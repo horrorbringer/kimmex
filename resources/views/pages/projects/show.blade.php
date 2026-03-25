@@ -11,7 +11,6 @@ $project = [
     'contract_value' => __('$120.5M'),
     'year' => __('2023 - 2026'),
     'heroImage' => '/images/projects/Thumbnail-1.jpg',
-    'video' => 'https://www.w3schools.com/html/mov_bbb.mp4',
     
     // Structured Narrative sections
     'narrative' => [
@@ -65,312 +64,265 @@ $project = [
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'View detailed information about this Kimmex built legacy.'">
 
-<div class="bg-white min-h-screen text-titan-navy">
-    
-    <!-- === PREMIUM CINEMATIC HERO SECTION === -->
-    <section class="relative h-screen w-full flex items-center overflow-hidden bg-titan-navy">
-        <!-- Dynamic Cinematic Background -->
-        <div class="absolute inset-0 scale-105">
-            <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}" class="w-full h-full object-cover opacity-40 blur-[1px]" />
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/60 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-transparent"></div>
-            <!-- Structural Grid Overlay -->
-            <div class="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-            <div class="absolute inset-0 border-[40px] border-titan-navy/20 pointer-events-none"></div>
-        </div>
+<div class="bg-gray-50 min-h-screen text-titan-navy selection:bg-titan-red selection:text-white pb-32">
+
+    <!-- === EDITORIAL SPLIT HERO === -->
+    <section class="relative w-full lg:h-[90vh] flex flex-col lg:flex-row bg-titan-navy border-b-[20px] border-titan-red">
         
-        <!-- Breadcrumbs (Floating Left) -->
-        <div class="absolute top-12 left-12 z-30 hidden lg:block">
-            <nav class="flex items-center gap-6 text-[9px] font-black uppercase tracking-[0.5em] text-white/30">
-                <a href="/" class="hover:text-titan-red transition-all">{{ __('Home') }}</a>
-                <span class="w-8 h-px bg-white/10"></span>
-                <a href="/projects" class="hover:text-titan-red transition-all">{{ __('Portfolios') }}</a>
-                <span class="w-8 h-px bg-titan-red"></span>
-                <span class="text-white">{{ __('Project Detail') }}</span>
-            </nav>
-        </div>
-
-        <!-- Hero Content: Split Layout -->
-        <div class="relative z-20 w-full max-w-[1700px] mx-auto px-12 lg:px-24 grid grid-cols-1 lg:grid-cols-12 gap-20 items-end pb-24" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+        <!-- Left Content Block -->
+        <div class="w-full lg:w-5/12 pt-40 pb-24 lg:pb-16 px-8 lg:px-16 xl:px-24 flex flex-col justify-between relative z-10 bg-titan-navy relative">
             
-            <div class="lg:col-span-8 space-y-12">
-                <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'" class="transition-all duration-1000 delay-100 inline-flex items-center gap-4 text-titan-red text-[10px] font-black uppercase tracking-[0.5em]">
-                    <span class="w-12 h-px bg-titan-red"></span>
-                    <span>{{ $project['type'] }}</span>
+            <div x-data="{ reveal: false }" x-init="setTimeout(() => reveal = true, 300)">
+                <!-- Breadcrumbs -->
+                <nav class="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.4em] text-white/40 mb-16 transition-all duration-700" :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                    <a href="/" class="hover:text-titan-red transition-colors">{{ __('Home') }}</a>
+                    <span class="w-3 h-px bg-white/20"></span>
+                    <a href="/projects" class="hover:text-titan-red transition-colors">{{ __('Portfolio') }}</a>
+                    <span class="w-3 h-px bg-titan-red"></span>
+                    <span class="text-white">{{ __('Project Detail') }}</span>
+                </nav>
+
+                <!-- Project Tag -->
+                <div class="inline-flex items-center gap-3 px-4 py-1.5 border border-white/10 text-titan-red text-[9px] font-black uppercase tracking-[0.4em] mb-8 transition-all duration-700 delay-100" :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
+                    <span class="w-1.5 h-1.5 rounded-full bg-titan-red animate-pulse"></span>
+                    {{ $project['type'] }}
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'" class="transition-all duration-1000 delay-300 text-6xl md:text-[120px] font-black text-white leading-[0.85] uppercase tracking-tighter mix-blend-lighten max-w-4xl">
-                    {{ $project['title'] }}
+                <!-- Title -->
+                <h1 class="text-4xl md:text-6xl xl:text-[5rem] font-black text-white leading-[0.9] uppercase tracking-tighter mix-blend-difference mb-8 transition-all duration-1000 delay-300" :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'">
+                    {!! str_replace(' & ', '<br><span class="text-titan-red">&</span><br>', $project['title']) !!}
                 </h1>
+                
+                <p class="text-titan-navy/40 text-sm xl:text-base font-bold uppercase tracking-widest transition-all duration-1000 delay-500" :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">{{ $project['location'] }}</p>
             </div>
 
-            <!-- Floating Hero Specs -->
-            <div class="lg:col-span-4" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'" class="transition-all duration-1000 delay-500">
-                <div class="bg-white/5 backdrop-blur-3xl border border-white/10 p-12 space-y-10 group hover:border-titan-red/50 transition-colors duration-700">
-                    <div class="flex items-center justify-between">
-                         <div class="text-[9px] font-black uppercase tracking-[0.4em] text-white/40">{{ __('Location') }}</div>
-                         <div class="font-black text-white uppercase text-sm tracking-widest text-right">{{ $project['location'] }}</div>
-                    </div>
-                    <div class="w-full h-px bg-white/5"></div>
-                    <div class="flex items-center justify-between">
-                         <div class="text-[9px] font-black uppercase tracking-[0.4em] text-white/40">{{ __('Project Status') }}</div>
-                         <div class="px-3 py-1 bg-green-600/20 border border-green-600/30 text-green-500 font-black text-[9px] uppercase tracking-widest">{{ $project['status'] }}</div>
-                    </div>
-                </div>
+            <!-- Scroll Indicator -->
+            <div class="hidden lg:flex items-center gap-6 mt-20" x-data="{ reveal: false }" x-init="setTimeout(() => reveal = true, 800)" :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="transition-all duration-1000">
+                <div class="w-12 h-px bg-titan-red"></div>
+                <span class="text-[9px] font-black text-white/40 uppercase tracking-[0.4em]">Explore Legacy</span>
+            </div>
+            
+            <!-- Large Watermark -->
+            <div class="absolute -bottom-10 -left-10 text-[20vw] font-black text-white/[0.02] uppercase tracking-tighter select-none pointer-events-none z-[-1] overflow-hidden leading-none">
+                KMX
             </div>
         </div>
 
-        <!-- Scroll Indicator (Architectural Line) -->
-        <div class="absolute bottom-12 right-12 flex items-center gap-8 cursor-pointer group" onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'})">
-             <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white/20 group-hover:text-white transition-colors">{{ __('Scroll to legacy') }}</span>
-             <div class="w-24 h-px bg-gradient-to-r from-titan-red to-transparent"></div>
+        <!-- Right Image Block -->
+        <div class="w-full lg:w-7/12 h-[50vh] lg:h-full relative overflow-hidden group">
+            <div class="absolute inset-0 bg-titan-navy/10 z-10 transition-colors duration-1000 group-hover:bg-transparent pointer-events-none"></div>
+            <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}" class="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[10s] select-none" />
+            
+            <!-- Overlay Tech Detail -->
+            <div class="absolute bottom-12 right-12 z-20 text-right backdrop-blur-md bg-titan-navy/40 p-6 border border-white/10 hidden md:block" x-data="{ reveal: false }" x-init="setTimeout(() => reveal = true, 1000)" :class="reveal ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'" class="transition-all duration-1000">
+                <div class="text-[9px] font-black text-white/60 uppercase tracking-[0.5em] mb-2 border-b border-white/20 pb-2 inline-block">Archived Spec</div>
+                <div class="text-white text-xl font-black uppercase tracking-tight">{{ $project['built_area'] }}</div>
+            </div>
         </div>
     </section>
 
-    <!-- === PROJECT STORYTELLING AREA === -->
-    <section class="py-24 px-6 bg-white relative">
-        <div class="max-w-[1500px] mx-auto">
+    <!-- === METRIC BAND === -->
+    <div class="bg-white border-b border-gray-200 py-12 px-8 lg:px-16 shadow-xl relative z-20 -mt-10 lg:-mt-16 mx-4 lg:mx-16 flex justify-center">
+        <div class="w-full flex justify-between gap-12 xl:gap-24 overflow-x-auto pb-4 snap-x">
+            @php
+                $metrics = [
+                    ['label' => 'Project Owner', 'value' => $project['client']],
+                    ['label' => 'Contract Value', 'value' => $project['contract_value']],
+                    ['label' => 'Status', 'value' => $project['status']],
+                    ['label' => 'Timeline', 'value' => $project['year']],
+                    ['label' => 'Final Handover', 'value' => $project['date']],
+                ];
+            @endphp
+            @foreach($metrics as $index => $metric)
+                <div class="flex-shrink-0 snap-center min-w-[200px]">
+                    <div class="text-[9px] font-black uppercase tracking-[0.4em] text-titan-navy/30 mb-2">{{ __($metric['label']) }}</div>
+                    <div class="text-sm lg:text-base font-black uppercase tracking-tight text-titan-navy border-l-[3px] border-titan-red pl-3 leading-tight">{{ $metric['value'] }}</div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- === EDITORIAL NARRATIVE === -->
+    <section class="py-32 px-8 xl:px-0 max-w-[1400px] mx-auto">
+        <div class="flex flex-col lg:flex-row gap-20 xl:gap-32">
             
-            <!-- Stealth Professional: Key Facts Grid -->
-            <div class="mb-32">
-                <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-0 border border-gray-100">
-                    @php
-                        $facts = [
-                            ['label' => 'Project Owner', 'value' => $project['client'], 'icon' => 'user-check'],
-                            ['label' => 'Precise Location', 'value' => $project['location'], 'icon' => 'navigation'],
-                            ['label' => 'Sector Category', 'value' => $project['type'], 'icon' => 'factory'],
-                            ['label' => 'Structural Area', 'value' => $project['built_area'], 'icon' => 'ruler'],
-                            ['label' => 'Project Valuation', 'value' => $project['contract_value'], 'icon' => 'bar-chart-3'],
-                            ['label' => 'Current Lifecycle', 'value' => $project['status'] . ' / ' . $project['year'], 'icon' => 'timer'],
-                        ];
-                    @endphp
-                    @foreach($facts as $fact)
-                    <div class="p-10 border-r border-b lg:border-b-0 border-gray-100 group hover:bg-titan-navy transition-all duration-500">
-                        <x-dynamic-component :component="'lucide-' . $fact['icon']" class="w-4 h-4 text-titan-red mb-6 opacity-40 group-hover:opacity-100 transition-opacity" />
-                        <div class="text-[8px] font-black tracking-[0.3em] text-titan-navy/30 group-hover:text-white/30 uppercase mb-3">{{ __($fact['label']) }}</div>
-                        <div class="font-black uppercase tracking-tight text-[13px] text-titan-navy group-hover:text-white leading-tight">{{ $fact['value'] }}</div>
+            <!-- Context Sidebar -->
+            <div class="lg:w-3/12 hidden lg:block">
+                <div class="sticky top-40">
+                    <h3 class="text-4xl xl:text-5xl font-black text-titan-navy uppercase tracking-tighter mb-8 leading-[0.9]">
+                        Project<br><span class="text-titan-red">Context</span>
+                    </h3>
+                    <p class="text-[10px] font-black text-titan-navy/50 uppercase tracking-[0.3em] leading-[2] mb-12 border-l-2 border-titan-red pl-4">
+                        A definitive case study on structural engineering and public infrastructure integration by Kimmex.
+                    </p>
+                    
+                    <!-- Resources -->
+                    <div class="space-y-4">
+                        <div class="text-[9px] font-black text-titan-navy/30 uppercase tracking-[0.4em] mb-6">Available Briefs</div>
+                        <a href="#" class="flex items-center gap-4 group/doc pb-4 border-b border-gray-200">
+                            <div class="w-10 h-10 border border-gray-200 flex items-center justify-center bg-gray-50 text-titan-navy/30 group-hover/doc:text-titan-red group-hover/doc:bg-white transition-all shadow-sm">
+                                <x-lucide-file-text class="w-4 h-4" />
+                            </div>
+                            <div>
+                                <span class="block text-[10px] font-black text-titan-navy uppercase tracking-widest group-hover/doc:text-titan-red transition-colors mb-0.5">Technical Summary</span>
+                                <span class="block text-[8px] font-black text-titan-navy/40 uppercase tracking-[0.4em]">2.4 MB PDF</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deep Narrative -->
+            <div class="lg:w-9/12 w-full space-y-32">
+                @php
+                    $narrativeSections = [
+                        'background' => 'Historical Background',
+                        'objectives' => 'Strategic Objectives',
+                        'design_concept' => 'Architectural Concept'
+                    ];
+                @endphp
+                
+                @foreach($narrativeSections as $key => $label)
+                <div class="relative group">
+                    <!-- Massive Background Number -->
+                    <div class="absolute -top-12 -left-8 md:-left-16 text-[100px] md:text-[140px] font-black text-gray-200/50 uppercase tracking-tighter select-none pointer-events-none z-0 transition-transform group-hover:-translate-x-4 duration-700">
+                        0{{ $loop->iteration }}
+                    </div>
+                    
+                    <div class="relative z-10 pl-4 md:pl-16 border-l w-full max-w-4xl {{ $loop->index % 2 == 0 ? 'border-titan-red' : 'border-titan-navy/20' }}">
+                        <div class="flex items-center gap-4 mb-6">
+                            <h2 class="text-3xl md:text-4xl font-black text-titan-navy uppercase tracking-tighter">{{ __($label) }}</h2>
+                        </div>
+                        <p class="text-lg md:text-xl text-titan-navy/70 leading-[1.8] font-medium">
+                            {{ $project['narrative'][$key] }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <!-- === FULL WIDTH BREAK IMAGE === -->
+    <div class="w-full h-[60vh] lg:h-[80vh] relative overflow-hidden group mb-32">
+        <img src="{{ $project['images'][0] }}" class="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-[15s]" alt="Project Mid Highlight">
+        <div class="absolute inset-0 bg-titan-navy/40 mix-blend-multiply transition-colors duration-1000 group-hover:bg-titan-navy/20"></div>
+        <div class="absolute bottom-16 left-8 xl:left-24 max-w-3xl z-10">
+            <h3 class="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter mb-8 leading-[0.9] drop-shadow-2xl">
+                Delivering scale without <br><span class="text-titan-red">compromising precision.</span>
+            </h3>
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-1 bg-titan-red"></div>
+                <div class="text-[10px] uppercase font-black tracking-[0.4em] text-white">Kimmex Standards</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === HIGH-END DATA PANELS === -->
+    <section class="pb-32 px-8 xl:px-0 max-w-[1400px] mx-auto">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Left: Scope -->
+            <div class="lg:w-1/2 p-12 lg:p-20 bg-white border border-gray-100 shadow-2xl relative overflow-hidden group">
+                 <div class="absolute -right-20 -bottom-20 opacity-[0.02] transform -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
+                      <img src="/images/logo/logo-kimmex.png" class="w-[400px]" alt="">
+                 </div>
+                 
+                <div class="inline-block px-4 py-1.5 bg-titan-navy text-white text-[9px] font-black uppercase tracking-[0.4em] mb-12">Execution</div>
+                <h3 class="text-4xl md:text-5xl font-black text-titan-navy uppercase tracking-tighter mb-16 relative z-10">Scope of <br><span class="text-titan-red">Services</span></h3>
+                
+                <div class="space-y-4 relative z-10">
+                    @foreach($project['scope'] as $index => $service)
+                    <div class="group/item flex items-center justify-between p-6 bg-gray-50 border border-transparent hover:bg-white hover:border-titan-red/20 hover:shadow-lg transition-all duration-300">
+                        <div class="flex items-center gap-6">
+                            <span class="text-[10px] font-black text-titan-red/30 group-hover/item:text-titan-red transition-colors">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-sm font-black text-titan-navy uppercase tracking-widest group-hover/item:translate-x-2 transition-transform">{{ $service }}</span>
+                        </div>
+                        <x-lucide-check class="w-4 h-4 text-titan-navy/10 group-hover/item:text-titan-red transition-colors" />
                     </div>
                     @endforeach
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-20">
+            <!-- Right: Resilience Grid -->
+            <div class="lg:w-1/2 p-12 lg:p-20 bg-titan-navy text-white relative overflow-hidden group border-b-8 border-titan-red shadow-2xl">
+                <!-- Abstract Blueprint Pattern -->
+                <div class="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-overlay" style="background-image: linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px); background-size: 40px 40px;"></div>
                 
-                <!-- Main Narrative Content -->
-                <div class="lg:col-span-8 space-y-24">
-                <!-- Main Narrative Content -->
-                <div class="lg:col-span-8 space-y-32">
-                    <!-- Project Storytelling Grid -->
-                    <div class="grid grid-cols-1 gap-24 relative">
-                         <!-- Vertical Architectural Line -->
-                         <div class="absolute left-0 top-0 bottom-0 w-px bg-gray-100 hidden lg:block"></div>
-
-                        @foreach(['background' => 'Historical Background', 'objectives' => 'Strategic Objectives', 'design_concept' => 'Architectural Concept'] as $key => $label)
-                        <div class="relative pl-0 lg:pl-16 space-y-10 group">
-                            <!-- Bullet Accent -->
-                            <div class="absolute -left-1.5 top-0 w-3 h-3 bg-titan-red hidden lg:block group-hover:scale-150 transition-transform duration-500"></div>
-
-                            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-gray-100 pb-10">
-                                <h3 class="text-3xl font-black text-titan-navy uppercase tracking-tighter">{{ __($label) }}</h3>
-                                <span class="text-[10px] font-black text-titan-red/40 uppercase tracking-[0.5em]">{{ __('Kimmex Report 0'.($loop->index+1)) }}</span>
+                <div class="inline-block px-4 py-1.5 bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.4em] mb-12 relative z-10">Resilience</div>
+                <h3 class="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-16 relative z-10">Technical <br><span class="text-titan-red">Challenges</span></h3>
+                
+                <div class="space-y-12 relative z-10">
+                    @foreach($project['challenges'] as $cs)
+                    <div class="relative group/chal">
+                        <div class="border-l-2 border-white/10 pl-8 group-hover/chal:border-titan-red transition-colors duration-500 pb-8 border-b border-white/5 last:border-b-0 last:pb-0">
+                            <div class="mb-6">
+                                <div class="text-[8px] font-black text-titan-red uppercase tracking-[0.4em] mb-3">The Obstacle</div>
+                                <p class="text-lg md:text-xl font-black text-white uppercase leading-tight tracking-tight">{{ $cs['challenge'] }}</p>
                             </div>
-                            <div class="prose prose-2xl text-titan-navy/50 font-medium leading-[1.8] max-w-none hover:text-titan-navy transition-colors duration-500">
-                                <p>{{ $project['narrative'][$key] }}</p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-
-                    <!-- Professional Scope -->
-                    <div class="relative p-12 lg:p-16 border border-gray-100 bg-white group overflow-hidden">
-                        <!-- Background Stealth Logo -->
-                        <div class="absolute -bottom-10 -right-10 opacity-[0.02] rotate-12 group-hover:rotate-0 transition-transform duration-1000">
-                             <img src="/images/logo/logo-kimmex.png" class="w-64" alt="">
-                        </div>
-
-                        <div class="relative z-10">
-                            <div class="inline-block px-4 py-1.5 bg-titan-navy text-white text-[9px] font-black uppercase tracking-[0.3em] mb-10">
-                                {{ __('Kimmex Execution') }}
-                            </div>
-                            <h3 class="text-4xl font-black text-titan-navy uppercase tracking-tighter mb-12">{{ __('Scope of Services') }}</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-                                @foreach($project['scope'] as $service)
-                                <div class="flex items-center justify-between pb-4 border-b border-gray-50 group/item">
-                                    <span class="text-xs font-black text-titan-navy/60 group-hover/item:text-titan-red transition-colors uppercase tracking-tight">{{ $service }}</span>
-                                    <x-lucide-arrow-up-right class="w-3.5 h-3.5 text-titan-red opacity-0 group-hover/item:opacity-100 -translate-x-2 group-hover/item:translate-x-0 transition-all" />
+                            <div>
+                                <div class="text-[8px] font-black text-white/30 uppercase tracking-[0.4em] mb-2 flex items-center gap-2">
+                                    <x-lucide-arrow-right class="w-3 h-3 text-titan-red" />
+                                    Kimmex Solution
                                 </div>
-                                @endforeach
+                                <p class="text-white/60 text-sm md:text-base font-medium leading-[1.8]">{{ $cs['solution'] }}</p>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Intellectual Asset: Challenges & Solutions -->
-                    <div class="space-y-16">
-                        <div class="flex items-center gap-5">
-                            <span class="text-[10px] font-black text-titan-red uppercase tracking-[0.5em]">{{ __('Strategy') }}</span>
-                            <div class="h-px flex-1 bg-gray-100"></div>
-                            <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter">{{ __('Challenges & Solutions') }}</h2>
-                        </div>
-                        <div class="grid grid-cols-1 gap-12">
-                            @foreach($project['challenges'] as $cs)
-                            <div class="group">
-                                <div class="flex flex-col md:flex-row gap-10">
-                                    <div class="md:w-1/3 flex gap-4">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-titan-red mt-1.5 shrink-0"></div>
-                                        <div>
-                                            <div class="text-[9px] font-black uppercase tracking-widest text-titan-navy/30 mb-2">{{ __('The Obstacle') }}</div>
-                                            <p class="font-black text-titan-navy uppercase tracking-tight leading-tight">{{ $cs['challenge'] }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="md:w-2/3 p-8 bg-gray-50 border-l-2 border-titan-red group-hover:bg-titan-navy group-hover:text-white transition-all duration-500">
-                                        <div class="text-[9px] font-black uppercase tracking-widest text-titan-red mb-3 group-hover:text-white/40">{{ __('Kimmex Solution') }}</div>
-                                        <p class="text-titan-navy/60 group-hover:text-white/80 text-base font-medium leading-relaxed">{{ $cs['solution'] }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Cinematic Video -->
-                    @if(isset($project['video']))
-                    <div class="space-y-10">
-                         <div class="flex items-center gap-4">
-                            <div class="w-16 h-1 bg-titan-red"></div>
-                            <h2 class="text-3xl font-black text-titan-navy uppercase tracking-tighter">{{ __('Visualization') }}</h2>
-                        </div>
-                        <div class="relative w-full aspect-video overflow-hidden bg-titan-navy border border-gray-100 shadow-xl group">
-                            <video src="{{ $project['video'] }}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700" autoplay muted loop playsinline></video>
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Uniform Gallery -->
-                    <div class="space-y-10 relative">
-                         <!-- Structural Accent Corners -->
-                         <div class="absolute -top-4 -left-4 w-12 h-12 border-t-2 border-l-2 border-titan-red/20 pointer-events-none"></div>
-                         <div class="absolute -bottom-4 -right-4 w-12 h-12 border-b-2 border-r-2 border-titan-red/20 pointer-events-none"></div>
-
-                         <div class="flex items-center gap-4">
-                            <div class="w-16 h-1 bg-titan-red"></div>
-                            <h2 class="text-3xl font-black text-titan-navy uppercase tracking-tighter">{{ __('Visual Documentation') }}</h2>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @foreach($project['images'] as $index => $img)
-                                <div class="group relative aspect-[4/3] overflow-hidden bg-gray-50 border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-700">
-                                    <img src="{{ $img }}" alt="Gallery Image {{ $index + 1 }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                                    <div class="absolute inset-0 bg-titan-navy/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                         <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-500 shadow-2xl">
-                                             <x-lucide-maximize-2 class="w-6 h-6 text-titan-red" />
-                                         </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-
-                <!-- High-End Specs Sidebar -->
-                <div class="lg:col-span-4 lg:pl-12">
-                    <div class="sticky top-32 space-y-12">
-                        <!-- Floating Data Card -->
-                        <div class="relative bg-white border border-gray-100 p-12 overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.05)]">
-                            <div class="absolute top-0 left-0 w-1 h-12 bg-titan-red"></div>
-                            
-                            <p class="text-[9px] font-black uppercase tracking-[0.5em] text-titan-navy/30 mb-12">{{ __('Executive Data') }}</p>
-                            
-                            <ul class="space-y-10">
-                                <li class="flex items-end justify-between border-b border-gray-50 pb-6 group/spec">
-                                    <div class="text-[9px] uppercase font-black tracking-[0.3em] text-titan-navy/40 group-hover/spec:text-titan-red transition-colors">{{ __('Total Built Area') }}</div>
-                                    <div class="font-black text-titan-navy uppercase text-lg tracking-tight">{{ $project['built_area'] }}</div>
-                                </li>
-                                <li class="flex items-end justify-between border-b border-gray-50 pb-6 group/spec">
-                                    <div class="text-[9px] uppercase font-black tracking-[0.3em] text-titan-navy/40 group-hover/spec:text-titan-red transition-colors">{{ __('Contract Phase') }}</div>
-                                    <div class="font-black text-titan-navy uppercase text-lg tracking-tight">{{ $project['status'] }}</div>
-                                </li>
-                                <li class="flex items-end justify-between border-b border-gray-50 pb-6 group/spec">
-                                    <div class="text-[9px] uppercase font-black tracking-[0.3em] text-titan-navy/40 group-hover/spec:text-titan-red transition-colors">{{ __('Active Since') }}</div>
-                                    <div class="font-black text-titan-navy uppercase text-lg tracking-tight">{{ $project['year'] }}</div>
-                                </li>
-                            </ul>
-
-                            <a href="/contact" class="mt-16 w-full bg-titan-navy py-5 text-white text-[10px] font-black uppercase tracking-[0.5em] flex items-center justify-center gap-4 hover:bg-titan-red transition-all duration-500 shadow-2xl">
-                                {{ __('Inquire Details') }}
-                                <x-lucide-arrow-right class="w-4 h-4" />
-                            </a>
-                        </div>
-
-                        <!-- Professional Downloads -->
-                        <div class="p-12 border border-gray-100 space-y-10 relative overflow-hidden group">
-                             <div class="absolute -right-8 -bottom-8 opacity-[0.05]">
-                                 <x-lucide-file-text class="w-32 h-32 text-titan-navy" />
-                             </div>
-                             <h4 class="text-xs font-black text-titan-navy uppercase tracking-[0.4em] relative z-10">{{ __('Whitepapers') }}</h4>
-                             <div class="space-y-6 relative z-10">
-                                <a href="#" class="flex items-center justify-between group/link border-b border-gray-50 pb-4">
-                                    <span class="text-[10px] font-black text-titan-navy/50 group-hover/link:text-titan-red transition-colors uppercase tracking-widest">{{ __('Technical Summary.PDF') }}</span>
-                                    <x-lucide-download class="w-3.5 h-3.5 text-titan-navy/20 group-hover/link:text-titan-red transition-transform group-hover/link:translate-y-1" />
-                                </a>
-                                <a href="#" class="flex items-center justify-between group/link border-b border-gray-50 pb-4">
-                                    <span class="text-[10px] font-black text-titan-navy/50 group-hover/link:text-titan-red transition-colors uppercase tracking-widest">{{ __('Site Specifications.PDF') }}</span>
-                                    <x-lucide-download class="w-3.5 h-3.5 text-titan-navy/20 group-hover/link:text-titan-red transition-transform group-hover/link:translate-y-1" />
-                                </a>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <!-- === RELATED LEGACIES (Dynamic Grid) === -->
-    @if(isset($project['related']) && count($project['related']) > 0)
-    <section class="py-24 bg-gray-50/50 border-t border-gray-100 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] pointer-events-none"></div>
-        <div class="max-w-[1500px] mx-auto px-6 relative z-10">
-            
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-                <div>
-                     <span class="text-[10px] font-black uppercase tracking-[0.4em] text-titan-red mb-4 block">{{ __('Portfolio') }}</span>
-                     <h3 class="text-4xl md:text-5xl font-black text-titan-navy uppercase tracking-tighter">{{ __('Related Legacies') }}</h3>
-                </div>
-                <a href="/projects" class="inline-flex items-center gap-3 px-8 py-4 bg-white border border-gray-100 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] text-titan-navy hover:border-titan-red/30 hover:shadow-xl transition-all group">
-                    {{ __('View All Projects') }}
-                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-2 transition-transform text-titan-red" />
-                </a>
+    <!-- === OFFSET VISUALS GALLERY === -->
+    <section class="pb-40 px-8 xl:px-0 max-w-[1400px] mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+            <h3 class="text-5xl md:text-6xl font-black text-titan-navy uppercase tracking-tighter leading-[0.9]">Site <br><span class="text-titan-red">Documentation</span></h3>
+            <div class="text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.4em] pb-2 border-b-2 border-titan-red">
+                {{ count($project['images']) - 1 }} Media Files
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                @foreach($project['related'] as $related)
-                <a href="/projects/{{ $related['id'] }}" class="group block relative bg-white border border-gray-100 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] transition-all duration-700">
-                    <div class="aspect-[16/10] overflow-hidden relative">
-                        <img src="{{ $related['image'] }}" alt="{{ $related['title'] }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                        <div class="absolute inset-0 bg-titan-navy/20 group-hover:bg-titan-navy/5 transition-colors duration-700"></div>
-                        
-                        <!-- Premium Float Badge -->
-                        <div class="absolute top-6 left-6 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                            {{ __('Explore Legacy') }}
-                        </div>
-
-                        <div class="absolute bottom-0 right-0 p-8">
-                            <div class="w-14 h-14 bg-titan-red text-white flex items-center justify-center translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 shadow-2xl">
-                                <x-lucide-arrow-right class="w-6 h-6" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-10">
-                        <p class="text-[9px] uppercase tracking-[0.4em] font-black text-titan-red/60 mb-3">{{ $related['type'] }}</p>
-                        <h4 class="text-2xl font-black text-titan-navy uppercase tracking-tight group-hover:text-titan-red transition-colors duration-500">{{ $related['title'] }}</h4>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-            
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            @foreach(array_slice($project['images'], 1) as $index => $img) <!-- skip first image used in break -->
+                <div class="group relative overflow-hidden bg-gray-100 shadow-xl {{ $index % 2 == 1 ? 'md:mt-32' : '' }} aspect-[4/5]">
+                    <img src="{{ $img }}" alt="Gallery Image {{ $index + 2 }}" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" />
+                    <div class="absolute inset-0 bg-titan-navy/60 opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex flex-col items-center justify-center p-8 backdrop-blur-[2px]">
+                         <div class="w-16 h-16 rounded-full border border-white/30 flex items-center justify-center mb-6 scale-50 group-hover:scale-100 transition-transform duration-500 delay-100">
+                             <x-lucide-maximize-2 class="w-6 h-6 text-white" />
+                         </div>
+                         <div class="text-[9px] font-black text-titan-red uppercase tracking-[0.5em] mb-2 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200">Enlarge</div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
+
+    <!-- === NEXT LEGACY / RELATED === -->
+    @if(isset($project['related']) && count($project['related']) > 0)
+    <section class="max-w-[1400px] mx-auto px-8 xl:px-0 cursor-pointer">
+        <a href="/projects/{{ $project['related'][0]['id'] }}" class="block w-full bg-titan-navy hover:bg-black transition-colors duration-1000 text-white relative overflow-hidden group shadow-2xl">
+            <div class="absolute right-0 top-0 bottom-0 w-1/2 z-0 hidden md:block">
+                 <img src="{{ $project['related'][0]['image'] }}" class="w-full h-full object-cover opacity-30 group-hover:opacity-70 scale-100 group-hover:scale-110 transition-all duration-[3s]" alt="">
+                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy to-transparent"></div>
+            </div>
+            
+            <div class="relative z-10 py-32 md:py-40 px-12 md:px-24 w-full md:w-3/4 lg:w-2/3">
+                <div class="flex items-center gap-4 mb-8">
+                     <div class="w-8 h-px bg-titan-red"></div>
+                     <span class="text-[9px] font-black text-titan-red uppercase tracking-[0.5em]">{{ __('Next Legacy') }}</span>
+                </div>
+                <h3 class="text-4xl md:text-6xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-12 leading-[0.9] group-hover:translate-x-4 transition-transform duration-700">
+                    {{ $project['related'][0]['title'] }}
+                </h3>
+                
+                <div class="inline-flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-white/50 group-hover:text-white transition-colors">
+                    <span>{{ __('Discover Project') }}</span>
+                    <x-lucide-arrow-right class="w-4 h-4 text-titan-red group-hover:translate-x-4 transition-transform duration-500" />
+                </div>
+            </div>
+        </a>
     </section>
     @endif
 
