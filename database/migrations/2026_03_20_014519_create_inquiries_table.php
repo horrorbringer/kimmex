@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('subject')->nullable();
             $table->text('message');
             $table->string('status')->default('NEW');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }

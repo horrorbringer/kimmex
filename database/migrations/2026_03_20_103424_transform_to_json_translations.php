@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -25,7 +24,8 @@ return new class extends Migration
         ];
 
         foreach ($tables as $table => $columns) {
-            if (!Schema::hasTable($table)) continue;
+            if (!Schema::hasTable($table))
+                continue;
 
             // Migrate data to temporary array before making structural changes
             $rows = DB::table($table)->get();
@@ -34,7 +34,7 @@ return new class extends Migration
             foreach ($rows as $row) {
                 $translations = [];
                 $rowId = $row->id;
-                
+
                 // For each field, build the JSON translation object
                 foreach ($columns as $baseField => $kmField) {
                     // Normalize: if the value is numerically indexed, it means base name == field pair key
@@ -58,18 +58,25 @@ return new class extends Migration
             }
 
             // Change columns to json and drop Km columns
-            Schema::table($table, function (Blueprint $tableAlter) use ($columns) {
+            Schema::table($table, function (Blueprint $tableAlter) use ($columns, $table) {
                 foreach ($columns as $baseField => $kmField) {
                     $actualBaseField = is_numeric($baseField) ? $kmField : $baseField;
                     $actualKmField = is_numeric($baseField) ? $kmField . 'Km' : $kmField;
 
                     // Drop Km column if it exists
-                    if (Schema::hasColumn($tableAlter->getTable(), $actualKmField)) {
+                    if (Schema::hasColumn($table, $actualKmField)) {
                         $tableAlter->dropColumn($actualKmField);
                     }
 
                     // Change base column to json (longText or json depending on DB)
-                    $tableAlter->json($actualBaseField)->nullable()->change();
+                    // Postgres does not support change() from varchar to json automatically
+                    if (DB::getDriverName() === 'pgsql') {
+                        // For PG, drop and re-add is cleaner than complex casting since we restore data manually after
+                        $tableAlter->dropColumn($actualBaseField);
+                        $tableAlter->json($actualBaseField)->nullable();
+                    } else {
+                        $tableAlter->json($actualBaseField)->nullable()->change();
+                    }
                 }
             });
 

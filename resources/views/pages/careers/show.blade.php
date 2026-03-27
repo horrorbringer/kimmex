@@ -114,10 +114,10 @@
          </div>
     </div>
 @else
-    <div class="bg-white min-h-screen font-sans text-titan-navy pt-[100px]">
+    <div class="bg-white min-h-screen font-sans text-titan-navy">
         
         <!-- HERO SECTION (Cinematic Image Background) -->
-        <section class="relative bg-titan-navy overflow-hidden py-32 min-h-[480px] flex items-center">
+        <section class="relative bg-titan-navy overflow-hidden pt-64 pb-32 min-h-[480px] flex items-start">
             <!-- Background Image with Overlay -->
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-1.jpg" alt="{{ $job['title'] }}" class="w-full h-full object-cover opacity-30 blur-[2px] scale-105" />

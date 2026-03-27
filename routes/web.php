@@ -65,3 +65,12 @@ Route::get('/news/{slug}', function ($slug) {
 Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
+
+// Documents Page
+Route::get('/documents', function () {
+    return view('pages.documents');
+})->name('documents');
+
+Route::get('/documents/{slug}', function ($slug) {
+    return view('pages.documents.show', ['slug' => $slug]);
+})->name('documents.show');

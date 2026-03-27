@@ -2,49 +2,66 @@
     description="Learn about Kimmex's history, mission, vision, and core values in construction.">
 
     @php
-    $aboutData = [
-    'story' => __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner for Cambodia\'s
-    most critical infrastructure projects. We pride ourselves on engineering excellence, unwavering safety standards,
-    and delivering landmark results on time.'),
-    'values' => [
-    ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction
-    sites.')],
-    ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.')],
-    ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.')],
-    ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.')]
-    ]
-    ];
+        $aboutData = [
+            'story' => __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner for Cambodia\'s
+                                                            most critical infrastructure projects. We pride ourselves on engineering excellence, unwavering safety standards,
+                                                            and delivering landmark results on time.'),
+            'values' => [
+                [
+                    'title' => __('Safety First'),
+                    'content' => __('We maintain a strict zero-incident policy on all construction
+                                                            sites.')
+                ],
+                ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.')],
+                ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.')],
+                ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.')]
+            ]
+        ];
 
-    $milestones = [
-    ['year' => '2000', 'title' => __('Company Founded'), 'desc' => __('Started as a small dedicated engineering firm.'),
-    'image' => '/images/projects/Thumbnail-1.jpg'],
-    ['year' => '2010', 'title' => __('First Mega Project'), 'desc' => __('Secured our first major government
-    infrastructure contract.'), 'image' => '/images/projects/Thumbnail-2.jpg'],
-    ['year' => '2026', 'title' => __('Industry Leaders'), 'desc' => __('Recognized as the top infrastructure firm in the
-    Kingdom of Cambodia.'), 'image' => '/images/projects/Thumbnail-3.jpg']
-    ];
+        $milestones = [
+            [
+                'year' => '2000',
+                'title' => __('Company Founded'),
+                'desc' => __('Started as a small dedicated engineering firm.'),
+                'image' => '/images/projects/Thumbnail-1.jpg'
+            ],
+            [
+                'year' => '2010',
+                'title' => __('First Mega Project'),
+                'desc' => __('Secured our first major government
+                                                            infrastructure contract.'),
+                'image' => '/images/projects/Thumbnail-2.jpg'
+            ],
+            [
+                'year' => '2026',
+                'title' => __('Industry Leaders'),
+                'desc' => __('Recognized as the top infrastructure firm in the
+                                                            Kingdom of Cambodia.'),
+                'image' => '/images/projects/Thumbnail-3.jpg'
+            ]
+        ];
 
-    $orgChart = [
-    'name' => 'Sok Visal',
-    'role' => __('Chief Executive Officer'),
-    'type' => 'ceo',
-    'image' => null,
-    'bio' => __('With over 30 years of experience, Sok leads the strategic vision of Kim Mex.'),
-    'children' => [
-    [
-    'name' => 'Chamroeun S.',
-    'role' => __('Managing Director'),
-    'type' => 'director',
-    'image' => null,
-    'bio' => __('Focuses on operational excellence and high-level project management.'),
-    'children' => [
-    ['name' => __('Engineering Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []],
-    ['name' => __('Finance Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []],
-    ['name' => __('HR Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []]
-    ]
-    ]
-    ]
-    ];
+        $orgChart = [
+            'name' => 'Sok Visal',
+            'role' => __('Chief Executive Officer'),
+            'type' => 'ceo',
+            'image' => null,
+            'bio' => __('With over 30 years of experience, Sok leads the strategic vision of Kim Mex.'),
+            'children' => [
+                [
+                    'name' => 'Chamroeun S.',
+                    'role' => __('Managing Director'),
+                    'type' => 'director',
+                    'image' => null,
+                    'bio' => __('Focuses on operational excellence and high-level project management.'),
+                    'children' => [
+                        ['name' => __('Engineering Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []],
+                        ['name' => __('Finance Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []],
+                        ['name' => __('HR Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []]
+                    ]
+                ]
+            ]
+        ];
     @endphp
 
     <div x-data="{ selectedMember: null }" class="bg-white min-h-screen text-titan-navy border-t border-gray-100">
@@ -107,7 +124,7 @@
                     </div>
                     <div class="flex-grow">
                         <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-4 italic">{{
-                            __('Executive Biography') }}</h4>
+    __('Executive Biography') }}</h4>
                         <div class="space-y-4 md:space-y-6 text-titan-navy/80 leading-relaxed font-medium">
                             <p class="text-base md:text-lg leading-relaxed"
                                 x-text="selectedMember?.bio || 'An integral part of KIM MEX Construction bringing specialized expertise.'">
@@ -127,7 +144,7 @@
             </div>
             <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-20">
                 <h1
-                    class="text-5xl md:text-7xl lg:text-8xl font-heading font-black text-white mb-6 tracking-tight leading-[0.95]">
+                    class="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white mb-6 tracking-tight leading-tight uppercase">
                     {{ __('BUILDING') }}<br /><span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
                 </h1>
             </div>
@@ -138,147 +155,174 @@
             <div class="max-w-[1400px] mx-auto px-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                     @php
-                    $stats = [
-                    ['value' => 25, 'suffix' => '+', 'label' => __('Years Experience')],
-                    ['value' => 150, 'suffix' => '+', 'label' => __('Projects Completed')],
-                    ['value' => 500, 'suffix' => '+', 'label' => __('Team Members')],
-                    ['value' => 98, 'suffix' => '%', 'label' => __('Client Satisfaction')],
-                    ];
+                        $stats = [
+                            ['value' => 25, 'suffix' => '+', 'label' => __('Years Experience')],
+                            ['value' => 150, 'suffix' => '+', 'label' => __('Projects Completed')],
+                            ['value' => 500, 'suffix' => '+', 'label' => __('Team Members')],
+                            ['value' => 98, 'suffix' => '%', 'label' => __('Client Satisfaction')],
+                        ];
                     @endphp
                     @foreach($stats as $stat)
-                    <div x-data="{ count: 0, target: {{ $stat['value'] }}, shown: false }"
-                        x-intersect.once="shown = true; let steps = 60; let step = target / steps; let c = 0; let timer = setInterval(() => { c += step; if (c >= target) { count = target; clearInterval(timer); } else { count = Math.floor(c); } }, 2000 / steps);"
-                        class="text-center">
-                        <div class="text-5xl md:text-6xl font-heading font-black text-white mb-2">
-                            <span x-text="count">0</span>{{ $stat['suffix'] }}
+                        <div x-data="{ count: 0, target: {{ $stat['value'] }}, shown: false }"
+                            x-intersect.once="shown = true; let steps = 60; let step = target / steps; let c = 0; let timer = setInterval(() => { c += step; if (c >= target) { count = target; clearInterval(timer); } else { count = Math.floor(c); } }, 2000 / steps);"
+                            class="text-center">
+                            <div class="text-4xl md:text-5xl font-heading font-black text-white mb-2">
+                                <span x-text="count">0</span>{{ $stat['suffix'] }}
+                            </div>
+                            <div class="text-sm uppercase tracking-widest text-white/60 font-bold">{{ $stat['label'] }}
+                            </div>
                         </div>
-                        <div class="text-sm uppercase tracking-widest text-white/60 font-bold">{{ $stat['label'] }}
-                        </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
         </section>
 
-        <!-- ABOUT STORY -->
-        <section class="py-24 px-6">
-            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-16 items-center">
-                <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="grid grid-cols-2 gap-4 transition-all duration-1000">
-                    <div class="space-y-4">
-                        <div class="relative h-48 rounded-2xl overflow-hidden shadow-lg"><img
-                                src="/images/projects/Thumbnail-1.jpg" class="object-cover w-full h-full" /></div>
-                        <div class="relative h-64 rounded-2xl overflow-hidden shadow-lg"><img
-                                src="/images/projects/Thumbnail-2.jpg" class="object-cover w-full h-full" /></div>
-                    </div>
-                    <div class="space-y-4 pt-8">
-                        <div class="relative h-64 rounded-2xl overflow-hidden shadow-lg"><img
-                                src="/images/projects/Thumbnail-3.jpg" class="object-cover w-full h-full" /></div>
-                        <div class="relative h-48 rounded-2xl overflow-hidden shadow-lg"><img
-                                src="/images/projects/Thumbnail-4.jpg" class="object-cover w-full h-full" /></div>
+        <!-- WHO WE ARE SECTION (Synced with Image) -->
+        <section class="py-32 px-6 bg-white overflow-hidden">
+            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
+
+                <!-- Left: Aesthetic Image Grid with Badge -->
+                <div class="relative" x-data="{ shown: false }" x-intersect.once="shown = true">
+                    <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
+                        class="grid grid-cols-2 gap-6 transition-all duration-1000 relative">
+                        <div class="space-y-6">
+                            <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl">
+                                <img src="/images/projects/Thumbnail-1.jpg"
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                            </div>
+                            <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
+                                <img src="/images/projects/Thumbnail-3.jpg"
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                            </div>
+                        </div>
+                        <div class="space-y-6 pt-12">
+                            <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
+                                <img src="/images/projects/Thumbnail-2.jpg"
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                            </div>
+                            <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl relative">
+                                <img src="/images/projects/Thumbnail-4.jpg"
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+
+                                <!-- Floating 25+ Years Badge -->
+                                <div
+                                    class="absolute -bottom-6 -right-6 bg-accent-orange text-white p-8 rounded-3xl shadow-[0_20px_40px_rgba(255,107,0,0.3)] z-20 flex flex-col items-center justify-center min-w-[140px] transform hover:scale-105 transition-transform">
+                                    <span class="text-4xl font-black leading-none">25+</span>
+                                    <span
+                                        class="text-[10px] font-black uppercase tracking-[0.2em] mt-1">{{ __('Years') }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- Right: Content & MVG -->
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 delay-200">
-                    <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Who We
-                        Are') }}</span>
-                    <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy mb-6">{{ __('Cambodia
-                        Premier Partner') }}</h2>
-                    <p class="text-titan-navy/60 text-lg leading-relaxed mb-8">{{ $aboutData['story'] }}</p>
-                    <div class="space-y-4">
-                        @foreach($aboutData['values'] as $val)
-                        <div class="p-6 bg-gray-50 rounded-2xl">
-                            <h3 class="font-bold text-titan-navy mb-1">{{ $val['title'] }}</h3>
-                            <p class="text-sm text-titan-navy/60">{{ $val['content'] }}</p>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <span
+                        class="text-accent-orange font-black uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('WHO WE ARE') }}</span>
+                    <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy leading-tight mb-8">
+                        {{ __("Cambodia's Premier Construction Partner") }}
+                    </h2>
+                    <p class="text-titan-navy/60 text-lg leading-relaxed mb-12 max-w-2xl">
+                        {{ __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}
+                    </p>
 
-        <!-- WHO WE ARE: MISSION / VISION / GOAL -->
-        <section class="py-16 px-6 bg-white">
-            <div class="max-w-[1400px] mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    @php
-                    $mvg = [
-                    [
-                    'icon' => 'flag',
-                    'title' => __('Our Mission'),
-                    'desc' => __('To bridge the gap between concept and reality through exceptional engineering and
-                    safety.'),
-                    'points' => [
-                    __('Prioritizing safety in every structural phase.'),
-                    __('Implementing sustainable building practices.'),
-                    __('Delivering unmatched precision and quality.'),
-                    ]
-                    ],
-                    [
-                    'icon' => 'eye',
-                    'title' => __('Our Vision'),
-                    'desc' => __('To be the most trusted and innovative construction partner in Cambodia.'),
-                    'points' => [
-                    __('Global recognition for engineering excellence.'),
-                    __('Pioneering smart construction technologies.'),
-                    __('Shaping the future of urban living.'),
-                    ]
-                    ],
-                    [
-                    'icon' => 'target',
-                    'title' => __('Our Goal'),
-                    'desc' => __('To complete every project on time and within budget with zero-accident safety.'),
-                    'points' => [
-                    __('Achieving 100% on-time project completion.'),
-                    __('Maintaining a strict zero-accident safety record.'),
-                    __('Expanding our footprint into renewable infrastructure.'),
-                    ]
-                    ],
-                    ];
-                    @endphp
-                    @foreach($mvg as $item)
-                    <div x-data="{ open: false }"
-                        class="p-6 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-all duration-300 cursor-pointer border border-transparent hover:border-titan-red/20"
-                        @click="open = !open">
-                        <div class="flex gap-5">
-                            <div
-                                class="w-14 h-14 rounded-xl flex items-center justify-center shrink-0 bg-titan-red/10 text-titan-red">
-                                @if($item['icon'] === 'flag')
-                                <x-lucide-flag class="w-6 h-6" />
-                                @elseif($item['icon'] === 'eye')
-                                <x-lucide-eye class="w-6 h-6" />
-                                @elseif($item['icon'] === 'target')
-                                <x-lucide-target class="w-6 h-6" />
-                                @endif
-                            </div>
-                            <div class="flex-grow">
-                                <div class="flex items-center justify-between mb-1">
-                                    <h3 class="text-lg font-heading font-bold text-titan-navy">{{ $item['title'] }}</h3>
-                                    <x-lucide-chevron-right
-                                        class="w-4 h-4 text-titan-red/30 transition-transform duration-300"
-                                        ::class="open ? 'rotate-90 text-titan-red' : ''" />
-                                </div>
-                                <p class="text-titan-navy/50 text-sm leading-relaxed">{{ $item['desc'] }}</p>
-                                <div x-show="open" x-collapse class="overflow-hidden">
-                                    <div class="pt-4 mt-4 border-t border-gray-200">
-                                        <ul class="grid grid-cols-1 gap-2">
-                                            @foreach($item['points'] as $point)
-                                            <li class="flex items-start gap-2 text-xs font-bold text-titan-navy/60">
-                                                <div class="w-1.5 h-1.5 bg-titan-red rounded-full mt-1.5 shrink-0">
-                                                </div>
-                                                {{ $point }}
-                                            </li>
-                                            @endforeach
-                                        </ul>
+                    <!-- Mission/Vision/Goal Interactive List -->
+                    <div class="space-y-4" x-data="{ activeMvg: null }">
+                        @php
+                            $mvg_items = [
+                                [
+                                    'id' => 'vision',
+                                    'icon' => 'eye',
+                                    'title' => __('Our Vision'),
+                                    'desc' => __('To be the most trusted and innovative construction partner in Cambodia.'),
+                                    'long_desc' => __('Our vision drives us to set new industry standards through sustainable engineering, pioneering architecture, and an unwavering commitment to quality in the Kingdom.')
+                                ],
+                                [
+                                    'id' => 'mission',
+                                    'icon' => 'flag',
+                                    'title' => __('Our Mission'),
+                                    'desc' => __('To bridge the gap between concept and reality through exceptional engineering and safety.'),
+                                    'long_desc' => __('We ensure every structural phase is handled with military-grade precision while maintaining the highest international safety protocols and workforce standards.')
+                                ],
+                                [
+                                    'id' => 'goal',
+                                    'icon' => 'target',
+                                    'title' => __('Our Goal'),
+                                    'desc' => __('To complete every project on time and within budget with zero-accident safety.'),
+                                    'long_desc' => __('Our goal is to scale our operations across the Kingdom of Cambodia while fostering long-term, transparent partnerships with our local and international clients.')
+                                ],
+                            ];
+                        @endphp
+
+                        @foreach($mvg_items as $idx => $item)
+                            @php $itemId = $item['id']; @endphp
+                            <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                                @click="activeMvg = (activeMvg === '{{ $itemId }}' ? null : '{{ $itemId }}')" 
+                                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                                class="group cursor-pointer relative p-8 md:p-10 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                                style="transition-delay: {{ $idx * 150 }}ms">
+                                
+                                <!-- Background Container -->
+                                <div class="absolute inset-0 border border-transparent transition-all duration-700 rounded-3xl pointer-events-none"
+                                     :class="activeMvg === '{{ $itemId }}' ? 'bg-white border-titan-navy/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] scale-100' : 'bg-white/40 hover:bg-white hover:border-titan-navy/5 hover:shadow-2xl hover:shadow-titan-navy/5 hover:scale-[1.01]'"></div>
+
+                                <!-- Left Accent Line -->
+                                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-0 bg-titan-red transition-all duration-500 rounded-r-full group-hover:h-12"
+                                     :class="activeMvg === '{{ $itemId }}' ? '!h-24 shadow-[0_0_15px_rgba(227,30,36,0.6)]' : ''"></div>
+
+                                <div class="flex flex-col md:flex-row gap-6 md:gap-8 relative z-10">
+                                    <!-- Icon Box -->
+                                    <div class="w-16 md:w-20 h-16 md:h-20 rounded-2xl md:rounded-[1.25rem] flex items-center justify-center shrink-0 transition-all duration-700 relative overflow-hidden group-hover:-translate-y-1"
+                                        :class="activeMvg === '{{ $itemId }}' ? 'bg-titan-red text-white shadow-2xl shadow-titan-red/40 rotate-[5deg]' : 'bg-gray-100 text-titan-navy group-hover:bg-titan-navy group-hover:text-white'">
+                                        <div class="relative z-10 transition-transform duration-700"
+                                            :class="activeMvg === '{{ $itemId }}' ? 'scale-110 -rotate-[5deg]' : 'group-hover:scale-110'">
+                                            @if($item['icon'] === 'eye')
+                                                <x-lucide-eye class="w-8 h-8" stroke-width="1.5" />
+                                            @elseif($item['icon'] === 'flag')
+                                                <x-lucide-flag class="w-8 h-8" stroke-width="1.5" />
+                                            @elseif($item['icon'] === 'target')
+                                                <x-lucide-target class="w-8 h-8" stroke-width="1.5" />
+                                            @endif
+                                        </div>
+                                        <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                    </div>
+
+                                    <div class="flex-grow md:pt-2">
+                                        <div class="flex items-start md:items-center justify-between mb-4 gap-4">
+                                            <h3 class="text-2xl md:text-3xl font-heading font-black transition-colors duration-500 uppercase tracking-tighter"
+                                                :class="activeMvg === '{{ $itemId }}' ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'">
+                                                {{ $item['title'] }}
+                                            </h3>
+                                            
+                                            <!-- Right side animated plus/minus -->
+                                            <div class="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0"
+                                                 :class="activeMvg === '{{ $itemId }}' ? 'border-titan-red text-titan-red bg-titan-red/5' : 'border-gray-200 text-gray-400 group-hover:border-titan-red group-hover:text-titan-red bg-white'">
+                                                 <x-lucide-plus class="w-5 h-5 transition-transform duration-700 absolute" x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-180 opacity-0 scale-50' : 'opacity-100 scale-100'" />
+                                                 <x-lucide-minus class="w-5 h-5 transition-transform duration-700 absolute" x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-0 opacity-100 scale-100' : '-rotate-180 opacity-0 scale-50'" />
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="text-base md:text-lg font-medium transition-colors duration-500 leading-relaxed max-w-2xl"
+                                            :class="activeMvg === '{{ $itemId }}' ? 'text-titan-navy/80' : 'text-titan-navy/50'">
+                                            {{ $item['desc'] }}
+                                        </p>
+
+                                        <div x-show="activeMvg === '{{ $itemId }}'" x-collapse>
+                                            <div class="pt-8 mt-8 border-t border-titan-navy/5 relative">
+                                                <div class="absolute left-0 top-0 w-24 h-[1px] bg-titan-red"></div>
+                                                <p class="text-base md:text-lg text-titan-navy/70 leading-relaxed font-normal">
+                                                    {{ $item['long_desc'] }}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
                 </div>
             </div>
         </section>
@@ -312,10 +356,10 @@
                         <!-- Right: Message -->
                         <div class="relative z-10 flex-grow">
                             <span class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{
-                                __('Message From CEO') }}</span>
+    __('Message From CEO') }}</span>
 
                             <blockquote
-                                class="text-xl md:text-2xl text-titan-navy font-heading font-black leading-relaxed mb-6">
+                                class="text-lg md:text-xl text-titan-navy font-heading font-bold leading-relaxed mb-6">
                                 &ldquo;{{ __('Construction is not just about concrete and steel. It is about building
                                 trust, fostering communities, and leaving a legacy that stands the test of time.')
                                 }}&rdquo;
@@ -329,7 +373,7 @@
                             <div>
                                 <div class="text-titan-navy font-black text-lg uppercase mb-1">Okhna. TOUCH KIM</div>
                                 <div class="text-titan-red text-[10px] font-bold uppercase tracking-[0.2em]">{{
-                                    __('Founder & Chief Executive Officer') }}</div>
+    __('Founder & Chief Executive Officer') }}</div>
                             </div>
                         </div>
 
@@ -346,102 +390,161 @@
                     class="text-center mb-16 transition-all duration-1000">
                     <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('What
                         Drives Us') }}</span>
-                    <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy">{{ __('Our Core Values') }}
+                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy">{{ __('Our Core Values') }}
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @php
-                    $coreValues = [
-                    ['icon' => 'shield', 'title' => __('Integrity'), 'desc' => __('We uphold the highest ethical
-                    standards in every project and relationship.')],
-                    ['icon' => 'award', 'title' => __('Excellence'), 'desc' => __('We strive for perfection in every
-                    beam, brick, and blueprint we deliver.')],
-                    ['icon' => 'handshake', 'title' => __('Partnership'), 'desc' => __('We build lasting relationships
-                    with clients, partners, and communities.')],
-                    ['icon' => 'lightbulb', 'title' => __('Innovation'), 'desc' => __('We embrace new technologies and
-                    methods to deliver better solutions.')],
-                    ['icon' => 'heart', 'title' => __('Safety First'), 'desc' => __('We prioritize the wellbeing of our
-                    team and everyone on our sites.')],
-                    ['icon' => 'trending-up', 'title' => __('Growth'), 'desc' => __('We continuously improve and invest
-                    in our people and capabilities.')],
-                    ];
+                        $coreValues = [
+                            [
+                                'icon' => 'shield',
+                                'title' => __('Integrity'),
+                                'desc' => __('We uphold the highest ethical
+                                                                                                                                                                                            standards in every project and relationship.')
+                            ],
+                            [
+                                'icon' => 'award',
+                                'title' => __('Excellence'),
+                                'desc' => __('We strive for perfection in every
+                                                                                                                                                                                            beam, brick, and blueprint we deliver.')
+                            ],
+                            [
+                                'icon' => 'handshake',
+                                'title' => __('Partnership'),
+                                'desc' => __('We build lasting relationships
+                                                                                                                                                                                            with clients, partners, and communities.')
+                            ],
+                            [
+                                'icon' => 'lightbulb',
+                                'title' => __('Innovation'),
+                                'desc' => __('We embrace new technologies and
+                                                                                                                                                                                            methods to deliver better solutions.')
+                            ],
+                            [
+                                'icon' => 'heart',
+                                'title' => __('Safety First'),
+                                'desc' => __('We prioritize the wellbeing of our
+                                                                                                                                                                                            team and everyone on our sites.')
+                            ],
+                            [
+                                'icon' => 'trending-up',
+                                'title' => __('Growth'),
+                                'desc' => __('We continuously improve and invest
+                                                                                                                                                                                            in our people and capabilities.')
+                            ],
+                        ];
                     @endphp
                     @foreach($coreValues as $i => $value)
-                    <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="transition-all duration-700" style="transition-delay: {{ $i * 100 }}ms">
-                        <div
-                            class="bg-gray-50 p-8 rounded-2xl hover:bg-titan-navy group transition-all duration-500 h-full">
+                        <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                            :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                            class="transition-all duration-700" style="transition-delay: {{ $i * 100 }}ms">
                             <div
-                                class="w-16 h-16 bg-titan-red/10 rounded-2xl flex items-center justify-center text-titan-red mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
-                                @if($value['icon'] === 'shield')
-                                <x-lucide-shield class="w-7 h-7" />
-                                @elseif($value['icon'] === 'award')
-                                <x-lucide-award class="w-7 h-7" />
-                                @elseif($value['icon'] === 'handshake')
-                                <x-lucide-handshake class="w-7 h-7" />
-                                @elseif($value['icon'] === 'lightbulb')
-                                <x-lucide-lightbulb class="w-7 h-7" />
-                                @elseif($value['icon'] === 'heart')
-                                <x-lucide-heart class="w-7 h-7" />
-                                @elseif($value['icon'] === 'trending-up')
-                                <x-lucide-trending-up class="w-7 h-7" />
-                                @endif
+                                class="bg-gray-50/50 p-10 rounded-[2.5rem] border-2 border-transparent hover:border-gray-100 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/30 group transition-all duration-500 h-full">
+                                <div
+                                    class="w-16 h-16 bg-accent-orange/5 rounded-2xl flex items-center justify-center text-accent-orange mb-8 group-hover:bg-accent-orange group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-accent-orange/30">
+                                    @if($value['icon'] === 'shield')
+                                        <x-lucide-shield class="w-7 h-7" />
+                                    @elseif($value['icon'] === 'award')
+                                        <x-lucide-award class="w-7 h-7" />
+                                    @elseif($value['icon'] === 'handshake')
+                                        <x-lucide-handshake class="w-7 h-7" />
+                                    @elseif($value['icon'] === 'lightbulb')
+                                        <x-lucide-lightbulb class="w-7 h-7" />
+                                    @elseif($value['icon'] === 'heart')
+                                        <x-lucide-heart class="w-7 h-7" />
+                                    @elseif($value['icon'] === 'trending-up')
+                                        <x-lucide-trending-up class="w-7 h-7" />
+                                    @endif
+                                </div>
+                                <h3
+                                    class="text-xl font-heading font-black text-titan-navy mb-4 group-hover:text-accent-orange transition-colors duration-500">
+                                    {{ $value['title'] }}
+                                </h3>
+                                <p class="text-sm text-titan-navy/50 leading-relaxed font-medium">
+                                    {{ $value['desc'] }}
+                                </p>
                             </div>
-                            <h3
-                                class="text-xl font-heading font-bold text-titan-navy mb-3 group-hover:text-white transition-colors">
-                                {{ $value['title'] }}</h3>
-                            <p class="text-titan-navy/50 leading-relaxed group-hover:text-white/70 transition-colors">{{
-                                $value['desc'] }}</p>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
         </section>
 
-        <!-- MILESTONES -->
-        <section class="py-24 px-6 bg-gray-900 text-white overflow-hidden relative">
-            <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white to-transparent opacity-10"></div>
+        <!-- MILESTONES (Our Journey) -->
+        <section class="py-32 px-6 bg-white overflow-hidden relative border-t border-gray-100">
             <div class="max-w-[1400px] mx-auto">
-                <div class="text-center mb-20">
-                    <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our
-                        Journey') }}</span>
-                    <h2 class="text-4xl md:text-6xl font-heading font-black uppercase tracking-tighter">{{ __('Project
-                        Milestones') }}</h2>
+                <div class="text-center mb-24">
+                    <span
+                        class="text-accent-orange font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('OUR JOURNEY') }}</span>
+                    <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase tracking-tight">
+                        {{ __('Company Milestones') }}
+                    </h2>
                 </div>
 
-                <div class="space-y-12 relative">
-                    <div class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/10 hidden md:block"></div>
+                <div class="space-y-32 relative">
+                    <!-- Vertical Timeline Line -->
+                    <div class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gray-200 hidden md:block"></div>
 
                     @foreach($milestones as $idx => $milestone)
-                    <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="flex flex-col {{ $idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' }} items-center gap-8 md:gap-20 transition-all duration-1000 delay-[{{ $idx * 100 }}ms]">
-                        <div class="w-full md:w-1/2">
+                        <div x-data="{ shown: false, open: false }" x-intersect.once="shown = true"
+                            :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                            class="relative flex flex-col {{ $idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' }} items-center gap-12 md:gap-24 transition-all duration-1000">
+
+                            <!-- Content Side -->
                             <div
-                                class="relative h-64 md:h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10 {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
-                                <img src="{{ $milestone['image'] }}" class="object-cover w-full h-full" />
-                                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent"></div>
-                                <div class="absolute bottom-6 left-6">
-                                    <span class="text-5xl font-black text-white/40">{{ $milestone['year'] }}</span>
+                                class="w-full md:w-1/2 flex flex-col {{ $idx % 2 === 0 ? 'md:items-end md:text-right' : 'md:items-start md:text-left' }}">
+                                <div
+                                    class="inline-flex items-center justify-center px-6 py-2 bg-accent-orange text-white rounded-2xl text-xs font-black mb-6 shadow-lg shadow-accent-orange/20">
+                                    {{ $milestone['year'] }}
+                                </div>
+                                <h3
+                                    class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-6 tracking-tight">
+                                    {{ $milestone['title'] }}
+                                </h3>
+                                <p class="text-titan-navy/60 text-lg leading-relaxed max-w-xl">{{ $milestone['desc'] }}</p>
+
+                                <!-- Interactive Detail Toggle -->
+                                <button @click="open = !open"
+                                    class="mt-8 flex items-center gap-3 group/btn text-accent-orange font-black uppercase text-[10px] tracking-widest hover:text-titan-navy transition-all duration-300">
+                                    <span x-text="open ? '{{ __('Show Less') }}' : '{{ __('Explore Details') }}'"></span>
+                                    <div
+                                        class="w-8 h-8 rounded-full border border-accent-orange/20 flex items-center justify-center group-hover/btn:border-titan-navy transition-colors">
+                                        <x-lucide-chevron-down class="w-3.5 h-3.5 transition-transform duration-500"
+                                            ::class="open ? 'rotate-180' : ''" />
+                                    </div>
+                                </button>
+
+                                <div x-show="open" x-collapse>
+                                    <div
+                                        class="mt-8 p-8 bg-gray-50 rounded-3xl border border-gray-100 text-titan-navy/50 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
+                                        {{ __('This journey began as a vision of excellence. Through dedication and hard work, we expanded our footprint, technical expertise, and community impact, setting new standards in the Cambodian construction landscape.') }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Dot -->
+                            <div class="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white border-4 border-accent-orange z-10 shadow-xl transition-transform duration-500"
+                                :class="open ? 'scale-125 bg-accent-orange' : ''">
+                                <div class="w-2 h-2 rounded-full bg-accent-orange transition-colors"
+                                    :class="open ? 'bg-white' : ''"></div>
+                            </div>
+
+                            <!-- Image Side -->
+                            <div class="w-full md:w-1/2">
+                                <div class="relative aspect-[16/10] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer"
+                                    @click="open = !open">
+                                    <img src="{{ $milestone['image'] }}"
+                                        class="object-cover w-full h-full transition-transform duration-1000 group-hover:scale-110"
+                                        :class="open ? 'scale-110' : ''" />
+                                    <div class="absolute inset-0 bg-accent-orange/10 mix-blend-overlay transition-opacity duration-500"
+                                        :class="open ? 'opacity-100' : 'opacity-0'"></div>
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div
-                            class="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-titan-red border-4 border-gray-900 z-10 shadow-[0_0_20px_rgba(200,16,46,0.5)]">
-                        </div>
-
-                        <div
-                            class="w-full md:w-1/2 text-center {{ $idx % 2 === 0 ? 'md:text-left' : 'md:text-right' }}">
-                            <h3
-                                class="text-2xl md:text-3xl font-heading font-black text-titan-red mb-4 uppercase tracking-tight">
-                                {{ $milestone['title'] }}</h3>
-                            <p class="text-white/60 text-lg leading-relaxed mb-6">{{ $milestone['desc'] }}</p>
-                        </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
@@ -470,7 +573,7 @@
                         class="transition-all duration-1000">
                         <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our
                             Standards') }}</span>
-                        <h2 class="text-4xl md:text-5xl font-heading font-black text-white mb-6 leading-tight">
+                        <h2 class="text-3xl md:text-4xl font-heading font-black text-white mb-6 leading-tight">
                             {{ __('Quality & Safety') }} <span class="text-titan-red uppercase">{{ __('First') }}</span>
                         </h2>
                         <p class="text-white/60 text-lg leading-relaxed mb-10">
@@ -481,34 +584,42 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             @php
-                            $qualityItems = [
-                            ['icon' => 'shield', 'title' => 'ISO 9001:2015', 'desc' => __('Quality Management
-                            Certified')],
-                            ['icon' => 'award', 'title' => __('Zero Accidents'), 'desc' => __('Safety record policy')],
-                            ['icon' => 'check-circle-2', 'title' => __('100% Compliance'), 'desc' => __('Building code
-                            adherence')],
-                            ['icon' => 'clock', 'title' => __('On-Time Delivery'), 'desc' => __('98% completion rate')],
-                            ];
+                                $qualityItems = [
+                                    [
+                                        'icon' => 'shield',
+                                        'title' => 'ISO 9001:2015',
+                                        'desc' => __('Quality Management
+                                                                                                                                                                                                                                                            Certified')
+                                    ],
+                                    ['icon' => 'award', 'title' => __('Zero Accidents'), 'desc' => __('Safety record policy')],
+                                    [
+                                        'icon' => 'check-circle-2',
+                                        'title' => __('100% Compliance'),
+                                        'desc' => __('Building code
+                                                                                                                                                                                                                                                            adherence')
+                                    ],
+                                    ['icon' => 'clock', 'title' => __('On-Time Delivery'), 'desc' => __('98% completion rate')],
+                                ];
                             @endphp
                             @foreach($qualityItems as $item)
-                            <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
-                                <div
-                                    class="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
-                                    @if($item['icon'] === 'shield')
-                                    <x-lucide-shield class="w-5 h-5" />
-                                    @elseif($item['icon'] === 'award')
-                                    <x-lucide-award class="w-5 h-5" />
-                                    @elseif($item['icon'] === 'check-circle-2')
-                                    <x-lucide-check-circle-2 class="w-5 h-5" />
-                                    @elseif($item['icon'] === 'clock')
-                                    <x-lucide-clock class="w-5 h-5" />
-                                    @endif
+                                <div class="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                    <div
+                                        class="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
+                                        @if($item['icon'] === 'shield')
+                                            <x-lucide-shield class="w-5 h-5" />
+                                        @elseif($item['icon'] === 'award')
+                                            <x-lucide-award class="w-5 h-5" />
+                                        @elseif($item['icon'] === 'check-circle-2')
+                                            <x-lucide-check-circle-2 class="w-5 h-5" />
+                                        @elseif($item['icon'] === 'clock')
+                                            <x-lucide-clock class="w-5 h-5" />
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <div class="text-white font-bold">{{ $item['title'] }}</div>
+                                        <div class="text-white/40 text-sm">{{ $item['desc'] }}</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="text-white font-bold">{{ $item['title'] }}</div>
-                                    <div class="text-white/40 text-sm">{{ $item['desc'] }}</div>
-                                </div>
-                            </div>
                             @endforeach
                         </div>
                     </div>

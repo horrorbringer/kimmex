@@ -33,14 +33,14 @@ if (empty($services)) {
             "features" => [["name" => "Detail Design"], ["name" => "Civil Work"], ["name" => "MEP Work"], ["name" => "Finishing Work"], ["name" => "Decoration"]]
         ],
         [
-            "id" => "building-renovation",
-            "title" => ["en" => "Building Renovation", "kh" => "ការជួសជុលអគារ"],
+            "id" => "construction",
+            "title" => ["en" => "Construction", "kh" => "សាងសង់"],
             "desc" => [
-                "en" => "Comprehensive renovation services for interior and exterior improvements, structural upgrades, and modernization of existing buildings.",
-                "kh" => "សេវាកម្មជួសជុលសម្រាប់ការកែលម្អខាងក្នុង និងខាងក្រៅ ការធ្វើឱ្យប្រសើរឡើងនូវរចនាសម្ព័ន្ធ និងការធ្វើទំនើបកម្មអគារដែលមានស្រាប់។"
+                "en" => "Premium civil construction services across Cambodia specializing in robust concrete work, high-rise buildings, and commercial spaces.",
+                "kh" => "សេវាកម្មសំណង់ស៊ីវិលលំដាប់ខ្ពស់ប្រចាំប្រទេសកម្ពុជាដែលមានជំនាញលើការងារបេតុងដ៏រឹងមាំ អគារខ្ពស់ៗ និងអគារពាណិជ្ជកម្ម។"
             ],
-            "image" => "/images/projects/Thumbnail-2.jpg",
-            "features" => [["name" => "Interior Renovation"], ["name" => "Exterior Renovation"], ["name" => "Structural Upgrades"]]
+            "image" => "/images/projects/Thumbnail-1.jpg",
+            "features" => [["name" => "High-Rise Buildings"], ["name" => "Commercial Spaces"], ["name" => "Quality Assurance"]]
         ],
         [
             "id" => "project-management",
@@ -111,60 +111,57 @@ $sectors = [
         .custom-hero-container {
             height: 95vh;
             min-height: 800px;
-            border-bottom-left-radius: 3rem;
-            border-bottom-right-radius: 3rem;
         }
         @media (min-width: 1024px) {
             .custom-hero-container {
-                border-bottom-left-radius: 6rem;
-                border-bottom-right-radius: 6rem;
+                /* Removed radius for sharp corners */
             }
         }
     </style>
     <!-- === HERO SECTION (Design-Z) === -->
     <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl custom-hero-container">
         {{-- Background Parallel Zoom Animation --}}
-        <div class="absolute inset-0 scale-110 animate-super-slow-pan">
-            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-50 transition-opacity duration-1000" />
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/90 via-titan-navy/20 to-titan-navy/90"></div>
+        <div class="absolute inset-0 scale-105 animate-super-slow-pan bg-titan-navy">
+            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 transition-opacity duration-1000" />
+            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/80 via-titan-navy/20 to-transparent"></div>
         </div>
 
         <!-- Decorative Floating Elements -->
-        <div class="absolute top-1/4 left-10 w-24 h-24 border border-white/20 rounded-full animate-pulse hidden lg:block"></div>
-        <div class="absolute bottom-1/4 right-10 w-40 h-40 border border-titan-red/30 rounded-full hidden lg:block shadow-[0_0_30px_rgba(255,42,0,0.2)]"></div>
+        <div class="absolute top-[20%] -left-32 w-[600px] h-[600px] border border-white/5 rounded-full hidden lg:block pointer-events-none"></div>
+        <div class="absolute bottom-[20%] -right-40 w-[600px] h-[600px] border border-accent-orange/10 rounded-full hidden lg:block pointer-events-none"></div>
         
         <!-- Center Glow -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-titan-red/10 rounded-full pointer-events-none" style="filter: blur(120px);"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent-orange/5 rounded-full pointer-events-none" style="filter: blur(120px);"></div>
 
         <!-- Hero Content -->
-        <div class="relative z-20 text-center max-w-6xl px-6 pt-[120px]" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" class="transition-all duration-1000 delay-100 inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest mb-10 border border-white/10 shadow-2xl">
-                <x-lucide-settings class="w-4 h-4 text-titan-red animate-spin-slow" />
-                <span>{{ __('Our Expertise') }}</span>
+        <div class="relative z-20 text-center max-w-6xl px-6 pt-16" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" class="transition-all duration-1000 delay-100 inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-md rounded-full text-white text-[11px] font-bold uppercase tracking-[0.2em] mb-8 border border-white/20 shadow-2xl">
+                <x-lucide-settings class="w-4 h-4 text-accent-orange animate-spin-slow" />
+                <span>{{ strtoupper(__('Services')) }}</span>
             </div>
 
-            <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="transition-all duration-1000 delay-300 text-6xl md:text-9xl font-black text-white mb-10 leading-[0.8] tracking-tighter uppercase drop-shadow-2xl" style="font-size: clamp(4rem, 12vw, 10rem);">
-                {{ $lang === 'kh' ? 'ជំនាញ' : 'OUR' }} <span class="text-titan-red" style="filter: drop-shadow(0 0 30px rgba(255,42,0,0.4));">{{ $lang === 'kh' ? 'របស់យើង' : 'EXPERTISE' }}</span>
+            <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[6rem] font-black text-white mb-10 leading-[0.9] tracking-tight uppercase">
+                <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'OUR' }}</span> <span class="text-accent-orange">{{ $lang === 'kh' ? 'របស់យើង' : 'EXPERTISE' }}</span>
             </h1>
 
-            <p :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 text-lg md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-[0.3em] drop-shadow-lg">
+            <p :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 text-sm md:text-base text-white/60 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-[0.3em] opacity-80">
                 {{ __('Precision. Innovation. Excellence.') }}
             </p>
         </div>
 
         <!-- Scroll Indicator -->
         <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer group z-20" @click="document.getElementById('services-list').scrollIntoView({ behavior: 'smooth' })">
-            <span class="text-[10px] uppercase tracking-[0.3em] font-black text-white/50 group-hover:text-titan-red transition-colors">{{ __('Explore Services') }}</span>
-            <div class="w-7 h-12 border-2 border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-white/5 group-hover:border-titan-red/50 transition-colors">
-                <div class="w-1.5 h-1.5 bg-titan-red rounded-full animate-bounce shadow-[0_0_15px_rgba(255,107,0,0.8)]"></div>
+            <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/50 group-hover:text-accent-orange transition-colors">{{ strtoupper(__('Explore Services')) }}</span>
+            <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-transparent group-hover:border-accent-orange transition-colors">
+                <div class="w-1.5 h-1.5 bg-accent-orange rounded-full animate-bounce"></div>
             </div>
         </div>
     </section>
 
     <!-- === SERVICE CATEGORIES (Design-Z Staggered) === -->
     <div class="w-full" style="background-color: #f8f9fa;">
-        <section id="services-list" class="py-32 px-6 max-w-[1500px] mx-auto overflow-hidden">
-        <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-24 transition-all duration-1000">
+        <section id="services-list" class="pt-8 pb-16 px-6 max-w-[1500px] mx-auto overflow-hidden">
+        <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-8 transition-all duration-1000">
             <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
             <h2 class="text-4xl md:text-6xl font-black text-titan-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
             <div class="w-24 h-1.5 bg-titan-red mx-auto mb-8"></div>

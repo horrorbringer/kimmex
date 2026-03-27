@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Filament\Support\Facades\FilamentView::registerRenderHook(
+            \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
+            fn(): string => view('filament.components.language-switcher')->render(),
+        );
     }
 }

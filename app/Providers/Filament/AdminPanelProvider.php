@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName(fn () => auth()->user()?->role === 'ADMIN' ? 'Kimmex Admin' : 'Kimmex Editor')
+            ->brandName(fn() => auth()->user()?->role === 'ADMIN' ? 'Kimmex Admin' : 'Kimmex Editor')
             ->font('Kantumruy Pro')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
@@ -48,13 +48,13 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                \App\Http\Middleware\SetLocale::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \App\Http\Middleware\SetLocale::class,
             ])
             ->plugins([
                 \LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin::make()
@@ -62,10 +62,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->renderHook(
-                \Filament\View\PanelsRenderHook::TOPBAR_END,
-                fn (): string => view('filament.components.language-switcher')->render(),
-            );
+            ]);
     }
 }
