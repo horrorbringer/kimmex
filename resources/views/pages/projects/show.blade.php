@@ -37,7 +37,7 @@
             ],
 
             'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->path, '/') ? $img->path : \Illuminate\Support\Facades\Storage::url($img->path))->toArray(),
-            'related' => \App\Models\Project::where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn($p) => [
+            'related' => \App\Models\Project::where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
                 'title' => $p->getTranslation('title', app()->getLocale()),
                 'type' => $p->category ?: __('Infrastructure'),
@@ -84,7 +84,8 @@
     <div class="bg-gray-50 min-h-screen text-titan-navy selection:bg-titan-red selection:text-white pb-32">
 
         <!-- === HERO SECTION (Refined Architectural Style) === -->
-        <section class="relative w-full lg:min-h-[80vh] flex flex-col lg:flex-row bg-titan-navy border-b border-white/5 overflow-hidden">
+        <section
+            class="relative w-full lg:min-h-[80vh] flex flex-col lg:flex-row bg-titan-navy border-b border-white/5 overflow-hidden">
 
             <!-- Left Content Block -->
             <div
@@ -119,7 +120,8 @@
                     <div class="flex items-center gap-4 transition-all duration-1000 delay-500"
                         :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
                         <x-lucide-map-pin class="w-4 h-4 text-titan-red" />
-                        <p class="text-white/70 text-sm font-bold uppercase tracking-widest font-heading">{{ $project['location'] }}
+                        <p class="text-white/70 text-sm font-bold uppercase tracking-widest font-heading">
+                            {{ $project['location'] }}
                         </p>
                     </div>
                 </div>
@@ -132,7 +134,9 @@
                 <div
                     class="absolute inset-0 bg-gradient-to-r from-titan-navy via-transparent to-transparent z-10 pointer-events-none lg:block hidden">
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent z-10 pointer-events-none"></div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent z-10 pointer-events-none">
+                </div>
 
                 <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
                     class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[20s] ease-out brightness-90" />
@@ -146,7 +150,9 @@
                         <span>Project Scale</span>
                         <x-lucide-maximize-2 class="w-3 h-3 group-hover/scale:scale-125 transition-transform" />
                     </div>
-                    <div class="text-white text-xl lg:text-2xl font-black uppercase tracking-tight group-hover:text-titan-red transition-colors duration-500">{{ $project['built_area'] }}
+                    <div
+                        class="text-white text-xl lg:text-2xl font-black uppercase tracking-tight group-hover:text-titan-red transition-colors duration-500">
+                        {{ $project['built_area'] }}
                     </div>
                 </div>
             </div>
@@ -168,12 +174,14 @@
                 @foreach($metrics as $metric)
                     <div class="group-item relative">
                         <div class="flex items-center gap-3 mb-4">
-                            <div class="p-2 rounded-lg bg-titan-red/5 text-titan-red/50 group-hover/band:bg-titan-red/10 group-hover/band:text-titan-red transition-all duration-500">
+                            <div
+                                class="p-2 rounded-lg bg-titan-red/5 text-titan-red/50 group-hover/band:bg-titan-red/10 group-hover/band:text-titan-red transition-all duration-500">
                                 <x-dynamic-component :component="$metric['icon']" class="w-4 h-4" />
                             </div>
                             <div
                                 class="text-[10px] font-black uppercase tracking-[0.4em] text-titan-navy/30 group-hover/band:text-titan-navy/50 transition-colors">
-                                {{ __($metric['label']) }}</div>
+                                {{ __($metric['label']) }}
+                            </div>
                         </div>
                         <div
                             class="text-xs md:text-sm font-black uppercase tracking-tight text-titan-navy border-l-2 border-titan-red pl-4 leading-tight group-hover/band:translate-x-2 transition-transform duration-500">
@@ -193,9 +201,11 @@
                     <div class="sticky top-40">
                         <div class="flex items-center gap-4 mb-8">
                             <span class="w-8 h-[2px] bg-titan-red"></span>
-                            <span class="text-[11px] font-black text-titan-navy/40 uppercase tracking-[0.4em]">{{ __('Insight') }}</span>
+                            <span
+                                class="text-[11px] font-black text-titan-navy/40 uppercase tracking-[0.4em]">{{ __('Insight') }}</span>
                         </div>
-                        <h3 class="text-3xl md:text-4xl font-black text-titan-navy uppercase tracking-tighter mb-10 leading-[0.8]">
+                        <h3
+                            class="text-3xl md:text-4xl font-black text-titan-navy uppercase tracking-tighter mb-10 leading-[0.8]">
                             Project<br><span class="text-titan-red">Story</span>
                         </h3>
                         <div class="w-full h-px bg-gray-100 mb-12"></div>
@@ -216,15 +226,18 @@
                                 class="absolute -top-12 right-0 text-[100px] font-black text-titan-navy/[0.02] select-none pointer-events-none transition-all duration-1000 transform group-hover:text-titan-red/[0.03] group-hover:translate-x-4">
                                 0{{ $loop->iteration }}
                             </div>
-                            
+
                             <div class="relative z-10 group-hover:translate-x-4 transition-transform duration-700">
                                 <div class="flex items-center gap-4 mb-8">
-                                    <div class="w-2 h-2 rounded-full bg-titan-red scale-0 group-hover:scale-100 transition-transform duration-500"></div>
+                                    <div
+                                        class="w-2 h-2 rounded-full bg-titan-red scale-0 group-hover:scale-100 transition-transform duration-500">
+                                    </div>
                                     <h2 class="text-xl md:text-2xl font-black text-titan-navy uppercase tracking-tighter">
                                         {{ __(str_replace('_', ' ', $key)) }}
                                     </h2>
                                 </div>
-                                <p class="text-base md:text-lg text-titan-navy/70 leading-loose font-normal selection:bg-titan-red selection:text-white max-w-4xl">
+                                <p
+                                    class="text-base md:text-lg text-titan-navy/70 leading-loose font-normal selection:bg-titan-red selection:text-white max-w-4xl">
                                     {{ $content }}
                                 </p>
                             </div>
@@ -266,7 +279,8 @@
                     <header class="mb-16">
                         <div class="text-[9px] font-black text-titan-red uppercase tracking-[0.5em] mb-4">Implementation
                             Scope</div>
-                        <h3 class="text-xl md:text-2xl font-black text-titan-navy uppercase tracking-tighter leading-none">
+                        <h3
+                            class="text-xl md:text-2xl font-black text-titan-navy uppercase tracking-tighter leading-none">
                             Engineering <br>Services</h3>
                     </header>
 
@@ -291,8 +305,10 @@
                     <header class="mb-16 relative z-10">
                         <div class="text-[9px] font-black text-titan-red uppercase tracking-[0.5em] mb-4">Strategic
                             Resolution</div>
-                        <h3 class="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-none">Technical
-                            <br>Resilience</h3>
+                        <h3 class="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-none">
+                            Technical
+                            <br>Resilience
+                        </h3>
                     </header>
 
                     <div class="space-y-12 relative z-10">
@@ -306,10 +322,12 @@
                                 <div>
                                     <h4
                                         class="text-base font-bold text-white uppercase tracking-tight mb-2 group-hover/chal:text-titan-red transition-colors">
-                                        {{ $node['challenge'] }}</h4>
+                                        {{ $node['challenge'] }}
+                                    </h4>
                                     <p
                                         class="text-white/40 text-sm leading-loose group-hover/chal:text-white/70 transition-colors">
-                                        {{ $node['solution'] }}</p>
+                                        {{ $node['solution'] }}
+                                    </p>
                                 </div>
                             </div>
                         @endforeach
@@ -320,18 +338,23 @@
 
         <!-- === PROJECTS GALLERY === -->
         <section class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-gray-100 pb-12">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-gray-100 pb-12">
                 <div>
-                    <div class="flex items-center gap-3 mb-4 text-titan-red font-black text-[11px] uppercase tracking-[0.4em]">
+                    <div
+                        class="flex items-center gap-3 mb-4 text-titan-red font-black text-[11px] uppercase tracking-[0.4em]">
                         <span class="w-6 h-[2px] bg-titan-red"></span>
                         {{ __('Visual Capture') }}
                     </div>
-                    <h3 class="text-2xl md:text-3xl font-black text-titan-navy uppercase tracking-tighter leading-none">{{ __('Projects') }}
-                        <br><span class="text-titan-red">{{ __('Gallery') }}</span></h3>
+                    <h3 class="text-2xl md:text-3xl font-black text-titan-navy uppercase tracking-tighter leading-none">
+                        {{ __('Projects') }}
+                        <br><span class="text-titan-red">{{ __('Gallery') }}</span>
+                    </h3>
                 </div>
                 <div class="bg-gray-50 px-6 py-4 rounded-xl border border-gray-100">
                     <span class="text-[12px] font-black text-titan-navy/40 uppercase tracking-[0.2em]">
-                        <span class="text-titan-red">{{ count($project['images']) }}</span> {{ __('Media Files Captured') }}
+                        <span class="text-titan-red">{{ count($project['images']) }}</span>
+                        {{ __('Media Files Captured') }}
                     </span>
                 </div>
             </div>
@@ -356,25 +379,38 @@
             <section class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
                 <div class="flex items-center gap-4 mb-16">
                     <span class="w-12 h-1 bg-titan-red"></span>
-                    <h2 class="text-3xl md:text-5xl font-black text-titan-navy uppercase tracking-tight">{{ __('Similar') }} <span class="text-titan-red">{{ __('Projects') }}</span></h2>
+                    <h2 class="text-3xl md:text-5xl font-black text-titan-navy uppercase tracking-tight">{{ __('Similar') }}
+                        <span class="text-titan-red">{{ __('Projects') }}</span></h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($project['related'] as $rel)
-                    <a href="/projects/{{ $rel['id'] }}" class="group block cursor-pointer">
-                        <div class="relative h-[450px] overflow-hidden mb-8 rounded-2xl shadow-sm shadow-black/5 hover:shadow-2xl hover:shadow-black/10 transition-all duration-700">
-                            <img src="{{ $rel['image'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[15s]" alt="{{ $rel['title'] }}" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500"></div>
-                            <div class="absolute bottom-8 left-8 right-8 text-white z-10 transition-transform duration-500 overflow-hidden">
-                                <div class="text-[10px] font-bold text-titan-red uppercase tracking-[0.2em] mb-2 transform opacity-100 transition-all duration-300">{{ $rel['type'] }}</div>
-                                <h3 class="text-2xl font-black uppercase tracking-tight leading-snug mb-4 group-hover:text-titan-red transition-colors">{{ $rel['title'] }}</h3>
-                                <div class="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors mt-6">
-                                    <span>{{ __('View Project') }}</span>
-                                    <x-lucide-arrow-right class="w-4 h-4 text-titan-red group-hover:translate-x-2 transition-transform duration-500" />
+                        <a href="/projects/{{ $rel['id'] }}" class="group block cursor-pointer">
+                            <div
+                                class="relative h-[450px] overflow-hidden mb-8 rounded-2xl shadow-sm shadow-black/5 hover:shadow-2xl hover:shadow-black/10 transition-all duration-700">
+                                <img src="{{ $rel['image'] }}"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[15s]"
+                                    alt="{{ $rel['title'] }}" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500">
+                                </div>
+                                <div
+                                    class="absolute bottom-8 left-8 right-8 text-white z-10 transition-transform duration-500 overflow-hidden">
+                                    <div
+                                        class="text-[10px] font-bold text-titan-red uppercase tracking-[0.2em] mb-2 transform opacity-100 transition-all duration-300">
+                                        {{ $rel['type'] }}</div>
+                                    <h3
+                                        class="text-2xl font-black uppercase tracking-tight leading-snug mb-4 group-hover:text-titan-red transition-colors">
+                                        {{ $rel['title'] }}</h3>
+                                    <div
+                                        class="flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-white transition-colors mt-6">
+                                        <span>{{ __('View Project') }}</span>
+                                        <x-lucide-arrow-right
+                                            class="w-4 h-4 text-titan-red group-hover:translate-x-2 transition-transform duration-500" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
                     @endforeach
                 </div>
             </section>

@@ -1,0 +1,37 @@
+
+  Migration name ..... Batch / Status  
+  0001_01_01_000000_create_users_table  [1] Ran  
+  0001_01_01_000001_create_cache_table  [1] Ran  
+  0001_01_01_000002_create_jobs_table  [1] Ran  
+  2026_03_20_014511_create_audit_logs_table  [1] Ran  
+  2026_03_20_014512_create_departments_table  [1] Ran  
+  2026_03_20_014512_create_employees_table  [1] Ran  
+  2026_03_20_014513_create_org_units_table  [1] Ran  
+  2026_03_20_014513_create_projects_table  [1] Ran  
+  2026_03_20_014514_create_project_images_table  [1] Ran  
+  2026_03_20_014515_create_partners_table  [1] Ran  
+  2026_03_20_014515_create_services_table  [1] Ran  
+  2026_03_20_014516_create_testimonials_table  [1] Ran  
+  2026_03_20_014517_create_documents_table  [1] Ran  
+  2026_03_20_014517_create_news_articles_table  [1] Ran  
+  2026_03_20_014518_create_job_postings_table  [1] Ran  
+  2026_03_20_014519_create_inquiries_table  [1] Ran  
+  2026_03_20_014519_create_job_applications_table  [1] Ran  
+  2026_03_20_014520_create_system_settings_table  [1] Ran  
+  2026_03_20_083914_create_activity_log_table  [1] Ran  
+  2026_03_20_083915_add_event_column_to_activity_log_table  [1] Ran  
+  2026_03_20_083916_add_batch_uuid_column_to_activity_log_table  [1] Ran  
+  2026_03_20_103424_transform_to_json_translations  [1] Ran  
+  2026_03_22_074337_add_user_id_to_employees_table  [1] Ran  
+  2026_03_22_145700_add_slug_to_departments_table  [1] Ran  
+  2026_03_22_151000_create_project_categories_table  [1] Ran  
+  2026_03_22_151100_add_project_category_id_to_projects_table  [1] Ran  
+  2026_03_22_153500_add_parent_id_to_project_categories_table  [1] Ran  
+  2026_03_22_154500_add_premium_fields_to_projects_table  [1] Ran  
+  2026_03_22_154600_create_academic_resources_table  [1] Ran  
+  2026_03_22_154700_create_milestones_table  [1] Ran  
+  2026_03_22_155500_create_policies_table  [1] Ran  
+  2026_03_22_160000_add_slug_to_documents_table  [1] Ran  
+  2026_03_22_161000_merge_academic_resources_into_documents  [1] Ran  
+  2026_03_22_162000_create_document_categories_table  [1] Ran  
+

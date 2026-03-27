@@ -29,6 +29,13 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName(fn() => auth()->user()?->role === 'ADMIN' ? 'Kimmex Admin' : 'Kimmex Editor')
+            ->homeUrl('/')
+            ->navigationItems([
+                \Filament\Navigation\NavigationItem::make(__('Visit Website'))
+                    ->url('/')
+                    ->icon('heroicon-o-globe-alt')
+                    ->sort(-1),
+            ])
             ->font('Kantumruy Pro')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
@@ -59,6 +66,26 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 \LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin::make()
                     ->defaultLocales(['en', 'km']),
+            ])
+            ->navigationGroups([
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(__('Organization'))
+                    ->icon('heroicon-o-identification'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(__('Portfolio'))
+                    ->icon('heroicon-o-briefcase'),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(__('Communication'))
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->collapsed(),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(__('Governance'))
+                    ->icon('heroicon-o-shield-check')
+                    ->collapsed(),
+                \Filament\Navigation\NavigationGroup::make()
+                    ->label(__('Administration'))
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->collapsed(),
             ])
             ->authMiddleware([
                 Authenticate::class,

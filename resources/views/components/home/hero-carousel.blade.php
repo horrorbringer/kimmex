@@ -1,30 +1,44 @@
 @php
-    $slides = [
-        [
-            'id' => 1,
-            'image' => '/images/hero/hero-1.jpg',
-            'subtitle' => __('Government Infrastructure'),
-            'title' => __('Ministry of Economy'),
-            'desc' => __('Over 25 years of excellence in building the future of Cambodia. We deliver high-quality infrastructure.'),
-            'link' => '/projects'
-        ],
-        [
-            'id' => 2,
-            'image' => '/images/hero/hero-2.jpg',
-            'subtitle' => __('Water Infrastructure'),
-            'title' => __('Khleang Toeuk WTP'),
-            'desc' => __('Ensuring clean and accessible water solutions through state-of-the-art treatment facilities and engineering.'),
-            'link' => '/projects'
-        ],
-        [
-            'id' => 3,
-            'image' => '/images/hero/hero-3.jpg',
-            'subtitle' => __('Infrastructure Protection'),
-            'title' => __('Mekong Bank Protection'),
-            'desc' => __('Securing vulnerable riverbanks and developing resilient infrastructure to protect communities and commerce.'),
-            'link' => '/projects'
-        ]
-    ];
+    $featuredProjects = \App\Models\Project::where('isFeatured', true)->take(5)->get();
+    if ($featuredProjects->count() > 0) {
+        $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) {
+            return [
+                'id' => $index + 1,
+                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage)) : '/images/projects/Thumbnail-1.jpg',
+                'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) : ($p->category ?: __('Featured Project')),
+                'title' => $p->getTranslation('title', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('title', 'en'),
+                'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('description', 'en')), 120),
+                'link' => '/projects/' . $p->slug
+            ];
+        })->toArray();
+    } else {
+        $slides = [
+            [
+                'id' => 1,
+                'image' => '/images/hero/hero-1.jpg',
+                'subtitle' => __('Government Infrastructure'),
+                'title' => __('Ministry of Economy'),
+                'desc' => __('Over 25 years of excellence in building the future of Cambodia. We deliver high-quality infrastructure.'),
+                'link' => '/projects'
+            ],
+            [
+                'id' => 2,
+                'image' => '/images/hero/hero-2.jpg',
+                'subtitle' => __('Water Infrastructure'),
+                'title' => __('Khleang Toeuk WTP'),
+                'desc' => __('Ensuring clean and accessible water solutions through state-of-the-art treatment facilities and engineering.'),
+                'link' => '/projects'
+            ],
+            [
+                'id' => 3,
+                'image' => '/images/hero/hero-3.jpg',
+                'subtitle' => __('Infrastructure Protection'),
+                'title' => __('Mekong Bank Protection'),
+                'desc' => __('Securing vulnerable riverbanks and developing resilient infrastructure to protect communities and commerce.'),
+                'link' => '/projects'
+            ]
+        ];
+    }
 @endphp
 
 <header x-data="{

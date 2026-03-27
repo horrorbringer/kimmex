@@ -1,12 +1,35 @@
 <footer class="bg-titan-navy text-white pt-24 pb-12 relative overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-16">
+            @php
+                $profile = \App\Models\SystemSetting::get('organization_profile', []);
+                $lang = app()->getLocale();
+                $isKm = $lang === 'km';
+
+                // Helper to get translated field or fallback to English
+                $getVal = function ($field, $default) use ($profile, $lang) {
+                    if (isset($profile[$field]) && is_array($profile[$field])) {
+                        return $profile[$field][$lang] ?? $profile[$field]['en'] ?? $default;
+                    }
+                    return $profile[$field] ?? $default;
+                };
+
+                $companyName = $getVal('company_name', 'KIMMEX');
+                $address = $getVal('address', __('Phnom Penh, Cambodia'));
+                $email = $profile['email'] ?? 'info@kimmex.com.kh';
+                $phone = $profile['phone'] ?? '+855 23 999 999';
+                $facebook = $profile['facebook'] ?? '#';
+                $linkedin = $profile['linkedin'] ?? '#';
+                $youtube = $profile['youtube'] ?? '#';
+                $instagram = $profile['instagram'] ?? '#';
+            @endphp
             <!-- Column 1: Brand -->
             <div class="space-y-6">
                 <div class="flex items-center gap-3">
                     <img src="/logo.png" alt="Kimmex Logo" class="h-10 w-auto" />
                     <div class="flex flex-col flex-1">
-                        <span class="font-bold text-xl leading-none tracking-tight text-white">KIMMEX</span>
+                        <span
+                            class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
                         <span
                             class="text-[10px] uppercase tracking-[0.2em] text-accent-orange">{{ __('Construction') }}</span>
                     </div>
@@ -15,17 +38,21 @@
                     {{ __('Over 25 years of excellence in building the future of Cambodia.') }}
                 </p>
                 <div class="flex gap-3 pt-2">
-                    <a href="#" target="_blank" rel="noopener noreferrer"
+                    <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer"
                         class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                         <x-lucide-facebook class="w-4 h-4" />
                     </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer"
+                    <a href="{{ $linkedin }}" target="_blank" rel="noopener noreferrer"
                         class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                         <x-lucide-linkedin class="w-4 h-4" />
                     </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer"
+                    <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
                         class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                         <x-lucide-youtube class="w-4 h-4" />
+                    </a>
+                    <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
+                        class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                        <x-lucide-instagram class="w-4 h-4" />
                     </a>
                 </div>
             </div>
@@ -86,21 +113,22 @@
                 <ul class="space-y-6 text-sm text-white/50">
                     <li class="flex gap-4">
                         <x-lucide-map-pin class="text-accent-orange shrink-0 w-5 h-5" />
-                        <a href="#" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $profile['google_maps_url'] ?? '#' }}" target="_blank" rel="noopener noreferrer"
                             class="hover:text-accent-orange transition-colors">
-                            {{ __('Phnom Penh, Cambodia') }}
+                            {{ $address }}
                         </a>
                     </li>
                     <li class="flex gap-4 items-center">
                         <x-lucide-phone class="text-accent-orange shrink-0 w-5 h-5" />
-                        <a href="tel:+85523999888" class="hover:text-accent-orange transition-colors">
-                            +855 23 999 888
+                        <a href="tel:{{ str_replace(' ', '', $phone) }}"
+                            class="hover:text-accent-orange transition-colors">
+                            {{ $phone }}
                         </a>
                     </li>
                     <li class="flex gap-4 items-center">
                         <x-lucide-mail class="text-accent-orange shrink-0 w-5 h-5" />
-                        <a href="mailto:info@kimmex.com" class="hover:text-accent-orange transition-colors">
-                            info@kimmex.com
+                        <a href="mailto:{{ $email }}" class="hover:text-accent-orange transition-colors">
+                            {{ $email }}
                         </a>
                     </li>
                 </ul>

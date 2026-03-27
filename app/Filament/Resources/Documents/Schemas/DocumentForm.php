@@ -26,7 +26,7 @@ class DocumentForm
                                 ->label(__('Title'))
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', \Illuminate\Support\Str::slug($state))),
+                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', \Illuminate\Support\Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
                                 ->unique(ignoreRecord: true)
@@ -62,7 +62,7 @@ class DocumentForm
                         Grid::make(3)->components([
                             Select::make('document_category_id')
                                 ->label(__('Category'))
-                                ->relationship('documentCategory', 'name')
+                                ->relationship('documentCategory', 'name', fn($query) => $query->orderBy('name->en'))
                                 ->searchable()
                                 ->preload()
                                 ->createOptionForm([
@@ -76,7 +76,7 @@ class DocumentForm
                                 ->required(),
                             Select::make('departmentId')
                                 ->label(__('Department'))
-                                ->relationship('department', 'name')
+                                ->relationship('department', 'name', fn($query) => $query->orderBy('name->en'))
                                 ->searchable()
                                 ->preload(),
                             Toggle::make('isPublic')

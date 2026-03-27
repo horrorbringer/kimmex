@@ -25,7 +25,7 @@ class JobPostingForm
                     ->required(),
                 Select::make('departmentId')
                     ->label(__('Department'))
-                    ->relationship('department', 'name')
+                    ->relationship('department', 'name', fn($query) => $query->orderBy('name->en'))
                     ->searchable()
                     ->preload()
                     ->required(),

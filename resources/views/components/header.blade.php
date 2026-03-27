@@ -17,21 +17,26 @@
     }
 }" class="fixed top-0 left-0 w-full z-[100]">
 
+    @php
+        $profile = \App\Models\SystemSetting::get('organization_profile', []);
+        $email = $profile['email'] ?? 'info@kimmex.com.kh';
+        $phone = $profile['phone'] ?? '+855 23 999 999';
+    @endphp
     <!-- TOP BAR -->
     <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-10 opacity-100 border-white/10' + (isHeroPage ? ' bg-titan-navy/20 backdrop-blur-md' : ' bg-titan-navy')"
         class="text-white text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden relative border-b">
         <div class="max-w-[1600px] mx-auto px-2 sm:px-6 h-full flex justify-between items-center">
             <div class="flex gap-2 sm:gap-6 items-center">
-                <a href="tel:+85523999999"
+                <a href="tel:{{ str_replace(' ', '', $phone) }}"
                     class="flex items-center gap-1.5 hover:text-accent-orange cursor-pointer transition whitespace-nowrap">
                     <x-lucide-phone class="text-accent-orange shrink-0 w-3 h-3" />
-                    <span class="text-[10px] sm:hidden">+855 2...</span>
-                    <span class="hidden sm:inline">+855 23 999 999</span>
+                    <span class="text-[10px] sm:hidden">{{ \Illuminate\Support\Str::limit($phone, 8) }}</span>
+                    <span class="hidden sm:inline">{{ $phone }}</span>
                 </a>
-                <a href="mailto:info@kimmex.com.kh"
+                <a href="mailto:{{ $email }}"
                     class="hidden md:flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
                     <x-lucide-mail class="text-accent-orange w-3 h-3" />
-                    info@kimmex.com.kh
+                    {{ $email }}
                 </a>
             </div>
 

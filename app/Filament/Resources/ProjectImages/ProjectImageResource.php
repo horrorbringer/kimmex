@@ -18,7 +18,10 @@ class ProjectImageResource extends Resource
 {
     protected static ?string $model = ProjectImage::class;
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Site Content';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Portfolio');
+    }
     protected static ?string $navigationParentItem = 'Projects';
     protected static ?int $navigationSort = 2;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-photo';

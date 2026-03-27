@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 use Spatie\Translatable\HasTranslations;
 
 class Testimonial extends Model
 {
-    use HasTranslations;
+    use HasTranslations, HasUuids;
 
     public $translatable = ['clientName', 'clientRole', 'content'];
 

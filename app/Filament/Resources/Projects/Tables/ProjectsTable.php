@@ -21,8 +21,8 @@ class ProjectsTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
-                    ->sortable()
-                    ->description(fn ($record) => $record->slug),
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction))
+                    ->description(fn($record) => $record->slug),
                 TextColumn::make('projectCategory.name')
                     ->label(__('Category'))
                     ->badge()

@@ -19,15 +19,14 @@ class ManageBranding extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-sparkles';
-    public static function getNavigationLabel(): string
+    public static function getNavigationIcon(): string|\BackedEnum|null
     {
-        return __('Branding & Vision');
+        return 'heroicon-o-sparkles';
     }
 
-    public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return __('Settings');
+        return __('Communication');
     }
 
     public function getTitle(): string

@@ -25,7 +25,7 @@ class MilestoneResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Content');
+        return __('Portfolio');
     }
 
     public static function getLabel(): ?string
@@ -38,7 +38,7 @@ class MilestoneResource extends Resource
         return __('Milestones');
     }
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 5;
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-flag';
 
     public static function form(Schema $schema): Schema

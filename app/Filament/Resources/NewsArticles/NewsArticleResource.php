@@ -27,7 +27,7 @@ class NewsArticleResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Content');
+        return __('Communication');
     }
 
     public static function getLabel(): ?string

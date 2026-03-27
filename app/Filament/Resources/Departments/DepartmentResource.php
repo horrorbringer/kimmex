@@ -27,7 +27,7 @@ class DepartmentResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('HR Management');
+        return __('Organization');
     }
 
     public static function getLabel(): ?string
@@ -43,10 +43,7 @@ class DepartmentResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
-    public static function canViewAny(): bool
-    {
-        return auth()->user()?->role === 'ADMIN';
-    }
+
 
     public static function form(Schema $schema): Schema
     {

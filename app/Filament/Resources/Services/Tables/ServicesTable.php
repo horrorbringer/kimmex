@@ -23,7 +23,7 @@ class ServicesTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction)),
                 IconColumn::make('is_active')
                     ->label(__('Is Active'))
                     ->boolean()

@@ -27,7 +27,7 @@ class JobPostingResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('HR Management');
+        return __('Governance');
     }
 
     public static function getLabel(): ?string

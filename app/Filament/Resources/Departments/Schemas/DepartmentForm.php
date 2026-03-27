@@ -17,25 +17,32 @@ class DepartmentForm
         return $schema
             ->components([
                 Section::make(__('Department Identity'))
+                    ->icon('heroicon-o-building-office')
+                    ->description(__('Define the core identification for this corporate department.'))
                     ->components([
                         Grid::make(2)->components([
                             TextInput::make('name')
-                                ->label(__('Name'))
+                                ->label(__('Department Name'))
+                                ->placeholder(__('E.g., Civil Engineering'))
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
-                                ->label(__('Slug'))
+                                ->label(__('URL Slug'))
+                                ->placeholder(__('civil-engineering'))
+                                ->prefix('kimmex.com/dept/')
                                 ->unique(ignoreRecord: true)
                                 ->required(),
                         ]),
                     ]),
 
-                Section::make(__('About Department'))
+                Section::make(__('Information'))
+                    ->icon('heroicon-o-information-circle')
+                    ->description(__('Provide a detailed overview of the department\'s scope and responsibilities.'))
                     ->components([
-                        Textarea::make('description')
-                            ->label(__('Description'))
-                            ->rows(5)
+                        \Filament\Forms\Components\RichEditor::make('description')
+                            ->label(__('Detailed Description'))
+                            ->placeholder(__('Describe the department goals...'))
                             ->columnSpanFull(),
                     ]),
             ]);

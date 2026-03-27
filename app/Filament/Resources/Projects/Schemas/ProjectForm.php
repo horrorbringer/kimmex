@@ -31,7 +31,7 @@ class ProjectForm
                                 ->required()
                                 ->live(onBlur: true)
                                 ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
                                 ->unique(ignoreRecord: true)
@@ -84,13 +84,13 @@ class ProjectForm
                             ->label(__('Description'))
                             ->columnSpanFull(),
                     ]),
- 
+
                 Section::make(__('Categorization & Status'))
                     ->components([
                         Grid::make(3)->components([
                             Select::make('project_category_id')
                                 ->label(__('Category'))
-                                ->relationship('projectCategory', 'name')
+                                ->relationship('projectCategory', 'name', fn($query) => $query->orderBy('name->en'))
                                 ->searchable()
                                 ->preload()
                                 ->required(),
@@ -121,7 +121,7 @@ class ProjectForm
                                     ->placeholder(__('Enter a short caption...')),
                             ])
                             ->columns(['default' => 2])
-                            ->itemLabel(fn (array $state): ?string => $state['caption'] ?? null)
+                            ->itemLabel(fn(array $state): ?string => $state['caption'] ?? null)
                             ->collapsible()
                             ->grid(['default' => 2])
                             ->columnSpanFull(),

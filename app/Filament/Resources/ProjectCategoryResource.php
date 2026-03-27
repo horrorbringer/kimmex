@@ -34,7 +34,7 @@ class ProjectCategoryResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Project Management');
+        return __('Portfolio');
     }
 
     public static function getLabel(): ?string
@@ -57,7 +57,7 @@ class ProjectCategoryResource extends Resource
                     ->label(__('Name'))
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                 TextInput::make('slug')
                     ->label(__('Slug'))
                     ->required()
@@ -79,13 +79,11 @@ class ProjectCategoryResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('parent.name')
                     ->label(__('Parent Category'))
                     ->badge()
-                    ->placeholder(__('Top Level'))
-                    ->sortable(),
+                    ->placeholder(__('Top Level')),
                 TextColumn::make('slug')
                     ->label(__('Slug'))
                     ->searchable(),

@@ -26,7 +26,7 @@ class ActivityLogResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Settings');
+        return __('Administration');
     }
 
     public static function getLabel(): ?string

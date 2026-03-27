@@ -62,7 +62,7 @@ class DocumentCategoryResource extends Resource
                                 ->label(__('Name'))
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
                                 ->required()
@@ -71,7 +71,7 @@ class DocumentCategoryResource extends Resource
                         Grid::make(2)->components([
                             Select::make('parent_id')
                                 ->label(__('Parent Category'))
-                                ->relationship('parent', 'name')
+                                ->relationship('parent', 'name', fn($query) => $query->orderBy('name->en'))
                                 ->searchable()
                                 ->preload(),
                             TextInput::make('icon')
@@ -99,12 +99,11 @@ class DocumentCategoryResource extends Resource
                 TextColumn::make('name')
                     ->label(__('Name'))
                     ->searchable()
-                    ->sortable(),
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('name->en', $direction)),
                 TextColumn::make('parent.name')
                     ->label(__('Parent Category'))
                     ->badge()
-                    ->placeholder(__('Top Level'))
-                    ->sortable(),
+                    ->placeholder(__('Top Level')),
                 TextColumn::make('slug')
                     ->label(__('Slug'))
                     ->searchable(),

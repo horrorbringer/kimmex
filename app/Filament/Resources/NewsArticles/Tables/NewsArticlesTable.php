@@ -22,8 +22,8 @@ class NewsArticlesTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
-                    ->sortable()
-                    ->description(fn ($record) => $record->slug)
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction))
+                    ->description(fn($record) => $record->slug)
                     ->wrap(),
                 TextColumn::make('category')
                     ->label(__('Category'))

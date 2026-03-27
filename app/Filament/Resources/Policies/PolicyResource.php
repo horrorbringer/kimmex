@@ -25,7 +25,7 @@ class PolicyResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Corporate');
+        return __('Governance');
     }
 
     public static function getLabel(): ?string

@@ -22,18 +22,16 @@ class DocumentsTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
-                    ->sortable()
-                    ->description(fn ($record) => $record->slug),
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction))
+                    ->description(fn($record) => $record->slug),
                 TextColumn::make('documentCategory.name')
                     ->label(__('Category'))
                     ->badge()
                     ->color('info')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('department.name')
                     ->label(__('Department'))
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 ToggleColumn::make('isPublic')
                     ->label(__('Public')),
                 ToggleColumn::make('is_featured')

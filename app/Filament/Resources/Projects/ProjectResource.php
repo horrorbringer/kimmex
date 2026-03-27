@@ -27,7 +27,7 @@ class ProjectResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Content');
+        return __('Portfolio');
     }
 
     public static function getLabel(): ?string

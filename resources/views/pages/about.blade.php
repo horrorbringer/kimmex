@@ -4,13 +4,13 @@
     @php
         $aboutData = [
             'story' => __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner for Cambodia\'s
-                                                            most critical infrastructure projects. We pride ourselves on engineering excellence, unwavering safety standards,
-                                                            and delivering landmark results on time.'),
+                                                                                                            most critical infrastructure projects. We pride ourselves on engineering excellence, unwavering safety standards,
+                                                                                                            and delivering landmark results on time.'),
             'values' => [
                 [
                     'title' => __('Safety First'),
                     'content' => __('We maintain a strict zero-incident policy on all construction
-                                                            sites.')
+                                                                                                            sites.')
                 ],
                 ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.')],
                 ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.')],
@@ -29,39 +29,93 @@
                 'year' => '2010',
                 'title' => __('First Mega Project'),
                 'desc' => __('Secured our first major government
-                                                            infrastructure contract.'),
+                                                                                                            infrastructure contract.'),
                 'image' => '/images/projects/Thumbnail-2.jpg'
             ],
             [
                 'year' => '2026',
                 'title' => __('Industry Leaders'),
                 'desc' => __('Recognized as the top infrastructure firm in the
-                                                            Kingdom of Cambodia.'),
+                                                                                                            Kingdom of Cambodia.'),
                 'image' => '/images/projects/Thumbnail-3.jpg'
             ]
         ];
 
-        $orgChart = [
-            'name' => 'Sok Visal',
-            'role' => __('Chief Executive Officer'),
-            'type' => 'ceo',
-            'image' => null,
-            'bio' => __('With over 30 years of experience, Sok leads the strategic vision of Kim Mex.'),
-            'children' => [
-                [
-                    'name' => 'Chamroeun S.',
-                    'role' => __('Managing Director'),
-                    'type' => 'director',
+        $orgChart = (function () {
+            $buildNode = function ($unit) use (&$buildNode) {
+                // Determine name based on Employee or local Title
+                $name = $unit->employee?->name ?? $unit->getTranslation('title', app()->getLocale());
+
+                // Determine role based on Employee or local Department
+                $role = $unit->employee?->role ?? $unit->department?->getTranslation('name', app()->getLocale());
+
+                // Specific Type Mapping for Styling
+                $rawType = strtoupper($unit->type);
+                $type = match ($rawType) {
+                    'STAFF' => 'staff',
+                    'DEPARTMENT' => 'department',
+                    'OFFICE' => 'office',
+                    default => 'staff',
+                };
+
+                // Override "ceo" or "director" types based on role content 
+                // to maintain hierarchy visual styles from CSS components
+                $lowRole = strtolower($role);
+                if (str_contains($lowRole, 'ceo') || str_contains($lowRole, 'chief')) {
+                    $type = 'ceo';
+                } elseif (str_contains($lowRole, 'director') || str_contains($lowRole, 'manager')) {
+                    $type = 'director';
+                }
+
+                return [
+                    'name' => $name,
+                    'role' => $role,
+                    'type' => $type,
+                    'image' => $unit->employee?->image ? \Illuminate\Support\Facades\Storage::url($unit->employee->image) : null,
+                    'bio' => $unit->employee?->bio,
+                    'children' => \App\Models\OrgUnit::where('parentId', $unit->id)
+                        ->orderBy('orderIndex')
+                        ->with(['employee', 'department'])
+                        ->get()
+                        ->map(fn($child) => $buildNode($child))
+                        ->toArray()
+                ];
+            };
+
+            $roots = \App\Models\OrgUnit::whereNull('parentId')
+                ->orderBy('orderIndex')
+                ->with(['employee', 'department'])
+                ->get();
+
+            if ($roots->isEmpty()) {
+                // Fallback to placeholder if nothing in DB
+                return [
+                    'name' => 'Sok Visal',
+                    'role' => __('CEO (Not Configured)'),
+                    'type' => 'ceo',
                     'image' => null,
-                    'bio' => __('Focuses on operational excellence and high-level project management.'),
-                    'children' => [
-                        ['name' => __('Engineering Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []],
-                        ['name' => __('Finance Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []],
-                        ['name' => __('HR Dept'), 'role' => __('Department'), 'type' => 'department', 'children' => []]
-                    ]
-                ]
-            ]
-        ];
+                    'bio' => __('To show your team here, please: 1. Add an Employee record. 2. Create an Org Unit mapping for that employee in the admin panel.'),
+                    'children' => []
+                ];
+            }
+
+            // If there's only one root (standard), render it directly
+            if ($roots->count() === 1) {
+                return $buildNode($roots->first());
+            }
+
+            // If there are multiple roots (e.g., Board of Directors), 
+            // wrap them in a virtual company node to maintain tree structure
+            $profile = \App\Models\SystemSetting::get('organization_profile', []);
+            $companyName = $profile[app()->getLocale()]['name'] ?? 'Kimmex Group';
+
+            return [
+                'name' => $companyName,
+                'role' => __('Organization Structure'),
+                'type' => 'office',
+                'children' => $roots->map(fn($root) => $buildNode($root))->toArray()
+            ];
+        })();
     @endphp
 
     <div x-data="{ selectedMember: null }" class="bg-white min-h-screen text-titan-navy border-t border-gray-100">
@@ -260,18 +314,20 @@
                         @foreach($mvg_items as $idx => $item)
                             @php $itemId = $item['id']; @endphp
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                                @click="activeMvg = (activeMvg === '{{ $itemId }}' ? null : '{{ $itemId }}')" 
+                                @click="activeMvg = (activeMvg === '{{ $itemId }}' ? null : '{{ $itemId }}')"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                                 class="group cursor-pointer relative p-8 md:p-10 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
                                 style="transition-delay: {{ $idx * 150 }}ms">
-                                
+
                                 <!-- Background Container -->
                                 <div class="absolute inset-0 border border-transparent transition-all duration-700 rounded-3xl pointer-events-none"
-                                     :class="activeMvg === '{{ $itemId }}' ? 'bg-white border-titan-navy/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] scale-100' : 'bg-white/40 hover:bg-white hover:border-titan-navy/5 hover:shadow-2xl hover:shadow-titan-navy/5 hover:scale-[1.01]'"></div>
+                                    :class="activeMvg === '{{ $itemId }}' ? 'bg-white border-titan-navy/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] scale-100' : 'bg-white/40 hover:bg-white hover:border-titan-navy/5 hover:shadow-2xl hover:shadow-titan-navy/5 hover:scale-[1.01]'">
+                                </div>
 
                                 <!-- Left Accent Line -->
                                 <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-0 bg-titan-red transition-all duration-500 rounded-r-full group-hover:h-12"
-                                     :class="activeMvg === '{{ $itemId }}' ? '!h-24 shadow-[0_0_15px_rgba(227,30,36,0.6)]' : ''"></div>
+                                    :class="activeMvg === '{{ $itemId }}' ? '!h-24 shadow-[0_0_15px_rgba(227,30,36,0.6)]' : ''">
+                                </div>
 
                                 <div class="flex flex-col md:flex-row gap-6 md:gap-8 relative z-10">
                                     <!-- Icon Box -->
@@ -287,7 +343,9 @@
                                                 <x-lucide-target class="w-8 h-8" stroke-width="1.5" />
                                             @endif
                                         </div>
-                                        <div class="absolute -bottom-4 -right-4 w-12 h-12 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                        <div
+                                            class="absolute -bottom-4 -right-4 w-12 h-12 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                                        </div>
                                     </div>
 
                                     <div class="flex-grow md:pt-2">
@@ -296,15 +354,17 @@
                                                 :class="activeMvg === '{{ $itemId }}' ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'">
                                                 {{ $item['title'] }}
                                             </h3>
-                                            
+
                                             <!-- Right side animated plus/minus -->
                                             <div class="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0"
-                                                 :class="activeMvg === '{{ $itemId }}' ? 'border-titan-red text-titan-red bg-titan-red/5' : 'border-gray-200 text-gray-400 group-hover:border-titan-red group-hover:text-titan-red bg-white'">
-                                                 <x-lucide-plus class="w-5 h-5 transition-transform duration-700 absolute" x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-180 opacity-0 scale-50' : 'opacity-100 scale-100'" />
-                                                 <x-lucide-minus class="w-5 h-5 transition-transform duration-700 absolute" x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-0 opacity-100 scale-100' : '-rotate-180 opacity-0 scale-50'" />
+                                                :class="activeMvg === '{{ $itemId }}' ? 'border-titan-red text-titan-red bg-titan-red/5' : 'border-gray-200 text-gray-400 group-hover:border-titan-red group-hover:text-titan-red bg-white'">
+                                                <x-lucide-plus class="w-5 h-5 transition-transform duration-700 absolute"
+                                                    x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-180 opacity-0 scale-50' : 'opacity-100 scale-100'" />
+                                                <x-lucide-minus class="w-5 h-5 transition-transform duration-700 absolute"
+                                                    x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-0 opacity-100 scale-100' : '-rotate-180 opacity-0 scale-50'" />
                                             </div>
                                         </div>
-                                        
+
                                         <p class="text-base md:text-lg font-medium transition-colors duration-500 leading-relaxed max-w-2xl"
                                             :class="activeMvg === '{{ $itemId }}' ? 'text-titan-navy/80' : 'text-titan-navy/50'">
                                             {{ $item['desc'] }}
@@ -313,7 +373,8 @@
                                         <div x-show="activeMvg === '{{ $itemId }}'" x-collapse>
                                             <div class="pt-8 mt-8 border-t border-titan-navy/5 relative">
                                                 <div class="absolute left-0 top-0 w-24 h-[1px] bg-titan-red"></div>
-                                                <p class="text-base md:text-lg text-titan-navy/70 leading-relaxed font-normal">
+                                                <p
+                                                    class="text-base md:text-lg text-titan-navy/70 leading-relaxed font-normal">
                                                     {{ $item['long_desc'] }}
                                                 </p>
                                             </div>
@@ -401,37 +462,37 @@
                                 'icon' => 'shield',
                                 'title' => __('Integrity'),
                                 'desc' => __('We uphold the highest ethical
-                                                                                                                                                                                            standards in every project and relationship.')
+                                                                                                                                                                                                                                                                                                                                            standards in every project and relationship.')
                             ],
                             [
                                 'icon' => 'award',
                                 'title' => __('Excellence'),
                                 'desc' => __('We strive for perfection in every
-                                                                                                                                                                                            beam, brick, and blueprint we deliver.')
+                                                                                                                                                                                                                                                                                                                                            beam, brick, and blueprint we deliver.')
                             ],
                             [
                                 'icon' => 'handshake',
                                 'title' => __('Partnership'),
                                 'desc' => __('We build lasting relationships
-                                                                                                                                                                                            with clients, partners, and communities.')
+                                                                                                                                                                                                                                                                                                                                            with clients, partners, and communities.')
                             ],
                             [
                                 'icon' => 'lightbulb',
                                 'title' => __('Innovation'),
                                 'desc' => __('We embrace new technologies and
-                                                                                                                                                                                            methods to deliver better solutions.')
+                                                                                                                                                                                                                                                                                                                                            methods to deliver better solutions.')
                             ],
                             [
                                 'icon' => 'heart',
                                 'title' => __('Safety First'),
                                 'desc' => __('We prioritize the wellbeing of our
-                                                                                                                                                                                            team and everyone on our sites.')
+                                                                                                                                                                                                                                                                                                                                            team and everyone on our sites.')
                             ],
                             [
                                 'icon' => 'trending-up',
                                 'title' => __('Growth'),
                                 'desc' => __('We continuously improve and invest
-                                                                                                                                                                                            in our people and capabilities.')
+                                                                                                                                                                                                                                                                                                                                            in our people and capabilities.')
                             ],
                         ];
                     @endphp
@@ -550,19 +611,24 @@
             </div>
         </section>
 
-        <!-- ORG CHART -->
-        <section id="leadership" class="py-32 px-6 bg-gray-50 overflow-hidden relative">
-            <div class="max-w-[1700px] mx-auto relative z-10">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-heading font-black text-[#002B5B] uppercase">{{ __('KIM MEX Organization
-                        Structure') }}</h2>
+        <!-- ORG CHART SECTON -->
+        <section id="leadership" class="py-32 px-6 bg-gray-50 overflow-hidden relative border-b border-gray-100">
+            <div class="max-w-[1700px] mx-auto relative z-10 overflow-x-auto pb-12">
+                <div class="text-center mb-24">
+                    <span
+                        class="text-accent-orange font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('GOVERNANCE') }}</span>
+                    <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase tracking-tight">
+                        {{ __('KIM MEX ORGANIZATION STRUCTURE') }}
+                    </h2>
                 </div>
 
-                <div class="flex flex-col items-center space-y-16">
+                <div class="min-w-[800px] flex justify-center">
                     <x-about.org-node :node="$orgChart" :level="0" />
                 </div>
             </div>
         </section>
+
+
 
         <!-- QUALITY & SAFETY -->
         <section id="safety" class="py-24 px-6 bg-titan-navy">
@@ -589,14 +655,14 @@
                                         'icon' => 'shield',
                                         'title' => 'ISO 9001:2015',
                                         'desc' => __('Quality Management
-                                                                                                                                                                                                                                                            Certified')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            Certified')
                                     ],
                                     ['icon' => 'award', 'title' => __('Zero Accidents'), 'desc' => __('Safety record policy')],
                                     [
                                         'icon' => 'check-circle-2',
                                         'title' => __('100% Compliance'),
                                         'desc' => __('Building code
-                                                                                                                                                                                                                                                            adherence')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            adherence')
                                     ],
                                     ['icon' => 'clock', 'title' => __('On-Time Delivery'), 'desc' => __('98% completion rate')],
                                 ];
