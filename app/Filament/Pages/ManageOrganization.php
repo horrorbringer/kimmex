@@ -130,7 +130,8 @@ class ManageOrganization extends Page implements HasForms
                                 ->rows(3),
                             TextInput::make('google_maps_url')
                                 ->label(__('Google Maps Embed URL'))
-                                ->helperText(__('Link to Google Maps or coordinate point.'))
+                                ->helperText(__('IMPORTANT: Must be the EMBED link (starts with https://www.google.com/maps/embed...). Get it from Google Maps > Share > Embed a map > Copy ONLY the src URL.'))
+                                ->placeholder('https://www.google.com/maps/embed?pb=...')
                                 ->url(),
                         ]),
                     ]),

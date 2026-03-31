@@ -14,6 +14,9 @@
                     return $profile[$field] ?? $default;
                 };
 
+                $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
+                $brand = $brandProfile[$lang] ?? ($brandProfile['en'] ?? []);
+
                 $companyName = $getVal('company_name', 'KIMMEX');
                 $address = $getVal('address', __('Phnom Penh, Cambodia'));
                 $email = $profile['email'] ?? 'info@kimmex.com.kh';
@@ -23,6 +26,10 @@
                 $youtube = $profile['youtube'] ?? '#';
                 $instagram = $profile['instagram'] ?? '#';
                 $telegram = $profile['telegram'] ?? '#';
+
+                $googleMapsUrl = $profile['google_maps_url'] ?? '';
+                $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=');
+                $googleMapsLink = (!empty($googleMapsUrl) && !$isEmbed) ? $googleMapsUrl : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
             @endphp
             @php
                 $logo = $profile['logo'] ?? null;
@@ -40,7 +47,7 @@
                     </div>
                 </div>
                 <p class="text-white/50 text-sm leading-relaxed max-w-xs">
-                    {{ __('Over 25 years of excellence in building the future of Cambodia.') }}
+                    {{ \Illuminate\Support\Str::limit($brand['company_story'] ?? __('Over 25 years of excellence in building the future of Cambodia.'), 120) }}
                 </p>
                 <div class="flex gap-3 pt-2">
                     <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer"
@@ -124,7 +131,7 @@
                 <ul class="space-y-6 text-sm text-white/50">
                     <li class="flex gap-4">
                         <x-lucide-map-pin class="text-accent-orange shrink-0 w-5 h-5" />
-                        <a href="{{ $profile['google_maps_url'] ?? '#' }}" target="_blank" rel="noopener noreferrer"
+                        <a href="{{ $googleMapsLink }}" target="_blank" rel="noopener noreferrer"
                             class="hover:text-accent-orange transition-colors">
                             {{ $address }}
                         </a>

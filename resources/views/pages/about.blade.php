@@ -2,23 +2,33 @@
     description="Learn about Kimmex's history, mission, vision, and core values in construction.">
 
     @php
+        $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
+        $locale = app()->getLocale();
+        $localeKey = $locale === 'kh' ? 'km' : $locale;
+        $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
+
         $aboutData = [
-            'story' => __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner for Cambodia\'s
-                                                                                                                                            most critical infrastructure projects. We pride ourselves on engineering excellence, unwavering safety standards,
-                                                                                                                                            and delivering landmark results on time.'),
-            'values' => [
-                [
-                    'title' => __('Safety First'),
-                    'content' => __('We maintain a strict zero-incident policy on all construction
-                                                                                                                                            sites.')
-                ],
+            'story' => $brand['company_story'] ?? __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner...'),
+            'values' => array_map(function ($v) {
+                return [
+                    'title' => $v['title'] ?? '',
+                    'content' => $v['description'] ?? '',
+                    'icon' => $v['icon'] ?? 'lucide-shield'
+                ];
+            }, $brand['values_list'] ?? [])
+        ];
+
+        // Fallback values if branding values list is empty
+        if (empty($aboutData['values'])) {
+            $aboutData['values'] = [
+                ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction sites.')],
                 ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.')],
                 ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.')],
                 ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.')]
-            ]
-        ];
+            ];
+        }
 
-        $milestones = \App\Models\Milestone::orderBy('sortOrder')->get()->map(function ($m) {
+        $milestones = \App\Models\Milestone::orderBy('sortOrder')->get()->map(function (\App\Models\Milestone $m) {
             return [
                 'year' => $m->year,
                 'title' => $m->getTranslation('title', app()->getLocale()),
@@ -299,14 +309,10 @@
                         {{ $tagline }}
                     </h2>
                     @php
-                        $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
-                        $locale = app()->getLocale();
-                        $localeKey = $locale === 'kh' ? 'km' : $locale;
-                        $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
                         $ceoName = $brandProfile['ceo_name'] ?? 'Okhna. TOUCH KIM';
                     @endphp
                     <p class="text-titan-navy/60 text-lg leading-relaxed mb-12 max-w-2xl">
-                        {{ __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}
+                        {{ $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}
                     </p>
 
                     <!-- Mission/Vision/Goal Interactive List -->
@@ -474,60 +480,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @php
-                        $coreValues = [
-                            [
-                                'icon' => 'shield',
-                                'title' => __('Integrity'),
-                                'desc' => __('We uphold the highest ethical
-                                                                                                                                                                                                                                                                                                                                                                                                                                            standards in every project and relationship.')
-                            ],
-                            [
-                                'icon' => 'award',
-                                'title' => __('Excellence'),
-                                'desc' => __('We strive for perfection in every
-                                                                                                                                                                                                                                                                                                                                                                                                                                            beam, brick, and blueprint we deliver.')
-                            ],
-                            [
-                                'icon' => 'handshake',
-                                'title' => __('Partnership'),
-                                'desc' => __('We build lasting relationships
-                                                                                                                                                                                                                                                                                                                                                                                                                                            with clients, partners, and communities.')
-                            ],
-                            [
-                                'icon' => 'lightbulb',
-                                'title' => __('Innovation'),
-                                'desc' => __('We embrace new technologies and
-                                                                                                                                                                                                                                                                                                                                                                                                                                            methods to deliver better solutions.')
-                            ],
-                            [
-                                'icon' => 'heart',
-                                'title' => __('Safety First'),
-                                'desc' => __('We prioritize the wellbeing of our
-                                                                                                                                                                                                                                                                                                                                                                                                                                            team and everyone on our sites.')
-                            ],
-                            [
-                                'icon' => 'trending-up',
-                                'title' => __('Growth'),
-                                'desc' => __('We continuously improve and invest
-                                                                                                                                                                                                                                                                                                                                                                                                                                            in our people and capabilities.')
-                            ],
-                        ];
-                    @endphp
-                    @php
-                        $rawValues = $brand['values_list'] ?? [];
-                        if (!empty($rawValues)) {
-                            $coreValues = [];
-                            foreach ($rawValues as $val) {
-                                $coreValues[] = [
-                                    'icon' => str_replace('lucide-', '', $val['icon'] ?? 'shield'),
-                                    'title' => $val['title'] ?? '',
-                                    'desc' => $val['description'] ?? '',
-                                ];
-                            }
-                        }
-                    @endphp
-                    @foreach($coreValues as $i => $value)
+                    @foreach($aboutData['values'] as $i => $value)
                         <div x-data="{ shown: false }" x-intersect.once="shown = true"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                             class="transition-all duration-700" style="transition-delay: {{ $i * 100 }}ms">
@@ -535,26 +488,14 @@
                                 class="bg-gray-50/50 p-10 rounded-[2.5rem] border-2 border-transparent hover:border-gray-100 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/30 group transition-all duration-500 h-full">
                                 <div
                                     class="w-16 h-16 bg-accent-orange/5 rounded-2xl flex items-center justify-center text-accent-orange mb-8 group-hover:bg-accent-orange group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-accent-orange/30">
-                                    @if($value['icon'] === 'shield')
-                                        <x-lucide-shield class="w-7 h-7" />
-                                    @elseif($value['icon'] === 'award')
-                                        <x-lucide-award class="w-7 h-7" />
-                                    @elseif($value['icon'] === 'handshake')
-                                        <x-lucide-handshake class="w-7 h-7" />
-                                    @elseif($value['icon'] === 'lightbulb')
-                                        <x-lucide-lightbulb class="w-7 h-7" />
-                                    @elseif($value['icon'] === 'heart')
-                                        <x-lucide-heart class="w-7 h-7" />
-                                    @elseif($value['icon'] === 'trending-up')
-                                        <x-lucide-trending-up class="w-7 h-7" />
-                                    @endif
+                                    <x-dynamic-component :component="$value['icon']" class="w-7 h-7" />
                                 </div>
                                 <h3
                                     class="text-xl font-heading font-black text-titan-navy mb-4 group-hover:text-accent-orange transition-colors duration-500">
                                     {{ $value['title'] }}
                                 </h3>
                                 <p class="text-sm text-titan-navy/50 leading-relaxed font-medium">
-                                    {{ $value['desc'] }}
+                                    {{ $value['content'] }}
                                 </p>
                             </div>
                         </div>
@@ -686,14 +627,14 @@
                                         'icon' => 'shield',
                                         'title' => 'ISO 9001:2015',
                                         'desc' => __('Quality Management
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Certified')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Certified')
                                     ],
                                     ['icon' => 'award', 'title' => __('Zero Accidents'), 'desc' => __('Safety record policy')],
                                     [
                                         'icon' => 'check-circle-2',
                                         'title' => __('100% Compliance'),
                                         'desc' => __('Building code
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            adherence')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            adherence')
                                     ],
                                     ['icon' => 'clock', 'title' => __('On-Time Delivery'), 'desc' => __('98% completion rate')],
                                 ];

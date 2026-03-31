@@ -43,6 +43,7 @@ class ManageBranding extends Page implements HasForms
 
         // Load the English (source) content for editing
         $this->data = [
+            'company_story' => $allData['en']['company_story'] ?? '',
             'ceo_name' => $allData['ceo_name'] ?? '',
             'ceo_message' => $allData['en']['ceo_message'] ?? '',
             'mission' => $allData['en']['mission'] ?? '',
@@ -58,11 +59,15 @@ class ManageBranding extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make(__('CEO Identity'))
+                Section::make(__('Company Identity'))
                     ->schema([
                         TextInput::make('ceo_name')
                             ->label(__('CEO Full Name'))
                             ->required(),
+                        Textarea::make('company_story')
+                            ->label(__('Company Story / About Us Text'))
+                            ->rows(5)
+                            ->helperText(__('A longer narrative about your company history and growth.')),
                         RichEditor::make('ceo_message')
                             ->label(__('CEO Message'))
                             ->helperText(__('Write in English — Khmer translation is generated automatically on save.'))
@@ -128,6 +133,7 @@ class ManageBranding extends Page implements HasForms
 
         // English content (source)
         $enContent = [
+            'company_story' => $state['company_story'] ?? '',
             'ceo_message' => $state['ceo_message'] ?? '',
             'mission' => $state['mission'] ?? '',
             'vision' => $state['vision'] ?? '',

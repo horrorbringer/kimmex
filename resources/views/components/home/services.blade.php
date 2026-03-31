@@ -2,7 +2,7 @@
     $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
     $servicesDb = \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->limit(4)->get();
 
-    $services = $servicesDb->map(function ($s) use ($lang) {
+    $services = $servicesDb->map(function (\App\Models\Service $s) use ($lang) {
         $features = is_array($s->features) ? $s->features : [];
         $mappedFeatures = array_map(function ($f) use ($lang) {
             return is_array($f) ? ($f[$lang] ?? $f['en'] ?? '') : $f;

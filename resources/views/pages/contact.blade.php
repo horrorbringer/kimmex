@@ -39,11 +39,30 @@
             $email = $profile['email'] ?? 'info@kimmex.com.kh';
             $phone = $profile['phone'] ?? '+855 23 999 999';
             $address = $profile[$lang]['address'] ?? $profile['en']['address'] ?? __('Phnom Penh, Cambodia');
-            $googleMapsUrl = $profile['google_maps_url'] ?? 'https://maps.google.com';
+            $googleMapsUrl = $profile['google_maps_url'] ?? '';
+            $originalMapsUrl = $googleMapsUrl;
+
+            // Improved fallback for missing or invalid embed URLs
+            $isEmbed = str_contains($googleMapsUrl, '/maps/embed') ||
+                str_contains($googleMapsUrl, 'google.com/maps?pb=') ||
+                str_contains($googleMapsUrl, 'google.com/maps/embed');
+
+            if (!$isEmbed && !empty($googleMapsUrl)) {
+                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.767!2d104.9197!3d11.5563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDMzJzIyLjciTiAxMDTCsDU1JzEwLjkiRQ!5e0!3m2!1sen!2skh!4v1234567890";
+            } elseif (empty($googleMapsUrl)) {
+                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.767!2d104.9197!3d11.5563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDMzJzIyLjciTiAxMDTCsDU1JzEwLjkiRQ!5e0!3m2!1sen!2skh!4v1234567890";
+            }
+
+            // Clickable link fallback: prioritze user's link if provided and it's NOT an embed link
+            $googleMapsLink = (!empty($originalMapsUrl) && !$isEmbed)
+                ? $originalMapsUrl
+                : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
+
             $facebook = $profile['facebook'] ?? '#';
             $linkedin = $profile['linkedin'] ?? '#';
             $youtube = $profile['youtube'] ?? '#';
             $instagram = $profile['instagram'] ?? '#';
+            $telegram = $profile['telegram'] ?? '#';
             $workingHours = $profile[$lang]['working_hours'] ?? $profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM';
         @endphp
 
@@ -51,7 +70,7 @@
         <section class="max-w-[1200px] mx-auto px-6 relative z-40 -mt-12">
             <div
                 class="bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                <a href="{{ $googleMapsUrl }}" target="_blank"
+                <a href="{{ $googleMapsLink }}" target="_blank"
                     class="flex items-center gap-4 p-7 group hover:bg-gray-50/50 transition-colors rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none">
                     <div
                         class="w-11 h-11 bg-titan-red/10 text-titan-red rounded-xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
@@ -256,7 +275,7 @@
                     </div>
 
                     <!-- Map -->
-                    <div class="rounded-2xl overflow-hidden h-[220px] relative group border border-gray-100 shadow-sm">
+                    <div class="rounded-2xl overflow-hidden h-[260px] relative group border border-gray-100 shadow-sm">
                         <iframe src="{{ $googleMapsUrl }}"
                             class="w-full h-full border-0 grayscale group-hover:grayscale-0 transition-all duration-500"
                             allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
@@ -265,6 +284,16 @@
                             class="absolute top-4 left-4 bg-white px-3 py-1.5 rounded-lg shadow text-[10px] font-bold uppercase tracking-widest text-titan-navy flex items-center gap-1.5">
                             <div class="w-1.5 h-1.5 bg-titan-red rounded-full animate-pulse"></div>
                             {{ __('Phnom Penh') }}
+                        </div>
+
+                        <!-- Open in Maps Button -->
+                        <div
+                            class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <a href="{{ $googleMapsLink }}" target="_blank"
+                                class="bg-white hover:bg-titan-red hover:text-white text-titan-navy px-3 py-2 rounded-lg shadow-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all">
+                                <x-lucide-external-link class="w-3 h-3" />
+                                {{ __('Open in Maps') }}
+                            </a>
                         </div>
                     </div>
                 </div>
