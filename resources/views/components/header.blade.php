@@ -75,10 +75,10 @@
                         <x-lucide-instagram class="w-3 h-3" />
                     </a>
                     @if($telegram !== '#')
-                    <a href="{{ $telegram }}" target="_blank"
-                        class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                        <x-lucide-send class="w-3 h-3" />
-                    </a>
+                        <a href="{{ $telegram }}" target="_blank"
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            <x-lucide-send class="w-3 h-3" />
+                        </a>
                     @endif
                 </div>
 
@@ -119,7 +119,7 @@
                             {{ $companyName }}
                         </span>
                         <span :class="navDark ? 'text-titan-navy/50' : 'text-white/60'"
-                            class="block text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5">
+                            class="hidden sm:block text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5">
                             {{ $tagline }}
                         </span>
                     </div>
