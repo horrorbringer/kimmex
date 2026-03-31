@@ -22,16 +22,21 @@
                 $linkedin = $profile['linkedin'] ?? '#';
                 $youtube = $profile['youtube'] ?? '#';
                 $instagram = $profile['instagram'] ?? '#';
+                $telegram = $profile['telegram'] ?? '#';
+            @endphp
+            @php
+                $logo = $profile['logo'] ?? null;
+                $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
+                $tagline = $profile[$lang]['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
             @endphp
             <!-- Column 1: Brand -->
             <div class="space-y-6">
                 <div class="flex items-center gap-3">
-                    <img src="/logo.png" alt="Kimmex Logo" class="h-10 w-auto" />
+                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-10 w-auto" />
                     <div class="flex flex-col flex-1">
                         <span
                             class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
-                        <span
-                            class="text-[10px] uppercase tracking-[0.2em] text-accent-orange">{{ __('Construction') }}</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] text-accent-orange">{{ $tagline }}</span>
                     </div>
                 </div>
                 <p class="text-white/50 text-sm leading-relaxed max-w-xs">
@@ -54,6 +59,12 @@
                         class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                         <x-lucide-instagram class="w-4 h-4" />
                     </a>
+                    @if($telegram !== '#')
+                        <a href="{{ $telegram }}" target="_blank" rel="noopener noreferrer"
+                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <x-lucide-send class="w-4 h-4" />
+                        </a>
+                    @endif
                 </div>
             </div>
 

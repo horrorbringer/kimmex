@@ -21,6 +21,17 @@
         $profile = \App\Models\SystemSetting::get('organization_profile', []);
         $email = $profile['email'] ?? 'info@kimmex.com.kh';
         $phone = $profile['phone'] ?? '+855 23 999 999';
+        $facebook = $profile['facebook'] ?? '#';
+        $linkedin = $profile['linkedin'] ?? '#';
+        $youtube = $profile['youtube'] ?? '#';
+        $instagram = $profile['instagram'] ?? '#';
+        $telegram = $profile['telegram'] ?? '#';
+
+        $lang = app()->getLocale();
+        $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
+        $tagline = $profile[$lang]['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
+        $logo = $profile['logo'] ?? null;
+        $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
     @endphp
     <!-- TOP BAR -->
     <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-10 opacity-100 border-white/10' + (isHeroPage ? ' bg-titan-navy/20 backdrop-blur-md' : ' bg-titan-navy')"
@@ -47,22 +58,28 @@
                 </div>
                 <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
                 <div class="hidden sm:flex gap-2">
-                    <a href="#"
+                    <a href="{{ $facebook }}" target="_blank"
                         class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
                         <x-lucide-facebook class="w-3 h-3" />
                     </a>
-                    <a href="#"
+                    <a href="{{ $linkedin }}" target="_blank"
                         class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
                         <x-lucide-linkedin class="w-3 h-3" />
                     </a>
-                    <a href="#"
+                    <a href="{{ $youtube }}" target="_blank"
                         class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
                         <x-lucide-youtube class="w-3 h-3" />
                     </a>
-                    <a href="#"
+                    <a href="{{ $instagram }}" target="_blank"
                         class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
                         <x-lucide-instagram class="w-3 h-3" />
                     </a>
+                    @if($telegram !== '#')
+                    <a href="{{ $telegram }}" target="_blank"
+                        class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                        <x-lucide-send class="w-3 h-3" />
+                    </a>
+                    @endif
                 </div>
 
                 <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
@@ -92,17 +109,18 @@
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 group cursor-pointer">
                     <div class="relative">
-                        <img src="/logo.png" alt="Kimmex Logo" class="h-12 w-auto transition-all duration-300" />
+                        <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
+                            class="h-12 w-auto transition-all duration-300" />
                     </div>
                     <div class="leading-none flex flex-col justify-center">
                         <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                             style="font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em;"
                             class="block text-[25px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5 group-hover:text-accent-orange">
-                            KIMMEX
+                            {{ $companyName }}
                         </span>
                         <span :class="navDark ? 'text-titan-navy/50' : 'text-white/60'"
                             class="block text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5">
-                            {{ __('Construction & Investment') }}
+                            {{ $tagline }}
                         </span>
                     </div>
                 </a>
