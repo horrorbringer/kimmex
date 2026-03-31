@@ -21,10 +21,10 @@
         // Fallback values if branding values list is empty
         if (empty($aboutData['values'])) {
             $aboutData['values'] = [
-                ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction sites.')],
-                ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.')],
-                ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.')],
-                ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.')]
+                ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction sites.'), 'icon' => 'lucide-heart'],
+                ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.'), 'icon' => 'lucide-award'],
+                ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.'), 'icon' => 'lucide-shield'],
+                ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.'), 'icon' => 'lucide-lightbulb']
             ];
         }
 
@@ -627,14 +627,14 @@
                                         'icon' => 'shield',
                                         'title' => 'ISO 9001:2015',
                                         'desc' => __('Quality Management
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Certified')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Certified')
                                     ],
                                     ['icon' => 'award', 'title' => __('Zero Accidents'), 'desc' => __('Safety record policy')],
                                     [
                                         'icon' => 'check-circle-2',
                                         'title' => __('100% Compliance'),
                                         'desc' => __('Building code
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            adherence')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            adherence')
                                     ],
                                     ['icon' => 'clock', 'title' => __('On-Time Delivery'), 'desc' => __('98% completion rate')],
                                 ];
