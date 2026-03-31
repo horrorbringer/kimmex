@@ -64,7 +64,7 @@ class ProjectCategoryResource extends Resource
                     ->unique(ignoreRecord: true),
                 \Filament\Forms\Components\Select::make('parent_id')
                     ->label(__('Parent Category'))
-                    ->relationship('parent', 'name')
+                    ->relationship('parent', 'name', fn($query) => $query->orderBy('name->en'))
                     ->searchable()
                     ->preload(),
                 Textarea::make('description')

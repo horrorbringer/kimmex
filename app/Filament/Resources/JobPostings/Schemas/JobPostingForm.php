@@ -8,6 +8,8 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Set;
+use Illuminate\Support\Str;
 use App\Filament\Support\TranslationHelper;
 
 class JobPostingForm
@@ -19,10 +21,14 @@ class JobPostingForm
                 TextInput::make('title')
                     ->label(__('Title'))
                     ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                    ->required(),
+                    ->required()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn($set, ?string $state) => $set('slug', Str::slug($state))),
                 TextInput::make('slug')
                     ->label(__('Slug'))
-                    ->required(),
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->prefix('kimmex.com/careers/'),
                 Select::make('departmentId')
                     ->label(__('Department'))
                     ->relationship('department', 'name', fn($query) => $query->orderBy('name->en'))
@@ -55,7 +61,8 @@ class JobPostingForm
                     ->columnSpanFull(),
                 Toggle::make('isActive')
                     ->label(__('Is Active'))
-                    ->required(),
+                    ->required()
+                    ->default(true),
                 DateTimePicker::make('closingDate')
                     ->label(__('Closing Date')),
                 TextInput::make('experience')

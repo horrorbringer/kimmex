@@ -188,20 +188,20 @@ $sectors = [
                     </div>
 
                     <!-- Content Side -->
-                    <div class="lg:w-[55%] p-10 md:p-20 flex flex-col justify-center relative bg-white">
+                    <div class="lg:w-[55%] p-10 md:p-20 flex flex-col items-center text-center justify-center relative bg-white">
                         <!-- Ghost Number -->
                         <div class="absolute top-10 right-10 hidden md:block select-none pointer-events-none">
                             <span class="text-[12rem] font-black text-titan-navy transition-colors duration-700 leading-none" style="opacity: 0.05;">0{{ $i + 1 }}</span>
                         </div>
 
                         <div class="relative z-10">
-                            <div class="w-20 h-2 bg-titan-red mb-10"></div>
+                            <div class="w-20 h-2 bg-titan-red mb-10 mx-auto"></div>
                             
                             <h3 class="text-4xl md:text-6xl font-black text-titan-navy mb-8 uppercase tracking-tighter leading-[0.9]">
                                 {{ $service['title'][$lang] }}
                             </h3>
                             
-                            <p class="text-titan-navy/60 text-xl leading-relaxed mb-12 max-w-2xl">
+                            <p class="text-titan-navy/60 text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
                                 {{ $service['desc'][$lang] }}
                             </p>
 
@@ -210,9 +210,9 @@ $sectors = [
                             @endphp
                             
                             @if(count($featuresArray) > 0)
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-12 mb-12">
+                            <div class="flex flex-wrap justify-center gap-y-5 gap-x-12 mb-12">
                                 @foreach($featuresArray as $feature)
-                                    <div class="flex items-center gap-4 text-titan-navy/80 font-bold text-xs uppercase tracking-[0.2em] group/feat">
+                                    <div class="flex items-center gap-4 text-titan-navy/80 font-bold text-xs uppercase tracking-[0.2em] group/feat bg-gray-50 px-5 py-3 rounded-full border border-gray-100">
                                         <div class="w-2.5 h-2.5 bg-titan-red rounded-full"></div>
                                         <span>{{ __($feature['name'] ?? (is_array($feature) ? ($feature[$lang] ?? '') : $feature)) }}</span>
                                     </div>
@@ -264,10 +264,10 @@ $sectors = [
                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-titan-red/80 to-transparent w-1/4 h-full animate-line-flow"></div>
                 </div>
 
-                <div class="flex overflow-x-auto md:grid md:grid-cols-5 gap-8 md:gap-4 relative z-10 hide-scrollbar snap-x snap-mandatory pb-10 pt-10 px-6 md:px-0 -mx-6 md:mx-0">
+                <div class="flex flex-wrap justify-center gap-8 md:gap-12 relative z-10 hide-scrollbar snap-x snap-mandatory pb-10 pt-10 px-6 md:px-0">
                     @foreach($process as $i => $s)
                         <div x-data="{ shown: false }" x-intersect.once="shown = true" style="transition-delay: {{ $i * 150 }}ms" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                             class="flex-none w-[85%] sm:w-[320px] md:w-auto snap-center flex flex-col items-center text-center group transition-all duration-1000">
+                             class="flex-none w-full sm:w-[320px] md:w-[calc(20%-2rem)] snap-center flex flex-col items-center text-center group transition-all duration-1000">
                             
                             <div class="relative mb-12 flex justify-center items-center" style="width: 160px; height: 160px;">
                                 <!-- Ghost Number -->
@@ -383,11 +383,11 @@ $sectors = [
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="flex flex-wrap justify-center gap-8">
                 @foreach($sectors as $i => $sector)
                     <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
                          style="transition-delay: {{ $i * 100 }}ms"
-                         class="group relative h-[500px] overflow-hidden rounded-[2rem] bg-[#0F172A] cursor-pointer transition-all duration-700 shadow-2xl">
+                         class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded-[2rem] bg-[#0F172A] cursor-pointer transition-all duration-700 shadow-2xl">
                         
                         <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-80" alt="{{ $sector['title'][$lang] }}" />
                         
@@ -424,13 +424,13 @@ $sectors = [
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <!-- Left Content -->
-                    <div class="p-10 md:p-20 flex flex-col justify-center relative z-10">
+                    <div class="p-10 md:p-20 flex flex-col items-center text-center justify-center relative z-10">
                         <span class="text-titan-red font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('Work with us') }}</span>
-                        <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight leading-tight">
+                        <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight leading-tight mx-auto">
                             {{ __('Ready to Start Your') }} <br/>
                             <span class="text-titan-red">{{ __('Next Visionary Project?') }}</span>
                         </h2>
-                        <p class="text-white/60 text-lg mb-12 leading-relaxed max-w-xl font-normal">
+                        <p class="text-white/60 text-lg mb-12 leading-relaxed max-w-xl font-normal mx-auto">
                             {{ __('Join forces with Kimmex for engineering excellence and construction that defines the future.') }}
                         </p>
 

@@ -64,7 +64,13 @@ class NewsArticlesTable
             ->filters([
                 //
             ])
-            ->recordActions([
+            ->actions([
+                \Filament\Actions\Action::make('viewOnWebsite')
+                    ->label(__('View on Website'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('info')
+                    ->url(fn(\App\Models\NewsArticle $record): string => route('news.show', ['slug' => $record->slug]))
+                    ->openUrlInNewTab(),
                 EditAction::make(),
             ])
             ->toolbarActions([

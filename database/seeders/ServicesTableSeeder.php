@@ -17,6 +17,7 @@ class ServicesTableSeeder extends Seeder
         $services = [
             [
                 "id" => "design-build",
+                "icon" => "lucide-pen-tool",
                 "title" => ["en" => "Design & Build", "kh" => "រចនា និងសាងសង់"],
                 "desc" => [
                     "en" => "A seamless integration of architectural creativity and engineering precision. We handle the entire lifecycle from concept to completion.",
@@ -27,11 +28,12 @@ class ServicesTableSeeder extends Seeder
                     ["en" => "Architectural Design", "kh" => "ការរចនាស្ថាបត្យកម្ម"],
                     ["en" => "Structural Engineering", "kh" => "វិស្វកម្មសំណង់"],
                     ["en" => "Permit Acquisition", "kh" => "ការស្នើសុំលិខិតអនុញ្ញាត"],
-                    ["en" => "Turnkey Construction", "kh" => "សេវាកختیម្មសាងសង់ទាំងស្រុង"]
+                    ["en" => "Turnkey Construction", "kh" => "សេវាកម្មសាងសង់ទាំងស្រុង"]
                 ]
             ],
             [
                 "id" => "construction",
+                "icon" => "lucide-hammer",
                 "title" => ["en" => "Construction", "kh" => "ការសាងសង់"],
                 "desc" => [
                     "en" => "World-class building and civil engineering solutions. We deliver robust structures tailored to residential, commercial, and industrial needs.",
@@ -47,6 +49,7 @@ class ServicesTableSeeder extends Seeder
             ],
             [
                 "id" => "project-management",
+                "icon" => "lucide-settings",
                 "title" => ["en" => "Project Management", "kh" => "ការគ្រប់គ្រងគម្រោង"],
                 "desc" => [
                     "en" => "Comprehensive oversight and strategic advisory ensuring on-time, on-budget delivery. We combine rigorous on-field management with technical and financial insights.",
@@ -58,6 +61,22 @@ class ServicesTableSeeder extends Seeder
                     ["en" => "Feasibility Studies", "kh" => "ការសិក្សាសមិទ្ធភាព"],
                     ["en" => "Quality & Safety Compliance", "kh" => "ការអនុលោមតាមគុណភាព និងសុវត្ថិភាព"],
                     ["en" => "Regulatory Advice", "kh" => "ការប្រឹក្សាបទប្បញ្ញត្តិ"]
+                ]
+            ],
+            [
+                "id" => "infrastructure",
+                "icon" => "lucide-truck",
+                "title" => ["en" => "Infrastructure", "kh" => "ហេដ្ឋារចនាសម្ព័ន្ធ"],
+                "desc" => [
+                    "en" => "Developing critical infrastructure including roads, bridges, and public utilities. We build foundation for national growth.",
+                    "kh" => "ការអភិវឌ្ឍហេដ្ឋារចនាសម្ព័ន្ធសំខាន់ៗរួមមាន ផ្លូវ ស្ពាន និងឧបករណ៍ប្រើប្រាស់សាធារណៈ។ យើងកសាងមូលដ្ឋានគ្រឹះសម្រាប់កំណើនជាតិ។"
+                ],
+                "image" => "/images/projects/Thumbnail-6.jpg",
+                "features" => [
+                    ["en" => "Road & Bridge Construction", "kh" => "ការសាងសង់ផ្លូវ និងស្ពាន"],
+                    ["en" => "Public Utility Networks", "kh" => "បណ្តាញឧបករណ៍ប្រើប្រាស់សាធារណៈ"],
+                    ["en" => "Slope Protection", "kh" => "ការការពារជម្រាល"],
+                    ["en" => "Land Reclamation", "kh" => "ការចាក់ដីបំពេញ"]
                 ]
             ]
         ];
@@ -72,6 +91,7 @@ class ServicesTableSeeder extends Seeder
                     'descriptionKm' => $s['desc']['kh'],
                     'summary' => Str::limit($s['desc']['en'], 150),
                     'summaryKm' => Str::limit($s['desc']['kh'], 150),
+                    'icon' => $s['icon'],
                     'image' => $s['image'],
                     'features' => $s['features'],
                     'orderIndex' => $i + 1,

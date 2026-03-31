@@ -112,6 +112,7 @@ class ProjectForm
                             ->schema([
                                 FileUpload::make('url')
                                     ->image()
+                                    ->disk('public')
                                     ->directory('projects/gallery')
                                     ->label(__('Photo'))
                                     ->required(),
@@ -131,6 +132,7 @@ class ProjectForm
                     ->components([
                         FileUpload::make('heroImage')
                             ->image()
+                            ->disk('public')
                             ->directory('projects/hero')
                             ->label(__('Hero Image'))
                             ->columnSpanFull(),

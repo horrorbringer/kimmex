@@ -11,11 +11,19 @@ class ProjectImageForm
     {
         return $schema
             ->components([
-                TextInput::make('url')
-                    ->url()
+                \Filament\Forms\Components\FileUpload::make('url')
+                    ->label(__('Image'))
+                    ->image()
+                    ->disk('public')
+                    ->directory('projects/gallery')
                     ->required(),
-                TextInput::make('caption'),
-                TextInput::make('projectId')
+                TextInput::make('caption')
+                    ->label(__('Caption')),
+                \Filament\Forms\Components\Select::make('projectId')
+                    ->label(__('Project'))
+                    ->relationship('project', 'title', fn($query) => $query->orderBy('title->en'))
+                    ->searchable()
+                    ->preload()
                     ->required(),
             ]);
     }

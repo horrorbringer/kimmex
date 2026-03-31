@@ -24,11 +24,11 @@ class ServicesTable
                     ->label(__('Title'))
                     ->searchable()
                     ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction)),
-                IconColumn::make('is_active')
+                IconColumn::make('isActive')
                     ->label(__('Is Active'))
                     ->boolean()
                     ->sortable(),
-                TextColumn::make('order_index')
+                TextColumn::make('orderIndex')
                     ->label(__('Order'))
                     ->numeric()
                     ->sortable(),

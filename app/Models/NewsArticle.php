@@ -9,7 +9,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Translatable\HasTranslations;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
- 
+
 class NewsArticle extends Model
 {
     use LogsActivity, HasTranslations, HasUuids;
@@ -34,6 +34,14 @@ class NewsArticle extends Model
         'isTrending',
         'readTime',
         'year',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
+        'tags' => 'array',
+        'isFeatured' => 'boolean',
+        'isTrending' => 'boolean',
+        'publishedAt' => 'datetime',
     ];
 
     public function getActivitylogOptions(): LogOptions

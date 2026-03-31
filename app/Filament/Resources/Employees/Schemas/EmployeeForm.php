@@ -25,7 +25,9 @@ class EmployeeForm
                                 ->required(),
                             FileUpload::make('image')
                                 ->image()
+                                ->disk('public')
                                 ->directory('employees')
+                                ->visibility('public')
                                 ->label(__('Profile Photo')),
                         ]),
                     ]),

@@ -47,7 +47,8 @@ class ManageBranding extends Page implements HasForms
             'ceo_message' => $allData['en']['ceo_message'] ?? '',
             'mission' => $allData['en']['mission'] ?? '',
             'vision' => $allData['en']['vision'] ?? '',
-            'values' => $allData['en']['values'] ?? '',
+            'goal' => $allData['en']['goal'] ?? '',
+            'values' => $allData['en']['values_list'] ?? [],
         ];
 
         $this->form->fill($this->data);
@@ -77,9 +78,33 @@ class ManageBranding extends Page implements HasForms
                         Textarea::make('vision')
                             ->label(__('Vision Statement'))
                             ->rows(3),
-                        Textarea::make('values')
-                            ->label(__('Core Values'))
-                            ->rows(4),
+                        Textarea::make('goal')
+                            ->label(__('Goal Statement'))
+                            ->rows(3),
+                    ]),
+
+                Section::make(__('Core Values'))
+                    ->description(__('Add your company core values as a list.'))
+                    ->schema([
+                        \Filament\Forms\Components\Repeater::make('values')
+                            ->label(__('Values List'))
+                            ->schema([
+                                TextInput::make('title')->label(__('Title'))->required(),
+                                Textarea::make('description')->label(__('Description'))->rows(2),
+                                \Filament\Forms\Components\Select::make('icon')
+                                    ->label(__('Icon'))
+                                    ->options([
+                                        'lucide-shield' => 'Shield/Integrity',
+                                        'lucide-award' => 'Award/Excellence',
+                                        'lucide-handshake' => 'Handshake/Partnership',
+                                        'lucide-lightbulb' => 'Lightbulb/Innovation',
+                                        'lucide-heart' => 'Heart/Safety',
+                                        'lucide-trending-up' => 'Trending/Growth',
+                                    ])->searchable(),
+                            ])
+                            ->columns(2)
+                            ->itemLabel(fn(array $state): ?string => $state['title'] ?? null)
+                            ->collapsible(),
                     ]),
             ])
             ->statePath('data');
@@ -106,7 +131,8 @@ class ManageBranding extends Page implements HasForms
             'ceo_message' => $state['ceo_message'] ?? '',
             'mission' => $state['mission'] ?? '',
             'vision' => $state['vision'] ?? '',
-            'values' => $state['values'] ?? '',
+            'goal' => $state['goal'] ?? '',
+            'values_list' => $state['values'] ?? [],
         ];
 
         // Auto-translate to Khmer

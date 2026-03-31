@@ -36,7 +36,7 @@
                 ]
             ],
 
-            'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->path, '/') ? $img->path : \Illuminate\Support\Facades\Storage::url($img->path))->toArray(),
+            'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \Illuminate\Support\Facades\Storage::url($img->url))->toArray(),
             'related' => \App\Models\Project::where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
                 'title' => $p->getTranslation('title', app()->getLocale()),
@@ -236,10 +236,10 @@
                                         {{ __(str_replace('_', ' ', $key)) }}
                                     </h2>
                                 </div>
-                                <p
-                                    class="text-base md:text-lg text-titan-navy/70 leading-loose font-normal selection:bg-titan-red selection:text-white max-w-4xl">
-                                    {{ $content }}
-                                </p>
+                                <div
+                                    class="text-base md:text-lg text-titan-navy/70 leading-loose font-normal selection:bg-titan-red selection:text-white max-w-4xl prose prose-slate max-w-none">
+                                    {!! $content !!}
+                                </div>
                             </div>
                         </div>
                     @endforeach

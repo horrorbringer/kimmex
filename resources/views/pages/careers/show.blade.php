@@ -1,106 +1,25 @@
 <x-layouts.app :title="__('Job Details')" description="Join our team of experts in the construction and investment industry.">
 
 @php
-    $jobs = [
-        [
-            'id' => 'senior-civil-engineer',
-            'title' => __('Senior Civil Engineer'),
-            'dept' => 'Engineering',
-            'loc' => __('Phnom Penh'),
-            'type' => __('Full-time'),
-            'salary' => __('Negotiable'),
-            'experience' => __('2-3 Years'),
-            'postedDate' => '3/6/2026',
-            'tags' => [__('Engineering')],
-            'summary' => __('We are seeking a highly experienced Senior Civil Engineer to lead complex structural projects.'),
-            'description' => __('Lead engineering teams through complex structural projects, ensuring precision, safety, and operational excellence from design to completion.'),
-            'responsibilities' => [
-                __('Lead structural design and analysis for major construction projects.'),
-                __('Coordinate with project managers and stakeholders to ensure timeline adherence.'),
-                __('Review and approve structural engineering drawings and calculations.'),
-                __('Ensure compliance with local building codes, safety regulations, and quality standards.'),
-                __('Provide technical guidance and mentorship to junior engineering staff.')
-            ],
-            'requirements' => [
-                __('Bachelor’s or Master’s degree in Civil Engineering or related field.'),
-                __("At least 5 years of experience in structural engineering within the construction sector."),
-                __('Proficiency in AutoCAD, Civil 3D, and structural analysis software.'),
-                __('Strong leadership, communication, and project management skills.'),
-                __('Registered Professional Engineer (PE) license is a major plus.')
-            ],
-            'benefits' => [
-                __('Competitive salary package with annual performance-based bonuses.'),
-                __('Comprehensive health and life insurance coverage.'),
-                __('Opportunities for professional development and certified training.'),
-                __('Relocation support and housing allowance for offshore projects.'),
-                __('A dynamic, high-growth environment with clear career progression paths.')
-            ]
-        ],
-        [
-            'id' => 'operation-assistant',
-            'title' => __('Operation Assistant'),
-            'dept' => 'Operations',
-            'loc' => __('Tamork'),
-            'type' => __('Full-time'),
-            'salary' => __('Negotiable'),
-            'experience' => __('2-3 Years'),
-             'postedDate' => '3/6/2026',
-            'tags' => [__('Operations')],
-            'summary' => __('Support daily operations and project coordination across multiple sites.'),
-             'description' => __('Facilitate seamless site operations by coordinating resources, schedules, and communication across multiple high-stakes construction projects.'),
-            'responsibilities' => [
-                __('Coordinate daily site activities and resource allocation.'),
-                __('Maintain detailed operational schedules and progress reports.'),
-                __('Bridge communication between field teams and regional headquarters.'),
-                __('Inventory management and procurement support for operational supplies.')
-            ],
-            'requirements' => [
-                __('Degree in Business Administration, Operations, or related field.'),
-                __('Minimum 2 years of experience in field operations or site management.'),
-                __('Strong organizational and problem-solving abilities.'),
-                __('Willingness to travel to various project sites across Cambodia.')
-            ],
-            'benefits' => [
-                __('Competitive base salary with travel allowances.'),
-                __('Paid time off and flexible scheduling opportunities.'),
-                __('Health insurance and wellness programs.'),
-                __('Ongoing mentorship from seasoned operational leaders.')
-            ]
-        ],
-        [
-            'id' => 'site-supervisor',
-            'title' => __('Site Supervisor'),
-            'dept' => 'Operations',
-            'loc' => __('Sihanoukville'),
-            'type' => __('Full-time'),
-            'salary' => __('Negotiable'),
-            'experience' => __('3-5 Years'),
-            'postedDate' => '3/10/2026',
-            'tags' => [__('Construction')],
-            'summary' => __('Expert oversight of construction sites and project coordination.'),
-             'description' => __('Direct site operations to ensure high-quality construction delivery, maintaining strict safety standards and operational efficiency.'),
-            'responsibilities' => [
-                __('Directly oversee construction activities on-site.'),
-                __('Enforce strict occupational health and safety (OHS) protocols.'),
-                __("Perform quality control inspections at all stages of the project."),
-                __('Supervise sub-contractors and ensure workmanship standards are met.')
-            ],
-            'requirements' => [
-                 __('Certified technical background or degree in Construction Management.'),
-                 __('At least 3 years as a supervisor or lead on major building sites.'),
-                 __('Demonstrable knowledge of modern construction methods and materials.'),
-                 __('Excellent command of safety standards and regulatory requirements.')
-            ],
-            'benefits' => [
-                __('High-growth salary path with project completion bonuses.'),
-                __('On-site accommodation and meal allowances provided.'),
-                __('Career advancement into site management or operations lead.'),
-                __('Comprehensive medical support and accident insurance.')
-            ]
-        ]
-    ];
+    $jobDb = \App\Models\JobPosting::where('id', $id)->first();
+    $job = null;
 
-    $job = collect($jobs)->where('id', $id)->first();
+    if ($jobDb) {
+        $job = [
+            'id' => $jobDb->id,
+            'title' => $jobDb->getTranslation('title', app()->getLocale()),
+            'dept' => $jobDb->department ? $jobDb->department->getTranslation('name', app()->getLocale()) : ($jobDb->getTranslation('department', app()->getLocale()) ?: __('General')),
+            'loc' => $jobDb->getTranslation('location', app()->getLocale()),
+            'type' => __($jobDb->type ?? 'FULL_TIME'),
+            'salary' => $jobDb->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
+            'experience' => $jobDb->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
+            'postedDate' => $jobDb->created_at ? $jobDb->created_at->format('M d, Y') : now()->format('M d, Y'),
+            'description' => $jobDb->getTranslation('summary', app()->getLocale()),
+            'responsibilities' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('responsibilities', app()->getLocale()))))),
+            'requirements' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('requirements', app()->getLocale()))))),
+            'benefits' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('benefits', app()->getLocale()))))),
+        ];
+    }
 @endphp
 
 @if(!$job)
@@ -189,12 +108,15 @@
                     <div class="prose prose-lg max-w-none text-titan-navy/70 space-y-12">
                         
                         <!-- 01: Job Summary -->
+                        @if($job['description'])
                         <section>
                             <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Job Summary') }}</h2>
-                            <p class="leading-relaxed text-lg">{{ $job['description'] }}</p>
+                            <div class="leading-relaxed text-lg prose-p:mb-4">{!! $job['description'] !!}</div>
                         </section>
+                        @endif
 
                         <!-- 02: Key Responsibilities -->
+                        @if(!empty($job['responsibilities']))
                         <section>
                             <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Key Responsibilities') }}</h2>
                             <ul class="list-none space-y-4 p-0">
@@ -206,8 +128,10 @@
                                 @endforeach
                             </ul>
                         </section>
+                        @endif
 
                         <!-- 03: Requirements -->
+                        @if(!empty($job['requirements']))
                         <section>
                             <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Requirements') }}</h2>
                             <ul class="list-none space-y-4 p-0">
@@ -219,8 +143,10 @@
                                 @endforeach
                             </ul>
                         </section>
+                        @endif
 
                         <!-- 04: Benefits -->
+                        @if(!empty($job['benefits']))
                         <section class="pt-10 border-t border-gray-100">
                              <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-8">{{ __('Benefits') }}</h2>
                              <ul class="list-none space-y-4 p-0">
@@ -232,6 +158,7 @@
                                 @endforeach
                              </ul>
                         </section>
+                        @endif
 
                     </div>
                 </div>

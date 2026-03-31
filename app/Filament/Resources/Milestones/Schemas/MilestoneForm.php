@@ -42,7 +42,9 @@ class MilestoneForm
                             FileUpload::make('image')
                                 ->label(__('Image'))
                                 ->image()
-                                ->directory('milestones'),
+                                ->disk('public')
+                                ->directory('milestones')
+                                ->visibility('public'),
                             TextInput::make('sortOrder')
                                 ->label(__('Order'))
                                 ->numeric()

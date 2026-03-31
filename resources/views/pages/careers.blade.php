@@ -1,47 +1,39 @@
 <x-layouts.app title="Careers" description="Join the Kimmex team and build your future in the construction industry.">
 
     @php
-        $jobs = [
-            [
-                'id' => 'senior-civil-engineer',
-                'title' => __('Senior Civil Engineer'),
-                'dept' => 'Engineering',
-                'loc' => __('Phnom Penh'),
-                'type' => __('Full-time'),
-                'salary' => __('Negotiable'),
-                'experience' => __('2-3 Years'),
-                'postedDate' => '3/6/2026',
-                'tags' => [__('Engineering')],
-                'summary' => __('We are seeking a highly experienced Senior Civil Engineer to lead complex structural projects.')
-            ],
-            [
-                'id' => 'operation-assistant',
-                'title' => __('Operation Assistant'),
-                'dept' => 'Operations',
-                'loc' => __('Tamork'),
-                'type' => __('Full-time'),
-                'salary' => __('Negotiable'),
-                'experience' => __('2-3 Years'),
-                'postedDate' => '3/6/2026',
-                'tags' => [__('Operations')],
-                'summary' => __('Support daily operations and project coordination across multiple sites.')
-            ],
-            [
-                'id' => 'site-supervisor',
-                'title' => __('Site Supervisor'),
-                'dept' => 'Operations',
-                'loc' => __('Sihanoukville'),
-                'type' => __('Full-time'),
-                'salary' => __('Negotiable'),
-                'experience' => __('3-5 Years'),
-                'postedDate' => '3/10/2026',
-                'tags' => [__('Construction')],
-                'summary' => __('Expert oversight of construction sites and project coordination.')
-            ]
-        ];
+        $jobsDb = \App\Models\JobPosting::where('isActive', true)
+            ->with('department')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $categories = [__('All Departments'), __('Engineering'), __('Operations'), __('Design'), __('Supply Chain'), __('Quality & Safety')];
-        $locations = [__('All Locations'), __('Phnom Penh'), __('Sihanoukville'), __('Kampot'), __('Siem Reap')];
+        $jobs = $jobsDb->map(function ($j) {
+            $deptName = $j->department ? $j->department->getTranslation('name', app()->getLocale()) : ($j->getTranslation('department', app()->getLocale()) ?: __('General'));
+            return [
+                'id' => $j->id,
+                'title' => $j->getTranslation('title', app()->getLocale()),
+                'dept' => $deptName,
+                'loc' => $j->getTranslation('location', app()->getLocale()),
+                'type' => __($j->type ?? 'FULL_TIME'),
+                'salary' => $j->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
+                'experience' => $j->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
+                'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
+                'tags' => [$deptName],
+                'summary' => \Illuminate\Support\Str::limit(strip_tags($j->getTranslation('summary', app()->getLocale())), 150)
+            ];
+        })->toArray();
+
+        $categories = $jobsDb->map(fn($j) => $j->department ? $j->department->getTranslation('name', app()->getLocale()) : ($j->getTranslation('department', app()->getLocale()) ?: __('Engineering')))
+            ->unique()->values()->prepend(__('All Departments'))->toArray();
+
+        $locations = $jobsDb->map(fn($j) => $j->getTranslation('location', app()->getLocale()))
+            ->unique()->values()->prepend(__('All Locations'))->toArray();
+
+        // Fallback for empty DB
+        if (empty($jobs)) {
+            $jobs = [
+                ['id' => 'gen', 'title' => __('Visionary Talent'), 'dept' => __('General'), 'loc' => __('Phnom Penh'), 'type' => __('Full-time'), 'salary' => __('Competitive'), 'experience' => __('Mixed'), 'postedDate' => now()->format('M d, Y'), 'tags' => [__('Hiring')], 'summary' => __('We are always looking for exceptional engineers and managers.')]
+            ];
+        }
     @endphp
 
     <div x-data="{ 

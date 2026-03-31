@@ -14,15 +14,20 @@ class ProjectImagesTable
     {
         return $table
             ->columns([
+                \Filament\Tables\Columns\ImageColumn::make('url')
+                    ->label(__('Image'))
+                    ->disk('public')
+                    ->circular(),
+                TextColumn::make('project.title')
+                    ->label(__('Project'))
+                    ->searchable()
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('projects.title->en', $direction)),
+                TextColumn::make('caption')
+                    ->label(__('Caption'))
+                    ->searchable(),
                 TextColumn::make('id')
                     ->label('ID')
-                    ->searchable(),
-                TextColumn::make('url')
-                    ->searchable(),
-                TextColumn::make('caption')
-                    ->searchable(),
-                TextColumn::make('projectId')
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

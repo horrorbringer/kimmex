@@ -2,48 +2,45 @@
     description="View Kimmex's portfolio of successful construction and engineering projects.">
 
     @php
-        $categories = [__('All'), __('Government Office Building'), __('Water Treatment Plant'), __('Slope Construction'), __('Systems')];
-        $locations = [__('All'), __('Phnom Penh'), __('Siem Reap'), __('Kandal'), __('Sihanoukville')];
-        $statusOptions = [__('All'), __('Completed'), __('In Progress')];
+        // Fetch All Projects
+        $projectsDb = \App\Models\Project::with('projectCategory')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $projects = [
-            [
-                'id' => 'mef',
-                'title' => __('Ministry of Economy Building'),
-                'location' => __('Phnom Penh'),
-                'type' => __('Government Office Building'),
-                'status' => __('Completed'),
-                'image' => '/images/projects/Thumbnail-1.jpg',
-                'summary' => __('A state-of-the-art facility for the MEF integrating modern security and sustainable systems.')
-            ],
-            [
-                'id' => 'water',
-                'title' => __('Khleang Toeuk WTP'),
-                'location' => __('Siem Reap'),
-                'type' => __('Water Treatment Plant'),
-                'status' => __('In Progress'),
-                'image' => '/images/projects/Thumbnail-2.jpg',
-                'summary' => __('Advanced water purification infrastructure capable of supplying clean water to the entire province.')
-            ],
-            [
-                'id' => 'slope',
-                'title' => __('Mekong River Bank Protection'),
-                'location' => __('Kandal'),
-                'type' => __('Slope Construction'),
-                'status' => __('Completed'),
-                'image' => '/images/projects/Thumbnail-3.jpg',
-                'summary' => __('Critical infrastructure preventing riverbank erosion using reinforced concrete piling.')
-            ],
-            [
-                'id' => 'airport',
-                'title' => __('New Airport Systems'),
-                'location' => __('Phnom Penh'),
-                'type' => __('Systems'),
-                'status' => __('In Progress'),
-                'image' => '/images/projects/Thumbnail-4.jpg',
-                'summary' => __('Comprehensive MEP installation for the new international airport terminal.')
-            ]
-        ];
+        // Dynamically build filter lists
+        $categories = $projectsDb->map(function ($p) {
+            $cat = $p->projectCategory;
+            if ($cat) {
+                return $cat->getTranslation('name', app()->getLocale()) ?: ($cat->getTranslation('name', 'en') ?: $cat->name);
+            }
+            return $p->category ?: 'General';
+        })->unique()->values()->prepend(__('All'))->toArray();
+
+        $locations = $projectsDb->map(fn($p) => $p->getTranslation('location', app()->getLocale()))
+            ->unique()->values()->prepend(__('All'))->toArray();
+
+        $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
+
+        $projects = $projectsDb->map(function ($p) {
+            return [
+                'id' => $p->slug,
+                'title' => $p->getTranslation('title', app()->getLocale()),
+                'location' => $p->getTranslation('location', app()->getLocale()),
+                'type' => $p->projectCategory
+                    ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
+                    : ($p->category ?: 'General'),
+                'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
+                'image' => $p->heroImage ? \Illuminate\Support\Facades\Storage::url($p->heroImage) : '/images/projects/Thumbnail-1.jpg',
+                'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
+            ];
+        })->toArray();
+
+        // Fallback for empty DB
+        if (count($projects) === 0) {
+            $projects = [
+                ['id' => 'mef', 'title' => __('Ministry of Economy Building'), 'location' => __('Phnom Penh'), 'type' => __('Government'), 'status' => __('Completed'), 'image' => '/images/projects/Thumbnail-1.jpg', 'summary' => __('Kimmex built legacy facility.')]
+            ];
+        }
     @endphp
 
     <div x-data="{
@@ -57,13 +54,15 @@
         statusOptions: {{ Js::from($statusOptions) }},
         
         init() {
-            this.filterStatus = this.statusOptions[0]; // Set to translated 'All'
             const params = new URLSearchParams(window.location.search);
             const status = params.get('status');
+            
             if (status === 'completed') {
-                this.filterStatus = this.statusOptions[1];
-            } else if (status === 'in-progress') {
-                this.filterStatus = this.statusOptions[2];
+                this.filterStatus = this.statusOptions.find(opt => opt.toLowerCase() === 'completed') || this.statusOptions[0];
+            } else if (status === 'in-progress' || status === 'ongoing') {
+                this.filterStatus = this.statusOptions.find(opt => opt.toLowerCase() === 'ongoing' || opt.toLowerCase() === 'in progress') || this.statusOptions[0];
+            } else {
+                this.filterStatus = this.statusOptions[0]; // All
             }
         },
 
@@ -296,9 +295,11 @@
                     class="text-center py-40 bg-gray-50 rounded-[4rem] border border-dashed border-gray-100">
                     <x-lucide-building class="w-12 h-12 text-titan-navy/10 mx-auto mb-8" />
                     <h3 class="text-2xl font-black text-titan-navy mb-4 uppercase tracking-tighter">
-                        {{ __('No Built Legacy Found') }}</h3>
+                        {{ __('No Built Legacy Found') }}
+                    </h3>
                     <p class="text-titan-navy/40 text-sm max-w-sm mx-auto leading-relaxed">
-                        {{ __('Refine your search parameters to explore other successful Kimmex deliveries.') }}</p>
+                        {{ __('Refine your search parameters to explore other successful Kimmex deliveries.') }}
+                    </p>
                 </div>
             </div>
         </section>

@@ -51,6 +51,7 @@ class ManageOrganization extends Page implements HasForms
 
         $this->data = [
             'company_name' => $allData['en']['company_name'] ?? 'Kimmex Construction',
+            'tagline' => $allData['en']['tagline'] ?? 'Cambodia\'s Premier Construction Partner',
             'registration_number' => $allData['registration_number'] ?? '',
             'founded_date' => $allData['founded_date'] ?? '',
             'address' => $allData['en']['address'] ?? '',
@@ -82,12 +83,18 @@ class ManageOrganization extends Page implements HasForms
                             FileUpload::make('logo')
                                 ->label(__('Company Logo'))
                                 ->image()
+                                ->disk('public')
                                 ->directory('organization')
+                                ->visibility('public')
                                 ->maxSize(1024),
                             Grid::make(2)->schema([
                                 TextInput::make('company_name')
                                     ->label(__('Official Company Name'))
                                     ->required()
+                                    ->columnSpanFull(),
+                                TextInput::make('tagline')
+                                    ->label(__('Company Tagline/Slogan'))
+                                    ->placeholder(__('e.g. Cambodia\'s Premier Construction Partner'))
                                     ->columnSpanFull(),
                                 TextInput::make('registration_number')
                                     ->label(__('Registration Number')),
@@ -163,6 +170,7 @@ class ManageOrganization extends Page implements HasForms
         // English content (source)
         $enContent = [
             'company_name' => $state['company_name'] ?? '',
+            'tagline' => $state['tagline'] ?? '',
             'address' => $state['address'] ?? '',
             'working_hours' => $state['working_hours'] ?? '',
         ];

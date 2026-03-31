@@ -15,6 +15,7 @@ class JobPosting extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'departmentId',
         'location',
         'type',

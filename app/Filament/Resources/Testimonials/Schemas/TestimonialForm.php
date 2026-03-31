@@ -26,7 +26,9 @@ class TestimonialForm
                                 ->required(),
                             FileUpload::make('image')
                                 ->image()
+                                ->disk('public')
                                 ->directory('testimonials')
+                                ->visibility('public')
                                 ->label(__('Client Avatar')),
                         ]),
                         Grid::make(2)->components([

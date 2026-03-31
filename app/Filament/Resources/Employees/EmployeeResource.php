@@ -25,7 +25,7 @@ class EmployeeResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Organization');
+        return __('HR Management');
     }
 
     public static function getLabel(): ?string

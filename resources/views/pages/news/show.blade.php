@@ -1,70 +1,53 @@
 <x-layouts.app :title="__('News Details')" description="Read the latest news and updates from Kimmex.">
 
     @php
-        $newsArticles = [
-            [
-                'slug' => 'award',
-                'category' => __('Updates'),
-                'image' => '/images/projects/Thumbnail-4.jpg',
-                'title' => __('Kimmex awarded the mega Ministry infrastructure project.'),
-                'date' => 'Oct 12, 2026',
-                'author' => 'Kimmex Editorial',
-                'readTime' => '5 min read',
-                'content' => __('Our dedication to quality and architectural precision has earned us a major role in expanding the Ministry headquarters. This landmark project represents a significant milestone in our history of delivering governmental infrastructure. The expansion will feature sustainable building materials, high-efficiency MEP systems, and integrated security protocols as part of our commitment to excellence.')
-            ],
-            [
-                'slug' => 'milestone',
-                'category' => __('Milestone'),
-                'image' => '/images/projects/Thumbnail-5.jpg',
-                'title' => __('Celebrating 25 years of excellence in Cambodia.'),
-                'date' => 'Sep 05, 2026',
-                'author' => 'Communications Team',
-                'readTime' => '4 min read',
-                'content' => __('Looking back at our incredible journey of building the infrastructure of tomorrow. Over the last quarter-century, Kimmex has evolved from a small engineering firm into a diversified construction and investment group. We thank our partners, employees, and the government for their trust.')
-            ],
-            [
-                'slug' => 'safety',
-                'category' => __('Safety'),
-                'image' => '/images/projects/Thumbnail-6.jpg',
-                'title' => __('New safety standards implemented across all active sites.'),
-                'date' => 'Aug 21, 2026',
-                'author' => 'EHS Department',
-                'readTime' => '6 min read',
-                'content' => __('Safety is paramount. We have introduced rigorous new check protocols for our entire workforce, emphasizing Zero-Harm strategies. Every site now features real-time monitoring of safety compliance and augmented training programs for operators.')
-            ],
-            [
-                'slug' => 'mep',
-                'category' => __('Expertise'),
-                'image' => '/images/projects/Thumbnail-1.jpg',
-                'title' => __('Advancing MEP capabilities in South East Asia.'),
-                'date' => 'Jul 10, 2026',
-                'author' => 'Engineering Lead',
-                'readTime' => '7 min read',
-                'content' => __('Exploring the intricacies of modern mechanical and plumbing installations in high rises. Our team is now utilizing BIM and Digital Twin technologies to optimize the lifespan and efficiency of complex building systems.')
-            ],
-            [
-                'slug' => 'partnership',
-                'category' => __('Partnership'),
-                'image' => '/images/projects/Thumbnail-2.jpg',
-                'title' => __('Strategic partnership with leading Japanese engineering firm.'),
-                'date' => 'Jun 18, 2026',
-                'author' => 'Executive Office',
-                'readTime' => '3 min read',
-                'content' => __('A new collaboration that brings world-class technology and standards to our projects. This partnership focuses on seismic-resistant structures and advanced modular construction techniques.')
-            ],
-            [
-                'slug' => 'green-building',
-                'category' => __('Sustainability'),
-                'image' => '/images/projects/Thumbnail-3.jpg',
-                'title' => __('Pioneering green building practices in the region.'),
-                'date' => 'May 02, 2026',
-                'author' => 'Sustainability Group',
-                'readTime' => '6 min read',
-                'content' => __('Our commitment to sustainable construction is shaping the future of urban development. We are now integrating solar thermal energy and greywater recycling into all our new commercial developments.')
-            ]
-        ];
+        $articleDb = \App\Models\NewsArticle::where('slug', $slug)->first();
 
-        $article = collect($newsArticles)->firstWhere('slug', $slug) ?? $newsArticles[0];
+        if ($articleDb) {
+            $excerpt = $articleDb->getTranslation('excerpt', app()->getLocale())
+                ?: \Illuminate\Support\Str::limit(strip_tags($articleDb->getTranslation('content', app()->getLocale())), 180);
+
+            $article = [
+                'slug' => $articleDb->slug,
+                'category' => $articleDb->category ?: __('Updates'),
+                'image' => $articleDb->coverImage ? \Illuminate\Support\Facades\Storage::url($articleDb->coverImage) : '/images/projects/Thumbnail-4.jpg',
+                'title' => $articleDb->getTranslation('title', app()->getLocale()),
+                'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
+                'author' => $articleDb->getTranslation('authorName', app()->getLocale()) ?: 'Kimmex Editorial',
+                'readTime' => ($articleDb->getTranslation('readTime', app()->getLocale())) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', app()->getLocale()))) / 200) . ' min read'),
+                'excerpt' => $excerpt,
+                'content' => $articleDb->getTranslation('content', app()->getLocale())
+            ];
+        } else {
+            // Fallback for non-existent slug
+            $article = [
+                'slug' => 'error',
+                'category' => __('Error'),
+                'image' => '/images/projects/Thumbnail-4.jpg',
+                'title' => __('Article Not Found'),
+                'date' => now()->format('M d, Y'),
+                'author' => 'System',
+                'readTime' => '1 min',
+                'excerpt' => __('This article could not be located in our database.'),
+                'content' => __('Please return to the news index to browse our available articles.')
+            ];
+        }
+
+        // Fetch related from DB
+        $relatedQuery = \App\Models\NewsArticle::orderBy('publishedAt', 'desc')->take(3);
+        if ($articleDb) {
+            $relatedQuery->where('id', '!=', $articleDb->id);
+        }
+        $relatedDb = $relatedQuery->get();
+
+        $relatedArticles = $relatedDb->map(function ($r) {
+            return [
+                'slug' => $r->slug,
+                'title' => $r->getTranslation('title', app()->getLocale()),
+                'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
+                'category' => __('Updates')
+            ];
+        })->toArray();
     @endphp
 
     <div class="bg-white min-h-screen text-titan-navy pb-32">
@@ -144,7 +127,7 @@
                             </p>
 
                             <div class="space-y-8">
-                                {{ $article['content'] }}
+                                {!! $article['content'] !!}
                             </div>
                         </div>
 
@@ -173,15 +156,18 @@
                     <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100">
                         <h3
                             class="text-xs font-black uppercase tracking-widest text-titan-navy mb-8 border-b border-titan-red/20 pb-4">
-                            {{ __('Latest Updates') }}</h3>
+                            {{ __('Latest Updates') }}
+                        </h3>
                         <div class="space-y-8">
-                            @foreach(collect($newsArticles)->where('slug', '!=', $slug)->take(3) as $related)
+                            @foreach($relatedArticles as $related)
                                 <a href="/news/{{ $related['slug'] }}" class="group block">
                                     <div class="text-[9px] font-black text-titan-red uppercase tracking-widest mb-2">
-                                        {{ $related['category'] }}</div>
+                                        {{ $related['category'] }}
+                                    </div>
                                     <h4
                                         class="text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors leading-snug mb-2">
-                                        {{ $related['title'] }}</h4>
+                                        {{ $related['title'] }}
+                                    </h4>
                                     <div class="text-[10px] text-titan-navy/40 font-bold uppercase">{{ $related['date'] }}
                                     </div>
                                 </a>

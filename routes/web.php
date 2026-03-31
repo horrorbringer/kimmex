@@ -30,8 +30,8 @@ Route::get('/careers', function () {
     return view('pages.careers');
 })->name('careers');
 
-Route::get('/careers/{id}', function ($id) {
-    return view('pages.careers.show', ['id' => $id]);
+Route::get('/careers/{slug}', function ($slug) {
+    return view('pages.careers.show', ['slug' => $slug]);
 })->name('careers.show');
 
 // Services Archive

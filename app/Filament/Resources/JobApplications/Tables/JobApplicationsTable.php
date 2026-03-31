@@ -14,11 +14,9 @@ class JobApplicationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label(__('ID'))
-                    ->searchable(),
-                TextColumn::make('jobId')
+                TextColumn::make('job.title')
                     ->label(__('Job Title'))
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('applicantName')
                     ->label(__('Applicant Name'))
@@ -54,6 +52,7 @@ class JobApplicationsTable
                 //
             ])
             ->recordActions([
+                \Filament\Actions\ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

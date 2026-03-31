@@ -31,7 +31,7 @@ class NewsArticleForm
                                 ->required()
                                 ->live(onBlur: true)
                                 ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
                                 ->unique(ignoreRecord: true)
@@ -53,12 +53,14 @@ class NewsArticleForm
                     ->components([
                         FileUpload::make('coverImage')
                             ->image()
+                            ->disk('public')
                             ->directory('news/covers')
                             ->label(__('Cover Image')),
                         FileUpload::make('gallery')
                             ->label(__('Gallery'))
                             ->image()
                             ->multiple()
+                            ->disk('public')
                             ->directory('news/gallery')
                             ->columnSpanFull(),
                     ]),
@@ -93,7 +95,7 @@ class NewsArticleForm
                                     }
                                 })
                                 ->default(auth()->user()?->employee?->id),
-                             TextInput::make('authorName')
+                            TextInput::make('authorName')
                                 ->label(__('Author Name'))
                                 ->suffixAction(TranslationHelper::getAutoTranslateAction('authorName'))
                                 ->disabled()

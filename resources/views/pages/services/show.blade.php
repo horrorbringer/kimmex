@@ -229,12 +229,12 @@
                         </h2>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="flex flex-wrap justify-center gap-6">
                         @foreach($service['scopeItems'] as $i => $item)
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 style="transition-delay: {{ $i * 100 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="group flex items-start gap-5 p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-titan-red/30 transition-all duration-300 h-full">
+                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-titan-red/30 transition-all duration-300 h-full">
                                 <div
                                     class="w-10 h-10 rounded-full bg-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
                                     <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red group-hover:text-white" />
@@ -375,12 +375,12 @@
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="flex flex-wrap justify-center gap-10">
                     @foreach($featuredProjects as $i => $project)
                         <div x-data="{ shown: false }" x-intersect.once="shown = true"
                             style="transition-delay: {{ $i * 100 }}ms"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                            class="transition-all duration-1000">
+                            class="w-full md:w-[calc(50%-1.25rem)] transition-all duration-1000">
                             <a href="/projects/{{ $project['id'] }}"
                                 class="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl h-full">
                                 <img src="{{ $project['image'] }}" alt="{{ $project['title'][$lang] }}"

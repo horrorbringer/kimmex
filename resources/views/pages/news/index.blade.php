@@ -1,14 +1,30 @@
 <x-layouts.app title="News & Updates" description="Read the latest news, updates, and announcements from Kimmex.">
 
     @php
-        $newsArticles = [
-            ['slug' => 'award', 'category' => __('Updates'), 'image' => '/images/projects/Thumbnail-4.jpg', 'title' => __('Kimmex awarded the mega Ministry infrastructure project.'), 'date' => 'Oct 12, 2026', 'excerpt' => __('Our dedication to quality has earned us a major role in expanding the Ministry headquarters...')],
-            ['slug' => 'milestone', 'category' => __('Milestone'), 'image' => '/images/projects/Thumbnail-5.jpg', 'title' => __('Celebrating 25 years of excellence in Cambodia.'), 'date' => 'Sep 05, 2026', 'excerpt' => __('Looking back at our incredible journey of building the infrastructure of tomorrow...')],
-            ['slug' => 'safety', 'category' => __('Safety'), 'image' => '/images/projects/Thumbnail-6.jpg', 'title' => __('New safety standards implemented across all active sites.'), 'date' => 'Aug 21, 2026', 'excerpt' => __('Safety is paramount. We have introduced rigorous check protocols for our workforce...')],
-            ['slug' => 'mep', 'category' => __('Expertise'), 'image' => '/images/projects/Thumbnail-1.jpg', 'title' => __('Advancing MEP capabilities in South East Asia.'), 'date' => 'Jul 10, 2026', 'excerpt' => __('Exploring the intricacies of modern mechanical and plumbing installations in high rises...')],
-            ['slug' => 'partnership', 'category' => __('Partnership'), 'image' => '/images/projects/Thumbnail-2.jpg', 'title' => __('Strategic partnership with leading Japanese engineering firm.'), 'date' => 'Jun 18, 2026', 'excerpt' => __('A new collaboration that brings world-class technology and standards to our projects...')],
-            ['slug' => 'green-building', 'category' => __('Sustainability'), 'image' => '/images/projects/Thumbnail-3.jpg', 'title' => __('Pioneering green building practices in the region.'), 'date' => 'May 02, 2026', 'excerpt' => __('Our commitment to sustainable construction is shaping the future of urban development...')]
-        ];
+        $newsArticlesDb = \App\Models\NewsArticle::where('publishedAt', '<=', now())
+            ->orderBy('publishedAt', 'desc')
+            ->get();
+
+        $newsArticles = $newsArticlesDb->map(function ($n) {
+            $excerpt = $n->getTranslation('excerpt', app()->getLocale())
+                ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', app()->getLocale())), 180);
+
+            return [
+                'slug' => $n->slug,
+                'category' => $n->category ?: __('Updates'),
+                'image' => $n->coverImage ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : '/images/projects/Thumbnail-4.jpg',
+                'title' => $n->getTranslation('title', app()->getLocale()),
+                'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                'excerpt' => $excerpt
+            ];
+        })->toArray();
+
+        // Fallback
+        if (empty($newsArticles)) {
+            $newsArticles = [
+                ['slug' => 'award', 'category' => __('Updates'), 'image' => '/images/projects/Thumbnail-4.jpg', 'title' => __('Kimmex Insights and Announcements'), 'date' => now()->format('M d, Y'), 'excerpt' => __('Discover our journey in construction excellence.')]
+            ];
+        }
     @endphp
 
     <div class="bg-white min-h-screen text-titan-navy">

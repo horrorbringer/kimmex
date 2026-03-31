@@ -60,7 +60,13 @@ class JobPostingsTable
             ->filters([
                 //
             ])
-            ->recordActions([
+            ->actions([
+                \Filament\Actions\Action::make('viewOnWebsite')
+                    ->label(__('View on Website'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('info')
+                    ->url(fn(\App\Models\JobPosting $record): string => route('careers.show', ['slug' => $record->slug]))
+                    ->openUrlInNewTab(),
                 EditAction::make(),
             ])
             ->toolbarActions([
