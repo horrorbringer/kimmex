@@ -40,12 +40,13 @@ class MilestonesTable
                 //
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                \Filament\Actions\ViewAction::make(),
+                EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

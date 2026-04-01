@@ -1,453 +1,197 @@
 <x-filament-panels::page>
-    <div class="org-chart-wrapper" x-data="orgChartManager()" @node-added.window="handleNodeAdded($event.detail)">
+    <div class="space-y-8">
         <style>
-            .org-chart-wrapper {
-                max-width: 1200px;
-                margin: 0 auto;
-                font-family: 'Inter', sans-serif, system-ui;
+            :root {
+                --titan-red: #E31E24;
+                --titan-red-hover: #C2191F;
+                --titan-navy: #1a1a2e;
+                --titan-navy-light: #2D3E5D;
+                --titan-gray: #6B7280;
+                --card-bg: #ffffff;
+                --tab-bg: #f1f5f9;
             }
 
-            .page-subtitle {
-                margin-top: -1.75rem;
-                margin-bottom: 2.5rem;
-                font-size: 0.875rem;
-                color: #6b7280;
-                font-weight: 500;
-            }
-
-            .view-switcher {
-                display: flex;
-                gap: 0.5rem;
-                margin-bottom: 2.5rem;
-                background: #f1f5f9;
-                padding: 0.25rem;
-                border-radius: 9999px;
-                width: fit-content;
-                border: 1px solid #e2e8f0;
-            }
-
-            .switcher-btn {
-                padding: 0.6rem 1.75rem;
-                border-radius: 9999px;
-                font-size: 13px;
-                font-weight: 800;
-                transition: all 300ms ease;
-                cursor: pointer;
-                color: #64748b;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-
-            .switcher-btn.active {
+            /* Container & Layout */
+            .org-chart-wrapper { background: #fcfcfc; padding: 2rem; border-radius: 2.5rem; border: 1px solid #f1f5f9; }
+            
+            /* Generic Helper Classes (since TW utilities might be purged) */
+            .org-flex { display: flex; align-items: center; }
+            .org-justify-between { justify-content: space-between; }
+            .org-mb-8 { margin-bottom: 2rem; }
+            .org-rounded-xl { border-radius: 0.75rem; }
+            .org-shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+            
+            /* Card Styling */
+            .node-card {
                 background: white;
-                color: #be1e2d;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            }
-
-            .hierarchy-card {
-                background: white;
-                border: 1px solid #e5e7eb;
-                border-radius: 2rem;
-                box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
-                overflow: hidden;
-                min-height: 500px;
-                margin-bottom: 2.5rem;
-                position: relative;
-            }
-
-            .section-header {
+                border: 1px solid #f1f5f9;
+                border-radius: 1.25rem;
+                padding: 1.25rem;
+                margin-bottom: 0.75rem;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                padding: 2.5rem 2.5rem 1.5rem;
-                border-bottom: 1px solid #f8fafc;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                transition: all 0.3s;
+            }
+            
+            .node-card:hover {
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                transform: translateX(4px);
             }
 
-            .section-label {
-                font-size: 11px;
+            .node-name {
+                color: var(--titan-navy);
                 font-weight: 900;
                 text-transform: uppercase;
-                letter-spacing: 0.3em;
+                font-size: 0.8rem;
+                margin: 0 !important;
+                letter-spacing: -0.01em;
+            }
+
+            .node-role {
                 color: #94a3b8;
-                display: flex;
-                align-items: center;
-                gap: 0.875rem;
-            }
-
-            .tree-container {
-                padding: 1.5rem 2.5rem 4rem;
-            }
-
-            .node-card {
-                display: flex;
-                align-items: center;
-                gap: 1.25rem;
-                padding: 1.25rem 2rem;
-                border: 1px solid #f1f5f9;
-                border-radius: 1.5rem;
-                background: white;
-                transition: all 300ms ease;
-                margin-top: 1rem;
-                position: relative;
-                cursor: pointer;
-            }
-
-            .node-card:hover {
-                border-color: #e2e8f0;
-                box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.04);
-            }
-
-            .level-0>.node-card,
-            .level-1>.node-card {
-                border-radius: 1.5rem;
-            }
-
-            .level-0 .node-avatar,
-            .level-1 .node-avatar {
-                width: 3.5rem;
-                height: 3.5rem;
-                border-radius: 9999px;
-                border: 3px solid white;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .level-deep>.node-card {
-                border-radius: 1.25rem;
-                border: 1.5px solid #f1f5f9;
-                padding: 1.125rem 2rem;
-            }
-
-            .level-deep .node-avatar {
-                width: 2.75rem;
-                height: 2.75rem;
-                border-radius: 0.75rem;
-                background: #f8fafc;
-                overflow: hidden;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .level-deep .node-name {
-                font-size: 13px !important;
+                font-size: 0.6rem;
+                font-weight: 600;
+                font-style: italic;
+                text-transform: uppercase;
                 letter-spacing: 0.05em;
-                font-weight: 800;
-                color: #1e293b;
+                margin: 0 !important;
+                opacity: 0.8;
             }
 
-            .node-avatar {
+            /* Avatar Circle Fixed */
+            .avatar-circle {
+                width: 3rem !important;
+                height: 3rem !important;
+                border-radius: 50% !important;
+                object-fit: cover;
+                border: 2px solid white;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
                 flex-shrink: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                overflow: hidden;
                 background: #f8fafc;
+                overflow: hidden;
+                margin-right: 1.25rem;
             }
-
-            .node-name {
-                font-size: 0.9375rem;
+            
+            .avatar-initials {
+                color: #64748b;
                 font-weight: 800;
-                color: #1e293b;
-                text-transform: uppercase;
-                margin: 0;
+                font-size: 0.75rem;
             }
 
-            .node-role-list {
-                font-size: 13px;
-                font-style: italic;
-                color: #94a3b8;
-                font-weight: 600;
-                text-align: right;
-                min-width: 150px;
+            /* Tree Connections */
+            .node-children {
+                position: relative;
+                margin-left: 3.5rem;
+                padding-left: 1.5rem;
             }
 
-            .drag-handle {
-                color: #e2e8f0;
-                cursor: grab;
-                padding: 0.5rem;
-                margin-left: -1rem;
-            }
-
-            .drag-handle:hover {
-                color: #be1e2d;
-            }
-
-            .children-nested {
-                margin-left: 4.5rem;
-                padding-left: 2rem;
-                border-left: 2px solid #f9fafb;
-                min-height: 1px;
-            }
-
-            .card-actions {
-                display: flex;
-                gap: 0.25rem;
-                margin-left: 1rem;
-            }
-
-            .action-btn {
-                padding: 0.5rem;
-                border-radius: 0.6rem;
-                color: #94a3b8;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 200ms;
-            }
-
-            .action-btn:hover {
-                background: #f1f5f9;
-                color: #be1e2d;
-            }
-
-            .action-btn.primary {
-                color: #be1e2d;
-                background: #fff5f5;
-                border: 1px solid #fee2e2;
-            }
-
-            .action-btn.delete:hover {
-                color: #f43f5e;
-                background: #fff1f2;
-            }
-
-            .processing-overlay {
+            .node-children::before {
+                content: '';
                 position: absolute;
-                top: 0;
                 left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(255, 255, 255, 0.7);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 50;
-                backdrop-filter: blur(2px);
-                border-radius: inherit;
-            }
-
-            .visual-preview {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 5rem 3rem;
-                background: #fdfdfd;
-                background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-                background-size: 30px 30px;
-                overflow-x: auto;
-            }
-
-            .viz-node {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                position: relative;
-            }
-
-            .viz-card {
-                background: white;
-                border: 1px solid #e5e7eb;
-                border-radius: 1.25rem;
-                padding: 1.5rem;
-                text-align: center;
-                width: 240px;
-                box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.05);
-                position: relative;
-                z-index: 10;
-            }
-
-            .viz-avatar {
-                width: 5.5rem;
-                height: 5.5rem;
-                border-radius: 9999px;
-                margin: 0 auto 1.5rem;
-                border: 3px solid white;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                overflow: hidden;
-                background: #f8fafc;
-            }
-
-            .viz-role-badge {
-                background: #be1e2d;
-                color: white;
-                display: inline-block;
-                padding: 0.35rem 1rem;
-                border-radius: 9999px;
-                font-size: 10px;
-                font-weight: 800;
-                text-transform: uppercase;
-                margin-bottom: 0.625rem;
-            }
-
-            .viz-name {
-                font-size: 13px;
-                font-weight: 900;
-                color: #1e293b;
-                text-transform: uppercase;
-                margin: 0;
-            }
-
-            .viz-children {
-                display: flex;
-                gap: 4rem;
-                position: relative;
-                padding-top: 4rem;
-            }
-
-            .viz-children::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 50%;
+                top: -0.75rem;
+                bottom: 2rem;
                 width: 2px;
-                height: 4rem;
-                background: #D1D5DB;
+                border-left: 2px dashed #e2e8f0;
             }
-
-            .viz-joint {
-                position: absolute;
-                top: -1rem;
-                left: calc(50% - 0.5rem);
-                width: 1rem;
-                height: 1rem;
-                background: #f97316;
-                border: 2px solid white;
-                border-radius: 9999px;
-                z-index: 20;
+            
+            /* Action Buttons */
+            .node-action-btn {
+                padding: 0.5rem;
+                border-radius: 0.75rem;
+                transition: all 0.2s;
+                background: #f8fafc;
+                color: #94a3b8;
+                border: none;
+                cursor: pointer;
             }
-
-            [x-cloak] {
-                display: none !important;
+            .node-action-btn:hover { background: #f1f5f9; color: var(--titan-navy); }
+            .node-action-btn.btn-red:hover { background: #fee2e2; color: var(--titan-red); }
+            
+            /* Icon Sizing (Bypass TW Purge) */
+            .org-icon-sm { width: 1.25rem !important; height: 1.25rem !important; }
+            .org-icon-md { width: 1.5rem !important; height: 1.5rem !important; }
+            .org-icon-lg { width: 2rem !important; height: 2rem !important; }
+            
+            /* Action Buttons Header */
+            .org-btn-primary {
+                background-color: var(--titan-navy);
+                color: white !important;
+                padding: 0.75rem 2rem;
+                border-radius: 0.75rem;
+                font-weight: 700;
+                font-size: 0.875rem;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                transition: all 0.2s;
             }
+            .org-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
         </style>
 
-        <div class="flex items-center justify-between">
-            <p class="page-subtitle">{{ __('Organizational management with real-time sync.') }}</p>
-            <div class="view-switcher">
-                <div class="switcher-btn" :class="viewMode === 'editor' ? 'active' : ''" @click="viewMode = 'editor'">
-                    {{ __('Management') }}</div>
-                <div class="switcher-btn" :class="viewMode === 'preview' ? 'active' : ''" @click="viewMode = 'preview'">
-                    {{ __('Live Preview') }}</div>
-            </div>
-        </div>
-
-        <div class="hierarchy-card">
-            <!-- Loading Indicator -->
-            <div wire:loading class="processing-overlay">
-                <div class="flex flex-col items-center gap-4">
-                    <div class="w-12 h-12 border-4 border-[#be1e2d] border-t-transparent rounded-full animate-spin">
-                    </div>
-                    <span
-                        class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{{ __('Syncing Hierarchy...') }}</span>
+        <div class="org-chart-wrapper">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-12 border-b border-gray-50 pb-8">
+                <div class="flex items-center gap-4 text-gray-400">
+                    <x-heroicon-o-magnifying-glass class="org-icon-md" />
+                    <span class="font-black uppercase tracking-[0.3em] text-xs">{{ __('MANAGEMENT') }}</span>
                 </div>
-            </div>
-
-            <div class="section-header">
-                <span class="section-label">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.3-4.3" />
-                    </svg>
-                    <span x-text="viewMode === 'editor' ? 'DATA ENTRY' : 'DESIGN PREVIEW'"></span>
-                </span>
-
-                <button x-show="viewMode === 'editor'" type="button" @click="saveOrder()"
-                    class="bg-[#be1e2d] text-white px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-black transition-all shadow-lg hover:shadow-[#be1e2d]/20">
+                <button class="org-btn-primary">
                     {{ __('Save Display Order') }}
                 </button>
             </div>
 
-            <div x-show="viewMode === 'editor'" x-transition class="tree-container">
-                <div id="root-sortable" class="sortable-list">
-                    @include('filament.pages.org-chart-node', ['nodes' => $tree, 'level' => 0, 'parentId' => null])
-                </div>
+            <!-- Tree List -->
+            <div class="max-w-4xl mx-auto space-y-4" x-ref="treeRoot">
+                @foreach($chartData as $node)
+                    <x-org.chart-node :node="$node" />
+                @endforeach
             </div>
 
-            <div x-show="viewMode === 'preview'" x-transition class="visual-preview">
-                <template x-for="node in tree" :key="node.id">
-                    <div class="viz-node" :class="node.children && node.children.length ? 'has-children' : ''">
-                        <div class="viz-card">
-                            <div class="viz-avatar"><template x-if="node.image"><img :src="node.image"
-                                        onerror="this.src='https://ui-avatars.com/api/?name=User&background=f8fafc&color=cbd5e1'" /></template>
-                            </div>
-                            <div class="viz-role-badge" x-text="node.role"></div>
-                            <h4 class="viz-name" x-text="node.name"></h4>
-                        </div>
-                        <div x-show="node.children && node.children.length" class="viz-children">
-                            <div class="viz-joint"></div>
-                            <template x-for="child in node.children" :key="child.id">
-                                <div class="viz-node"
-                                    :class="child.children && child.children.length ? 'has-children' : ''">
-                                    <div class="viz-card" style="width: 210px;">
-                                        <div class="viz-avatar" style="width: 4.5rem; height: 4.5rem;"><template
-                                                x-if="child.image"><img :src="child.image"
-                                                    onerror="this.src='https://ui-avatars.com/api/?name=User&background=f8fafc&color=cbd5e1'" /></template>
-                                        </div>
-                                        <div class="viz-role-badge" x-text="child.role"></div>
-                                        <h4 class="viz-name" style="font-size: 12px;" x-text="child.name"></h4>
-                                    </div>
-                                    <div x-show="child.children && child.children.length" class="viz-children">
-                                        <div class="viz-joint"></div>
-                                        <template x-for="grand in child.children" :key="grand.id">
-                                            <div class="viz-node">
-                                                <div class="viz-card" style="width: 180px; padding: 1rem;">
-                                                    <div class="viz-avatar" style="width: 3.5rem; height: 3.5rem;">
-                                                        <template x-if="grand.image"><img :src="grand.image"
-                                                                onerror="this.src='https://ui-avatars.com/api/?name=User&background=f8fafc&color=cbd5e1'" /></template>
-                                                    </div>
-                                                    <div class="viz-role-badge" x-text="grand.role"
-                                                        style="font-size: 8px; padding: 0.2rem 0.6rem;"></div>
-                                                    <h4 class="viz-name" style="font-size: 11px;" x-text="grand.name">
-                                                    </h4>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </template>
-            </div>
-        </div>
-        <x-filament-actions::modals />
-    </div>
-
-    @once
-        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-        <script>
-            function orgChartManager() {
-                return {
-                    tree: @entangle('tree'),
-                    expanded: {},
-                    viewMode: 'editor',
-
-                    init() {
-                        this.$nextTick(() => this.initSortable());
-                        this.$watch('tree', () => this.$nextTick(() => this.initSortable()));
-                        window.addEventListener('node-added', (e) => {
-                            if (e.detail.parentId) { this.expanded[e.detail.parentId] = true; }
-                        });
-                    },
-
-                    initSortable() {
-                        document.querySelectorAll('.sortable-list').forEach(el => {
-                            Sortable.create(el, { group: 'nested', animation: 300, handle: '.drag-handle' });
-                        });
-                    },
-
-                    saveOrder() {
-                        const gather = (el) => {
-                            return Array.from(el.children).map(i => {
-                                const nest = i.querySelector('.children-nested');
-                                return { id: i.dataset.id, children: nest ? gather(nest) : [] };
+            @push('scripts')
+                <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+                <script>
+                    document.addEventListener('livewire:load', function () {
+                        const initSortable = (el) => {
+                            new Sortable(el, {
+                                group: 'nested',
+                                animation: 150,
+                                fallbackOnBody: true,
+                                swapThreshold: 0.65,
+                                handle: '.cursor-grab',
+                                onEnd: function (evt) {
+                                    let data = serializeTree(document.querySelector('[x-ref="treeRoot"]'));
+                                    @this.call('saveOrder', data);
+                                }
                             });
                         };
-                        const data = gather(document.getElementById('root-sortable'));
-                        this.$wire.updateHierarchy(data);
-                    }
-                }
-            }
-        </script>
-    @endonce
+
+                        const serializeTree = (root) => {
+                            return Array.from(root.children).map(el => {
+                                const id = el.getAttribute('data-id');
+                                const childContainer = el.querySelector('.children-container');
+                                return {
+                                    id: id,
+                                    children: childContainer ? serializeTree(childContainer) : []
+                                };
+                            });
+                        };
+
+                        initSortable(document.querySelector('[x-ref="treeRoot"]'));
+                        document.querySelectorAll('.children-container').forEach(initSortable);
+                    });
+                </script>
+            @endpush
+
+            @if(empty($chartData))
+                <div class="text-center py-24 text-titan-navy/30 italic">
+                    {{ __('No organizational units found. Start by adding a root node.') }}
+                </div>
+            @endif
+        </div>
+    </div>
 </x-filament-panels::page>

@@ -15,11 +15,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $admin = User::firstOrNew(['email' => 'admin@kimmex.com']);
+        $admin->forceFill([
+            'name' => 'Admin User',
+            'password' => 'password',
+            'role' => 'ADMIN',
+        ])->save();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $editor = User::firstOrNew(['email' => 'editor@kimmex.com']);
+        $editor->forceFill([
+            'name' => 'Editor User',
+            'password' => 'password',
+            'role' => 'EDITOR',
+        ])->save();
+
+        $this->call([
+            PartnerSeeder::class,
+            OrganizationSeeder::class,
+            BrandIdentitySeeder::class,
         ]);
     }
 }

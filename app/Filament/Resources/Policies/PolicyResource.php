@@ -41,6 +41,11 @@ class PolicyResource extends Resource
     protected static ?int $navigationSort = 10;
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-shield-check';
 
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return PolicyForm::configure($schema);

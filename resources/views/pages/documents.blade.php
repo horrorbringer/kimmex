@@ -1,5 +1,5 @@
-<x-layouts.app title="Doc Collection"
-    description="Access our centralized repository of engineering standards, research papers, technical specifications, and corporate policies.">
+<x-layouts.app title="Student Research Hub"
+    description="Access our centralized repository of engineering standards, research papers, case studies, and internship resources for students and researchers.">
 
     @php
         $documents = [
@@ -15,6 +15,7 @@
                 'desc' => 'Comprehensive engineering standards covering structural design, load calculations, and quality requirements for high-rise construction projects in Cambodia.',
                 'date' => 'March 2026',
                 'image' => '/images/projects/Thumbnail-1.jpg',
+                'academic' => true,
             ],
             [
                 'slug' => 'site-safety-risk-management',
@@ -28,6 +29,7 @@
                 'desc' => 'Complete safety protocols, PPE requirements, and emergency response procedures for all active construction sites.',
                 'date' => 'February 2026',
                 'image' => '/images/projects/Thumbnail-2.jpg',
+                'academic' => true,
             ],
             [
                 'slug' => 'company-profile-2026',
@@ -41,6 +43,7 @@
                 'desc' => 'Full corporate profile including company history, leadership, core services, and a showcase of landmark projects delivered.',
                 'date' => 'January 2026',
                 'image' => '/images/projects/Thumbnail-3.jpg',
+                'academic' => false,
             ],
             [
                 'slug' => 'mep-technical-specifications',
@@ -54,6 +57,7 @@
                 'desc' => 'Detailed technical specifications for Mechanical, Electrical, and Plumbing systems integration across all project types.',
                 'date' => 'January 2026',
                 'image' => '/images/projects/Thumbnail-4.jpg',
+                'academic' => true,
             ],
             [
                 'slug' => 'sustainable-construction-sea',
@@ -67,6 +71,7 @@
                 'desc' => 'Research paper on eco-friendly materials, energy-efficient designs, and green building certifications applicable to the Cambodian market.',
                 'date' => 'December 2025',
                 'image' => '/images/projects/Thumbnail-5.jpg',
+                'academic' => true,
             ],
             [
                 'slug' => 'mef-project-case-study',
@@ -80,9 +85,10 @@
                 'desc' => 'Detailed case study covering the design, construction, and delivery of the MEF government office complex in Phnom Penh.',
                 'date' => 'November 2025',
                 'image' => '/images/projects/Thumbnail-1.jpg',
+                'academic' => true,
             ],
         ];
-        $tabs = ['All Types', 'Engineering', 'Safety', 'Research', 'Corporate', 'Technical', 'Case Study'];
+        $tabs = ['All Types', 'Case Studies', 'Engineering Standards', 'Safety Manuals', 'Research', 'Corporate', 'Technical'];
     @endphp
 
     <div class="min-h-screen bg-white text-titan-navy" x-data="{
@@ -101,12 +107,12 @@
         <section class="bg-titan-navy pt-[120px] pb-16 px-6">
             <div class="max-w-[1200px] mx-auto">
 
-                <!-- Resource Center Badge -->
+                <!-- Student Research Hub Badge -->
                 <div
-                    class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 mb-8">
-                    <x-lucide-library class="w-3.5 h-3.5 text-white/50" />
+                    class="inline-flex items-center gap-2 bg-accent-orange/10 border border-accent-orange/20 rounded-full px-4 py-2 mb-8">
+                    <x-lucide-graduation-cap class="w-3.5 h-3.5 text-accent-orange" />
                     <span
-                        class="text-[11px] font-bold uppercase tracking-[0.25em] text-white/60">{{ __('Resource Center') }}</span>
+                        class="text-[11px] font-bold uppercase tracking-[0.25em] text-accent-orange">{{ __('Student Research & Knowledge Hub') }}</span>
                 </div>
 
                 <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
@@ -117,7 +123,7 @@
                             {{ __('DOC') }} <span class="text-accent-orange">{{ __('COLLECTION') }}</span>
                         </h1>
                         <p class="text-white/40 text-base leading-relaxed max-w-lg">
-                            {{ __('Access our centralized repository of engineering standards, research papers, technical specifications, and corporate policies.') }}
+                            {{ __('Access our centralized repository of engineering standards, research papers, case studies, and internship resources for students and researchers.') }}
                         </p>
                     </div>
 
@@ -135,6 +141,67 @@
                                 {{ __('Categories') }}
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- === RESEARCH RESOURCES === -->
+        <section class="bg-gradient-to-b from-gray-50 to-white py-20 px-6">
+            <div class="max-w-[1200px] mx-auto">
+                <div class="text-center mb-16">
+                    <div class="inline-flex items-center gap-2 mb-4">
+                        <div class="w-8 h-px bg-accent-orange"></div>
+                        <span class="text-[10px] font-black text-accent-orange uppercase tracking-[0.4em]">{{ __('Knowledge Library') }}</span>
+                        <div class="w-8 h-px bg-accent-orange"></div>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-black text-titan-navy uppercase tracking-tighter">
+                        {{ __('Research') }} <span class="text-accent-orange">{{ __('Resources') }}</span>
+                    </h2>
+                    <p class="text-titan-navy/40 text-sm mt-4 max-w-2xl mx-auto leading-relaxed">
+                        {{ __('Kimmex is committed to advancing engineering education through open access to real-world project data, technical standards, and learning materials.') }}
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Case Studies -->
+                    <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center mb-6 group-hover:bg-accent-orange/20 transition-colors">
+                            <x-lucide-book-open class="w-6 h-6 text-accent-orange" />
+                        </div>
+                        <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Case Studies') }}</h3>
+                        <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('Deep dives into real project challenges, solutions, and engineering outcomes.') }}</p>
+                        <button @click="activeTab = 'Case Study'" class="text-[10px] font-bold text-accent-orange uppercase tracking-widest hover:underline">{{ __('Browse Case Studies') }} →</button>
+                    </div>
+
+                    <!-- Engineering Standards -->
+                    <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-titan-navy/5 flex items-center justify-center mb-6 group-hover:bg-titan-navy/10 transition-colors">
+                            <x-lucide-ruler class="w-6 h-6 text-titan-navy" />
+                        </div>
+                        <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Engineering Standards') }}</h3>
+                        <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('SOPs, structural guidelines, and quality standards for educational reference.') }}</p>
+                        <button @click="activeTab = 'Engineering'" class="text-[10px] font-bold text-titan-navy/50 uppercase tracking-widest hover:text-accent-orange hover:underline transition-colors">{{ __('View Standards') }} →</button>
+                    </div>
+
+                    <!-- Safety Manuals -->
+                    <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mb-6 group-hover:bg-green-100 transition-colors">
+                            <x-lucide-shield-check class="w-6 h-6 text-green-600" />
+                        </div>
+                        <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Safety Manuals') }}</h3>
+                        <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('Standard safety protocols, PPE requirements, and emergency procedures.') }}</p>
+                        <button @click="activeTab = 'Safety'" class="text-[10px] font-bold text-green-600 uppercase tracking-widest hover:underline">{{ __('Read Manuals') }} →</button>
+                    </div>
+
+                    <!-- Internship Program -->
+                    <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-blue-100 transition-colors">
+                            <x-lucide-briefcase class="w-6 h-6 text-blue-600" />
+                        </div>
+                        <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Internship Program') }}</h3>
+                        <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('Hands-on learning opportunities for engineering students at active job sites.') }}</p>
+                        <a href="/contact" class="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline">{{ __('Apply Now') }} →</a>
                     </div>
                 </div>
             </div>

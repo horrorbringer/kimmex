@@ -20,9 +20,8 @@ class PartnersTable
                 TextColumn::make('name')
                     ->label(__('Name'))
                     ->searchable(),
-                TextColumn::make('logoUrl')
-                    ->label(__('Logo'))
-                    ->searchable(),
+                \Filament\Tables\Columns\ImageColumn::make('logoUrl')
+                    ->label(__('Logo')),
                 TextColumn::make('website')
                     ->label(__('Website'))
                     ->searchable(),
@@ -52,7 +51,7 @@ class PartnersTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

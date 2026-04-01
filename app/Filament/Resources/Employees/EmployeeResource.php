@@ -41,6 +41,16 @@ class EmployeeResource extends Resource
     protected static ?int $navigationSort = 3;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return EmployeeForm::configure($schema);

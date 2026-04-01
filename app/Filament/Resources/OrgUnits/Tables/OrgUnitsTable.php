@@ -15,26 +15,43 @@ class OrgUnitsTable
     {
         return $table
             ->columns([
+                \Filament\Tables\Columns\ImageColumn::make('employee.image')
+                    ->label('')
+                    ->circular()
+                    ->placeholder('-'),
+
                 TextColumn::make('title')
                     ->label(__('Title'))
-                    ->description(fn(OrgUnit $record) => $record->parent?->title ?? __('Root Unit'))
+                    ->description(fn(OrgUnit $record) => $record->getPath())
                     ->weight('bold')
                     ->searchable(),
 
                 TextColumn::make('type')
-                    ->label(__('Unit Type'))
+                    ->label(__('Tier / Type'))
                     ->badge()
                     ->colors([
+                        'danger' => 'EXECUTIVE',
+                        'warning' => 'MANAGEMENT',
+                        'success' => 'DIRECTOR',
+                        'info' => 'MANAGER',
                         'primary' => 'STAFF',
-                        'success' => 'DEPARTMENT',
-                        'warning' => 'OFFICE',
+                        'secondary' => 'DEPARTMENT',
+                        'gray' => 'OFFICE',
                     ])
                     ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'EXECUTIVE' => __('Executive'),
+                        'MANAGEMENT' => __('Management'),
+                        'DIRECTOR' => __('Director'),
+                        'MANAGER' => __('Manager'),
                         'STAFF' => __('Individual'),
                         'DEPARTMENT' => __('Department'),
                         'OFFICE' => __('Facility'),
                     })
                     ->icon(fn(string $state): string => match ($state) {
+                        'EXECUTIVE' => 'heroicon-o-sparkles',
+                        'MANAGEMENT' => 'heroicon-o-shield-check',
+                        'DIRECTOR' => 'heroicon-o-academic-cap',
+                        'MANAGER' => 'heroicon-o-identification',
                         'STAFF' => 'heroicon-o-user',
                         'DEPARTMENT' => 'heroicon-o-building-office-2',
                         'OFFICE' => 'heroicon-o-map-pin',
@@ -43,19 +60,19 @@ class OrgUnitsTable
                 TextColumn::make('employee.name')
                     ->label(__('Assigned Employee'))
                     ->placeholder('-')
+                    ->weight('semibold')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('department.name')
                     ->label(__('Related Dept'))
                     ->placeholder('-')
+                    ->color('gray')
                     ->searchable(),
 
-                TextColumn::make('orderIndex')
+                \Filament\Tables\Columns\TextInputColumn::make('orderIndex')
                     ->label(__('Sort'))
-                    ->numeric()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('Last Update'))
@@ -64,13 +81,25 @@ class OrgUnitsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('orderIndex')
+            ->groups([
+                \Filament\Tables\Grouping\Group::make('type')
+                    ->label(__('Organizational Tier'))
+                    ->collapsible(),
+                \Filament\Tables\Grouping\Group::make('department.name')
+                    ->label(__('Department'))
+                    ->collapsible(),
+            ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('type')
-                    ->label(__('Filter by Type'))
+                    ->label(__('Filter by Tier'))
                     ->options([
-                        'STAFF' => __('Individual (Staff)'),
-                        'DEPARTMENT' => __('Departmental Group'),
-                        'OFFICE' => __('Facility / Office'),
+                        'EXECUTIVE' => __('C-Suite'),
+                        'MANAGEMENT' => __('Senior Management'),
+                        'DIRECTOR' => __('Directors'),
+                        'MANAGER' => __('Managers'),
+                        'STAFF' => __('Staff'),
+                        'DEPARTMENT' => __('Departments'),
                     ]),
                 \Filament\Tables\Filters\SelectFilter::make('departmentId')
                     ->label(__('Department'))

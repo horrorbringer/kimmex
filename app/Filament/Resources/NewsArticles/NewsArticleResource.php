@@ -43,6 +43,11 @@ class NewsArticleResource extends Resource
     protected static ?int $navigationSort = 4;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-newspaper';
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return NewsArticleForm::configure($schema);

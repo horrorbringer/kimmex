@@ -45,6 +45,11 @@ class ProjectResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ProjectForm::configure($schema);

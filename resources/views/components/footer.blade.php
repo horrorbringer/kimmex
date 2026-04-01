@@ -158,7 +158,7 @@
             class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
             <p>&copy; 2026 Kimmex Construction & Investment Co., Ltd. {{ __('All rights reserved') }}.</p>
             <div class="flex gap-6">
-                <a href="#" class="hover:text-accent-orange transition-colors">{{ __('Privacy Policy') }}</a>
+                <a href="/privacy-policy" class="hover:text-accent-orange transition-colors">{{ __('Privacy Policy') }}</a>
                 <a href="#" class="hover:text-accent-orange transition-colors">{{ __('Terms of Service') }}</a>
             </div>
         </div>

@@ -74,3 +74,8 @@ Route::get('/documents', function () {
 Route::get('/documents/{slug}', function ($slug) {
     return view('pages.documents.show', ['slug' => $slug]);
 })->name('documents.show');
+
+// Privacy Policy
+Route::get('/privacy-policy', function () {
+    return view('pages.privacy');
+})->name('privacy');

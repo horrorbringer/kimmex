@@ -15,19 +15,36 @@
                 'image' => $n->coverImage ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : '/images/projects/Thumbnail-4.jpg',
                 'title' => $n->getTranslation('title', app()->getLocale()),
                 'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-                'excerpt' => $excerpt
+                'excerpt' => $excerpt,
+                'isSustainability' => in_array(strtolower($n->category ?? ''), ['sustainability', 'csr', 'environment', 'green', 'esg'])
             ];
         })->toArray();
+
+        // Get unique categories including Sustainability and CSR as default options
+        $categoriesFromDb = $newsArticlesDb->map(fn($n) => $n->category ?: __('Updates'))->unique()->toArray();
+        $defaultCategories = [__('Sustainability'), __('CSR'), __('Updates')];
+        $categories = array_values(array_unique(array_merge($defaultCategories, $categoriesFromDb)));
+        array_unshift($categories, __('All'));
 
         // Fallback
         if (empty($newsArticles)) {
             $newsArticles = [
-                ['slug' => 'award', 'category' => __('Updates'), 'image' => '/images/projects/Thumbnail-4.jpg', 'title' => __('Kimmex Insights and Announcements'), 'date' => now()->format('M d, Y'), 'excerpt' => __('Discover our journey in construction excellence.')]
+                ['slug' => 'award', 'category' => __('Updates'), 'image' => '/images/projects/Thumbnail-4.jpg', 'title' => __('Kimmex Insights and Announcements'), 'date' => now()->format('M d, Y'), 'excerpt' => __('Discover our journey in construction excellence.'), 'isSustainability' => false],
+                ['slug' => 'green-initiative', 'category' => __('Sustainability'), 'image' => '/images/projects/Thumbnail-6.jpg', 'title' => __('Green Building Initiative Launched'), 'date' => now()->subDays(15)->format('M d, Y'), 'excerpt' => __('Kimmex launches new sustainable construction practices across all projects.'), 'isSustainability' => true]
             ];
+            $categories = [__('All'), __('Sustainability'), __('CSR'), __('Updates')];
         }
     @endphp
 
-    <div class="bg-white min-h-screen text-titan-navy">
+    <div class="bg-white min-h-screen text-titan-navy" x-data="{
+        activeCategory: '{{ __('All') }}',
+        articles: {{ Js::from($newsArticles) }},
+        categories: {{ Js::from($categories) }},
+        get filteredArticles() {
+            if (this.activeCategory === '{{ __('All') }}') return this.articles;
+            return this.articles.filter(a => a.category === this.activeCategory);
+        }
+    }">
 
         <!-- HERO -->
         <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy"
@@ -59,8 +76,21 @@
             </div>
         </section>
 
+        <!-- CATEGORY FILTER -->
+        <section class="max-w-[1200px] mx-auto px-6 relative z-40 -mt-12">
+            <div class="flex flex-wrap items-center gap-2 bg-white rounded-xl shadow-lg border border-gray-100 p-2">
+                <template x-for="cat in categories" :key="cat">
+                    <button @click="activeCategory = cat"
+                        :class="activeCategory === cat ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/50 hover:text-titan-navy hover:bg-gray-100'"
+                        class="px-4 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap"
+                        x-text="cat === '{{ __('All') }}' ? '{{ __('All News') }}' : cat">
+                    </button>
+                </template>
+            </div>
+        </section>
+
         <!-- FEATURED ARTICLE (First article as hero card) -->
-        <section class="max-w-[1200px] mx-auto px-6 relative z-40 -mt-16">
+        <section class="max-w-[1200px] mx-auto px-6 relative z-40 mt-8">
             <a href="/news/{{ $newsArticles[0]['slug'] }}"
                 class="group block bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-2">

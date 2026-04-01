@@ -51,6 +51,11 @@ class DocumentCategoryResource extends Resource
     protected static ?int $navigationSort = 2;
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-tag';
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -126,7 +131,7 @@ class DocumentCategoryResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

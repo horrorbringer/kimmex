@@ -43,6 +43,11 @@ class DocumentResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-folder-open';
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return DocumentForm::configure($schema);

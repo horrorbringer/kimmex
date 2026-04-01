@@ -33,6 +33,12 @@ class ManageBranding extends Page implements HasForms
     {
         return __('Manage Brand Identity');
     }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     protected string $view = 'filament.pages.manage-branding';
 
     public ?array $data = [];

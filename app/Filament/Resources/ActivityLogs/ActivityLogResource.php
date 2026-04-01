@@ -44,7 +44,7 @@ class ActivityLogResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return auth()->user()?->role === 'ADMIN';
+        return auth()->user()?->isAdmin();
     }
 
     public static function canCreate(): bool

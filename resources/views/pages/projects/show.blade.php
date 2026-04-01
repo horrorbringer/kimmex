@@ -81,9 +81,28 @@
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
 
-    <div class="bg-gray-50 min-h-screen text-titan-navy selection:bg-titan-red selection:text-white pb-32">
+    <div class="bg-gray-50 min-h-screen text-titan-navy selection:bg-titan-red selection:text-white pb-32" x-data="{
+        lightboxOpen: false,
+        lightboxIndex: 0,
+        images: {{ json_encode($project['images']) }},
+        activeSection: 'overview',
+        openLightbox(index) { this.lightboxIndex = index; this.lightboxOpen = true; },
+        closeLightbox() { this.lightboxOpen = false; },
+        nextImage() { this.lightboxIndex = (this.lightboxIndex + 1) % this.images.length; },
+        prevImage() { this.lightboxIndex = (this.lightboxIndex - 1 + this.images.length) % this.images.length; },
+        countersAnimated: false,
+        animateCounters() { this.countersAnimated = true; }
+    }" x-init="
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { this.animateCounters(); observer.unobserve(entry.target); }
+            });
+        }, { threshold: 0.3 });
+        const band = document.getElementById('metric-band');
+        if (band) observer.observe(band);
+    ">
 
-        <!-- === HERO SECTION (Refined Architectural Style) === -->
+        <!-- === HERO SECTION (Enhanced) === -->
         <section
             class="relative w-full lg:min-h-[80vh] flex flex-col lg:flex-row bg-titan-navy border-b border-white/5 overflow-hidden">
 
@@ -102,17 +121,28 @@
                         <span class="text-white/60">{{ __('Project Detail') }}</span>
                     </nav>
 
+                    <!-- Status Badge -->
+                    <div class="inline-flex items-center gap-3 mb-6 transition-all duration-700 delay-100"
+                        :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
+                        <span class="w-8 h-px bg-titan-red"></span>
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-orange/10 border border-accent-orange/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent-orange animate-pulse"></span>
+                            <span class="text-accent-orange text-[10px] font-black uppercase tracking-[0.3em]">
+                                {{ $project['status'] }}
+                            </span>
+                        </span>
+                    </div>
+
                     <!-- Project Tag -->
                     <div class="inline-flex items-center gap-3 mb-10 transition-all duration-700 delay-100"
                         :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'">
-                        <span class="w-8 h-px bg-titan-red"></span>
                         <span class="text-titan-red text-[11px] font-black uppercase tracking-[0.4em]">
                             {{ $project['type'] }}
                         </span>
                     </div>
 
                     <!-- Title -->
-                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-black text-white leading-[1.1] uppercase tracking-tight mb-8 transition-all duration-1000 delay-300"
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.05] uppercase tracking-tight mb-8 transition-all duration-1000 delay-300"
                         :class="reveal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
                         {!! str_replace(' & ', ' <span class="text-titan-red">&</span> ', $project['title']) !!}
                     </h1>
@@ -125,12 +155,12 @@
                         </p>
                     </div>
                 </div>
-
-                <!-- Subtle Decorative Background Text removed for clarity -->
             </div>
 
-            <!-- Right Image Block -->
-            <div class="w-full lg:w-1/2 h-[50vh] lg:h-full relative overflow-hidden group bg-titan-navy">
+            <!-- Right Image Block with Parallax -->
+            <div class="w-full lg:w-1/2 h-[50vh] lg:h-full relative overflow-hidden group bg-titan-navy"
+                x-data="{ scrollY: 0 }"
+                @scroll.window="scrollY = window.scrollY">
                 <div
                     class="absolute inset-0 bg-gradient-to-r from-titan-navy via-transparent to-transparent z-10 pointer-events-none lg:block hidden">
                 </div>
@@ -139,9 +169,10 @@
                 </div>
 
                 <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                    class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[20s] ease-out brightness-90" />
+                    class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[20s] ease-out brightness-90"
+                    :style="'transform: translateY(' + (scrollY * 0.15) + 'px) scale(1.05)'" />
 
-                <!-- Refined Scale Badge -->
+                <!-- Floating Stats Overlay -->
                 <div class="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 z-20 backdrop-blur-3xl bg-white/5 py-6 px-8 border border-white/10 hidden md:block group/scale transition-all duration-500 hover:bg-white/10 rounded-xl"
                     x-data="{ reveal: false }" x-init="setTimeout(() => reveal = true, 1000)"
                     :class="reveal ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'">
@@ -158,8 +189,8 @@
             </div>
         </section>
 
-        <!-- === METRIC BAND === -->
-        <div
+        <!-- === METRIC BAND with Animated Counters === -->
+        <div id="metric-band"
             class="bg-white/90 backdrop-blur-2xl border border-white/20 py-16 px-8 lg:px-20 shadow-[0_32px_128px_-16px_rgba(0,0,0,0.1)] relative z-20 -mt-10 lg:-mt-16 mx-4 lg:mx-20 rounded-3xl flex justify-center group/band transition-all duration-700 hover:shadow-[0_48px_160px_-16px_rgba(0,0,0,0.15)]">
             <div class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-12 lg:gap-8 gap-y-16">
                 @php
@@ -192,8 +223,40 @@
             </div>
         </div>
 
+        <!-- === STICKY NAVIGATION SIDEBAR === -->
+        <div class="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col gap-3"
+            x-data="{ shown: false }"
+            x-init="setTimeout(() => shown = true, 2000)"
+            :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'"
+            style="transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+            <a href="#overview" @click="activeSection = 'overview'"
+                :class="activeSection === 'overview' ? 'bg-titan-navy text-white' : 'bg-white/80 text-titan-navy/40 hover:bg-white hover:text-titan-navy'"
+                class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold backdrop-blur-sm border border-gray-100 shadow-sm transition-all duration-300"
+                title="Overview">
+                <x-lucide-file-text class="w-4 h-4" />
+            </a>
+            <a href="#technical" @click="activeSection = 'technical'"
+                :class="activeSection === 'technical' ? 'bg-titan-navy text-white' : 'bg-white/80 text-titan-navy/40 hover:bg-white hover:text-titan-navy'"
+                class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold backdrop-blur-sm border border-gray-100 shadow-sm transition-all duration-300"
+                title="Technical">
+                <x-lucide-settings class="w-4 h-4" />
+            </a>
+            <a href="#gallery" @click="activeSection = 'gallery'"
+                :class="activeSection === 'gallery' ? 'bg-titan-navy text-white' : 'bg-white/80 text-titan-navy/40 hover:bg-white hover:text-titan-navy'"
+                class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold backdrop-blur-sm border border-gray-100 shadow-sm transition-all duration-300"
+                title="Gallery">
+                <x-lucide-image class="w-4 h-4" />
+            </a>
+            <a href="#related" @click="activeSection = 'related'"
+                :class="activeSection === 'related' ? 'bg-titan-navy text-white' : 'bg-white/80 text-titan-navy/40 hover:bg-white hover:text-titan-navy'"
+                class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold backdrop-blur-sm border border-gray-100 shadow-sm transition-all duration-300"
+                title="Related">
+                <x-lucide-link class="w-4 h-4" />
+            </a>
+        </div>
+
         <!-- === DEEP NARRATIVE SECTION === -->
-        <section class="py-40 px-8 xl:px-0 max-w-[1400px] mx-auto overflow-hidden">
+        <section id="overview" class="py-40 px-8 xl:px-0 max-w-[1400px] mx-auto overflow-hidden">
             <div class="flex flex-col lg:flex-row gap-20 xl:gap-32">
 
                 <!-- Sidebar Labels -->
@@ -270,7 +333,7 @@
         </div>
 
         <!-- === TECHNICAL DATASHEETS === -->
-        <section class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
+        <section id="technical" class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
                 <!-- Scope Section -->
@@ -337,7 +400,7 @@
         </section>
 
         <!-- === PROJECTS GALLERY === -->
-        <section class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
+        <section id="gallery" class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40" x-data="{ shown: false }" x-intersect.once="shown = true">
             <div
                 class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-gray-100 pb-12">
                 <div>
@@ -361,26 +424,96 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 @foreach($project['images'] as $index => $img)
-                    <div
-                        class="relative aspect-[4/3] bg-gray-100 overflow-hidden group rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500">
+                    <div @click="openLightbox({{ $index }})"
+                        class="relative aspect-[4/3] bg-gray-100 overflow-hidden group rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 cursor-zoom-in"
+                        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                        :style="'transition-delay: {{ $index * 100 }}ms; transition-duration: 700ms;'">
                         <img src="{{ $img }}"
                             class="w-full h-full object-cover transition-transform duration-[12s] scale-100 group-hover:scale-110" />
                         <div class="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-2xl pointer-events-none"></div>
+                        <!-- Hover Overlay -->
                         <div
-                            class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-500 pointer-events-none">
+                            class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/40 transition-colors duration-500 flex items-center justify-center">
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
+                                <div class="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                                    <x-lucide-zoom-in class="w-6 h-6 text-white" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image Number Badge -->
+                        <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span class="bg-white/90 backdrop-blur-sm text-titan-navy text-[10px] font-black px-2.5 py-1 rounded-lg">
+                                {{ $index + 1 }} / {{ count($project['images']) }}
+                            </span>
                         </div>
                     </div>
                 @endforeach
             </div>
         </section>
 
+        <!-- === LIGHTBOX MODAL === -->
+        <div x-show="lightboxOpen" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @keydown.escape.window="closeLightbox()"
+             @keydown.arrow-right.window="nextImage()"
+             @keydown.arrow-left.window="prevImage()"
+             class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center"
+             style="display: none;">
+            
+            <!-- Close Button -->
+            <button @click="closeLightbox()" 
+                    class="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                <x-lucide-x class="w-6 h-6 text-white" />
+            </button>
+
+            <!-- Previous Button -->
+            <button @click="prevImage()" 
+                    class="absolute left-6 z-50 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                <x-lucide-chevron-left class="w-6 h-6 text-white" />
+            </button>
+
+            <!-- Next Button -->
+            <button @click="nextImage()" 
+                    class="absolute right-6 z-50 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                <x-lucide-chevron-right class="w-6 h-6 text-white" />
+            </button>
+
+            <!-- Image -->
+            <div class="max-w-7xl max-h-[85vh] px-24 py-12">
+                <img :src="images[lightboxIndex]" 
+                     class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100" />
+            </div>
+
+            <!-- Image Counter -->
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10">
+                <span class="text-white/80 text-sm font-bold">
+                    <span x-text="lightboxIndex + 1"></span> / <span x-text="images.length"></span>
+                </span>
+            </div>
+        </div>
+
         <!-- === SIMILAR PROJECTS === -->
         @if(count($project['related']) > 0)
-            <section class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
-                <div class="flex items-center gap-4 mb-16">
-                    <span class="w-12 h-1 bg-titan-red"></span>
-                    <h2 class="text-3xl md:text-5xl font-black text-titan-navy uppercase tracking-tight">{{ __('Similar') }}
-                        <span class="text-titan-red">{{ __('Projects') }}</span></h2>
+            <section id="related" class="max-w-[1400px] mx-auto px-8 xl:px-0 mb-40">
+                <div class="flex items-center justify-between mb-16">
+                    <div class="flex items-center gap-4">
+                        <span class="w-12 h-1 bg-titan-red"></span>
+                        <h2 class="text-3xl md:text-5xl font-black text-titan-navy uppercase tracking-tight">{{ __('Similar') }}
+                            <span class="text-titan-red">{{ __('Projects') }}</span></h2>
+                    </div>
+                    <a href="/projects"
+                        class="inline-flex items-center gap-2 bg-titan-navy hover:bg-accent-orange text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all duration-300">
+                        {{ __('View All Projects') }}
+                        <x-lucide-arrow-right class="w-4 h-4" />
+                    </a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -19,6 +19,20 @@
 /storage/*.key
 /storage/pail
 /vendor
+Thumbs.db
 Homestead.json
 Homestead.yaml
-Thumbs.db
+
+# AI Agent Specific
+.agents/
+.claude/
+.remember/
+.gemini/
+
+# Local diagnostic/temporary files
+artisan_list.txt
+db_show.txt
+migrate_status.txt
+milestones*.txt
+tmp_org.json
+db_dump.json

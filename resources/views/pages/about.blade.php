@@ -6,6 +6,7 @@
         $locale = app()->getLocale();
         $localeKey = $locale === 'kh' ? 'km' : $locale;
         $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
+        $ceoName = $brandProfile['ceo_name'] ?? 'Okhna. TOUCH KIM';
 
         $aboutData = [
             'story' => $brand['company_story'] ?? __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner...'),
@@ -67,7 +68,7 @@
                 $name = $unit->employee?->name ?? $unit->getTranslation('title', app()->getLocale());
 
                 // Determine role based on Employee or local Department
-                $role = $unit->employee?->role ?? $unit->department?->getTranslation('name', app()->getLocale());
+                $role = $unit->employee?->role ?? $unit->getTranslation('title', app()->getLocale());
 
                 // Specific Type Mapping for Styling
                 $rawType = strtoupper($unit->type);
@@ -92,6 +93,7 @@
                     'role' => $role,
                     'type' => $type,
                     'image' => $unit->employee?->image ? \Illuminate\Support\Facades\Storage::url($unit->employee->image) : null,
+                    'phone' => $unit->employee?->phone,
                     'bio' => $unit->employee?->bio,
                     'children' => \App\Models\OrgUnit::where('parentId', $unit->id)
                         ->orderBy('orderIndex')
@@ -297,9 +299,10 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 delay-200">
-                    <span
-                        class="text-accent-orange font-black uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('WHO WE ARE') }}</span>
-                    <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy leading-tight mb-8">
+                    <span class="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">
+                        {{ __('WHO WE ARE') }}
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
                         @php
                             $profile = \App\Models\SystemSetting::get('organization_profile', []);
                             $locale = app()->getLocale();
@@ -308,112 +311,77 @@
                         @endphp
                         {{ $tagline }}
                     </h2>
-                    @php
-                        $ceoName = $brandProfile['ceo_name'] ?? 'Okhna. TOUCH KIM';
-                    @endphp
-                    <p class="text-titan-navy/60 text-lg leading-relaxed mb-12 max-w-2xl">
+                    
+                    <p class="text-gray-500 text-lg leading-relaxed mb-12 whitespace-pre-line">
                         {{ $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}
                     </p>
 
                     <!-- Mission/Vision/Goal Interactive List -->
-                    <div class="space-y-4" x-data="{ activeMvg: null }">
+                    <div class="space-y-6" x-data="{ active: 'vision' }">
                         @php
                             $mvg_items = [
                                 [
                                     'id' => 'vision',
                                     'icon' => 'eye',
                                     'title' => __('Our Vision'),
-                                    'desc' => $brand['vision'] ?? __('To be the most trusted and innovative construction partner in Cambodia.'),
-                                    'long_desc' => __('Our vision drives us to set new industry standards through sustainable engineering, pioneering architecture, and an unwavering commitment to quality in the Kingdom.')
+                                    'desc' => $brand['vision'] ?? __('To be the most trusted and innovative construction partner in Cambodia.')
                                 ],
                                 [
                                     'id' => 'mission',
                                     'icon' => 'flag',
                                     'title' => __('Our Mission'),
-                                    'desc' => $brand['mission'] ?? __('To bridge the gap between concept and reality through exceptional engineering and safety.'),
-                                    'long_desc' => __('We ensure every structural phase is handled with military-grade precision while maintaining the highest international safety protocols and workforce standards.')
+                                    'desc' => $brand['mission'] ?? __('To bridge the gap between concept and reality through exceptional engineering and safety.')
                                 ],
                                 [
                                     'id' => 'goal',
                                     'icon' => 'target',
-                                    'title' => __('Our Goal'),
-                                    'desc' => $brand['goal'] ?? __('To complete every project on time and within budget with zero-accident safety.'),
-                                    'long_desc' => __('Our goal is to scale our operations across the Kingdom of Cambodia while fostering long-term, transparent partnerships with our local and international clients.')
+                                    'title' => __('Our Strategy'),
+                                    'desc' => $brand['goal'] ?? __('To maintain long-term leadership in the Cambodian market through talent development and CMS investment.')
                                 ],
                             ];
                         @endphp
 
-                        @foreach($mvg_items as $idx => $item)
-                            @php $itemId = $item['id']; @endphp
-                            <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                                @click="activeMvg = (activeMvg === '{{ $itemId }}' ? null : '{{ $itemId }}')"
-                                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="group cursor-pointer relative p-8 md:p-10 transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                                style="transition-delay: {{ $idx * 150 }}ms">
-
-                                <!-- Background Container -->
-                                <div class="absolute inset-0 border border-transparent transition-all duration-700 rounded-3xl pointer-events-none"
-                                    :class="activeMvg === '{{ $itemId }}' ? 'bg-white border-titan-navy/5 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] scale-100' : 'bg-white/40 hover:bg-white hover:border-titan-navy/5 hover:shadow-2xl hover:shadow-titan-navy/5 hover:scale-[1.01]'">
+                        @foreach($mvg_items as $item)
+                        <div class="group cursor-pointer border-b border-gray-100 last:border-b-0 pb-6"
+                             @click="active = (active === '{{ $item['id'] }}' ? null : '{{ $item['id'] }}')">
+                            <div class="flex gap-6 items-start">
+                                <!-- Icon Box -->
+                                <div class="w-14 h-14 rounded-[1rem] bg-[#FFF0E6] text-accent-orange flex items-center justify-center shrink-0 transition-colors duration-500"
+                                     :class="active === '{{ $item['id'] }}' ? 'bg-accent-orange text-white' : ''">
+                                    @if($item['icon'] === 'eye')
+                                        <x-lucide-eye class="w-6 h-6" stroke-width="2" />
+                                    @elseif($item['icon'] === 'flag')
+                                        <x-lucide-flag class="w-6 h-6" stroke-width="2" />
+                                    @elseif($item['icon'] === 'target')
+                                        <x-lucide-target class="w-6 h-6" stroke-width="2" />
+                                    @endif
                                 </div>
 
-                                <!-- Left Accent Line -->
-                                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-0 bg-titan-red transition-all duration-500 rounded-r-full group-hover:h-12"
-                                    :class="activeMvg === '{{ $itemId }}' ? '!h-24 shadow-[0_0_15px_rgba(227,30,36,0.6)]' : ''">
-                                </div>
-
-                                <div class="flex flex-col md:flex-row gap-6 md:gap-8 relative z-10">
-                                    <!-- Icon Box -->
-                                    <div class="w-16 md:w-20 h-16 md:h-20 rounded-2xl md:rounded-[1.25rem] flex items-center justify-center shrink-0 transition-all duration-700 relative overflow-hidden group-hover:-translate-y-1"
-                                        :class="activeMvg === '{{ $itemId }}' ? 'bg-titan-red text-white shadow-2xl shadow-titan-red/40 rotate-[5deg]' : 'bg-gray-100 text-titan-navy group-hover:bg-titan-navy group-hover:text-white'">
-                                        <div class="relative z-10 transition-transform duration-700"
-                                            :class="activeMvg === '{{ $itemId }}' ? 'scale-110 -rotate-[5deg]' : 'group-hover:scale-110'">
-                                            @if($item['icon'] === 'eye')
-                                                <x-lucide-eye class="w-8 h-8" stroke-width="1.5" />
-                                            @elseif($item['icon'] === 'flag')
-                                                <x-lucide-flag class="w-8 h-8" stroke-width="1.5" />
-                                            @elseif($item['icon'] === 'target')
-                                                <x-lucide-target class="w-8 h-8" stroke-width="1.5" />
-                                            @endif
-                                        </div>
-                                        <div
-                                            class="absolute -bottom-4 -right-4 w-12 h-12 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                                <!-- Text Content -->
+                                <div class="flex-grow">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900 transition-colors duration-500"
+                                            :class="active === '{{ $item['id'] }}' ? 'text-accent-orange' : ''">
+                                            {{ $item['title'] }}
+                                        </h3>
+                                        <div class="w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500"
+                                             :class="active === '{{ $item['id'] }}' ? 'border-accent-orange text-accent-orange rotate-180' : 'border-gray-200 text-gray-400'">
+                                            <x-lucide-chevron-down class="w-4 h-4" />
                                         </div>
                                     </div>
-
-                                    <div class="flex-grow md:pt-2">
-                                        <div class="flex items-start md:items-center justify-between mb-4 gap-4">
-                                            <h3 class="text-2xl md:text-3xl font-heading font-black transition-colors duration-500 uppercase tracking-tighter"
-                                                :class="activeMvg === '{{ $itemId }}' ? 'text-titan-red' : 'text-titan-navy group-hover:text-titan-red'">
-                                                {{ $item['title'] }}
-                                            </h3>
-
-                                            <!-- Right side animated plus/minus -->
-                                            <div class="w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 shrink-0"
-                                                :class="activeMvg === '{{ $itemId }}' ? 'border-titan-red text-titan-red bg-titan-red/5' : 'border-gray-200 text-gray-400 group-hover:border-titan-red group-hover:text-titan-red bg-white'">
-                                                <x-lucide-plus class="w-5 h-5 transition-transform duration-700 absolute"
-                                                    x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-180 opacity-0 scale-50' : 'opacity-100 scale-100'" />
-                                                <x-lucide-minus class="w-5 h-5 transition-transform duration-700 absolute"
-                                                    x-bind:class="activeMvg === '{{ $itemId }}' ? 'rotate-0 opacity-100 scale-100' : '-rotate-180 opacity-0 scale-50'" />
-                                            </div>
-                                        </div>
-
-                                        <p class="text-base md:text-lg font-medium transition-colors duration-500 leading-relaxed max-w-2xl"
-                                            :class="activeMvg === '{{ $itemId }}' ? 'text-titan-navy/80' : 'text-titan-navy/50'">
+                                    
+                                    <div x-show="active === '{{ $item['id'] }}'" x-collapse>
+                                        <p class="text-gray-500 text-base leading-relaxed whitespace-pre-line pb-4">
                                             {{ $item['desc'] }}
                                         </p>
-
-                                        <div x-show="activeMvg === '{{ $itemId }}'" x-collapse>
-                                            <div class="pt-8 mt-8 border-t border-titan-navy/5 relative">
-                                                <div class="absolute left-0 top-0 w-24 h-[1px] bg-titan-red"></div>
-                                                <p
-                                                    class="text-base md:text-lg text-titan-navy/70 leading-relaxed font-normal">
-                                                    {{ $item['long_desc'] }}
-                                                </p>
-                                            </div>
-                                        </div>
                                     </div>
+                                    
+                                    <p x-show="active !== '{{ $item['id'] }}'" class="text-gray-400 text-sm italic truncate max-w-md">
+                                        {{ \Illuminate\Support\Str::limit($item['desc'], 80) }}
+                                    </p>
                                 </div>
                             </div>
+                        </div>
                         @endforeach
                     </div>
                 </div>
@@ -599,7 +567,6 @@
                 </div>
             </div>
         </section>
-
 
 
         <!-- QUALITY & SAFETY -->

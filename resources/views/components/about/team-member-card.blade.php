@@ -45,6 +45,13 @@
             <h3 class="text-xs md:text-sm font-black text-titan-navy uppercase tracking-tight leading-tight group-hover:{{ $styles['text'] }} transition-colors duration-500 max-w-[160px]">
                 {{ $member['name'] }}
             </h3>
+
+            @if(!empty($member['phone']))
+                <div class="mt-1 flex items-center gap-1.5 {{ $styles['text'] }} opacity-50 font-bold text-[9px] tracking-widest uppercase">
+                    <x-lucide-phone class="w-2 h-2" />
+                    <span>{{ $member['phone'] }}</span>
+                </div>
+            @endif
         </div>
     </div>
 @endif

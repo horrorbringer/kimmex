@@ -27,18 +27,21 @@
     @php
         $partnersDb = \App\Models\Partner::orderBy('orderIndex')->get();
 
-        $partners = $partnersDb->map(function ($p) {
+        $fallbacks = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
+        
+        $partners = $partnersDb->map(function ($p, $index) use ($fallbacks) {
+            $fallbackLogo = "/patner/" . $fallbacks[$index % count($fallbacks)] . ".png";
             return [
                 'name' => $p->name,
-                'logo' => $p->logo ? \Illuminate\Support\Facades\Storage::url($p->logo) : '/images/partners/default.jpg'
+                'logo' => $p->logoUrl ? \Illuminate\Support\Facades\Storage::url($p->logoUrl) : $fallbackLogo
             ];
         })->toArray();
 
-        // Fallback
+        // Fallback if no records in DB
         if (empty($partners)) {
             $partners = [];
-            for ($i = 1; $i <= 6; $i++) {
-                $partners[] = ['name' => "Partner $i", 'logo' => "/patner/$i.png"];
+            for ($i = 0; $i < count($fallbacks); $i++) {
+                $partners[] = ['name' => "Partner " . ($i+1), 'logo' => "/patner/" . $fallbacks[$i] . ".png"];
             }
         }
     @endphp
@@ -50,7 +53,7 @@
             @foreach($partners as $p)
                 <div
                     class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
-                    <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}"
+                    <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
                         class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" />
                 </div>
             @endforeach
@@ -58,7 +61,7 @@
             @foreach($partners as $p)
                 <div
                     class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
-                    <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}"
+                    <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
                         class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" />
                 </div>
             @endforeach

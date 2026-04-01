@@ -41,6 +41,11 @@ class ManageOrganization extends Page implements HasForms
         return __('Manage Organization Profile');
     }
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     protected string $view = 'filament.pages.manage-organization';
 
     public ?array $data = [];

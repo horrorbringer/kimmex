@@ -20,7 +20,7 @@ class OrgUnitResource extends Resource
 
     protected static ?string $model = OrgUnit::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     public static function getNavigationLabel(): string
     {
@@ -29,7 +29,7 @@ class OrgUnitResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Organization');
+        return __('HR Management');
     }
 
     public static function getLabel(): ?string
@@ -42,11 +42,13 @@ class OrgUnitResource extends Resource
         return __('Org Units');
     }
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 5;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-
-
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
     public static function form(Schema $schema): Schema
     {
         return OrgUnitForm::configure($schema);

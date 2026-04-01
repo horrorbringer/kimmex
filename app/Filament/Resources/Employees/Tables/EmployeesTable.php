@@ -23,6 +23,13 @@ class EmployeesTable
                     ->searchable()
                     ->sortable()
                     ->description(fn ($record) => $record->role),
+
+                TextColumn::make('orgUnit.title')
+                    ->label(__('Org Position'))
+                    ->description(fn ($record) => $record->orgUnit?->getPath() ?? __('Not Assigned'))
+                    ->placeholder('-')
+                    ->wrap()
+                    ->searchable(),
                 TextColumn::make('email')
                     ->label(__('Email'))
                     ->searchable()
@@ -65,7 +72,7 @@ class EmployeesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

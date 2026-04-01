@@ -43,6 +43,15 @@ class PartnerResource extends Resource
     protected static ?int $navigationSort = 7;
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
 
     public static function form(Schema $schema): Schema
     {

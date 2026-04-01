@@ -36,4 +36,17 @@ class OrgUnit extends Model
     {
         return $this->belongsTo(Department::class, 'departmentId');
     }
+
+    public function getPath(): string
+    {
+        $path = [$this->getTranslation('title', app()->getLocale())];
+        $parent = $this->parent;
+
+        while ($parent) {
+            array_unshift($path, $parent->getTranslation('title', app()->getLocale()));
+            $parent = $parent->parent;
+        }
+
+        return implode(' > ', $path);
+    }
 }

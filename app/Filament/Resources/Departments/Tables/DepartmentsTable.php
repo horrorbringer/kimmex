@@ -21,6 +21,16 @@ class DepartmentsTable
                     ->searchable()
                     ->weight('bold'),
 
+                \Filament\Tables\Columns\ImageColumn::make('headUnit.employee.image')
+                    ->label(__('Head / Manager'))
+                    ->circular()
+                    ->placeholder('-'),
+
+                TextColumn::make('headUnit.employee.name')
+                    ->label(__('Department Head'))
+                    ->description(fn(Department $record) => $record->headUnit?->employee?->role ?? '-')
+                    ->placeholder('-'),
+
                 TextColumn::make('slug')
                     ->label(__('Public URL'))
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -53,11 +63,12 @@ class DepartmentsTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                \Filament\Actions\ViewAction::make(),
+                EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

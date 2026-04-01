@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName(fn() => auth()->user()?->role === 'ADMIN' ? 'Kimmex Admin' : 'Kimmex Editor')
+            ->brandName(fn() => auth()->user()?->isAdmin() ? 'Kimmex Admin' : 'Kimmex Editor')
             ->homeUrl('/')
             ->navigationItems([
                 \Filament\Navigation\NavigationItem::make(__('Visit Website'))
