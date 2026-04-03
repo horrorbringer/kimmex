@@ -8,7 +8,6 @@ use Filament\Notifications\Notification;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -16,11 +15,11 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 {
     use \Filament\Actions\Concerns\InteractsWithActions;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-presentation-chart-line';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
     protected string $view = 'filament.pages.manage-org-chart';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'HR Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'HR Management';
 
     protected static ?int $navigationSort = 1;
 
@@ -47,7 +46,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
         return Action::make('edit')
             ->model(OrgUnit::class)
             ->form(\App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm::getSchema())
-            ->fillForm(fn (array $arguments): array => OrgUnit::find($arguments['id'])->toArray())
+            ->fillForm(fn(array $arguments): array => OrgUnit::find($arguments['id'])->toArray())
             ->action(function (array $data, array $arguments): void {
                 OrgUnit::find($arguments['id'])->update($data);
                 $this->loadChartData();
@@ -68,11 +67,15 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
     public function deleteAction(): Action
     {
-        return DeleteAction::make('delete')
-            ->model(OrgUnit::class)
+        return Action::make('delete')
             ->requiresConfirmation()
+            ->color('danger')
+            ->icon('heroicon-o-trash')
             ->action(function (array $arguments): void {
-                OrgUnit::find($arguments['id'])->delete();
+                $unit = OrgUnit::find($arguments['id']);
+                if ($unit) {
+                    $unit->delete();
+                }
                 $this->loadChartData();
             });
     }

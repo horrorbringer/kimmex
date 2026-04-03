@@ -33,9 +33,8 @@ class JobPostingsTable
                 TextColumn::make('type')
                     ->label(__('Type'))
                     ->searchable(),
-                IconColumn::make('isActive')
-                    ->label(__('Is Active'))
-                    ->boolean(),
+                \Filament\Tables\Columns\ToggleColumn::make('isActive')
+                    ->label(__('Is Active')),
                 TextColumn::make('closingDate')
                     ->label(__('Closing Date'))
                     ->dateTime()
@@ -71,7 +70,7 @@ class JobPostingsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                    DeleteBulkAction::make()->visible(fn() => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

@@ -13,7 +13,7 @@
                 'title' => $j->getTranslation('title', app()->getLocale()),
                 'dept' => $deptName,
                 'loc' => $j->getTranslation('location', app()->getLocale()),
-                'type' => __($j->type ?? 'FULL_TIME'),
+                'type' => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
                 'salary' => $j->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
                 'experience' => $j->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
                 'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
@@ -297,23 +297,23 @@
                         <button @click="open = !open"
                             class="w-full flex items-center gap-2 bg-white border-none px-5 py-3.5 rounded-xl text-sm font-bold text-titan-navy justify-between transition-all hover:bg-gray-50 shadow-sm"
                             :class="open ? 'ring-2 ring-titan-red/10' : ''">
-                            <div class="flex items-center gap-2">
-                                <x-lucide-filter class="text-titan-red w-3.5 h-3.5" />
+                            <div class="flex items-center gap-2 min-w-0">
+                                <x-lucide-filter class="text-titan-red w-3.5 h-3.5 shrink-0" />
                                 <span x-text="filterDept" class="truncate"></span>
                             </div>
                             <x-lucide-chevron-down
-                                class="text-titan-navy/20 w-3.5 h-3.5 transition-transform duration-300"
+                                class="text-titan-navy/20 w-3.5 h-3.5 shrink-0 transition-transform duration-300"
                                 ::class="open ? 'rotate-180' : ''" />
                         </button>
                         <div x-show="open" @click.away="open = false" style="display: none"
-                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-50">
+                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-50 overflow-hidden">
                             @foreach($categories as $cat)
-                                <button @click="filterDept = '{{ $cat }}'; open = false"
+                                <button @click="filterDept = '{{ addslashes($cat) }}'; open = false"
                                     class="w-full text-left px-5 py-2.5 text-[13px] font-bold hover:bg-gray-50 flex items-center justify-between transition-colors"
-                                    :class="filterDept === '{{ $cat }}' ? 'text-titan-red bg-red-50/50' : 'text-titan-navy/60'">
-                                    {{ $cat }}
-                                    <x-lucide-check x-show="filterDept === '{{ $cat }}'"
-                                        class="text-titan-red w-3.5 h-3.5" />
+                                    :class="filterDept === '{{ addslashes($cat) }}' ? 'text-titan-red bg-red-50/50' : 'text-titan-navy/60'">
+                                    <span class="truncate pr-2">{{ $cat }}</span>
+                                    <x-lucide-check x-show="filterDept === '{{ addslashes($cat) }}'"
+                                        class="text-titan-red w-3.5 h-3.5 shrink-0" />
                                 </button>
                             @endforeach
                         </div>
@@ -324,23 +324,23 @@
                         <button @click="open = !open"
                             class="w-full flex items-center gap-2 bg-white border-none px-5 py-3.5 rounded-xl text-sm font-bold text-titan-navy justify-between transition-all hover:bg-gray-50 shadow-sm"
                             :class="open ? 'ring-2 ring-titan-red/10' : ''">
-                            <div class="flex items-center gap-2">
-                                <x-lucide-map-pin class="text-titan-red w-3.5 h-3.5" />
+                            <div class="flex items-center gap-2 min-w-0">
+                                <x-lucide-map-pin class="text-titan-red w-3.5 h-3.5 shrink-0" />
                                 <span x-text="filterLoc" class="truncate"></span>
                             </div>
                             <x-lucide-chevron-down
-                                class="text-titan-navy/20 w-3.5 h-3.5 transition-transform duration-300"
+                                class="text-titan-navy/20 w-3.5 h-3.5 shrink-0 transition-transform duration-300"
                                 ::class="open ? 'rotate-180' : ''" />
                         </button>
                         <div x-show="open" @click.away="open = false" style="display: none"
-                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-50">
+                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-50 overflow-hidden">
                             @foreach($locations as $loc)
-                                <button @click="filterLoc = '{{ $loc }}'; open = false"
+                                <button @click="filterLoc = '{{ addslashes($loc) }}'; open = false"
                                     class="w-full text-left px-5 py-2.5 text-[13px] font-bold hover:bg-gray-50 flex items-center justify-between transition-colors"
-                                    :class="filterLoc === '{{ $loc }}' ? 'text-titan-red bg-red-50/50' : 'text-titan-navy/60'">
-                                    {{ $loc }}
-                                    <x-lucide-check x-show="filterLoc === '{{ $loc }}'"
-                                        class="text-titan-red w-3.5 h-3.5" />
+                                    :class="filterLoc === '{{ addslashes($loc) }}' ? 'text-titan-red bg-red-50/50' : 'text-titan-navy/60'">
+                                    <span class="truncate pr-2">{{ $loc }}</span>
+                                    <x-lucide-check x-show="filterLoc === '{{ addslashes($loc) }}'"
+                                        class="text-titan-red w-3.5 h-3.5 shrink-0" />
                                 </button>
                             @endforeach
                         </div>

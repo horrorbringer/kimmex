@@ -23,5 +23,10 @@ class AppServiceProvider extends ServiceProvider
             \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
             fn(): string => view('filament.components.language-switcher')->render(),
         );
+
+        // Make all table columns globally toggleable by default
+        \Filament\Tables\Columns\Column::configureUsing(function (\Filament\Tables\Columns\Column $column) {
+            $column->toggleable();
+        });
     }
 }

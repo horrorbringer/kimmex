@@ -239,16 +239,16 @@ $sectors = [
     </div>
 
     <!-- === OUR METHODOLOGY (Design-Z Process) === -->
-    <section class="py-32 bg-titan-navy text-white relative overflow-hidden">
+    <section class="py-32 bg-gray-50 relative overflow-hidden">
         <!-- Background Decor -->
-        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-titan-red/5 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/5 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-titan-navy/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
             <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-24 transition-all duration-1000">
                 <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-sm mb-4 block">{{ __('HOW IT WORKS') }}</span>
-                <h2 class="text-5xl md:text-6xl font-bold mb-6 text-white tracking-tight">{{ __('Our Methodology') }}</h2>
-                <p class="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6 text-titan-navy tracking-tight">{{ __('Our Methodology') }}</h2>
+                <p class="text-titan-navy/50 text-lg max-w-2xl mx-auto leading-relaxed">
                     {{ __('A systematic approach ensuring transparency, safety, and excellence from the first meeting to final handover.') }}
                 </p>
             </div>
@@ -260,8 +260,8 @@ $sectors = [
             
             <div class="relative mt-10 md:mt-16">
                 <!-- Connecting Line (Desktop) -->
-                <div class="hidden md:block absolute top-[80px] left-[10%] right-[10%] h-[1px] bg-white/10 z-0">
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-titan-red/80 to-transparent w-1/4 h-full animate-line-flow"></div>
+                <div class="hidden md:block absolute top-[80px] left-[10%] right-[10%] h-[1px] bg-titan-navy/10 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-titan-red/60 to-transparent w-1/4 h-full animate-line-flow"></div>
                 </div>
 
                 <div class="flex flex-wrap justify-center gap-8 md:gap-12 relative z-10 hide-scrollbar snap-x snap-mandatory pb-10 pt-10 px-6 md:px-0">
@@ -271,30 +271,30 @@ $sectors = [
                             
                             <div class="relative mb-12 flex justify-center items-center" style="width: 160px; height: 160px;">
                                 <!-- Ghost Number -->
-                                <div class="absolute font-black z-0 leading-none select-none tracking-tighter mb-4 pointer-events-none transition-colors duration-700" style="font-size: 120px; color: rgba(255,255,255,0.02); top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                <div class="absolute font-black z-0 leading-none select-none tracking-tighter mb-4 pointer-events-none transition-colors duration-700" style="font-size: 120px; color: rgba(15,23,42,0.04); top: 50%; left: 50%; transform: translate(-50%, -50%);">
                                     0{{ $i + 1 }}
                                 </div>
 
-                                <!-- The Rotating Diamond -->
-                                <div class="relative z-10 flex items-center justify-center transition-all duration-700 pointer-events-none"
-                                     style="width: 100px; height: 100px; background-color: #12141C; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; transform: rotate(45deg); box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.5);">
+                                <!-- The Diamond Shape -->
+                                <div class="relative z-10 flex items-center justify-center transition-all duration-700 group-hover:scale-110 pointer-events-none"
+                                     style="width: 100px; height: 100px; background-color: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 20px; transform: rotate(45deg); box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
                                     <div style="transform: rotate(-45deg);">
-                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8 transition-colors duration-500 {{ $i == 2 ? 'text-[#FF6B00]' : 'text-white' }} group-hover:text-[#FF6B00]" />
+                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8 text-titan-navy group-hover:text-titan-red transition-colors duration-500" />
                                     </div>
                                 </div>
 
-                                <!-- Floating Mini Step Indicator -->
+                                <!-- Floating Step Indicator -->
                                 <div class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110"
-                                     style="width: 30px; height: 30px; background-color: #FF6B00; border-radius: 8px; bottom: 15px; right: 15px; font-size: 12px; box-shadow: 0 5px 15px rgba(255, 107, 0, 0.4);">
+                                     style="width: 30px; height: 30px; background-color: #FF2A00; border-radius: 8px; bottom: 15px; right: 15px; font-size: 12px; box-shadow: 0 5px 15px rgba(255,42,0,0.35);">
                                     0{{ $i + 1 }}
                                 </div>
                             </div>
 
                             <div class="px-2 relative z-10 mt-2">
-                                <h3 class="font-black mb-3 uppercase tracking-wider transition-colors duration-300 {{ $i == 2 ? 'text-[#FF6B00]' : 'text-white' }} group-hover:text-[#FF6B00]" style="font-size: 14px;">
+                                <h3 class="font-black mb-3 uppercase tracking-wider text-titan-navy group-hover:text-titan-red transition-colors duration-300" style="font-size: 14px;">
                                     {{ $s['title'][$lang] }}
                                 </h3>
-                                <p class="text-white/40 leading-relaxed max-w-[200px] mx-auto transition-colors duration-300 group-hover:text-white/60" style="font-size: 11px;">
+                                <p class="text-titan-navy/45 leading-relaxed max-w-[200px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70" style="font-size: 11px;">
                                     {{ $s['desc'][$lang] }}
                                 </p>
                             </div>

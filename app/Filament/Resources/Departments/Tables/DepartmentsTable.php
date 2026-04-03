@@ -19,17 +19,20 @@ class DepartmentsTable
                     ->label(__('Department Name'))
                     ->description(fn(Department $record) => \Illuminate\Support\Str::limit(strip_tags($record->description['en'] ?? ''), 50))
                     ->searchable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->toggleable(),
 
                 \Filament\Tables\Columns\ImageColumn::make('headUnit.employee.image')
                     ->label(__('Head / Manager'))
                     ->circular()
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->toggleable(),
 
                 TextColumn::make('headUnit.employee.name')
                     ->label(__('Department Head'))
                     ->description(fn(Department $record) => $record->headUnit?->employee?->role ?? '-')
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->toggleable(),
 
                 TextColumn::make('slug')
                     ->label(__('Public URL'))
@@ -43,14 +46,16 @@ class DepartmentsTable
                     ->counts('orgUnits')
                     ->badge()
                     ->color('info')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('jobPostings_count')
                     ->label(__('Job Openings'))
                     ->counts('jobPostings')
                     ->badge()
                     ->color('warning')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label(__('Last Edit'))
@@ -64,11 +69,11 @@ class DepartmentsTable
             ])
             ->recordActions([
                 \Filament\Actions\ViewAction::make(),
-                EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                EditAction::make()->visible(fn() => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                    DeleteBulkAction::make()->visible(fn() => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }
