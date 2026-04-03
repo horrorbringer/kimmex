@@ -1,4 +1,4 @@
-@props(['member', 'isCEO' => false])
+@props(['member', 'isCEO' => false, 'small' => false])
 
 @php
     $type = $member['type'] ?? 'staff';
@@ -12,13 +12,28 @@
 
     $roleColor = $isCEO ? 'bg-titan-red text-white' : $styles['bg'] . ' text-white';
     $isDepartment = $type === 'department';
+
+    // Sizes based on small mode
+    if ($small) {
+        $imageSize = $isCEO ? 'w-20 h-20 mb-2' : 'w-14 h-14 mb-2';
+        $titleSize = 'text-[9px] md:text-[10px]';
+        $rolePadding = 'px-3 py-0.5';
+        $roleTextSize = 'text-[7px]';
+        $containerPadding = 'px-2';
+    } else {
+        $imageSize = $isCEO ? 'w-32 h-32 mb-4 group-hover:shadow-titan-red/20' : 'w-24 h-24 mb-4 group-hover:shadow-current';
+        $titleSize = 'text-xs md:text-sm';
+        $rolePadding = 'px-4 py-1';
+        $roleTextSize = 'text-[9px]';
+        $containerPadding = 'px-4';
+    }
 @endphp
 
 @if($isDepartment)
     <div class="flex flex-col items-center group relative z-10 w-full">
-        <div class="{{ $styles['light'] }} border px-6 py-3 rounded-xl backdrop-blur-sm shadow-sm transition-all duration-500 group-hover:shadow-md group-hover:scale-105">
-            <span class="text-[10px] font-black uppercase tracking-[0.2em] {{ $styles['text'] }} opacity-50 mb-1 block text-center italic">{{ __('DEPARTMENT') }}</span>
-            <h3 class="text-sm font-black {{ $styles['text'] }} uppercase tracking-tight text-center whitespace-nowrap">
+        <div class="{{ $styles['light'] }} border {{ $small ? 'px-4 py-2' : 'px-6 py-3' }} rounded-xl backdrop-blur-sm shadow-sm transition-all duration-500 group-hover:shadow-md group-hover:scale-105">
+            <span class="{{ $small ? 'text-[8px]' : 'text-[10px]' }} font-black uppercase tracking-[0.2em] {{ $styles['text'] }} opacity-50 mb-0.5 block text-center italic">{{ __('DEPARTMENT') }}</span>
+            <h3 class="{{ $small ? 'text-[10px]' : 'text-sm' }} font-black {{ $styles['text'] }} uppercase tracking-tight text-center whitespace-nowrap">
                 {{ $member['name'] }}
             </h3>
         </div>
@@ -27,26 +42,26 @@
     <div class="flex flex-col items-center group relative z-10 w-full cursor-pointer" 
          @click="selectedMember = {{ Js::from($member) }}">
         
-        <div class="relative rounded-full overflow-hidden border-[4px] border-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:shadow-lg {{ $isCEO ? 'w-32 h-32 mb-4 group-hover:shadow-titan-red/20' : 'w-24 h-24 mb-4 group-hover:shadow-current' }}">
+        <div class="relative rounded-full overflow-hidden border-[3px] border-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:shadow-lg {{ $imageSize }}">
             @if(isset($member['image']) && $member['image'])
                 <img src="{{ $member['image'] }}" alt="{{ $member['name'] }}" class="object-cover object-top w-full h-full" />
             @else
                 <div class="absolute inset-0 bg-gray-50 flex items-center justify-center text-gray-300">
-                    <x-lucide-users class="{{ $isCEO ? 'w-12 h-12' : 'w-8 h-8' }}" />
+                    <x-lucide-users class="{{ $isCEO ? ($small ? 'w-8 h-8' : 'w-12 h-12') : ($small ? 'w-6 h-6' : 'w-8 h-8') }}" />
                 </div>
             @endif
             <div class="absolute inset-0 bg-current opacity-0 group-hover:opacity-10 transition-opacity duration-500 {{ $styles['text'] }}"></div>
         </div>
         
-        <div class="flex flex-col items-center text-center px-4">
-            <div class="{{ $roleColor }} px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-2 shadow-lg scale-90 group-hover:scale-100 transition-transform duration-500 whitespace-nowrap">
+        <div class="flex flex-col items-center text-center {{ $containerPadding }}">
+            <div class="{{ $roleColor }} {{ $rolePadding }} rounded-full {{ $roleTextSize }} font-black uppercase tracking-widest mb-1.5 shadow-lg scale-90 group-hover:scale-100 transition-transform duration-500 whitespace-nowrap">
                 {{ Str::limit($member['role'] ?? '', 25) }}
             </div>
-            <h3 class="text-xs md:text-sm font-black text-titan-navy uppercase tracking-tight leading-tight group-hover:{{ $styles['text'] }} transition-colors duration-500 max-w-[160px]">
+            <h3 class="{{ $titleSize }} font-black text-titan-navy uppercase tracking-tight leading-tight group-hover:{{ $styles['text'] }} transition-colors duration-500 max-w-[120px]">
                 {{ $member['name'] }}
             </h3>
 
-            @if(!empty($member['phone']))
+            @if(!$small && !empty($member['phone']))
                 <div class="mt-1 flex items-center gap-1.5 {{ $styles['text'] }} opacity-50 font-bold text-[9px] tracking-widest uppercase">
                     <x-lucide-phone class="w-2 h-2" />
                     <span>{{ $member['phone'] }}</span>

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Milestones\Schemas;
 
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -30,9 +30,11 @@ class MilestoneForm
 
                 Section::make(__('Content'))
                     ->components([
-                        Textarea::make('description')
+                        RichEditor::make('description')
                             ->label(__('Description'))
-                            ->rows(3)
+                            ->toolbarButtons([
+                                'bold', 'italic', 'bulletList', 'orderedList', 'link', 'redo', 'undo'
+                            ])
                             ->columnSpanFull(),
                     ]),
 

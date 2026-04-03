@@ -483,67 +483,65 @@
                     </h2>
                 </div>
 
-                <div class="space-y-32 relative">
+                <div class="space-y-24 relative">
                     <!-- Vertical Timeline Line -->
-                    <div class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gray-200 hidden md:block"></div>
+                    <div class="absolute left-[30px] md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-gray-100 via-titan-red/30 to-gray-100 hidden md:block -translate-x-1/2 z-0"></div>
 
                     @foreach($milestones as $idx => $milestone)
                         <div x-data="{ shown: false, open: false }" x-intersect.once="shown = true"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                             class="relative flex flex-col {{ $idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' }} items-center gap-12 md:gap-24 transition-all duration-1000">
 
-                            <!-- Content Side -->
                             <div
-                                class="w-full md:w-1/2 flex flex-col {{ $idx % 2 === 0 ? 'md:items-end md:text-right' : 'md:items-start md:text-left' }}">
+                                class="w-full md:w-5/12 flex flex-col {{ $idx % 2 === 0 ? 'md:items-end md:text-right' : 'md:items-start md:text-left' }} pl-16 md:pl-0 z-10 relative">
                                 <div
-                                    class="inline-flex items-center justify-center px-6 py-2 bg-accent-orange text-white rounded-2xl text-xs font-black mb-6 shadow-lg shadow-accent-orange/20">
+                                    class="inline-block bg-titan-red text-white text-sm font-bold px-5 py-2 rounded-full mb-4 shadow-md tracking-wider">
                                     {{ $milestone['year'] }}
                                 </div>
                                 <h3
-                                    class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-6 tracking-tight">
+                                    class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-4 tracking-tight">
                                     {{ $milestone['title'] }}
                                 </h3>
-                                <p class="text-titan-navy/60 text-lg leading-relaxed max-w-xl">{{ $milestone['desc'] }}</p>
-
-                                <!-- Interactive Detail Toggle -->
-                                <button @click="open = !open"
-                                    class="mt-8 flex items-center gap-3 group/btn text-accent-orange font-black uppercase text-[10px] tracking-widest hover:text-titan-navy transition-all duration-300">
-                                    <span x-text="open ? '{{ __('Show Less') }}' : '{{ __('Explore Details') }}'"></span>
-                                    <div
-                                        class="w-8 h-8 rounded-full border border-accent-orange/20 flex items-center justify-center group-hover/btn:border-titan-navy transition-colors">
-                                        <x-lucide-chevron-down class="w-3.5 h-3.5 transition-transform duration-500"
-                                            ::class="open ? 'rotate-180' : ''" />
-                                    </div>
-                                </button>
-
+                                
+                                <div class="w-full text-titan-navy/60 leading-relaxed 
+                                    [&>p]:mb-4 
+                                    [&>ul]:space-y-2 [&>ul]:mt-4 [&>ul]:inline-block [&>ul]:w-full [&>ul]:list-none 
+                                    [&>ol]:space-y-2 [&>ol]:mt-4 [&>ol]:inline-block [&>ol]:w-full [&>ol]:list-none 
+                                    {{ $idx % 2 === 0 ? '[&>ul]:md:text-right [&>ol]:md:text-right' : '[&>ul]:md:text-left [&>ol]:md:text-left' }}
+                                    [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_li]:text-[15px] [&_li]:font-bold [&_li]:text-titan-navy/80 [&_li]:hover:text-titan-red [&_li]:transition-colors
+                                    {{ $idx % 2 === 0 ? '[&_li]:md:flex-row-reverse [&_li]:md:text-right cursor-pointer' : '[&_li]:md:flex-row [&_li]:md:text-left cursor-pointer' }}
+                                    ">
+                                    {!! str_replace(['<li>', '</li>'], ['<li><div class="w-2 h-2 bg-titan-red rounded-full mt-1.5 shrink-0 block"></div><span>', '</span></li>'], $milestone['desc']) !!}
+                                </div>
+                                
                                 <div x-show="open" x-collapse>
                                     <div
-                                        class="mt-8 p-8 bg-gray-50 rounded-3xl border border-gray-100 text-titan-navy/50 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
+                                        class="mt-6 p-6 bg-gray-50/80 rounded-2xl border border-gray-100 text-titan-navy/60 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
                                         {{ __('This journey began as a vision of excellence. Through dedication and hard work, we expanded our footprint, technical expertise, and community impact, setting new standards in the Cambodian construction landscape.') }}
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Timeline Dot -->
-                            <div class="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white border-4 border-accent-orange z-10 shadow-xl transition-transform duration-500"
-                                :class="open ? 'scale-125 bg-accent-orange' : ''">
-                                <div class="w-2 h-2 rounded-full bg-accent-orange transition-colors"
-                                    :class="open ? 'bg-white' : ''"></div>
+                            <div class="hidden md:block absolute left-1/2 top-[50px] w-[18px] h-[18px] bg-white border-4 border-titan-red rounded-full -translate-x-1/2 shadow-lg z-20 transition-all duration-300"
+                                :class="open ? 'scale-[1.3] bg-titan-red' : ''">
                             </div>
 
                             <!-- Image Side -->
-                            <div class="w-full md:w-1/2">
-                                <div class="relative aspect-[16/10] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer"
-                                    @click="open = !open">
+                            <div class="w-full md:w-5/12 pl-16 md:pl-0 z-10">
+                                <a class="block aspect-video rounded-xl overflow-hidden shadow-lg border border-gray-100 relative group cursor-pointer"
+                                    @click.prevent="open = !open">
                                     <img src="{{ $milestone['image'] }}"
-                                        class="object-cover w-full h-full transition-transform duration-1000 group-hover:scale-110"
-                                        :class="open ? 'scale-110' : ''" />
-                                    <div class="absolute inset-0 bg-accent-orange/10 mix-blend-overlay transition-opacity duration-500"
-                                        :class="open ? 'opacity-100' : 'opacity-0'"></div>
+                                        class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+                                        :class="open ? 'scale-105' : ''" />
+                                    <div class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-300"></div>
                                     <div
-                                        class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                        class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                        <span class="bg-white/95 backdrop-blur-sm text-titan-navy px-3 py-1.5 text-xs font-bold rounded-full shadow-sm">
+                                            {{ __('Explore Details') }}
+                                        </span>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     @endforeach
@@ -563,7 +561,7 @@
                 </div>
 
                 <div class="min-w-[800px] flex justify-center">
-                    <x-about.org-node :node="$orgChart" :level="0" />
+                    <x-about.org-node :node="$orgChart" :level="0" :small="true" />
                 </div>
             </div>
         </section>
