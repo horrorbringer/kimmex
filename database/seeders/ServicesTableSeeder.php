@@ -82,18 +82,31 @@ class ServicesTableSeeder extends Seeder
         ];
 
         foreach ($services as $i => $s) {
+            // Map features to the Repeater schema: [['name' => '...'], ...]
+            // Since Service features column is not translatable, we store English names by default or handle manually if needed.
+            // But usually, if we want it to show in Admin and look right, we use the name key.
+            $mappedFeatures = array_map(function ($f) {
+                return ['name' => $f['en']]; // Use English for the non-translatable JSON field
+            }, $s['features']);
+
             Service::updateOrCreate(
                 ['slug' => $s['id']],
                 [
-                    'title' => $s['title']['en'],
-                    'titleKm' => $s['title']['kh'],
-                    'description' => $s['desc']['en'],
-                    'descriptionKm' => $s['desc']['kh'],
-                    'summary' => Str::limit($s['desc']['en'], 150),
-                    'summaryKm' => Str::limit($s['desc']['kh'], 150),
+                    'title' => [
+                        'en' => $s['title']['en'],
+                        'km' => $s['title']['kh'],
+                    ],
+                    'description' => [
+                        'en' => $s['desc']['en'],
+                        'km' => $s['desc']['kh'],
+                    ],
+                    'summary' => [
+                        'en' => Str::limit($s['desc']['en'], 150),
+                        'km' => Str::limit($s['desc']['kh'], 150),
+                    ],
                     'icon' => $s['icon'],
                     'image' => $s['image'],
-                    'features' => $s['features'],
+                    'features' => $mappedFeatures,
                     'orderIndex' => $i + 1,
                     'isActive' => true,
                 ]

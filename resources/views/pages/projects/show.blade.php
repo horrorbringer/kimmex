@@ -49,13 +49,14 @@
         // Ensure at least 4 images so you can see the layout and "Load More" functionality
         if (count($project['images']) < 4) {
             $fallbacks = [
-                '/images/projects/Thumbnail-2.jpg', 
-                '/images/projects/Thumbnail-3.jpg', 
+                '/images/projects/Thumbnail-2.jpg',
+                '/images/projects/Thumbnail-3.jpg',
                 '/images/projects/Thumbnail-4.jpg',
                 '/images/projects/Thumbnail-5.jpg'
             ];
             foreach ($fallbacks as $fallback) {
-                if (count($project['images']) >= 4) break;
+                if (count($project['images']) >= 4)
+                    break;
                 $project['images'][] = $fallback;
             }
         }
@@ -137,7 +138,8 @@
                         <div class="space-y-8 text-lg text-titan-navy/70 leading-relaxed">
                             <div>
                                 <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                    {{ __('The Background') }}</h3>
+                                    {{ __('The Background') }}
+                                </h3>
                                 <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
                                     {!! $project['narrative']['background'] !!}
                                 </div>
@@ -145,7 +147,8 @@
                             @if(!empty($project['narrative']['objectives']))
                                 <div>
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                        {{ __('Objectives') }}</h3>
+                                        {{ __('Objectives') }}
+                                    </h3>
                                     <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
                                         {!! $project['narrative']['objectives'] !!}
                                     </div>
@@ -154,7 +157,8 @@
                             @if(!empty($project['narrative']['design_concept']))
                                 <div>
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                        {{ __('Design Concept') }}</h3>
+                                        {{ __('Design Concept') }}
+                                    </h3>
                                     <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
                                         {!! $project['narrative']['design_concept'] !!}
                                     </div>
@@ -194,7 +198,8 @@
                                         <li class="flex gap-4">
                                             <div
                                                 class="w-8 h-8 rounded-full bg-titan-navy/5 flex items-center justify-center shrink-0 font-bold text-titan-navy text-sm">
-                                                {{ $index + 1 }}</div>
+                                                {{ $index + 1 }}
+                                            </div>
                                             <div class="pt-1">
                                                 <p class="text-titan-navy/70 leading-relaxed">{{ $c }}</p>
                                             </div>
@@ -203,7 +208,8 @@
                                         <li class="flex gap-4">
                                             <div
                                                 class="w-8 h-8 rounded-full bg-titan-navy/5 flex items-center justify-center shrink-0 font-bold text-titan-navy text-sm">
-                                                {{ $index + 1 }}</div>
+                                                {{ $index + 1 }}
+                                            </div>
                                             <div class="pt-1">
                                                 @if(isset($c['challenge']))
                                                     <p class="font-bold text-titan-navy mb-1">{{ $c['challenge'] }}</p>
@@ -224,7 +230,8 @@
                 <div class="lg:col-span-4">
                     <div class="bg-white p-8 rounded-xl shadow-2xl border border-gray-100 sticky top-32">
                         <h3 class="text-xl font-black text-titan-navy mb-8 pb-4 border-b border-gray-100">
-                            {{ __('Project Data') }}</h3>
+                            {{ __('Project Data') }}
+                        </h3>
 
                         <div class="space-y-6">
                             <div class="group">
@@ -271,11 +278,55 @@
                             </div>
                         </div>
 
-                        <div class="mt-10 pt-8 border-t border-gray-100">
-                            <button
-                                class="w-full bg-titan-navy text-white font-bold uppercase tracking-widest py-4 rounded-sm hover:bg-titan-red transition-colors shadow-lg flex items-center justify-center gap-2">
-                                <x-lucide-share-2 class="w-4 h-4" /> {{ __('Share Project') }}
-                            </button>
+                        <div class="mt-10 pt-8 border-t border-gray-100" x-data="{
+                            copied: false,
+                            copyLink() {
+                                navigator.clipboard.writeText(window.location.href);
+                                this.copied = true;
+                                setTimeout(() => this.copied = false, 2000);
+                            },
+                            shareNative() {
+                                if (navigator.share) {
+                                    navigator.share({
+                                        title: '{{ $project['title'] }}',
+                                        url: window.location.href
+                                    });
+                                }
+                            }
+                        }">
+                            <div
+                                class="text-[10px] font-black text-titan-navy/30 uppercase tracking-[0.3em] mb-5 text-center">
+                                {{ __('Share via Network') }}</div>
+                            <div class="flex items-center justify-between gap-3">
+                                <!-- Facebook -->
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
+                                    target="_blank"
+                                    class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy hover:bg-[#1877F2] hover:text-white transition-all shadow-sm group">
+                                    <x-lucide-facebook class="w-5 h-5" />
+                                </a>
+                                <!-- LinkedIn -->
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}"
+                                    target="_blank"
+                                    class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy hover:bg-[#0A66C2] hover:text-white transition-all shadow-sm group">
+                                    <x-lucide-linkedin class="w-5 h-5" />
+                                </a>
+                                <!-- Telegram -->
+                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}"
+                                    target="_blank"
+                                    class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy hover:bg-[#229ED9] hover:text-white transition-all shadow-sm group">
+                                    <x-lucide-send class="w-5 h-5" />
+                                </a>
+                                <!-- Copy Link -->
+                                <button @click="copyLink()"
+                                    class="flex-1 h-12 rounded-xl bg-titan-navy text-white flex items-center justify-center gap-2 hover:bg-titan-red transition-all shadow-lg text-[10px] font-black uppercase tracking-widest relative overflow-hidden">
+                                    <span x-show="!copied" class="flex items-center gap-2">
+                                        <x-lucide-link class="w-4 h-4" /> {{ __('Copy Link') }}
+                                    </span>
+                                    <span x-show="copied" x-cloak class="flex items-center gap-2 text-white">
+                                        <x-lucide-check class="w-4 h-4" /> {{ __('Copied!') }}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -311,11 +362,13 @@
                                     class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full {{ $gridClass }}">
                                     <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
                                         class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700" />
-                                    
+
                                     @if($i === 2 && $count > 3)
-                                        <div class="absolute inset-0 bg-titan-navy/80 hover:bg-titan-navy/90 transition-colors duration-500 flex flex-col items-center justify-center z-10">
+                                        <div
+                                            class="absolute inset-0 bg-titan-navy/80 hover:bg-titan-navy/90 transition-colors duration-500 flex flex-col items-center justify-center z-10">
                                             <span class="text-4xl md:text-5xl font-black text-white mb-2">+{{ $count - 3 }}</span>
-                                            <span class="text-xs font-bold text-titan-red uppercase tracking-widest">{{ __('More Gallery') }}</span>
+                                            <span
+                                                class="text-xs font-bold text-titan-red uppercase tracking-widest">{{ __('More Gallery') }}</span>
                                         </div>
                                     @else
                                         <div
@@ -390,11 +443,13 @@
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 <div
                                     class="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">
-                                    {{ $p['type'] }}</div>
+                                    {{ $p['type'] }}
+                                </div>
                             </div>
                             <h3
                                 class="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-1">
-                                {{ $p['title'] }}</h3>
+                                {{ $p['title'] }}
+                            </h3>
                         </a>
                     @endforeach
                 </div>

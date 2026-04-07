@@ -2,12 +2,21 @@
 
     <!-- === HERO / HEADER SECTION === -->
     <section class="relative bg-titan-navy pt-[140px] pb-24 px-6 overflow-hidden">
-        <!-- Background Pattern -->
-        <div class="absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] [background-size:20px_20px] opacity-20"></div>
-        <!-- Decorative Glow -->
-        <div class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-accent-orange/20 blur-[120px] rounded-full pointer-events-none"></div>
+        <!-- New Cinematic Background (Brightened) -->
+        <div class="absolute inset-0">
+            <img src="{{ asset('images/heroes/documents-bg.png') }}" class="w-full h-full object-cover opacity-70"
+                alt="" />
+            <!-- Lighter Gradient Overlays -->
+            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/60 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/40 via-transparent to-transparent"></div>
+        </div>
 
-        <div class="max-w-[1200px] mx-auto relative z-10">
+        <!-- Decorative Glow (Brightened) -->
+        <div
+            class="absolute top-0 right-0 -mr-32 -mt-32 w-[600px] h-[600px] bg-accent-orange/20 blur-[150px] rounded-full pointer-events-none">
+        </div>
+
+        <div class="max-w-[1240px] mx-auto relative z-10">
             <!-- Student Research Hub Badge -->
             <div
                 class="inline-flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md rounded-full px-5 py-2.5 mb-10 shadow-xl">
@@ -20,27 +29,30 @@
                 <!-- Title + Desc -->
                 <div class="max-w-2xl">
                     <h1 class="font-black text-white uppercase leading-[0.9] tracking-tighter mb-6"
-                        style="font-size: clamp(3.5rem, 8vw, 7rem);">
-                        {{ __('DOC') }}<span class="text-accent-orange">.</span><br/>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('COLLECTION') }}</span>
+                        style="font-size: clamp(3rem, 8vw, 6rem);">
+                        {{ __('DOC') }}<span class="text-accent-orange">.</span><br />
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('COLLECTION') }}</span>
                     </h1>
                     <p class="text-white/60 text-lg leading-relaxed max-w-lg font-medium">
-                        {{ __('Access our centralized repository of engineering standards, research papers, case studies, and corporate resources.') }}
+                        {{ __('Access our centralized repository of engineering standards, research papers, and corporate resources.') }}
                     </p>
                 </div>
 
                 <!-- Stats -->
-                <div class="flex items-end gap-10 shrink-0 bg-white/5 p-8 rounded-3xl backdrop-blur-sm border border-white/10">
+                <div
+                    class="flex items-end gap-10 shrink-0 bg-white/5 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10">
                     <div>
-                        <div class="text-6xl font-black text-accent-orange leading-none mb-2">{{ $totalDocuments }}<span class="text-white/30">+</span></div>
-                        <div class="text-[11px] font-black uppercase tracking-[0.25em] text-white/50">
+                        <div class="text-5xl font-black text-accent-orange leading-none mb-2">{{ $totalDocuments }}<span
+                                class="text-white/30">+</span></div>
+                        <div class="text-[10px] font-black uppercase tracking-[0.25em] text-white/50">
                             {{ __('Documents') }}
                         </div>
                     </div>
-                    <div class="w-px h-16 bg-white/10"></div>
+                    <div class="w-px h-12 bg-white/10"></div>
                     <div>
-                        <div class="text-6xl font-black text-white leading-none mb-2">{{ $totalCategories }}</div>
-                        <div class="text-[11px] font-black uppercase tracking-[0.25em] text-white/50">
+                        <div class="text-5xl font-black text-white leading-none mb-2">{{ $totalCategories }}</div>
+                        <div class="text-[10px] font-black uppercase tracking-[0.25em] text-white/50">
                             {{ __('Categories') }}
                         </div>
                     </div>
@@ -49,219 +61,213 @@
         </div>
     </section>
 
-    <!-- === RESEARCH RESOURCES === -->
-    <section class="bg-gradient-to-b from-gray-50 to-white py-20 px-6">
-        <div class="max-w-[1200px] mx-auto">
-            <div class="text-center mb-16">
-                <div class="inline-flex items-center gap-2 mb-4">
-                    <div class="w-8 h-px bg-accent-orange"></div>
-                    <span class="text-[10px] font-black text-accent-orange uppercase tracking-[0.4em]">{{ __('Knowledge Library') }}</span>
-                    <div class="w-8 h-px bg-accent-orange"></div>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-black text-titan-navy uppercase tracking-tighter">
-                    {{ __('Research') }} <span class="text-accent-orange">{{ __('Resources') }}</span>
-                </h2>
-                <p class="text-titan-navy/40 text-sm mt-4 max-w-2xl mx-auto leading-relaxed">
-                    {{ __('Kimmex is committed to advancing engineering education through open access to real-world project data, technical standards, and learning materials.') }}
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Case Studies -->
-                <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
-                    <div class="w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center mb-6 group-hover:bg-accent-orange/20 transition-colors">
-                        <x-lucide-book-open class="w-6 h-6 text-accent-orange" />
-                    </div>
-                    <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Case Studies') }}</h3>
-                    <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('Deep dives into real project challenges, solutions, and engineering outcomes.') }}</p>
-                    <button wire:click="setTab('Case Study')" class="text-[10px] font-bold text-accent-orange uppercase tracking-widest hover:underline">{{ __('Browse Case Studies') }} →</button>
-                </div>
-
-                <!-- Engineering Standards -->
-                <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
-                    <div class="w-12 h-12 rounded-xl bg-titan-navy/5 flex items-center justify-center mb-6 group-hover:bg-titan-navy/10 transition-colors">
-                        <x-lucide-ruler class="w-6 h-6 text-titan-navy" />
-                    </div>
-                    <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Engineering Standards') }}</h3>
-                    <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('SOPs, structural guidelines, and quality standards for educational reference.') }}</p>
-                    <button wire:click="setTab('Engineering')" class="text-[10px] font-bold text-titan-navy/50 uppercase tracking-widest hover:text-accent-orange hover:underline transition-colors">{{ __('View Standards') }} →</button>
-                </div>
-
-                <!-- Safety Manuals -->
-                <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
-                    <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mb-6 group-hover:bg-green-100 transition-colors">
-                        <x-lucide-shield-check class="w-6 h-6 text-green-600" />
-                    </div>
-                    <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Safety Manuals') }}</h3>
-                    <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('Standard safety protocols, PPE requirements, and emergency procedures.') }}</p>
-                    <button wire:click="setTab('Safety')" class="text-[10px] font-bold text-green-600 uppercase tracking-widest hover:underline">{{ __('Read Manuals') }} →</button>
-                </div>
-
-                <!-- Internship Program -->
-                <div class="group bg-white rounded-2xl border border-gray-100 p-8 hover:border-accent-orange/30 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-blue-100 transition-colors">
-                        <x-lucide-briefcase class="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 class="text-sm font-black text-titan-navy uppercase tracking-tight mb-2">{{ __('Internship Program') }}</h3>
-                    <p class="text-xs text-titan-navy/40 leading-relaxed mb-4">{{ __('Hands-on learning opportunities for engineering students at active job sites.') }}</p>
-                    <a href="/contact" class="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:underline">{{ __('Apply Now') }} →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- === FILTER + SEARCH BAR === -->
-    <section class="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm px-6">
-        <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-stretch md:items-center gap-0">
-            <!-- Tabs -->
-            <div class="flex items-center gap-1 flex-wrap flex-1 py-3" wire:ignore.self>
-                @foreach($tabs as $tab)
-                    <button wire:click="setTab('{{ $tab }}')" 
-                        class="px-4 py-2 rounded-lg text-[12px] font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap {{ $activeTab === $tab ? 'bg-titan-navy text-white' : 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-100' }}">
-                        {{ __($tab) }}
+    <!-- === FILTER + SEARCH BAR (CLEAN) === -->
+    <section class="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-6 py-2 shadow-sm">
+        <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Scrollable Tabs -->
+            <div class="w-full md:w-auto flex items-center gap-1 overflow-x-auto no-scrollbar py-1" wire:ignore.self>
+                <button wire:click="setTab('all')" 
+                    class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2 shrink-0 {{ $activeTabId === 'all' ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-50' }}">
+                    <x-lucide-layers class="w-3.5 h-3.5" />
+                    {{ __('All') }}
+                </button>
+                @foreach($categories as $cat)
+                    @php
+                        $iconMap = [
+                            'heroicon-o-academic-cap' => 'lucide-graduation-cap',
+                            'heroicon-o-cog-6-tooth' => 'lucide-settings-2',
+                            'heroicon-o-shield-check' => 'lucide-shield-check',
+                            'heroicon-o-scale' => 'lucide-scale',
+                            'heroicon-o-wrench-screwdriver' => 'lucide-wrench',
+                            'heroicon-o-document-text' => 'lucide-file-text',
+                            'heroicon-o-clipboard-document-list' => 'lucide-clipboard-list',
+                            'heroicon-o-book-open' => 'lucide-book-open',
+                        ];
+                        $iconName = $iconMap[$cat->icon] ?? 'lucide-folder';
+                    @endphp
+                    <button wire:click="setTab('{{ $cat->id }}')" 
+                        class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2 shrink-0 {{ $activeTabId === $cat->id ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-50' }}">
+                        <x-dynamic-component :component="$iconName" class="w-3.5 h-3.5" />
+                        {{ $cat->getTranslation('name', app()->getLocale()) }}
                     </button>
                 @endforeach
             </div>
 
-            <!-- Divider -->
-            <div class="hidden md:block w-px h-10 bg-gray-100 mx-4 shrink-0"></div>
-
-            <!-- Search -->
-            <div class="relative py-3 md:w-64 shrink-0">
-                <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/25" />
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search by title or keyword...') }}"
-                    class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 py-2.5 text-sm text-titan-navy placeholder:text-titan-navy/25 focus:outline-none focus:ring-2 focus:ring-accent-orange/20 focus:border-accent-orange/30 transition-all" />
+            <!-- Integrated Search -->
+            <div class="relative w-full md:w-72">
+                <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/30" />
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search records...') }}"
+                    class="w-full bg-titan-navy/[0.03] border-none rounded-xl pl-10 pr-4 py-2 text-xs text-titan-navy placeholder:text-titan-navy/20 focus:ring-1 focus:ring-accent-orange/30 transition-all font-bold" />
             </div>
         </div>
     </section>
 
-    <!-- === DOCUMENT LIST === -->
-    <section class="max-w-[1200px] mx-auto px-6 py-16 space-y-8 relative">
-        <!-- Loading Overlay -->
-        <div wire:loading class="absolute inset-0 z-10 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center">
-            <div class="w-8 h-8 border-4 border-accent-orange border-t-transparent rounded-full animate-spin"></div>
+    <!-- === DOCUMENT GRID (ULTRA CLEAN) === -->
+    <section class="max-w-[1240px] mx-auto px-6 py-16 relative min-h-[600px]">
+        <!-- SKELETON LOADING GRID -->
+        <div wire:loading.grid class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            @for($i = 0; $i < 6; $i++)
+                <div class="animate-pulse flex flex-col rounded-2xl border border-gray-100 bg-white overflow-hidden h-full">
+                    <div class="aspect-video bg-gray-50"></div>
+                    <div class="p-6 space-y-3">
+                        <div class="h-3 w-20 bg-gray-100 rounded-full"></div>
+                        <div class="h-6 w-full bg-gray-100 rounded-lg"></div>
+                        <div class="h-3 w-2/3 bg-gray-50 rounded-lg"></div>
+                        <div class="pt-4 flex justify-between">
+                            <div class="h-4 w-12 bg-gray-50"></div>
+                            <div class="h-4 w-20 bg-gray-100 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            @endfor
         </div>
 
-        @forelse($documents as $doc)
-            <div>
-                <!-- Section Label (Latest Release, etc) -->
-                @if($doc->is_featured && $loop->first)
-                    <div class="flex items-center gap-2 mb-5">
-                        <span class="w-2 h-2 bg-accent-orange rounded-full inline-block"></span>
-                        <span class="text-[11px] font-black uppercase tracking-[0.35em] text-titan-navy/50">
-                            {{ __('LATEST RELEASE') }}
-                        </span>
-                    </div>
-                @endif
+        <!-- ACTUAL CONTENT -->
+        <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            @forelse($documents as $doc)
+                @php
+                    $isFirstFeatured = $doc->is_featured && ($loop->first && $documents->currentPage() === 1);
+                @endphp
+                <div @class([
+                    'flex flex-col overflow-hidden transition-all duration-500 bg-white group border border-gray-100 relative',
+                    'md:col-span-2 lg:col-span-3 rounded-[2rem] border-accent-orange/10 !flex-row min-h-[380px] shadow-lg bg-gradient-to-br from-white to-gray-50/30' => $isFirstFeatured,
+                    'rounded-2xl h-full hover:shadow-xl hover:border-accent-orange/10' => !$isFirstFeatured
+                ])>
 
-                <!-- Card -->
-                <a href="/documents/{{ $doc->slug }}"
-                    class="cursor-pointer group flex flex-col md:flex-row rounded-2xl border border-gray-100 overflow-hidden hover:border-accent-orange/20 hover:shadow-lg transition-all duration-500 bg-white">
-
-                    <!-- Image Side -->
-                    <div class="relative w-full md:w-80 lg:w-96 min-h-[220px] md:min-h-full shrink-0 overflow-hidden bg-gray-50 flex flex-col justify-center">
+                    <!-- Image/Thumbnail Container -->
+                    <div @class([
+                        'relative overflow-hidden bg-gray-50 flex items-center justify-center shrink-0',
+                        'w-2/5 min-h-[380px]' => $isFirstFeatured,
+                        'aspect-video' => !$isFirstFeatured
+                    ])>
                         @if($doc->thumbnailUrl)
                             <img src="{{ Storage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]" />
                         @else
-                            <div class="absolute inset-0 w-full h-full bg-titan-navy/[0.03] flex items-center justify-center relative overflow-hidden">
-                                <div class="absolute inset-0 bg-[radial-gradient(#00000010_1px,transparent_1px)] [background-size:10px_10px]"></div>
-                                <div class="absolute inset-0 bg-gradient-to-t from-gray-100/50 to-transparent"></div>
-                                <x-lucide-file-text class="w-16 h-16 text-titan-navy/20 group-hover:scale-110 group-hover:text-accent-orange transition-all duration-700 relative z-10 drop-shadow-sm" />
+                            <div class="absolute inset-0 w-full h-full bg-titan-navy/[0.01] flex items-center justify-center">
+                                <div class="absolute inset-0 bg-[radial-gradient(#00000005_1px,transparent_1px)] [background-size:10px_10px]"></div>
+                                <x-lucide-file-text @class([
+                                    'text-titan-navy/10 group-hover:scale-110 group-hover:text-accent-orange transition-all duration-700 relative z-10 opacity-30 drop-shadow-sm',
+                                    'w-24 h-24' => $isFirstFeatured,
+                                    'w-14 h-14' => !$isFirstFeatured
+                                ]) />
                             </div>
                         @endif
 
-                        <!-- Badge -->
-                        @if($doc->is_featured)
-                            <div class="absolute top-4 left-4 z-20">
-                                <span class="bg-accent-orange text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm">
+                        <!-- Top Badges -->
+                        <div class="absolute top-4 left-4 z-20">
+                            @if($doc->is_featured)
+                                <span class="bg-accent-orange text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-lg shadow-md">
                                     {{ __('FEATURED') }}
                                 </span>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </div>
 
-                    <!-- Content Side -->
-                    <div class="flex flex-col justify-between p-8 lg:p-10 flex-1">
-                        <!-- Meta -->
-                        <div>
-                            <div class="flex items-center gap-3 mb-4">
-                                <span class="text-[11px] font-black uppercase tracking-widest text-accent-orange bg-accent-orange/5 px-3 py-1.5 rounded-lg">
-                                    {{ $doc->documentCategory ? $doc->documentCategory->name : $doc->category }}
-                                </span>
-                                <span class="text-[11px] text-titan-navy/30 font-bold">|</span>
-                                <span class="text-[11px] font-bold text-titan-navy/30 uppercase tracking-wider">
-                                    {{ $doc->fileType ?? 'PDF' }} {{ $doc->fileSize ? '· '.$doc->fileSize : '' }}
-                                </span>
-                            </div>
+                    <!-- Content Section -->
+                    <div @class([
+                        'flex flex-col flex-1',
+                        'p-10 justify-center' => $isFirstFeatured,
+                        'p-6' => !$isFirstFeatured
+                    ])>
+                        <!-- Category Header -->
+                        <div class="flex items-center gap-2.5 mb-3">
+                            <span class="text-[9px] font-black uppercase tracking-[0.15em] text-accent-orange">
+                                {{ $doc->documentCategory ? $doc->documentCategory->getTranslation('name', app()->getLocale()) : ($doc->category ?: __('RESOURCE')) }}
+                            </span>
+                            <span class="w-1 h-1 bg-gray-200 rounded-full"></span>
+                            <span class="text-[9px] font-bold text-titan-navy/30 uppercase tracking-[0.15em]">
+                                {{ $doc->fileType ?? 'PDF' }} · {{ $doc->fileSize ?? '' }}
+                            </span>
+                        </div>
 
-                            <h2 class="text-xl lg:text-2xl font-black text-titan-navy mb-4 group-hover:text-accent-orange transition-colors duration-300 leading-tight">
+                        <!-- Title -->
+                        <a href="/documents/{{ $doc->slug }}" class="block mb-3">
+                            <h2 @class([
+                                'font-black text-titan-navy group-hover:text-accent-orange transition-colors duration-300 leading-[1.2] tracking-tight',
+                                'text-3xl max-w-lg' => $isFirstFeatured,
+                                'text-lg line-clamp-2' => !$isFirstFeatured
+                            ])>
                                 {{ $doc->title }}
                             </h2>
-                            <p class="text-sm text-titan-navy/50 leading-relaxed max-w-3xl">
-                                {{ str($doc->description)->limit(150) }}
-                            </p>
-                        </div>
+                        </a>
+
+                        <!-- Excerpt -->
+                        <p @class([
+                            'text-titan-navy/50 leading-relaxed mb-6',
+                            'text-base max-w-md' => $isFirstFeatured,
+                            'text-xs line-clamp-2' => !$isFirstFeatured
+                        ])>
+                            {{ str(strip_tags($doc->description))->limit(120) }}
+                        </p>
 
                         <!-- Footer -->
-                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-50">
+                        <div class="mt-auto flex items-center justify-between pt-5 border-t border-gray-50">
                             <div class="flex items-center gap-2">
-                                <x-lucide-calendar class="w-3.5 h-3.5 text-titan-navy/25" />
-                                <span class="text-[11px] font-bold text-titan-navy/30 uppercase tracking-wider">
-                                    {{ $doc->created_at->format('F Y') }}
+                                <x-lucide-calendar class="w-3 h-3 text-titan-navy/20" />
+                                <span class="text-[9px] font-bold text-titan-navy/20 uppercase tracking-widest">
+                                    {{ $doc->created_at->format('M Y') }}
                                 </span>
                             </div>
+
                             <div class="flex items-center gap-3">
                                 @if($doc->fileUrl)
-                                    <a href="{{ Storage::url($doc->fileUrl) }}" download
-                                        class="inline-flex items-center justify-center w-10 h-10 bg-gray-50 hover:bg-accent-orange text-titan-navy hover:text-white rounded-xl transition-all duration-300"
-                                        title="{{ __('Download') }}">
-                                        <x-lucide-download class="w-4 h-4" />
+                                    <a href="{{ Storage::url($doc->fileUrl) }}" download @click.stop 
+                                        class="w-8 h-8 rounded-lg bg-gray-50 text-titan-navy/30 hover:bg-accent-orange hover:text-white flex items-center justify-center transition-all">
+                                        <x-lucide-download class="w-3.5 h-3.5" />
                                     </a>
                                 @endif
-                                <div class="inline-flex items-center gap-2 bg-titan-navy group-hover:bg-accent-orange text-white text-[12px] font-black uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all duration-300">
-                                    <x-lucide-eye class="w-3.5 h-3.5" />
-                                    {{ __('View Detail') }}
-                                </div>
+                                <a href="/documents/{{ $doc->slug }}" 
+                                    class="inline-flex items-center gap-2 text-[10px] font-black text-titan-navy uppercase tracking-[0.2em] group/btn hover:text-accent-orange transition-colors">
+                                    <span>{{ __('View') }}</span>
+                                    <x-lucide-arrow-right class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                                </a>
                             </div>
                         </div>
                     </div>
-                </a>
-            </div>
-        @empty
-            <!-- Empty State -->
-            <div class="text-center py-24">
-                <x-lucide-file-x class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
-                <p class="text-titan-navy/30 font-bold text-sm uppercase tracking-widest">{{ __('No documents found') }}</p>
-            </div>
-        @endforelse
+                </div>
+            @empty
+                <!-- Empty State -->
+                <div class="col-span-full py-24 text-center bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-100">
+                    <x-lucide-file-x class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
+                    <p class="text-titan-navy/30 font-black text-xs uppercase tracking-[0.3em]">{{ __('No documents found') }}</p>
+                </div>
+            @endforelse
+        </div>
 
         <!-- Pagination -->
-        <div class="mt-8">
-            {{ $documents->links() }}
-        </div>
+        @if($documents->hasPages())
+            <div class="mt-20 flex justify-center">
+                {{ $documents->links() }}
+            </div>
+        @endif
     </section>
 
-    <!-- CTA -->
+    <!-- === CTA SECTION === -->
     <section class="bg-titan-navy py-16 px-6">
-        <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
             <div>
-                <div class="text-[10px] font-black text-accent-orange uppercase tracking-[0.4em] mb-3">
-                    {{ __('Need More?') }}
+                <div class="text-[10px] font-black text-accent-orange uppercase tracking-[0.4em] mb-4">
+                    {{ __('Need Specific Files?') }}
                 </div>
-                <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-2">
-                    {{ __("Can't Find What You're Looking For?") }}
+                <h3 class="text-3xl font-black text-white uppercase tracking-tight mb-3">
+                    {{ __("Can't find what you need?") }}
                 </h3>
-                <p class="text-white/40 text-sm max-w-md leading-relaxed">
-                    {{ __('Contact us directly and our team will prepare the relevant documents for you.') }}
+                <p class="text-white/40 text-base max-w-md leading-relaxed font-medium">
+                    {{ __('Our team can prepare custom technical documentation and case studies upon request.') }}
                 </p>
             </div>
             <a href="/contact"
-                class="shrink-0 inline-flex items-center gap-3 bg-accent-orange hover:bg-white hover:text-titan-navy text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-lg">
-                <x-lucide-mail class="w-4 h-4" />
-                {{ __('Contact Us') }}
+                class="inline-flex items-center gap-3 bg-accent-orange hover:bg-white hover:text-titan-navy text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl group">
+                <x-lucide-mail class="w-4 h-4 group-hover:scale-110 transition-transform" />
+                {{ __('Request Support') }}
             </a>
         </div>
     </section>
 
 </div>
+
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

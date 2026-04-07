@@ -1,14 +1,14 @@
 <x-layouts.app :title="__('Job Details')" description="Join our team of experts in the construction and investment industry.">
 
 @php
-    $jobDb = \App\Models\JobPosting::where('id', $id)->first();
+    $jobDb = \App\Models\JobPosting::where('slug', $slug)->first();
     $job = null;
 
     if ($jobDb) {
         $job = [
             'id' => $jobDb->id,
             'title' => $jobDb->getTranslation('title', app()->getLocale()),
-            'dept' => $jobDb->department ? $jobDb->department->getTranslation('name', app()->getLocale()) : ($jobDb->getTranslation('department', app()->getLocale()) ?: __('General')),
+            'dept' => $jobDb->department ? $jobDb->department->getTranslation('name', app()->getLocale()) : __('General'),
             'loc' => $jobDb->getTranslation('location', app()->getLocale()),
             'type' => __($jobDb->type ?? 'FULL_TIME'),
             'salary' => $jobDb->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
@@ -18,6 +18,33 @@
             'responsibilities' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('responsibilities', app()->getLocale()))))),
             'requirements' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('requirements', app()->getLocale()))))),
             'benefits' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('benefits', app()->getLocale()))))),
+        ];
+    } elseif ($slug === 'gen') {
+        $job = [
+            'id' => 'gen',
+            'title' => __('Visionary Talent'),
+            'dept' => __('General'),
+            'loc' => __('Phnom Penh'),
+            'type' => __('Full-time'),
+            'salary' => __('Competitive'),
+            'experience' => __('Mixed'),
+            'postedDate' => now()->format('M d, Y'),
+            'description' => __('We are always looking for exceptional engineers and managers. Even if there is no specific opening that matches your profile, we encourage you to submit your general application.'),
+            'responsibilities' => [
+                __('Willingness to learn and grow within the Kimmex ecosystem'),
+                __('Contributing to various projects across departments'),
+                __('Maintaining professional excellence in all tasks')
+            ],
+            'requirements' => [
+                __('Strong technical background in engineering or construction'),
+                __('Passion for innovation and quality'),
+                __('Excellent teamwork and communication skills')
+            ],
+            'benefits' => [
+                __('Competitive compensation package'),
+                __('Continuous professional development'),
+                __('Opportunity to work on landmark projects')
+            ],
         ];
     }
 @endphp
@@ -159,9 +186,6 @@
                              </ul>
                         </section>
                         @endif
-
-                    </div>
-                </div>
 
                     </div>
 

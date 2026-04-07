@@ -12,211 +12,167 @@
             return [
                 'slug' => $n->slug,
                 'category' => $n->category ?: __('Updates'),
-                'image' => $n->coverImage ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : '/images/projects/Thumbnail-4.jpg',
+                'image' => $n->coverImage ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : '/images/heroes/documents-bg.png',
                 'title' => $n->getTranslation('title', app()->getLocale()),
                 'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                 'excerpt' => $excerpt,
-                'isSustainability' => in_array(strtolower($n->category ?? ''), ['sustainability', 'csr', 'environment', 'green', 'esg'])
             ];
         })->toArray();
 
-        // Get unique categories including Sustainability and CSR as default options
+        // Get unique categories
         $categoriesFromDb = $newsArticlesDb->map(fn($n) => $n->category ?: __('Updates'))->unique()->toArray();
-        $defaultCategories = [__('Sustainability'), __('CSR'), __('Updates')];
-        $categories = array_values(array_unique(array_merge($defaultCategories, $categoriesFromDb)));
-        array_unshift($categories, __('All'));
-
-        // Fallback
-        if (empty($newsArticles)) {
-            $newsArticles = [
-                ['slug' => 'award', 'category' => __('Updates'), 'image' => '/images/projects/Thumbnail-4.jpg', 'title' => __('Kimmex Insights and Announcements'), 'date' => now()->format('M d, Y'), 'excerpt' => __('Discover our journey in construction excellence.'), 'isSustainability' => false],
-                ['slug' => 'green-initiative', 'category' => __('Sustainability'), 'image' => '/images/projects/Thumbnail-6.jpg', 'title' => __('Green Building Initiative Launched'), 'date' => now()->subDays(15)->format('M d, Y'), 'excerpt' => __('Kimmex launches new sustainable construction practices across all projects.'), 'isSustainability' => true]
-            ];
-            $categories = [__('All'), __('Sustainability'), __('CSR'), __('Updates')];
-        }
+        $categories = array_values(array_unique(array_merge([__('All')], $categoriesFromDb)));
     @endphp
 
-    <div class="bg-white min-h-screen text-titan-navy" x-data="{
+    <div class="bg-[#FCFCFD] min-h-screen text-titan-navy" x-data="{
         activeCategory: '{{ __('All') }}',
         articles: {{ Js::from($newsArticles) }},
-        categories: {{ Js::from($categories) }},
         get filteredArticles() {
             if (this.activeCategory === '{{ __('All') }}') return this.articles;
             return this.articles.filter(a => a.category === this.activeCategory);
         }
     }">
 
-        <!-- HERO -->
-        <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy"
-            style="min-height: 480px;">
+        <!-- === CINEMATIC HERO === -->
+        <section class="relative bg-titan-navy pt-[140px] pb-24 px-6 overflow-hidden">
+            <!-- Background Image -->
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-6.jpg" alt="News" class="w-full h-full object-cover opacity-45" />
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/50 via-titan-navy/30 to-titan-navy/80">
-                </div>
+                <img src="/images/projects/Thumbnail-6.jpg" class="w-full h-full object-cover opacity-60" alt="" />
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/70 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
-            <div class="relative z-20 text-center max-w-4xl px-6 pt-64" x-data="{ shown: false }"
-                x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'"
-                    class="transition-all duration-700 delay-100 inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 backdrop-blur-sm rounded-full text-white/80 text-[11px] font-bold uppercase tracking-widest mb-8 border border-white/10">
+            <!-- Accent Glow -->
+            <div
+                class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-titan-red/10 blur-[120px] rounded-full pointer-events-none">
+            </div>
+
+            <div class="max-w-[1240px] mx-auto relative z-10">
+                <!-- Badge -->
+                <div
+                    class="inline-flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md rounded-full px-5 py-2.5 mb-10 shadow-xl">
                     <x-lucide-newspaper class="w-3.5 h-3.5 text-titan-red" />
-                    {{ __('Insights') }}
+                    <span
+                        class="text-[10px] font-black uppercase tracking-[0.3em] text-white/90">{{ __('Kimmex Narrative') }}</span>
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-700 delay-300 font-black text-white mb-6 leading-none tracking-tighter uppercase"
-                    style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
-                    {{ __('News & Updates') }}
-                </h1>
-
-                <p :class="shown ? 'opacity-100' : 'opacity-0'"
-                    class="transition-all duration-700 delay-500 text-base text-white/40 max-w-xl mx-auto leading-relaxed">
-                    {{ __('Stay up to date with the latest developments from Kimmex Construction.') }}
-                </p>
+                <div class="max-w-3xl">
+                    <h1 class="font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
+                        style="font-size: clamp(3rem, 8vw, 6rem);">
+                        {{ __('NEWS') }}<span class="text-titan-red">.</span><br />
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('HUB') }}</span>
+                    </h1>
+                    <p class="text-white/40 text-lg leading-relaxed max-w-lg font-medium">
+                        {{ __('Stay up to date with the latest engineering breakthroughs and project updates from Kimmex.') }}
+                    </p>
+                </div>
             </div>
         </section>
 
-        <!-- CATEGORY FILTER -->
-        <section class="max-w-[1200px] mx-auto px-6 relative z-40 -mt-12">
-            <div class="flex flex-wrap items-center gap-2 bg-white rounded-xl shadow-lg border border-gray-100 p-2">
-                <template x-for="cat in categories" :key="cat">
-                    <button @click="activeCategory = cat"
-                        :class="activeCategory === cat ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/50 hover:text-titan-navy hover:bg-gray-100'"
-                        class="px-4 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap"
-                        x-text="cat === '{{ __('All') }}' ? '{{ __('All News') }}' : cat">
+        <!-- === MINIMAL CATEGORY BAR === -->
+        <section class="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-6 py-2 shadow-sm">
+            <div class="max-w-[1240px] mx-auto flex items-center gap-2 overflow-x-auto no-scrollbar">
+                @foreach($categories as $cat)
+                    <button @click="activeCategory = '{{ $cat }}'"
+                        :class="activeCategory === '{{ $cat }}' ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/30 hover:text-titan-navy hover:bg-gray-50'"
+                        class="px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shrink-0">
+                        {{ $cat }}
                     </button>
-                </template>
-            </div>
-        </section>
-
-        <!-- FEATURED ARTICLE (First article as hero card) -->
-        <section class="max-w-[1200px] mx-auto px-6 relative z-40 mt-8">
-            <a href="/news/{{ $newsArticles[0]['slug'] }}"
-                class="group block bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-2">
-                    <!-- Image -->
-                    <div class="relative h-64 lg:h-auto overflow-hidden">
-                        <img src="{{ $newsArticles[0]['image'] }}" alt="{{ $newsArticles[0]['title'] }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                        <div
-                            class="absolute top-5 left-5 px-4 py-2 bg-titan-red text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg">
-                            {{ $newsArticles[0]['category'] }}
-                        </div>
-                    </div>
-                    <!-- Content -->
-                    <div class="p-8 lg:p-14 flex flex-col justify-center">
-                        <div class="flex items-center gap-3 mb-5">
-                            <span
-                                class="bg-titan-red/10 text-titan-red text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg">{{ __('Featured') }}</span>
-                            <span class="text-[11px] font-bold text-titan-navy/30 flex items-center gap-1.5">
-                                <x-lucide-calendar class="w-3 h-3" /> {{ $newsArticles[0]['date'] }}
-                            </span>
-                        </div>
-                        <h2
-                            class="text-2xl lg:text-3xl font-black text-titan-navy leading-tight mb-4 group-hover:text-titan-red transition-colors duration-300 uppercase tracking-tight">
-                            {{ $newsArticles[0]['title'] }}
-                        </h2>
-                        <p class="text-titan-navy/50 text-[15px] leading-relaxed mb-8">
-                            {{ $newsArticles[0]['excerpt'] }}
-                        </p>
-                        <div
-                            class="flex items-center gap-3 text-titan-red font-bold text-xs uppercase tracking-widest group-hover:gap-4 transition-all duration-300">
-                            {{ __('Read Full Story') }}
-                            <x-lucide-arrow-right class="w-4 h-4" />
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </section>
-
-        <!-- NEWS GRID -->
-        <section class="py-24 max-w-[1200px] mx-auto px-6">
-            <!-- Section Header -->
-            <div class="flex items-center justify-between mb-12">
-                <div class="flex items-center gap-4">
-                    <div class="w-1 h-8 bg-titan-red rounded-full"></div>
-                    <div>
-                        <h2 class="text-xl font-black text-titan-navy uppercase tracking-tight">{{ __('All Articles') }}
-                        </h2>
-                        <p class="text-titan-navy/30 text-xs mt-0.5">{{ count($newsArticles) - 1 }} {{ __('stories') }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach(array_slice($newsArticles, 1) as $i => $article)
-                    <a href="/news/{{ $article['slug'] }}"
-                        class="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-1">
-                        <!-- Image -->
-                        <div class="aspect-[16/10] relative overflow-hidden">
-                            <div
-                                class="absolute top-4 left-4 z-20 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-titan-navy text-[10px] font-black uppercase tracking-widest rounded-lg">
-                                {{ $article['category'] }}
-                            </div>
-                            <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}"
-                                class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
-                        </div>
-
-                        <!-- Content -->
-                        <div class="p-7">
-                            <div class="text-[10px] font-bold text-titan-navy/30 mb-3 flex items-center gap-1.5">
-                                <x-lucide-calendar class="w-3 h-3 text-titan-red" /> {{ $article['date'] }}
-                            </div>
-
-                            <h3
-                                class="text-lg font-black text-titan-navy leading-snug mb-3 group-hover:text-titan-red transition-colors duration-300">
-                                {{ $article['title'] }}
-                            </h3>
-
-                            <p class="text-titan-navy/40 text-sm leading-relaxed mb-6 line-clamp-2">
-                                {{ $article['excerpt'] }}
-                            </p>
-
-                            <div class="flex items-center justify-between pt-5 border-t border-gray-50">
-                                <span
-                                    class="text-[11px] font-bold uppercase tracking-widest text-titan-navy/30 group-hover:text-titan-red transition-colors">{{ __('Read More') }}</span>
-                                <div
-                                    class="w-8 h-8 rounded-full bg-gray-50 text-titan-navy/40 flex items-center justify-center group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
-                                    <x-lucide-arrow-right class="w-3.5 h-3.5" />
-                                </div>
-                            </div>
-                        </div>
-                    </a>
                 @endforeach
             </div>
         </section>
 
-        <!-- CTA BANNER -->
-        <section class="bg-titan-navy py-16 relative overflow-hidden">
-            <div
-                class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+        <!-- === EDITORIAL GRID === -->
+        <section class="max-w-[1240px] mx-auto px-6 py-16 lg:py-24">
+
+            <!-- Grid Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <template x-for="(article, index) in filteredArticles" :key="article.slug">
+                    <!-- Article Card -->
+                    <a :href="'/news/' + article.slug"
+                        class="group flex flex-col bg-white rounded-3xl border border-gray-100 hover:border-titan-red/10 hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+
+                        <!-- Thumbnail -->
+                        <div class="aspect-video relative overflow-hidden bg-titan-navy/5">
+                            <img :src="article.image" :alt="article.title"
+                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105" />
+                            <div class="absolute top-4 left-4 z-20">
+                                <span
+                                    class="bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-lg shadow-xl"
+                                    x-text="article.category"></span>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-8 flex-1 flex flex-col">
+                            <div class="flex items-center gap-2 mb-4">
+                                <x-lucide-calendar class="w-3 h-3 text-titan-red/60" />
+                                <span class="text-[9px] font-black text-titan-navy/20 uppercase tracking-[0.2em]"
+                                    x-text="article.date"></span>
+                            </div>
+
+                            <h3 class="text-xl font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 leading-tight mb-4 line-clamp-2"
+                                x-text="article.title"></h3>
+
+                            <p class="text-[13px] text-titan-navy/50 leading-relaxed line-clamp-3 mb-6"
+                                x-text="article.excerpt"></p>
+
+                            <!-- Footer -->
+                            <div class="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
+                                <span
+                                    class="text-[10px] font-black uppercase tracking-[0.3em] text-titan-navy/20 group-hover:text-titan-red transition-colors">{{ __('Read Depth') }}</span>
+                                <div
+                                    class="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy/20 group-hover:bg-titan-red group-hover:text-white transition-all">
+                                    <x-lucide-arrow-right
+                                        class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </template>
             </div>
-            <div
-                class="max-w-[1200px] mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+
+            <!-- Empty State -->
+            <div x-show="filteredArticles.length === 0"
+                class="py-24 text-center bg-white rounded-[3rem] border-2 border-dashed border-gray-100">
+                <x-lucide-newspaper class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
+                <p class="text-titan-navy/30 font-black text-xs uppercase tracking-[0.3em]">
+                    {{ __('No articles found in this category') }}</p>
+            </div>
+
+        </section>
+
+        <!-- === CORPORATE CTA === -->
+        <section class="bg-titan-navy py-20 px-6 mt-16">
+            <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
                 <div>
-                    <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-2">{{ __('Stay Connected') }}
+                    <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em] mb-4">
+                        {{ __('Media Inquiries') }}</div>
+                    <h3 class="text-3xl font-black text-white uppercase tracking-tight mb-3">{{ __('Press & PR Desk') }}
                     </h3>
-                    <p class="text-white/40 text-sm">
-                        {{ __('Follow us for the latest updates and project announcements.') }}
+                    <p class="text-white/40 text-base max-w-md font-medium">
+                        {{ __('Are you a journalist or industry analyst? Get in touch with our communications team.') }}
                     </p>
                 </div>
-                <div class="flex gap-3">
-                    <a href="#"
-                        class="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center hover:bg-titan-red transition-all duration-300 border border-white/5"><x-lucide-facebook
-                            class="w-5 h-5" /></a>
-                    <a href="#"
-                        class="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center hover:bg-titan-red transition-all duration-300 border border-white/5"><x-lucide-linkedin
-                            class="w-5 h-5" /></a>
-                    <a href="#"
-                        class="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center hover:bg-titan-red transition-all duration-300 border border-white/5"><x-lucide-youtube
-                            class="w-5 h-5" /></a>
-                    <a href="#"
-                        class="w-12 h-12 rounded-xl bg-white/10 text-white flex items-center justify-center hover:bg-titan-red transition-all duration-300 border border-white/5"><x-lucide-instagram
-                            class="w-5 h-5" /></a>
-                </div>
+                <a href="/contact"
+                    class="bg-white text-titan-navy px-10 py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-titan-red hover:text-white transition-all shadow-2xl">
+                    {{ __('Contact Media Team') }}
+                </a>
             </div>
         </section>
+
     </div>
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 
 </x-layouts.app>

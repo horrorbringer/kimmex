@@ -65,7 +65,7 @@ class FormController extends Controller
         $resumePath = $request->file('resume')->store('resumes', 'public');
 
         JobApplication::create([
-            'jobId' => $sanitized['job_id'],
+            'jobId' => $sanitized['job_id'] === 'gen' ? null : $sanitized['job_id'],
             'applicantName' => $sanitized['full_name'],
             'email' => $sanitized['email'],
             'phone' => $sanitized['phone'],

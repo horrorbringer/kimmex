@@ -33,6 +33,13 @@ class DatabaseSeeder extends Seeder
             PartnerSeeder::class,
             OrganizationSeeder::class,
             BrandIdentitySeeder::class,
+            ServicesTableSeeder::class,
+            ProjectCategorySeeder::class,
+            ProjectSeeder::class,
+            TestimonialSeeder::class,
+            DocumentSeeder::class,
+            MilestoneSeeder::class,
+            NewsArticleSeeder::class,
         ]);
     }
 }

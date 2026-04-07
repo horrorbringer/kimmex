@@ -19,7 +19,7 @@ class Testimonial extends Model
         'content',
         'image',
         'rating',
-        'order_index',
-        'is_active',
+        'orderIndex',
+        'isFeatured',
     ];
 }

@@ -6,10 +6,11 @@
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $jobs = $jobsDb->map(function ($j) {
-            $deptName = $j->department ? $j->department->getTranslation('name', app()->getLocale()) : ($j->getTranslation('department', app()->getLocale()) ?: __('General'));
+        $jobs = $jobsDb->map(function (\App\Models\JobPosting $j) {
+            $deptName = $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General');
             return [
                 'id' => $j->id,
+                'slug' => $j->slug,
                 'title' => $j->getTranslation('title', app()->getLocale()),
                 'dept' => $deptName,
                 'loc' => $j->getTranslation('location', app()->getLocale()),
@@ -22,7 +23,7 @@
             ];
         })->toArray();
 
-        $categories = $jobsDb->map(fn($j) => $j->department ? $j->department->getTranslation('name', app()->getLocale()) : ($j->getTranslation('department', app()->getLocale()) ?: __('Engineering')))
+        $categories = $jobsDb->map(fn($j) => $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General'))
             ->unique()->values()->prepend(__('All Departments'))->toArray();
 
         $locations = $jobsDb->map(fn($j) => $j->getTranslation('location', app()->getLocale()))
@@ -31,7 +32,7 @@
         // Fallback for empty DB
         if (empty($jobs)) {
             $jobs = [
-                ['id' => 'gen', 'title' => __('Visionary Talent'), 'dept' => __('General'), 'loc' => __('Phnom Penh'), 'type' => __('Full-time'), 'salary' => __('Competitive'), 'experience' => __('Mixed'), 'postedDate' => now()->format('M d, Y'), 'tags' => [__('Hiring')], 'summary' => __('We are always looking for exceptional engineers and managers.')]
+                ['id' => 'gen', 'slug' => 'gen', 'title' => __('Visionary Talent'), 'dept' => __('General'), 'loc' => __('Phnom Penh'), 'type' => __('Full-time'), 'salary' => __('Competitive'), 'experience' => __('Mixed'), 'postedDate' => now()->format('M d, Y'), 'tags' => [__('Hiring')], 'summary' => __('We are always looking for exceptional engineers and managers.')]
             ];
         }
     @endphp
@@ -421,7 +422,7 @@
 
                             <!-- Right: CTA -->
                             <div class="shrink-0 pt-4 lg:pt-0">
-                                <a :href="'/careers/' + job.id"
+                                <a :href="'/careers/' + job.slug"
                                     class="bg-titan-navy text-white px-8 py-4 rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-titan-red transition-all shadow-lg hover:-translate-y-0.5 flex items-center gap-3 group/btn">
                                     {{ __('Apply Now') }}
                                     <x-lucide-arrow-right

@@ -18,7 +18,7 @@
                 "image" => $serviceDb->image
                     ? (\Illuminate\Support\Str::startsWith($serviceDb->image, '/') ? $serviceDb->image : \Illuminate\Support\Facades\Storage::url($serviceDb->image))
                     : "/images/projects/Thumbnail-1.jpg",
-                "features" => is_array($serviceDb->features) ? $serviceDb->features : [],
+                "scopeItems" => is_array($serviceDb->features) ? array_map(fn($f) => ["en" => $f['name'] ?? '', "kh" => $f['name'] ?? ''], $serviceDb->features) : [],
             ];
         } else {
             // Fallback service data
