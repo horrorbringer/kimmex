@@ -23,11 +23,11 @@
             ];
         })->toArray();
 
-        $categories = $jobsDb->map(fn($j) => $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General'))
-            ->unique()->values()->prepend(__('All Departments'))->toArray();
+        $categories = array_merge([__('All Departments')], $jobsDb->map(fn(\App\Models\JobPosting $j) => $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General'))
+            ->unique()->values()->all());
 
-        $locations = $jobsDb->map(fn($j) => $j->getTranslation('location', app()->getLocale()))
-            ->unique()->values()->prepend(__('All Locations'))->toArray();
+        $locations = array_merge([__('All Locations')], $jobsDb->map(fn(\App\Models\JobPosting $j) => $j->getTranslation('location', app()->getLocale()))
+            ->unique()->values()->all());
 
         // Fallback for empty DB
         if (empty($jobs)) {
