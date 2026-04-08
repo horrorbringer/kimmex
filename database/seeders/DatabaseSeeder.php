@@ -40,6 +40,8 @@ class DatabaseSeeder extends Seeder
             DocumentSeeder::class,
             MilestoneSeeder::class,
             NewsArticleSeeder::class,
+            JobPostingSeeder::class,
+            OrgStructureSeeder::class,
         ]);
     }
 }
