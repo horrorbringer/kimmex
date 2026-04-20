@@ -2,7 +2,7 @@
     description="View Kimmex's portfolio of successful construction and engineering projects.">
 
     @php
-        // Fetch All Projects
+        /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
         $projectsDb = \App\Models\Project::with('projectCategory')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -22,6 +22,7 @@
         $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
 
         $projects = $projectsDb->map(function ($p) {
+            /** @var \App\Models\Project $p */
             return [
                 'id' => $p->slug,
                 'title' => $p->getTranslation('title', app()->getLocale()),
@@ -30,7 +31,9 @@
                     ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
                     : ($p->category ?: 'General'),
                 'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
-                'image' => $p->heroImage ? \Illuminate\Support\Facades\Storage::url($p->heroImage) : '/images/projects/Thumbnail-1.jpg',
+                'image' => $p->heroImage
+                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
+                    : '/images/projects/Thumbnail-1.jpg',
                 'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
             ];
         })->toArray();

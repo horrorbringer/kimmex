@@ -21,11 +21,11 @@
         $profile = \App\Models\SystemSetting::get('organization_profile', []);
         $email = $profile['email'] ?? 'info@kimmex.com.kh';
         $phone = $profile['phone'] ?? '+855 23 999 999';
-        $facebook = $profile['facebook'] ?? '#';
-        $linkedin = $profile['linkedin'] ?? '#';
-        $youtube = $profile['youtube'] ?? '#';
-        $instagram = $profile['instagram'] ?? '#';
-        $telegram = $profile['telegram'] ?? '#';
+        $facebook = $profile['facebook'] ?? null;
+        $linkedin = $profile['linkedin'] ?? null;
+        $youtube = $profile['youtube'] ?? null;
+        $instagram = $profile['instagram'] ?? null;
+        $telegram = $profile['telegram'] ?? null;
 
         $lang = app()->getLocale();
         $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
@@ -58,23 +58,31 @@
                 </div>
                 <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
                 <div class="hidden sm:flex gap-2">
-                    <a href="{{ $facebook }}" target="_blank"
-                        class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                        <x-lucide-facebook class="w-3 h-3" />
-                    </a>
-                    <a href="{{ $linkedin }}" target="_blank"
-                        class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                        <x-lucide-linkedin class="w-3 h-3" />
-                    </a>
-                    <a href="{{ $youtube }}" target="_blank"
-                        class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                        <x-lucide-youtube class="w-3 h-3" />
-                    </a>
-                    <a href="{{ $instagram }}" target="_blank"
-                        class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
-                        <x-lucide-instagram class="w-3 h-3" />
-                    </a>
-                    @if($telegram !== '#')
+                    @if($facebook && $facebook !== '#')
+                        <a href="{{ $facebook }}" target="_blank"
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            <x-lucide-facebook class="w-3 h-3" />
+                        </a>
+                    @endif
+                    @if($linkedin && $linkedin !== '#')
+                        <a href="{{ $linkedin }}" target="_blank"
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            <x-lucide-linkedin class="w-3 h-3" />
+                        </a>
+                    @endif
+                    @if($youtube && $youtube !== '#')
+                        <a href="{{ $youtube }}" target="_blank"
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            <x-lucide-youtube class="w-3 h-3" />
+                        </a>
+                    @endif
+                    @if($instagram && $instagram !== '#')
+                        <a href="{{ $instagram }}" target="_blank"
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            <x-lucide-instagram class="w-3 h-3" />
+                        </a>
+                    @endif
+                    @if($telegram && $telegram !== '#')
                         <a href="{{ $telegram }}" target="_blank"
                             class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
                             <x-lucide-send class="w-3 h-3" />

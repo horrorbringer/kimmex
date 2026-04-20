@@ -42,15 +42,17 @@
             $googleMapsUrl = $profile['google_maps_url'] ?? '';
             $originalMapsUrl = $googleMapsUrl;
 
-            // Improved fallback for missing or invalid embed URLs
+            // Enhanced detection for embeddable URLs
             $isEmbed = str_contains($googleMapsUrl, '/maps/embed') ||
                 str_contains($googleMapsUrl, 'google.com/maps?pb=') ||
-                str_contains($googleMapsUrl, 'google.com/maps/embed');
+                str_contains($googleMapsUrl, 'output=embed');
 
             if (!$isEmbed && !empty($googleMapsUrl)) {
-                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.767!2d104.9197!3d11.5563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDMzJzIyLjciTiAxMDTCsDU1JzEwLjkiRQ!5e0!3m2!1sen!2skh!4v1234567890";
+                // If it's not an embed link, we use the official Kimmex Embed fallback
+                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh";
             } elseif (empty($googleMapsUrl)) {
-                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.767!2d104.9197!3d11.5563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTHCsDMzJzIyLjciTiAxMDTCsDU1JzEwLjkiRQ!5e0!3m2!1sen!2skh!4v1234567890";
+                // Default fallback if nothing provided
+                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh";
             }
 
             // Clickable link fallback: prioritze user's link if provided and it's NOT an embed link

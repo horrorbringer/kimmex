@@ -1,4 +1,5 @@
 @php
+    /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
     $projectsDb = \App\Models\Project::orderBy('isFeatured', 'desc')
         ->orderBy('created_at', 'desc')
         ->take(3)
@@ -7,7 +8,9 @@
     $projects = $projectsDb->map(function ($p) {
         return [
             'slug' => $p->slug,
-            'image' => $p->heroImage ? \Illuminate\Support\Facades\Storage::url($p->heroImage) : '/images/projects/Thumbnail-1.jpg',
+            'image' => $p->heroImage
+                ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
+                : '/images/projects/Thumbnail-1.jpg',
             'type' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale()) : ($p->category ?: __('Infrastructure')),
             'title' => $p->getTranslation('title', app()->getLocale()),
             'location' => $p->getTranslation('location', app()->getLocale()),

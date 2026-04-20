@@ -21,11 +21,11 @@
                 $address = $getVal('address', __('Phnom Penh, Cambodia'));
                 $email = $profile['email'] ?? 'info@kimmex.com.kh';
                 $phone = $profile['phone'] ?? '+855 23 999 999';
-                $facebook = $profile['facebook'] ?? '#';
-                $linkedin = $profile['linkedin'] ?? '#';
-                $youtube = $profile['youtube'] ?? '#';
-                $instagram = $profile['instagram'] ?? '#';
-                $telegram = $profile['telegram'] ?? '#';
+                $facebook = $profile['facebook'] ?? null;
+                $linkedin = $profile['linkedin'] ?? null;
+                $youtube = $profile['youtube'] ?? null;
+                $instagram = $profile['instagram'] ?? null;
+                $telegram = $profile['telegram'] ?? null;
 
                 $googleMapsUrl = $profile['google_maps_url'] ?? '';
                 $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=');
@@ -50,23 +50,31 @@
                     {{ \Illuminate\Support\Str::limit($brand['company_story'] ?? __('Over 25 years of excellence in building the future of Cambodia.'), 120) }}
                 </p>
                 <div class="flex gap-3 pt-2">
-                    <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer"
-                        class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                        <x-lucide-facebook class="w-4 h-4" />
-                    </a>
-                    <a href="{{ $linkedin }}" target="_blank" rel="noopener noreferrer"
-                        class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                        <x-lucide-linkedin class="w-4 h-4" />
-                    </a>
-                    <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
-                        class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                        <x-lucide-youtube class="w-4 h-4" />
-                    </a>
-                    <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
-                        class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
-                        <x-lucide-instagram class="w-4 h-4" />
-                    </a>
-                    @if($telegram !== '#')
+                    @if($facebook && $facebook !== '#')
+                        <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer"
+                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <x-lucide-facebook class="w-4 h-4" />
+                        </a>
+                    @endif
+                    @if($linkedin && $linkedin !== '#')
+                        <a href="{{ $linkedin }}" target="_blank" rel="noopener noreferrer"
+                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <x-lucide-linkedin class="w-4 h-4" />
+                        </a>
+                    @endif
+                    @if($youtube && $youtube !== '#')
+                        <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
+                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <x-lucide-youtube class="w-4 h-4" />
+                        </a>
+                    @endif
+                    @if($instagram && $instagram !== '#')
+                        <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
+                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            <x-lucide-instagram class="w-4 h-4" />
+                        </a>
+                    @endif
+                    @if($telegram && $telegram !== '#')
                         <a href="{{ $telegram }}" target="_blank" rel="noopener noreferrer"
                             class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
                             <x-lucide-send class="w-4 h-4" />
@@ -158,7 +166,8 @@
             class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
             <p>&copy; 2026 Kimmex Construction & Investment Co., Ltd. {{ __('All rights reserved') }}.</p>
             <div class="flex gap-6">
-                <a href="/privacy-policy" class="hover:text-accent-orange transition-colors">{{ __('Privacy Policy') }}</a>
+                <a href="/privacy-policy"
+                    class="hover:text-accent-orange transition-colors">{{ __('Privacy Policy') }}</a>
                 <a href="#" class="hover:text-accent-orange transition-colors">{{ __('Terms of Service') }}</a>
             </div>
         </div>
