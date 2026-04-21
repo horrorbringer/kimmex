@@ -15,9 +15,9 @@
             'experience' => $jobDb->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
             'postedDate' => $jobDb->created_at ? $jobDb->created_at->format('M d, Y') : now()->format('M d, Y'),
             'description' => $jobDb->getTranslation('summary', app()->getLocale()),
-            'responsibilities' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('responsibilities', app()->getLocale()))))),
-            'requirements' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('requirements', app()->getLocale()))))),
-            'benefits' => array_filter(explode("\n", strip_tags(str_replace(['</li>', '</div>', '<br>', '<br/>'], "\n", $jobDb->getTranslation('benefits', app()->getLocale()))))),
+            'responsibilities' => $jobDb->getTranslation('responsibilities', app()->getLocale()),
+            'requirements' => $jobDb->getTranslation('requirements', app()->getLocale()),
+            'benefits' => $jobDb->getTranslation('benefits', app()->getLocale()),
         ];
     } elseif ($slug === 'gen') {
         $job = [
@@ -30,21 +30,9 @@
             'experience' => __('Mixed'),
             'postedDate' => now()->format('M d, Y'),
             'description' => __('We are always looking for exceptional engineers and managers. Even if there is no specific opening that matches your profile, we encourage you to submit your general application.'),
-            'responsibilities' => [
-                __('Willingness to learn and grow within the Kimmex ecosystem'),
-                __('Contributing to various projects across departments'),
-                __('Maintaining professional excellence in all tasks')
-            ],
-            'requirements' => [
-                __('Strong technical background in engineering or construction'),
-                __('Passion for innovation and quality'),
-                __('Excellent teamwork and communication skills')
-            ],
-            'benefits' => [
-                __('Competitive compensation package'),
-                __('Continuous professional development'),
-                __('Opportunity to work on landmark projects')
-            ],
+            'responsibilities' => '<ul><li>' . __('Willingness to learn and grow within the Kimmex ecosystem') . '</li><li>' . __('Contributing to various projects across departments') . '</li><li>' . __('Maintaining professional excellence in all tasks') . '</li></ul>',
+            'requirements' => '<ul><li>' . __('Strong technical background in engineering or construction') . '</li><li>' . __('Passion for innovation and quality') . '</li><li>' . __('Excellent teamwork and communication skills') . '</li></ul>',
+            'benefits' => '<ul><li>' . __('Competitive compensation package') . '</li><li>' . __('Continuous professional development') . '</li><li>' . __('Opportunity to work on landmark projects') . '</li></ul>',
         ];
     }
 @endphp
@@ -142,48 +130,35 @@
                         </section>
                         @endif
 
+                        <style>
+                            .rich-text-content ul { list-style: none; padding: 0; }
+                            .rich-text-content ul li { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+                            .rich-text-content ul li::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 9999px; background-color: #ff2a00; margin-top: 10px; flex-shrink: 0; }
+                            .rich-text-content p { margin-bottom: 1rem; }
+                            .rich-text-content p:last-child { margin-bottom: 0; }
+                        </style>
+
                         <!-- 02: Key Responsibilities -->
-                        @if(!empty($job['responsibilities']))
+                        @if(!empty(trim(strip_tags($job['responsibilities']))))
                         <section>
                             <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Key Responsibilities') }}</h2>
-                            <ul class="list-none space-y-4 p-0">
-                                @foreach($job['responsibilities'] as $item)
-                                    <li class="flex gap-4 items-start">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-titan-red mt-2.5 shrink-0"></div>
-                                        <span class="text-base">{{ $item }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            <div class="leading-relaxed text-lg rich-text-content">{!! $job['responsibilities'] !!}</div>
                         </section>
                         @endif
 
                         <!-- 03: Requirements -->
-                        @if(!empty($job['requirements']))
+                        @if(!empty(trim(strip_tags($job['requirements']))))
                         <section>
                             <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Requirements') }}</h2>
-                            <ul class="list-none space-y-4 p-0">
-                                @foreach($job['requirements'] as $req)
-                                    <li class="flex gap-4 items-start">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-titan-red mt-2.5 shrink-0"></div>
-                                        <span class="text-base">{{ $req }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            <div class="leading-relaxed text-lg rich-text-content">{!! $job['requirements'] !!}</div>
                         </section>
                         @endif
 
                         <!-- 04: Benefits -->
-                        @if(!empty($job['benefits']))
+                        @if(!empty(trim(strip_tags($job['benefits']))))
                         <section class="pt-10 border-t border-gray-100">
                              <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-8">{{ __('Benefits') }}</h2>
-                             <ul class="list-none space-y-4 p-0">
-                                @foreach($job['benefits'] as $benefit)
-                                    <li class="flex gap-4 items-start">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-titan-red mt-2.5 shrink-0"></div>
-                                        <span class="text-base">{{ $benefit }}</span>
-                                    </li>
-                                @endforeach
-                             </ul>
+                             <div class="leading-relaxed text-lg rich-text-content">{!! $job['benefits'] !!}</div>
                         </section>
                         @endif
 

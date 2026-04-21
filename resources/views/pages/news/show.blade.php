@@ -17,7 +17,7 @@
                 'readTime' => ($articleDb->getTranslation('readTime', app()->getLocale())) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', app()->getLocale()))) / 200) . ' min read'),
                 'excerpt' => $excerpt,
                 'content' => $articleDb->getTranslation('content', app()->getLocale()),
-                'gallery' => $articleDb->gallery ?? []
+                'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => \Illuminate\Support\Facades\Storage::url($img))->toArray()
             ];
         } else {
             // Fallback for non-existent slug

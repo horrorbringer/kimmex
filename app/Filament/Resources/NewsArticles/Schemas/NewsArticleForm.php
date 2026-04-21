@@ -21,106 +21,113 @@ class NewsArticleForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
-                Section::make(__('Article Content'))
-                    ->description(__('Main content and identity of the article'))
+                TextInput::make('title')
+                    ->label(__('Title'))
+                    ->required()
+                    ->live(onBlur: true)
+                    ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
+
+                TextInput::make('slug')
+                    ->label(__('Slug'))
+                    ->helperText(__('Auto-generated from title. Used for the article URL.'))
+                    ->unique(ignoreRecord: true)
+                    ->required(),
+
+                Textarea::make('excerpt')
+                    ->label(__('Excerpt'))
+                    ->hintAction(TranslationHelper::getAutoTranslateAction('excerpt'))
+                    ->rows(3),
+
+                FileUpload::make('coverImage')
+                    ->image()
+                    ->disk('public')
+                    ->directory('news/covers')
+                    ->label(__('Cover Image')),
+
+                RichEditor::make('content')
+                    ->label(__('Content'))
+                    ->required()
+                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDirectory('news/content'),
+
+                FileUpload::make('gallery')
+                    ->label(__('Gallery'))
+                    ->image()
+                    ->multiple()
+                    ->reorderable()
+                    ->appendFiles()
+                    ->disk('public')
+                    ->directory('news/gallery')
+                    ->panelLayout('grid')
+                    ->helperText(__('Upload multiple images for the article gallery')),
+
+                Section::make(__('Publishing Info'))
+                    ->icon('heroicon-o-calendar')
                     ->components([
-                        Grid::make(2)->components([
-                            TextInput::make('title')
-                                ->label(__('Title'))
-                                ->required()
-                                ->live(onBlur: true)
-                                ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                            TextInput::make('slug')
-                                ->label(__('Slug'))
-                                ->unique(ignoreRecord: true)
-                                ->required(),
-                        ]),
-                        Textarea::make('excerpt')
-                            ->label(__('Excerpt'))
-                            ->hintAction(TranslationHelper::getAutoTranslateAction('excerpt'))
-                            ->rows(3)
-                            ->columnSpanFull(),
-                        RichEditor::make('content')
-                            ->label(__('Content'))
+                        DateTimePicker::make('publishedAt')
+                            ->label(__('Published At'))
                             ->required()
-                            ->columnSpanFull(),
-                    ]),
+                            ->default(now())
+                            ->native(false),
 
-                Section::make(__('Media & Gallery'))
-                    ->description(__('Visual assets for the article'))
-                    ->components([
-                        FileUpload::make('coverImage')
-                            ->image()
-                            ->disk('public')
-                            ->directory('news/covers')
-                            ->label(__('Cover Image')),
-                        FileUpload::make('gallery')
-                            ->label(__('Gallery'))
-                            ->image()
-                            ->multiple()
-                            ->disk('public')
-                            ->directory('news/gallery')
-                            ->columnSpanFull(),
-                    ]),
+                        TextInput::make('category')
+                            ->label(__('Category'))
+                            ->required(),
 
-                Section::make(__('Publishing & Authorship'))
-                    ->components([
-                        Grid::make(3)->components([
-                            DateTimePicker::make('publishedAt')
-                                ->label(__('Published At'))
-                                ->required()
-                                ->default(now()),
-                            TextInput::make('category')
-                                ->label(__('Category'))
-                                ->required(),
-                            TextInput::make('readTime')
-                                ->label(__('Read Time'))
-                                ->suffix(__('mins')),
-                        ]),
-                        Grid::make(2)->components([
-                            Select::make('authorId')
-                                ->label(__('Author'))
-                                ->relationship('author', 'name')
-                                ->searchable()
-                                ->preload()
-                                ->live()
-                                ->afterStateUpdated(function ($state, Set $set) {
-                                    if ($state) {
-                                        $employee = \App\Models\Employee::find($state);
-                                        if ($employee) {
-                                            $set('authorName', $employee->name);
-                                        }
-                                    }
-                                })
-                                ->default(auth()->user()?->employee?->id),
-                            TextInput::make('authorName')
-                                ->label(__('Author Name'))
-                                ->suffixAction(TranslationHelper::getAutoTranslateAction('authorName'))
-                                ->disabled()
-                                ->dehydrated(),
-                        ]),
+                        TextInput::make('readTime')
+                            ->label(__('Read Time'))
+                            ->suffix(__('mins')),
+
                         TextInput::make('tags')
                             ->label(__('Tags'))
                             ->placeholder('news, update, announcement'),
+
+                        TextInput::make('year')
+                            ->label(__('Year'))
+                            ->numeric()
+                            ->default(date('Y')),
                     ]),
 
-                Section::make(__('Visibility & Settings'))
+                Section::make(__('Author & Settings'))
+                    ->icon('heroicon-o-user')
                     ->components([
-                        Grid::make(3)->components([
-                            Toggle::make('isFeatured')
-                                ->label(__('Is Featured')),
-                            Toggle::make('isTrending')
-                                ->label(__('Is Trending')),
-                            TextInput::make('year')
-                                ->label(__('Year'))
-                                ->numeric()
-                                ->default(date('Y')),
-                        ]),
+                        Select::make('authorId')
+                            ->label(__('Author'))
+                            ->relationship('author', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->afterStateUpdated(function ($state, Set $set) {
+                                if ($state) {
+                                    $employee = \App\Models\Employee::find($state);
+                                    if ($employee) {
+                                        $set('authorName', $employee->name);
+                                    }
+                                }
+                            })
+                            ->default(auth()->user()?->employee?->id),
+
+                        TextInput::make('authorName')
+                            ->label(__('Author Name'))
+                            ->suffixAction(TranslationHelper::getAutoTranslateAction('authorName'))
+                            ->disabled()
+                            ->dehydrated(),
+
+                        Toggle::make('isFeatured')
+                            ->label(__('Is Featured'))
+                            ->inline(false),
+
+                        Toggle::make('isTrending')
+                            ->label(__('Is Trending'))
+                            ->inline(false),
                     ]),
 
                 Section::make(__('SEO Enhancement'))
+                    ->icon('heroicon-o-magnifying-glass')
+                    ->description(__('Search engine optimization settings'))
                     ->collapsed()
                     ->components([
                         TextInput::make('metaTitle')
@@ -128,8 +135,7 @@ class NewsArticleForm
                             ->suffixAction(TranslationHelper::getAutoTranslateAction('metaTitle')),
                         Textarea::make('metaDescription')
                             ->label(__('Meta Description'))
-                            ->hintAction(TranslationHelper::getAutoTranslateAction('metaDescription'))
-                            ->columnSpanFull(),
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('metaDescription')),
                     ]),
             ]);
     }
