@@ -24,6 +24,7 @@ class DepartmentsTable
 
                 \Filament\Tables\Columns\ImageColumn::make('headUnit.employee.image')
                     ->label(__('Head / Manager'))
+                    ->disk('public')
                     ->circular()
                     ->placeholder('-')
                     ->toggleable(),

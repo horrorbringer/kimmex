@@ -38,6 +38,8 @@ class DocumentForm
                     ->components([
                         RichEditor::make('description')
                             ->label(__('Description'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                     ]),
 
@@ -47,12 +49,16 @@ class DocumentForm
                         Grid::make(2)->components([
                             FileUpload::make('fileUrl')
                                 ->label(__('Main Document File'))
+                                ->disk('public')
+                                ->visibility('public')
                                 ->directory('documents/files')
                                 ->preserveFilenames()
                                 ->required(),
                             FileUpload::make('thumbnailUrl')
                                 ->label(__('Thumbnail Preview'))
                                 ->image()
+                                ->disk('public')
+                                ->visibility('public')
                                 ->directory('documents/thumbnails'),
                         ]),
                     ]),

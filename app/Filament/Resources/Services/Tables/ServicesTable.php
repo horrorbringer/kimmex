@@ -18,6 +18,7 @@ class ServicesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label(__('Image'))
+                    ->disk('public')
                     ->circular()
                     ->defaultImageUrl('https://ui-avatars.com/api/?name=Service&color=7F9CF5&background=EBF4FF'),
                 TextColumn::make('title')

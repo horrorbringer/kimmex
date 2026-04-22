@@ -96,15 +96,23 @@ class JobPostingForm
                     ->components([
                         RichEditor::make('summary')
                             ->label(__('Summary'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('responsibilities')
                             ->label(__('Responsibilities'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('requirements')
                             ->label(__('Requirements'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('benefits')
                             ->label(__('Benefits'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                     ]),
             ]);

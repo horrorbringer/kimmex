@@ -18,12 +18,25 @@ class DocumentsTable
             ->columns([
                 ImageColumn::make('thumbnailUrl')
                     ->label(__('Thumbnail'))
+                    ->disk('public')
                     ->circular(),
+                \Filament\Tables\Columns\ImageColumn::make('employee.image')
+                    ->label('')
+                    ->disk('public')
+                    ->circular()
+                    ->placeholder('-'),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
                     ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction))
                     ->description(fn($record) => $record->slug),
+                \Filament\Forms\Components\FileUpload::make('url')
+                    ->label(__('Image'))
+                    ->image()
+                    ->disk('public')
+                    ->visibility('public')
+                    ->directory('projects/gallery')
+                    ->required(),
                 TextColumn::make('documentCategory.name')
                     ->label(__('Category'))
                     ->badge()

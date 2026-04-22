@@ -15,6 +15,7 @@ class ProjectImageForm
                     ->label(__('Image'))
                     ->image()
                     ->disk('public')
+                    ->visibility('public')
                     ->directory('projects/gallery')
                     ->required(),
                 TextInput::make('caption')

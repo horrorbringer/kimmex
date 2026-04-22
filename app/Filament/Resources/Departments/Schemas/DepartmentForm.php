@@ -42,6 +42,8 @@ class DepartmentForm
                     ->components([
                         \Filament\Forms\Components\RichEditor::make('description')
                             ->label(__('Detailed Description'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->placeholder(__('Describe the department goals...'))
                             ->columnSpanFull(),
                     ]),

@@ -17,6 +17,7 @@ class ProjectsTable
             ->columns([
                 ImageColumn::make('heroImage')
                     ->label(__('Photo'))
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('title')
                     ->label(__('Title'))

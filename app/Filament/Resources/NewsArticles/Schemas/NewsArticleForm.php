@@ -44,6 +44,7 @@ class NewsArticleForm
                 FileUpload::make('coverImage')
                     ->image()
                     ->disk('public')
+                    ->visibility('public')
                     ->directory('news/covers')
                     ->label(__('Cover Image')),
 
@@ -51,6 +52,7 @@ class NewsArticleForm
                     ->label(__('Content'))
                     ->required()
                     ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsVisibility('public')
                     ->fileAttachmentsDirectory('news/content'),
 
                 FileUpload::make('gallery')
@@ -58,8 +60,8 @@ class NewsArticleForm
                     ->image()
                     ->multiple()
                     ->reorderable()
-                    ->appendFiles()
                     ->disk('public')
+                    ->visibility('public')
                     ->directory('news/gallery')
                     ->panelLayout('grid')
                     ->helperText(__('Upload multiple images for the article gallery')),
@@ -113,7 +115,6 @@ class NewsArticleForm
                         TextInput::make('authorName')
                             ->label(__('Author Name'))
                             ->suffixAction(TranslationHelper::getAutoTranslateAction('authorName'))
-                            ->disabled()
                             ->dehydrated(),
 
                         Toggle::make('isFeatured')

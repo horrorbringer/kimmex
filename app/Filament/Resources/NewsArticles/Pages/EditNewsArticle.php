@@ -8,7 +8,7 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditNewsArticle extends EditRecord
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
+    // use \LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
 
     protected static string $resource = NewsArticleResource::class;
 
@@ -17,5 +17,10 @@ class EditNewsArticle extends EditRecord
         return [
             DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

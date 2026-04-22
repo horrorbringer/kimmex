@@ -24,7 +24,9 @@ class UserForm
                     ->maxLength(255),
                 DateTimePicker::make('email_verified_at'),
                 FileUpload::make('image')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->visibility('public'),
                 Select::make('role')
                     ->options([
                         'ADMIN' => 'Admin',

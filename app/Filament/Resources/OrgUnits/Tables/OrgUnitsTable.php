@@ -17,6 +17,7 @@ class OrgUnitsTable
             ->columns([
                 \Filament\Tables\Columns\ImageColumn::make('employee.image')
                     ->label('')
+                    ->disk('public')
                     ->circular()
                     ->placeholder('-'),
 

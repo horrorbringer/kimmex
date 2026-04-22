@@ -45,6 +45,8 @@ class PolicyForm
                     ->components([
                         RichEditor::make('content')
                             ->label(__('Content'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull()
                             ->required(),
                     ]),

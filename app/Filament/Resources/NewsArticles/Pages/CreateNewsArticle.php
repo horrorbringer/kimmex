@@ -7,7 +7,7 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateNewsArticle extends CreateRecord
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
+    // use \LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
     protected static string $resource = NewsArticleResource::class;
 }

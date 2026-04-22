@@ -206,7 +206,7 @@
 
                 <!-- Core Editorial Content -->
                 <article
-                    class="prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.8] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:text-titan-navy reveal-up">
+                    class="prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.8] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:text-titan-navy prose-table:border-collapse prose-table:w-full prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-4 prose-th:py-3 prose-th:text-left prose-th:font-black prose-th:uppercase prose-th:tracking-wider prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-3 reveal-up">
                     {!! $article['content'] !!}
                 </article>
 
@@ -321,6 +321,39 @@
             margin: 3.5rem 0 !important;
             aspect-ratio: 16 / 9;
             width: 100%;
+        }
+
+        /* Table Styles */
+        article table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.95rem;
+        }
+
+        article th {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #1e293b;
+        }
+
+        article td {
+            border: 1px solid #d1d5db;
+            padding: 12px 16px;
+            color: #475569;
+        }
+
+        article tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        article tr:hover {
+            background: #f3f4f6;
         }
     </style>
 

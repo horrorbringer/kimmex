@@ -21,6 +21,7 @@ class MilestonesTable
                     ->sortable(),
                 ImageColumn::make('image')
                     ->label(__('Image'))
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('title')
                     ->label(__('Title'))

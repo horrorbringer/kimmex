@@ -71,17 +71,25 @@ class ProjectForm
                     ->description(__('Technical details and solutions'))
                     ->components([
                         RichEditor::make('designConcept')
-                            ->label(__('Design Concept & Functions')),
+                            ->label(__('Design Concept & Functions'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public'),
                         RichEditor::make('scopeContributions')
-                            ->label(__('Specific Kimmex Contributions')),
+                            ->label(__('Specific Kimmex Contributions'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public'),
                         RichEditor::make('engineeringNarrative')
-                            ->label(__('Challenges & Solutions (Engineering Narrative)')),
+                            ->label(__('Challenges & Solutions (Engineering Narrative)'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public'),
                     ]),
 
                 Section::make(__('Brief Description'))
                     ->components([
                         RichEditor::make('description')
                             ->label(__('Description'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                     ]),
 
@@ -113,6 +121,7 @@ class ProjectForm
                                 FileUpload::make('url')
                                     ->image()
                                     ->disk('public')
+                                    ->visibility('public')
                                     ->directory('projects/gallery')
                                     ->label(__('Photo'))
                                     ->required(),
@@ -133,6 +142,7 @@ class ProjectForm
                         FileUpload::make('heroImage')
                             ->image()
                             ->disk('public')
+                            ->visibility('public')
                             ->directory('projects/hero')
                             ->label(__('Hero Image'))
                             ->columnSpanFull(),

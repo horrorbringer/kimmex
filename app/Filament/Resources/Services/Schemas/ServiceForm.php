@@ -71,7 +71,9 @@ class ServiceForm
                                 ->hintAction(TranslationHelper::getAutoTranslateAction('summary'))
                                 ->maxLength(1000),
                             RichEditor::make('description')
-                                ->label(__('Description')),
+                                ->label(__('Description'))
+                                ->fileAttachmentsDisk('public')
+                                ->fileAttachmentsVisibility('public'),
                         ]),
                     ]),
 

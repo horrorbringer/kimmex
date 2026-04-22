@@ -18,4 +18,9 @@ class EditProject extends EditRecord
             DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

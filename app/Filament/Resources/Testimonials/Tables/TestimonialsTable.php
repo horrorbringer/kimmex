@@ -33,7 +33,8 @@ class TestimonialsTable
                     ->numeric()
                     ->sortable(),
                 ImageColumn::make('image')
-                    ->label(__('Photo')),
+                    ->label(__('Photo'))
+                    ->disk('public'),
                 IconColumn::make('isFeatured')
                     ->label(__('Featured'))
                     ->boolean(),

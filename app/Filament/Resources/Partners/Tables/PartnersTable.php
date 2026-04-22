@@ -21,7 +21,8 @@ class PartnersTable
                     ->label(__('Name'))
                     ->searchable(),
                 \Filament\Tables\Columns\ImageColumn::make('logoUrl')
-                    ->label(__('Logo')),
+                    ->label(__('Logo'))
+                    ->disk('public'),
                 TextColumn::make('website')
                     ->label(__('Website'))
                     ->searchable(),

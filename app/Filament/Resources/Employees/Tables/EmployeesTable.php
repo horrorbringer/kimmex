@@ -17,6 +17,7 @@ class EmployeesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label(__('Photo'))
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('name')
                     ->label(__('Full Name'))

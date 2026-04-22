@@ -18,6 +18,7 @@ class NewsArticlesTable
             ->columns([
                 ImageColumn::make('coverImage')
                     ->label(__('Cover Image'))
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('title')
                     ->label(__('Title'))
