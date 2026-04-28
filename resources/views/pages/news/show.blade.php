@@ -42,7 +42,8 @@
                 'slug' => $r->slug,
                 'title' => $r->getTranslation('title', app()->getLocale()),
                 'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
-                'category' => $r->category ?? __('Updates')
+                'category' => $r->category ?? __('Updates'),
+                'image' => $r->coverImage
             ];
         });
     @endphp
@@ -95,15 +96,15 @@
                                 class="text-[9px] font-black text-titan-navy/20 uppercase tracking-widest">{{ __('Share') }}</span>
                             <div class="flex gap-2">
                                 <a href="#"
-                                    class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all"><x-lucide-facebook
+                                    class="w-8 h-8 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all"><x-lucide-facebook
                                         class="w-3.5 h-3.5" /></a>
                                 <a href="#"
-                                    class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all"><x-lucide-linkedin
+                                    class="w-8 h-8 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all"><x-lucide-linkedin
                                         class="w-3.5 h-3.5" /></a>
                             </div>
                         </div>
                         <a href="/news"
-                            class="w-8 h-8 rounded-lg bg-titan-navy text-white flex items-center justify-center hover:bg-titan-red transition-all shadow-xl shadow-titan-navy/20"><x-lucide-arrow-left
+                            class="w-8 h-8 bg-titan-navy text-white flex items-center justify-center hover:bg-titan-red transition-all"><x-lucide-arrow-left
                                 class="w-4 h-4" /></a>
                     </div>
                 </div>
@@ -124,11 +125,11 @@
                 <div class="max-w-4xl mx-auto space-y-6" x-data="{ shown: false }"
                     x-init="setTimeout(() => shown = true, 100)">
                     <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                        class="transition-all duration-700 inline-flex items-center gap-2 px-4 py-1.5 bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.3em] rounded-full shadow-2xl">
+                        class="transition-all duration-700 inline-flex items-center gap-2 px-4 py-1.5 bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.3em]">
                         {{ $article['category'] }}
                     </div>
                     <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                        class="transition-all duration-700 delay-300 text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-[1.1] drop-shadow-2xl">
+                        class="transition-all duration-700 delay-300 text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-[1.1]">
                         {{ $article['title'] }}
                     </h1>
                 </div>
@@ -166,15 +167,15 @@
                         </div>
                         <div class="flex flex-col gap-3">
                             <a href="#"
-                                class="w-11 h-11 rounded-2xl bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all transform hover:rotate-12 shadow-sm group">
+                                class="w-11 h-11 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all transform hover:rotate-12 shadow-sm group">
                                 <x-lucide-facebook class="w-4 h-4" />
                             </a>
                             <a href="#"
-                                class="w-11 h-11 rounded-2xl bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all transform hover:rotate-12 shadow-sm group">
+                                class="w-11 h-11 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all transform hover:rotate-12 shadow-sm group">
                                 <x-lucide-linkedin class="w-4 h-4" />
                             </a>
                             <button onclick="window.print()"
-                                class="w-11 h-11 rounded-2xl bg-gray-50 flex items-center justify-center hover:bg-titan-navy hover:text-white transition-all transform hover:rotate-12 shadow-sm">
+                                class="w-11 h-11 bg-gray-50 flex items-center justify-center hover:bg-titan-navy hover:text-white transition-all transform hover:rotate-12">
                                 <x-lucide-printer class="w-4 h-4" />
                             </button>
                         </div>
@@ -214,21 +215,73 @@
                     {!! $article['content'] !!}
                 </article>
 
-                <!-- GALLERY SECTION (IF MULTIPLE IMAGES) -->
+                <!-- GALLERY SECTION: BENTO GRID & LIGHTBOX -->
                 @if(!empty($article['gallery']))
-                    <div class="reveal-up pt-20">
-                        <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em] mb-6">
-                            {{ __('Project Insight Gallery') }}
+                    <div class="reveal-up pt-20" x-data="{ 
+                        isOpen: false, 
+                        activeImg: '', 
+                        openLightbox(src) { 
+                            this.activeImg = src; 
+                            this.isOpen = true; 
+                            document.body.style.overflow = 'hidden';
+                        },
+                        closeLightbox() {
+                            this.isOpen = false;
+                            document.body.style.overflow = 'auto';
+                        }
+                    }">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em]">
+                                {{ __('Project Insight Gallery') }}
+                            </div>
+                            <div class="text-[9px] font-black text-titan-navy/20 uppercase tracking-widest">
+                                {{ count($article['gallery']) }} {{ __('Assets') }}
+                            </div>
                         </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                            @foreach($article['gallery'] as $img)
-                                <div
-                                    class="aspect-square rounded-2xl overflow-hidden bg-gray-100 group cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500">
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            @foreach($article['gallery'] as $index => $img)
+                                <div @click="openLightbox('{{ $img }}')"
+                                    class="group relative overflow-hidden bg-gray-100 cursor-pointer transition-all duration-700
+                                    {{ $index === 0 ? 'md:col-span-2 md:row-span-2 aspect-square md:aspect-auto' : 'aspect-square' }}">
+                                    
+                                    <!-- Image -->
                                     <img src="{{ $img }}"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
                                         loading="lazy" />
+
+                                    <!-- Subtle Index Number -->
+                                    <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-2 group-hover:translate-y-0">
+                                        <span class="text-[10px] font-black text-white bg-titan-navy px-2 py-1">
+                                            {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Hover Overlay -->
+                                    <div class="absolute inset-0 bg-titan-navy/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                                        <x-lucide-maximize-2 class="w-6 h-6 text-white transform scale-50 group-hover:scale-100 transition-transform duration-500" />
+                                    </div>
                                 </div>
                             @endforeach
+                        </div>
+
+                        <!-- SIMPLE LIGHTBOX MODAL -->
+                        <div x-show="isOpen" 
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             class="fixed inset-0 z-[200] flex items-center justify-center bg-titan-navy/95 backdrop-blur-xl p-6"
+                             @keydown.escape.window="closeLightbox()"
+                             style="display: none;">
+                            
+                            <button @click="closeLightbox()" class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors">
+                                <x-lucide-x class="w-8 h-8" />
+                            </button>
+
+                            <img :src="activeImg" class="max-w-full max-h-[85vh] object-contain" @click.away="closeLightbox()">
                         </div>
                     </div>
                 @endif
@@ -239,7 +292,7 @@
                         class="text-[9px] font-black text-titan-navy/20 uppercase tracking-widest">{{ __('Tags:') }}</span>
                     @foreach(explode(',', 'Engineering,Sustainability,Infrastructure') as $tag)
                         <span
-                            class="px-4 py-1.5 bg-gray-50 rounded-lg text-[9px] font-black text-titan-navy/40 uppercase tracking-widest hover:text-titan-red cursor-pointer transition-colors">{{ $tag }}</span>
+                            class="px-4 py-1.5 bg-gray-50 text-[9px] font-black text-titan-navy/40 uppercase tracking-widest hover:text-titan-red cursor-pointer transition-colors">{{ $tag }}</span>
                     @endforeach
                 </div>
             </div>
@@ -258,7 +311,7 @@
                         </h2>
                     </div>
                     <a href="/news"
-                        class="w-12 h-12 rounded-xl bg-titan-navy text-white flex items-center justify-center hover:bg-titan-red transition-all group shadow-xl">
+                        class="w-12 h-12 bg-titan-navy text-white flex items-center justify-center hover:bg-titan-red transition-all group">
                         <x-lucide-arrow-right class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </a>
                 </div>
@@ -267,8 +320,8 @@
                     @foreach($relatedArticles as $rel)
                         <a href="/news/{{ $rel['slug'] }}"
                             class="group block overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
-                            <div class="aspect-[16/10] rounded-2xl bg-titan-navy relative overflow-hidden mb-6 shadow-md">
-                                <img src="/images/projects/Thumbnail-{{ $loop->index + 1 }}.jpg"
+                            <div class="aspect-[16/10] bg-titan-navy relative overflow-hidden mb-6">
+                                <img src="{{ ($rel['image'] && \Illuminate\Support\Facades\Storage::disk('public')->exists($rel['image'])) ? \Illuminate\Support\Facades\Storage::url($rel['image']) : '/images/projects/Thumbnail-' . ($loop->index + 1) . '.jpg' }}"
                                     class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110" />
                             </div>
                             <h4
@@ -314,14 +367,10 @@
         }
 
         article img {
-            border-radius: 1.5rem;
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15);
             margin: 3.5rem 0 !important;
         }
 
         article iframe {
-            border-radius: 1.5rem;
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.15);
             margin: 3.5rem 0 !important;
             aspect-ratio: 16 / 9;
             width: 100%;

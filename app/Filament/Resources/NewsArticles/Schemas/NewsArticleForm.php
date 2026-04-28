@@ -28,7 +28,10 @@ class NewsArticleForm
                     ->required()
                     ->live(onBlur: true)
                     ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(function (Set $set, ?string $state) {
+                        $set('slug', Str::slug($state));
+                        $set('metaTitle', $state);
+                    }),
 
                 TextInput::make('slug')
                     ->label(__('Slug'))
@@ -39,7 +42,9 @@ class NewsArticleForm
                 Textarea::make('excerpt')
                     ->label(__('Excerpt'))
                     ->hintAction(TranslationHelper::getAutoTranslateAction('excerpt'))
-                    ->rows(3),
+                    ->rows(3)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('metaDescription', $state)),
 
                 FileUpload::make('coverImage')
                     ->image()
@@ -53,7 +58,21 @@ class NewsArticleForm
                     ->required()
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsVisibility('public')
-                    ->fileAttachmentsDirectory('news/content'),
+                    ->fileAttachmentsDirectory('news/content')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Set $set, $state, $get) {
+                        // Auto-generate excerpt if empty
+                        if (!$get('excerpt')) {
+                            $excerpt = Str::limit(strip_tags($state), 160);
+                            $set('excerpt', $excerpt);
+                            $set('metaDescription', $excerpt);
+                        }
+                        
+                        // Auto-calculate read time (roughly 200 words per minute)
+                        $wordCount = str_word_count(strip_tags($state));
+                        $readTime = ceil($wordCount / 200);
+                        $set('readTime', $readTime);
+                    }),
 
                 FileUpload::make('gallery')
                     ->label(__('Gallery'))
@@ -77,13 +96,14 @@ class NewsArticleForm
 
                         TextInput::make('category')
                             ->label(__('Category'))
-                            ->required(),
+                            ->required()
+                            ->suffixAction(TranslationHelper::getAutoTranslateAction('category')),
 
                         TextInput::make('readTime')
                             ->label(__('Read Time'))
                             ->suffix(__('mins')),
 
-                        TextInput::make('tags')
+                        \Filament\Forms\Components\TagsInput::make('tags')
                             ->label(__('Tags'))
                             ->placeholder('news, update, announcement'),
 
@@ -110,12 +130,21 @@ class NewsArticleForm
                                     }
                                 }
                             })
-                            ->default(auth()->user()?->employee?->id),
+                            ->default(auth()->user()?->employee?->id)
+                            ->afterStateHydrated(function ($state, Set $set, $get) {
+                                if (!$get('authorName') && $state) {
+                                    $employee = \App\Models\Employee::find($state);
+                                    if ($employee) {
+                                        $set('authorName', $employee->name);
+                                    }
+                                }
+                            }),
 
                         TextInput::make('authorName')
                             ->label(__('Author Name'))
                             ->suffixAction(TranslationHelper::getAutoTranslateAction('authorName'))
-                            ->dehydrated(),
+                            ->dehydrated()
+                            ->default(auth()->user()?->name),
 
                         Toggle::make('isFeatured')
                             ->label(__('Is Featured'))

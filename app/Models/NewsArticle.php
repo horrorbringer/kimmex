@@ -14,7 +14,7 @@ class NewsArticle extends Model
 {
     use LogsActivity, HasTranslations, HasUuids;
 
-    public $translatable = ['title', 'excerpt', 'content', 'authorName', 'readTime'];
+    public $translatable = ['title', 'excerpt', 'content', 'authorName', 'readTime', 'metaTitle', 'metaDescription', 'category'];
 
     protected $fillable = [
         'title',
