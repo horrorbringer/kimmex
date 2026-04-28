@@ -4,6 +4,7 @@ namespace App\Filament\Resources\OrgUnits\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -88,6 +89,10 @@ class OrgUnitForm
                         ->required()
                         ->numeric()
                         ->default(0),
+                    Toggle::make('isActive')
+                        ->label(__('Is Active'))
+                        ->default(true)
+                        ->required(),
                 ]),
         ];
     }

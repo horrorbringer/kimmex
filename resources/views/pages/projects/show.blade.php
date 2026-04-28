@@ -1,6 +1,8 @@
 @php
     // Use the $slug passed from the router to fetch the project
-    $projectDb = \App\Models\Project::where('slug', $slug)->first();
+    $projectDb = \App\Models\Project::where('isActive', true)->where('slug', $slug)
+        ->where('isActive', true)
+        ->first();
 
     if ($projectDb) {
         $project = [
@@ -14,31 +16,21 @@
             'built_area' => $projectDb->scale ?: __('50,000 SQM'),
             'contract_value' => __('Contact for Details'),
             'year' => $projectDb->timeline ?: __('2023 - 2026'),
-            'heroImage' => $projectDb->heroImage
+            'heroImage' => ($projectDb->heroImage && (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? file_exists(public_path($projectDb->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($projectDb->heroImage)))
                 ? (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? $projectDb->heroImage : \Illuminate\Support\Facades\Storage::url($projectDb->heroImage))
-                : '/images/projects/Thumbnail-1.jpg',
+                : null,
 
             'narrative' => [
                 'background' => $projectDb->getTranslation('background', app()->getLocale()) ?: $projectDb->getTranslation('description', app()->getLocale()),
                 'objectives' => $projectDb->getTranslation('objectives', app()->getLocale()) ?: '',
-                'design_concept' => $projectDb->getTranslation('designConcept', app()->getLocale()) ?: ''
+                'design_concept' => $projectDb->getTranslation('designConcept', app()->getLocale()) ?: '',
+                'engineering_narrative' => $projectDb->getTranslation('engineeringNarrative', app()->getLocale()) ?: ''
             ],
 
-            'scope' => is_array($projectDb->scopeContributions) ? $projectDb->scopeContributions : [
-                __('General Contracting'),
-                __('Structural Engineering'),
-                __('MEP Systems Integration')
-            ],
-
-            'challenges' => is_array($projectDb->challenges) && count($projectDb->challenges) > 0 ? $projectDb->challenges : [
-                [
-                    'challenge' => __('High-density urban site constraints.'),
-                    'solution' => __('Implemented a just-in-time logistics system for material delivery.')
-                ]
-            ],
+            'scope' => $projectDb->getTranslation('scopeContributions', app()->getLocale()),
 
             'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \Illuminate\Support\Facades\Storage::url($img->url))->toArray(),
-            'related' => \App\Models\Project::where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn(\App\Models\Project $p) => [
+            'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
                 'title' => $p->getTranslation('title', app()->getLocale()),
                 'type' => $p->category ?: __('Infrastructure'),
@@ -96,11 +88,17 @@
     <div class="bg-white min-h-screen text-titan-navy relative">
         <!-- --- HERO SECTION --- -->
         <section class="relative h-[70vh] bg-titan-navy flex items-end">
-            <div class="absolute inset-0">
-                <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                    class="w-full h-full object-cover opacity-70" />
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent"></div>
-            </div>
+            @if($project['heroImage'])
+                <div class="absolute inset-0">
+                    <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
+                        class="w-full h-full object-cover opacity-70" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent"></div>
+                </div>
+            @else
+                <div class="absolute inset-0 bg-titan-navy shadow-inner opacity-50">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.1)_0%,transparent_50%)]"></div>
+                </div>
+            @endif
 
             <div class="relative z-10 w-full max-w-[1400px] mx-auto px-6 pb-20">
                 <a href="/projects"
@@ -168,60 +166,39 @@
                     </div>
 
                     <!-- Scope -->
-                    @if(count($project['scope']) > 0)
+                    @if(!empty($project['scope']))
                         <div class="mb-16 bg-gray-50 p-10 rounded-xl border border-titan-navy/10">
                             <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                                 <x-lucide-activity class="w-6 h-6 text-titan-red" /> {{ __('Scope of Work') }}
                             </h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                @foreach($project['scope'] as $s)
-                                    <div
-                                        class="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm border border-transparent hover:border-titan-red/20 transition-all">
-                                        <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red flex-shrink-0" />
-                                        <span class="font-bold text-titan-navy">{{ $s }}</span>
-                                    </div>
-                                @endforeach
+                            <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 
+                                [&_ul]:grid [&_ul]:grid-cols-1 [&_ul]:md:grid-cols-2 [&_ul]:gap-4 [&_ul]:list-none [&_ul]:p-0
+                                [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:p-4 [&_li]:bg-white [&_li]:rounded-lg [&_li]:shadow-sm [&_li]:border [&_li]:border-transparent [&_li]:hover:border-titan-red/20 [&_li]:transition-all [&_li]:font-bold [&_li]:text-titan-navy
+                                [&_li:before]:content-[''] [&_li:before]:w-5 [&_li:before]:h-5 [&_li:before]:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjZCMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjIgMTEuMDhWMTJBMTAgMTAgMCAxIDEgMTcgNC40NyIvPjxwYXRoIGQ9Ik0yMiA0IDEyIDE0LjAxIDkgMTEiLz48L3N2Zz4=')] [&_li:before]:bg-contain [&_li:before]:bg-no-repeat
+                            ">
+                                @if(is_array($project['scope']))
+                                    <ul>
+                                        @foreach($project['scope'] as $item)
+                                            <li>{{ $item }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    {!! $project['scope'] !!}
+                                @endif
                             </div>
                         </div>
                     @endif
 
-                    <!-- Challenges -->
-                    @if(!empty($project['challenges']) && count($project['challenges']) > 0)
+                    <!-- Narrative -->
+                    @if(!empty($project['narrative']['engineering_narrative']))
                         <div>
                             <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                                 <x-lucide-alert-triangle class="w-6 h-6 text-titan-red" />
-                                {{ __('Key Challenges & Solutions') }}
+                                {{ __('Engineering Challenges & Solutions') }}
                             </h2>
-                            <ul class="space-y-6">
-                                @foreach($project['challenges'] as $index => $c)
-                                    @if(is_string($c))
-                                        <li class="flex gap-4">
-                                            <div
-                                                class="w-8 h-8 rounded-full bg-titan-navy/5 flex items-center justify-center shrink-0 font-bold text-titan-navy text-sm">
-                                                {{ $index + 1 }}
-                                            </div>
-                                            <div class="pt-1">
-                                                <p class="text-titan-navy/70 leading-relaxed">{{ $c }}</p>
-                                            </div>
-                                        </li>
-                                    @elseif(is_array($c))
-                                        <li class="flex gap-4">
-                                            <div
-                                                class="w-8 h-8 rounded-full bg-titan-navy/5 flex items-center justify-center shrink-0 font-bold text-titan-navy text-sm">
-                                                {{ $index + 1 }}
-                                            </div>
-                                            <div class="pt-1">
-                                                @if(isset($c['challenge']))
-                                                    <p class="font-bold text-titan-navy mb-1">{{ $c['challenge'] }}</p>
-                                                @endif
-                                                @if(isset($c['solution']))
-                                                    <p class="text-titan-navy/70 leading-relaxed">{{ $c['solution'] }}</p>
-                                                @endif
-                                            </div>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
+                            <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
+                                {!! $project['narrative']['engineering_narrative'] !!}
+                            </div>
                         </div>
                     @endif
                 </div>

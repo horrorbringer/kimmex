@@ -19,6 +19,11 @@ class Employee extends Model
         'specialization',
         'role',
         'user_id',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isActive' => 'boolean',
     ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

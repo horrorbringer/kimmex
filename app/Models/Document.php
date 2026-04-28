@@ -26,6 +26,13 @@ class Document extends Model
         'isPublic',
         'is_featured',
         'downloadCount',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isPublic' => 'boolean',
+        'is_featured' => 'boolean',
+        'isActive' => 'boolean',
     ];
 
     public function documentCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo

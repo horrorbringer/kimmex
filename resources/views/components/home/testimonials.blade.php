@@ -1,5 +1,5 @@
 @php
-    $testimonialsDb = \App\Models\Testimonial::where('isFeatured', true)->orderBy('orderIndex')->take(3)->get();
+    $testimonialsDb = \App\Models\Testimonial::where('isActive', true)->where('isFeatured', true)->orderBy('orderIndex')->take(3)->get();
     if ($testimonialsDb->count() > 0) {
         $testimonials = $testimonialsDb->map(function (\App\Models\Testimonial $t) {
             return [

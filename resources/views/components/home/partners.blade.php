@@ -25,12 +25,12 @@
     </div>
 
     @php
-        $partnersDb = \App\Models\Partner::orderBy('orderIndex')->get();
+        $partnersDb = \App\Models\Partner::where('isActive', true)->orderBy('orderIndex')->get();
 
         $fallbacks = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
         
         $partners = $partnersDb->map(function ($p, $index) use ($fallbacks) {
-            $fallbackLogo = "/patner/" . $fallbacks[$index % count($fallbacks)] . ".png";
+            $fallbackLogo = "/partners/" . $fallbacks[$index % count($fallbacks)] . ".png";
             return [
                 'name' => $p->name,
                 'logo' => $p->logoUrl ? \Illuminate\Support\Facades\Storage::url($p->logoUrl) : $fallbackLogo
@@ -41,12 +41,12 @@
         if (empty($partners)) {
             $partners = [];
             for ($i = 0; $i < count($fallbacks); $i++) {
-                $partners[] = ['name' => "Partner " . ($i+1), 'logo' => "/patner/" . $fallbacks[$i] . ".png"];
+                $partners[] = ['name' => "Partner " . ($i+1), 'logo' => "/partners/" . $fallbacks[$i] . ".png"];
             }
         }
     @endphp
 
-    <!-- Partner Logos Row 1 (assuming public/patner/1.png exists based on React code) -->
+    <!-- Partner Logos Row 1 (assuming public/partners/1.png exists based on React code) -->
     <div class="relative mb-6 flex overflow-x-hidden group">
         <!-- We use two identical divs for a seamless infinite marquee effect in Alpine/CSS -->
         <div class="flex animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap">

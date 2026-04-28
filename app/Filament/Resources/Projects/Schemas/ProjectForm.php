@@ -153,6 +153,10 @@ class ProjectForm
                         Toggle::make('isFeatured')
                             ->label(__('Is Featured'))
                             ->required(),
+                        Toggle::make('isActive')
+                            ->label(__('Is Active'))
+                            ->default(true)
+                            ->required(),
                     ]),
             ]);
     }

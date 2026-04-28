@@ -17,6 +17,11 @@ class Department extends Model
         'name',
         'slug',
         'description',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isActive' => 'boolean',
     ];
 
     public function orgUnits(): \Illuminate\Database\Eloquent\Relations\HasMany

@@ -15,7 +15,8 @@ composer install                    # Install PHP dependencies
 npm install                         # Install JS dependencies
 npm run dev                         # Start Vite dev server
 npm run build                       # Build assets for production
-composer run dev                    # Start dev servers (app, queue, logs, Vite)
+composer run dev                    # Start background services (queue, Vite)
+# Note: App is served via Laravel Herd at http://kimmex.test
 php artisan migrate                 # Run database migrations
 php artisan db:seed                 # Run database seeders
 ```

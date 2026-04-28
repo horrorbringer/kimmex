@@ -34,6 +34,7 @@ class NewsArticle extends Model
         'isTrending',
         'readTime',
         'year',
+        'isActive',
     ];
 
     protected $casts = [
@@ -42,6 +43,7 @@ class NewsArticle extends Model
         'isFeatured' => 'boolean',
         'isTrending' => 'boolean',
         'publishedAt' => 'datetime',
+        'isActive' => 'boolean',
     ];
 
     public function getActivitylogOptions(): LogOptions

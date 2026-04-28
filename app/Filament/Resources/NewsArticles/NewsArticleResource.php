@@ -16,7 +16,7 @@ use Filament\Tables\Table;
 
 class NewsArticleResource extends Resource
 {
-    // use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
     protected static ?string $model = NewsArticle::class;
 

@@ -114,19 +114,18 @@
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Services') }}
                 </h4>
+                @php
+                    $footerServices = \App\Models\Service::where('isActive', true)->get();
+                @endphp
                 <ul class="space-y-4 text-sm text-white/50">
-                    <li><a href="/services/design-and-build"
-                            class="flex items-center gap-2 hover:text-accent-orange transition-all group"><span
-                                class="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>{{ __('Design & Build') }}</a>
-                    </li>
-                    <li><a href="/services/construction"
-                            class="flex items-center gap-2 hover:text-accent-orange transition-all group"><span
-                                class="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>{{ __('Construction') }}</a>
-                    </li>
-                    <li><a href="/services/systems"
-                            class="flex items-center gap-2 hover:text-accent-orange transition-all group"><span
-                                class="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>{{ __('MEP Systems') }}</a>
-                    </li>
+                    @foreach($footerServices as $fs)
+                        <li><a href="/services/{{ $fs->slug }}"
+                                class="flex items-center gap-2 hover:text-accent-orange transition-all group">
+                                <span class="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>
+                                {{ $fs->getTranslation('title', app()->getLocale()) }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
 

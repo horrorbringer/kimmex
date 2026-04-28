@@ -9,9 +9,13 @@ class ProjectCategory extends Model
 {
     use HasTranslations;
 
-    protected $fillable = ['name', 'slug', 'description', 'parent_id'];
+    protected $fillable = ['name', 'slug', 'description', 'parent_id', 'isActive'];
 
     public $translatable = ['name', 'description'];
+
+    protected $casts = [
+        'isActive' => 'boolean',
+    ];
 
     public function parent()
     {

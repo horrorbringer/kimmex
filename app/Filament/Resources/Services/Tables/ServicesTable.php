@@ -25,9 +25,8 @@ class ServicesTable
                     ->label(__('Title'))
                     ->searchable()
                     ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction)),
-                IconColumn::make('isActive')
+                \Filament\Tables\Columns\ToggleColumn::make('isActive')
                     ->label(__('Is Active'))
-                    ->boolean()
                     ->sortable(),
                 TextColumn::make('orderIndex')
                     ->label(__('Order'))

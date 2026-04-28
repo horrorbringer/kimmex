@@ -1,5 +1,6 @@
 @php
-    $newsDb = \App\Models\NewsArticle::where('publishedAt', '<=', now())
+    $newsDb = \App\Models\NewsArticle::where('isActive', true)
+        ->where('publishedAt', '<=', now())
         ->orderBy('publishedAt', 'desc')
         ->take(3)
         ->get();
@@ -7,7 +8,7 @@
     $allNews = $newsDb->map(function ($n) {
         return [
             'id' => $n->slug,
-            'image' => $n->image ? \Illuminate\Support\Facades\Storage::url($n->image) : '/images/projects/Thumbnail-4.jpg',
+        'image' => ($n->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($n->image)) ? \Illuminate\Support\Facades\Storage::url($n->image) : null,
             'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
             'title' => $n->getTranslation('title', app()->getLocale()),
             'category' => __('Updates'),
@@ -47,13 +48,19 @@
                     class="transition-all duration-1000">
                     <a href="/news/{{ $news['id'] }}"
                         class="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
-                        <div class="aspect-[16/10] relative overflow-hidden">
+                        <div class="aspect-[16/10] relative overflow-hidden bg-titan-navy">
                             <div
                                 class="absolute top-4 left-4 bg-accent-orange text-white text-xs font-bold uppercase px-3 py-1 z-10 rounded">
                                 {{ $news['category'] }}
                             </div>
-                            <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
-                                class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
+                            @if($news['image'])
+                                <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
+                            @else
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)] flex items-center justify-center">
+                                    <x-lucide-newspaper class="w-12 h-12 text-white/10" />
+                                </div>
+                            @endif
                         </div>
                         <div class="p-6 flex flex-col flex-grow">
                             <div

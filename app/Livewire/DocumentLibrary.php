@@ -27,12 +27,16 @@ class DocumentLibrary extends Component
 
     public function render()
     {
-        $categories = DocumentCategory::orderBy('name->en')->get();
+        $categories = DocumentCategory::where('isActive', true)->orderBy('name->en')->get();
 
         $query = Document::with('documentCategory')
+            ->where('isActive', true)
             ->where(function ($q) {
                 // Adjust if your isPublic defaults to true or 1.
                 $q->whereNull('isPublic')->orWhere('isPublic', true)->orWhere('isPublic', 1);
+            })
+            ->whereHas('documentCategory', function ($q) {
+                $q->where('isActive', true);
             });
 
         if ($this->activeTabId !== 'all') {
@@ -51,8 +55,8 @@ class DocumentLibrary extends Component
         return view('livewire.document-library', [
             'documents' => $query->latest()->paginate(12),
             'categories' => $categories,
-            'totalDocuments' => Document::count(),
-            'totalCategories' => DocumentCategory::count(),
+            'totalDocuments' => Document::where('isActive', true)->whereHas('documentCategory', fn($q) => $q->where('isActive', true))->count(),
+            'totalCategories' => DocumentCategory::where('isActive', true)->count(),
         ]);
     }
 }

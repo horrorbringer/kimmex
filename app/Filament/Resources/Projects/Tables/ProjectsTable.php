@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class ProjectsTable
@@ -19,6 +20,8 @@ class ProjectsTable
                     ->label(__('Photo'))
                     ->disk('public')
                     ->circular(),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()

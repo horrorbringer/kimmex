@@ -29,12 +29,15 @@
             ];
         }
 
-        $milestones = \App\Models\Milestone::orderBy('sortOrder')->get()->map(function (\App\Models\Milestone $m) {
+        $milestones = \App\Models\Milestone::where('isActive', true)->orderBy('sortOrder')->get()->map(function (\App\Models\Milestone $m) {
             return [
                 'year' => $m->year,
                 'title' => $m->getTranslation('title', app()->getLocale()),
                 'desc' => $m->getTranslation('description', app()->getLocale()),
-                'image' => $m->image ? \Illuminate\Support\Facades\Storage::url($m->image) : '/images/projects/Thumbnail-1.jpg',
+                'detail' => $m->getTranslation('detailed_description', app()->getLocale()),
+                'image' => ($m->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($m->image)) 
+                    ? \Illuminate\Support\Facades\Storage::url($m->image) 
+                    : "/images/projects/Thumbnail-1.jpg",
             ];
         })->toArray();
 
@@ -95,7 +98,7 @@
                     'image' => $unit->employee?->image ? \Illuminate\Support\Facades\Storage::url($unit->employee->image) : null,
                     'phone' => $unit->employee?->phone,
                     'bio' => $unit->employee?->bio,
-                    'children' => \App\Models\OrgUnit::where('parentId', $unit->id)
+                    'children' => \App\Models\OrgUnit::where('isActive', true)->where('parentId', $unit->id)
                         ->orderBy('orderIndex')
                         ->with(['employee', 'department'])
                         ->get()
@@ -104,7 +107,7 @@
                 ];
             };
 
-            $roots = \App\Models\OrgUnit::whereNull('parentId')
+            $roots = \App\Models\OrgUnit::where('isActive', true)->whereNull('parentId')
                 ->orderBy('orderIndex')
                 ->with(['employee', 'department'])
                 ->get();
@@ -517,7 +520,11 @@
                                 <div x-show="open" x-collapse>
                                     <div
                                         class="mt-6 p-6 bg-gray-50/80 rounded-2xl border border-gray-100 text-titan-navy/60 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
-                                        {{ __('This journey began as a vision of excellence. Through dedication and hard work, we expanded our footprint, technical expertise, and community impact, setting new standards in the Cambodian construction landscape.') }}
+                                        @if(!empty($milestone['detail']))
+                                            {!! $milestone['detail'] !!}
+                                        @else
+                                            {{ __('This journey began as a vision of excellence. Through dedication and hard work, we expanded our footprint, technical expertise, and community impact, setting new standards in the Cambodian construction landscape.') }}
+                                        @endif
                                     </div>
                                 </div>
                             </div>

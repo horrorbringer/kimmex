@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class NewsArticlesTable
@@ -43,6 +44,8 @@ class NewsArticlesTable
                 IconColumn::make('isTrending')
                     ->boolean()
                     ->label(__('Is Trending')),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
                 TextColumn::make('readTime')
                     ->label(__('Read Time'))
                     ->suffix(__(' mins'))

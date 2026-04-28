@@ -75,6 +75,9 @@ class ProjectCategoryResource extends Resource
                 Textarea::make('description')
                     ->label(__('Description'))
                     ->columnSpanFull(),
+                \Filament\Forms\Components\Toggle::make('isActive')
+                    ->label(__('Is Active'))
+                    ->default(true),
             ]);
     }
 
@@ -95,6 +98,8 @@ class ProjectCategoryResource extends Resource
                 TextColumn::make('projects_count')
                     ->counts('projects')
                     ->label(__('Projects')),
+                \Filament\Tables\Columns\ToggleColumn::make('isActive')
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->label(__('Created At'))
                     ->dateTime()

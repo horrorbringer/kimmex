@@ -1,7 +1,8 @@
 <x-layouts.app title="News & Updates" description="Read the latest news, updates, and announcements from Kimmex.">
 
     @php
-        $newsArticlesDb = \App\Models\NewsArticle::where('publishedAt', '<=', now())
+        $newsArticlesDb = \App\Models\NewsArticle::where('isActive', true)
+        ->where('publishedAt', '<=', now())
             ->orderBy('publishedAt', 'desc')
             ->get();
 
@@ -12,7 +13,7 @@
             return [
                 'slug' => $n->slug,
                 'category' => $n->category ?: __('Updates'),
-                'image' => $n->coverImage ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : '/images/heroes/documents-bg.png',
+                'image' => ($n->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($n->coverImage)) ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : null,
                 'title' => $n->getTranslation('title', app()->getLocale()),
                 'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                 'excerpt' => $excerpt,
@@ -94,9 +95,16 @@
                         class="group flex flex-col bg-white rounded-3xl border border-gray-100 hover:border-titan-red/10 hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
 
                         <!-- Thumbnail -->
-                        <div class="aspect-video relative overflow-hidden bg-titan-navy/5">
-                            <img :src="article.image" :alt="article.title"
-                                class="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105" />
+                        <div class="aspect-video relative overflow-hidden bg-titan-navy">
+                            <template x-if="article.image">
+                                <img :src="article.image" :alt="article.title"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105" />
+                            </template>
+                            <template x-if="!article.image">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)] flex items-center justify-center">
+                                    <x-lucide-newspaper class="w-12 h-12 text-white/10" />
+                                </div>
+                            </template>
                             <div class="absolute top-4 left-4 z-20">
                                 <span
                                     class="bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-lg shadow-xl"

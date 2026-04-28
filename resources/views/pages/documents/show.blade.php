@@ -3,12 +3,24 @@
     use Illuminate\Support\Facades\Storage;
 
     /** @var string $slug */
-    $doc = Document::with('documentCategory')->where('slug', $slug)->where('isPublic', true)->firstOrFail();
+    $doc = Document::with('documentCategory')
+        ->where('isActive', true)
+        ->where('slug', $slug)
+        ->where('isPublic', true)
+        ->whereHas('documentCategory', function ($q) {
+            $q->where('isActive', true);
+        })
+        ->firstOrFail();
 
     // For a related docs feel, just pull latest 4 from same category
-    $relatedDocs = Document::with('documentCategory')->where('document_category_id', $doc->document_category_id)
+    $relatedDocs = Document::with('documentCategory')
+        ->where('document_category_id', $doc->document_category_id)
         ->where('id', '!=', $doc->id)
         ->where('isPublic', true)
+        ->where('isActive', true)
+        ->whereHas('documentCategory', function ($q) {
+            $q->where('isActive', true);
+        })
         ->latest()
         ->take(4)
         ->get();

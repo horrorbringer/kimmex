@@ -32,6 +32,14 @@
         $tagline = $profile[$lang]['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
         $logo = $profile['logo'] ?? null;
         $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
+
+        $navCategories = \App\Models\ProjectCategory::where('isActive', true)
+            ->get()
+            ->sortBy(fn($cat) => $cat->getTranslation('name', app()->getLocale()));
+
+        $navServices = \App\Models\Service::where('isActive', true)
+            ->get()
+            ->sortBy(fn($svc) => $svc->getTranslation('title', app()->getLocale()));
     @endphp
     <!-- TOP BAR -->
     <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-10 opacity-100 border-white/10' + (isHeroPage ? ' bg-titan-navy/20 backdrop-blur-md' : ' bg-titan-navy')"
@@ -90,12 +98,14 @@
                     @endif
                 </div>
 
-                <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
-                <a href="/admin"
-                    class="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-accent-orange rounded transition-colors group">
-                    <x-lucide-shield class="text-accent-orange group-hover:text-white w-2.5 h-2.5" />
-                    <span class="text-[9px] font-bold">{{ __('ADMIN') }}</span>
-                </a>
+                @if(auth()->check() && auth()->user()->isAdmin())
+                    <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
+                    <a href="/admin"
+                        class="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-accent-orange rounded transition-colors group">
+                        <x-lucide-shield class="text-accent-orange group-hover:text-white w-2.5 h-2.5" />
+                        <span class="text-[9px] font-bold">{{ __('ADMIN') }}</span>
+                    </a>
+                @endif
 
                 <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
                 <div class="flex items-center gap-1 bg-white/10 rounded px-1 py-0.5">
@@ -207,45 +217,14 @@
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
                                 class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[280px] p-2">
-                                <a href="/services/design-and-build"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
-                                    <div>
-                                        <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
-                                            {{ __('Design & Build') }}
-                                        </div>
-                                        <div
-                                            class="text-[10px] text-white/50 mt-0.5 group-hover/item:text-white/70 transition-colors">
-                                            {{ __('Full lifecycle solutions') }}
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="/services/construction"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
-                                    <div>
-                                        <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
-                                            {{ __('Construction') }}
-                                        </div>
-                                        <div
-                                            class="text-[10px] text-white/50 mt-0.5 group-hover/item:text-white/70 transition-colors">
-                                            {{ __('Revitalize existing structures') }}
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="/services/project-management"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
-                                    <div>
-                                        <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
-                                            {{ __('Project Management') }}
-                                        </div>
-                                        <div
-                                            class="text-[10px] text-white/50 mt-0.5 group-hover/item:text-white/70 transition-colors">
-                                            {{ __('Oversight & control') }}
-                                        </div>
-                                    </div>
-                                </a>
+                                @foreach($navServices as $navService)
+                                    <a href="/services/{{ $navService->slug }}"
+                                        class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                                        <span>{{ $navService->getTranslation('title', app()->getLocale()) }}</span>
+                                        <x-lucide-arrow-right
+                                            class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
+                                    </a>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -285,30 +264,14 @@
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
                                             class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[240px] p-2">
-                                            <a href="/projects/completed?type=Government+Office+Building"
-                                                class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                <span>{{ __('Government') }}</span>
-                                                <x-lucide-arrow-right
-                                                    class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
-                                            </a>
-                                            <a href="/projects/completed?type=Water+Treatment+Plant"
-                                                class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                <span>{{ __('Water Treatment') }}</span>
-                                                <x-lucide-arrow-right
-                                                    class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
-                                            </a>
-                                            <a href="/projects/completed?type=Slope+Construction"
-                                                class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                <span>{{ __('Slope') }}</span>
-                                                <x-lucide-arrow-right
-                                                    class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
-                                            </a>
-                                            <a href="/projects/completed?type=Systems"
-                                                class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                <span>{{ __('Systems') }}</span>
-                                                <x-lucide-arrow-right
-                                                    class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
-                                            </a>
+                                            @foreach($navCategories as $navCat)
+                                                <a href="/projects?status=completed&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
+                                                    class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                                                    <span>{{ $navCat->getTranslation('name', app()->getLocale()) }}</span>
+                                                    <x-lucide-arrow-right
+                                                        class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
+                                                </a>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -334,18 +297,14 @@
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
                                             class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[240px] p-2">
-                                            <a href="/projects/implementation?type=Water+Treatment+Plant"
-                                                class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                <span>{{ __('Water Treatment') }}</span>
-                                                <x-lucide-arrow-right
-                                                    class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
-                                            </a>
-                                            <a href="/projects/implementation?type=Systems"
-                                                class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                <span>{{ __('Systems') }}</span>
-                                                <x-lucide-arrow-right
-                                                    class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
-                                            </a>
+                                            @foreach($navCategories as $navCat)
+                                                <a href="/projects?status=in-progress&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
+                                                    class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                                                    <span>{{ $navCat->getTranslation('name', app()->getLocale()) }}</span>
+                                                    <x-lucide-arrow-right
+                                                        class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
+                                                </a>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -484,21 +443,13 @@
                             x-bind:class="expandedMobileItem === 1 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 1" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
-                        <a href="/services/design-and-build"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
-                            <span class="text-sm font-medium">{{ __('Design & Build') }}</span>
-                        </a>
-                        <a href="/services/construction"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
-                            <span class="text-sm font-medium">{{ __('Construction') }}</span>
-                        </a>
-                        <a href="/services/project-management"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
-                            <span class="text-sm font-medium">{{ __('Project Management') }}</span>
-                        </a>
+                        @foreach($navServices as $navService)
+                            <a href="/services/{{ $navService->slug }}"
+                                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
+                                <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                                <span class="text-sm font-medium">{{ $navService->getTranslation('title', app()->getLocale()) }}</span>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
 
@@ -517,14 +468,12 @@
                             <span class="text-sm font-medium">{{ __('Completed Projects') }}</span>
                         </a>
                         <div class="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
-                            <a href="/projects/completed?type=Government+Office+Building"
-                                class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">{{ __('Government') }}</a>
-                            <a href="/projects/completed?type=Water+Treatment+Plant"
-                                class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">{{ __('Water Treatment') }}</a>
-                            <a href="/projects/completed?type=Slope+Construction"
-                                class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">{{ __('Slope') }}</a>
-                            <a href="/projects/completed?type=Systems"
-                                class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">{{ __('Systems') }}</a>
+                            @foreach($navCategories as $navCat)
+                                <a href="/projects?status=completed&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
+                                    class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">
+                                    {{ $navCat->getTranslation('name', app()->getLocale()) }}
+                                </a>
+                            @endforeach
                         </div>
                         <a href="/projects?status=in-progress"
                             class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all mt-2">
@@ -532,10 +481,12 @@
                             <span class="text-sm font-medium">{{ __('Project in Progress') }}</span>
                         </a>
                         <div class="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
-                            <a href="/projects/implementation?type=Water+Treatment+Plant"
-                                class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">{{ __('Water Treatment') }}</a>
-                            <a href="/projects/implementation?type=Systems"
-                                class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">{{ __('Systems') }}</a>
+                            @foreach($navCategories as $navCat)
+                                <a href="/projects?status=in-progress&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
+                                    class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">
+                                    {{ $navCat->getTranslation('name', app()->getLocale()) }}
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </div>

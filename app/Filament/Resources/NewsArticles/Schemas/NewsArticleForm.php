@@ -124,6 +124,11 @@ class NewsArticleForm
                         Toggle::make('isTrending')
                             ->label(__('Is Trending'))
                             ->inline(false),
+
+                        Toggle::make('isActive')
+                            ->label(__('Is Active'))
+                            ->default(true)
+                            ->inline(false),
                     ]),
 
                 Section::make(__('SEO Enhancement'))

@@ -1,7 +1,7 @@
 <x-layouts.app :title="__('Job Details')" description="Join our team of experts in the construction and investment industry.">
 
 @php
-    $jobDb = \App\Models\JobPosting::where('slug', $slug)->first();
+    $jobDb = \App\Models\JobPosting::where('isActive', true)->where('slug', $slug)->first();
     $job = null;
 
     if ($jobDb) {

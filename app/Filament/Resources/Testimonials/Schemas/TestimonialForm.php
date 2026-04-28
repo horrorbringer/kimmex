@@ -65,9 +65,13 @@ class TestimonialForm
                 Section::make(__('Internal Settings'))
                     ->collapsed()
                     ->components([
-                        Grid::make(2)->components([
+                        Grid::make(3)->components([
                             Toggle::make('isFeatured')
                                 ->label(__('Is Featured'))
+                                ->required(),
+                            Toggle::make('isActive')
+                                ->label(__('Is Active'))
+                                ->default(true)
                                 ->required(),
                             TextInput::make('orderIndex')
                                 ->label(__('Order'))

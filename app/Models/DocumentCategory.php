@@ -9,7 +9,11 @@ class DocumentCategory extends Model
 {
     use HasTranslations;
 
-    protected $fillable = ['name', 'slug', 'description', 'parent_id', 'icon', 'sort_order'];
+    protected $fillable = ['name', 'slug', 'description', 'parent_id', 'icon', 'sort_order', 'isActive'];
+
+    protected $casts = [
+        'isActive' => 'boolean',
+    ];
 
     public $translatable = ['name', 'description'];
 

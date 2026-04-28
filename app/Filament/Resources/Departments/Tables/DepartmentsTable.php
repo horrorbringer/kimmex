@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use App\Models\Department;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class DepartmentsTable
@@ -57,6 +58,8 @@ class DepartmentsTable
                     ->color('warning')
                     ->sortable()
                     ->toggleable(),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
 
                 TextColumn::make('updated_at')
                     ->label(__('Last Edit'))

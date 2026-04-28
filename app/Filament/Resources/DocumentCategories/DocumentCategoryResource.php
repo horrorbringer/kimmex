@@ -9,12 +9,14 @@ use App\Models\DocumentCategory;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -89,6 +91,9 @@ class DocumentCategoryResource extends Resource
                                 ->label(__('Order'))
                                 ->numeric()
                                 ->default(0),
+                            Toggle::make('isActive')
+                                ->label(__('Is Active'))
+                                ->default(true),
                         ]),
                         Textarea::make('description')
                             ->label(__('Description'))
@@ -118,6 +123,8 @@ class DocumentCategoryResource extends Resource
                 TextColumn::make('sort_order')
                     ->label(__('Order'))
                     ->sortable(),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->label(__('Created At'))
                     ->dateTime()

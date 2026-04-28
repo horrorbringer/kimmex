@@ -1,7 +1,7 @@
 <x-layouts.app :title="__('News Details')" description="Read the latest news and updates from Kimmex.">
 
     @php
-        $articleDb = \App\Models\NewsArticle::where('slug', $slug)->first();
+        $articleDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', $slug)->first();
 
         if ($articleDb) {
             $excerpt = $articleDb->getTranslation('excerpt', app()->getLocale())
@@ -10,7 +10,7 @@
             $article = [
                 'slug' => $articleDb->slug,
                 'category' => $articleDb->category ?: __('Updates'),
-                'image' => $articleDb->coverImage ? \Illuminate\Support\Facades\Storage::url($articleDb->coverImage) : '/images/projects/Thumbnail-4.jpg',
+                'image' => ($articleDb->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($articleDb->coverImage)) ? \Illuminate\Support\Facades\Storage::url($articleDb->coverImage) : null,
                 'title' => $articleDb->getTranslation('title', app()->getLocale()),
                 'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
                 'author' => $articleDb->getTranslation('authorName', app()->getLocale()) ?: 'Kimmex Editorial',
@@ -36,7 +36,7 @@
         }
 
         // Fetch related from DB
-        $relatedDb = \App\Models\NewsArticle::where('slug', '!=', $slug)->latest()->take(3)->get();
+        $relatedDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
         $relatedArticles = $relatedDb->map(function (\App\Models\NewsArticle $r) {
             return [
                 'slug' => $r->slug,
@@ -112,8 +112,12 @@
 
         <!-- REFINED NARRATIVE HERO -->
         <header class="relative w-full h-[60vh] md:h-[70vh] overflow-hidden bg-titan-navy">
-            <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}"
-                class="absolute inset-0 w-full h-full object-cover opacity-60 scale-105" />
+            @if($article['image'])
+                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}"
+                    class="absolute inset-0 w-full h-full object-cover opacity-60 scale-105" />
+            @else
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
+            @endif
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/30 via-transparent to-titan-navy"></div>
 
             <div class="absolute inset-0 flex flex-col items-center justify-end pb-24 px-6 text-center">

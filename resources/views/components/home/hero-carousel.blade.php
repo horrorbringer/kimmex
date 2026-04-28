@@ -1,10 +1,15 @@
 @php
-    $featuredProjects = \App\Models\Project::where('isFeatured', true)->take(5)->get();
+    $featuredProjects = \App\Models\Project::where('isFeatured', true)
+        ->where('isActive', true)
+        ->take(5)
+        ->get();
     if ($featuredProjects->count() > 0) {
         $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) {
             return [
                 'id' => $index + 1,
-                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage)) : '/images/projects/Thumbnail-1.jpg',
+                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
+                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
+                    : null,
                 'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) : ($p->category ?: __('Featured Project')),
                 'title' => $p->getTranslation('title', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('title', 'en'),
                 'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('description', 'en')), 120),
@@ -81,13 +86,20 @@
             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-105"
             class="absolute inset-0 w-full h-full">
 
-            <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-70" />
+            <template x-if="slide.image">
+                <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-70" />
+            </template>
+            <template x-if="!slide.image">
+                <div class="w-full h-full bg-titan-navy shadow-inner opacity-50">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
+                </div>
+            </template>
             <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
         </div>
     </template>
 
     <!-- Content Overlay -->
-    <div class="absolute inset-0 flex items-center z-10">
+    <div class="absolute inset-0 flex items-center z-10 pt-32 lg:pt-40">
         <div class="max-w-[1400px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
 
             <template x-for="(slide, index) in slides" :key="'content-'+index">
@@ -104,7 +116,7 @@
                             x-text="slide.subtitle"></span>
                     </div>
 
-                    <h1 class="font-heading font-black mb-6 text-5xl md:text-7xl leading-[1.1] tracking-tight"
+                    <h1 class="font-heading font-black mb-6 text-4xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight max-w-3xl"
                         x-text="slide.title"></h1>
 
                     <p class="text-white/80 max-w-lg mb-10 font-light text-lg md:text-xl leading-relaxed"
@@ -142,31 +154,32 @@
             </div>
 
             <!-- Arrows -->
-            <div class="flex gap-2">
-                <button @click="prevSlide"
-                    class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">
-                    <x-lucide-chevron-left class="w-6 h-6" />
-                </button>
-                <button @click="nextSlide"
-                    class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">
-                    <x-lucide-chevron-right class="w-6 h-6" />
-                </button>
+            <div class="flex items-center gap-8">
+                <!-- Decorative Stats (Integrated) -->
+                <div class="hidden xl:flex gap-8 border-r border-white/10 pr-8 mr-2">
+                    <div>
+                        <div class="text-2xl font-black text-white">25+</div>
+                        <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Years Exp') }}</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-white">150+</div>
+                        <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Projects') }}</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button @click="prevSlide"
+                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">
+                        <x-lucide-chevron-left class="w-6 h-6" />
+                    </button>
+                    <button @click="nextSlide"
+                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">
+                        <x-lucide-chevron-right class="w-6 h-6" />
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Decorative Stats -->
-    <div class="hidden lg:block absolute bottom-12 right-[20%] z-10">
-        <div class="flex gap-12">
-            <div>
-                <div class="text-3xl font-black text-white">25+</div>
-                <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Years Exp') }}
-                </div>
-            </div>
-            <div>
-                <div class="text-3xl font-black text-white">150+</div>
-                <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Projects') }}</div>
-            </div>
-        </div>
-    </div>
+    <!-- Removed separate Decorative Stats to prevent overlap -->
 </header>

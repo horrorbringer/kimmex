@@ -7,6 +7,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class OrgUnitsTable
@@ -74,6 +75,8 @@ class OrgUnitsTable
                 \Filament\Tables\Columns\TextInputColumn::make('orderIndex')
                     ->label(__('Sort'))
                     ->sortable(),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
 
                 TextColumn::make('updated_at')
                     ->label(__('Last Update'))

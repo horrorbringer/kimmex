@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Employees\Schemas;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -73,6 +74,10 @@ class EmployeeForm
                             ->searchable()
                             ->placeholder('Select an admin user to link...')
                             ->helperText('Linking a user allows automatic author assignment for news articles.'),
+                        Toggle::make('isActive')
+                            ->label(__('Is Active'))
+                            ->default(true)
+                            ->required(),
                     ]),
             ]);
     }

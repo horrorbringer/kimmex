@@ -3,7 +3,8 @@
 
     @php
         /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-        $projectsDb = \App\Models\Project::with('projectCategory')
+        $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
+            ->where('isActive', true)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -31,9 +32,9 @@
                     ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
                     : ($p->category ?: 'General'),
                 'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
-                'image' => $p->heroImage
+                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                     ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                    : '/images/projects/Thumbnail-1.jpg',
+                    : null,
                 'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
             ];
         })->toArray();
@@ -241,8 +242,19 @@
 
                                 <!-- Thumbnail Area - Uniform Aspect Ratio -->
                                 <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
-                                    <img :src="project.image" :alt="project.title"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                    <template x-if="project.image">
+                                        <img :src="project.image" :alt="project.title"
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                    </template>
+                                    <template x-if="!project.image">
+                                        <div class="w-full h-full bg-titan-navy flex items-center justify-center">
+                                            <div class="text-white/20">
+                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </template>
                                     <div
                                         class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-500">
                                     </div>

@@ -11,7 +11,7 @@
         $siteName = config('app.name', 'Kimmex CMS');
         $pageTitle = $title ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
-        $pageImage = $image ?? asset('images/logo.webp');
+        $pageImage = $image ?? asset('logo.png');
     @endphp
 
     <title>{{ $pageTitle }}</title>

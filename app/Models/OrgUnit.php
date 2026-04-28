@@ -20,6 +20,11 @@ class OrgUnit extends Model
         'employeeId',
         'departmentId',
         'orderIndex',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isActive' => 'boolean',
     ];
 
     public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo

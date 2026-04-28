@@ -1,6 +1,7 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-    $projectsDb = \App\Models\Project::orderBy('isFeatured', 'desc')
+    $projectsDb = \App\Models\Project::where('isActive', true)
+        ->orderBy('isFeatured', 'desc')
         ->orderBy('created_at', 'desc')
         ->take(3)
         ->get();
@@ -8,9 +9,9 @@
     $projects = $projectsDb->map(function ($p) {
         return [
             'slug' => $p->slug,
-            'image' => $p->heroImage
+            'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                 ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                : '/images/projects/Thumbnail-1.jpg',
+                : null,
             'type' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale()) : ($p->category ?: __('Infrastructure')),
             'title' => $p->getTranslation('title', app()->getLocale()),
             'location' => $p->getTranslation('location', app()->getLocale()),
@@ -51,9 +52,13 @@
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
-                        <div class="relative overflow-hidden rounded-2xl shadow-lg h-80 w-full">
-                            <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
+                        <div class="relative overflow-hidden rounded-2xl shadow-lg h-80 w-full bg-titan-navy">
+                            @if($p['image'])
+                                <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
+                                    class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
+                            @else
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
+                            @endif
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent z-10">
                             </div>

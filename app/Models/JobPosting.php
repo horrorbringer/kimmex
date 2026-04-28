@@ -29,6 +29,10 @@ class JobPosting extends Model
         'isActive',
     ];
 
+    protected $casts = [
+        'isActive' => 'boolean',
+    ];
+
     public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Department::class, 'departmentId');

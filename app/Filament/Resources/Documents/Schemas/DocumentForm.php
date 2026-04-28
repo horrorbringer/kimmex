@@ -68,7 +68,7 @@ class DocumentForm
                         Grid::make(3)->components([
                             Select::make('document_category_id')
                                 ->label(__('Category'))
-                                ->relationship('documentCategory', 'name', fn($query) => $query->orderBy('name->en'))
+                                ->relationship('documentCategory', 'name', fn($query) => $query->where('isActive', true)->orderBy('name->en'))
                                 ->searchable()
                                 ->preload()
                                 ->createOptionForm([
@@ -91,6 +91,9 @@ class DocumentForm
                             Toggle::make('is_featured')
                                 ->label(__('Is Featured'))
                                 ->default(false),
+                            Toggle::make('isActive')
+                                ->label(__('Is Active'))
+                                ->default(true),
                         ]),
                     ]),
 

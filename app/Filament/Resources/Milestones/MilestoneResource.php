@@ -41,16 +41,6 @@ class MilestoneResource extends Resource
     protected static ?int $navigationSort = 5;
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-flag';
 
-    public static function canCreate(): bool
-    {
-        return auth()->user()?->isAdmin();
-    }
-
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
-    {
-        return auth()->user()?->isAdmin();
-    }
-
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return auth()->user()?->isAdmin();

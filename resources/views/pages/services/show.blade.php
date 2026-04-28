@@ -10,14 +10,14 @@
         if ($serviceDb) {
             $service = [
                 "id" => $serviceDb->slug,
-                "title" => ["en" => $serviceDb->title, "kh" => $serviceDb->titleKm ?: $serviceDb->title],
+                "title" => ["en" => $serviceDb->getTranslation('title', 'en'), "kh" => $serviceDb->getTranslation('title', 'km')],
                 "desc" => [
-                    "en" => strip_tags($serviceDb->description),
-                    "kh" => strip_tags($serviceDb->descriptionKm ?: $serviceDb->description)
+                    "en" => strip_tags($serviceDb->getTranslation('description', 'en')),
+                    "kh" => strip_tags($serviceDb->getTranslation('description', 'km'))
                 ],
-                "image" => $serviceDb->image
-                    ? (\Illuminate\Support\Str::startsWith($serviceDb->image, '/') ? $serviceDb->image : \Illuminate\Support\Facades\Storage::url($serviceDb->image))
-                    : "/images/projects/Thumbnail-1.jpg",
+                "image" => ($serviceDb->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($serviceDb->image))
+                    ? \Illuminate\Support\Facades\Storage::url($serviceDb->image)
+                    : null,
                 "scopeItems" => is_array($serviceDb->features) ? array_map(fn($f) => ["en" => $f['name'] ?? '', "kh" => $f['name'] ?? ''], $serviceDb->features) : [],
             ];
         } else {
@@ -126,8 +126,12 @@
         <section class="relative h-[80vh] flex items-center justify-center overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
                 <!-- Simplified parallax effect for blade without framer-motion -->
-                <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                    class="w-full h-[120%] object-cover opacity-50 mix-blend-overlay -translate-y-[10%]" />
+                @if($service['image'])
+                    <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
+                        class="w-full h-[120%] object-cover opacity-50 mix-blend-overlay -translate-y-[10%]" />
+                @else
+                    <div class="w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.1)_0%,transparent_50%)]"></div>
+                @endif
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent">
                 </div>
             </div>

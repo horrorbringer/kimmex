@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Milestones\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
@@ -30,6 +31,8 @@ class MilestonesTable
                 TextColumn::make('sortOrder')
                     ->label(__('Order'))
                     ->sortable(),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->label(__('Created At'))
                     ->dateTime()
@@ -42,7 +45,7 @@ class MilestonesTable
             ])
             ->actions([
                 \Filament\Actions\ViewAction::make(),
-                EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                EditAction::make(),
                 DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->bulkActions([

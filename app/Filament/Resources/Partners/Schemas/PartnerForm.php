@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Partners\Schemas;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -48,6 +49,10 @@ class PartnerForm
                                 ->required()
                                 ->numeric()
                                 ->default(0),
+                            Toggle::make('isActive')
+                                ->label(__('Is Active'))
+                                ->default(true)
+                                ->required(),
                         ]),
                     ]),
             ]);

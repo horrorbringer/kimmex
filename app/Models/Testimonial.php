@@ -21,5 +21,11 @@ class Testimonial extends Model
         'rating',
         'orderIndex',
         'isFeatured',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isFeatured' => 'boolean',
+        'isActive' => 'boolean',
     ];
 }

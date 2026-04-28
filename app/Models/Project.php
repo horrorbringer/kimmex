@@ -39,12 +39,14 @@ class Project extends Model
         'project_category_id',
         'status',
         'isFeatured',
+        'isActive',
     ];
 
     protected $casts = [
         'status' => \App\Enums\ProjectStatus::class,
         'completionDate' => 'datetime',
         'isFeatured' => 'boolean',
+        'isActive' => 'boolean',
     ];
 
     public function projectCategory()

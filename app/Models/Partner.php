@@ -19,5 +19,10 @@ class Partner extends Model
         'website',
         'type',
         'orderIndex',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isActive' => 'boolean',
     ];
 }

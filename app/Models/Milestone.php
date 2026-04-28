@@ -10,13 +10,19 @@ class Milestone extends Model
 {
     use HasUuids, HasTranslations;
 
-    public $translatable = ['title', 'description'];
+    public $translatable = ['title', 'description', 'detailed_description'];
 
     protected $fillable = [
         'year',
         'title',
         'description',
+        'detailed_description',
         'image',
         'sortOrder',
+        'isActive',
+    ];
+
+    protected $casts = [
+        'isActive' => 'boolean',
     ];
 }

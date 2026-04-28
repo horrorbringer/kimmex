@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class EmployeesTable
@@ -51,6 +52,8 @@ class EmployeesTable
                     ->label(__('Location'))
                     ->searchable()
                     ->toggleable(),
+                ToggleColumn::make('isActive')
+                    ->label(__('Active')),
                 TextColumn::make('id')
                     ->label('ID')
                     ->toggleable(isToggledHiddenByDefault: true),

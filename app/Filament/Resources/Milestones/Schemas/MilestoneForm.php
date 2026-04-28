@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Milestones\Schemas;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use App\Filament\Support\TranslationHelper;
 use Filament\Schemas\Schema;
 
 class MilestoneForm
@@ -24,7 +26,8 @@ class MilestoneForm
                                 ->required(),
                             TextInput::make('title')
                                 ->label(__('Title'))
-                                ->required(),
+                                ->required()
+                                ->suffixAction(TranslationHelper::getAutoTranslateAction('title')),
                         ]),
                     ]),
 
@@ -37,6 +40,12 @@ class MilestoneForm
                             ->toolbarButtons([
                                 'bold', 'italic', 'bulletList', 'orderedList', 'link', 'redo', 'undo'
                             ])
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
+                            ->columnSpanFull(),
+                        RichEditor::make('detailed_description')
+                            ->label(__('Detailed Description (Shown on Click)'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('detailed_description'))
+                            ->placeholder(__('Expanded narrative about this milestone...'))
                             ->columnSpanFull(),
                     ]),
 
@@ -53,6 +62,10 @@ class MilestoneForm
                                 ->label(__('Order'))
                                 ->numeric()
                                 ->default(0),
+                            Toggle::make('isActive')
+                                ->label(__('Is Active'))
+                                ->default(true)
+                                ->required(),
                         ]),
                     ]),
             ]);

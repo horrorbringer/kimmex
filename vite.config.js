@@ -11,6 +11,7 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        host: 'kimmex.test',
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
