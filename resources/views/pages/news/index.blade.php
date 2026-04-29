@@ -1,27 +1,30 @@
 <x-layouts.app title="News & Updates" description="Read the latest news, updates, and announcements from Kimmex.">
 
     @php
-        $newsArticlesDb = \App\Models\NewsArticle::where('isActive', true)
-        ->where('publishedAt', '<=', now())
-            ->orderBy('publishedAt', 'desc')
-            ->get();
+        $locale = app()->getLocale();
+        $newsArticles = \Illuminate\Support\Facades\Cache::remember("news_index_data_{$locale}", now()->addHours(12), function() use ($locale) {
+            $newsArticlesDb = \App\Models\NewsArticle::where('isActive', true)
+                ->where('publishedAt', '<=', now())
+                ->orderBy('publishedAt', 'desc')
+                ->get();
 
-        $newsArticles = $newsArticlesDb->map(function ($n) {
-            $excerpt = $n->getTranslation('excerpt', app()->getLocale())
-                ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', app()->getLocale())), 180);
+            return $newsArticlesDb->map(function ($n) use ($locale) {
+                $excerpt = $n->getTranslation('excerpt', $locale)
+                    ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 180);
 
-            return [
-                'slug' => $n->slug,
-                'category' => $n->category ?: __('Updates'),
-                'image' => ($n->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($n->coverImage)) ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : null,
-                'title' => $n->getTranslation('title', app()->getLocale()),
-                'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-                'excerpt' => $excerpt,
-            ];
-        })->toArray();
+                return [
+                    'slug' => $n->slug,
+                    'category' => $n->category ?: __('Updates'),
+                    'image' => ($n->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($n->coverImage)) ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : null,
+                    'title' => $n->getTranslation('title', app()->getLocale()),
+                    'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                    'excerpt' => $excerpt,
+                ];
+            })->toArray();
+        });
 
         // Get unique categories
-        $categoriesFromDb = $newsArticlesDb->map(fn($n) => $n->category ?: __('Updates'))->unique()->toArray();
+        $categoriesFromDb = array_column($newsArticles, 'category');
         $categories = array_values(array_unique(array_merge([__('All')], $categoriesFromDb)));
     @endphp
 
@@ -98,7 +101,7 @@
                         <div class="aspect-video relative overflow-hidden bg-titan-navy">
                             <template x-if="article.image">
                                 <img :src="article.image" :alt="article.title"
-                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105" />
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105" loading="lazy" />
                             </template>
                             <template x-if="!article.image">
                                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)] flex items-center justify-center">

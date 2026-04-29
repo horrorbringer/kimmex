@@ -1,6 +1,8 @@
 @php
     $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
-    $servicesDb = \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->limit(4)->get();
+    $servicesDb = \Illuminate\Support\Facades\Cache::remember('home_services_'.app()->getLocale(), now()->addHours(12), function() {
+        return \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->limit(4)->get();
+    });
 
     $services = $servicesDb->map(function (\App\Models\Service $s) use ($lang) {
         $features = is_array($s->features) ? $s->features : [];

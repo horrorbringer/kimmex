@@ -1,33 +1,32 @@
 <x-layouts.app title="Careers" description="Join the Kimmex team and build your future in the construction industry.">
 
     @php
-        $jobsDb = \App\Models\JobPosting::where('isActive', true)
-            ->with('department')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $jobs = \Illuminate\Support\Facades\Cache::remember('careers_jobs_data_'.app()->getLocale(), now()->addHours(12), function() {
+            $jobsDb = \App\Models\JobPosting::where('isActive', true)
+                ->with('department')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        $jobs = $jobsDb->map(function (\App\Models\JobPosting $j) {
-            $deptName = $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General');
-            return [
-                'id' => $j->id,
-                'slug' => $j->slug,
-                'title' => $j->getTranslation('title', app()->getLocale()),
-                'dept' => $deptName,
-                'loc' => $j->getTranslation('location', app()->getLocale()),
-                'type' => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
-                'salary' => $j->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
-                'experience' => $j->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
-                'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
-                'tags' => [$deptName],
-                'summary' => \Illuminate\Support\Str::limit(strip_tags($j->getTranslation('summary', app()->getLocale())), 150)
-            ];
-        })->toArray();
+            return $jobsDb->map(function (\App\Models\JobPosting $j) {
+                $deptName = $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General');
+                return [
+                    'id' => $j->id,
+                    'slug' => $j->slug,
+                    'title' => $j->getTranslation('title', app()->getLocale()),
+                    'dept' => $deptName,
+                    'loc' => $j->getTranslation('location', app()->getLocale()),
+                    'type' => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
+                    'salary' => $j->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
+                    'experience' => $j->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
+                    'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
+                    'tags' => [$deptName],
+                    'summary' => \Illuminate\Support\Str::limit(strip_tags($j->getTranslation('summary', app()->getLocale())), 150)
+                ];
+            })->toArray();
+        });
 
-        $categories = array_merge([__('All Departments')], $jobsDb->map(fn(\App\Models\JobPosting $j) => $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General'))
-            ->unique()->values()->all());
-
-        $locations = array_merge([__('All Locations')], $jobsDb->map(fn(\App\Models\JobPosting $j) => $j->getTranslation('location', app()->getLocale()))
-            ->unique()->values()->all());
+        $categories = array_values(array_unique(array_merge([__('All Departments')], array_column($jobs, 'dept'))));
+        $locations = array_values(array_unique(array_merge([__('All Locations')], array_column($jobs, 'loc'))));
 
         // Fallback for empty DB
         if (empty($jobs)) {

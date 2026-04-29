@@ -29,17 +29,21 @@
             ];
         }
 
-        $milestones = \App\Models\Milestone::where('isActive', true)->orderBy('sortOrder')->get()->map(function (\App\Models\Milestone $m) {
-            return [
-                'year' => $m->year,
-                'title' => $m->getTranslation('title', app()->getLocale()),
-                'desc' => $m->getTranslation('description', app()->getLocale()),
-                'detail' => $m->getTranslation('detailed_description', app()->getLocale()),
-                'image' => ($m->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($m->image)) 
-                    ? \Illuminate\Support\Facades\Storage::url($m->image) 
-                    : "/images/projects/Thumbnail-1.jpg",
-            ];
-        })->toArray();
+        $milestones = \Illuminate\Support\Facades\Cache::remember('about_milestones_data_'.app()->getLocale(), now()->addHours(12), function() {
+            $milestonesDb = \App\Models\Milestone::where('isActive', true)->orderBy('sortOrder')->get();
+
+            return $milestonesDb->map(function (\App\Models\Milestone $m) {
+                return [
+                    'year' => $m->year,
+                    'title' => $m->getTranslation('title', app()->getLocale()),
+                    'desc' => $m->getTranslation('description', app()->getLocale()),
+                    'detail' => $m->getTranslation('detailed_description', app()->getLocale()),
+                    'image' => ($m->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($m->image)) 
+                        ? \Illuminate\Support\Facades\Storage::url($m->image) 
+                        : "/images/projects/Thumbnail-1.jpg",
+                ];
+            })->toArray();
+        });
 
         // Fallback to hardcoded if DB is empty
         if (empty($milestones)) {
@@ -65,7 +69,7 @@
             ];
         }
 
-        $orgChart = (function () {
+        $orgChart = \Illuminate\Support\Facades\Cache::remember('about_orgchart_'.app()->getLocale(), now()->addHours(12), function() {
             $buildNode = function ($unit) use (&$buildNode) {
                 // Determine name based on Employee or local Title
                 $name = $unit->employee?->name ?? $unit->getTranslation('title', app()->getLocale());
@@ -143,7 +147,7 @@
                 'type' => 'office',
                 'children' => $roots->map(fn($root) => $buildNode($root))->toArray()
             ];
-        })();
+        });
     @endphp
 
     <div x-data="{ selectedMember: null }" class="bg-white min-h-screen text-titan-navy border-t border-gray-100">
@@ -270,21 +274,21 @@
                         <div class="space-y-6">
                             <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl">
                                 <img src="/images/projects/Thumbnail-1.jpg"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
                             </div>
                             <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
                                 <img src="/images/projects/Thumbnail-3.jpg"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
                             </div>
                         </div>
                         <div class="space-y-6 pt-12">
                             <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl">
                                 <img src="/images/projects/Thumbnail-2.jpg"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
                             </div>
                             <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl relative">
                                 <img src="/images/projects/Thumbnail-4.jpg"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" />
+                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
 
                                 <!-- Floating 25+ Years Badge -->
                                 <div
@@ -409,7 +413,7 @@
                             <div
                                 class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-lg border-4 border-white">
                                 <img src="/images/team-leadership-professional/touch_kim.jpg" alt="Okhna. TOUCH KIM"
-                                    class="object-cover object-top w-full h-full bg-titan-navy/5" />
+                                    class="object-cover object-top w-full h-full bg-titan-navy/5" loading="lazy" />
                             </div>
                             <div
                                 class="absolute -bottom-4 -right-4 w-16 h-16 bg-titan-red text-white flex items-center justify-center rounded-2xl shadow-lg border-4 border-gray-50 rotate-3 hover:rotate-0 transition-transform cursor-default">
@@ -540,7 +544,7 @@
                                     @click.prevent="open = !open">
                                     <img src="{{ $milestone['image'] }}"
                                         class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
-                                        :class="open ? 'scale-105' : ''" />
+                                        :class="open ? 'scale-105' : ''" loading="lazy" />
                                     <div class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-300"></div>
                                     <div
                                         class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
@@ -638,7 +642,7 @@
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         class="transition-all duration-1000 delay-200 relative">
                         <img src="/images/projects/Thumbnail-6.jpg" alt="Safety Inspection"
-                            class="rounded-2xl shadow-2xl w-full h-auto" />
+                            class="rounded-2xl shadow-2xl w-full h-auto" loading="lazy" />
                         <!-- Floating ISO Card -->
                         <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-xl hidden md:block">
                             <div class="flex items-center gap-4">

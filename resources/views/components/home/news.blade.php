@@ -1,9 +1,11 @@
 @php
-    $newsDb = \App\Models\NewsArticle::where('isActive', true)
-        ->where('publishedAt', '<=', now())
-        ->orderBy('publishedAt', 'desc')
-        ->take(3)
-        ->get();
+    $newsDb = \Illuminate\Support\Facades\Cache::remember('home_news_'.app()->getLocale(), now()->addHours(12), function() {
+        return \App\Models\NewsArticle::where('isActive', true)
+            ->where('publishedAt', '<=', now())
+            ->orderBy('publishedAt', 'desc')
+            ->take(3)
+            ->get();
+    });
 
     $allNews = $newsDb->map(function ($n) {
         return [
@@ -55,7 +57,7 @@
                             </div>
                             @if($news['image'])
                                 <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
-                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" />
+                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                             @else
                                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)] flex items-center justify-center">
                                     <x-lucide-newspaper class="w-12 h-12 text-white/10" />

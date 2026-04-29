@@ -1,5 +1,7 @@
 @php
-    $testimonialsDb = \App\Models\Testimonial::where('isActive', true)->where('isFeatured', true)->orderBy('orderIndex')->take(3)->get();
+    $testimonialsDb = \Illuminate\Support\Facades\Cache::remember('home_testimonials', now()->addHours(12), function() {
+        return \App\Models\Testimonial::where('isActive', true)->where('isFeatured', true)->orderBy('orderIndex')->take(3)->get();
+    });
     if ($testimonialsDb->count() > 0) {
         $testimonials = $testimonialsDb->map(function (\App\Models\Testimonial $t) {
             return [

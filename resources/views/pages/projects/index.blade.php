@@ -2,42 +2,50 @@
     description="View Kimmex's portfolio of successful construction and engineering projects.">
 
     @php
-        /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-        $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
-            ->where('isActive', true)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $locale = app()->getLocale();
+        $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() {
+            $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        // Dynamically build filter lists
-        $categories = $projectsDb->map(function ($p) {
-            $cat = $p->projectCategory;
-            if ($cat) {
-                return $cat->getTranslation('name', app()->getLocale()) ?: ($cat->getTranslation('name', 'en') ?: $cat->name);
-            }
-            return $p->category ?: 'General';
-        })->unique()->values()->prepend(__('All'))->toArray();
+            // Dynamically build filter lists
+            $categories = $projectsDb->map(function ($p) {
+                $cat = $p->projectCategory;
+                if ($cat) {
+                    return $cat->getTranslation('name', app()->getLocale()) ?: ($cat->getTranslation('name', 'en') ?: $cat->name);
+                }
+                return $p->category ?: 'General';
+            })->unique()->values()->prepend(__('All'))->toArray();
 
-        $locations = $projectsDb->map(fn($p) => $p->getTranslation('location', app()->getLocale()))
-            ->unique()->values()->prepend(__('All'))->toArray();
+            $locations = $projectsDb->map(fn($p) => $p->getTranslation('location', app()->getLocale()))
+                ->unique()->values()->prepend(__('All'))->toArray();
 
-        $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
+            $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
 
-        $projects = $projectsDb->map(function ($p) {
-            /** @var \App\Models\Project $p */
-            return [
-                'id' => $p->slug,
-                'title' => $p->getTranslation('title', app()->getLocale()),
-                'location' => $p->getTranslation('location', app()->getLocale()),
-                'type' => $p->projectCategory
-                    ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
-                    : ($p->category ?: 'General'),
-                'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
-                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
-                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                    : null,
-                'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
-            ];
-        })->toArray();
+            $projects = $projectsDb->map(function ($p) {
+                /** @var \App\Models\Project $p */
+                return [
+                    'id' => $p->slug,
+                    'title' => $p->getTranslation('title', app()->getLocale()),
+                    'location' => $p->getTranslation('location', app()->getLocale()),
+                    'type' => $p->projectCategory
+                        ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
+                        : ($p->category ?: 'General'),
+                    'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
+                    'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
+                        ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
+                        : null,
+                    'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
+                ];
+            })->toArray();
+
+            return compact('categories', 'locations', 'statusOptions', 'projects');
+        });
+
+        $categories = $cachedData['categories'];
+        $locations = $cachedData['locations'];
+        $statusOptions = $cachedData['statusOptions'];
+        $projects = $cachedData['projects'];
 
         // Fallback for empty DB
         if (count($projects) === 0) {
@@ -244,7 +252,7 @@
                                 <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
                                     <template x-if="project.image">
                                         <img :src="project.image" :alt="project.title"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                                     </template>
                                     <template x-if="!project.image">
                                         <div class="w-full h-full bg-titan-navy flex items-center justify-center">

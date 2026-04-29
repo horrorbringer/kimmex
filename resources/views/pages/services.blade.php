@@ -3,21 +3,23 @@
 @php
 $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
 
-$servicesDb = \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->get();
-$services = $servicesDb->map(function($service) {
-    return [
-        "id" => $service->slug,
-        "title" => ["en" => $service->getTranslation('title', 'en'), "kh" => $service->getTranslation('title', 'km')],
-        "desc" => [
-            "en" => strip_tags($service->getTranslation('description', 'en')),
-            "kh" => strip_tags($service->getTranslation('description', 'km'))
-        ],
-        "image" => ($service->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($service->image)) 
-            ? \Illuminate\Support\Facades\Storage::url($service->image)
-            : "/images/projects/Thumbnail-1.jpg",
-        "features" => is_array($service->features) ? $service->features : []
-    ];
-})->toArray();
+$services = \Illuminate\Support\Facades\Cache::remember('services_index_data', now()->addHours(12), function() {
+    $servicesDb = \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->get();
+    return $servicesDb->map(function($service) {
+        return [
+            "id" => $service->slug,
+            "title" => ["en" => $service->getTranslation('title', 'en'), "kh" => $service->getTranslation('title', 'km')],
+            "desc" => [
+                "en" => strip_tags($service->getTranslation('description', 'en')),
+                "kh" => strip_tags($service->getTranslation('description', 'km'))
+            ],
+            "image" => ($service->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($service->image)) 
+                ? \Illuminate\Support\Facades\Storage::url($service->image)
+                : "/images/projects/Thumbnail-1.jpg",
+            "features" => is_array($service->features) ? $service->features : []
+        ];
+    })->toArray();
+});
 
 // Fallback service categories from project structure if DB is empty
 if (empty($services)) {
@@ -65,7 +67,9 @@ if (empty($services)) {
     ];
 }
 
-$processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
+$processDb = \Illuminate\Support\Facades\Cache::remember('process_index', now()->addHours(12), function() {
+    return \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
+});
 $process = $processDb->map(function($step, $index) {
     return [
         "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
@@ -168,7 +172,7 @@ $sectors = [
                     
                     <!-- Image Side (Staggered) -->
                     <div class="lg:w-[45%] relative h-[350px] lg:h-auto overflow-hidden">
-                        <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000 ease-out" />
+                        <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000 ease-out" loading="lazy" />
                         <div class="absolute inset-0 bg-black/10 transition-colors duration-700"></div>
                         
                         <!-- Overlay Title for Mobile -->
@@ -341,12 +345,12 @@ $sectors = [
                         <!-- Left Image -->
                         <div class="relative h-[300px] md:h-[400px] rounded-[2rem] shadow-2xl overflow-hidden translate-y-12 md:translate-y-20 group">
                             <div class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                            <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                            <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                         </div>
                         <!-- Right Image -->
                         <div class="relative h-[350px] md:h-[480px] rounded-[2rem] shadow-2xl overflow-hidden group">
                             <div class="absolute inset-0 bg-titan-red/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                            <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                            <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                         </div>
                     </div>
                     
@@ -379,7 +383,7 @@ $sectors = [
                          style="transition-delay: {{ $i * 100 }}ms"
                          class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded-[2rem] bg-[#0F172A] cursor-pointer transition-all duration-700 shadow-2xl">
                         
-                        <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-80" alt="{{ $sector['title'][$lang] }}" />
+                        <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-80" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
                         
                         <!-- Gradient Overlay always present to ensure text contrast -->
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent transition-opacity duration-300"></div>
@@ -438,7 +442,7 @@ $sectors = [
                     <!-- Right Image Area -->
                     <div class="relative min-h-[350px] lg:min-h-full hidden md:block">
                         <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/60 to-transparent z-10 w-2/3 lg:w-1/2"></div>
-                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" />
+                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" loading="lazy" />
                         
                         <!-- Floating Decorative Badge -->
                         <div class="absolute top-12 right-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white p-5 rounded-3xl z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">

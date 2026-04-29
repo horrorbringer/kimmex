@@ -5,22 +5,26 @@
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
 
         // Try to load from DB first
-        $serviceDb = \App\Models\Service::where('slug', $slug)->where('isActive', true)->first();
+        $service = \Illuminate\Support\Facades\Cache::remember("service_show_data_{$slug}_{$lang}", now()->addHours(12), function() use ($slug) {
+            $serviceDb = \App\Models\Service::where('slug', $slug)->where('isActive', true)->first();
+            if ($serviceDb) {
+                return [
+                    "id" => $serviceDb->slug,
+                    "title" => ["en" => $serviceDb->getTranslation('title', 'en'), "kh" => $serviceDb->getTranslation('title', 'km')],
+                    "desc" => [
+                        "en" => strip_tags($serviceDb->getTranslation('description', 'en')),
+                        "kh" => strip_tags($serviceDb->getTranslation('description', 'km'))
+                    ],
+                    "image" => ($serviceDb->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($serviceDb->image))
+                        ? \Illuminate\Support\Facades\Storage::url($serviceDb->image)
+                        : null,
+                    "scopeItems" => is_array($serviceDb->features) ? array_map(fn($f) => ["en" => $f['name'] ?? '', "kh" => $f['name'] ?? ''], $serviceDb->features) : [],
+                ];
+            }
+            return null;
+        });
 
-        if ($serviceDb) {
-            $service = [
-                "id" => $serviceDb->slug,
-                "title" => ["en" => $serviceDb->getTranslation('title', 'en'), "kh" => $serviceDb->getTranslation('title', 'km')],
-                "desc" => [
-                    "en" => strip_tags($serviceDb->getTranslation('description', 'en')),
-                    "kh" => strip_tags($serviceDb->getTranslation('description', 'km'))
-                ],
-                "image" => ($serviceDb->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($serviceDb->image))
-                    ? \Illuminate\Support\Facades\Storage::url($serviceDb->image)
-                    : null,
-                "scopeItems" => is_array($serviceDb->features) ? array_map(fn($f) => ["en" => $f['name'] ?? '', "kh" => $f['name'] ?? ''], $serviceDb->features) : [],
-            ];
-        } else {
+        if (!$service) {
             // Fallback service data
             $fallbackServices = [
                 "design-and-build" => [
@@ -206,7 +210,7 @@
                         </div>
                         <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative z-10 bg-titan-navy">
                             <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                             <div
                                 class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500">
                             </div>
@@ -388,7 +392,7 @@
                             <a href="/projects/{{ $project['id'] }}"
                                 class="group relative aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-2xl h-full">
                                 <img src="{{ $project['image'] }}" alt="{{ $project['title'][$lang] }}"
-                                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity">
                                 </div>

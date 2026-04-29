@@ -25,7 +25,9 @@
     </div>
 
     @php
-        $partnersDb = \App\Models\Partner::where('isActive', true)->orderBy('orderIndex')->get();
+        $partnersDb = \Illuminate\Support\Facades\Cache::remember('home_partners', now()->addHours(12), function() {
+            return \App\Models\Partner::where('isActive', true)->orderBy('orderIndex')->get();
+        });
 
         $fallbacks = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
         
@@ -54,7 +56,7 @@
                 <div
                     class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
                     <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                        class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" />
+                        class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
                 </div>
             @endforeach
             <!-- Duplicate for infinite scroll loop -->
@@ -62,7 +64,7 @@
                 <div
                     class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
                     <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                        class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" />
+                        class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
                 </div>
             @endforeach
         </div>

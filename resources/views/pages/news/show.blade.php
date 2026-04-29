@@ -1,25 +1,30 @@
 <x-layouts.app :title="__('News Details')" description="Read the latest news and updates from Kimmex.">
 
     @php
-        $articleDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', $slug)->first();
+        $locale = app()->getLocale();
+        $article = \Illuminate\Support\Facades\Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function() use ($slug, $locale) {
+            $articleDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', $slug)->first();
+            if ($articleDb) {
+                $excerpt = $articleDb->getTranslation('excerpt', $locale)
+                    ?: \Illuminate\Support\Str::limit(strip_tags($articleDb->getTranslation('content', $locale)), 180);
 
-        if ($articleDb) {
-            $excerpt = $articleDb->getTranslation('excerpt', app()->getLocale())
-                ?: \Illuminate\Support\Str::limit(strip_tags($articleDb->getTranslation('content', app()->getLocale())), 180);
+                return [
+                    'slug' => $articleDb->slug,
+                    'category' => $articleDb->category ?: __('Updates'),
+                    'image' => ($articleDb->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($articleDb->coverImage)) ? \Illuminate\Support\Facades\Storage::url($articleDb->coverImage) : null,
+                    'title' => $articleDb->getTranslation('title', $locale),
+                    'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
+                    'author' => $articleDb->getTranslation('authorName', $locale) ?: 'Kimmex Editorial',
+                    'readTime' => ($articleDb->getTranslation('readTime', $locale)) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', $locale))) / 200) . ' min read'),
+                    'excerpt' => $excerpt,
+                    'content' => $articleDb->getTranslation('content', $locale),
+                    'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => \Illuminate\Support\Facades\Storage::url($img))->toArray()
+                ];
+            }
+            return null;
+        });
 
-            $article = [
-                'slug' => $articleDb->slug,
-                'category' => $articleDb->category ?: __('Updates'),
-                'image' => ($articleDb->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($articleDb->coverImage)) ? \Illuminate\Support\Facades\Storage::url($articleDb->coverImage) : null,
-                'title' => $articleDb->getTranslation('title', app()->getLocale()),
-                'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
-                'author' => $articleDb->getTranslation('authorName', app()->getLocale()) ?: 'Kimmex Editorial',
-                'readTime' => ($articleDb->getTranslation('readTime', app()->getLocale())) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', app()->getLocale()))) / 200) . ' min read'),
-                'excerpt' => $excerpt,
-                'content' => $articleDb->getTranslation('content', app()->getLocale()),
-                'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => \Illuminate\Support\Facades\Storage::url($img))->toArray()
-            ];
-        } else {
+        if (!$article) {
             // Fallback for non-existent slug
             $article = [
                 'slug' => 'error',
@@ -35,12 +40,15 @@
             ];
         }
 
-        // Fetch related from DB
-        $relatedDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
-        $relatedArticles = $relatedDb->map(function (\App\Models\NewsArticle $r) {
+        // Fetch related from DB with caching
+        $relatedDb = \Illuminate\Support\Facades\Cache::remember("news_related_{$slug}_{$locale}", now()->addHours(12), function() use ($slug) {
+            return \App\Models\NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
+        });
+        
+        $relatedArticles = $relatedDb->map(function (\App\Models\NewsArticle $r) use ($locale) {
             return [
                 'slug' => $r->slug,
-                'title' => $r->getTranslation('title', app()->getLocale()),
+                'title' => $r->getTranslation('title', $locale),
                 'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
                 'category' => $r->category ?? __('Updates'),
                 'image' => $r->coverImage
@@ -52,27 +60,39 @@
         scrolled: false, 
         progress: 0,
         headings: [],
-        activeHeading: null
+        activeHeading: null,
+        hElements: [],
+        ticking: false
     }" x-init="
-        window.addEventListener('scroll', () => {
-            scrolled = window.scrollY > 400;
-            const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
-            progress = (window.scrollY / scrollTotal) * 100;
-            
-            // Find active heading
-            const hItems = Array.from(document.querySelectorAll('article h2, article h3'));
-            const current = hItems.find(h => h.getBoundingClientRect().top > 0 && h.getBoundingClientRect().top < 200);
-            if(current) activeHeading = current.id || current.innerText;
-        });
-
-        // Initialize headings from article
+        // Initialize headings from article and cache DOM elements
         $nextTick(() => {
-            const hTags = document.querySelectorAll('article h2, article h3');
-            hTags.forEach((h, i) => {
+            hElements = Array.from(document.querySelectorAll('article h2, article h3'));
+            hElements.forEach((h, i) => {
                 if(!h.id) h.id = 'heading-' + i;
                 headings.push({ id: h.id, text: h.innerText, level: h.tagName });
             });
         });
+
+        // Throttled Scroll Listener using requestAnimationFrame
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    scrolled = window.scrollY > 400;
+                    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+                    progress = scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0;
+                    
+                    // Find active heading from cached elements
+                    const current = hElements.find(h => {
+                        const top = h.getBoundingClientRect().top;
+                        return top > 0 && top < 200;
+                    });
+                    if(current) activeHeading = current.id || current.innerText;
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
     ">
 
         <!-- READING PROGRESS & STICKY NAV -->
@@ -129,7 +149,7 @@
                         {{ $article['category'] }}
                     </div>
                     <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                        class="transition-all duration-700 delay-300 text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter leading-[1.1]">
+                        class="transition-all duration-700 delay-300 text-2xl md:text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter leading-[1.1]">
                         {{ $article['title'] }}
                     </h1>
                 </div>
@@ -219,15 +239,26 @@
                 @if(!empty($article['gallery']))
                     <div class="reveal-up pt-20" x-data="{ 
                         isOpen: false, 
-                        activeImg: '', 
-                        openLightbox(src) { 
-                            this.activeImg = src; 
+                        currentIndex: 0,
+                        images: {{ \Illuminate\Support\Js::from(array_values($article['gallery'])) }},
+                        openLightbox(index) { 
+                            this.currentIndex = index; 
                             this.isOpen = true; 
                             document.body.style.overflow = 'hidden';
                         },
                         closeLightbox() {
                             this.isOpen = false;
                             document.body.style.overflow = 'auto';
+                        },
+                        next() {
+                            if (this.images.length > 0) {
+                                this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                            }
+                        },
+                        prev() {
+                            if (this.images.length > 0) {
+                                this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                            }
                         }
                     }">
                         <div class="flex items-center justify-between mb-8">
@@ -241,31 +272,41 @@
 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             @foreach($article['gallery'] as $index => $img)
-                                <div @click="openLightbox('{{ $img }}')"
-                                    class="group relative overflow-hidden bg-gray-100 cursor-pointer transition-all duration-700
-                                    {{ $index === 0 ? 'md:col-span-2 md:row-span-2 aspect-square md:aspect-auto' : 'aspect-square' }}">
-                                    
-                                    <!-- Image -->
-                                    <img src="{{ $img }}"
-                                        class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
-                                        loading="lazy" />
+                                @if($index < 5)
+                                    <div @click="openLightbox({{ $index }})"
+                                        class="group relative overflow-hidden bg-gray-100 cursor-pointer transition-all duration-700
+                                        {{ $index === 0 ? 'md:col-span-2 md:row-span-2 aspect-square md:aspect-auto' : 'aspect-square' }}">
+                                        
+                                        <!-- Image -->
+                                        <img src="{{ $img }}"
+                                            class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
+                                            loading="lazy" />
 
-                                    <!-- Subtle Index Number -->
-                                    <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-2 group-hover:translate-y-0">
-                                        <span class="text-[10px] font-black text-white bg-titan-navy px-2 py-1">
-                                            {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
-                                        </span>
-                                    </div>
+                                        <!-- Subtle Index Number -->
+                                        <div class="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-2 group-hover:translate-y-0 z-10">
+                                            <span class="text-[10px] font-black text-white bg-titan-navy px-2 py-1">
+                                                {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                                            </span>
+                                        </div>
 
-                                    <!-- Hover Overlay -->
-                                    <div class="absolute inset-0 bg-titan-navy/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                                        <x-lucide-maximize-2 class="w-6 h-6 text-white transform scale-50 group-hover:scale-100 transition-transform duration-500" />
+                                        @if($index === 4 && count($article['gallery']) > 5)
+                                            <!-- +X Overlay -->
+                                            <div class="absolute inset-0 bg-titan-navy/80 flex flex-col items-center justify-center transition-all duration-500 z-20">
+                                                <span class="text-3xl font-black text-white">+{{ count($article['gallery']) - 5 }}</span>
+                                                <span class="text-[9px] font-black text-white/50 uppercase tracking-widest mt-1">{{ __('More Assets') }}</span>
+                                            </div>
+                                        @else
+                                            <!-- Hover Overlay -->
+                                            <div class="absolute inset-0 bg-titan-navy/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center z-20">
+                                                <x-lucide-maximize-2 class="w-6 h-6 text-white transform scale-50 group-hover:scale-100 transition-transform duration-500" />
+                                            </div>
+                                        @endif
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
                         </div>
 
-                        <!-- SIMPLE LIGHTBOX MODAL -->
+                        <!-- REFINED LIGHTBOX MODAL -->
                         <div x-show="isOpen" 
                              x-transition:enter="transition ease-out duration-300"
                              x-transition:enter-start="opacity-0"
@@ -275,13 +316,27 @@
                              x-transition:leave-end="opacity-0"
                              class="fixed inset-0 z-[200] flex items-center justify-center bg-titan-navy/95 backdrop-blur-xl p-6"
                              @keydown.escape.window="closeLightbox()"
+                             @keydown.right.window="next()"
+                             @keydown.left.window="prev()"
                              style="display: none;">
                             
-                            <button @click="closeLightbox()" class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors">
+                            <button @click="closeLightbox()" class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors z-[210]">
                                 <x-lucide-x class="w-8 h-8" />
                             </button>
 
-                            <img :src="activeImg" class="max-w-full max-h-[85vh] object-contain" @click.away="closeLightbox()">
+                            <button @click.stop="prev()" class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-all z-[210]" x-show="images.length > 1">
+                                <x-lucide-chevron-left class="w-8 h-8" />
+                            </button>
+                            
+                            <button @click.stop="next()" class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-full transition-all z-[210]" x-show="images.length > 1">
+                                <x-lucide-chevron-right class="w-8 h-8" />
+                            </button>
+
+                            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 font-black tracking-widest text-xs z-[210]">
+                                <span x-text="currentIndex + 1"></span> / <span x-text="images.length"></span>
+                            </div>
+
+                            <img :src="images[currentIndex]" class="max-w-full max-h-[85vh] object-contain relative z-[205]" @click.away="closeLightbox()">
                         </div>
                     </div>
                 @endif
@@ -322,7 +377,7 @@
                             class="group block overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
                             <div class="aspect-[16/10] bg-titan-navy relative overflow-hidden mb-6">
                                 <img src="{{ ($rel['image'] && \Illuminate\Support\Facades\Storage::disk('public')->exists($rel['image'])) ? \Illuminate\Support\Facades\Storage::url($rel['image']) : '/images/projects/Thumbnail-' . ($loop->index + 1) . '.jpg' }}"
-                                    class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110" />
+                                    class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110" loading="lazy" />
                             </div>
                             <h4
                                 class="text-lg font-black text-titan-navy group-hover:text-titan-red transition-colors leading-tight mb-3">

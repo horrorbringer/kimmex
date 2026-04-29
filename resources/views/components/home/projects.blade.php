@@ -1,10 +1,13 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-    $projectsDb = \App\Models\Project::where('isActive', true)
-        ->orderBy('isFeatured', 'desc')
-        ->orderBy('created_at', 'desc')
-        ->take(3)
-        ->get();
+    $projectsDb = \Illuminate\Support\Facades\Cache::remember('home_projects_'.app()->getLocale(), now()->addHours(12), function() {
+        return \App\Models\Project::where('isActive', true)
+            ->with('projectCategory')
+            ->orderBy('isFeatured', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+    });
 
     $projects = $projectsDb->map(function ($p) {
         return [
@@ -55,7 +58,7 @@
                         <div class="relative overflow-hidden rounded-2xl shadow-lg h-80 w-full bg-titan-navy">
                             @if($p['image'])
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                    class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
+                                    class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                             @else
                                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
                             @endif

@@ -1,25 +1,28 @@
 <x-layouts.app :title="__('Job Details')" description="Join our team of experts in the construction and investment industry.">
 
 @php
-    $jobDb = \App\Models\JobPosting::where('isActive', true)->where('slug', $slug)->first();
-    $job = null;
+    $job = \Illuminate\Support\Facades\Cache::remember("career_job_show_data_{$slug}_".app()->getLocale(), now()->addHours(12), function() use ($slug) {
+        $jobDb = \App\Models\JobPosting::where('isActive', true)->where('slug', $slug)->first();
+        if ($jobDb) {
+            return [
+                'id' => $jobDb->id,
+                'title' => $jobDb->getTranslation('title', app()->getLocale()),
+                'dept' => $jobDb->department ? $jobDb->department->getTranslation('name', app()->getLocale()) : __('General'),
+                'loc' => $jobDb->getTranslation('location', app()->getLocale()),
+                'type' => __($jobDb->type ?? 'FULL_TIME'),
+                'salary' => $jobDb->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
+                'experience' => $jobDb->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
+                'postedDate' => $jobDb->created_at ? $jobDb->created_at->format('M d, Y') : now()->format('M d, Y'),
+                'description' => $jobDb->getTranslation('summary', app()->getLocale()),
+                'responsibilities' => $jobDb->getTranslation('responsibilities', app()->getLocale()),
+                'requirements' => $jobDb->getTranslation('requirements', app()->getLocale()),
+                'benefits' => $jobDb->getTranslation('benefits', app()->getLocale()),
+            ];
+        }
+        return null;
+    });
 
-    if ($jobDb) {
-        $job = [
-            'id' => $jobDb->id,
-            'title' => $jobDb->getTranslation('title', app()->getLocale()),
-            'dept' => $jobDb->department ? $jobDb->department->getTranslation('name', app()->getLocale()) : __('General'),
-            'loc' => $jobDb->getTranslation('location', app()->getLocale()),
-            'type' => __($jobDb->type ?? 'FULL_TIME'),
-            'salary' => $jobDb->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
-            'experience' => $jobDb->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
-            'postedDate' => $jobDb->created_at ? $jobDb->created_at->format('M d, Y') : now()->format('M d, Y'),
-            'description' => $jobDb->getTranslation('summary', app()->getLocale()),
-            'responsibilities' => $jobDb->getTranslation('responsibilities', app()->getLocale()),
-            'requirements' => $jobDb->getTranslation('requirements', app()->getLocale()),
-            'benefits' => $jobDb->getTranslation('benefits', app()->getLocale()),
-        ];
-    } elseif ($slug === 'gen') {
+    if (!$job && $slug === 'gen') {
         $job = [
             'id' => 'gen',
             'title' => __('Visionary Talent'),

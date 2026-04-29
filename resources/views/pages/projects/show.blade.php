@@ -1,11 +1,11 @@
 @php
+    $locale = app()->getLocale();
     // Use the $slug passed from the router to fetch the project
-    $projectDb = \App\Models\Project::where('isActive', true)->where('slug', $slug)
-        ->where('isActive', true)
-        ->first();
+    $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$locale}", now()->addHours(12), function() use ($slug, $locale) {
+        $projectDb = \App\Models\Project::where('isActive', true)->where('slug', $slug)->first();
+        if (!$projectDb) return null;
 
-    if ($projectDb) {
-        $project = [
+        return [
             'id' => $projectDb->slug,
             'title' => $projectDb->getTranslation('title', app()->getLocale()),
             'type' => $projectDb->projectCategory ? $projectDb->projectCategory->getTranslation('name', app()->getLocale()) : ($projectDb->category ?: __('Infrastructure')),
@@ -37,6 +37,9 @@
                 'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage)) : '/images/projects/Thumbnail-5.jpg'
             ])->toArray()
         ];
+    });
+
+    if ($project) {
 
         // Ensure at least 4 images so you can see the layout and "Load More" functionality
         if (count($project['images']) < 4) {
@@ -338,7 +341,7 @@
                                 <div @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
                                     class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full {{ $gridClass }}">
                                     <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
-                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700" />
+                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700" loading="lazy" />
 
                                     @if($i === 2 && $count > 3)
                                         <div
@@ -417,7 +420,7 @@
                         <a href="/projects/{{ $p['id'] }}" class="block group">
                             <div class="aspect-[4/3] rounded-lg overflow-hidden mb-4 relative">
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                                 <div
                                     class="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">
                                     {{ $p['type'] }}
