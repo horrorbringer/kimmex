@@ -78,61 +78,69 @@
         }
     }" x-init="startTimer()" class="relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white">
 
-    <!-- Slides -->
+    <!-- === SLIDES === -->
     <template x-for="(slide, index) in slides" :key="index">
-        <div x-show="current === index" x-transition:enter="transition transform ease-out duration-700"
+        <div x-show="current === index" x-transition:enter="transition transform ease-out duration-1000"
             x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition absolute transform ease-in duration-500 z-0"
+            x-transition:leave="transition absolute transform ease-in duration-700 z-0"
             x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-105"
             class="absolute inset-0 w-full h-full">
 
             <template x-if="slide.image">
-                <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-70" />
-            </template>
-            <template x-if="!slide.image">
-                <div class="w-full h-full bg-titan-navy shadow-inner opacity-50">
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
+                <div class="relative w-full h-full overflow-hidden">
+                    <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" />
+                    {{-- Deep multi-stage gradient for maximum text contrast --}}
+                    <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/80"></div>
                 </div>
             </template>
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
+            <template x-if="!slide.image">
+                <div class="w-full h-full bg-titan-navy shadow-inner opacity-100">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
+                </div>
+            </template>
         </div>
     </template>
 
-    <!-- Content Overlay -->
+    <!-- === CONTENT OVERLAY === -->
     <div class="absolute inset-0 flex items-center z-10 pt-32 lg:pt-40">
         <div class="max-w-[1400px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
 
             <template x-for="(slide, index) in slides" :key="'content-'+index">
-                <div x-show="current === index" x-transition:enter="transition ease-out duration-700 delay-300"
-                    x-transition:enter-start="opacity-0 translate-y-8"
+                <div x-show="current === index" 
+                    x-transition:enter="transition ease-out duration-1000 delay-300"
+                    x-transition:enter-start="opacity-0 translate-y-12"
                     x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-300 absolute"
+                    x-transition:leave="transition ease-in duration-500 absolute"
                     x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 -translate-y-4">
+                    x-transition:leave-end="opacity-0 -translate-y-8">
 
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-1 bg-titan-red"></div>
-                        <span class="text-titan-red font-bold tracking-[0.2em] uppercase text-sm"
-                            x-text="slide.subtitle"></span>
+                    <div class="flex items-center gap-4 mb-10">
+                        <div class="transition-all duration-1000 delay-500 inline-flex items-center gap-3 glass-premium px-6 py-2.5 rounded-full">
+                            <div class="w-2 h-2 bg-titan-red animate-pulse rounded-full"></div>
+                            <span class="{{ app()->getLocale() === 'km' ? 'font-khmer text-white/90 text-sm tracking-normal' : 'text-white/90 font-black tracking-[0.3em] uppercase text-[10px]' }}"
+                                x-text="slide.subtitle"></span>
+                        </div>
                     </div>
 
-                    <h1 class="font-heading font-black mb-6 text-4xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight max-w-3xl"
+                    <h1 class="font-heading font-black mb-8 text-white uppercase leading-[0.9] tracking-tighter max-w-4xl"
+                        style="font-size: clamp(3rem, 7vw, 6.5rem);"
                         x-text="slide.title"></h1>
 
-                    <p class="text-white/80 max-w-lg mb-10 font-light text-lg md:text-xl leading-relaxed"
+                    <p class="text-white/70 max-w-lg mb-12 font-medium text-lg md:text-xl leading-relaxed"
                         x-text="slide.desc"></p>
 
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-5">
                         <a :href="slide.link"
-                            class="group bg-titan-red text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-titan-red transition-all duration-300 flex items-center gap-3 rounded-none">
-                            <span>{{ __('View Project') }}</span>
-                            <x-lucide-arrow-right
-                                class="group-hover:translate-x-1 transition-transform w-[18px] h-[18px]" />
+                            class="group relative overflow-hidden bg-titan-red text-white px-10 py-5 font-black transition-all duration-500 flex items-center gap-4 shadow-2xl rounded-2xl {{ app()->getLocale() === 'km' ? 'font-khmer text-base tracking-normal' : 'text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy' }}">
+                            <span class="relative z-10">{{ __('VIEW PROJECT') }}</span>
+                            <x-lucide-arrow-right class="group-hover:translate-x-2 transition-transform w-5 h-5 relative z-10" />
                         </a>
                         <a href="/contact"
-                            class="group border-2 border-white text-white px-8 py-4 font-bold text-sm tracking-widest uppercase hover:bg-titan-red hover:border-titan-red hover:text-white transition-all duration-300 flex items-center gap-3 rounded-none">
-                            <x-lucide-phone class="w-[18px] h-[18px]" />
-                            <span>{{ __('Contact Us') }}</span>
+                            class="group border-2 border-white/20 backdrop-blur-md text-white px-10 py-5 font-black transition-all duration-500 flex items-center gap-4 rounded-2xl {{ app()->getLocale() === 'km' ? 'font-khmer text-base tracking-normal' : 'text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
+                            <x-lucide-phone class="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                            <span>{{ __('CONTACT US') }}</span>
                         </a>
                     </div>
                 </div>

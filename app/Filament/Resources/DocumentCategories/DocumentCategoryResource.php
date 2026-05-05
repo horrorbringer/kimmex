@@ -81,10 +81,24 @@ class DocumentCategoryResource extends Resource
                                 ->relationship('parent', 'name', fn($query) => $query->orderBy('name->en'))
                                 ->searchable()
                                 ->preload(),
-                            TextInput::make('icon')
+                            Select::make('icon')
                                 ->label(__('Icon'))
-                                ->placeholder('heroicon-o-folder')
-                                ->helperText(__('Heroicon name for display')),
+                                ->options([
+                                    'heroicon-o-folder' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-folder style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Folder',
+                                    'heroicon-o-document-text' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-document-text style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Documents',
+                                    'heroicon-o-book-open' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-book-open style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Academic/Learning',
+                                    'heroicon-o-presentation-chart-line' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-presentation-chart-line style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Reports & Stats',
+                                    'heroicon-o-briefcase' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-briefcase style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Business & Portfolio',
+                                    'heroicon-o-academic-cap' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-academic-cap style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Educational',
+                                    'heroicon-o-newspaper' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-newspaper style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' News & Articles',
+                                    'heroicon-o-photo' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-photo style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Media/Photos',
+                                    'heroicon-o-video-camera' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-video-camera style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Video Content',
+                                    'heroicon-o-archive-box' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-archive-box style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Archive/History',
+                                ])
+                                ->allowHtml()
+                                ->searchable()
+                                ->prefixIcon(fn($state) => $state)
+                                ->placeholder(__('Select an icon')),
                         ]),
                         Grid::make(2)->components([
                             TextInput::make('sort_order')

@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('News Details')" description="Read the latest news and updates from Kimmex.">
+
 
     @php
         $locale = app()->getLocale();
@@ -18,6 +18,7 @@
                     'readTime' => ($articleDb->getTranslation('readTime', $locale)) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', $locale))) / 200) . ' min read'),
                     'excerpt' => $excerpt,
                     'content' => $articleDb->getTranslation('content', $locale),
+                    'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0 ? $articleDb->tags : [$articleDb->category ?: 'News'],
                     'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => \Illuminate\Support\Facades\Storage::url($img))->toArray()
                 ];
             }
@@ -36,29 +37,72 @@
                 'readTime' => '1 min',
                 'excerpt' => __('We are currently updating our news archive. Please try again soon.'),
                 'content' => '<p>The content you are looking for might have been archived or moved during our site optimization. Please return to the news index to explore our latest updates.</p>',
+                'tags' => ['Announcement'],
                 'gallery' => []
             ];
         }
 
         // Fetch related from DB with caching
-        $relatedDb = \Illuminate\Support\Facades\Cache::remember("news_related_{$slug}_{$locale}", now()->addHours(12), function() use ($slug) {
-            return \App\Models\NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
-        });
-        
-        $relatedArticles = $relatedDb->map(function (\App\Models\NewsArticle $r) use ($locale) {
+        $relatedData = \Illuminate\Support\Facades\Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function() use ($slug, $locale) {
+            $currentDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', $slug)->first();
+            
+            $relatedDb = \App\Models\NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
+            $related = $relatedDb->map(function (\App\Models\NewsArticle $r) use ($locale) {
+                return [
+                    'slug' => $r->slug,
+                    'title' => $r->getTranslation('title', $locale),
+                    'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
+                    'category' => $r->category ?? __('Updates'),
+                    'image' => $r->coverImage
+                ];
+            })->toArray();
+
+            $next = null;
+            $prev = null;
+            if ($currentDb) {
+                $nextDb = \App\Models\NewsArticle::where('isActive', true)->where('id', '>', $currentDb->id)->orderBy('id', 'asc')->first();
+                $prevDb = \App\Models\NewsArticle::where('isActive', true)->where('id', '<', $currentDb->id)->orderBy('id', 'desc')->first();
+                if ($nextDb) $next = ['slug' => $nextDb->slug, 'title' => $nextDb->getTranslation('title', $locale)];
+                if ($prevDb) $prev = ['slug' => $prevDb->slug, 'title' => $prevDb->getTranslation('title', $locale)];
+            }
+
             return [
-                'slug' => $r->slug,
-                'title' => $r->getTranslation('title', $locale),
-                'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
-                'category' => $r->category ?? __('Updates'),
-                'image' => $r->coverImage
+                'related' => $related,
+                'next' => $next,
+                'prev' => $prev
             ];
         });
+        $relatedArticles = $relatedData['related'] ?? [];
+        $nextArticle = $relatedData['next'] ?? null;
+        $prevArticle = $relatedData['prev'] ?? null;
+
+        $pageTitle = $article['title'] ?? __('News Details');
+        $pageDesc = $article['excerpt'] ?? __('Read the latest news and updates from Kimmex.');
+        $pageImage = $article['image'] ?? null;
     @endphp
+
+<x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage">
+
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "NewsArticle",
+        "headline": "{{ $article['title'] ?? '' }}",
+        "image": [
+            "{{ $article['image'] ? url($article['image']) : url('/logo.png') }}"
+        ],
+        "datePublished": "{{ isset($article['date']) ? \Carbon\Carbon::parse($article['date'])->toIso8601String() : now()->toIso8601String() }}",
+        "author": [{
+            "@@type": "Person",
+            "name": "{{ $article['author'] ?? 'Kimmex Editorial' }}"
+        }]
+    }
+    </script>
 
     <div class="bg-white min-h-screen text-titan-navy font-sans antialiased" x-data="{ 
         scrolled: false, 
         progress: 0,
+        scrollY: 0,
         headings: [],
         activeHeading: null,
         hElements: [],
@@ -77,6 +121,7 @@
         window.addEventListener('scroll', () => {
             if (!ticking) {
                 window.requestAnimationFrame(() => {
+                    scrollY = window.scrollY;
                     scrolled = window.scrollY > 400;
                     const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
                     progress = scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0;
@@ -102,7 +147,7 @@
                 <div class="h-full bg-titan-red absolute left-0 top-0 transition-all duration-150"
                     :style="'width: ' + progress + '%'"></div>
             </div>
-            <div class="bg-white/95 backdrop-blur-md border-b border-gray-100 h-14 flex items-center px-6">
+            <div class="bg-white/95 backdrop-blur-md border-b border-gray-100 h-12 flex items-center px-6">
                 <div class="max-w-[1240px] mx-auto w-full flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <span
@@ -115,116 +160,100 @@
                             <span
                                 class="text-[9px] font-black text-titan-navy/20 uppercase tracking-widest">{{ __('Share') }}</span>
                             <div class="flex gap-2">
-                                <a href="#"
-                                    class="w-8 h-8 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all"><x-lucide-facebook
-                                        class="w-3.5 h-3.5" /></a>
-                                <a href="#"
-                                    class="w-8 h-8 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all"><x-lucide-linkedin
-                                        class="w-3.5 h-3.5" /></a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
+                                    class="w-8 h-8 bg-[#1877F2] rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/fb">
+                                    <x-lucide-facebook class="w-3.5 h-3.5 transition-transform group-hover/fb:scale-110" />
+                                </a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
+                                    class="w-8 h-8 bg-[#0A66C2] rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/li">
+                                    <x-lucide-linkedin class="w-3.5 h-3.5 transition-transform group-hover/li:scale-110" />
+                                </a>
+                                <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener"
+                                    class="w-8 h-8 bg-[#24A1DE] rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/tg">
+                                    <x-lucide-send class="w-3.5 h-3.5 transition-transform group-hover/tg:scale-110" />
+                                </a>
                             </div>
                         </div>
                         <a href="/news"
-                            class="w-8 h-8 bg-titan-navy text-white flex items-center justify-center hover:bg-titan-red transition-all"><x-lucide-arrow-left
-                                class="w-4 h-4" /></a>
+                            class="w-8 h-8 bg-titan-navy border border-titan-navy/20 text-white rounded-lg flex items-center justify-center hover:bg-titan-red hover:border-transparent transition-all group/back">
+                            <x-lucide-arrow-left class="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- REFINED NARRATIVE HERO -->
-        <header class="relative w-full h-[60vh] md:h-[70vh] overflow-hidden bg-titan-navy">
-            @if($article['image'])
-                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}"
-                    class="absolute inset-0 w-full h-full object-cover opacity-60 scale-105" />
-            @else
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
-            @endif
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/30 via-transparent to-titan-navy"></div>
+        <!-- === PREMIUM NEWS HERO === -->
+        <header class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+            {{-- Background Zoom Animation --}}
+            <div class="absolute inset-0">
+                @if($article['image'])
+                    <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                @else
+                    <div class="w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
+                @endif
+                {{-- Deep multi-stage gradient for maximum text contrast --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+                <div class="absolute inset-0 bg-black/20"></div>
+            </div>
 
-            <div class="absolute inset-0 flex flex-col items-center justify-end pb-24 px-6 text-center">
-                <div class="max-w-4xl mx-auto space-y-6" x-data="{ shown: false }"
-                    x-init="setTimeout(() => shown = true, 100)">
-                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                        class="transition-all duration-700 inline-flex items-center gap-2 px-4 py-1.5 bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.3em]">
-                        {{ $article['category'] }}
-                    </div>
-                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                        class="transition-all duration-700 delay-300 text-2xl md:text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter leading-[1.1]">
-                        {{ $article['title'] }}
-                    </h1>
+            <div class="relative z-20 text-center max-w-5xl px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12">
+                    <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
+                    <span>{{ strtoupper($article['category']) }}</span>
+                </div>
+
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                    class="transition-all duration-1000 delay-300 text-3xl md:text-5xl lg:text-6xl font-black text-white mb-10 leading-[1.1] tracking-tighter uppercase">
+                    {{ $article['title'] }}
+                </h1>
+
+                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
+                    <div class="h-[1px] w-12 bg-titan-red"></div>
+                    <p class="text-[10px] md:text-xs text-white/90 font-bold uppercase tracking-[0.4em]">
+                        {{ $article['date'] }} · {{ $article['readTime'] }} · {{ __('By') }} {{ $article['author'] }}
+                    </p>
+                    <div class="h-[1px] w-12 bg-titan-red"></div>
                 </div>
             </div>
+
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </header>
 
         <!-- MAIN CONTENT ARCHITECTURE -->
         <div class="max-w-[1240px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 py-20 relative">
 
-            <!-- SIDEBAR (TOC & SHARES) -->
-            <aside class="hidden lg:block lg:col-span-3">
-                <div class="sticky top-32 space-y-12">
-                    <!-- TOC -->
-                    <div class="space-y-8" x-show="headings.length > 0">
-                        <div
-                            class="text-[10px] font-black text-titan-navy/10 uppercase tracking-[0.4em] border-b border-gray-100 pb-4">
-                            {{ __('On This Page') }}
-                        </div>
-                        <nav class="flex flex-col gap-4">
-                            <template x-for="h in headings" :key="h.id">
-                                <a :href="'#' + h.id"
-                                    @click.prevent="document.getElementById(h.id).scrollIntoView({ behavior: 'smooth', block: 'center' })"
-                                    class="text-[10px] font-black uppercase tracking-[0.1em] transition-all duration-300 hover:translate-x-1"
-                                    :class="activeHeading === h.id || activeHeading === h.text ? 'text-titan-red' : 'text-titan-navy/30 hover:text-titan-navy'"
-                                    x-text="h.text"></a>
-                            </template>
-                        </nav>
-                    </div>
 
-                    <!-- Vertical Shares -->
-                    <div class="space-y-8">
-                        <div
-                            class="text-[10px] font-black text-titan-navy/10 uppercase tracking-[0.4em] border-b border-gray-100 pb-4">
-                            {{ __('Spread Word') }}
-                        </div>
-                        <div class="flex flex-col gap-3">
-                            <a href="#"
-                                class="w-11 h-11 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all transform hover:rotate-12 shadow-sm group">
-                                <x-lucide-facebook class="w-4 h-4" />
-                            </a>
-                            <a href="#"
-                                class="w-11 h-11 bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all transform hover:rotate-12 shadow-sm group">
-                                <x-lucide-linkedin class="w-4 h-4" />
-                            </a>
-                            <button onclick="window.print()"
-                                class="w-11 h-11 bg-gray-50 flex items-center justify-center hover:bg-titan-navy hover:text-white transition-all transform hover:rotate-12">
-                                <x-lucide-printer class="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </aside>
 
             <!-- READABLE ARTICLE AREA -->
-            <div class="lg:col-span-9 xl:col-span-8 xl:col-start-4 space-y-16">
+            <div class="lg:col-span-10 lg:col-start-2 xl:col-span-8 xl:col-start-3 space-y-16">
 
                 <!-- Lead & Metadata Row -->
                 <div class="space-y-10 reveal-up">
                     <p
-                        class="text-xl md:text-2xl font-black text-titan-navy leading-tight border-l-4 border-titan-red pl-8 italic">
+                        class="text-xl md:text-2xl font-black text-titan-navy leading-tight text-center italic">
                         {{ $article['excerpt'] }}
                     </p>
-                    <div
-                        class="flex items-center gap-8 text-[9px] font-black text-titan-navy/30 uppercase tracking-[0.3em]">
-                        <div class="flex items-center gap-2">
-                            <x-lucide-user class="w-3.5 h-3.5 text-titan-red/60" />
-                            {{ $article['author'] }}
+                    <div class="flex flex-wrap items-center justify-center gap-y-4 gap-x-12 pt-8 border-t border-gray-100">
+                        <div class="flex items-center gap-3 group/meta">
+                            <div class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center group-hover/meta:bg-titan-red/10 transition-all duration-300">
+                                <x-lucide-user class="w-4 h-4 text-titan-red" />
+                            </div>
+                            <span class="text-[10px] font-black text-titan-navy uppercase tracking-[0.2em]">{{ $article['author'] }}</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <x-lucide-calendar class="w-3.5 h-3.5 text-titan-red/60" />
-                            {{ $article['date'] }}
+                        <div class="flex items-center gap-3 group/meta">
+                            <div class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center group-hover/meta:bg-titan-red/10 transition-all duration-300">
+                                <x-lucide-calendar class="w-4 h-4 text-titan-red" />
+                            </div>
+                            <span class="text-[10px] font-black text-titan-navy uppercase tracking-[0.2em]">{{ $article['date'] }}</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <x-lucide-clock class="w-3.5 h-3.5 text-titan-red/60" />
-                            {{ $article['readTime'] }}
+                        <div class="flex items-center gap-3 group/meta">
+                            <div class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center group-hover/meta:bg-titan-red/10 transition-all duration-300">
+                                <x-lucide-clock class="w-4 h-4 text-titan-red" />
+                            </div>
+                            <span class="text-[10px] font-black text-titan-navy uppercase tracking-[0.2em]">{{ $article['readTime'] }}</span>
                         </div>
                     </div>
                 </div>
@@ -234,6 +263,53 @@
                     class="prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.8] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:text-titan-navy prose-table:border-collapse prose-table:w-full prose-th:border prose-th:border-gray-300 prose-th:bg-gray-50 prose-th:px-4 prose-th:py-3 prose-th:text-left prose-th:font-black prose-th:uppercase prose-th:tracking-wider prose-td:border prose-td:border-gray-300 prose-td:px-4 prose-td:py-3 reveal-up">
                     {!! $article['content'] !!}
                 </article>
+
+                <!-- CENTERED SOCIAL SHARING -->
+                <div class="reveal-up pt-12 flex flex-col items-center gap-6">
+                    <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Story') }}</div>
+                    <div class="flex items-center gap-4">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
+                            class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                            <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
+                            class="w-12 h-12 bg-[#0A66C2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                            <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
+                        </a>
+                        <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener"
+                            class="w-12 h-12 bg-[#24A1DE] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                            <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
+                        </a>
+                        <div x-data="{ 
+                            copied: false, 
+                            copyLink() {
+                                navigator.clipboard.writeText(window.location.href);
+                                this.copied = true;
+                                setTimeout(() => this.copied = false, 2000);
+                            }
+                        }" class="relative">
+                            <button @click="copyLink()"
+                                class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
+                                <x-lucide-link class="w-5 h-5" x-show="!copied" />
+                                <x-lucide-check class="w-5 h-5 text-green-500" x-show="copied" x-cloak />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AUTHOR BIO BOX -->
+                <div class="mt-16 p-8 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center gap-6 reveal-up">
+                    <div class="w-20 h-20 rounded-full bg-titan-navy flex items-center justify-center shrink-0">
+                        <x-lucide-user class="w-8 h-8 text-white/50" />
+                    </div>
+                    <div class="text-center">
+                        <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.3em] mb-1">{{ __('Written By') }}</div>
+                        <h4 class="text-xl font-black text-titan-navy uppercase tracking-tight mb-2">{{ $article['author'] }}</h4>
+                        <p class="text-sm font-medium text-titan-navy/60 max-w-xl">
+                            {{ __('An editorial contributor for Kimmex, bringing you the latest updates on engineering, sustainability, and large-scale infrastructure projects.') }}
+                        </p>
+                    </div>
+                </div>
 
                 <!-- GALLERY SECTION: BENTO GRID & LIGHTBOX -->
                 @if(!empty($article['gallery']))
@@ -342,14 +418,36 @@
                 @endif
 
                 <!-- TAGS -->
-                <div class="pt-10 border-t border-gray-50 flex items-center gap-3 reveal-up">
+                <div class="pt-10 border-t border-gray-50 flex items-center flex-wrap gap-3 reveal-up">
                     <span
                         class="text-[9px] font-black text-titan-navy/20 uppercase tracking-widest">{{ __('Tags:') }}</span>
-                    @foreach(explode(',', 'Engineering,Sustainability,Infrastructure') as $tag)
+                    @foreach($article['tags'] as $tag)
                         <span
-                            class="px-4 py-1.5 bg-gray-50 text-[9px] font-black text-titan-navy/40 uppercase tracking-widest hover:text-titan-red cursor-pointer transition-colors">{{ $tag }}</span>
+                            class="px-4 py-1.5 bg-gray-50 rounded-full text-[9px] font-black text-titan-navy/40 uppercase tracking-widest hover:text-titan-red hover:bg-titan-red/5 cursor-pointer transition-colors">{{ $tag }}</span>
                     @endforeach
                 </div>
+
+                <!-- PREVIOUS / NEXT ARTICLE NAVIGATION -->
+                @if($prevArticle || $nextArticle)
+                <div class="mt-16 border-t border-b border-gray-100 py-8 grid grid-cols-1 md:grid-cols-2 gap-8 reveal-up">
+                    <div>
+                        @if($prevArticle)
+                            <a href="/news/{{ $prevArticle['slug'] }}" class="group block">
+                                <div class="text-[9px] font-black text-titan-navy/30 uppercase tracking-[0.2em] mb-2 group-hover:text-titan-red transition-colors">{{ __('Previous Article') }}</div>
+                                <h4 class="text-lg font-black text-titan-navy leading-tight group-hover:text-titan-red transition-colors">{{ $prevArticle['title'] }}</h4>
+                            </a>
+                        @endif
+                    </div>
+                    <div class="md:text-right">
+                        @if($nextArticle)
+                            <a href="/news/{{ $nextArticle['slug'] }}" class="group block">
+                                <div class="text-[9px] font-black text-titan-navy/30 uppercase tracking-[0.2em] mb-2 group-hover:text-titan-red transition-colors">{{ __('Next Article') }}</div>
+                                <h4 class="text-lg font-black text-titan-navy leading-tight group-hover:text-titan-red transition-colors">{{ $nextArticle['title'] }}</h4>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 
@@ -366,7 +464,7 @@
                         </h2>
                     </div>
                     <a href="/news"
-                        class="w-12 h-12 bg-titan-navy text-white flex items-center justify-center hover:bg-titan-red transition-all group">
+                        class="w-12 h-12 bg-titan-navy text-white rounded-xl flex items-center justify-center hover:bg-titan-red transition-all group">
                         <x-lucide-arrow-right class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </a>
                 </div>
@@ -374,8 +472,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                     @foreach($relatedArticles as $rel)
                         <a href="/news/{{ $rel['slug'] }}"
-                            class="group block overflow-hidden transform hover:-translate-y-2 transition-all duration-500">
-                            <div class="aspect-[16/10] bg-titan-navy relative overflow-hidden mb-6">
+                            class="group block overflow-hidden transform hover:-translate-y-2 transition-all duration-500 rounded-2xl">
+                            <div class="aspect-[16/10] bg-titan-navy relative overflow-hidden mb-6 rounded-2xl">
                                 <img src="{{ ($rel['image'] && \Illuminate\Support\Facades\Storage::disk('public')->exists($rel['image'])) ? \Illuminate\Support\Facades\Storage::url($rel['image']) : '/images/projects/Thumbnail-' . ($loop->index + 1) . '.jpg' }}"
                                     class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110" loading="lazy" />
                             </div>

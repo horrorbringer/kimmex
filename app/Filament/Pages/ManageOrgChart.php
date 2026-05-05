@@ -83,6 +83,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
     public function loadChartData()
     {
         $this->chartData = $this->buildTree();
+        $this->dispatch('chartUpdated');
     }
 
     protected function buildTree($parentId = null)
@@ -106,8 +107,12 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
     public function saveOrder($data)
     {
-        // Recursive function to update hierarchy from flattened Sortable data
         $this->updateHierarchy($data);
+
+        // Clear cache for both English and Khmer
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_kh');
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
 
         Notification::make()
             ->title(__('Saved successfully'))

@@ -22,12 +22,18 @@ class FormController extends Controller
             'phone' => 'nullable|string|max:50',
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:10240',
         ]);
 
         // 2. Sanitize Inputs
-        $sanitized = collect($validated)->map(function ($value) {
+        $sanitized = collect($validated)->except('attachment')->map(function ($value) {
             return is_string($value) ? strip_tags($value) : $value;
         })->all();
+
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+        }
 
         Inquiry::create([
             'name' => $sanitized['first_name'] . ' ' . $sanitized['last_name'],
@@ -35,6 +41,7 @@ class FormController extends Controller
             'phone' => $sanitized['phone'],
             'subject' => $sanitized['subject'] ?? 'Website Inquiry',
             'message' => $sanitized['message'],
+            'attachment_url' => $attachmentPath,
             'status' => 'NEW',
         ]);
 

@@ -126,55 +126,52 @@
             }
         </style>
 
-        <!-- === HERO SECTION (Design-Z Elite) === -->
-        <section
-            class="relative z-10 flex items-center justify-center overflow-hidden bg-[#1a1a2e] min-h-[85vh] projects-hero-container">
-            <!-- Cinematic Background -->
-            <div class="absolute inset-0 scale-105">
-                <img src="/images/projects/Thumbnail-5.jpg" alt="Kimmex Built Legacy"
-                    class="w-full h-full object-cover opacity-60 blur-[0.5px]" />
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/80 via-titan-navy/30 to-transparent">
-                </div>
+        <!-- === PREMIUM PROJECTS HERO === -->
+        <section class="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+            {{-- Background Zoom Animation --}}
+            <div class="absolute inset-0">
+                <img src="/images/projects/Thumbnail-5.jpg" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                {{-- Deep multi-stage gradient for maximum text contrast --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+                <div class="absolute inset-0 bg-black/20"></div>
             </div>
 
             <!-- Decorative Elements -->
-            <div
-                class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
-            </div>
-            <div
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px] bg-titan-red/5 rounded-full blur-[150px] pointer-events-none">
-            </div>
+            <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
-            <div class="relative z-20 text-center px-6 max-w-7xl pt-24" x-data="{ shown: false }"
-                x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100' : 'opacity-0'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-5 py-2.5 bg-white/5 backdrop-blur-xl rounded-lg border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12 shadow-2xl">
+            <div class="relative z-20 text-center px-6 max-w-7xl pt-24" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12">
                     <span class="relative flex h-2 w-2">
-                        <span
-                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-titan-red"></span>
                     </span>
-                    <span>{{ __('Portfolio Showcase') }}</span>
+                    <span>{{ strtoupper(__('Portfolio Showcase')) }}</span>
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 delay-300 text-5xl md:text-8xl font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase">
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                    class="transition-all duration-1000 delay-300 text-5xl md:text-8xl font-black text-white mb-10 leading-[0.9] tracking-tighter uppercase">
                     {{ __('BUILT') }} <span class="text-titan-red">{{ __('LEGACY') }}</span>
                 </h1>
 
-                <p :class="shown ? 'opacity-100' : 'opacity-0' "
-                    class="transition-all duration-1000 delay-500 text-[10px] md:text-xs text-white/40 max-w-2xl mx-auto leading-loose font-bold uppercase tracking-[0.4em] mb-16">
-                    {{ __('Architecting the future through engineering precision.') }}
-                </p>
+                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6 mb-16">
+                    <div class="h-[1px] w-12 bg-white/30"></div>
+                    <p class="text-[10px] md:text-xs text-white/90 font-bold uppercase tracking-[0.4em]">
+                        {{ __('Architecting the future through engineering precision.') }}
+                    </p>
+                    <div class="h-[1px] w-12 bg-white/30"></div>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-700 flex flex-col items-center gap-4 cursor-pointer group"
+                    onclick="document.getElementById('portfolio-grid').scrollIntoView({ behavior: 'smooth' })">
+                    <span class="text-[9px] uppercase tracking-[0.4em] font-black text-white/40 group-hover:text-titan-red transition-colors">{{ __('Scroll') }}</span>
+                    <div class="w-[1px] h-16 bg-gradient-to-b from-titan-red to-transparent"></div>
+                </div>
             </div>
 
-            <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer group z-20"
-                onclick="document.getElementById('portfolio-grid').scrollIntoView({ behavior: 'smooth' })">
-                <span
-                    class="text-[9px] uppercase tracking-[0.4em] font-black text-white/30 group-hover:text-white transition-colors">{{ __('Scroll') }}</span>
-                <div class="w-[1px] h-12 bg-gradient-to-b from-titan-red to-transparent"></div>
-            </div>
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
         </section>
 

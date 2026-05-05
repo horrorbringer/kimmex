@@ -8,14 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @php
-        $siteName = config('app.name', 'Kimmex CMS');
+        $profile = $globalSettings['profile'] ?? [];
+        $siteLocale = $siteLocale ?? app()->getLocale();
+        $siteName = $profile[$siteLocale]['company_name'] ?? $profile['en']['company_name'] ?? config('app.name', 'KIMMEX');
+        $logo = $profile['logo'] ?? null;
+        $faviconUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('favicon.ico');
+        
         $pageTitle = $title ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
-        $pageImage = $image ?? asset('logo.png');
+        $pageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('logo.png'));
     @endphp
 
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
+    <link rel="icon" href="{{ $faviconUrl }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -29,12 +35,17 @@
     <meta property="twitter:description" content="{{ $pageDesc }}">
     <meta property="twitter:image" content="{{ $pageImage }}">
 
-    <!-- Fonts -->
+    <!-- Fonts (non-render-blocking) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;700;900&family=Kantumruy+Pro:wght@100..700&family=Hanuman:wght@400;700;900&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;700;900&family=Kantumruy+Pro:wght@100..700&family=Hanuman:wght@400;700;900&display=swap"
+            rel="stylesheet">
+    </noscript>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

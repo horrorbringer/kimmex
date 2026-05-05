@@ -28,7 +28,17 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName(fn() => auth()->user()?->isAdmin() ? 'Kimmex Admin' : 'Kimmex Editor')
+            ->brandName(fn() => \App\Models\SystemSetting::get('organization_profile', [])['en']['company_name'] ?? 'Kimmex Admin')
+            ->brandLogo(function() {
+                $logo = \App\Models\SystemSetting::get('organization_profile', [])['logo'] ?? null;
+                $url = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('logo.png');
+                return new \Illuminate\Support\HtmlString("<img src='{$url}' alt='Logo' style='height: 2.5rem; width: auto; object-fit: contain;'>");
+            })
+            ->favicon(function() {
+                $logo = \App\Models\SystemSetting::get('organization_profile', [])['logo'] ?? null;
+                return $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('favicon.ico');
+            })
+            ->brandLogoHeight('2.5rem')
             ->homeUrl('/')
             ->navigationItems([
                 \Filament\Navigation\NavigationItem::make(__('Visit Website'))
@@ -50,6 +60,9 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                \App\Filament\Widgets\StatsOverview::class,
+                \App\Filament\Widgets\LatestInquiriesWidget::class,
+                \App\Filament\Widgets\LatestJobApplicationsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

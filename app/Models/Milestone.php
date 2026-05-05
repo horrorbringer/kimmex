@@ -25,4 +25,17 @@ class Milestone extends Model
     protected $casts = [
         'isActive' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::saved(fn () => static::clearMilestoneCache());
+        static::deleted(fn () => static::clearMilestoneCache());
+    }
+
+    protected static function clearMilestoneCache()
+    {
+        \Illuminate\Support\Facades\Cache::forget('about_milestones_data_en');
+        \Illuminate\Support\Facades\Cache::forget('about_milestones_data_kh');
+        \Illuminate\Support\Facades\Cache::forget('about_milestones_data_km');
+    }
 }

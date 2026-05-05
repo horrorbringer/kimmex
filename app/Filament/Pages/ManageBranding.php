@@ -105,13 +105,18 @@ class ManageBranding extends Page implements HasForms
                                 \Filament\Forms\Components\Select::make('icon')
                                     ->label(__('Icon'))
                                     ->options([
-                                        'lucide-shield' => 'Shield/Integrity',
-                                        'lucide-award' => 'Award/Excellence',
-                                        'lucide-handshake' => 'Handshake/Partnership',
-                                        'lucide-lightbulb' => 'Lightbulb/Innovation',
-                                        'lucide-heart' => 'Heart/Safety',
-                                        'lucide-trending-up' => 'Trending/Growth',
-                                    ])->searchable(),
+                                        'lucide-shield' => \Illuminate\Support\Facades\Blade::render('<x-lucide-shield style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Shield/Integrity',
+                                        'lucide-award' => \Illuminate\Support\Facades\Blade::render('<x-lucide-award style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Award/Excellence',
+                                        'lucide-handshake' => \Illuminate\Support\Facades\Blade::render('<x-lucide-handshake style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Handshake/Partnership',
+                                        'lucide-lightbulb' => \Illuminate\Support\Facades\Blade::render('<x-lucide-lightbulb style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Lightbulb/Innovation',
+                                        'lucide-heart' => \Illuminate\Support\Facades\Blade::render('<x-lucide-heart style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Heart/Safety',
+                                        'lucide-trending-up' => \Illuminate\Support\Facades\Blade::render('<x-lucide-trending-up style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Trending/Growth',
+                                        'lucide-users' => \Illuminate\Support\Facades\Blade::render('<x-lucide-users style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Team/People',
+                                        'lucide-target' => \Illuminate\Support\Facades\Blade::render('<x-lucide-target style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle; color: #0F172A;" />') . ' Target/Goal',
+                                    ])
+                                    ->allowHtml()
+                                    ->searchable()
+                                    ->prefixIcon(fn ($state) => $state),
                             ])
                             ->columns(2)
                             ->itemLabel(fn(array $state): ?string => $state['title'] ?? null)

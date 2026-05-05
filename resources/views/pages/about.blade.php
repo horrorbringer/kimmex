@@ -222,18 +222,40 @@
         </div>
 
 
-        <!-- HERO SECTION -->
-        <section class="relative min-h-[75vh] flex items-center justify-center overflow-hidden bg-titan-navy">
+        <!-- === PREMIUM ABOUT HERO === -->
+        <section class="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+            {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="/images/hero/hero-1.jpg" alt="Construction" class="object-cover w-full h-full" />
-                <div class="absolute inset-0 bg-titan-navy/30"></div>
+                <img src="/images/hero/hero-1.jpg" alt="Construction Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                {{-- Deep multi-stage gradient for maximum text contrast --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+                <div class="absolute inset-0 bg-black/20"></div>
             </div>
-            <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-20">
-                <h1
-                    class="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white mb-6 tracking-tight leading-tight uppercase">
-                    {{ __('BUILDING') }}<br /><span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
+
+            <div class="relative z-20 text-center max-w-5xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" 
+                     class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-bold uppercase tracking-[0.3em] mb-12">
+                    <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
+                    <span>{{ strtoupper(__('Our Legacy & Vision')) }}</span>
+                </div>
+
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
+                    class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[7rem] font-black text-white mb-10 leading-[0.9] tracking-tighter uppercase">
+                    {{ __('BUILDING') }}<br />
+                    <span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
                 </h1>
+
+                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
+                    <div class="h-[1px] w-12 bg-white/30"></div>
+                    <p class="text-sm md:text-base text-white/90 font-bold uppercase tracking-[0.4em]">
+                        {{ __('Precision. Integrity. Excellence.') }}
+                    </p>
+                    <div class="h-[1px] w-12 bg-white/30"></div>
+                </div>
             </div>
+
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         <!-- STATS BAR -->
@@ -292,7 +314,7 @@
 
                                 <!-- Floating 25+ Years Badge -->
                                 <div
-                                    class="absolute -bottom-6 -right-6 bg-accent-orange text-white p-8 rounded-3xl shadow-[0_20px_40px_rgba(255,107,0,0.3)] z-20 flex flex-col items-center justify-center min-w-[140px] transform hover:scale-105 transition-transform">
+                                    class="absolute -bottom-6 -right-6 bg-titan-red text-white p-8 rounded-3xl shadow-[0_20px_40px_rgba(227,30,36,0.3)] z-20 flex flex-col items-center justify-center min-w-[140px] transform hover:scale-105 transition-transform">
                                     <span class="text-4xl font-black leading-none">25+</span>
                                     <span
                                         class="text-[10px] font-black uppercase tracking-[0.2em] mt-1">{{ __('Years') }}</span>
@@ -306,7 +328,7 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 delay-200">
-                    <span class="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">
+                    <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">
                         {{ __('WHO WE ARE') }}
                     </span>
                     <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
@@ -353,8 +375,8 @@
                              @click="active = (active === '{{ $item['id'] }}' ? null : '{{ $item['id'] }}')">
                             <div class="flex gap-6 items-start">
                                 <!-- Icon Box -->
-                                <div class="w-14 h-14 rounded-[1rem] bg-[#FFF0E6] text-accent-orange flex items-center justify-center shrink-0 transition-colors duration-500"
-                                     :class="active === '{{ $item['id'] }}' ? 'bg-accent-orange text-white' : ''">
+                                <div class="w-14 h-14 rounded-[1rem] bg-titan-red/10 text-titan-red flex items-center justify-center shrink-0 transition-colors duration-500"
+                                     :class="active === '{{ $item['id'] }}' ? 'bg-titan-red text-white' : ''">
                                     @if($item['icon'] === 'eye')
                                         <x-lucide-eye class="w-6 h-6" stroke-width="2" />
                                     @elseif($item['icon'] === 'flag')
@@ -368,11 +390,11 @@
                                 <div class="flex-grow">
                                     <div class="flex items-center justify-between mb-2">
                                         <h3 class="text-xl font-bold text-gray-900 transition-colors duration-500"
-                                            :class="active === '{{ $item['id'] }}' ? 'text-accent-orange' : ''">
+                                            :class="active === '{{ $item['id'] }}' ? 'text-titan-red' : ''">
                                             {{ $item['title'] }}
                                         </h3>
                                         <div class="w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500"
-                                             :class="active === '{{ $item['id'] }}' ? 'border-accent-orange text-accent-orange rotate-180' : 'border-gray-200 text-gray-400'">
+                                             :class="active === '{{ $item['id'] }}' ? 'border-titan-red text-titan-red rotate-180' : 'border-gray-200 text-gray-400'">
                                             <x-lucide-chevron-down class="w-4 h-4" />
                                         </div>
                                     </div>
@@ -462,11 +484,11 @@
                             <div
                                 class="bg-gray-50/50 p-10 rounded-[2.5rem] border-2 border-transparent hover:border-gray-100 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/30 group transition-all duration-500 h-full">
                                 <div
-                                    class="w-16 h-16 bg-accent-orange/5 rounded-2xl flex items-center justify-center text-accent-orange mb-8 group-hover:bg-accent-orange group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-accent-orange/30">
+                                    class="w-16 h-16 bg-titan-red/5 rounded-2xl flex items-center justify-center text-titan-red mb-8 group-hover:bg-titan-red group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-titan-red/30">
                                     <x-dynamic-component :component="$value['icon']" class="w-7 h-7" />
                                 </div>
                                 <h3
-                                    class="text-xl font-heading font-black text-titan-navy mb-4 group-hover:text-accent-orange transition-colors duration-500">
+                                    class="text-xl font-heading font-black text-titan-navy mb-4 group-hover:text-titan-red transition-colors duration-500">
                                     {{ $value['title'] }}
                                 </h3>
                                 <p class="text-sm text-titan-navy/50 leading-relaxed font-medium">
@@ -484,7 +506,7 @@
             <div class="max-w-[1400px] mx-auto">
                 <div class="text-center mb-24">
                     <span
-                        class="text-accent-orange font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('OUR JOURNEY') }}</span>
+                        class="text-titan-red font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('OUR JOURNEY') }}</span>
                     <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase tracking-tight">
                         {{ __('Company Milestones') }}
                     </h2>
@@ -565,7 +587,7 @@
             <div class="max-w-[1700px] mx-auto relative z-10 overflow-x-auto pb-12">
                 <div class="text-center mb-24">
                     <span
-                        class="text-accent-orange font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('GOVERNANCE') }}</span>
+                        class="text-titan-red font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('GOVERNANCE') }}</span>
                     <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase tracking-tight">
                         {{ __('KIM MEX ORGANIZATION STRUCTURE') }}
                     </h2>

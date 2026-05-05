@@ -52,85 +52,64 @@
     }
 }" class="bg-white min-h-screen text-titan-navy">
 
-        <!-- HERO -->
-        <section class="relative z-10 flex items-center overflow-hidden bg-titan-navy" style="min-height: 80vh;">
+        <!-- === PREMIUM CAREERS HERO === -->
+        <section class="relative h-[75vh] min-h-[600px] flex items-center overflow-hidden bg-titan-navy shadow-2xl">
+            {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <!-- Background Image with slight scale for depth -->
-                <img src="/images/projects/Thumbnail-5.jpg" alt="Careers at Kimmex"
-                    class="w-full h-full object-cover opacity-100 transform scale-105" />
-
-                <!-- Sleek Gradient Overlays -->
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/50 to-titan-navy/10">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/80 via-transparent to-transparent"></div>
-
-                <!-- Soft red radial glow to draw focus -->
-                <div
-                    class="absolute top-[20%] left-[10%] w-[600px] h-[600px] bg-titan-red/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen">
-                </div>
+                <img src="/images/projects/Thumbnail-5.jpg" alt="Careers Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                {{-- Deep multi-stage gradient for maximum text contrast --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+                <div class="absolute inset-0 bg-black/20"></div>
             </div>
 
-            <div class="relative z-20 w-full max-w-[1200px] mx-auto px-6 pt-[160px] pb-24">
-                <div x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                    <!-- Premium Glassmorphism Badge -->
-                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'"
-                        class="transition-all duration-1000 delay-100 inline-flex items-center gap-4 px-5 py-2.5 bg-white/5 backdrop-blur-xl rounded-full text-white text-[11px] font-black uppercase tracking-[0.25em] mb-10 border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.3)]">
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span
-                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
-                            <span
-                                class="relative inline-flex rounded-full h-2.5 w-2.5 bg-titan-red shadow-[0_0_10px_rgba(255,42,0,0.8)]"></span>
-                        </span>
-                        {{ __('We are Hiring') }}
-                    </div>
+            <div class="relative z-20 w-full max-w-[1240px] mx-auto px-6 pt-20" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <!-- Premium Glassmorphism Badge -->
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-4 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.25em] mb-12">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-titan-red shadow-[0_0_10px_rgba(227,30,36,0.8)]"></span>
+                    </span>
+                    {{ __('Join Our Elite Team') }}
+                </div>
 
-                    <!-- Striking Typography with soft red gradient -->
-                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                        class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.95] tracking-tight uppercase"
-                        style="font-size: clamp(3rem, 9vw, 6.5rem);">
-                        {{ __('Build Your') }}<br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-[#ff5533]"
-                            style="filter: drop-shadow(0 10px 20px rgba(255,42,0,0.2));">{{ __('Career') }}</span>
-                    </h1>
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-10 leading-[0.95] tracking-tight uppercase"
+                    style="font-size: clamp(3.5rem, 9vw, 7.5rem);">
+                    {{ __('BUILD YOUR') }}<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-red-400">{{ __('LEGACY') }}</span>
+                </h1>
 
-                    <!-- Refined Lead Text with border accent -->
-                    <p :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                        class="transition-all duration-1000 delay-500 text-lg md:text-xl text-white/70 max-w-2xl font-light leading-relaxed border-l-[3px] border-titan-red/50 pl-6 mb-12">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" 
+                     class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-8 mb-16 max-w-2xl">
+                    <p class="text-lg md:text-xl text-white/90 font-medium leading-relaxed">
                         {{ __('Join a team of visionaries shaping the skyline and engineering future of Cambodia. We value excellence, impact, and continuous growth.') }}
                     </p>
+                </div>
 
-                    <!-- Upgraded Buttons -->
-                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                        class="transition-all duration-1000 delay-700 flex flex-col sm:flex-row items-stretch sm:items-center gap-5">
+                <!-- Upgraded Action Buttons -->
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+                    class="transition-all duration-1000 delay-700 flex flex-wrap gap-6">
+                    <button @click="document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })"
+                        class="bg-titan-red text-white px-10 py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-2xl hover:shadow-titan-red/40 hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6">
+                        <span>{{ __('Explore Roles') }}</span>
+                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                            <x-lucide-arrow-down class="w-4 h-4" />
+                        </div>
+                    </button>
 
-                        <button @click="document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })"
-                            class="relative group overflow-hidden bg-gradient-to-r from-titan-red to-[#cc2200] text-white px-8 py-5 md:px-10 rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-[0_20px_40px_rgba(255,42,0,0.25)] hover:shadow-[0_20px_50px_rgba(255,42,0,0.4)] hover:-translate-y-1 transition-all duration-500 flex items-center justify-between sm:justify-center gap-6 border border-titan-red/50">
-                            <div
-                                class="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-in-out z-0">
-                            </div>
-                            <span class="relative z-10">{{ __('View Openings') }}</span>
-                            <div
-                                class="relative z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-titan-red transition-colors duration-300 shadow-inner">
-                                <x-lucide-arrow-down
-                                    class="w-4 h-4 translate-y-[-1px] group-hover:translate-y-[2px] transition-transform duration-300" />
-                            </div>
-                        </button>
-
-                        <button @click="isApplyOpen = true"
-                            class="relative group bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-white/30 text-white px-8 py-5 md:px-10 rounded-2xl font-bold text-[12px] uppercase tracking-widest shadow-[0_20px_40px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all duration-500 flex items-center justify-between sm:justify-center gap-6">
-                            <span class="relative z-10">{{ __('General Application') }}</span>
-                            <div
-                                class="relative z-10 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-white/20 transition-all duration-300">
-                                <x-lucide-send
-                                    class="w-4 h-4 group-hover:translate-x-[2px] group-hover:-translate-y-[2px] transition-transform duration-300 text-white/80 group-hover:text-white" />
-                            </div>
-                        </button>
-
-                    </div>
+                    <button @click="isApplyOpen = true"
+                        class="glass-premium hover:bg-white/20 text-white px-10 py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6 border border-white/10">
+                        <span>{{ __('Direct Apply') }}</span>
+                        <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                            <x-lucide-send class="w-4 h-4" />
+                        </div>
+                    </button>
                 </div>
             </div>
 
-            <!-- Stats placeholder removed (Waiting for real data) -->
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         <!-- WHY JOIN US -->

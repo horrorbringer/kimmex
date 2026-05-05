@@ -260,7 +260,7 @@
                     @endforeach
                 </div>
 
-                <div class="mt-8 p-6 bg-accent-orange/10 rounded-xl border border-accent-orange/20">
+                <div class="mt-8 p-6 bg-titan-red/10 rounded-xl border border-titan-red/20">
                     <p class="text-titan-navy/80 text-sm leading-relaxed">
                         <strong class="text-titan-navy font-black">{{ __('To exercise these rights:') }}</strong>
                         {{ __('Contact us at privacy@kimmex.com.kh with your request. We will respond within 30 days.') }}

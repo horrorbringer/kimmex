@@ -268,17 +268,19 @@
                     <!-- Share Role -->
                     <div class="p-8 border border-gray-100 rounded-3xl space-y-6">
                          <h4 class="text-xs font-black text-titan-navy uppercase tracking-widest">{{ __('Share this role') }}</h4>
-                         <div class="flex gap-3">
-                            <a href="#" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
-                                <x-lucide-link class="w-4 h-4" />
-                            </a>
-                            <a href="#" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
-                                <x-lucide-facebook class="w-4 h-4" />
-                            </a>
-                             <a href="#" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
-                                <x-lucide-linkedin class="w-4 h-4" />
-                            </a>
-                         </div>
+                          <div class="flex gap-3">
+                             <a href="#" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-titan-navy hover:text-white transition-all">
+                                 <x-lucide-link class="w-4 h-4" />
+                             </a>
+                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank"
+                                 class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-all">
+                                 <x-lucide-facebook class="w-4 h-4" />
+                             </a>
+                              <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank"
+                                 class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-[#0A66C2] hover:text-white transition-all">
+                                 <x-lucide-linkedin class="w-4 h-4" />
+                             </a>
+                          </div>
                     </div>
 
                     <!-- Quick Info -->

@@ -3,6 +3,7 @@
 @php
     $hasChildren = isset($node['children']) && count($node['children']) > 0;
     $isCEO = $level === 0;
+    $childCount = $hasChildren ? count($node['children']) : 0;
     
     // Spacing and sizing based on small mode
     $nodeSpacing = $small ? 'mt-4' : 'mt-8';
@@ -24,16 +25,19 @@
 
     @if($hasChildren)
         <div class="{{ $nodeSpacing }} w-full relative">
-            @if(count($node['children']) > 1)
-                <div class="absolute top-0 left-[12.5%] right-[12.5%] h-[2px] bg-titan-red/20"></div>
-            @endif
-
-            <div class="grid grid-cols-1 md:grid-cols-{{ min(count($node['children']), 4) }} {{ $gapSize }} pt-0">
-                @foreach($node['children'] as $child)
+            <div class="grid grid-cols-1 md:grid-cols-{{ min($childCount, 4) }} {{ $gapSize }} pt-0">
+                @foreach($node['children'] as $index => $child)
                     <div class="relative {{ $paddingTop }} flex flex-col items-center">
-                        @if(count($node['children']) > 1)
-                            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] {{ $lineHeight }} bg-titan-red/20"></div>
+                        {{-- Horizontal 'Shoulder' Line --}}
+                        @if($childCount > 1)
+                            <div class="absolute top-0 h-[2px] bg-titan-red/20 
+                                {{ $index === 0 ? 'left-1/2 right-0' : ($index === $childCount - 1 ? 'left-0 right-1/2' : 'left-0 right-0') }}">
+                            </div>
                         @endif
+
+                        {{-- Vertical Connector to this child --}}
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] {{ $lineHeight }} bg-titan-red/20"></div>
+                        
                         <x-about.org-node :node="$child" :level="$level + 1" :small="$small" />
                     </div>
                 @endforeach

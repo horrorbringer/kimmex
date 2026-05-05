@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Inquiries\Schemas;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
+use Filament\Actions\Action;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
@@ -64,6 +65,23 @@ class InquiryForm
                             ->required()
                             ->rows(8)
                             ->columnSpanFull(),
+                    ]),
+
+                Section::make(__('Inquiry Attachment'))
+                    ->description(__('Files attached by the customer'))
+                    ->components([
+                        TextInput::make('attachment_url')
+                            ->label(__('Attachment File'))
+                            ->disabled()
+                            ->placeholder(__('No attachment provided'))
+                            ->suffixAction(
+                                Action::make('openAttachment')
+                                    ->icon('heroicon-m-arrow-top-right-on-square')
+                                    ->tooltip(__('Open Attachment'))
+                                    ->url(fn(?string $state): ?string => $state ? asset('storage/' . $state) : null)
+                                    ->openUrlInNewTab()
+                                    ->visible(fn(?string $state): bool => (bool) $state)
+                            ),
                     ]),
             ]);
     }

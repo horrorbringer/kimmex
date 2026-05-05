@@ -2,35 +2,40 @@
 
     <div class="bg-white min-h-screen text-titan-navy">
 
-        <!-- HERO -->
-        <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy"
-            style="min-height: 480px;">
+        <!-- === PREMIUM CONTACT HERO === -->
+        <section class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+            {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-3.jpg" alt="Contact"
-                    class="w-full h-full object-cover opacity-50" />
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/50 via-titan-navy/30 to-titan-navy/80">
-                </div>
+                <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                {{-- Deep multi-stage gradient for maximum text contrast --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+                <div class="absolute inset-0 bg-black/20"></div>
             </div>
 
-            <div class="relative z-20 text-center max-w-4xl px-6 pt-[100px]" x-data="{ shown: false }"
-                x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'"
-                    class="transition-all duration-700 delay-100 inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 backdrop-blur-sm rounded-full text-white/80 text-[11px] font-bold uppercase tracking-widest mb-8 border border-white/10">
-                    <x-lucide-mail class="w-3.5 h-3.5 text-titan-red" />
-                    {{ __('Contact') }}
+            <div class="relative z-20 text-center max-w-5xl px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12">
+                    <x-lucide-mail class="w-4 h-4 text-titan-red animate-pulse" />
+                    <span>{{ strtoupper(__('Get in Touch')) }}</span>
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-700 delay-300 font-black text-white mb-6 leading-none tracking-tighter uppercase"
-                    style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
-                    {{ __('Get In Touch') }}
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                    class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[6.5rem] font-black text-white mb-10 leading-[0.9] tracking-tighter uppercase">
+                    {{ __('CONNECT') }}<br />
+                    <span class="text-titan-red">{{ __('WITH US') }}</span>
                 </h1>
 
-                <p :class="shown ? 'opacity-100' : 'opacity-0'"
-                    class="transition-all duration-700 delay-500 text-base text-white/40 max-w-xl mx-auto leading-relaxed">
-                    {{ __('Have a project in mind? Our team is ready to bring your vision to life.') }}
-                </p>
+                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
+                    <div class="h-[1px] w-12 bg-white/30"></div>
+                    <p class="text-sm md:text-base text-white/90 font-bold uppercase tracking-[0.4em]">
+                        {{ __('Building Relationships. Building Future.') }}
+                    </p>
+                    <div class="h-[1px] w-12 bg-white/30"></div>
+                </div>
             </div>
+
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         @php

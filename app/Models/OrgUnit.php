@@ -27,6 +27,19 @@ class OrgUnit extends Model
         'isActive' => 'boolean',
     ];
 
+    protected static function booted()
+    {
+        static::saved(fn () => static::clearOrgCache());
+        static::deleted(fn () => static::clearOrgCache());
+    }
+
+    protected static function clearOrgCache()
+    {
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_kh');
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
+    }
+
     public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(OrgUnit::class, 'parentId');
@@ -46,10 +59,14 @@ class OrgUnit extends Model
     {
         $path = [$this->getTranslation('title', app()->getLocale())];
         $parent = $this->parent;
+        $seen = [$this->id];
+        $depth = 0;
 
-        while ($parent) {
+        while ($parent && !in_array($parent->id, $seen) && $depth < 20) {
             array_unshift($path, $parent->getTranslation('title', app()->getLocale()));
+            $seen[] = $parent->id;
             $parent = $parent->parent;
+            $depth++;
         }
 
         return implode(' > ', $path);

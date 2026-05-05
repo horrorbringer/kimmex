@@ -1,26 +1,26 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-    $projectsDb = \Illuminate\Support\Facades\Cache::remember('home_projects_'.app()->getLocale(), now()->addHours(12), function() {
-        return \App\Models\Project::where('isActive', true)
+    $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.app()->getLocale(), now()->addHours(12), function() {
+        $projectsDb = \App\Models\Project::where('isActive', true)
             ->with('projectCategory')
             ->orderBy('isFeatured', 'desc')
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->get();
-    });
 
-    $projects = $projectsDb->map(function ($p) {
-        return [
-            'slug' => $p->slug,
-            'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
-                ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                : null,
-            'type' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale()) : ($p->category ?: __('Infrastructure')),
-            'title' => $p->getTranslation('title', app()->getLocale()),
-            'location' => $p->getTranslation('location', app()->getLocale()),
-            'status' => strtoupper($p->status->value ?? $p->status ?? 'COMPLETED'),
-        ];
-    })->toArray();
+        return $projectsDb->map(function ($p) {
+            return [
+                'slug' => $p->slug,
+                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
+                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
+                    : null,
+                'type' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale()) : ($p->category ?: __('Infrastructure')),
+                'title' => $p->getTranslation('title', app()->getLocale()),
+                'location' => $p->getTranslation('location', app()->getLocale()),
+                'status' => strtoupper($p->status->value ?? $p->status ?? 'COMPLETED'),
+            ];
+        })->toArray();
+    });
 
     // Fallback if no projects in DB
     if (empty($projects)) {
@@ -39,11 +39,11 @@
             class="flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000">
             <div>
                 <span
-                    class="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our Portfolio') }}</span>
+                    class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our Portfolio') }}</span>
                 <h2 class="text-4xl font-heading font-black text-titan-navy">{{ __('Featured Projects') }}</h2>
             </div>
             <a href="/projects"
-                class="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
+                class="mt-6 md:mt-0 inline-flex items-center gap-2 text-titan-red font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
                 {{ __('View All Projects') }} <x-lucide-arrow-right class="w-4 h-4" />
             </a>
         </div>
@@ -60,20 +60,20 @@
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
                                     class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                             @else
-                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)]"></div>
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
                             @endif
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent z-10">
                             </div>
                             <div class="absolute top-4 left-4 z-20">
                                 <span
-                                    class="bg-accent-orange text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded">
+                                    class="bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded">
                                     {{ $p['type'] }}
                                 </span>
                             </div>
                             <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                                 <h3
-                                    class="text-white text-2xl font-heading font-bold mb-2 group-hover:text-accent-orange transition-colors">
+                                    class="text-white text-2xl font-heading font-bold mb-2 group-hover:text-titan-red transition-colors">
                                     {{ $p['title'] }}
                                 </h3>
                                 <div class="flex items-center gap-4 text-white/60 text-sm">

@@ -25,4 +25,17 @@ class Partner extends Model
     protected $casts = [
         'isActive' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('home_partners_array');
+            \Illuminate\Support\Facades\Cache::forget('home_partners_array_v2');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('home_partners_array');
+            \Illuminate\Support\Facades\Cache::forget('home_partners_array_v2');
+        });
+    }
 }

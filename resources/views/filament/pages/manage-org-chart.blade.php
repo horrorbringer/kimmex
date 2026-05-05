@@ -94,9 +94,22 @@
                 position: absolute;
                 left: 0;
                 top: -0.75rem;
-                bottom: 2rem;
+                bottom: 1.75rem; /* Terminates at the last child's hook */
                 width: 2px;
                 border-left: 2px dashed #e2e8f0;
+            }
+
+            /* Horizontal Hook for children */
+            .node-card { position: relative; }
+            .node-children .node-card::before {
+                content: '';
+                position: absolute;
+                left: -1.5rem;
+                top: 50%;
+                width: 1.5rem;
+                height: 2px;
+                border-top: 2px dashed #e2e8f0;
+                transform: translateY(-50%);
             }
             
             /* Action Buttons */
@@ -140,8 +153,13 @@
                     <x-heroicon-o-magnifying-glass class="org-icon-md" />
                     <span class="font-black uppercase tracking-[0.3em] text-xs">{{ __('MANAGEMENT') }}</span>
                 </div>
-                <button class="org-btn-primary">
-                    {{ __('Save Display Order') }}
+                <button 
+                    onclick="triggerSave()" 
+                    class="org-btn-primary flex items-center gap-2"
+                    id="save-btn"
+                >
+                    <span id="save-btn-text">{{ __('Save Display Order') }}</span>
+                    <div id="save-spinner" class="hidden animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
                 </button>
             </div>
 
@@ -156,33 +174,63 @@
                 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
                 <script>
                     document.addEventListener('livewire:load', function () {
+                        const initAll = () => {
+                            initSortable(document.querySelector('[x-ref="treeRoot"]'));
+                            document.querySelectorAll('.children-container').forEach(initSortable);
+                        };
+
                         const initSortable = (el) => {
-                            new Sortable(el, {
+                            if (!el || el.sortable) return;
+                            el.sortable = new Sortable(el, {
                                 group: 'nested',
                                 animation: 150,
                                 fallbackOnBody: true,
                                 swapThreshold: 0.65,
                                 handle: '.cursor-grab',
+                                ghostClass: 'bg-titan-navy/5',
                                 onEnd: function (evt) {
-                                    let data = serializeTree(document.querySelector('[x-ref="treeRoot"]'));
-                                    @this.call('saveOrder', data);
+                                    // Optional: Mark as dirty
                                 }
                             });
                         };
 
                         const serializeTree = (root) => {
-                            return Array.from(root.children).map(el => {
-                                const id = el.getAttribute('data-id');
-                                const childContainer = el.querySelector('.children-container');
-                                return {
-                                    id: id,
-                                    children: childContainer ? serializeTree(childContainer) : []
-                                };
+                            if (!root) return [];
+                            return Array.from(root.children)
+                                .filter(el => el.hasAttribute('data-id'))
+                                .map(el => {
+                                    const id = el.getAttribute('data-id');
+                                    const childContainer = el.querySelector('.children-container');
+                                    return {
+                                        id: id,
+                                        children: childContainer ? serializeTree(childContainer) : []
+                                    };
+                                });
+                        };
+
+                        window.triggerSave = function() {
+                            const btn = document.getElementById('save-btn');
+                            const text = document.getElementById('save-btn-text');
+                            const spinner = document.getElementById('save-spinner');
+
+                            btn.disabled = true;
+                            text.innerText = "{{ __('Saving...') }}";
+                            spinner.classList.remove('hidden');
+
+                            let data = serializeTree(document.querySelector('[x-ref="treeRoot"]'));
+                            @this.call('saveOrder', data).then(() => {
+                                btn.disabled = false;
+                                text.innerText = "{{ __('Save Display Order') }}";
+                                spinner.classList.add('hidden');
                             });
                         };
 
-                        initSortable(document.querySelector('[x-ref="treeRoot"]'));
-                        document.querySelectorAll('.children-container').forEach(initSortable);
+                        initAll();
+
+                        // Re-init after Livewire updates
+                        Livewire.on('chartUpdated', () => {
+                            setTimeout(initAll, 100);
+                        });
                     });
                 </script>
             @endpush

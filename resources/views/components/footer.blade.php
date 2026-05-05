@@ -2,9 +2,10 @@
     <div class="max-w-[1400px] mx-auto px-6 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-16">
             @php
-                $profile = \App\Models\SystemSetting::get('organization_profile', []);
-                $lang = app()->getLocale();
+                $profile = $globalSettings['profile'] ?? [];
+                $lang = $siteLocale;
                 $isKm = $lang === 'km';
+                $brand = $globalSettings['brand'] ?? [];
 
                 // Helper to get translated field or fallback to English
                 $getVal = function ($field, $default) use ($profile, $lang) {
@@ -13,9 +14,6 @@
                     }
                     return $profile[$field] ?? $default;
                 };
-
-                $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
-                $brand = $brandProfile[$lang] ?? ($brandProfile['en'] ?? []);
 
                 $companyName = $getVal('company_name', 'KIMMEX');
                 $address = $getVal('address', __('Phnom Penh, Cambodia'));
@@ -30,16 +28,15 @@
                 $googleMapsUrl = $profile['google_maps_url'] ?? '';
                 $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=');
                 $googleMapsLink = (!empty($googleMapsUrl) && !$isEmbed) ? $googleMapsUrl : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
-            @endphp
-            @php
+
                 $logo = $profile['logo'] ?? null;
                 $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
-                $tagline = $profile[$lang]['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
+                $tagline = $brand['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
             @endphp
             <!-- Column 1: Brand -->
             <div class="space-y-6">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-10 w-auto" />
+                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-10 w-auto object-contain" />
                     <div class="flex flex-col flex-1">
                         <span
                             class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
@@ -115,14 +112,22 @@
                     {{ __('Services') }}
                 </h4>
                 @php
-                    $footerServices = \App\Models\Service::where('isActive', true)->get();
+                    $footerServices = \Illuminate\Support\Facades\Cache::remember('footer_services_'.app()->getLocale(), now()->addHours(12), function() {
+                        return \App\Models\Service::where('isActive', true)
+                            ->get()
+                            ->map(fn($svc) => [
+                                'slug' => $svc->slug,
+                                'title' => $svc->getTranslation('title', app()->getLocale())
+                            ])
+                            ->all();
+                    });
                 @endphp
                 <ul class="space-y-4 text-sm text-white/50">
                     @foreach($footerServices as $fs)
-                        <li><a href="/services/{{ $fs->slug }}"
+                        <li><a href="/services/{{ $fs['slug'] }}"
                                 class="flex items-center gap-2 hover:text-accent-orange transition-all group">
                                 <span class="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>
-                                {{ $fs->getTranslation('title', app()->getLocale()) }}
+                                {{ $fs['title'] }}
                             </a>
                         </li>
                     @endforeach

@@ -30,10 +30,24 @@ class PolicyForm
                                 ->label(__('Slug'))
                                 ->unique(ignoreRecord: true)
                                 ->required(),
-                            TextInput::make('icon')
+                            \Filament\Forms\Components\Select::make('icon')
                                 ->label(__('Icon'))
-                                ->placeholder('heroicon-o-shield-check')
-                                ->helperText(__('Heroicon name (e.g., heroicon-o-shield-check)')),
+                                ->options([
+                                    'heroicon-o-shield-check' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-shield-check style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Safety & Security',
+                                    'heroicon-o-check-badge' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-check-badge style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Quality & Standards',
+                                    'heroicon-o-globe-alt' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-globe-alt style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Environmental',
+                                    'heroicon-o-finger-print' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-finger-print style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Ethics & Integrity',
+                                    'heroicon-o-lock-closed' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-lock-closed style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Privacy & Data',
+                                    'heroicon-o-document-text' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-document-text style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' General Policy',
+                                    'heroicon-o-user-group' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-user-group style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Governance & HR',
+                                    'heroicon-o-briefcase' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-briefcase style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Corporate/Business',
+                                    'heroicon-o-exclamation-triangle' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-exclamation-triangle style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Risk Management',
+                                    'heroicon-o-clipboard-document-check' => \Illuminate\Support\Facades\Blade::render('<x-heroicon-o-clipboard-document-check style="width: 18px; height: 18px; display: inline-block; margin-right: 8px; vertical-align: middle;" />') . ' Compliance',
+                                ])
+                                ->allowHtml()
+                                ->searchable()
+                                ->prefixIcon(fn ($state) => $state)
+                                ->placeholder(__('Select an icon')),
                             TextInput::make('sort_order')
                                 ->label(__('Order'))
                                 ->numeric()

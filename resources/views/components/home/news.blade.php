@@ -1,21 +1,31 @@
 @php
-    $newsDb = \Illuminate\Support\Facades\Cache::remember('home_news_'.app()->getLocale(), now()->addHours(12), function() {
-        return \App\Models\NewsArticle::where('isActive', true)
+    $allNews = \Illuminate\Support\Facades\Cache::remember('home_news_array_'.app()->getLocale(), now()->addHours(12), function() {
+        $newsDb = \App\Models\NewsArticle::where('isActive', true)
             ->where('publishedAt', '<=', now())
             ->orderBy('publishedAt', 'desc')
             ->take(3)
             ->get();
-    });
 
-    $allNews = $newsDb->map(function ($n) {
-        return [
-            'id' => $n->slug,
-        'image' => ($n->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($n->image)) ? \Illuminate\Support\Facades\Storage::url($n->image) : null,
-            'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-            'title' => $n->getTranslation('title', app()->getLocale()),
-            'category' => __('Updates'),
-        ];
-    })->toArray();
+        return $newsDb->map(function ($n) {
+            $imageUrl = null;
+            $cover = $n->coverImage;
+            if ($cover) {
+                if (\Illuminate\Support\Str::startsWith($cover, ['http', '/images'])) {
+                    $imageUrl = $cover;
+                } else {
+                    $imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($cover);
+                }
+            }
+
+            return [
+                'id' => $n->slug,
+                'image' => $imageUrl,
+                'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                'title' => $n->getTranslation('title', app()->getLocale()),
+                'category' => $n->getTranslation('category', app()->getLocale()) ?: __('Updates'),
+            ];
+        })->toArray();
+    });
 
     if (empty($allNews)) {
         $allNews = [
@@ -33,11 +43,11 @@
             class="flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000">
             <div>
                 <span
-                    class="text-accent-orange font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('News & Updates') }}</span>
+                    class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('News & Updates') }}</span>
                 <h2 class="text-4xl font-heading font-black text-titan-navy">{{ __('Latest Insights') }}</h2>
             </div>
             <a href="/news"
-                class="mt-6 md:mt-0 inline-flex items-center gap-2 text-accent-orange font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
+                class="mt-6 md:mt-0 inline-flex items-center gap-2 text-titan-red font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
                 {{ __('View All News') }} <x-lucide-arrow-right class="w-4 h-4" />
             </a>
         </div>
@@ -52,14 +62,14 @@
                         class="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
                         <div class="aspect-[16/10] relative overflow-hidden bg-titan-navy">
                             <div
-                                class="absolute top-4 left-4 bg-accent-orange text-white text-xs font-bold uppercase px-3 py-1 z-10 rounded">
+                                class="absolute top-4 left-4 bg-titan-red text-white text-xs font-bold uppercase px-3 py-1 z-10 rounded">
                                 {{ $news['category'] }}
                             </div>
                             @if($news['image'])
                                 <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
                                     class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                             @else
-                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.15)_0%,transparent_50%)] flex items-center justify-center">
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)] flex items-center justify-center">
                                     <x-lucide-newspaper class="w-12 h-12 text-white/10" />
                                 </div>
                             @endif

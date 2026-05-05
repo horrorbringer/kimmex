@@ -46,6 +46,23 @@ class NewsArticle extends Model
         'isActive' => 'boolean',
     ];
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            foreach (['en', 'km'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("home_news_array_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("news_index_data_{$locale}");
+            }
+        });
+
+        static::deleted(function () {
+            foreach (['en', 'km'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("home_news_array_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("news_index_data_{$locale}");
+            }
+        });
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->logAll()->logOnlyDirty();

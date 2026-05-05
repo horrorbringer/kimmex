@@ -1,64 +1,65 @@
 <div class="min-h-screen bg-white text-titan-navy">
 
-    <!-- === HERO / HEADER SECTION === -->
-    <section class="relative bg-titan-navy pt-[140px] pb-24 px-6 overflow-hidden">
-        <!-- New Cinematic Background (Brightened) -->
+    <!-- === PREMIUM KNOWLEDGE HUB HERO === -->
+    <section class="relative h-[65vh] min-h-[550px] flex items-center overflow-hidden bg-titan-navy shadow-2xl">
+        {{-- Background Zoom Animation --}}
         <div class="absolute inset-0">
-            <img src="{{ asset('images/heroes/documents-bg.png') }}" class="w-full h-full object-cover opacity-70"
-                alt="" />
-            <!-- Lighter Gradient Overlays -->
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/60 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/40 via-transparent to-transparent"></div>
+            <img src="{{ asset('images/heroes/documents-bg.png') }}" alt="Knowledge Hub" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+            {{-- Deep multi-stage gradient for maximum text contrast --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+            <div class="absolute inset-0 bg-black/20"></div>
         </div>
 
-        <!-- Decorative Glow (Brightened) -->
-        <div
-            class="absolute top-0 right-0 -mr-32 -mt-32 w-[600px] h-[600px] bg-accent-orange/20 blur-[150px] rounded-full pointer-events-none">
-        </div>
-
-        <div class="max-w-[1240px] mx-auto relative z-10">
-            <!-- Student Research Hub Badge -->
-            <div
-                class="inline-flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md rounded-full px-5 py-2.5 mb-10 shadow-xl">
-                <x-lucide-award class="w-4 h-4 text-accent-orange" />
+        <div class="max-w-[1240px] mx-auto w-full px-6 relative z-20" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+            <!-- Premium Glassmorphism Badge -->
+            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
+                class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 glass-premium px-6 py-3 mb-12 rounded-full">
+                <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
                 <span
-                    class="text-[11px] font-black uppercase tracking-[0.25em] text-white/90">{{ __('Kimmex Knowledge Hub') }}</span>
+                    class="text-[10px] font-black uppercase tracking-[0.3em] text-white/90">{{ __('Kimmex Knowledge Hub') }}</span>
             </div>
 
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
                 <!-- Title + Desc -->
-                <div class="max-w-2xl">
-                    <h1 class="font-black text-white uppercase leading-[0.9] tracking-tighter mb-6"
-                        style="font-size: clamp(3rem, 8vw, 6rem);">
-                        {{ __('DOC') }}<span class="text-accent-orange">.</span><br />
+                <div class="max-w-3xl">
+                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                        class="transition-all duration-1000 delay-300 font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
+                        style="font-size: clamp(3.5rem, 8vw, 6.5rem);">
+                        {{ __('KNOWLEDGE') }}<span class="text-titan-red">.</span><br />
                         <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('COLLECTION') }}</span>
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('RESOURCES') }}</span>
                     </h1>
-                    <p class="text-white/60 text-lg leading-relaxed max-w-lg font-medium">
-                        {{ __('Access our centralized repository of engineering standards, research papers, and corporate resources.') }}
-                    </p>
+                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                         class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-8">
+                        <p class="text-white/80 text-base md:text-lg leading-relaxed max-w-lg font-medium">
+                            {{ __('Access our centralized repository of engineering standards, research papers, and corporate resources.') }}
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Stats -->
-                <div
-                    class="flex items-end gap-10 shrink-0 bg-white/5 p-8 rounded-[2rem] backdrop-blur-sm border border-white/10">
+                <!-- Stats Grid (Premium Design) -->
+                <div :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-95'"
+                    class="transition-all duration-1000 delay-700 flex items-center gap-10 bg-white/5 p-10 rounded-[2.5rem] backdrop-blur-xl border border-white/10 shadow-2xl">
                     <div>
-                        <div class="text-5xl font-black text-accent-orange leading-none mb-2">{{ $totalDocuments }}<span
-                                class="text-white/30">+</span></div>
-                        <div class="text-[10px] font-black uppercase tracking-[0.25em] text-white/50">
+                        <div class="text-5xl font-black text-titan-red leading-none mb-3">{{ $totalDocuments }}<span
+                                class="text-white/30 font-light">+</span></div>
+                        <div class="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
                             {{ __('Documents') }}
                         </div>
                     </div>
-                    <div class="w-px h-12 bg-white/10"></div>
+                    <div class="w-px h-16 bg-white/10"></div>
                     <div>
-                        <div class="text-5xl font-black text-white leading-none mb-2">{{ $totalCategories }}</div>
-                        <div class="text-[10px] font-black uppercase tracking-[0.25em] text-white/50">
+                        <div class="text-5xl font-black text-white leading-none mb-3">{{ $totalCategories }}</div>
+                        <div class="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
                             {{ __('Categories') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- Decorative bottom edge --}}
+        <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
     </section>
 
     <!-- === FILTER + SEARCH BAR (CLEAN) === -->
@@ -97,7 +98,7 @@
             <div class="relative w-full md:w-72">
                 <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/30" />
                 <input type="text" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search records...') }}"
-                    class="w-full bg-titan-navy/[0.03] border-none rounded-xl pl-10 pr-4 py-2 text-xs text-titan-navy placeholder:text-titan-navy/20 focus:ring-1 focus:ring-accent-orange/30 transition-all font-bold" />
+                    class="w-full bg-titan-navy/[0.03] border-none rounded-xl pl-10 pr-4 py-2 text-xs text-titan-navy placeholder:text-titan-navy/20 focus:ring-1 focus:ring-titan-red/30 transition-all font-bold" />
             </div>
         </div>
     </section>
@@ -130,8 +131,8 @@
                 @endphp
                 <div @class([
                     'flex flex-col overflow-hidden transition-all duration-500 bg-white group border border-gray-100 relative',
-                    'md:col-span-2 lg:col-span-3 rounded-[2rem] border-accent-orange/10 !flex-row min-h-[380px] shadow-lg bg-gradient-to-br from-white to-gray-50/30' => $isFirstFeatured,
-                    'rounded-2xl h-full hover:shadow-xl hover:border-accent-orange/10' => !$isFirstFeatured
+                    'md:col-span-2 lg:col-span-3 rounded-[2rem] border-titan-red/10 !flex-row min-h-[380px] shadow-lg bg-gradient-to-br from-white to-gray-50/30' => $isFirstFeatured,
+                    'rounded-2xl h-full hover:shadow-xl hover:border-titan-red/10' => !$isFirstFeatured
                 ])>
 
                     <!-- Image/Thumbnail Container -->
@@ -147,7 +148,7 @@
                             <div class="absolute inset-0 w-full h-full bg-titan-navy/[0.01] flex items-center justify-center">
                                 <div class="absolute inset-0 bg-[radial-gradient(#00000005_1px,transparent_1px)] [background-size:10px_10px]"></div>
                                 <x-lucide-file-text @class([
-                                    'text-titan-navy/10 group-hover:scale-110 group-hover:text-accent-orange transition-all duration-700 relative z-10 opacity-30 drop-shadow-sm',
+                                    'text-titan-navy/10 group-hover:scale-110 group-hover:text-titan-red transition-all duration-700 relative z-10 opacity-30 drop-shadow-sm',
                                     'w-24 h-24' => $isFirstFeatured,
                                     'w-14 h-14' => !$isFirstFeatured
                                 ]) />
@@ -157,7 +158,7 @@
                         <!-- Top Badges -->
                         <div class="absolute top-4 left-4 z-20">
                             @if($doc->is_featured)
-                                <span class="bg-accent-orange text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-lg shadow-md">
+                                <span class="bg-titan-red text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-lg shadow-md">
                                     {{ __('FEATURED') }}
                                 </span>
                             @endif
@@ -172,7 +173,7 @@
                     ])>
                         <!-- Category Header -->
                         <div class="flex items-center gap-2.5 mb-3">
-                            <span class="text-[9px] font-black uppercase tracking-[0.15em] text-accent-orange">
+                            <span class="text-[9px] font-black uppercase tracking-[0.15em] text-titan-red">
                                 {{ $doc->documentCategory ? $doc->documentCategory->getTranslation('name', app()->getLocale()) : ($doc->category ?: __('RESOURCE')) }}
                             </span>
                             <span class="w-1 h-1 bg-gray-200 rounded-full"></span>
@@ -184,7 +185,7 @@
                         <!-- Title -->
                         <a href="/documents/{{ $doc->slug }}" class="block mb-3">
                             <h2 @class([
-                                'font-black text-titan-navy group-hover:text-accent-orange transition-colors duration-300 leading-[1.2] tracking-tight',
+                                'font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 leading-[1.2] tracking-tight',
                                 'text-3xl max-w-lg' => $isFirstFeatured,
                                 'text-lg line-clamp-2' => !$isFirstFeatured
                             ])>
@@ -213,12 +214,12 @@
                             <div class="flex items-center gap-3">
                                 @if($doc->fileUrl)
                                     <a href="{{ Storage::url($doc->fileUrl) }}" download @click.stop 
-                                        class="w-8 h-8 rounded-lg bg-gray-50 text-titan-navy/30 hover:bg-accent-orange hover:text-white flex items-center justify-center transition-all">
+                                        class="w-8 h-8 rounded-lg bg-gray-50 text-titan-navy/30 hover:bg-titan-red hover:text-white flex items-center justify-center transition-all">
                                         <x-lucide-download class="w-3.5 h-3.5" />
                                     </a>
                                 @endif
                                 <a href="/documents/{{ $doc->slug }}" 
-                                    class="inline-flex items-center gap-2 text-[10px] font-black text-titan-navy uppercase tracking-[0.2em] group/btn hover:text-accent-orange transition-colors">
+                                    class="inline-flex items-center gap-2 text-[10px] font-black text-titan-navy uppercase tracking-[0.2em] group/btn hover:text-titan-red transition-colors">
                                     <span>{{ __('View') }}</span>
                                     <x-lucide-arrow-right class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                                 </a>
@@ -247,7 +248,7 @@
     <section class="bg-titan-navy py-16 px-6">
         <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
             <div>
-                <div class="text-[10px] font-black text-accent-orange uppercase tracking-[0.4em] mb-4">
+                <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em] mb-4">
                     {{ __('Need Specific Files?') }}
                 </div>
                 <h3 class="text-3xl font-black text-white uppercase tracking-tight mb-3">
@@ -258,7 +259,7 @@
                 </p>
             </div>
             <a href="/contact"
-                class="inline-flex items-center gap-3 bg-accent-orange hover:bg-white hover:text-titan-navy text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl group">
+                class="inline-flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl group">
                 <x-lucide-mail class="w-4 h-4 group-hover:scale-110 transition-transform" />
                 {{ __('Request Support') }}
             </a>

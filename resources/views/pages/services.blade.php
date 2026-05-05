@@ -67,17 +67,17 @@ if (empty($services)) {
     ];
 }
 
-$processDb = \Illuminate\Support\Facades\Cache::remember('process_index', now()->addHours(12), function() {
-    return \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
+$process = \Illuminate\Support\Facades\Cache::remember('process_index_array_'.app()->getLocale(), now()->addHours(12), function() {
+    $processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
+    return $processDb->map(function($step, $index) {
+        return [
+            "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
+            "icon" => $step->icon,
+            "title" => ["en" => $step->title, "kh" => $step->getTranslation('title', 'kh')],
+            "desc" => ["en" => $step->description, "kh" => $step->getTranslation('description', 'kh')]
+        ];
+    })->toArray();
 });
-$process = $processDb->map(function($step, $index) {
-    return [
-        "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
-        "icon" => $step->icon,
-        "title" => ["en" => $step->title, "kh" => $step->getTranslation('title', 'kh')],
-        "desc" => ["en" => $step->description, "kh" => $step->getTranslation('description', 'kh')]
-    ];
-})->toArray();
 
 // Fallback if empty
 if (empty($process)) {
@@ -112,42 +112,47 @@ $sectors = [
             }
         }
     </style>
-    <!-- === HERO SECTION (Design-Z) === -->
+    <!-- === HERO SECTION (Premium Design-Z) === -->
     <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl custom-hero-container">
-        {{-- Background Parallel Zoom Animation --}}
-        <div class="absolute inset-0 scale-105 animate-super-slow-pan bg-titan-navy">
-            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 transition-opacity duration-1000" />
-            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/80 via-titan-navy/20 to-transparent"></div>
+        {{-- Background Zoom Animation --}}
+        <div class="absolute inset-0 bg-titan-navy">
+            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/90"></div>
+            <div class="absolute inset-0 bg-black/20"></div>
         </div>
 
         <!-- Decorative Floating Elements -->
         <div class="absolute top-[20%] -left-32 w-[600px] h-[600px] border border-white/5 rounded-full hidden lg:block pointer-events-none"></div>
-        <div class="absolute bottom-[20%] -right-40 w-[600px] h-[600px] border border-accent-orange/10 rounded-full hidden lg:block pointer-events-none"></div>
+        <div class="absolute bottom-[20%] -right-40 w-[600px] h-[600px] border border-white/5 rounded-full hidden lg:block pointer-events-none"></div>
         
-        <!-- Center Glow -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent-orange/5 rounded-full pointer-events-none" style="filter: blur(120px);"></div>
-
         <!-- Hero Content -->
-        <div class="relative z-20 text-center max-w-6xl px-6 pt-16" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" class="transition-all duration-1000 delay-100 inline-flex items-center gap-2 px-6 py-3 bg-white/5 backdrop-blur-md rounded-full text-white text-[11px] font-bold uppercase tracking-[0.2em] mb-8 border border-white/20 shadow-2xl">
-                <x-lucide-settings class="w-4 h-4 text-accent-orange animate-spin-slow" />
-                <span>{{ strtoupper(__('Services')) }}</span>
+        <div class="relative z-20 text-center max-w-6xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" 
+                 class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-bold uppercase tracking-[0.3em] mb-10">
+                <x-lucide-settings class="w-4 h-4 text-titan-red animate-spin-slow" />
+                <span>{{ strtoupper(__('Services & Expertise')) }}</span>
             </div>
 
-            <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[6rem] font-black text-white mb-10 leading-[0.9] tracking-tight uppercase">
-                <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'OUR' }}</span> <span class="text-accent-orange">{{ $lang === 'kh' ? 'របស់យើង' : 'EXPERTISE' }}</span>
+            <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
+                class="transition-all duration-1000 delay-300 text-6xl md:text-8xl lg:text-[7rem] font-black text-white mb-10 leading-[0.85] tracking-tighter uppercase">
+                <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'ENGINEERING' }}</span> <br/>
+                <span class="text-titan-red">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
             </h1>
 
-            <p :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 text-sm md:text-base text-white/60 max-w-3xl mx-auto leading-relaxed font-bold uppercase tracking-[0.3em] opacity-80">
-                {{ __('Precision. Innovation. Excellence.') }}
-            </p>
+            <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
+                <div class="h-[1px] w-12 bg-white/30"></div>
+                <p class="text-sm md:text-base text-white/90 leading-relaxed font-bold uppercase tracking-[0.4em]">
+                    {{ __('Precision. Innovation. Excellence.') }}
+                </p>
+                <div class="h-[1px] w-12 bg-white/30"></div>
+            </div>
         </div>
 
         <!-- Scroll Indicator -->
         <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer group z-20" @click="document.getElementById('services-list').scrollIntoView({ behavior: 'smooth' })">
-            <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/50 group-hover:text-accent-orange transition-colors">{{ strtoupper(__('Explore Services')) }}</span>
-            <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-transparent group-hover:border-accent-orange transition-colors">
-                <div class="w-1.5 h-1.5 bg-accent-orange rounded-full animate-bounce"></div>
+            <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/70 group-hover:text-white transition-colors">{{ strtoupper(__('Explore Services')) }}</span>
+            <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-transparent group-hover:border-titan-red transition-colors">
+                <div class="w-1.5 h-1.5 bg-titan-red rounded-full animate-bounce"></div>
             </div>
         </div>
     </section>
@@ -159,7 +164,7 @@ $sectors = [
             <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
             <h2 class="text-4xl md:text-6xl font-black text-titan-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
             <div class="w-24 h-1.5 bg-titan-red mx-auto mb-8"></div>
-            <p class="text-titan-navy/50 text-xl max-w-3xl mx-auto leading-relaxed">
+            <p class="text-titan-navy/90 text-xl max-w-3xl mx-auto leading-relaxed">
                 {{ __('We bring decades of experience to every project, ensuring quality and efficiency at every stage.') }}
             </p>
         </div>
@@ -195,7 +200,7 @@ $sectors = [
                                 {{ $service['title'][$lang] }}
                             </h3>
                             
-                            <p class="text-titan-navy/60 text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
+                            <p class="text-titan-navy/90 text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
                                 {{ $service['desc'][$lang] }}
                             </p>
 
@@ -206,7 +211,7 @@ $sectors = [
                             @if(count($featuresArray) > 0)
                             <div class="flex flex-wrap justify-center gap-y-5 gap-x-12 mb-12">
                                 @foreach($featuresArray as $feature)
-                                    <div class="flex items-center gap-4 text-titan-navy/80 font-bold text-xs uppercase tracking-[0.2em] group/feat bg-gray-50 px-5 py-3 rounded-full border border-gray-100">
+                                    <div class="flex items-center gap-4 text-titan-navy/100 font-bold text-xs uppercase tracking-[0.2em] group/feat bg-gray-50 px-5 py-3 rounded-full border border-gray-100">
                                         <div class="w-2.5 h-2.5 bg-titan-red rounded-full"></div>
                                         <span>{{ __($feature['name'] ?? (is_array($feature) ? ($feature[$lang] ?? '') : $feature)) }}</span>
                                     </div>
@@ -383,7 +388,7 @@ $sectors = [
                          style="transition-delay: {{ $i * 100 }}ms"
                          class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded-[2rem] bg-[#0F172A] cursor-pointer transition-all duration-700 shadow-2xl">
                         
-                        <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-80" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
+                        <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-100" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
                         
                         <!-- Gradient Overlay always present to ensure text contrast -->
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent transition-opacity duration-300"></div>
@@ -400,7 +405,7 @@ $sectors = [
                                     {{ $sector['title'][$lang] }}
                                 </h3>
                                 <div class="w-12 h-1.5 bg-[#FF2A00] group-hover:w-24 transition-all duration-500"></div>
-                                <p class="text-white/80 mt-6 text-sm leading-relaxed transition-opacity duration-500 delay-100">
+                                <p class="text-white/100 mt-6 text-sm leading-relaxed transition-opacity duration-500 delay-100">
                                     {{ __('Delivering tailor-made engineering and construction solutions for the :sector sector.', ['sector' => strtolower($sector['title'][$lang])]) }}
                                 </p>
                             </div>

@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 
 class JobApplicationsTable
@@ -27,11 +28,22 @@ class JobApplicationsTable
                 TextColumn::make('phone')
                     ->label(__('Phone'))
                     ->searchable(),
-                TextColumn::make('resumeUrl')
-                    ->label(__('Resume Link'))
-                    ->searchable(),
+                IconColumn::make('resumeUrl')
+                    ->label(__('Resume'))
+                    ->icon('heroicon-o-document-text')
+                    ->color('success')
+                    ->url(fn ($record) => $record->resumeUrl ? \Illuminate\Support\Facades\Storage::url($record->resumeUrl) : null)
+                    ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'PENDING' => 'warning',
+                        'REVIEWING' => 'info',
+                        'ACCEPTED' => 'success',
+                        'REJECTED' => 'danger',
+                        default => 'gray',
+                    })
                     ->searchable(),
                 TextColumn::make('submittedAt')
                     ->label(__('Submitted At'))

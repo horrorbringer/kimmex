@@ -18,7 +18,7 @@
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                 class="transition-all duration-1000">
 
-                <span class="text-accent-orange font-black uppercase tracking-[0.2em] text-xs mb-5 block">
+                <span class="text-titan-red font-black uppercase tracking-[0.2em] text-xs mb-5 block">
                     {{ __('About Kimmex') }}
                 </span>
 
@@ -31,7 +31,7 @@
                 </p>
 
                 <a href="/about"
-                    class="inline-flex items-center gap-2 text-accent-orange font-black uppercase tracking-widest text-xs hover:gap-4 transition-all duration-300 group">
+                    class="inline-flex items-center gap-2 text-titan-red font-black uppercase tracking-widest text-xs hover:gap-4 transition-all duration-300 group">
                     {{ __('Learn More About Us') }}
                     <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </a>
@@ -63,7 +63,7 @@
 
                 {{-- 25+ Years Badge -- centered at grid intersection --}}
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10
-                            bg-accent-orange text-white rounded-2xl shadow-xl p-5
+                            bg-titan-red text-white rounded-2xl shadow-xl p-5
                             flex flex-col items-center justify-center text-center min-w-[110px]">
                     <span class="text-3xl font-black leading-none">25+</span>
                     <span

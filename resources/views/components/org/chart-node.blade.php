@@ -16,7 +16,7 @@
                 <x-heroicon-o-chevron-down class="org-icon-sm" />
             </div>
         @else
-            <div class="mr-4 w-4"></div>
+            <div class="mr-4 org-icon-sm"></div>
         @endif
 
         <!-- Avatar -->
@@ -64,7 +64,7 @@
 
     <!-- Recursive Children -->
     @if(!empty($node['children']))
-        <div class="node-children">
+        <div class="node-children children-container">
             @foreach($node['children'] as $child)
                 <x-org.chart-node :node="$child" :depth="$depth + 1" />
             @endforeach

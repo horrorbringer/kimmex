@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             NewsArticleSeeder::class,
             JobPostingSeeder::class,
             OrgStructureSeeder::class,
+            PolicySeeder::class,
         ]);
     }
 }

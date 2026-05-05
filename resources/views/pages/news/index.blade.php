@@ -12,11 +12,21 @@
                 $excerpt = $n->getTranslation('excerpt', $locale)
                     ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 180);
 
+                $imageUrl = null;
+                $cover = $n->coverImage;
+                if ($cover) {
+                    if (\Illuminate\Support\Str::startsWith($cover, ['http', '/images'])) {
+                        $imageUrl = $cover;
+                    } else {
+                        $imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($cover);
+                    }
+                }
+
                 return [
                     'slug' => $n->slug,
-                    'category' => $n->category ?: __('Updates'),
-                    'image' => ($n->coverImage && \Illuminate\Support\Facades\Storage::disk('public')->exists($n->coverImage)) ? \Illuminate\Support\Facades\Storage::url($n->coverImage) : null,
-                    'title' => $n->getTranslation('title', app()->getLocale()),
+                    'category' => $n->getTranslation('category', $locale) ?: __('Updates'),
+                    'image' => $imageUrl,
+                    'title' => $n->getTranslation('title', $locale),
                     'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                     'excerpt' => $excerpt,
                 ];
@@ -37,41 +47,44 @@
         }
     }">
 
-        <!-- === CINEMATIC HERO === -->
-        <section class="relative bg-titan-navy pt-[140px] pb-24 px-6 overflow-hidden">
+        <!-- === PREMIUM NEWS HUB HERO === -->
+        <section class="relative bg-titan-navy h-[60vh] min-h-[500px] flex items-center overflow-hidden">
             <!-- Background Image -->
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-6.jpg" class="w-full h-full object-cover opacity-60" alt="" />
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/70 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
+                <img src="/images/projects/Thumbnail-6.jpg" class="w-full h-full object-cover opacity-100 animate-slow-zoom" alt="News Background" />
+                {{-- Deep multi-stage gradient for maximum text contrast --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+                <div class="absolute inset-0 bg-black/20"></div>
             </div>
 
-            <!-- Accent Glow -->
-            <div
-                class="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-titan-red/10 blur-[120px] rounded-full pointer-events-none">
-            </div>
-
-            <div class="max-w-[1240px] mx-auto relative z-10">
+            <div class="max-w-[1240px] mx-auto w-full px-6 relative z-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
                 <!-- Badge -->
-                <div
-                    class="inline-flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md px-5 py-2.5 mb-10">
-                    <x-lucide-newspaper class="w-3.5 h-3.5 text-titan-red" />
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 glass-premium px-6 py-3 mb-10 rounded-full">
+                    <x-lucide-newspaper class="w-4 h-4 text-titan-red animate-pulse" />
                     <span
                         class="text-[10px] font-black uppercase tracking-[0.3em] text-white/90">{{ __('Kimmex Narrative') }}</span>
                 </div>
 
-                <div class="max-w-3xl">
-                    <h1 class="font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
+                <div class="max-w-4xl">
+                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                        class="transition-all duration-1000 delay-300 font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
                         style="font-size: clamp(3rem, 8vw, 6rem);">
                         {{ __('NEWS') }}<span class="text-titan-red">.</span><br />
                         <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('HUB') }}</span>
                     </h1>
-                    <p class="text-white/40 text-lg leading-relaxed max-w-lg font-medium">
-                        {{ __('Stay up to date with the latest engineering breakthroughs and project updates from Kimmex.') }}
-                    </p>
+                    <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center gap-6">
+                        <div class="h-[1px] w-12 bg-titan-red"></div>
+                        <p class="text-white/80 text-sm md:text-base leading-relaxed max-w-lg font-bold uppercase tracking-[0.4em]">
+                            {{ __('Stay up to date with the latest engineering breakthroughs.') }}
+                        </p>
+                    </div>
                 </div>
             </div>
+
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#FCFCFD] to-transparent z-10"></div>
         </section>
 
         <!-- === MINIMAL CATEGORY BAR === -->
@@ -80,7 +93,7 @@
                 @foreach($categories as $cat)
                     <button @click="activeCategory = '{{ $cat }}'"
                         :class="activeCategory === '{{ $cat }}' ? 'bg-titan-navy text-white' : 'text-titan-navy/30 hover:text-titan-navy hover:bg-gray-50'"
-                        class="px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shrink-0">
+                        class="px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 shrink-0 rounded-full">
                         {{ $cat }}
                     </button>
                 @endforeach
@@ -95,10 +108,10 @@
                 <template x-for="(article, index) in filteredArticles" :key="article.slug">
                     <!-- Article Card -->
                     <a :href="'/news/' + article.slug"
-                        class="group flex flex-col bg-white border border-gray-100 hover:border-titan-red/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2">
+                        class="group flex flex-col bg-white border border-gray-100 hover:border-titan-red/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 rounded-2xl shadow-sm hover:shadow-xl">
 
                         <!-- Thumbnail -->
-                        <div class="aspect-video relative overflow-hidden bg-titan-navy">
+                        <div class="aspect-video relative overflow-hidden bg-titan-navy rounded-t-2xl">
                             <template x-if="article.image">
                                 <img :src="article.image" :alt="article.title"
                                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-105" loading="lazy" />
@@ -110,7 +123,7 @@
                             </template>
                             <div class="absolute top-4 left-4 z-20">
                                 <span
-                                    class="bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5"
+                                    class="bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-md"
                                     x-text="article.category"></span>
                             </div>
                         </div>
@@ -134,7 +147,7 @@
                                 <span
                                     class="text-[10px] font-black uppercase tracking-[0.3em] text-titan-navy/20 group-hover:text-titan-red transition-colors">{{ __('Read Depth') }}</span>
                                 <div
-                                    class="w-9 h-9 bg-gray-50 flex items-center justify-center text-titan-navy/20 group-hover:bg-titan-red group-hover:text-white transition-all">
+                                    class="w-9 h-9 bg-gray-50 flex items-center justify-center text-titan-navy/20 group-hover:bg-titan-red group-hover:text-white transition-all rounded-xl">
                                     <x-lucide-arrow-right
                                         class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </div>
@@ -146,7 +159,7 @@
 
             <!-- Empty State -->
             <div x-show="filteredArticles.length === 0"
-                class="py-24 text-center bg-white border-2 border-dashed border-gray-100">
+                class="py-24 text-center bg-white border-2 border-dashed border-gray-100 rounded-2xl">
                 <x-lucide-newspaper class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
                 <p class="text-titan-navy/30 font-black text-xs uppercase tracking-[0.3em]">
                     {{ __('No articles found in this category') }}</p>
@@ -154,24 +167,7 @@
 
         </section>
 
-        <!-- === CORPORATE CTA === -->
-        <section class="bg-titan-navy py-20 px-6 mt-16">
-            <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-                <div>
-                    <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em] mb-4">
-                        {{ __('Media Inquiries') }}</div>
-                    <h3 class="text-3xl font-black text-white uppercase tracking-tight mb-3">{{ __('Press & PR Desk') }}
-                    </h3>
-                    <p class="text-white/40 text-base max-w-md font-medium">
-                        {{ __('Are you a journalist or industry analyst? Get in touch with our communications team.') }}
-                    </p>
-                </div>
-                <a href="/contact"
-                    class="bg-white text-titan-navy px-10 py-5 font-black uppercase tracking-widest hover:bg-titan-red hover:text-white transition-all">
-                    {{ __('Contact Media Team') }}
-                </a>
-            </div>
-        </section>
+
 
     </div>
 

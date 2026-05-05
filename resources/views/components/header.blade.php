@@ -18,7 +18,7 @@
 }" class="fixed top-0 left-0 w-full z-[100]">
 
     @php
-        $profile = \App\Models\SystemSetting::get('organization_profile', []);
+        $profile = $globalSettings['profile'] ?? [];
         $email = $profile['email'] ?? 'info@kimmex.com.kh';
         $phone = $profile['phone'] ?? '+855 23 999 999';
         $facebook = $profile['facebook'] ?? null;
@@ -27,34 +27,51 @@
         $instagram = $profile['instagram'] ?? null;
         $telegram = $profile['telegram'] ?? null;
 
-        $lang = app()->getLocale();
+        $lang = $siteLocale;
         $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
-        $tagline = $profile[$lang]['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
+        $tagline = $globalSettings['brand']['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
         $logo = $profile['logo'] ?? null;
         $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
 
-        $navCategories = \App\Models\ProjectCategory::where('isActive', true)
-            ->get()
-            ->sortBy(fn($cat) => $cat->getTranslation('name', app()->getLocale()));
+        $navCategories = \Illuminate\Support\Facades\Cache::remember('nav_categories_'.$lang, now()->addHours(12), function() use ($lang) {
+            return \App\Models\ProjectCategory::where('isActive', true)
+                ->get()
+                ->sortBy(fn($cat) => $cat->getTranslation('name', $lang))
+                ->map(fn($cat) => [
+                    'slug' => $cat->slug,
+                    'name' => $cat->getTranslation('name', $lang),
+                    'name_en' => $cat->getTranslation('name', 'en')
+                ])
+                ->values()
+                ->all();
+        });
 
-        $navServices = \App\Models\Service::where('isActive', true)
-            ->get()
-            ->sortBy(fn($svc) => $svc->getTranslation('title', app()->getLocale()));
+        $navServices = \Illuminate\Support\Facades\Cache::remember('nav_services_'.$lang, now()->addHours(12), function() use ($lang) {
+            return \App\Models\Service::where('isActive', true)
+                ->get()
+                ->sortBy(fn($svc) => $svc->getTranslation('title', $lang))
+                ->map(fn($svc) => [
+                    'slug' => $svc->slug,
+                    'title' => $svc->getTranslation('title', $lang)
+                ])
+                ->values()
+                ->all();
+        });
     @endphp
     <!-- TOP BAR -->
     <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-10 opacity-100 border-white/10' + (isHeroPage ? ' bg-titan-navy/20 backdrop-blur-md' : ' bg-titan-navy')"
         class="text-white text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden relative border-b">
         <div class="max-w-[1600px] mx-auto px-2 sm:px-6 h-full flex justify-between items-center">
             <div class="flex gap-2 sm:gap-6 items-center">
-                <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                    class="flex items-center gap-1.5 hover:text-accent-orange cursor-pointer transition whitespace-nowrap">
-                    <x-lucide-phone class="text-accent-orange shrink-0 w-3 h-3" />
+                    <a href="tel:{{ str_replace(' ', '', $phone) }}"
+                    class="flex items-center gap-1.5 hover:text-titan-red cursor-pointer transition whitespace-nowrap">
+                    <x-lucide-phone class="text-titan-red shrink-0 w-3 h-3" />
                     <span class="text-[10px] sm:hidden">{{ \Illuminate\Support\Str::limit($phone, 8) }}</span>
                     <span class="hidden sm:inline">{{ $phone }}</span>
                 </a>
                 <a href="mailto:{{ $email }}"
-                    class="hidden md:flex items-center gap-2 hover:text-accent-orange cursor-pointer transition">
-                    <x-lucide-mail class="text-accent-orange w-3 h-3" />
+                    class="hidden md:flex items-center gap-2 hover:text-titan-red cursor-pointer transition">
+                    <x-lucide-mail class="text-titan-red w-3 h-3" />
                     {{ $email }}
                 </a>
             </div>
@@ -68,31 +85,31 @@
                 <div class="hidden sm:flex gap-2">
                     @if($facebook && $facebook !== '#')
                         <a href="{{ $facebook }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
                             <x-lucide-facebook class="w-3 h-3" />
                         </a>
                     @endif
                     @if($linkedin && $linkedin !== '#')
                         <a href="{{ $linkedin }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
                             <x-lucide-linkedin class="w-3 h-3" />
                         </a>
                     @endif
                     @if($youtube && $youtube !== '#')
                         <a href="{{ $youtube }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
                             <x-lucide-youtube class="w-3 h-3" />
                         </a>
                     @endif
                     @if($instagram && $instagram !== '#')
                         <a href="{{ $instagram }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
                             <x-lucide-instagram class="w-3 h-3" />
                         </a>
                     @endif
                     @if($telegram && $telegram !== '#')
                         <a href="{{ $telegram }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-colors">
+                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
                             <x-lucide-send class="w-3 h-3" />
                         </a>
                     @endif
@@ -101,19 +118,11 @@
                 @if(auth()->check() && auth()->user()->isAdmin())
                     <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
                     <a href="/admin"
-                        class="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-accent-orange rounded transition-colors group">
-                        <x-lucide-shield class="text-accent-orange group-hover:text-white w-2.5 h-2.5" />
+                        class="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-titan-red rounded transition-colors group">
+                        <x-lucide-shield class="text-titan-red group-hover:text-white w-2.5 h-2.5" />
                         <span class="text-[9px] font-bold">{{ __('ADMIN') }}</span>
                     </a>
                 @endif
-
-                <div class="w-[1px] h-3 bg-white/20 hidden sm:block"></div>
-                <div class="flex items-center gap-1 bg-white/10 rounded px-1 py-0.5">
-                    <a href="{{ route('lang.switch', 'en') }}"
-                        class="px-1.5 py-0.5 rounded text-[10px] font-bold transition-all {{ app()->getLocale() === 'en' ? 'bg-accent-orange text-white' : 'text-white/60 hover:text-white' }}">EN</a>
-                    <a href="{{ route('lang.switch', 'km') }}"
-                        class="px-1.5 py-0.5 rounded text-[10px] font-bold transition-all {{ app()->getLocale() === 'km' ? 'bg-accent-orange text-white' : 'text-white/60 hover:text-white' }}">KH</a>
-                </div>
             </div>
         </div>
     </div>
@@ -128,16 +137,16 @@
                 <a href="/" class="flex items-center gap-3 group cursor-pointer">
                     <div class="relative">
                         <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
-                            class="h-12 w-auto transition-all duration-300" />
+                            class="h-12 w-auto object-contain transition-all duration-300" />
                     </div>
                     <div class="leading-none flex flex-col justify-center">
                         <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                            style="font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em;"
-                            class="block text-[25px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5 group-hover:text-accent-orange">
+                            class="block {{ app()->getLocale() === 'km' ? 'font-khmer text-[20px] tracking-normal' : 'text-[25px] tracking-[0.15em] uppercase font-bold' }} transition-colors duration-300 mt-0.5 group-hover:text-titan-red"
+                            style="{{ app()->getLocale() !== 'km' ? "font-family: 'Bebas Neue', sans-serif;" : '' }}">
                             {{ $companyName }}
                         </span>
                         <span :class="navDark ? 'text-titan-navy/50' : 'text-white/60'"
-                            class="hidden sm:block text-[9px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 mt-0.5">
+                            class="hidden sm:block {{ app()->getLocale() === 'km' ? 'font-khmer text-[11px] tracking-normal' : 'text-[9px] font-bold tracking-[0.15em] uppercase' }} transition-colors duration-300 mt-0.5">
                             {{ $tagline }}
                         </span>
                     </div>
@@ -150,11 +159,11 @@
                     <div class="relative group/nav">
                         <a href="/about" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange">{{ __('About Us') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('About Us') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
-                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-accent-orange" />
+                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
-                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-accent-orange transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
+                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
@@ -164,7 +173,7 @@
                                     class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                            class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                             {{ __('Company Profile') }}
                                         </div>
                                         <div
@@ -177,7 +186,7 @@
                                     class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                            class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                             {{ __('Leadership') }}
                                         </div>
                                         <div
@@ -190,7 +199,7 @@
                                     class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                            class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                             {{ __('Quality & Safety') }}
                                         </div>
                                         <div
@@ -207,22 +216,22 @@
                     <div class="relative group/nav">
                         <a href="/services" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange">{{ __('Services') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Services') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
-                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-accent-orange" />
+                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
-                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-accent-orange transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
+                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
                                 class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[280px] p-2">
                                 @foreach($navServices as $navService)
-                                    <a href="/services/{{ $navService->slug }}"
+                                    <a href="/services/{{ $navService['slug'] }}"
                                         class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                        <span>{{ $navService->getTranslation('title', app()->getLocale()) }}</span>
+                                        <span>{{ $navService['title'] }}</span>
                                         <x-lucide-arrow-right
-                                            class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
+                                            class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-titan-red" />
                                     </a>
                                 @endforeach
                             </div>
@@ -233,11 +242,11 @@
                     <div class="relative group/nav">
                         <a href="/projects" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange">{{ __('Projects') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Projects') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
-                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-accent-orange" />
+                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
-                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-accent-orange transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
+                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
@@ -249,7 +258,7 @@
                                         class="flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                         <div>
                                             <div
-                                                class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                                class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                                 {{ __('Completed Projects') }}
                                             </div>
                                             <div
@@ -258,18 +267,18 @@
                                             </div>
                                         </div>
                                         <x-lucide-arrow-right
-                                            class="w-3.5 h-3.5 text-white/30 group-hover/item:text-accent-orange transition-colors" />
+                                            class="w-3.5 h-3.5 text-white/30 group-hover/item:text-titan-red transition-colors" />
                                     </a>
                                     <div
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
                                             class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[240px] p-2">
                                             @foreach($navCategories as $navCat)
-                                                <a href="/projects?status=completed&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
+                                                <a href="/projects?status=completed&type={{ urlencode($navCat['name_en']) }}"
                                                     class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                    <span>{{ $navCat->getTranslation('name', app()->getLocale()) }}</span>
+                                                    <span>{{ $navCat['name'] }}</span>
                                                     <x-lucide-arrow-right
-                                                        class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
+                                                        class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-titan-red" />
                                                 </a>
                                             @endforeach
                                         </div>
@@ -282,7 +291,7 @@
                                         class="flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                         <div>
                                             <div
-                                                class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                                class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                                 {{ __('Project in Progress') }}
                                             </div>
                                             <div
@@ -291,18 +300,18 @@
                                             </div>
                                         </div>
                                         <x-lucide-arrow-right
-                                            class="w-3.5 h-3.5 text-white/30 group-hover/item:text-accent-orange transition-colors" />
+                                            class="w-3.5 h-3.5 text-white/30 group-hover/item:text-titan-red transition-colors" />
                                     </a>
                                     <div
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
                                             class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[240px] p-2">
                                             @foreach($navCategories as $navCat)
-                                                <a href="/projects?status=in-progress&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
+                                                <a href="/projects?status=in-progress&type={{ urlencode($navCat['name_en']) }}"
                                                     class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
-                                                    <span>{{ $navCat->getTranslation('name', app()->getLocale()) }}</span>
+                                                    <span>{{ $navCat['name'] }}</span>
                                                     <x-lucide-arrow-right
-                                                        class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-accent-orange" />
+                                                        class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-titan-red" />
                                                 </a>
                                             @endforeach
                                         </div>
@@ -316,11 +325,11 @@
                     <div class="relative group/nav">
                         <a href="/news" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange">{{ __('News') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('News') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
-                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-accent-orange" />
+                                class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
-                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-accent-orange transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
+                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
@@ -330,7 +339,7 @@
                                     class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                            class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                             {{ __('News & Updates') }}
                                         </div>
                                         <div
@@ -343,7 +352,7 @@
                                     class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
-                                            class="font-medium text-white/90 group-hover/item:text-accent-orange text-sm transition-colors">
+                                            class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
                                             {{ __('Doc Collection') }}
                                         </div>
                                         <div
@@ -360,9 +369,9 @@
                     <div class="relative group/nav">
                         <a href="/careers" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange">{{ __('Careers') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Careers') }}</span>
                             <span
-                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-accent-orange transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
+                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
                     </div>
 
@@ -370,9 +379,9 @@
                     <div class="relative group/nav">
                         <a href="/contact" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="text-[13px] font-bold uppercase tracking-wide transition-all duration-200 group-hover/nav:text-accent-orange">{{ __('Contact') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Contact') }}</span>
                             <span
-                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-accent-orange transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
+                                class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
                     </div>
 
@@ -380,10 +389,24 @@
 
                 <!-- Right Side Actions -->
                 <div class="flex items-center gap-3">
+                    <!-- Language Switcher -->
+                    <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'" class="hidden sm:flex items-center gap-1 rounded-lg p-1 h-10">
+                        <a href="{{ route('lang.switch', 'en') }}"
+                            class="h-full flex items-center px-2 rounded-md text-[11px] font-bold transition-all {{ app()->getLocale() === 'en' ? 'bg-titan-red text-white' : '' }}"
+                            :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white'" : "navDark ? 'text-titan-navy/60 hover:text-titan-navy' : 'text-white/60 hover:text-white'" }}">
+                            EN
+                        </a>
+                        <a href="{{ route('lang.switch', 'km') }}"
+                            class="h-full flex items-center px-2 rounded-md text-[11px] font-bold transition-all {{ app()->getLocale() === 'km' ? 'bg-titan-red text-white' : '' }}"
+                            :class="{{ app()->getLocale() === 'km' ? "'bg-titan-red text-white'" : "navDark ? 'text-titan-navy/60 hover:text-titan-navy' : 'text-white/60 hover:text-white'" }}">
+                            KH
+                        </a>
+                    </div>
+
                     <!-- Search Button -->
                     <button @click="isSearchOpen = true"
                         :class="navDark ? 'bg-gray-100 text-titan-navy' : 'bg-white/10 text-white hover:bg-white/20'"
-                        class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-accent-orange hover:text-white transition-all">
+                        class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
                         <x-lucide-search class="w-4 h-4" />
                     </button>
 
@@ -411,24 +434,24 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 0 ? null : 0">
-                        <a href="/about" class="font-bold text-titan-navy">{{ __('About Us') }}</a>
+                        <a href="/about" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('About Us') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 0 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 0" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
                         <a href="/about#profile"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Company Profile') }}</span>
                         </a>
                         <a href="/about#leadership"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Leadership') }}</span>
                         </a>
                         <a href="/about#safety"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Quality & Safety') }}</span>
                         </a>
                     </div>
@@ -438,16 +461,16 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 1 ? null : 1">
-                        <a href="/services" class="font-bold text-titan-navy">{{ __('Services') }}</a>
+                        <a href="/services" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Services') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 1 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 1" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
                         @foreach($navServices as $navService)
-                            <a href="/services/{{ $navService->slug }}"
-                                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                                <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
-                                <span class="text-sm font-medium">{{ $navService->getTranslation('title', app()->getLocale()) }}</span>
+                            <a href="/services/{{ $navService['slug'] }}"
+                                class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                                <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
+                                <span class="text-sm font-medium">{{ $navService['title'] }}</span>
                             </a>
                         @endforeach
                     </div>
@@ -457,34 +480,34 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 2 ? null : 2">
-                        <a href="/projects" class="font-bold text-titan-navy">{{ __('Projects') }}</a>
+                        <a href="/projects" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Projects') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 2 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 2" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
                         <a href="/projects?status=completed"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all mt-1">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all mt-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Completed Projects') }}</span>
                         </a>
                         <div class="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
                             @foreach($navCategories as $navCat)
-                                <a href="/projects?status=completed&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
-                                    class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">
-                                    {{ $navCat->getTranslation('name', app()->getLocale()) }}
+                                <a href="/projects?status=completed&type={{ urlencode($navCat['name_en']) }}"
+                                    class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-titan-red transition-colors">
+                                    {{ $navCat['name'] }}
                                 </a>
                             @endforeach
                         </div>
                         <a href="/projects?status=in-progress"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all mt-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all mt-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Project in Progress') }}</span>
                         </a>
                         <div class="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
                             @foreach($navCategories as $navCat)
-                                <a href="/projects?status=in-progress&type={{ urlencode($navCat->getTranslation('name', 'en')) }}"
-                                    class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-accent-orange transition-colors">
-                                    {{ $navCat->getTranslation('name', app()->getLocale()) }}
+                                <a href="/projects?status=in-progress&type={{ urlencode($navCat['name_en']) }}"
+                                    class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-titan-red transition-colors">
+                                    {{ $navCat['name'] }}
                                 </a>
                             @endforeach
                         </div>
@@ -495,19 +518,19 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 3 ? null : 3">
-                        <a href="/news" class="font-bold text-titan-navy">{{ __('News') }}</a>
+                        <a href="/news" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('News') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 3 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 3" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
                         <a href="/news"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('News & Updates') }}</span>
                         </a>
                         <a href="/documents"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-accent-orange/10 text-titan-navy/70 hover:text-accent-orange transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-accent-orange"></div>
+                            class="flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Doc Collection') }}</span>
                         </a>
                     </div>
@@ -515,32 +538,32 @@
 
                 <!-- Careers -->
                 <a href="/careers"
-                    class="block px-4 py-3 rounded-lg hover:bg-gray-50 font-bold text-titan-navy">{{ __('Careers') }}</a>
+                    class="block px-4 py-3 rounded-lg hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Careers') }}</a>
 
                 <!-- Contact -->
                 <a href="/contact"
-                    class="block px-4 py-3 rounded-lg hover:bg-gray-50 font-bold text-titan-navy">{{ __('Contact') }}</a>
+                    class="block px-4 py-3 rounded-lg hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Contact') }}</a>
             </div>
 
             <!-- Mobile Contact Info -->
             <div class="p-4 bg-gray-50 border-t border-gray-100">
                 <div class="flex flex-col gap-2 text-sm">
                     <a href="tel:+85523999888" class="flex items-center gap-2 text-titan-navy/70">
-                        <x-lucide-phone class="text-accent-orange w-3.5 h-3.5" />
+                        <x-lucide-phone class="text-titan-red w-3.5 h-3.5" />
                         +855 23 999 888
                     </a>
                     <a href="mailto:info@kimmex.com" class="flex items-center gap-2 text-titan-navy/70">
-                        <x-lucide-mail class="text-accent-orange w-3.5 h-3.5" />
+                        <x-lucide-mail class="text-titan-red w-3.5 h-3.5" />
                         info@kimmex.com
                     </a>
                 </div>
                 <div class="mt-4 flex gap-2">
                     <a href="{{ route('lang.switch', 'en') }}"
-                        class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'en' ? 'bg-accent-orange text-white border-accent-orange' : 'bg-white text-titan-navy border-gray-200' }}">
+                        class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'en' ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border-gray-200' }}">
                         English
                     </a>
                     <a href="{{ route('lang.switch', 'km') }}"
-                        class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'km' ? 'bg-accent-orange text-white border-accent-orange' : 'bg-white text-titan-navy border-gray-200' }}">
+                        class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'km' ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border-gray-200' }}">
                         ខ្មែរ
                     </a>
                 </div>
@@ -571,36 +594,36 @@
                     placeholder="{{ __('Search projects, services...') }}"
                     class="w-full bg-transparent pl-14 pr-24 py-5 text-lg font-medium text-titan-navy outline-none placeholder:text-titan-navy/30 border-b border-gray-100" />
                 <button @click="isSearchOpen = false"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-titan-navy/50 hover:text-accent-orange transition-colors bg-gray-100 rounded-md">ESC</button>
+                    class="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-titan-navy/50 hover:text-titan-red transition-colors bg-gray-100 rounded-md">ESC</button>
             </div>
             <!-- Quick Links -->
             <div class="p-5">
-                <p class="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-4">{{ __('Quick Links') }}
+                <p class="{{ app()->getLocale() === 'km' ? 'font-khmer text-xs text-titan-navy/60' : 'text-xs font-bold text-titan-navy/40 uppercase tracking-widest' }} mb-4">{{ __('Quick Links') }}
                 </p>
                 <div class="grid grid-cols-2 gap-2">
                     <a href="/projects"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-accent-orange hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">🏗️</span>
                         <span class="text-sm">{{ __('Projects') }}</span>
                         <x-lucide-arrow-right
                             class="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                     <a href="/services"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-accent-orange hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">⚙️</span>
                         <span class="text-sm">{{ __('Services') }}</span>
                         <x-lucide-arrow-right
                             class="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                     <a href="/about"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-accent-orange hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">🏢</span>
                         <span class="text-sm">{{ __('About Us') }}</span>
                         <x-lucide-arrow-right
                             class="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                     <a href="/contact"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-accent-orange hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">📞</span>
                         <span class="text-sm">{{ __('Contact') }}</span>
                         <x-lucide-arrow-right
@@ -610,12 +633,12 @@
             </div>
             <!-- Categories -->
             <div class="px-5 pb-5">
-                <p class="text-xs font-bold text-titan-navy/40 uppercase tracking-widest mb-3">{{ __('Categories') }}
+                <p class="{{ app()->getLocale() === 'km' ? 'font-khmer text-xs text-titan-navy/60' : 'text-xs font-bold text-titan-navy/40 uppercase tracking-widest' }} mb-3">{{ __('Categories') }}
                 </p>
                 <div class="flex flex-wrap gap-2">
                     @foreach(['Commercial', 'Infrastructure', 'Industrial', 'Construction', 'Government'] as $tag)
                         <a href="/projects?search={{ $tag }}"
-                            class="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-accent-orange hover:text-white transition-all">
+                            class="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-titan-red hover:text-white transition-all">
                             {{ __($tag) }}
                         </a>
                     @endforeach

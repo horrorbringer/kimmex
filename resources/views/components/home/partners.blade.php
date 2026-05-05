@@ -25,25 +25,40 @@
     </div>
 
     @php
-        $partnersDb = \Illuminate\Support\Facades\Cache::remember('home_partners', now()->addHours(12), function() {
-            return \App\Models\Partner::where('isActive', true)->orderBy('orderIndex')->get();
-        });
-
         $fallbacks = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
         
-        $partners = $partnersDb->map(function ($p, $index) use ($fallbacks) {
-            $fallbackLogo = "/partners/" . $fallbacks[$index % count($fallbacks)] . ".png";
-            return [
-                'name' => $p->name,
-                'logo' => $p->logoUrl ? \Illuminate\Support\Facades\Storage::url($p->logoUrl) : $fallbackLogo
-            ];
-        })->toArray();
+        $partners = \Illuminate\Support\Facades\Cache::remember('home_partners_array', now()->addHours(12), function() use ($fallbacks) {
+            $partnersDb = \App\Models\Partner::where('isActive', true)->orderBy('orderIndex')->get();
+            return $partnersDb->map(function ($p, $index) use ($fallbacks) {
+                $fallbackLogo = "/partners/" . $fallbacks[$index % count($fallbacks)] . ".png";
+                $logo = $p->logoUrl;
+                $logoUrl = $fallbackLogo;
+                
+                if ($logo) {
+                    if (\Illuminate\Support\Str::startsWith($logo, ['http', '/images', '/partners'])) {
+                        $logoUrl = $logo;
+                    } else {
+                        $logoUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($logo);
+                    }
+                }
+
+                return [
+                    'name' => $p->getTranslation('name', app()->getLocale()),
+                    'logo' => $logoUrl,
+                    'website' => $p->website
+                ];
+            })->toArray();
+        });
 
         // Fallback if no records in DB
         if (empty($partners)) {
             $partners = [];
             for ($i = 0; $i < count($fallbacks); $i++) {
-                $partners[] = ['name' => "Partner " . ($i+1), 'logo' => "/partners/" . $fallbacks[$i] . ".png"];
+                $partners[] = [
+                    'name' => "Partner " . ($i+1), 
+                    'logo' => "/partners/" . $fallbacks[$i] . ".png",
+                    'website' => null
+                ];
             }
         }
     @endphp
@@ -53,19 +68,35 @@
         <!-- We use two identical divs for a seamless infinite marquee effect in Alpine/CSS -->
         <div class="flex animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap">
             @foreach($partners as $p)
-                <div
-                    class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
-                    <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                        class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
-                </div>
+                @if($p['website'])
+                    <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
+                        class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                    </a>
+                @else
+                    <div
+                        class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-default relative shrink-0">
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                    </div>
+                @endif
             @endforeach
             <!-- Duplicate for infinite scroll loop -->
             @foreach($partners as $p)
-                <div
-                    class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
-                    <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                        class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
-                </div>
+                @if($p['website'])
+                    <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
+                        class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                    </a>
+                @else
+                    <div
+                        class="w-44 h-20 mx-4 bg-white rounded-xl flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-default relative shrink-0">
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                    </div>
+                @endif
             @endforeach
         </div>
     </div>

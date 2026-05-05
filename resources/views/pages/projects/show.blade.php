@@ -88,42 +88,90 @@
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
 
-    <div class="bg-white min-h-screen text-titan-navy relative">
-        <!-- --- HERO SECTION --- -->
-        <section class="relative h-[70vh] bg-titan-navy flex items-end">
-            @if($project['heroImage'])
-                <div class="absolute inset-0">
-                    <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                        class="w-full h-full object-cover opacity-70" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent"></div>
-                </div>
-            @else
-                <div class="absolute inset-0 bg-titan-navy shadow-inner opacity-50">
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,107,0,0.1)_0%,transparent_50%)]"></div>
-                </div>
-            @endif
+    <div class="bg-white min-h-screen text-titan-navy font-sans antialiased" x-data="{ 
+        scrolled: false, 
+        progress: 0,
+        scrollY: 0,
+        ticking: false
+    }" x-init="
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    scrollY = window.scrollY;
+                    scrolled = window.scrollY > 400;
+                    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+                    progress = scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+    ">
 
-            <div class="relative z-10 w-full max-w-[1400px] mx-auto px-6 pb-20">
-                <a href="/projects"
-                    class="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors font-bold uppercase tracking-widest text-xs mb-8">
-                    <x-lucide-arrow-left class="w-3.5 h-3.5" /> {{ __('Back to Portfolio') }}
-                </a>
-                <div x-data="{ show: false }" x-init="setTimeout(() => show = true, 100)"
-                    :class="show ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 transform">
-                    <span
-                        class="bg-titan-red text-white px-4 py-1 rounded-sm text-xs font-bold uppercase tracking-widest mb-4 inline-block">
-                        {{ $project['type'] }}
-                    </span>
-                    <h1 class="text-5xl md:text-7xl font-black text-white mb-4 tracking-tight leading-none">
-                        {{ $project['title'] }}
-                    </h1>
-                    <p class="text-xl md:text-2xl text-white/80 font-light flex items-center gap-3">
-                        <x-lucide-map-pin class="w-5 h-5 text-titan-red" /> {{ $project['location'] }}
-                    </p>
+        <!-- READING PROGRESS & STICKY NAV -->
+        <div class="fixed top-0 left-0 w-full z-[100] transition-transform duration-500"
+            :class="scrolled ? 'translate-y-0' : '-translate-y-full'">
+            <div class="h-1 bg-gray-100 w-full relative">
+                <div class="h-full bg-titan-red absolute left-0 top-0 transition-all duration-150"
+                    :style="'width: ' + progress + '%'"></div>
+            </div>
+            <div class="bg-white/95 backdrop-blur-md border-b border-gray-100 h-12 flex items-center px-6">
+                <div class="max-w-[1400px] mx-auto w-full flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span
+                            class="text-[9px] font-black text-titan-red uppercase tracking-widest hidden md:block">{{ __('Project:') }}</span>
+                        <span
+                            class="text-[11px] font-black text-titan-navy truncate max-w-[200px] md:max-w-md uppercase tracking-tight">{{ $project['title'] }}</span>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <a href="/projects"
+                            class="w-8 h-8 bg-titan-navy text-white rounded-lg flex items-center justify-center hover:bg-titan-red transition-all"><x-lucide-arrow-left
+                                class="w-4 h-4" /></a>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- --- PREMIUM NARRATIVE HERO --- -->
+        <header class="relative w-full h-[75vh] min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
+            @if($project['heroImage'])
+                <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
+                    class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" />
+            @else
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#1a1a2e_0%,#0f1423_100%)]"></div>
+            @endif
+            
+            {{-- Deep multi-stage gradient for maximum text contrast --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
+            <div class="absolute inset-0 bg-black/30"></div>
+
+            <div class="relative z-10 text-center max-w-6xl px-6" x-data="{ shown: false }"
+                x-init="setTimeout(() => shown = true, 100)">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    class="transition-all duration-700 delay-100 inline-flex items-center gap-3 px-6 py-2 glass-premium text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-10">
+                    <div class="w-2 h-2 bg-titan-red rounded-full animate-pulse"></div>
+                    {{ $project['type'] }}
+                </div>
+                
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+                    class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[6.5rem] font-black text-white uppercase tracking-tighter leading-[0.9] mb-12">
+                    {{ $project['title'] }}
+                </h1>
+                
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    class="transition-all duration-700 delay-500 flex items-center justify-center gap-6 text-white font-bold uppercase tracking-[0.4em] text-xs md:text-sm">
+                    <div class="h-[1px] w-12 bg-titan-red"></div>
+                    <div class="flex items-center gap-3">
+                        <x-lucide-map-pin class="w-4 h-4 text-titan-red" />
+                        {{ $project['location'] }}
+                    </div>
+                    <div class="h-[1px] w-12 bg-titan-red"></div>
+                </div>
+            </div>
+
+            {{-- Decorative bottom edge --}}
+            <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent z-10"></div>
+        </header>
 
         <!-- --- MAIN CONTENT SPLIT --- -->
         <section class="py-24 px-6 max-w-[1400px] mx-auto">
@@ -132,7 +180,7 @@
                 <!-- LEFT: CONTENT -->
                 <div class="lg:col-span-8">
                     <!-- Description -->
-                    <div class="mb-16">
+                    <div class="mb-16 reveal-up">
                         <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                             <x-lucide-help-circle class="w-6 h-6 text-titan-red" /> {{ __('Project Overview') }}
                         </h2>
@@ -146,7 +194,7 @@
                                 </div>
                             </div>
                             @if(!empty($project['narrative']['objectives']))
-                                <div>
+                                <div class="mt-8">
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
                                         {{ __('Objectives') }}
                                     </h3>
@@ -156,7 +204,7 @@
                                 </div>
                             @endif
                             @if(!empty($project['narrative']['design_concept']))
-                                <div>
+                                <div class="mt-8">
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
                                         {{ __('Design Concept') }}
                                     </h3>
@@ -170,7 +218,7 @@
 
                     <!-- Scope -->
                     @if(!empty($project['scope']))
-                        <div class="mb-16 bg-gray-50 p-10 rounded-xl border border-titan-navy/10">
+                        <div class="mb-16 bg-gray-50 p-10 rounded-xl border border-titan-navy/10 reveal-up">
                             <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                                 <x-lucide-activity class="w-6 h-6 text-titan-red" /> {{ __('Scope of Work') }}
                             </h2>
@@ -194,7 +242,7 @@
 
                     <!-- Narrative -->
                     @if(!empty($project['narrative']['engineering_narrative']))
-                        <div>
+                        <div class="reveal-up">
                             <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                                 <x-lucide-alert-triangle class="w-6 h-6 text-titan-red" />
                                 {{ __('Engineering Challenges & Solutions') }}
@@ -258,54 +306,36 @@
                             </div>
                         </div>
 
-                        <div class="mt-10 pt-8 border-t border-gray-100" x-data="{
-                            copied: false,
-                            copyLink() {
-                                navigator.clipboard.writeText(window.location.href);
-                                this.copied = true;
-                                setTimeout(() => this.copied = false, 2000);
-                            },
-                            shareNative() {
-                                if (navigator.share) {
-                                    navigator.share({
-                                        title: '{{ $project['title'] }}',
-                                        url: window.location.href
-                                    });
-                                }
-                            }
-                        }">
-                            <div
-                                class="text-[10px] font-black text-titan-navy/30 uppercase tracking-[0.3em] mb-5 text-center">
-                                {{ __('Share via Network') }}</div>
-                            <div class="flex items-center justify-between gap-3">
-                                <!-- Facebook -->
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
-                                    target="_blank"
-                                    class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy hover:bg-[#1877F2] hover:text-white transition-all shadow-sm group">
-                                    <x-lucide-facebook class="w-5 h-5" />
+                        <!-- CENTERED SOCIAL SHARING -->
+                        <div class="reveal-up pt-12 border-t border-gray-100 mt-12 flex flex-col items-center gap-6">
+                            <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Project') }}</div>
+                            <div class="flex items-center gap-4">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
+                                    class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                                    <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
                                 </a>
-                                <!-- LinkedIn -->
-                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}"
-                                    target="_blank"
-                                    class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy hover:bg-[#0A66C2] hover:text-white transition-all shadow-sm group">
-                                    <x-lucide-linkedin class="w-5 h-5" />
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
+                                    class="w-12 h-12 bg-[#0A66C2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                                    <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
                                 </a>
-                                <!-- Telegram -->
-                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}"
-                                    target="_blank"
-                                    class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-titan-navy hover:bg-[#229ED9] hover:text-white transition-all shadow-sm group">
-                                    <x-lucide-send class="w-5 h-5" />
+                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}" target="_blank" rel="noopener"
+                                    class="w-12 h-12 bg-[#24A1DE] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                                    <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
                                 </a>
-                                <!-- Copy Link -->
-                                <button @click="copyLink()"
-                                    class="flex-1 h-12 rounded-xl bg-titan-navy text-white flex items-center justify-center gap-2 hover:bg-titan-red transition-all shadow-lg text-[10px] font-black uppercase tracking-widest relative overflow-hidden">
-                                    <span x-show="!copied" class="flex items-center gap-2">
-                                        <x-lucide-link class="w-4 h-4" /> {{ __('Copy Link') }}
-                                    </span>
-                                    <span x-show="copied" x-cloak class="flex items-center gap-2 text-white">
-                                        <x-lucide-check class="w-4 h-4" /> {{ __('Copied!') }}
-                                    </span>
-                                </button>
+                                <div x-data="{ 
+                                    copied: false, 
+                                    copyLink() {
+                                        navigator.clipboard.writeText(window.location.href);
+                                        this.copied = true;
+                                        setTimeout(() => this.copied = false, 2000);
+                                    }
+                                }" class="relative">
+                                    <button @click="copyLink()"
+                                        class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
+                                        <x-lucide-link class="w-5 h-5" x-show="!copied" />
+                                        <x-lucide-check class="w-5 h-5 text-green-500" x-show="copied" x-cloak />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -436,6 +466,31 @@
             </section>
         @endif
 
-    </div>
+    <!-- REFINED STYLES -->
+    <style>
+        @keyframes revealUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal-up {
+            animation: revealUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        @supports (view-timeline-name: --revealing) {
+            .reveal-up {
+                animation: revealUp both;
+                animation-timeline: view();
+                animation-range: entry 5% cover 25%;
+            }
+        }
+    </style>
 
 </x-layouts.app>
