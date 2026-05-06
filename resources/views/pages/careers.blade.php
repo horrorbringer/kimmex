@@ -53,35 +53,34 @@
 }" class="bg-white min-h-screen text-titan-navy">
 
         <!-- === PREMIUM CAREERS HERO === -->
-        <section class="relative h-[75vh] min-h-[600px] flex items-center overflow-hidden bg-titan-navy shadow-2xl">
+        <section class="relative h-[55vh] min-h-[480px] flex items-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-5.jpg" alt="Careers Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                {{-- Refined gradient for better text legibility --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-titan-navy/20 to-titan-navy/60"></div>
             </div>
 
-            <div class="relative z-20 w-full max-w-[1240px] mx-auto px-6 pt-20" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+            <div class="relative z-20 w-full max-w-[1240px] mx-auto px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
                 <!-- Premium Glassmorphism Badge -->
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-4 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.25em] mb-12">
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-4 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12 border border-white/10">
                     <span class="relative flex h-2.5 w-2.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-titan-red shadow-[0_0_10px_rgba(227,30,36,0.8)]"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-titan-red"></span>
                     </span>
                     {{ __('Join Our Elite Team') }}
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 font-black text-white mb-10 leading-[0.95] tracking-tight uppercase"
-                    style="font-size: clamp(3.5rem, 9vw, 7.5rem);">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                    style="font-size: clamp(2.5rem, 7vw, 5rem);">
                     {{ __('BUILD YOUR') }}<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-red-400">{{ __('LEGACY') }}</span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-red-500">{{ __('LEGACY') }}</span>
                 </h1>
 
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" 
-                     class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-8 mb-16 max-w-2xl">
+                     class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-8 mb-12 max-w-2xl">
                     <p class="text-lg md:text-xl text-white/90 font-medium leading-relaxed">
                         {{ __('Join a team of visionaries shaping the skyline and engineering future of Cambodia. We value excellence, impact, and continuous growth.') }}
                     </p>
@@ -108,8 +107,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         <!-- WHY JOIN US -->

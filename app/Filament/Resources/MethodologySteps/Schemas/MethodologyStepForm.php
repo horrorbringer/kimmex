@@ -19,9 +19,11 @@ class MethodologyStepForm
                 Section::make()
                     ->components([
                         TextInput::make('title')
+                            ->label(__('Title'))
                             ->required()
                             ->suffixAction(TranslationHelper::getAutoTranslateAction('title')),
                         RichEditor::make('description')
+                            ->label(__('Description'))
                             ->required()
                             ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->columnSpanFull(),
@@ -51,10 +53,12 @@ class MethodologyStepForm
                                     ->prefixIcon(fn($state) => $state)
                                     ->placeholder(__('Select an icon')),
                                 TextInput::make('orderIndex')
+                                    ->label(__('Order Index'))
                                     ->required()
                                     ->numeric()
                                     ->default(0),
                                 Toggle::make('isActive')
+                                    ->label(__('Is Active'))
                                     ->default(true)
                                     ->inline(false),
                             ]),

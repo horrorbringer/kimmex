@@ -3,13 +3,14 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === PREMIUM CONTACT HERO === -->
-        <section class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+        <section
+            class="relative h-[75vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
+                    class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                {{-- Lightened multi-stage gradient --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
 
             <div class="relative z-20 text-center max-w-5xl px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
@@ -25,7 +26,8 @@
                     <span class="text-titan-red">{{ __('WITH US') }}</span>
                 </h1>
 
-                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
+                <div :class="shown ? 'opacity-100' : 'opacity-0'"
+                    class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
                     <div class="h-[1px] w-12 bg-white/30"></div>
                     <p class="text-sm md:text-base text-white/90 font-bold uppercase tracking-[0.4em]">
                         {{ __('Building Relationships. Building Future.') }}
@@ -34,8 +36,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         @php
@@ -43,34 +43,39 @@
             $lang = app()->getLocale();
             $email = $profile['email'] ?? 'info@kimmex.com.kh';
             $phone = $profile['phone'] ?? '+855 23 999 999';
-            $address = $profile[$lang]['address'] ?? $profile['en']['address'] ?? __('Phnom Penh, Cambodia');
+            $address = $profile[$lang]['address'] ?? ($profile['en']['address'] ?? __('Phnom Penh, Cambodia'));
             $googleMapsUrl = $profile['google_maps_url'] ?? '';
             $originalMapsUrl = $googleMapsUrl;
 
             // Enhanced detection for embeddable URLs
-            $isEmbed = str_contains($googleMapsUrl, '/maps/embed') ||
+            $isEmbed =
+                str_contains($googleMapsUrl, '/maps/embed') ||
                 str_contains($googleMapsUrl, 'google.com/maps?pb=') ||
                 str_contains($googleMapsUrl, 'output=embed');
 
             if (!$isEmbed && !empty($googleMapsUrl)) {
                 // If it's not an embed link, we use the official Kimmex Embed fallback
-                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh";
-            } elseif (empty($googleMapsUrl)) {
-                // Default fallback if nothing provided
-                $googleMapsUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh";
-            }
+    $googleMapsUrl =
+        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
+} elseif (empty($googleMapsUrl)) {
+    // Default fallback if nothing provided
+    $googleMapsUrl =
+        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
+}
 
-            // Clickable link fallback: prioritze user's link if provided and it's NOT an embed link
-            $googleMapsLink = (!empty($originalMapsUrl) && !$isEmbed)
-                ? $originalMapsUrl
-                : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
+// Clickable link fallback: prioritze user's link if provided and it's NOT an embed link
+$googleMapsLink =
+    !empty($originalMapsUrl) && !$isEmbed
+        ? $originalMapsUrl
+        : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($address);
 
-            $facebook = $profile['facebook'] ?? '#';
-            $linkedin = $profile['linkedin'] ?? '#';
-            $youtube = $profile['youtube'] ?? '#';
-            $instagram = $profile['instagram'] ?? '#';
-            $telegram = $profile['telegram'] ?? '#';
-            $workingHours = $profile[$lang]['working_hours'] ?? $profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM';
+$facebook = $profile['facebook'] ?? '#';
+$linkedin = $profile['linkedin'] ?? '#';
+$youtube = $profile['youtube'] ?? '#';
+$instagram = $profile['instagram'] ?? '#';
+$telegram = $profile['telegram'] ?? '#';
+$workingHours =
+    $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
         @endphp
 
         <!-- CONTACT INFO BAR -->
@@ -138,7 +143,7 @@
                             </div>
                         </div>
 
-                        @if(session('success'))
+                        @if (session('success'))
                             <div
                                 class="bg-green-50 text-green-700 p-4 rounded-xl mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2">
                                 <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
@@ -146,7 +151,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('contact.submit') }}" method="POST" class="space-y-5">
+                        <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                             @csrf
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
@@ -162,7 +167,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Last Name') }}
+                                    <label
+                                        class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Last Name') }}
                                         <span class="text-titan-red">*</span></label>
                                     <div class="relative">
                                         <x-lucide-user
@@ -174,7 +180,8 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Email Address') }}
+                                <label
+                                    class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Email Address') }}
                                     <span class="text-titan-red">*</span></label>
                                 <div class="relative">
                                     <x-lucide-at-sign
@@ -209,11 +216,21 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Message') }} <span
-                                        class="text-titan-red">*</span></label>
+                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Message') }}
+                                    <span class="text-titan-red">*</span></label>
                                 <textarea name="message" required rows="5"
                                     class="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none resize-none placeholder:text-gray-300"
                                     placeholder="{{ __('Tell us about the details...') }}"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Attachment') }}</label>
+                                <div class="relative">
+                                    <x-lucide-paperclip
+                                        class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none" />
+                                    <input type="file" name="attachment"
+                                        class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
+                                </div>
+                                <p class="text-[10px] text-titan-navy/30 mt-1.5">{{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}</p>
                             </div>
                             <div class="flex items-center justify-between pt-2">
                                 <p class="text-[11px] text-titan-navy/25 hidden sm:block">
@@ -233,19 +250,19 @@
                 <!-- SIDEBAR (1/3) -->
                 <div class="lg:sticky lg:top-32 space-y-6 self-start">
                     <!-- Hours -->
-                    <div class="bg-titan-navy text-white rounded-2xl p-8 relative overflow-hidden">
+                    <div class="bg-gray-50 text-white rounded-2xl p-8 relative overflow-hidden">
                         <div
                             class="absolute top-0 right-0 w-32 h-32 bg-titan-red/10 rounded-full blur-[60px] pointer-events-none">
                         </div>
                         <div class="relative z-10">
                             <div class="flex items-center gap-3 mb-6">
                                 <x-lucide-clock class="w-4 h-4 text-titan-red" />
-                                <h3 class="text-xs font-black uppercase tracking-widest text-white/70">
+                                <h3 class="text-xs font-black uppercase tracking-widest text-titan-navy/70">
                                     {{ __('Working Hours') }}
                                 </h3>
                             </div>
                             <div class="space-y-3 text-sm">
-                                <div class="text-white/80 font-medium leading-relaxed">
+                                <div class="text-titan-navy/80 font-medium leading-relaxed">
                                     {{ $workingHours }}
                                 </div>
                             </div>
@@ -260,22 +277,28 @@
                                 {{ __('Follow Us') }}
                             </h3>
                         </div>
-                        <div class="flex gap-3">
-                            <a href="{{ $facebook }}" target="_blank"
-                                class="w-11 h-11 rounded-xl bg-white text-titan-navy flex items-center justify-center hover:bg-titan-red hover:text-white transition-all duration-300 shadow-sm border border-gray-100"><x-lucide-facebook
+                        <div class="flex flex-wrap gap-3">
+                            <a href="{{ $facebook }}" target="_blank" rel="noopener"
+                                class="w-9 h-9 rounded bg-[#1877F2] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#1877F2]/20"><x-lucide-facebook
                                     class="w-4 h-4" /></a>
-                            <a href="{{ $linkedin }}" target="_blank"
-                                class="w-11 h-11 rounded-xl bg-white text-titan-navy flex items-center justify-center hover:bg-titan-red hover:text-white transition-all duration-300 shadow-sm border border-gray-100"><x-lucide-linkedin
+                            <a href="{{ $linkedin }}" target="_blank" rel="noopener"
+                                class="w-9 h-9 rounded bg-[#0A66C2] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#0A66C2]/20"><x-lucide-linkedin
                                     class="w-4 h-4" /></a>
-                            <a href="{{ $youtube }}" target="_blank"
-                                class="w-11 h-11 rounded-xl bg-white text-titan-navy flex items-center justify-center hover:bg-titan-red hover:text-white transition-all duration-300 shadow-sm border border-gray-100"><x-lucide-youtube
-                                    class="w-4 h-4" /></a>
-                            <a href="{{ $instagram }}" target="_blank"
-                                class="w-11 h-11 rounded-xl bg-white text-titan-navy flex items-center justify-center hover:bg-titan-red hover:text-white transition-all duration-300 shadow-sm border border-gray-100"><x-lucide-instagram
-                                    class="w-4 h-4" /></a>
-                            @if($telegram !== '#')
-                                <a href="{{ $telegram }}" target="_blank"
-                                    class="w-11 h-11 rounded-xl bg-white text-titan-navy flex items-center justify-center hover:bg-titan-red hover:text-white transition-all duration-300 shadow-sm border border-gray-100"><x-lucide-send
+                            @if ($youtube && $youtube !== '#')
+                                <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
+                                    class="w-9 h-9 rounded bg-[#FF0000] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#FF0000]/20">
+                                    <x-lucide-youtube class="w-4 h-4" />
+                                </a>
+                            @endif
+                            @if ($instagram && $instagram !== '#')
+                                <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
+                                    class="w-9 h-9 rounded bg-[#E4405F] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#E4405F]/20">
+                                    <x-lucide-instagram class="w-4 h-4" />
+                                </a>
+                            @endif
+                            @if ($telegram && $telegram !== '#')
+                                <a href="{{ $telegram }}" target="_blank" rel="noopener"
+                                    class="w-9 h-9 rounded bg-[#24A1DE] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#24A1DE]/20"><x-lucide-send
                                         class="w-4 h-4" /></a>
                             @endif
                         </div>

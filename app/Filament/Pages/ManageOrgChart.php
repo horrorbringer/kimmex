@@ -19,7 +19,15 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
     protected string $view = 'filament.pages.manage-org-chart';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'HR Management';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('HR Management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Manage Org Chart');
+    }
 
     protected static ?int $navigationSort = 1;
 

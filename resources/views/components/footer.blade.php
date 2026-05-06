@@ -40,40 +40,40 @@
                     <div class="flex flex-col flex-1">
                         <span
                             class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
-                        <span class="text-[10px] uppercase tracking-[0.2em] text-accent-orange">{{ $tagline }}</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] text-titan-red">{{ $tagline }}</span>
                     </div>
                 </div>
                 <p class="text-white/50 text-sm leading-relaxed max-w-xs">
                     {{ \Illuminate\Support\Str::limit($brand['company_story'] ?? __('Over 25 years of excellence in building the future of Cambodia.'), 120) }}
                 </p>
-                <div class="flex gap-3 pt-2">
+                <div class="flex gap-3">
                     @if($facebook && $facebook !== '#')
                         <a href="{{ $facebook }}" target="_blank" rel="noopener noreferrer"
-                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            class="w-9 h-9 rounded bg-[#1877F2] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#1877F2]/20">
                             <x-lucide-facebook class="w-4 h-4" />
                         </a>
                     @endif
                     @if($linkedin && $linkedin !== '#')
                         <a href="{{ $linkedin }}" target="_blank" rel="noopener noreferrer"
-                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            class="w-9 h-9 rounded bg-[#0A66C2] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#0A66C2]/20">
                             <x-lucide-linkedin class="w-4 h-4" />
                         </a>
                     @endif
                     @if($youtube && $youtube !== '#')
                         <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
-                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            class="w-9 h-9 rounded bg-[#FF0000] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#FF0000]/20">
                             <x-lucide-youtube class="w-4 h-4" />
                         </a>
                     @endif
                     @if($instagram && $instagram !== '#')
                         <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
-                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            class="w-9 h-9 rounded bg-[#E4405F] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#E4405F]/20">
                             <x-lucide-instagram class="w-4 h-4" />
                         </a>
                     @endif
                     @if($telegram && $telegram !== '#')
                         <a href="{{ $telegram }}" target="_blank" rel="noopener noreferrer"
-                            class="w-9 h-9 rounded bg-white/10 flex items-center justify-center hover:bg-accent-orange transition-all text-white">
+                            class="w-9 h-9 rounded bg-[#24A1DE] flex items-center justify-center hover:brightness-110 transition-all text-white shadow-lg shadow-[#24A1DE]/20">
                             <x-lucide-send class="w-4 h-4" />
                         </a>
                     @endif
@@ -82,32 +82,32 @@
 
             <!-- Column 2: Quick Links -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
+                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-titan-red flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Explore') }}
                 </h4>
                 <ul class="space-y-4 text-sm text-white/50">
                     <li><a href="/projects"
-                            class="hover:text-accent-orange hover:pl-2 transition-all flex items-center gap-2">{{ __('Projects') }}</a>
+                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('Projects') }}</a>
                     </li>
                     <li><a href="/services"
-                            class="hover:text-accent-orange hover:pl-2 transition-all flex items-center gap-2">{{ __('Services') }}</a>
+                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('Services') }}</a>
                     </li>
                     <li><a href="/about"
-                            class="hover:text-accent-orange hover:pl-2 transition-all flex items-center gap-2">{{ __('About Us') }}</a>
+                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('About Us') }}</a>
                     </li>
                     <li><a href="/careers"
-                            class="hover:text-accent-orange hover:pl-2 transition-all flex items-center gap-2">{{ __('Careers') }}</a>
+                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('Careers') }}</a>
                     </li>
                     <li><a href="/news"
-                            class="hover:text-accent-orange hover:pl-2 transition-all flex items-center gap-2">{{ __('News & Insights') }}</a>
+                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('News & Insights') }}</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Column 3: Services -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
+                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-titan-red flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Services') }}
                 </h4>

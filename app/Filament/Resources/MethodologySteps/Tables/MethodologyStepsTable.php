@@ -20,11 +20,14 @@ class MethodologyStepsTable
                     ->label('#')
                     ->sortable(),
                 TextColumn::make('title')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction)),
                 TextColumn::make('icon')
+                    ->label(__('Icon'))
                     ->fontFamily(\Filament\Support\Enums\FontFamily::Mono),
-                ToggleColumn::make('isActive'),
+                ToggleColumn::make('isActive')
+                    ->label(__('Is Active')),
             ])
             ->reorderable('orderIndex')
             ->defaultSort('orderIndex')

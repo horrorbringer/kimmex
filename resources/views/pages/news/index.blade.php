@@ -48,13 +48,12 @@
     }">
 
         <!-- === PREMIUM NEWS HUB HERO === -->
-        <section class="relative bg-titan-navy h-[60vh] min-h-[500px] flex items-center overflow-hidden">
+        <section class="relative h-[50vh] min-h-[420px] flex items-center justify-center overflow-hidden bg-titan-navy">
             <!-- Background Image -->
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-6.jpg" class="w-full h-full object-cover opacity-100 animate-slow-zoom" alt="News Background" />
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                {{-- Lightened multi-stage gradient --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
 
             <div class="max-w-[1240px] mx-auto w-full px-6 relative z-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
@@ -69,7 +68,7 @@
                 <div class="max-w-4xl">
                     <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                         class="transition-all duration-1000 delay-300 font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
-                        style="font-size: clamp(3rem, 8vw, 6rem);">
+                        style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                         {{ __('NEWS') }}<span class="text-titan-red">.</span><br />
                         <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('HUB') }}</span>
@@ -83,8 +82,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#FCFCFD] to-transparent z-10"></div>
         </section>
 
         <!-- === MINIMAL CATEGORY BAR === -->

@@ -154,7 +154,8 @@
                 </div>
                 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[6.5rem] font-black text-white uppercase tracking-tighter leading-[0.9] mb-12">
+                    class="transition-all duration-1000 delay-300 font-black text-white uppercase tracking-tighter leading-[0.9] mb-8"
+                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                     {{ $project['title'] }}
                 </h1>
                 
@@ -169,8 +170,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent z-10"></div>
         </header>
 
         <!-- --- MAIN CONTENT SPLIT --- -->

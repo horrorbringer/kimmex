@@ -80,10 +80,10 @@
 
     <!-- === SLIDES === -->
     <template x-for="(slide, index) in slides" :key="index">
-        <div x-show="current === index" x-transition:enter="transition transform ease-out duration-1000"
-            x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition absolute transform ease-in duration-700 z-0"
-            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-105"
+        <div x-show="current === index" x-transition:enter="transition-all transform ease-out duration-[1200ms]"
+            x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0"
+            x-transition:leave="transition-all absolute transform ease-in duration-[1000ms] z-0"
+            x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 -translate-x-12"
             class="absolute inset-0 w-full h-full">
 
             <template x-if="slide.image">
@@ -104,17 +104,17 @@
     </template>
 
     <!-- === CONTENT OVERLAY === -->
-    <div class="absolute inset-0 flex items-center z-10 pt-32 lg:pt-40">
+    <div class="absolute inset-0 flex items-center z-10 pt-32 lg:pt-10">
         <div class="max-w-[1400px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
 
             <template x-for="(slide, index) in slides" :key="'content-'+index">
                 <div x-show="current === index" 
-                    x-transition:enter="transition ease-out duration-1000 delay-300"
-                    x-transition:enter-start="opacity-0 translate-y-12"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-500 absolute"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 -translate-y-8">
+                    x-transition:enter="transition-all transform ease-out duration-[1200ms] delay-300"
+                    x-transition:enter-start="opacity-0 translate-x-24"
+                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:leave="transition-all transform ease-in duration-700 absolute"
+                    x-transition:leave-start="opacity-100 translate-x-0"
+                    x-transition:leave-end="opacity-0 -translate-x-24">
 
                     <div class="flex items-center gap-4 mb-10">
                         <div class="transition-all duration-1000 delay-500 inline-flex items-center gap-3 glass-premium px-6 py-2.5 rounded-full">
@@ -124,8 +124,7 @@
                         </div>
                     </div>
 
-                    <h1 class="font-heading font-black mb-8 text-white uppercase leading-[0.9] tracking-tighter max-w-4xl"
-                        style="font-size: clamp(3rem, 7vw, 6.5rem);"
+                    <h1 class="font-heading font-black mb-8 text-white uppercase leading-[0.9] tracking-tighter max-w-4xl text-4xl md:text-5xl"
                         x-text="slide.title"></h1>
 
                     <p class="text-white/70 max-w-lg mb-12 font-medium text-lg md:text-xl leading-relaxed"
@@ -174,7 +173,7 @@
                         <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Projects') }}</div>
                     </div>
                 </div>
-
+          
                 <div class="flex gap-2">
                     <button @click="prevSlide"
                         class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">

@@ -31,11 +31,10 @@ class InquiriesTable
                     ->searchable(),
                 \Filament\Tables\Columns\IconColumn::make('attachment_url')
                     ->label(__('Attachment'))
-                    ->icon('heroicon-o-paper-clip')
+                    ->icon(fn ($state) => $state ? 'heroicon-o-paper-clip' : null)
                     ->color('primary')
                     ->url(fn ($record) => $record->attachment_url ? \Illuminate\Support\Facades\Storage::url($record->attachment_url) : null)
-                    ->openUrlInNewTab()
-                    ->visible(fn ($record) => (bool) $record->attachment_url),
+                    ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->searchable(),

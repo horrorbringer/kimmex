@@ -223,13 +223,12 @@
 
 
         <!-- === PREMIUM ABOUT HERO === -->
-        <section class="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+        <section class="relative h-[75vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
                 <img src="/images/hero/hero-1.jpg" alt="Construction Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                {{-- Lightened multi-stage gradient --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
 
             <div class="relative z-20 text-center max-w-5xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
@@ -240,7 +239,8 @@
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                    class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[7rem] font-black text-white mb-10 leading-[0.9] tracking-tighter uppercase">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                     {{ __('BUILDING') }}<br />
                     <span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
                 </h1>
@@ -254,8 +254,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         <!-- STATS BAR -->

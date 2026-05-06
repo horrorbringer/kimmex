@@ -59,6 +59,39 @@ class NewsArticleForm
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsVisibility('public')
                     ->fileAttachmentsDirectory('news/content')
+                    ->hintAction(
+                        \Filament\Actions\Action::make('generate_ai_content')
+                            ->label(__('Generate with AI'))
+                            ->icon('heroicon-o-sparkles')
+                            ->form([
+                                \Filament\Forms\Components\TextInput::make('topic')
+                                    ->label(__('What should the article be about?'))
+                                    ->required(),
+                                \Filament\Forms\Components\Textarea::make('instructions')
+                                    ->label(__('Additional Instructions (Optional)'))
+                                    ->rows(2),
+                            ])
+                            ->action(function (Set $set, array $data) {
+                                try {
+                                    $service = new \App\Services\AIGeneratorService();
+                                    $content = $service->generateContent($data['topic'], 'News Article', $data['instructions'] ?? null);
+                                    
+                                    if ($content) {
+                                        $set('content', $content);
+                                        \Filament\Notifications\Notification::make()
+                                            ->title(__('Content generated successfully!'))
+                                            ->success()
+                                            ->send();
+                                    }
+                                } catch (\Exception $e) {
+                                    \Filament\Notifications\Notification::make()
+                                        ->title(__('AI Generation Failed'))
+                                        ->body($e->getMessage())
+                                        ->danger()
+                                        ->send();
+                                }
+                            })
+                    )
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, $state, $get) {
                         // Auto-generate excerpt if empty

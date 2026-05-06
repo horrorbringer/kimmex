@@ -244,7 +244,7 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === 1. PREMIUM HERO === -->
-        <section class="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
+        <section class="relative h-[75vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
                 @if ($service['image'])
                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
@@ -276,7 +276,8 @@
                     <x-dynamic-component :component="$service['icon'] ?? 'lucide-building'" class="w-10 h-10 text-white" />
                 </div>
 
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 uppercase tracking-tighter leading-[0.9]">
+                <h1 class="font-black text-white mb-8 uppercase tracking-tighter leading-[0.9]"
+                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                     {{ $service['title'][$lang] }}
                 </h1>
 
@@ -289,8 +290,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </section>
 
         <!-- === 2. SERVICE OVERVIEW === -->

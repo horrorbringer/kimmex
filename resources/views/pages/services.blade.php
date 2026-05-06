@@ -101,24 +101,13 @@ $sectors = [
 @endphp
 
 <div class="bg-white min-h-screen text-titan-navy">
-    <style>
-        .custom-hero-container {
-            height: 95vh;
-            min-height: 800px;
-        }
-        @media (min-width: 1024px) {
-            .custom-hero-container {
-                /* Removed radius for sharp corners */
-            }
-        }
-    </style>
     <!-- === HERO SECTION (Premium Design-Z) === -->
-    <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl custom-hero-container">
+    <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy h-[75vh] min-h-[600px]">
         {{-- Background Zoom Animation --}}
         <div class="absolute inset-0 bg-titan-navy">
             <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/90"></div>
-            <div class="absolute inset-0 bg-black/20"></div>
+            {{-- Lightened multi-stage gradient --}}
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
         </div>
 
         <!-- Decorative Floating Elements -->
@@ -134,7 +123,8 @@ $sectors = [
             </div>
 
             <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                class="transition-all duration-1000 delay-300 text-6xl md:text-8xl lg:text-[7rem] font-black text-white mb-10 leading-[0.85] tracking-tighter uppercase">
+                class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                 <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'ENGINEERING' }}</span> <br/>
                 <span class="text-titan-red">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
             </h1>

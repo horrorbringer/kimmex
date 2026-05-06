@@ -141,7 +141,8 @@
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 text-3xl md:text-5xl lg:text-6xl font-black text-white mb-10 leading-[1.1] tracking-tighter uppercase">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[1.1] tracking-tighter uppercase"
+                    style="font-size: clamp(2rem, 6vw, 3.5rem);">
                     {{ $doc['title'] }}
                 </h1>
 
@@ -154,8 +155,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </header>
 
         <!-- MAIN ARCHITECTURE -->

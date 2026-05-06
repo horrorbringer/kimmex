@@ -73,7 +73,40 @@ class ServiceForm
                             RichEditor::make('description')
                                 ->label(__('Description'))
                                 ->fileAttachmentsDisk('public')
-                                ->fileAttachmentsVisibility('public'),
+                                ->fileAttachmentsVisibility('public')
+                                ->hintAction(
+                                    \Filament\Actions\Action::make('generate_ai_content')
+                                        ->label(__('Generate with AI'))
+                                        ->icon('heroicon-o-sparkles')
+                                        ->form([
+                                            \Filament\Forms\Components\TextInput::make('topic')
+                                                ->label(__('What should the service description be about?'))
+                                                ->required(),
+                                            \Filament\Forms\Components\Textarea::make('instructions')
+                                                ->label(__('Additional Instructions (Optional)'))
+                                                ->rows(2),
+                                        ])
+                                        ->action(function (Set $set, array $data) {
+                                            try {
+                                                $service = new \App\Services\AIGeneratorService();
+                                                $content = $service->generateContent($data['topic'], 'Service Description', $data['instructions'] ?? null);
+                                                
+                                                if ($content) {
+                                                    $set('description', $content);
+                                                    \Filament\Notifications\Notification::make()
+                                                        ->title(__('Content generated successfully!'))
+                                                        ->success()
+                                                        ->send();
+                                                }
+                                            } catch (\Exception $e) {
+                                                \Filament\Notifications\Notification::make()
+                                                    ->title(__('AI Generation Failed'))
+                                                    ->body($e->getMessage())
+                                                    ->danger()
+                                                    ->send();
+                                            }
+                                        })
+                                ),
                         ]),
                     ]),
 

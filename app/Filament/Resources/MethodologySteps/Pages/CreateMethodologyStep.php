@@ -4,8 +4,18 @@ namespace App\Filament\Resources\MethodologySteps\Pages;
 
 use App\Filament\Resources\MethodologySteps\MethodologyStepResource;
 use Filament\Resources\Pages\CreateRecord;
+use LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
 class CreateMethodologyStep extends CreateRecord
 {
+    use Translatable;
+
     protected static string $resource = MethodologyStepResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            \Filament\Actions\LocaleSwitcher::make(),
+        ];
+    }
 }

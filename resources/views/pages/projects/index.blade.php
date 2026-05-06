@@ -127,13 +127,12 @@
         </style>
 
         <!-- === PREMIUM PROJECTS HERO === -->
-        <section class="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+        <section class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-5.jpg" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                {{-- Lightened multi-stage gradient --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
 
             <!-- Decorative Elements -->
@@ -150,7 +149,8 @@
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 text-5xl md:text-8xl font-black text-white mb-10 leading-[0.9] tracking-tighter uppercase">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                     {{ __('BUILT') }} <span class="text-titan-red">{{ __('LEGACY') }}</span>
                 </h1>
 
@@ -170,9 +170,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
-        </section>
         </section>
 
         <!-- INTEGRATED FILTER & GRID -->

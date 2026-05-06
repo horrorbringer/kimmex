@@ -36,6 +36,11 @@ class ManageOrganization extends Page implements HasForms
         return 0;
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('Manage Organization');
+    }
+
     public function getTitle(): string
     {
         return __('Manage Organization Profile');

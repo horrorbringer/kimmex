@@ -18,12 +18,17 @@ class TranslationHelper
         return Action::make('autoTranslate')
             ->icon('heroicon-m-language')
             ->tooltip(__('Translate from English to Khmer'))
-            ->action(function (Get $get, Set $set, $state, $record) use ($fieldName) {
+            ->action(function (Get $get, Set $set, $state, $record, \Livewire\Component $livewire) use ($fieldName) {
                 $sourceText = $state;
 
                 // If the current field is empty, try to get the English value from the record or form
                 if (empty($sourceText) && $record) {
-                    $sourceText = $record->getTranslation($fieldName, 'en');
+                    $sourceText = $record->getTranslation($fieldName, 'en', false);
+                }
+                
+                // For new records, get the unsaved English text from the otherLocaleData array
+                if (empty($sourceText) && property_exists($livewire, 'otherLocaleData')) {
+                    $sourceText = $livewire->otherLocaleData['en'][$fieldName] ?? '';
                 }
 
                 if (empty($sourceText)) {

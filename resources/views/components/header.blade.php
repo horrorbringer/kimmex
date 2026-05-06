@@ -59,7 +59,7 @@
         });
     @endphp
     <!-- TOP BAR -->
-    <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-10 opacity-100 border-white/10' + (isHeroPage ? ' bg-titan-navy/20 backdrop-blur-md' : ' bg-titan-navy')"
+    <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-8 opacity-100 border-white/10' + (isHeroPage ? ' bg-titan-navy/20 backdrop-blur-md' : ' bg-titan-navy')"
         class="text-white text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden relative border-b">
         <div class="max-w-[1600px] mx-auto px-2 sm:px-6 h-full flex justify-between items-center">
             <div class="flex gap-2 sm:gap-6 items-center">
@@ -85,32 +85,32 @@
                 <div class="hidden sm:flex gap-2">
                     @if($facebook && $facebook !== '#')
                         <a href="{{ $facebook }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
-                            <x-lucide-facebook class="w-3 h-3" />
+                            class="w-6 h-6 rounded bg-[#1877F2] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            <x-lucide-facebook class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($linkedin && $linkedin !== '#')
                         <a href="{{ $linkedin }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
-                            <x-lucide-linkedin class="w-3 h-3" />
+                            class="w-6 h-6 rounded bg-[#0A66C2] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            <x-lucide-linkedin class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($youtube && $youtube !== '#')
                         <a href="{{ $youtube }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
-                            <x-lucide-youtube class="w-3 h-3" />
+                            class="w-6 h-6 rounded bg-[#FF0000] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            <x-lucide-youtube class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($instagram && $instagram !== '#')
                         <a href="{{ $instagram }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
-                            <x-lucide-instagram class="w-3 h-3" />
+                            class="w-6 h-6 rounded bg-[#E4405F] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            <x-lucide-instagram class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($telegram && $telegram !== '#')
                         <a href="{{ $telegram }}" target="_blank"
-                            class="w-6 h-6 rounded bg-white/10 flex items-center justify-center hover:bg-titan-red transition-colors">
-                            <x-lucide-send class="w-3 h-3" />
+                            class="w-6 h-6 rounded bg-[#24A1DE] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            <x-lucide-send class="w-3 h-3 text-white" />
                         </a>
                     @endif
                 </div>
@@ -388,17 +388,17 @@
                 </div>
 
                 <!-- Right Side Actions -->
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
                     <!-- Language Switcher -->
-                    <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'" class="hidden sm:flex items-center gap-1 rounded-lg p-1 h-10">
+                    <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'" class="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 h-8 border border-white/5">
                         <a href="{{ route('lang.switch', 'en') }}"
-                            class="h-full flex items-center px-2 rounded-md text-[11px] font-bold transition-all {{ app()->getLocale() === 'en' ? 'bg-titan-red text-white' : '' }}"
-                            :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white'" : "navDark ? 'text-titan-navy/60 hover:text-titan-navy' : 'text-white/60 hover:text-white'" }}">
+                            class="h-full flex items-center px-2.5 rounded-md text-[9px] font-black tracking-widest transition-all"
+                            :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
                             EN
                         </a>
                         <a href="{{ route('lang.switch', 'km') }}"
-                            class="h-full flex items-center px-2 rounded-md text-[11px] font-bold transition-all {{ app()->getLocale() === 'km' ? 'bg-titan-red text-white' : '' }}"
-                            :class="{{ app()->getLocale() === 'km' ? "'bg-titan-red text-white'" : "navDark ? 'text-titan-navy/60 hover:text-titan-navy' : 'text-white/60 hover:text-white'" }}">
+                            class="h-full flex items-center px-2.5 rounded-md text-[9px] font-black tracking-widest transition-all"
+                            :class="{{ app()->getLocale() === 'km' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
                             KH
                         </a>
                     </div>
@@ -406,16 +406,16 @@
                     <!-- Search Button -->
                     <button @click="isSearchOpen = true"
                         :class="navDark ? 'bg-gray-100 text-titan-navy' : 'bg-white/10 text-white hover:bg-white/20'"
-                        class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
-                        <x-lucide-search class="w-4 h-4" />
+                        class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
+                        <x-lucide-search class="w-3.5 h-3.5" />
                     </button>
 
                     <!-- Mobile Menu Button -->
                     <button @click="isMobileMenuOpen = !isMobileMenuOpen"
                         :class="navDark ? 'bg-titan-navy text-white' : 'bg-white/10 text-white'"
-                        class="lg:hidden w-10 h-10 rounded-lg flex items-center justify-center transition-colors">
-                        <span x-show="!isMobileMenuOpen"><x-lucide-menu class="w-5 h-5" /></span>
-                        <span x-show="isMobileMenuOpen" style="display:none"><x-lucide-x class="w-5 h-5" /></span>
+                        class="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
+                        <span x-show="!isMobileMenuOpen"><x-lucide-menu class="w-4 h-4" /></span>
+                        <span x-show="isMobileMenuOpen" style="display:none"><x-lucide-x class="w-4 h-4" /></span>
                     </button>
                 </div>
             </div>

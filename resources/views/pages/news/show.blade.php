@@ -79,6 +79,13 @@
         $pageTitle = $article['title'] ?? __('News Details');
         $pageDesc = $article['excerpt'] ?? __('Read the latest news and updates from Kimmex.');
         $pageImage = $article['image'] ?? null;
+
+        $profile = $globalSettings['profile'] ?? [];
+        $facebook = $profile['facebook'] ?? null;
+        $linkedin = $profile['linkedin'] ?? null;
+        $youtube = $profile['youtube'] ?? null;
+        $instagram = $profile['instagram'] ?? null;
+        $telegram = $profile['telegram'] ?? null;
     @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage">
@@ -184,7 +191,7 @@
         </div>
 
         <!-- === PREMIUM NEWS HERO === -->
-        <header class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
+        <header class="relative h-[50vh] min-h-[420px] flex items-center justify-center overflow-hidden bg-titan-navy shadow-2xl">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
                 @if($article['image'])
@@ -192,20 +199,20 @@
                 @else
                     <div class="w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
                 @endif
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                {{-- Lightened multi-stage gradient --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
 
             <div class="relative z-20 text-center max-w-5xl px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12">
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-10 border border-white/10">
                     <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
                     <span>{{ strtoupper($article['category']) }}</span>
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 text-3xl md:text-5xl lg:text-6xl font-black text-white mb-10 leading-[1.1] tracking-tighter uppercase">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[1] tracking-tighter uppercase drop-shadow-2xl"
+                    style="font-size: clamp(2rem, 6vw, 4rem);">
                     {{ $article['title'] }}
                 </h1>
 
@@ -218,8 +225,6 @@
                 </div>
             </div>
 
-            {{-- Decorative bottom edge --}}
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
         </header>
 
         <!-- MAIN CONTENT ARCHITECTURE -->
@@ -269,15 +274,15 @@
                     <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Story') }}</div>
                     <div class="flex items-center gap-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                            class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-[#1877F2]/20 group/fb">
                             <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
                         </a>
                         <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#0A66C2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                            class="w-12 h-12 bg-[#0A66C2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-[#0A66C2]/20 group/li">
                             <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
                         </a>
                         <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#24A1DE] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                            class="w-12 h-12 bg-[#24A1DE] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-[#24A1DE]/20 group/tg">
                             <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
                         </a>
                         <div x-data="{ 
@@ -289,7 +294,7 @@
                             }
                         }" class="relative">
                             <button @click="copyLink()"
-                                class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
+                                class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-xl group/link">
                                 <x-lucide-link class="w-5 h-5" x-show="!copied" />
                                 <x-lucide-check class="w-5 h-5 text-green-500" x-show="copied" x-cloak />
                             </button>
@@ -298,16 +303,53 @@
                 </div>
 
                 <!-- AUTHOR BIO BOX -->
-                <div class="mt-16 p-8 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center gap-6 reveal-up">
+                <div class="mt-16 p-8 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-center gap-8 reveal-up">
                     <div class="w-20 h-20 rounded-full bg-titan-navy flex items-center justify-center shrink-0">
                         <x-lucide-user class="w-8 h-8 text-white/50" />
                     </div>
                     <div class="text-center">
                         <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.3em] mb-1">{{ __('Written By') }}</div>
                         <h4 class="text-xl font-black text-titan-navy uppercase tracking-tight mb-2">{{ $article['author'] }}</h4>
-                        <p class="text-sm font-medium text-titan-navy/60 max-w-xl">
+                        <p class="text-sm font-medium text-titan-navy/60 max-w-xl mx-auto">
                             {{ __('An editorial contributor for Kimmex, bringing you the latest updates on engineering, sustainability, and large-scale infrastructure projects.') }}
                         </p>
+                    </div>
+
+                    <!-- SOCIAL FOLLOW IN NEWS DETAILS (FILLED) -->
+                    <div class="pt-6 border-t border-gray-200/50 w-full flex flex-col items-center gap-4">
+                        <div class="text-[9px] font-black text-titan-navy/30 uppercase tracking-[0.3em]">{{ __('Follow Kimmex') }}</div>
+                        <div class="flex items-center gap-3">
+                            @if($facebook && $facebook !== '#')
+                                <a href="{{ $facebook }}" target="_blank"
+                                    class="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#1877F2]/20">
+                                    <x-lucide-facebook class="w-4 h-4" />
+                                </a>
+                            @endif
+                            @if($linkedin && $linkedin !== '#')
+                                <a href="{{ $linkedin }}" target="_blank"
+                                    class="w-10 h-10 rounded-xl bg-[#0A66C2] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#0A66C2]/20">
+                                    <x-lucide-linkedin class="w-4 h-4" />
+                                </a>
+                            @endif
+                            @if($youtube && $youtube !== '#')
+                                <a href="{{ $youtube }}" target="_blank"
+                                    class="w-10 h-10 rounded-xl bg-[#FF0000] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#FF0000]/20">
+                                    <x-lucide-youtube class="w-4 h-4" />
+                                </a>
+                            @endif
+                            @if($instagram && $instagram !== '#')
+                                <a href="{{ $instagram }}" target="_blank"
+                                    class="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#E4405F]/20">
+                                    <x-lucide-instagram class="w-4 h-4" />
+                                </a>
+                            @endif
+                            @if($telegram && $telegram !== '#')
+                                <a href="{{ $telegram }}" target="_blank"
+                                    class="w-10 h-10 rounded-xl bg-[#24A1DE] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#24A1DE]/20">
+                                    <x-lucide-send class="w-4 h-4" />
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
 

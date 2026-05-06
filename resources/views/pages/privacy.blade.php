@@ -5,8 +5,8 @@
         <!-- === HERO SECTION === -->
         <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy" style="min-height: 400px;">
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-6.jpg" alt="Privacy" class="w-full h-full object-cover opacity-40" />
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-titan-navy/40 to-titan-navy">
+                <img src="/images/projects/Thumbnail-6.jpg" alt="Privacy" class="w-full h-full object-cover opacity-60" />
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70">
                 </div>
             </div>
 

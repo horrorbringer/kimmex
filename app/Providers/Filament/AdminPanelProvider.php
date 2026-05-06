@@ -41,7 +41,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('2.5rem')
             ->homeUrl('/')
             ->navigationItems([
-                \Filament\Navigation\NavigationItem::make(__('Visit Website'))
+                \Filament\Navigation\NavigationItem::make('visit_website')
+                    ->label(fn () => __('Visit Website'))
                     ->url('/')
                     ->icon('heroicon-o-globe-alt')
                     ->sort(-1),
@@ -82,21 +83,21 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()
-                    ->label(__('Organization'))
+                    ->label(fn() => __('Organization'))
                     ->icon('heroicon-o-identification'),
                 \Filament\Navigation\NavigationGroup::make()
-                    ->label(__('Portfolio'))
+                    ->label(fn() => __('Portfolio'))
                     ->icon('heroicon-o-briefcase'),
                 \Filament\Navigation\NavigationGroup::make()
-                    ->label(__('Communication'))
+                    ->label(fn() => __('Communication'))
                     ->icon('heroicon-o-chat-bubble-left-right')
                     ->collapsed(),
                 \Filament\Navigation\NavigationGroup::make()
-                    ->label(__('Governance'))
+                    ->label(fn() => __('Governance'))
                     ->icon('heroicon-o-shield-check')
                     ->collapsed(),
                 \Filament\Navigation\NavigationGroup::make()
-                    ->label(__('Administration'))
+                    ->label(fn() => __('Administration'))
                     ->icon('heroicon-o-cog-6-tooth')
                     ->collapsed(),
             ])

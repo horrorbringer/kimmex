@@ -5,18 +5,18 @@
             class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 transition-all duration-1000">
             <div>
                 <span
-                    class="text-accent-orange font-bold uppercase tracking-widest text-sm mb-2 block">{{ __('Our Partners') }}</span>
+                    class="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">{{ __('Our Partners') }}</span>
                 <h2 class="text-3xl md:text-4xl font-heading font-black text-white">
                     {{ __('Trusted By Leading Institutions') }}</h2>
             </div>
             <div class="flex items-center gap-4">
                 <div class="text-center px-6 py-3 bg-white/10 rounded-lg">
-                    <div class="text-2xl font-black text-accent-orange">50+</div>
+                    <div class="text-2xl font-black text-titan-red">50+</div>
                     <div class="text-[10px] uppercase tracking-widest text-white/60 font-bold">{{ __('Partners') }}
                     </div>
                 </div>
                 <div class="text-center px-6 py-3 bg-white/10 rounded-lg">
-                    <div class="text-2xl font-heading font-black text-accent-orange">25+</div>
+                    <div class="text-2xl font-heading font-black text-titan-red">25+</div>
                     <div class="text-[10px] uppercase tracking-widest text-white/60 font-bold">{{ __('Years Trust') }}
                     </div>
                 </div>

@@ -62,6 +62,24 @@
 
     <x-footer />
 
+    <!-- Scroll to Top Button -->
+    <div x-data="{ show: false }" 
+         @scroll.window="show = window.pageYOffset > 500" 
+         class="fixed bottom-8 right-8 z-[90]">
+        <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" 
+                x-show="show" style="display: none;"
+                x-transition:enter="transition ease-out duration-300 transform"
+                x-transition:enter-start="opacity-0 translate-y-8"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-300 transform"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-8"
+                class="w-12 h-12 bg-titan-red hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-xl shadow-titan-red/30 transition-colors focus:outline-none focus:ring-4 focus:ring-titan-red/50 group"
+                aria-label="Scroll to top">
+            <x-lucide-arrow-up class="w-5 h-5 group-hover:-translate-y-1 transition-transform duration-300" />
+        </button>
+    </div>
+
 </body>
 
 </html>
