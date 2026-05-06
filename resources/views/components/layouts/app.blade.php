@@ -35,17 +35,40 @@
     <meta property="twitter:description" content="{{ $pageDesc }}">
     <meta property="twitter:image" content="{{ $pageImage }}">
 
-    <!-- Fonts (non-render-blocking) -->
+    <!-- Dynamic Theme Styles -->
+    @php
+        $theme = $globalSettings['theme'] ?? [];
+        $primaryColor = $theme['primary_color'] ?? '#dc2626'; // Default titan-red
+        $secondaryColor = $theme['secondary_color'] ?? '#0f172a'; // Default titan-navy
+        $fontEn = $theme['font_family_en'] ?? 'Inter';
+        $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
+        
+        $fontsToLoad = collect([$fontEn, $fontKm])->unique()->filter();
+        $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
+    @endphp
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;700;900&family=Kantumruy+Pro:wght@100..700&family=Hanuman:wght@400;700;900&display=swap"
-        rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;700;900&family=Kantumruy+Pro:wght@100..700&family=Hanuman:wght@400;700;900&display=swap"
-            rel="stylesheet">
-    </noscript>
+    <link href="{{ $fontUrl }}" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: {{ $primaryColor }};
+            --secondary-color: {{ $secondaryColor }};
+            --font-en: '{{ $fontEn }}', sans-serif;
+            --font-km: '{{ $fontKm }}', cursive;
+        }
+        
+        .font-sans { font-family: var(--font-en) !important; }
+        .font-khmer { font-family: var(--font-km) !important; }
+        
+        /* Overwrite specific brand colors if needed */
+        .text-titan-red { color: var(--primary-color) !important; }
+        .bg-titan-red { background-color: var(--primary-color) !important; }
+        .border-titan-red { border-color: var(--primary-color) !important; }
+        .text-titan-navy { color: var(--secondary-color) !important; }
+        .bg-titan-navy { background-color: var(--secondary-color) !important; }
+    </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

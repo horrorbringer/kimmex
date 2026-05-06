@@ -16,7 +16,7 @@ class EditMethodologyStep extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\LocaleSwitcher::make(),
+            \LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher::make(),
             DeleteAction::make(),
         ];
     }

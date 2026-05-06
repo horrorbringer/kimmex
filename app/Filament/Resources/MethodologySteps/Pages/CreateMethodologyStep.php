@@ -15,7 +15,7 @@ class CreateMethodologyStep extends CreateRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\LocaleSwitcher::make(),
+            \LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher::make(),
         ];
     }
 }

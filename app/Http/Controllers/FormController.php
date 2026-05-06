@@ -35,7 +35,7 @@ class FormController extends Controller
             $attachmentPath = $request->file('attachment')->store('attachments', 'public');
         }
 
-        Inquiry::create([
+        $inquiry = Inquiry::create([
             'name' => $sanitized['first_name'] . ' ' . $sanitized['last_name'],
             'email' => $sanitized['email'],
             'phone' => $sanitized['phone'],
@@ -44,6 +44,20 @@ class FormController extends Controller
             'attachment_url' => $attachmentPath,
             'status' => 'NEW',
         ]);
+
+        // 3. Telegram Notification
+        try {
+            $telegram = new \App\Services\TelegramService();
+            $msg = "<b>New Website Inquiry</b>\n\n"
+                 . "<b>Name:</b> {$inquiry->name}\n"
+                 . "<b>Email:</b> {$inquiry->email}\n"
+                 . "<b>Phone:</b> " . ($inquiry->phone ?? 'N/A') . "\n"
+                 . "<b>Subject:</b> {$inquiry->subject}\n\n"
+                 . "<b>Message:</b>\n{$inquiry->message}";
+            $telegram->sendNotification($msg);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', __('Thank you for your inquiry! We will get back to you shortly.'));
     }
@@ -56,12 +70,12 @@ class FormController extends Controller
         }
 
         $validated = $request->validate([
-            'job_id' => 'required|string|max:255', // Simplified from job_posting_id
+            'job_id' => 'required|string|max:255',
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:50',
-            'resume' => 'required|file|mimes:pdf,doc,docx|mimetypes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document|max:10240', // 10MB Max + Mimetype check
-            'message' => 'nullable|string', // Renamed from cover_letter to match view
+            'resume' => 'required|file|mimes:pdf,doc,docx|mimetypes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document|max:10240',
+            'message' => 'nullable|string',
         ]);
 
         // 2. Sanitize Inputs
@@ -71,7 +85,7 @@ class FormController extends Controller
 
         $resumePath = $request->file('resume')->store('resumes', 'public');
 
-        JobApplication::create([
+        $application = JobApplication::create([
             'jobId' => $sanitized['job_id'] === 'gen' ? null : $sanitized['job_id'],
             'applicantName' => $sanitized['full_name'],
             'email' => $sanitized['email'],
@@ -81,6 +95,21 @@ class FormController extends Controller
             'status' => 'PENDING',
             'submittedAt' => now(),
         ]);
+
+        // 3. Telegram Notification
+        try {
+            $telegram = new \App\Services\TelegramService();
+            $jobTitle = $application->jobId ?? 'General Application';
+            $msg = "<b>New Job Application</b>\n\n"
+                 . "<b>Job:</b> {$jobTitle}\n"
+                 . "<b>Name:</b> {$application->applicantName}\n"
+                 . "<b>Email:</b> {$application->email}\n"
+                 . "<b>Phone:</b> {$application->phone}\n\n"
+                 . "<b>Message:</b>\n" . ($application->coverLetter ?: 'No message provided.');
+            $telegram->sendNotification($msg);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', __('Your application has been submitted successfully!'));
     }

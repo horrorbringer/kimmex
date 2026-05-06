@@ -50,7 +50,7 @@ class LatestJobApplicationsWidget extends BaseWidget
                     ->sortable(),
             ])
             ->actions([
-                Tables\Actions\Action::make('view')
+                \Filament\Actions\Action::make('view')
                     ->label(__('View'))
                     ->url(fn (JobApplication $record): string => \App\Filament\Resources\JobApplications\JobApplicationResource::getUrl('edit', ['record' => $record]))
                     ->icon('heroicon-m-eye'),

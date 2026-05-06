@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
                     'brand' => \App\Models\SystemSetting::get('brand_identity', [])[$lang] 
                                ?? \App\Models\SystemSetting::get('brand_identity', [])['en'] 
                                ?? [],
+                    'theme' => \App\Models\SystemSetting::get('theme_settings', []),
+                    'integrations' => \App\Models\SystemSetting::get('integration_settings', []),
                 ];
             });
 

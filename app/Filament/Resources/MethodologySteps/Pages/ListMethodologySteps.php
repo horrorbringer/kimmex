@@ -16,7 +16,7 @@ class ListMethodologySteps extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\LocaleSwitcher::make(),
+            \LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher::make(),
             CreateAction::make(),
         ];
     }
