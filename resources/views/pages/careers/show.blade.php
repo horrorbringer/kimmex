@@ -124,7 +124,7 @@
                         <style>
                             .rich-text-content ul { list-style: none; padding: 0; }
                             .rich-text-content ul li { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
-                            .rich-text-content ul li::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 9999px; background-color: #ff2a00; margin-top: 10px; flex-shrink: 0; }
+                            .rich-text-content ul li::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 9999px; background-color: var(--color-kmd-gold); margin-top: 10px; flex-shrink: 0; }
                             .rich-text-content p { margin-bottom: 1rem; }
                             .rich-text-content p:last-child { margin-bottom: 0; }
                         </style>

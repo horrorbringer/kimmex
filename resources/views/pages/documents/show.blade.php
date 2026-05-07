@@ -263,7 +263,7 @@
                                 <img src="{{ Storage::url($doc['thumbnailUrl']) }}" alt="{{ $doc['title'] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[10s]" loading="lazy" />
                             @else
-                                <div class="absolute inset-0 bg-[radial-gradient(#00000005_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                <div class="absolute inset-0 bg-[radial-gradient(rgba(11,43,92,0.03)_1px,transparent_1px)] [background-size:16px_16px]"></div>
                                 <x-lucide-file-text class="w-20 h-20 text-titan-navy/5 group-hover:scale-110 group-hover:text-titan-red/20 transition-all duration-700" />
                             @endif
                             <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/80 via-transparent to-transparent flex items-end p-8">

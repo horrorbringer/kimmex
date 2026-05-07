@@ -42,8 +42,8 @@
                     @endif
                 </div>
                 <div style="min-width: 0; flex: 1;">
-                    <p style="font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Status') }}</p>
-                    <p style="font-size: 14px; font-weight: 900; color: #111827; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <p style="font-size: 10px; font-weight: 800; color: #5A7BA5; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Status') }}</p>
+                    <p style="font-size: 14px; font-weight: 900; color: #0B2B5C; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                         {{ $status === 'healthy' ? __('HEALTHY') : ($status === 'error' ? __('ERROR') : __('OFFLINE')) }}
                     </p>
                 </div>
@@ -53,15 +53,15 @@
         <!-- Today's Usage -->
         <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(24, 95, 165, 0.1); color: #185FA5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.25 11.25 0 0 0 12.912-2.106L21.75 6" />
                     </svg>
                 </div>
                 <div>
-                    <p style="font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Today') }}</p>
-                    <p style="font-size: 14px; font-weight: 900; color: #111827; margin: 0;">
-                        {{ number_format($today) }} <span style="font-size: 10px; font-weight: 500; color: #9ca3af;">reqs</span>
+                    <p style="font-size: 10px; font-weight: 800; color: #5A7BA5; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Today') }}</p>
+                    <p style="font-size: 14px; font-weight: 900; color: #0B2B5C; margin: 0;">
+                        {{ number_format($today) }} <span style="font-size: 10px; font-weight: 500; color: #5A7BA5;">reqs</span>
                     </p>
                 </div>
             </div>
@@ -70,14 +70,14 @@
         <!-- Lifetime Usage -->
         <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: #f5f3ff; color: #7c3aed; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(212, 160, 23, 0.1); color: #D4A017; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
                     </svg>
                 </div>
                 <div>
-                    <p style="font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Lifetime') }}</p>
-                    <p style="font-size: 14px; font-weight: 900; color: #111827; margin: 0;">{{ number_format($total) }}</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #5A7BA5; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Lifetime') }}</p>
+                    <p style="font-size: 14px; font-weight: 900; color: #0B2B5C; margin: 0;">{{ number_format($total) }}</p>
                 </div>
             </div>
         </div>
@@ -85,14 +85,14 @@
         <!-- Quota & Limits -->
         <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
             <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: #fffbeb; color: #d97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(11, 43, 92, 0.1); color: #0B2B5C; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg style="width: 24px; height: 24px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                     </svg>
                 </div>
                 <div style="min-width: 0; flex: 1;">
-                    <p style="font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Quota') }}</p>
-                    <p style="font-size: 11px; font-weight: 900; color: #111827; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $quota }}</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #5A7BA5; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">{{ __('Quota') }}</p>
+                    <p style="font-size: 11px; font-weight: 900; color: #0B2B5C; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $quota }}</p>
                 </div>
             </div>
         </div>

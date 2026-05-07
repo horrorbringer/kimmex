@@ -2,17 +2,17 @@
     <div class="space-y-8">
         <style>
             :root {
-                --titan-red: #E31E24;
-                --titan-red-hover: #C2191F;
-                --titan-navy: #1a1a2e;
-                --titan-navy-light: #2D3E5D;
-                --titan-gray: #6B7280;
+                --titan-red: #D4A017;
+                --titan-red-hover: #B8890F;
+                --titan-navy: #0B2B5C;
+                --titan-navy-light: #0E3A7A;
+                --titan-gray: #5A7BA5;
                 --card-bg: #ffffff;
-                --tab-bg: #f1f5f9;
+                --tab-bg: var(--titan-gray);
             }
 
             /* Container & Layout */
-            .org-chart-wrapper { background: #fcfcfc; padding: 2rem; border-radius: 2.5rem; border: 1px solid #f1f5f9; }
+            .org-chart-wrapper { background: #fcfcfc; padding: 2rem; border-radius: 2.5rem; border: 1px solid var(--titan-gray); }
             
             /* Generic Helper Classes (since TW utilities might be purged) */
             .org-flex { display: flex; align-items: center; }
@@ -24,7 +24,7 @@
             /* Card Styling */
             .node-card {
                 background: white;
-                border: 1px solid #f1f5f9;
+                border: 1px solid var(--titan-gray);
                 border-radius: 1.25rem;
                 padding: 1.25rem;
                 margin-bottom: 0.75rem;
@@ -118,11 +118,11 @@
                 border-radius: 0.75rem;
                 transition: all 0.2s;
                 background: #f8fafc;
-                color: #94a3b8;
+                color: var(--titan-gray);
                 border: none;
                 cursor: pointer;
             }
-            .node-action-btn:hover { background: #f1f5f9; color: var(--titan-navy); }
+            .node-action-btn:hover { background: var(--titan-gray); color: var(--titan-navy); }
             .node-action-btn.btn-red:hover { background: #fee2e2; color: var(--titan-red); }
             
             /* Icon Sizing (Bypass TW Purge) */

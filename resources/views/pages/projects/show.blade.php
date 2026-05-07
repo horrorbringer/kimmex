@@ -138,7 +138,7 @@
                 <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
                     class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" />
             @else
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#1a1a2e_0%,#0f1423_100%)]"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--color-kmd-navy-light)_0%,var(--color-kmd-navy)_100%)]"></div>
             @endif
             
             {{-- Deep multi-stage gradient for maximum text contrast --}}

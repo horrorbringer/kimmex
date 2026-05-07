@@ -85,31 +85,31 @@
                 <div class="hidden sm:flex gap-2">
                     @if($facebook && $facebook !== '#')
                         <a href="{{ $facebook }}" target="_blank"
-                            class="w-6 h-6 rounded bg-[#1877F2] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            class="w-6 h-6 rounded bg-social-facebook flex items-center justify-center hover:brightness-110 transition-all duration-300">
                             <x-lucide-facebook class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($linkedin && $linkedin !== '#')
                         <a href="{{ $linkedin }}" target="_blank"
-                            class="w-6 h-6 rounded bg-[#0A66C2] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            class="w-6 h-6 rounded bg-social-linkedin flex items-center justify-center hover:brightness-110 transition-all duration-300">
                             <x-lucide-linkedin class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($youtube && $youtube !== '#')
                         <a href="{{ $youtube }}" target="_blank"
-                            class="w-6 h-6 rounded bg-[#FF0000] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            class="w-6 h-6 rounded bg-social-youtube flex items-center justify-center hover:brightness-110 transition-all duration-300">
                             <x-lucide-youtube class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($instagram && $instagram !== '#')
                         <a href="{{ $instagram }}" target="_blank"
-                            class="w-6 h-6 rounded bg-[#E4405F] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            class="w-6 h-6 rounded bg-social-instagram flex items-center justify-center hover:brightness-110 transition-all duration-300">
                             <x-lucide-instagram class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($telegram && $telegram !== '#')
                         <a href="{{ $telegram }}" target="_blank"
-                            class="w-6 h-6 rounded bg-[#24A1DE] flex items-center justify-center hover:brightness-110 transition-all duration-300">
+                            class="w-6 h-6 rounded bg-social-telegram flex items-center justify-center hover:brightness-110 transition-all duration-300">
                             <x-lucide-send class="w-3 h-3 text-white" />
                         </a>
                     @endif

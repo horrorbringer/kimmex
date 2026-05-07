@@ -17,8 +17,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'titan-navy': '#1a1a2e',
-                        'titan-red': '#E31E24',
+                        'titan-navy': '#0B2B5C',
+                        'titan-red': '#D4A017',
                     },
                     fontFamily: {
                         'sans': ['Inter', 'Kantumruy Pro', 'sans-serif'],

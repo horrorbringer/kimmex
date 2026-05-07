@@ -580,28 +580,28 @@
         }
 
         article th {
-            background: #f3f4f6;
-            border: 1px solid #d1d5db;
+            background: var(--color-kmd-bg-alt);
+            border: 1px solid var(--color-kmd-bg-section);
             padding: 12px 16px;
             text-align: left;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: #1e293b;
+            color: var(--color-kmd-navy);
         }
 
         article td {
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--color-kmd-bg-section);
             padding: 12px 16px;
-            color: #475569;
+            color: var(--color-kmd-navy-subtle);
         }
 
         article tr:nth-child(even) {
-            background: #f9fafb;
+            background: var(--color-kmd-bg-alt);
         }
 
         article tr:hover {
-            background: #f3f4f6;
+            background: var(--color-kmd-bg-alt);
         }
     </style>
 

@@ -146,7 +146,7 @@
                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]" />
                         @else
                             <div class="absolute inset-0 w-full h-full bg-titan-navy/[0.01] flex items-center justify-center">
-                                <div class="absolute inset-0 bg-[radial-gradient(#00000005_1px,transparent_1px)] [background-size:10px_10px]"></div>
+                                <div class="absolute inset-0 bg-[radial-gradient(rgba(11,43,92,0.03)_1px,transparent_1px)] [background-size:10px_10px]"></div>
                                 <x-lucide-file-text @class([
                                     'text-titan-navy/10 group-hover:scale-110 group-hover:text-titan-red transition-all duration-700 relative z-10 opacity-30 drop-shadow-sm',
                                     'w-24 h-24' => $isFirstFeatured,

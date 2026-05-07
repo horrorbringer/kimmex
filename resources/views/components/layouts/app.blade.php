@@ -38,8 +38,8 @@
     <!-- Dynamic Theme Styles -->
     @php
         $theme = $globalSettings['theme'] ?? [];
-        $primaryColor = $theme['primary_color'] ?? '#E31E24'; 
-        $secondaryColor = $theme['secondary_color'] ?? '#1a1a2e'; 
+        $primaryColor = $theme['primary_color'] ?? '#D4A017'; 
+        $secondaryColor = $theme['secondary_color'] ?? '#0B2B5C'; 
         $fontEn = $theme['font_family_en'] ?? 'Inter';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
         $fontHeading = 'Outfit'; // Premium heading font

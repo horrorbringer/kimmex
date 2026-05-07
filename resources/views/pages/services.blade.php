@@ -148,7 +148,7 @@ $sectors = [
     </section>
 
     <!-- === SERVICE CATEGORIES (Design-Z Staggered) === -->
-    <div class="w-full" style="background-color: #f8f9fa;">
+    <div class="w-full bg-kmd-bg-alt">
         <section id="services-list" class="pt-8 pb-16 px-6 max-w-[1500px] mx-auto overflow-hidden">
         <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-8 transition-all duration-1000">
             <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
@@ -266,7 +266,7 @@ $sectors = [
 
                                 <!-- The Diamond Shape -->
                                 <div class="relative z-10 flex items-center justify-center transition-all duration-700 group-hover:scale-110 pointer-events-none"
-                                     style="width: 100px; height: 100px; background-color: #ffffff; border: 1.5px solid #e5e7eb; border-radius: 20px; transform: rotate(45deg); box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                                     class="w-[100px] h-[100px] bg-kmd-bg-white border-[1.5px] border-kmd-bg-section rounded-[20px] rotate-45 shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
                                     <div style="transform: rotate(-45deg);">
                                         <x-dynamic-component :component="$s['icon']" class="w-8 h-8 text-titan-navy group-hover:text-titan-red transition-colors duration-500" />
                                     </div>
@@ -274,7 +274,7 @@ $sectors = [
 
                                 <!-- Floating Step Indicator -->
                                 <div class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110"
-                                     style="width: 30px; height: 30px; background-color: #FF2A00; border-radius: 8px; bottom: 15px; right: 15px; font-size: 12px; box-shadow: 0 5px 15px rgba(255,42,0,0.35);">
+                                     class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110 w-[30px] h-[30px] bg-titan-red rounded-[8px] bottom-[15px] right-[15px] text-[12px] shadow-[0_5px_15px_rgba(212,160,23,0.35)]">
                                     0{{ $i + 1 }}
                                 </div>
                             </div>
@@ -297,7 +297,7 @@ $sectors = [
     <!-- === THE KIMMEX ADVANTAGE (Design-Z Premium) === -->
     <section class="py-24 md:py-32 bg-kmd-bg-alt relative overflow-hidden">
         <!-- Decorative abstract lines -->
-        <div class="absolute top-0 right-0 w-full h-full opacity-5 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #0F172A 0, #0F172A 1px, transparent 1px, transparent 40px);"></div>
+        <div class="absolute top-0 right-0 w-full h-full opacity-5 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, var(--color-kmd-navy) 0, var(--color-kmd-navy) 1px, transparent 1px, transparent 40px);"></div>
         
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
@@ -381,7 +381,7 @@ $sectors = [
                         <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-100" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
                         
                         <!-- Gradient Overlay always present to ensure text contrast -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent transition-opacity duration-300"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-kmd-navy via-kmd-navy/40 to-transparent transition-opacity duration-300"></div>
                         
                         <!-- Content -->
                         <div class="absolute inset-0 p-8 flex flex-col justify-end relative z-10">
@@ -424,7 +424,7 @@ $sectors = [
                         </p>
 
                         <div class="flex flex-col sm:flex-row gap-5">
-                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-sm shadow-xl hover:scale-105 transition-all w-max" style="background-color: #FF2A00; color: white;">
+                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-sm shadow-xl hover:scale-105 transition-all w-max bg-titan-red text-white">
                                 <span>{{ __('Get a Free Quote') }}</span>
                                 <x-lucide-arrow-right class="w-4 h-4" />
                             </a>
