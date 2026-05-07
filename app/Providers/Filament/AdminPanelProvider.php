@@ -56,6 +56,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+                \App\Filament\Pages\ManageSettings::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
@@ -81,6 +82,10 @@ class AdminPanelProvider extends PanelProvider
                 \LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin::make()
                     ->defaultLocales(['en', 'km']),
             ])
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'ai-switcher\')'),
+            )
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn() => __('Organization'))

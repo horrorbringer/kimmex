@@ -13,6 +13,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Set;
 use App\Filament\Support\TranslationHelper;
+use App\Filament\Support\AIHelper;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -59,11 +60,17 @@ class ProjectForm
                         ]),
                         Textarea::make('background')
                             ->label(__('Project Background'))
-                            ->hintAction(TranslationHelper::getAutoTranslateAction('background'))
+                            ->hintActions([
+                                AIHelper::getImproveAction('background'),
+                                TranslationHelper::getAutoTranslateAction('background'),
+                            ])
                             ->rows(3),
                         Textarea::make('objectives')
                             ->label(__('Project Objectives'))
-                            ->hintAction(TranslationHelper::getAutoTranslateAction('objectives'))
+                            ->hintActions([
+                                AIHelper::getImproveAction('objectives'),
+                                TranslationHelper::getAutoTranslateAction('objectives'),
+                            ])
                             ->rows(3),
                     ]),
 
@@ -90,6 +97,10 @@ class ProjectForm
                             ->label(__('Description'))
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsVisibility('public')
+                            ->hintActions([
+                                AIHelper::getGenerateAction('description', 'Project Description'),
+                                AIHelper::getImproveAction('description'),
+                            ])
                             ->columnSpanFull(),
                     ]),
 

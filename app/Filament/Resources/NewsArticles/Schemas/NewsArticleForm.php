@@ -13,6 +13,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use App\Filament\Support\TranslationHelper;
+use App\Filament\Support\AIHelper;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -28,6 +29,7 @@ class NewsArticleForm
                     ->required()
                     ->live(onBlur: true)
                     ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
+                    ->hintAction(AIHelper::getImproveAction('title', 'Improve this news title to be more professional and catchy.'))
                     ->afterStateUpdated(function (Set $set, ?string $state) {
                         $set('slug', Str::slug($state));
                         $set('metaTitle', $state);
@@ -41,7 +43,10 @@ class NewsArticleForm
 
                 Textarea::make('excerpt')
                     ->label(__('Excerpt'))
-                    ->hintAction(TranslationHelper::getAutoTranslateAction('excerpt'))
+                    ->hintActions([
+                        AIHelper::getImproveAction('excerpt', 'Make this article excerpt more engaging.'),
+                        TranslationHelper::getAutoTranslateAction('excerpt'),
+                    ])
                     ->rows(3)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn(Set $set, ?string $state) => $set('metaDescription', $state)),
@@ -59,39 +64,10 @@ class NewsArticleForm
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsVisibility('public')
                     ->fileAttachmentsDirectory('news/content')
-                    ->hintAction(
-                        \Filament\Actions\Action::make('generate_ai_content')
-                            ->label(__('Generate with AI'))
-                            ->icon('heroicon-o-sparkles')
-                            ->form([
-                                \Filament\Forms\Components\TextInput::make('topic')
-                                    ->label(__('What should the article be about?'))
-                                    ->required(),
-                                \Filament\Forms\Components\Textarea::make('instructions')
-                                    ->label(__('Additional Instructions (Optional)'))
-                                    ->rows(2),
-                            ])
-                            ->action(function (Set $set, array $data) {
-                                try {
-                                    $service = new \App\Services\AIGeneratorService();
-                                    $content = $service->generateContent($data['topic'], 'News Article', $data['instructions'] ?? null);
-                                    
-                                    if ($content) {
-                                        $set('content', $content);
-                                        \Filament\Notifications\Notification::make()
-                                            ->title(__('Content generated successfully!'))
-                                            ->success()
-                                            ->send();
-                                    }
-                                } catch (\Exception $e) {
-                                    \Filament\Notifications\Notification::make()
-                                        ->title(__('AI Generation Failed'))
-                                        ->body($e->getMessage())
-                                        ->danger()
-                                        ->send();
-                                }
-                            })
-                    )
+                    ->hintActions([
+                        AIHelper::getGenerateAction('content', 'News Article'),
+                        AIHelper::getImproveAction('content', 'Rewrite this news article to be more professional and well-structured.'),
+                    ])
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, $state, $get) {
                         // Auto-generate excerpt if empty

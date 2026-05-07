@@ -28,6 +28,8 @@ class SystemSettingResource extends Resource
         return __('Administration');
     }
 
+    protected static ?int $navigationSort = 10;
+
     public static function getLabel(): ?string
     {
         return __('System Setting');
