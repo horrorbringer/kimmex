@@ -1,4 +1,4 @@
-<footer class="bg-titan-navy text-white pt-24 pb-12 relative overflow-hidden">
+<footer class="bg-kmd-navy text-white pt-24 pb-12 relative overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-16">
             @php
@@ -40,7 +40,7 @@
                     <div class="flex flex-col flex-1">
                         <span
                             class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
-                        <span class="text-[10px] uppercase tracking-[0.2em] text-titan-red">{{ $tagline }}</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] text-kmd-gold">{{ $tagline }}</span>
                     </div>
                 </div>
                 <p class="text-white/50 text-sm leading-relaxed max-w-xs">
@@ -82,32 +82,32 @@
 
             <!-- Column 2: Quick Links -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-titan-red flex items-center gap-2">
+                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-kmd-gold flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Explore') }}
                 </h4>
                 <ul class="space-y-4 text-sm text-white/50">
                     <li><a href="/projects"
-                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('Projects') }}</a>
+                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('Projects') }}</a>
                     </li>
                     <li><a href="/services"
-                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('Services') }}</a>
+                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('Services') }}</a>
                     </li>
                     <li><a href="/about"
-                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('About Us') }}</a>
+                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('About Us') }}</a>
                     </li>
                     <li><a href="/careers"
-                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('Careers') }}</a>
+                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('Careers') }}</a>
                     </li>
                     <li><a href="/news"
-                            class="hover:text-titan-red hover:pl-2 transition-all flex items-center gap-2">{{ __('News & Insights') }}</a>
+                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('News & Insights') }}</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Column 3: Services -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-titan-red flex items-center gap-2">
+                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-kmd-gold flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Services') }}
                 </h4>
@@ -125,8 +125,8 @@
                 <ul class="space-y-4 text-sm text-white/50">
                     @foreach($footerServices as $fs)
                         <li><a href="/services/{{ $fs['slug'] }}"
-                                class="flex items-center gap-2 hover:text-accent-orange transition-all group">
-                                <span class="w-1.5 h-1.5 bg-accent-orange rounded-full group-hover:scale-125 transition-transform"></span>
+                                class="flex items-center gap-2 hover:text-kmd-gold transition-all group">
+                                <span class="w-1.5 h-1.5 bg-kmd-gold rounded-full group-hover:scale-125 transition-transform"></span>
                                 {{ $fs['title'] }}
                             </a>
                         </li>
@@ -136,28 +136,28 @@
 
             <!-- Column 4: Contact -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-accent-orange flex items-center gap-2">
+                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-kmd-gold flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Contact') }}
                 </h4>
                 <ul class="space-y-6 text-sm text-white/50">
                     <li class="flex gap-4">
-                        <x-lucide-map-pin class="text-accent-orange shrink-0 w-5 h-5" />
+                        <x-lucide-map-pin class="text-kmd-gold shrink-0 w-5 h-5" />
                         <a href="{{ $googleMapsLink }}" target="_blank" rel="noopener noreferrer"
-                            class="hover:text-accent-orange transition-colors">
+                            class="hover:text-kmd-gold transition-colors">
                             {{ $address }}
                         </a>
                     </li>
                     <li class="flex gap-4 items-center">
-                        <x-lucide-phone class="text-accent-orange shrink-0 w-5 h-5" />
+                        <x-lucide-phone class="text-kmd-gold shrink-0 w-5 h-5" />
                         <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                            class="hover:text-accent-orange transition-colors">
+                            class="hover:text-kmd-gold transition-colors">
                             {{ $phone }}
                         </a>
                     </li>
                     <li class="flex gap-4 items-center">
-                        <x-lucide-mail class="text-accent-orange shrink-0 w-5 h-5" />
-                        <a href="mailto:{{ $email }}" class="hover:text-accent-orange transition-colors">
+                        <x-lucide-mail class="text-kmd-gold shrink-0 w-5 h-5" />
+                        <a href="mailto:{{ $email }}" class="hover:text-kmd-gold transition-colors">
                             {{ $email }}
                         </a>
                     </li>
@@ -171,8 +171,8 @@
             <p>&copy; 2026 Kimmex Construction & Investment Co., Ltd. {{ __('All rights reserved') }}.</p>
             <div class="flex gap-6">
                 <a href="/privacy-policy"
-                    class="hover:text-accent-orange transition-colors">{{ __('Privacy Policy') }}</a>
-                <a href="#" class="hover:text-accent-orange transition-colors">{{ __('Terms of Service') }}</a>
+                    class="hover:text-kmd-gold transition-colors">{{ __('Privacy Policy') }}</a>
+                <a href="#" class="hover:text-kmd-gold transition-colors">{{ __('Terms of Service') }}</a>
             </div>
         </div>
     </div>

@@ -100,14 +100,14 @@ $sectors = [
 ];
 @endphp
 
-<div class="bg-white min-h-screen text-titan-navy">
+<div class="bg-white min-h-screen text-kmd-navy">
     <!-- === HERO SECTION (Premium Design-Z) === -->
-    <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy h-[75vh] min-h-[600px]">
+    <section class="relative z-10 flex items-center justify-center overflow-hidden bg-kmd-navy h-[75vh] min-h-[600px]">
         {{-- Background Zoom Animation --}}
-        <div class="absolute inset-0 bg-titan-navy">
+        <div class="absolute inset-0 bg-kmd-navy">
             <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
             {{-- Lightened multi-stage gradient --}}
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-kmd-navy/40 via-transparent to-kmd-navy/70"></div>
         </div>
 
         <!-- Decorative Floating Elements -->
@@ -118,7 +118,7 @@ $sectors = [
         <div class="relative z-20 text-center max-w-6xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
             <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" 
                  class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-bold uppercase tracking-[0.3em] mb-10">
-                <x-lucide-settings class="w-4 h-4 text-titan-red animate-spin-slow" />
+                <x-lucide-settings class="w-4 h-4 text-kmd-gold animate-spin-slow" />
                 <span>{{ strtoupper(__('Services & Expertise')) }}</span>
             </div>
 
@@ -126,7 +126,7 @@ $sectors = [
                 class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
                 style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
                 <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'ENGINEERING' }}</span> <br/>
-                <span class="text-titan-red">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
+                <span class="text-kmd-gold">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
             </h1>
 
             <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
@@ -141,8 +141,8 @@ $sectors = [
         <!-- Scroll Indicator -->
         <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer group z-20" @click="document.getElementById('services-list').scrollIntoView({ behavior: 'smooth' })">
             <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/70 group-hover:text-white transition-colors">{{ strtoupper(__('Explore Services')) }}</span>
-            <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-transparent group-hover:border-titan-red transition-colors">
-                <div class="w-1.5 h-1.5 bg-titan-red rounded-full animate-bounce"></div>
+            <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-transparent group-hover:border-kmd-gold transition-colors">
+                <div class="w-1.5 h-1.5 bg-kmd-gold rounded-full animate-bounce"></div>
             </div>
         </div>
     </section>
@@ -151,10 +151,10 @@ $sectors = [
     <div class="w-full bg-kmd-bg-alt">
         <section id="services-list" class="pt-8 pb-16 px-6 max-w-[1500px] mx-auto overflow-hidden">
         <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-8 transition-all duration-1000">
-            <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
-            <h2 class="text-4xl md:text-6xl font-black text-titan-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
-            <div class="w-24 h-1.5 bg-titan-red mx-auto mb-8"></div>
-            <p class="text-titan-navy/90 text-xl max-w-3xl mx-auto leading-relaxed">
+            <span class="text-kmd-gold font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
+            <h2 class="text-4xl md:text-6xl font-black text-kmd-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
+            <div class="w-24 h-1.5 bg-kmd-gold mx-auto mb-8"></div>
+            <p class="text-kmd-navy/90 text-xl max-w-3xl mx-auto leading-relaxed">
                 {{ __('We bring decades of experience to every project, ensuring quality and efficiency at every stage.') }}
             </p>
         </div>
@@ -171,7 +171,7 @@ $sectors = [
                         <div class="absolute inset-0 bg-black/10 transition-colors duration-700"></div>
                         
                         <!-- Overlay Title for Mobile -->
-                        <div class="absolute bottom-0 left-0 right-0 p-8 lg:hidden bg-gradient-to-t from-titan-navy text-white">
+                        <div class="absolute bottom-0 left-0 right-0 p-8 lg:hidden bg-gradient-to-t from-kmd-navy text-white">
                             <h3 class="text-3xl font-black uppercase tracking-tighter">{{ $service['title'][$lang] }}</h3>
                         </div>
                     </div>
@@ -180,17 +180,17 @@ $sectors = [
                     <div class="lg:w-[55%] p-10 md:p-20 flex flex-col items-center text-center justify-center relative bg-white">
                         <!-- Ghost Number -->
                         <div class="absolute top-10 right-10 hidden md:block select-none pointer-events-none">
-                            <span class="text-[12rem] font-black text-titan-navy transition-colors duration-700 leading-none" style="opacity: 0.05;">0{{ $i + 1 }}</span>
+                            <span class="text-[12rem] font-black text-kmd-navy transition-colors duration-700 leading-none" style="opacity: 0.05;">0{{ $i + 1 }}</span>
                         </div>
 
                         <div class="relative z-10">
-                            <div class="w-20 h-2 bg-titan-red mb-10 mx-auto"></div>
+                            <div class="w-20 h-2 bg-kmd-gold mb-10 mx-auto"></div>
                             
-                            <h3 class="text-4xl md:text-6xl font-black text-titan-navy mb-8 uppercase tracking-tighter leading-[0.9]">
+                            <h3 class="text-4xl md:text-6xl font-black text-kmd-navy mb-8 uppercase tracking-tighter leading-[0.9]">
                                 {{ $service['title'][$lang] }}
                             </h3>
                             
-                            <p class="text-titan-navy/90 text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
+                            <p class="text-kmd-navy/90 text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
                                 {{ $service['desc'][$lang] }}
                             </p>
 
@@ -201,8 +201,8 @@ $sectors = [
                             @if(count($featuresArray) > 0)
                             <div class="flex flex-wrap justify-center gap-y-5 gap-x-12 mb-12">
                                 @foreach($featuresArray as $feature)
-                                    <div class="flex items-center gap-4 text-titan-navy/100 font-bold text-xs uppercase tracking-[0.2em] group/feat bg-gray-50 px-5 py-3 rounded-full border border-gray-100">
-                                        <div class="w-2.5 h-2.5 bg-titan-red rounded-full"></div>
+                                    <div class="flex items-center gap-4 text-kmd-navy/100 font-bold text-xs uppercase tracking-[0.2em] group/feat bg-gray-50 px-5 py-3 rounded-full border border-gray-100">
+                                        <div class="w-2.5 h-2.5 bg-kmd-gold rounded-full"></div>
                                         <span>{{ __($feature['name'] ?? (is_array($feature) ? ($feature[$lang] ?? '') : $feature)) }}</span>
                                     </div>
                                 @endforeach
@@ -210,12 +210,12 @@ $sectors = [
                             @endif
 
                             <div class="pt-8 border-t border-gray-100 flex items-center justify-between">
-                                <a href="/services/{{ $service['id'] }}" class="inline-flex items-center gap-4 text-titan-red font-black uppercase tracking-[0.4em] text-xs transition-all group/link">
+                                <a href="/services/{{ $service['id'] }}" class="inline-flex items-center gap-4 text-kmd-gold font-black uppercase tracking-[0.4em] text-xs transition-all group/link">
                                     {{ __('Learn More') }}
                                     <x-lucide-arrow-right class="w-5 h-5 transition-transform group-hover/link:translate-x-1" />
                                 </a>
                                 
-                                <div class="hidden sm:flex items-center gap-2 text-titan-navy/20 font-black text-5xl">
+                                <div class="hidden sm:flex items-center gap-2 text-kmd-navy/20 font-black text-5xl">
                                     0{{ $i + 1 }}
                                 </div>
                             </div>
@@ -230,14 +230,14 @@ $sectors = [
     <!-- === OUR METHODOLOGY (Design-Z Process) === -->
     <section class="py-32 bg-gray-50 relative overflow-hidden">
         <!-- Background Decor -->
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/5 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-titan-navy/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-kmd-gold/5 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-kmd-navy/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
             <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-24 transition-all duration-1000">
-                <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-sm mb-4 block">{{ __('HOW IT WORKS') }}</span>
-                <h2 class="text-5xl md:text-6xl font-bold mb-6 text-titan-navy tracking-tight">{{ __('Our Methodology') }}</h2>
-                <p class="text-titan-navy/50 text-lg max-w-2xl mx-auto leading-relaxed">
+                <span class="text-kmd-gold font-bold uppercase tracking-[0.2em] text-sm mb-4 block">{{ __('HOW IT WORKS') }}</span>
+                <h2 class="text-5xl md:text-6xl font-bold mb-6 text-kmd-navy tracking-tight">{{ __('Our Methodology') }}</h2>
+                <p class="text-kmd-navy/50 text-lg max-w-2xl mx-auto leading-relaxed">
                     {{ __('A systematic approach ensuring transparency, safety, and excellence from the first meeting to final handover.') }}
                 </p>
             </div>
@@ -249,8 +249,8 @@ $sectors = [
             
             <div class="relative mt-10 md:mt-16">
                 <!-- Connecting Line (Desktop) -->
-                <div class="hidden md:block absolute top-[80px] left-[10%] right-[10%] h-[1px] bg-titan-navy/10 z-0">
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-titan-red/60 to-transparent w-1/4 h-full animate-line-flow"></div>
+                <div class="hidden md:block absolute top-[80px] left-[10%] right-[10%] h-[1px] bg-kmd-navy/10 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-kmd-gold/60 to-transparent w-1/4 h-full animate-line-flow"></div>
                 </div>
 
                 <div class="flex flex-wrap justify-center gap-8 md:gap-12 relative z-10 hide-scrollbar snap-x snap-mandatory pb-10 pt-10 px-6 md:px-0">
@@ -268,22 +268,22 @@ $sectors = [
                                 <div class="relative z-10 flex items-center justify-center transition-all duration-700 group-hover:scale-110 pointer-events-none"
                                      class="w-[100px] h-[100px] bg-kmd-bg-white border-[1.5px] border-kmd-bg-section rounded-[20px] rotate-45 shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
                                     <div style="transform: rotate(-45deg);">
-                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8 text-titan-navy group-hover:text-titan-red transition-colors duration-500" />
+                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8 text-kmd-navy group-hover:text-kmd-gold transition-colors duration-500" />
                                     </div>
                                 </div>
 
                                 <!-- Floating Step Indicator -->
                                 <div class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110"
-                                     class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110 w-[30px] h-[30px] bg-titan-red rounded-[8px] bottom-[15px] right-[15px] text-[12px] shadow-[0_5px_15px_rgba(212,160,23,0.35)]">
+                                     class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110 w-[30px] h-[30px] bg-kmd-gold rounded-[8px] bottom-[15px] right-[15px] text-[12px] shadow-[0_5px_15px_rgba(212,160,23,0.35)]">
                                     0{{ $i + 1 }}
                                 </div>
                             </div>
 
                             <div class="px-2 relative z-10 mt-2">
-                                <h3 class="font-black mb-3 uppercase tracking-wider text-titan-navy group-hover:text-titan-red transition-colors duration-300" style="font-size: 14px;">
+                                <h3 class="font-black mb-3 uppercase tracking-wider text-kmd-navy group-hover:text-kmd-gold transition-colors duration-300" style="font-size: 14px;">
                                     {{ $s['title'][$lang] }}
                                 </h3>
-                                <p class="text-titan-navy/45 leading-relaxed max-w-[200px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70" style="font-size: 11px;">
+                                <p class="text-kmd-navy/45 leading-relaxed max-w-[200px] mx-auto transition-colors duration-300 group-hover:text-kmd-navy/70" style="font-size: 11px;">
                                     {{ $s['desc'][$lang] }}
                                 </p>
                             </div>
@@ -303,9 +303,9 @@ $sectors = [
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
                 <!-- Left Content -->
                 <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'" class="transition-all duration-1000">
-                    <span class="text-titan-red font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('The Kimmex Advantage') }}</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-titan-navy mb-8 uppercase tracking-tighter leading-tight">{{ __('Why Partner With Us?') }}</h2>
-                    <p class="text-titan-navy/60 text-lg leading-relaxed mb-12">
+                    <span class="text-kmd-gold font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('The Kimmex Advantage') }}</span>
+                    <h2 class="text-4xl md:text-5xl font-black text-kmd-navy mb-8 uppercase tracking-tighter leading-tight">{{ __('Why Partner With Us?') }}</h2>
+                    <p class="text-kmd-navy/60 text-lg leading-relaxed mb-12">
                         {{ __('We deliver more than just buildings; we deliver peace of mind. Our integrated approach ensures your project is handled with the utmost care and professionalism.') }}
                     </p>
 
@@ -317,14 +317,14 @@ $sectors = [
                         ] as $item)
                         <div class="group flex items-start gap-6 p-6 rounded-2xl hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 relative overflow-hidden bg-transparent border border-transparent hover:border-gray-100">
                             <!-- Animated left border accent -->
-                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-titan-red scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top"></div>
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-kmd-gold scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top"></div>
                             
-                            <div class="w-14 h-14 rounded-xl flex items-center justify-center text-titan-navy bg-white shadow-sm border border-gray-100 group-hover:bg-titan-red group-hover:text-white group-hover:shadow-md transition-all duration-500 shrink-0">
+                            <div class="w-14 h-14 rounded-xl flex items-center justify-center text-kmd-navy bg-white shadow-sm border border-gray-100 group-hover:bg-kmd-gold group-hover:text-white group-hover:shadow-md transition-all duration-500 shrink-0">
                                 <x-dynamic-component :component="$item['icon']" class="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 class="text-xl font-black text-titan-navy mb-2 uppercase tracking-wide group-hover:text-titan-red transition-colors">{{ $item['title'][$lang] }}</h3>
-                                <p class="text-titan-navy/60 leading-relaxed text-sm">{{ $item['desc'][$lang] }}</p>
+                                <h3 class="text-xl font-black text-kmd-navy mb-2 uppercase tracking-wide group-hover:text-kmd-gold transition-colors">{{ $item['title'][$lang] }}</h3>
+                                <p class="text-kmd-navy/60 leading-relaxed text-sm">{{ $item['desc'][$lang] }}</p>
                             </div>
                         </div>
                         @endforeach
@@ -334,24 +334,24 @@ $sectors = [
                 <!-- Right Staggered Image Grid -->
                 <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'" class="transition-all duration-1000 delay-200 relative lg:ml-10 mt-10 lg:mt-0">
                     <!-- Architectural Accent Background -->
-                    <div class="absolute -inset-10 bg-gradient-to-br from-titan-navy/5 to-transparent rounded-[3rem] -z-10 rotate-[-4deg]"></div>
+                    <div class="absolute -inset-10 bg-gradient-to-br from-kmd-navy/5 to-transparent rounded-[3rem] -z-10 rotate-[-4deg]"></div>
 
                     <div class="grid grid-cols-2 gap-4 md:gap-6 relative z-10 w-full h-full">
                         <!-- Left Image -->
                         <div class="relative h-[300px] md:h-[400px] rounded-[2rem] shadow-2xl overflow-hidden translate-y-12 md:translate-y-20 group">
-                            <div class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                            <div class="absolute inset-0 bg-kmd-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
                             <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                         </div>
                         <!-- Right Image -->
                         <div class="relative h-[350px] md:h-[480px] rounded-[2rem] shadow-2xl overflow-hidden group">
-                            <div class="absolute inset-0 bg-titan-red/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                            <div class="absolute inset-0 bg-kmd-gold/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
                             <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                         </div>
                     </div>
                     
                     <!-- Center Floating Glass Badge -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-2xl text-titan-navy p-6 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white z-20 flex flex-col items-center justify-center animate-bounce-slow" style="width: 130px; height: 130px;">
-                        <x-lucide-award class="w-10 h-10 text-titan-red mb-2" />
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-2xl text-kmd-navy p-6 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white z-20 flex flex-col items-center justify-center animate-bounce-slow" style="width: 130px; height: 130px;">
+                        <x-lucide-award class="w-10 h-10 text-kmd-gold mb-2" />
                         <span class="text-[9px] font-black uppercase tracking-[0.2em] text-center leading-tight">{{ __('ISO') }}<br/>{{ __('Certified') }}</span>
                     </div>
                 </div>
@@ -364,11 +364,11 @@ $sectors = [
         <div class="max-w-[1400px] mx-auto px-6">
             <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="flex flex-col md:flex-row md:items-end justify-between mb-20 transition-all duration-1000">
                 <div class="max-w-2xl">
-                    <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('Industries & Sectors') }}</span>
-                    <h2 class="text-4xl md:text-6xl font-black text-titan-navy uppercase tracking-tighter leading-none">{{ __('Where We Operate') }}</h2>
+                    <span class="text-kmd-gold font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('Industries & Sectors') }}</span>
+                    <h2 class="text-4xl md:text-6xl font-black text-kmd-navy uppercase tracking-tighter leading-none">{{ __('Where We Operate') }}</h2>
                 </div>
                 <div class="mt-8 md:mt-0">
-                    <div class="w-32 h-1.5 bg-titan-red"></div>
+                    <div class="w-32 h-1.5 bg-kmd-gold"></div>
                 </div>
             </div>
 
@@ -409,22 +409,22 @@ $sectors = [
     <!-- === CTA SECTION (Design-Z Premium) === -->
     <section class="py-20 md:py-32 bg-gray-50 relative overflow-hidden">
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
-            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="bg-titan-navy border border-white/5 rounded-[3rem] shadow-[0_30px_60px_-15px_rgba(15,23,42,0.5)] overflow-hidden relative transition-all duration-1000">
+            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="bg-kmd-navy border border-white/5 rounded-[3rem] shadow-[0_30px_60px_-15px_rgba(15,23,42,0.5)] overflow-hidden relative transition-all duration-1000">
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <!-- Left Content -->
                     <div class="p-10 md:p-20 flex flex-col items-center text-center justify-center relative z-10">
-                        <span class="text-titan-red font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('Work with us') }}</span>
+                        <span class="text-kmd-gold font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('Work with us') }}</span>
                         <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight leading-tight mx-auto">
                             {{ __('Ready to Start Your') }} <br/>
-                            <span class="text-titan-red">{{ __('Next Visionary Project?') }}</span>
+                            <span class="text-kmd-gold">{{ __('Next Visionary Project?') }}</span>
                         </h2>
                         <p class="text-white/60 text-lg mb-12 leading-relaxed max-w-xl font-normal mx-auto">
                             {{ __('Join forces with Kimmex for engineering excellence and construction that defines the future.') }}
                         </p>
 
                         <div class="flex flex-col sm:flex-row gap-5">
-                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-sm shadow-xl hover:scale-105 transition-all w-max bg-titan-red text-white">
+                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-sm shadow-xl hover:scale-105 transition-all w-max bg-kmd-gold text-white">
                                 <span>{{ __('Get a Free Quote') }}</span>
                                 <x-lucide-arrow-right class="w-4 h-4" />
                             </a>
@@ -436,12 +436,12 @@ $sectors = [
 
                     <!-- Right Image Area -->
                     <div class="relative min-h-[350px] lg:min-h-full hidden md:block">
-                        <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/60 to-transparent z-10 w-2/3 lg:w-1/2"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-kmd-navy via-kmd-navy/60 to-transparent z-10 w-2/3 lg:w-1/2"></div>
                         <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" loading="lazy" />
                         
                         <!-- Floating Decorative Badge -->
                         <div class="absolute top-12 right-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white p-5 rounded-3xl z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">
-                            <div class="w-12 h-12 bg-titan-red rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,42,0,0.5)]">
+                            <div class="w-12 h-12 bg-kmd-gold rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,42,0,0.5)]">
                                 <x-lucide-phone class="w-5 h-5 text-white" />
                             </div>
                             <div>
@@ -451,7 +451,7 @@ $sectors = [
                         </div>
 
                         <!-- Accent Glow -->
-                        <div class="absolute bottom-0 right-0 w-80 h-80 bg-titan-red/20 blur-[120px] rounded-full z-0 pointer-events-none"></div>
+                        <div class="absolute bottom-0 right-0 w-80 h-80 bg-kmd-gold/20 blur-[120px] rounded-full z-0 pointer-events-none"></div>
                     </div>
                 </div>
             </div>
