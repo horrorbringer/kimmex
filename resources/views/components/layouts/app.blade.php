@@ -38,12 +38,13 @@
     <!-- Dynamic Theme Styles -->
     @php
         $theme = $globalSettings['theme'] ?? [];
-        $primaryColor = $theme['primary_color'] ?? '#dc2626'; // Default titan-red
-        $secondaryColor = $theme['secondary_color'] ?? '#0f172a'; // Default titan-navy
+        $primaryColor = $theme['primary_color'] ?? '#E31E24'; 
+        $secondaryColor = $theme['secondary_color'] ?? '#1a1a2e'; 
         $fontEn = $theme['font_family_en'] ?? 'Inter';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
+        $fontHeading = 'Outfit'; // Premium heading font
         
-        $fontsToLoad = collect([$fontEn, $fontKm])->unique()->filter();
+        $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading])->unique()->filter();
         $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
     @endphp
 
@@ -56,13 +57,15 @@
             --primary-color: {{ $primaryColor }};
             --secondary-color: {{ $secondaryColor }};
             --font-en: '{{ $fontEn }}', sans-serif;
-            --font-km: '{{ $fontKm }}', cursive;
+            --font-km: '{{ $fontKm }}', sans-serif;
+            --font-heading: '{{ $fontHeading }}', '{{ $fontKm }}', sans-serif;
         }
         
-        .font-sans { font-family: var(--font-en) !important; }
-        .font-khmer { font-family: var(--font-km) !important; }
+        .font-sans { font-family: var(--font-en); }
+        .font-khmer { font-family: var(--font-km); }
+        .font-heading { font-family: var(--font-heading); }
         
-        /* Overwrite specific brand colors if needed */
+        /* Overwrite specific brand colors */
         .text-titan-red { color: var(--primary-color) !important; }
         .bg-titan-red { background-color: var(--primary-color) !important; }
         .border-titan-red { border-color: var(--primary-color) !important; }
@@ -74,7 +77,7 @@
 </head>
 
 <body
-    class="antialiased bg-white text-titan-navy flex flex-col min-h-screen relative {{ app()->getLocale() === 'km' ? 'font-khmer' : 'font-sans' }}">
+    class="antialiased bg-white text-titan-navy flex flex-col min-h-screen relative {{ app()->getLocale() === 'km' ? 'font-khmer khmer-optimized' : 'font-sans' }}">
 
     <x-header />
 

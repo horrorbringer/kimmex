@@ -168,15 +168,15 @@
                                 class="text-[9px] font-black text-titan-navy/20 uppercase tracking-widest">{{ __('Share') }}</span>
                             <div class="flex gap-2">
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
-                                    class="w-8 h-8 bg-[#1877F2] rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/fb">
+                                    class="w-8 h-8 bg-social-facebook rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/fb">
                                     <x-lucide-facebook class="w-3.5 h-3.5 transition-transform group-hover/fb:scale-110" />
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
-                                    class="w-8 h-8 bg-[#0A66C2] rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/li">
+                                    class="w-8 h-8 bg-social-linkedin rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/li">
                                     <x-lucide-linkedin class="w-3.5 h-3.5 transition-transform group-hover/li:scale-110" />
                                 </a>
                                 <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener"
-                                    class="w-8 h-8 bg-[#24A1DE] rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/tg">
+                                    class="w-8 h-8 bg-social-telegram rounded-lg flex items-center justify-center text-white hover:brightness-110 transition-all group/tg">
                                     <x-lucide-send class="w-3.5 h-3.5 transition-transform group-hover/tg:scale-110" />
                                 </a>
                             </div>
@@ -274,15 +274,15 @@
                     <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Story') }}</div>
                     <div class="flex items-center gap-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-[#1877F2]/20 group/fb">
+                            class="w-12 h-12 bg-social-facebook rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-social-facebook/20 group/fb">
                             <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
                         </a>
                         <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#0A66C2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-[#0A66C2]/20 group/li">
+                            class="w-12 h-12 bg-social-linkedin rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-social-linkedin/20 group/li">
                             <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
                         </a>
                         <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#24A1DE] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-[#24A1DE]/20 group/tg">
+                            class="w-12 h-12 bg-social-telegram rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-xl shadow-social-telegram/20 group/tg">
                             <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
                         </a>
                         <div x-data="{ 
@@ -321,31 +321,31 @@
                         <div class="flex items-center gap-3">
                             @if($facebook && $facebook !== '#')
                                 <a href="{{ $facebook }}" target="_blank"
-                                    class="w-10 h-10 rounded-xl bg-[#1877F2] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#1877F2]/20">
+                                    class="w-10 h-10 rounded-xl bg-social-facebook text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-social-facebook/20">
                                     <x-lucide-facebook class="w-4 h-4" />
                                 </a>
                             @endif
                             @if($linkedin && $linkedin !== '#')
                                 <a href="{{ $linkedin }}" target="_blank"
-                                    class="w-10 h-10 rounded-xl bg-[#0A66C2] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#0A66C2]/20">
+                                    class="w-10 h-10 rounded-xl bg-social-linkedin text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-social-linkedin/20">
                                     <x-lucide-linkedin class="w-4 h-4" />
                                 </a>
                             @endif
                             @if($youtube && $youtube !== '#')
                                 <a href="{{ $youtube }}" target="_blank"
-                                    class="w-10 h-10 rounded-xl bg-[#FF0000] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#FF0000]/20">
+                                    class="w-10 h-10 rounded-xl bg-social-youtube text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-social-youtube/20">
                                     <x-lucide-youtube class="w-4 h-4" />
                                 </a>
                             @endif
                             @if($instagram && $instagram !== '#')
                                 <a href="{{ $instagram }}" target="_blank"
-                                    class="w-10 h-10 rounded-xl bg-[#E4405F] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#E4405F]/20">
+                                    class="w-10 h-10 rounded-xl bg-social-instagram text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-social-instagram/20">
                                     <x-lucide-instagram class="w-4 h-4" />
                                 </a>
                             @endif
                             @if($telegram && $telegram !== '#')
                                 <a href="{{ $telegram }}" target="_blank"
-                                    class="w-10 h-10 rounded-xl bg-[#24A1DE] text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-[#24A1DE]/20">
+                                    class="w-10 h-10 rounded-xl bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all duration-300 shadow-lg shadow-social-telegram/20">
                                     <x-lucide-send class="w-4 h-4" />
                                 </a>
                             @endif
@@ -494,7 +494,7 @@
         </div>
 
         <!-- REFINED LATEST FEED -->
-        <section class="bg-[#FCFCFD] py-24 px-6">
+        <section class="bg-kmd-bg-alt py-24 px-6">
             <div class="max-w-[1240px] mx-auto">
                 <div class="flex items-end justify-between mb-16 px-4">
                     <div>

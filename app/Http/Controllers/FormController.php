@@ -45,16 +45,16 @@ class FormController extends Controller
             'status' => 'NEW',
         ]);
 
-        // 3. Telegram Notification
+        // 3. Smart Telegram Notification (Departmental Routing)
         try {
             $telegram = new \App\Services\TelegramService();
-            $msg = "<b>New Website Inquiry</b>\n\n"
-                 . "<b>Name:</b> {$inquiry->name}\n"
-                 . "<b>Email:</b> {$inquiry->email}\n"
-                 . "<b>Phone:</b> " . ($inquiry->phone ?? 'N/A') . "\n"
-                 . "<b>Subject:</b> {$inquiry->subject}\n\n"
-                 . "<b>Message:</b>\n{$inquiry->message}";
-            $telegram->sendNotification($msg);
+            $telegram->notifyInquiry([
+                'name' => $inquiry->name,
+                'email' => $inquiry->email,
+                'subject' => $inquiry->subject,
+                'message' => $inquiry->message,
+                'file_path' => $attachmentPath ? storage_path('app/public/' . $attachmentPath) : null,
+            ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
         }
@@ -96,17 +96,24 @@ class FormController extends Controller
             'submittedAt' => now(),
         ]);
 
-        // 3. Telegram Notification
+        // 3. Smart Telegram Notification (Departmental Routing)
         try {
+            $jobTitle = 'General Application';
+            if ($application->jobId) {
+                $job = \App\Models\JobPosting::find($application->jobId);
+                if ($job) {
+                    $jobTitle = $job->title; // Automatically handles current locale
+                }
+            }
+
             $telegram = new \App\Services\TelegramService();
-            $jobTitle = $application->jobId ?? 'General Application';
-            $msg = "<b>New Job Application</b>\n\n"
-                 . "<b>Job:</b> {$jobTitle}\n"
-                 . "<b>Name:</b> {$application->applicantName}\n"
-                 . "<b>Email:</b> {$application->email}\n"
-                 . "<b>Phone:</b> {$application->phone}\n\n"
-                 . "<b>Message:</b>\n" . ($application->coverLetter ?: 'No message provided.');
-            $telegram->sendNotification($msg);
+            $telegram->notifyJobApplication([
+                'name' => $application->applicantName,
+                'email' => $application->email,
+                'phone' => $application->phone,
+                'position' => $jobTitle,
+                'file_path' => storage_path('app/public/' . $resumePath),
+            ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
         }

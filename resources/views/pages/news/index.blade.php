@@ -38,7 +38,7 @@
         $categories = array_values(array_unique(array_merge([__('All')], $categoriesFromDb)));
     @endphp
 
-    <div class="bg-[#FCFCFD] min-h-screen text-titan-navy" x-data="{
+    <div class="bg-kmd-bg-alt min-h-screen text-titan-navy" x-data="{
         activeCategory: '{{ __('All') }}',
         articles: {{ Js::from($newsArticles) }},
         get filteredArticles() {

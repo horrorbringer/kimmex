@@ -110,15 +110,16 @@ class ManageSettings extends Page implements HasForms
             'auto_translate' => $ai['auto_translate'] ?? true,
             
             // Integration
-            'tg_enabled' => $integration['telegram_enabled'] ?? false,
-            'tg_bot_token' => $integration['telegram_bot_token'] ?? '',
-            'tg_chat_id' => $integration['telegram_chat_id'] ?? '',
+            'telegram_enabled' => (bool) ($integration['telegram_enabled'] ?? false),
+            'telegram_bot_token' => $integration['telegram_bot_token'] ?? '',
+            'telegram_jobs_chat_id' => $integration['telegram_jobs_chat_id'] ?? '',
+            'telegram_inquiries_chat_id' => $integration['telegram_inquiries_chat_id'] ?? '',
             
             // Appearance
-            'primary_color' => $theme['primary_color'] ?? '#fbbf24',
-            'secondary_color' => $theme['secondary_color'] ?? '#1e293b',
-            'font_en' => $theme['font_en'] ?? 'Inter',
-            'font_kh' => $theme['font_kh'] ?? 'Kantumruy Pro',
+            'primary_color' => $theme['primary_color'] ?? '#E31E24',
+            'secondary_color' => $theme['secondary_color'] ?? '#1a1a2e',
+            'font_en' => $theme['font_family_en'] ?? 'Inter',
+            'font_kh' => $theme['font_family_km'] ?? 'Kantumruy Pro',
         ];
 
         $provider = $this->data['ai_provider'];
@@ -230,9 +231,9 @@ class ManageSettings extends Page implements HasForms
                                                         ->hintAction(
                                                             \Filament\Actions\Action::make('fetchGeminiModels')
                                                                 ->icon('heroicon-o-arrow-path')
-                                                                ->action(function ($state, $get, $ai) {
+                                                                ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
                                                                     $this->availableModels = $ai->getAvailableModels($state, 'gemini');
-                                                                    Notification::make()->title(__('Gemini Models Updated'))->success()->send();
+                                                                    \Filament\Notifications\Notification::make()->title(__('Gemini Models Updated'))->success()->send();
                                                                 })
                                                         ),
                                                     Select::make('gemini_model')
@@ -250,9 +251,9 @@ class ManageSettings extends Page implements HasForms
                                                         ->hintAction(
                                                             \Filament\Actions\Action::make('fetchOllamaModels')
                                                                 ->icon('heroicon-o-arrow-path')
-                                                                ->action(function ($state, $get, $ai) {
-                                                                    $this->availableModels = $ai->getAvailableModels(null, 'ollama', $state);
-                                                                    Notification::make()->title(__('Ollama Models Updated'))->success()->send();
+                                                                ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
+                                                                    $this->availableModels = $ai->getAvailableModels($state, 'ollama');
+                                                                    \Filament\Notifications\Notification::make()->title(__('Ollama Models Updated'))->success()->send();
                                                                 })
                                                         ),
                                                     Select::make('ollama_model')
@@ -341,9 +342,88 @@ class ManageSettings extends Page implements HasForms
                                     ]),
                                 Section::make(__('Telegram Bot Alerts'))
                                     ->schema([
-                                        Toggle::make('tg_enabled')->label(__('Enable Bot Notifications')),
-                                        TextInput::make('tg_bot_token')->password()->revealable()->label(__('Bot Token')),
-                                        TextInput::make('tg_chat_id')->label(__('Admin Chat ID')),
+                                        Toggle::make('telegram_enabled')->label(__('Enable Bot Notifications'))->live(),
+                                        Group::make()
+                                            ->visible(fn ($get) => $get('telegram_enabled'))
+                                            ->schema([
+                                                TextInput::make('telegram_bot_token')
+                                                    ->label(__('Bot Token'))
+                                                    ->password()
+                                                    ->revealable()
+                                                    ->helperText('Get this from @BotFather'),
+                                                
+                                                Grid::make(2)->schema([
+                                                    TextInput::make('telegram_jobs_chat_id')
+                                                        ->label(__('HR Chat ID (Jobs)'))
+                                                        ->placeholder('-100123456789')
+                                                        ->hint(fn($get) => $get('jobs_chat_title') ? '✅ ' . $get('jobs_chat_title') : null)
+                                                        ->hintColor('success')
+                                                        ->helperText(__('For job application alerts')),
+
+                                                    TextInput::make('telegram_inquiries_chat_id')
+                                                        ->label(__('Sales Chat ID (Inquiries)'))
+                                                        ->placeholder('-100987654321')
+                                                        ->hint(fn($get) => $get('inquiries_chat_title') ? '✅ ' . $get('inquiries_chat_title') : null)
+                                                        ->hintColor('success')
+                                                        ->helperText(__('For general inquiry alerts')),
+                                                ]),
+
+                                                \Filament\Schemas\Components\Actions::make([
+                                                    \Filament\Actions\Action::make('testTelegram')
+                                                        ->label(__('Verify & Test Connection'))
+                                                        ->icon('heroicon-o-check-badge')
+                                                        ->color('success')
+                                                        ->action(function ($state, $get, $set) {
+                                                            $token = $get('telegram_bot_token');
+                                                            $targets = [
+                                                                'jobs' => $get('telegram_jobs_chat_id'),
+                                                                'inquiries' => $get('telegram_inquiries_chat_id'),
+                                                            ];
+                                                            
+                                                            if (!$token || (!array_filter($targets))) {
+                                                                \Filament\Notifications\Notification::make()
+                                                                    ->warning()
+                                                                    ->title(__('Missing Config'))
+                                                                    ->body(__('Please enter bot token and at least one chat ID.'))
+                                                                    ->send();
+                                                                return;
+                                                            }
+
+                                                            $successCount = 0;
+                                                            foreach ($targets as $key => $chatId) {
+                                                                if (!$chatId) continue;
+                                                                try {
+                                                                    // 1. Get Chat Info (Title)
+                                                                    $response = \Illuminate\Support\Facades\Http::get("https://api.telegram.org/bot{$token}/getChat", [
+                                                                        'chat_id' => $chatId,
+                                                                    ]);
+
+                                                                    if ($response->successful()) {
+                                                                        $chatData = $response->json('result');
+                                                                        $title = $chatData['title'] ?? ($chatData['first_name'] ?? 'Private Chat');
+                                                                        $set($key . '_chat_title', $title);
+                                                                        
+                                                                        // 2. Send Test Message
+                                                                        \Illuminate\Support\Facades\Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+                                                                            'chat_id' => $chatId,
+                                                                            'text' => "🚀 *KIMMEX VERIFIED*\nThis chat is now connected for " . strtoupper($key) . " alerts!",
+                                                                            'parse_mode' => 'Markdown',
+                                                                        ]);
+                                                                        $successCount++;
+                                                                    }
+                                                                } catch (\Exception $e) {
+                                                                    \Illuminate\Support\Facades\Log::error("Telegram {$key} Verify Failed: " . $e->getMessage());
+                                                                }
+                                                            }
+
+                                                            \Filament\Notifications\Notification::make()
+                                                                ->success()
+                                                                ->title(__('Verification Complete'))
+                                                                ->body(__("Verified and sent test messages to :count chat(s).", ['count' => $successCount]))
+                                                                ->send();
+                                                        }),
+                                                ]),
+                                            ]),
                                     ]),
                             ]),
 
@@ -465,35 +545,43 @@ class ManageSettings extends Page implements HasForms
 
         // 3. AI Settings (Multi-Provider)
         SystemSetting::set('ai_settings', [
-            'provider' => $state['ai_provider'],
+            'provider' => $state['ai_provider'] ?? 'gemini',
             'gemini' => [
-                'api_key' => $state['gemini_api_key'],
-                'model' => $state['gemini_model'],
+                'api_key' => $state['gemini_api_key'] ?? '',
+                'model' => $state['gemini_model'] ?? '',
             ],
             'ollama' => [
-                'base_url' => $state['ollama_base_url'],
-                'model' => $state['ollama_model'],
+                'base_url' => $state['ollama_base_url'] ?? '',
+                'model' => $state['ollama_model'] ?? '',
             ],
-            'system_prompt' => $state['ai_system_prompt'],
-            'temperature' => $state['ai_temperature'],
-            'tone' => $state['ai_tone'],
-            'auto_translate' => $state['auto_translate'],
+            'system_prompt' => $state['ai_system_prompt'] ?? '',
+            'temperature' => $state['ai_temperature'] ?? 0.7,
+            'tone' => $state['ai_tone'] ?? 'professional',
+            'auto_translate' => $state['auto_translate'] ?? true,
         ]);
 
         // 4. Integration Settings
         SystemSetting::set('integration_settings', [
-            'telegram_enabled' => $state['tg_enabled'],
-            'telegram_bot_token' => $state['tg_bot_token'],
-            'telegram_chat_id' => $state['tg_chat_id'],
+            'telegram_enabled' => (bool) $state['telegram_enabled'],
+            'telegram_bot_token' => $state['telegram_bot_token'] ?? '',
+            'telegram_jobs_chat_id' => $state['telegram_jobs_chat_id'] ?? '',
+            'telegram_inquiries_chat_id' => $state['telegram_inquiries_chat_id'] ?? '',
         ]);
-
         // 5. Theme Settings
         SystemSetting::set('theme_settings', [
             'primary_color' => $state['primary_color'],
             'secondary_color' => $state['secondary_color'],
-            'font_en' => $state['font_en'],
-            'font_kh' => $state['font_kh'],
+            'font_family_en' => $state['font_en'],
+            'font_family_km' => $state['font_kh'],
         ]);
+
+        // 6. Global Cache Purge (Force Frontend Sync)
+        \Illuminate\Support\Facades\Cache::forget('global_settings_en');
+        \Illuminate\Support\Facades\Cache::forget('global_settings_km');
+        \Illuminate\Support\Facades\Cache::forget('system_setting_theme_settings');
+        \Illuminate\Support\Facades\Cache::forget('system_setting_organization_profile');
+        \Illuminate\Support\Facades\Cache::forget('system_setting_brand_identity');
+        \Illuminate\Support\Facades\Cache::forget('system_setting_integration_settings');
 
         Notification::make()
             ->title(__('Global Configuration Saved'))

@@ -8,33 +8,117 @@ use Illuminate\Support\Facades\Log;
 
 class TelegramService
 {
-    public function sendNotification(string $message): bool
+    protected ?string $token;
+    protected bool $enabled;
+
+    public function __construct()
     {
         $settings = SystemSetting::get('integration_settings', []);
+        $this->token = $settings['telegram_bot_token'] ?? null;
+        $this->enabled = (bool) ($settings['telegram_enabled'] ?? false);
+    }
 
-        if (!($settings['telegram_enabled'] ?? false)) {
-            return false;
-        }
-
-        $botToken = $settings['telegram_bot_token'] ?? null;
-        $chatId = $settings['telegram_chat_id'] ?? null;
-
-        if (!$botToken || !$chatId) {
-            Log::warning('Telegram bot token or chat ID not configured.');
+    /**
+     * Send a formatted message to a specific Telegram Chat ID
+     */
+    public function sendMessage(string $chatId, string $message): bool
+    {
+        if (!$this->enabled || !$this->token || !$chatId) {
             return false;
         }
 
         try {
-            $response = Http::post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+            $url = "https://api.telegram.org/bot{$this->token}/sendMessage";
+            
+            $response = Http::post($url, [
                 'chat_id' => $chatId,
                 'text' => $message,
-                'parse_mode' => 'HTML',
+                'parse_mode' => 'Markdown',
+                'disable_web_page_preview' => true,
             ]);
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error('Telegram notification failed: ' . $e->getMessage());
+            Log::error("Telegram Notification Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Send a document (file) to a specific Telegram Chat ID
+     */
+    public function sendDocument(string $chatId, string $filePath, string $caption = ''): bool
+    {
+        if (!$this->enabled || !$this->token || !$chatId || !file_exists($filePath)) {
+            return false;
+        }
+
+        try {
+            $url = "https://api.telegram.org/bot{$this->token}/sendDocument";
+            
+            $response = Http::attach(
+                'document', 
+                file_get_contents($filePath), 
+                basename($filePath)
+            )->post($url, [
+                'chat_id' => $chatId,
+                'caption' => $caption,
+                'parse_mode' => 'Markdown',
+            ]);
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            Log::error("Telegram Document Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send a notification for a new Job Application
+     */
+    public function notifyJobApplication(array $data): bool
+    {
+        $settings = SystemSetting::get('integration_settings', []);
+        $chatId = $settings['telegram_jobs_chat_id'] ?? null;
+
+        if (!$chatId) return false;
+
+        $message = "💼 *NEW JOB APPLICATION*\n\n"
+                 . "👤 *Name:* {$data['name']}\n"
+                 . "📧 *Email:* {$data['email']}\n"
+                 . "📱 *Phone:* " . ($data['phone'] ?? 'N/A') . "\n"
+                 . "🎯 *Position:* {$data['position']}\n\n"
+                 . "🔗 _Please check the admin panel for details._";
+
+        // If file exists, send as document
+        if (!empty($data['file_path']) && file_exists($data['file_path'])) {
+            return $this->sendDocument($chatId, $data['file_path'], $message);
+        }
+
+        return $this->sendMessage($chatId, $message);
+    }
+
+    /**
+     * Send a notification for a new Contact Inquiry
+     */
+    public function notifyInquiry(array $data): bool
+    {
+        $settings = SystemSetting::get('integration_settings', []);
+        $chatId = $settings['telegram_inquiries_chat_id'] ?? null;
+
+        if (!$chatId) return false;
+
+        $message = "📧 *NEW CONTACT INQUIRY*\n\n"
+                 . "👤 *From:* {$data['name']}\n"
+                 . "✉️ *Email:* {$data['email']}\n"
+                 . "📝 *Subject:* " . ($data['subject'] ?? 'No Subject') . "\n\n"
+                 . "💬 *Message:*\n_{$data['message']}_";
+
+        // If file exists, send as document
+        if (!empty($data['file_path']) && file_exists($data['file_path'])) {
+            return $this->sendDocument($chatId, $data['file_path'], $message);
+        }
+
+        return $this->sendMessage($chatId, $message);
     }
 }

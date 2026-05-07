@@ -221,15 +221,15 @@
                     <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Document') }}</div>
                     <div class="flex items-center gap-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#1877F2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                            class="w-12 h-12 bg-social-facebook rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
                             <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
                         </a>
                         <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#0A66C2] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                            class="w-12 h-12 bg-social-linkedin rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
                             <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
                         </a>
                         <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($doc['title']) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-[#24A1DE] rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                            class="w-12 h-12 bg-social-telegram rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
                             <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
                         </a>
                         <div x-data="{ 
