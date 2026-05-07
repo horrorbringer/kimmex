@@ -295,7 +295,7 @@ $sectors = [
     </section>
 
     <!-- === THE KIMMEX ADVANTAGE (Design-Z Premium) === -->
-    <section class="py-24 md:py-32 bg-[#F8F9FA] relative overflow-hidden">
+    <section class="py-24 md:py-32 bg-kmd-bg-alt relative overflow-hidden">
         <!-- Decorative abstract lines -->
         <div class="absolute top-0 right-0 w-full h-full opacity-5 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #0F172A 0, #0F172A 1px, transparent 1px, transparent 40px);"></div>
         
@@ -376,7 +376,7 @@ $sectors = [
                 @foreach($sectors as $i => $sector)
                     <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
                          style="transition-delay: {{ $i * 100 }}ms"
-                         class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded-[2rem] bg-[#0F172A] cursor-pointer transition-all duration-700 shadow-2xl">
+                         class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded-[2rem] bg-kmd-navy cursor-pointer transition-all duration-700 shadow-2xl">
                         
                         <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-100" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
                         
@@ -394,7 +394,7 @@ $sectors = [
                                 <h3 class="text-3xl font-black text-white mb-4 uppercase tracking-tighter leading-tight">
                                     {{ $sector['title'][$lang] }}
                                 </h3>
-                                <div class="w-12 h-1.5 bg-[#FF2A00] group-hover:w-24 transition-all duration-500"></div>
+                                <div class="w-12 h-1.5 bg-kmd-gold group-hover:w-24 transition-all duration-500"></div>
                                 <p class="text-white/100 mt-6 text-sm leading-relaxed transition-opacity duration-500 delay-100">
                                     {{ __('Delivering tailor-made engineering and construction solutions for the :sector sector.', ['sector' => strtolower($sector['title'][$lang])]) }}
                                 </p>

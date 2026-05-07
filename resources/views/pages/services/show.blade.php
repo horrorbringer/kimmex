@@ -423,7 +423,7 @@
 
                                     <!-- The Dark Diamond -->
                                     <div
-                                        class="w-[110px] h-[110px] bg-[#0f1423] rounded-3xl flex items-center justify-center relative z-10 rotate-45 border-2 border-transparent group-hover:border-titan-red transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:shadow-[0_0_40px_rgba(227,30,36,0.2)]">
+                                        class="w-[110px] h-[110px] bg-titan-navy rounded-3xl flex items-center justify-center relative z-10 rotate-45 border-2 border-transparent group-hover:border-titan-red transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:shadow-[0_0_40px_rgba(227,30,36,0.2)]">
                                         <!-- Un-rotate the icon inside -->
                                         <div class="-rotate-45 flex flex-col items-center">
                                             <x-dynamic-component :component="$step['icon']"

@@ -40,7 +40,7 @@
         .khmer-text { font-family: 'Kantumruy Pro', sans-serif; }
     </style>
 </head>
-<body class="bg-[#f8fafc] text-titan-navy font-sans min-h-screen flex items-center justify-center p-6 overflow-hidden">
+<body class="bg-kmd-bg-alt text-titan-navy font-sans min-h-screen flex items-center justify-center p-6 overflow-hidden">
     
     <!-- Decorative Background -->
     <div class="fixed inset-0 -z-10">
