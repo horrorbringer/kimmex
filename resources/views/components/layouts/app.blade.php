@@ -43,8 +43,9 @@
         $fontEn = $theme['font_family_en'] ?? 'Inter';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
         $fontHeading = 'Outfit'; // Premium heading font
+        $fontDisplay = 'Barlow Condensed'; // Architectural display font
         
-        $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading])->unique()->filter();
+        $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading, $fontDisplay])->unique()->filter();
         $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
     @endphp
 

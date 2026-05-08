@@ -182,7 +182,7 @@
                             <div class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center group-hover/meta:bg-titan-red/10 transition-all duration-300">
                                 <x-lucide-calendar class="w-4 h-4 text-titan-red" />
                             </div>
-                            <span class="text-[10px] font-black text-titan-navy uppercase tracking-[0.2em]">{{ $doc['date'] }}</span>
+                            <span class="text-[10px] font-black text-titan-navy uppercase tracking-[0.2em]">{{ $doc['created_at_formatted'] }}</span>
                         </div>
                         <div class="flex items-center gap-3 group/meta">
                             <div class="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center group-hover/meta:bg-titan-red/10 transition-all duration-300">

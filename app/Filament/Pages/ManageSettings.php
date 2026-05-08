@@ -301,8 +301,12 @@ class ManageSettings extends Page implements HasForms
                                         Textarea::make('test_result')->rows(5)->readOnly()->placeholder(__('Result will appear here...')),
                                         \Filament\Schemas\Components\Actions::make([
                                             \Filament\Actions\Action::make('runTest')
-                                                ->label(__('Generate Test Content'))
-                                                ->icon('heroicon-m-play')
+                                                ->label(__('Generate Magic Content'))
+                                                ->icon('heroicon-m-sparkles')
+                                                ->extraAttributes([
+                                                    'class' => '!bg-gradient-to-r !from-indigo-500 !via-purple-500 !to-pink-500 !text-white !border-0 !shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:!shadow-[0_0_25px_rgba(168,85,247,0.6)] !transition-all !duration-300',
+                                                    'style' => 'color: white !important;'
+                                                ])
                                                 ->action(function ($get, $set, \App\Services\AIGeneratorService $ai) {
                                                     $topic = $get('test_topic');
                                                     if (empty($topic)) return;

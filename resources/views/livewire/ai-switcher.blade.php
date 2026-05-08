@@ -1,37 +1,38 @@
-<div
-    class="flex items-center px-3 py-1 ml-4 rounded-full shadow-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-    <div class="flex items-center space-x-3">
-        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider dark:text-gray-400">AI:</span>
-
-        <div class="flex bg-gray-200 dark:bg-gray-700 p-0.5 rounded-lg">
-            <button wire:click="switchProvider('gemini')" @class([
-                'flex items-center px-2 py-1 text-xs font-medium rounded-md transition-all',
-                'bg-white dark:bg-gray-600 shadow-sm text-primary-600 dark:text-primary-400' =>
-                    $provider === 'gemini',
-                'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300' =>
-                    $provider !== 'gemini',
-            ]) title="Use Google Gemini">
-                <x-heroicon-m-sparkles @class(['w-3.5 h-3.5', 'text-blue-500' => $provider === 'gemini']) />
+<div class="flex items-center ml-4" style="margin-left: 1rem;">
+    <div style="display: flex; align-items: center; gap: 6px; padding: 6px; background-color: rgba(243, 244, 246, 0.8); backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(229, 231, 235, 0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.3s ease;">
+        
+        <!-- Glowing Provider Toggle -->
+        <div style="display: flex; align-items: center; background-color: white; border-radius: 8px; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+            <!-- Gemini Button -->
+            <button wire:click="switchProvider('gemini')" 
+                title="Switch to Gemini"
+                style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; transition: all 0.3s; cursor: pointer; border: none; {{ $provider === 'gemini' ? 'background: linear-gradient(to top right, #6366f1, #a855f7, #ec4899); box-shadow: 0 2px 4px rgba(0,0,0,0.1);' : 'background: transparent;' }}">
+                <x-heroicon-m-sparkles style="width: 16px; height: 16px; {{ $provider === 'gemini' ? 'color: white; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;' : 'color: #9ca3af;' }}" />
             </button>
-
-            <button wire:click="switchProvider('ollama')" @class([
-                'flex items-center px-2 py-1 text-xs font-medium rounded-md transition-all',
-                'bg-white dark:bg-gray-600 shadow-sm text-primary-600 dark:text-primary-400' =>
-                    $provider === 'ollama',
-                'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300' =>
-                    $provider !== 'ollama',
-            ]) title="Use Ollama">
-                <x-heroicon-m-cpu-chip @class(['w-3.5 h-3.5', 'text-orange-500' => $provider === 'ollama']) />
+            
+            <!-- Ollama Button -->
+            <button wire:click="switchProvider('ollama')" 
+                title="Switch to Ollama"
+                style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; transition: all 0.3s; cursor: pointer; border: none; {{ $provider === 'ollama' ? 'background: linear-gradient(to top right, #f97316, #f59e0b); box-shadow: 0 2px 4px rgba(0,0,0,0.1);' : 'background: transparent;' }}">
+                <x-heroicon-m-cpu-chip style="width: 16px; height: 16px; {{ $provider === 'ollama' ? 'color: white;' : 'color: #9ca3af;' }}" />
             </button>
         </div>
 
-        <select wire:model.live="model"
-            class="text-[10px] py-0.5 pl-2 pr-6 border-none bg-transparent font-medium text-gray-700 dark:text-gray-300 focus:ring-0 cursor-pointer max-w-[120px]">
-            @forelse($availableModels as $key => $name)
-                <option value="{{ $key }}">{{ \Illuminate\Support\Str::limit($name, 20) }}</option>
-            @empty
-                <option value="">No models</option>
-            @endforelse
-        </select>
+        <!-- Model Selector -->
+        <div style="position: relative; display: flex; align-items: center; background-color: white; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;">
+            <select wire:model.live="model"
+                style="appearance: none; -webkit-appearance: none; -moz-appearance: none; width: 100%; padding: 6px 32px 6px 12px; font-size: 11px; font-weight: 700; color: #374151; background: transparent; border: none; outline: none; cursor: pointer; min-width: 140px; max-w-[180px];">
+                @forelse($availableModels as $key => $name)
+                    <option value="{{ $key }}" style="color: #111827;">{{ \Illuminate\Support\Str::limit($name, 25) }}</option>
+                @empty
+                    <option value="">{{ __('No models') }}</option>
+                @endforelse
+            </select>
+            <!-- Custom Caret -->
+            <div style="position: absolute; right: 10px; pointer-events: none; color: #9ca3af; display: flex; align-items: center;">
+                <x-heroicon-m-chevron-up-down style="width: 16px; height: 16px;" />
+            </div>
+        </div>
+        
     </div>
 </div>

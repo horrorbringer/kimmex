@@ -11,10 +11,26 @@
 @endphp
 
 <div class="w-full pb-8">
-    <!-- DEBUG INDICATOR -->
-    <div class="mb-3 text-[9px] font-bold text-gray-400/50 uppercase tracking-widest flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        AI Health Monitor Engine v2.2
+    <!-- AI HEALTH INDICATOR -->
+    <div class="mb-6 inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/60 backdrop-blur-xl border border-white/40 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/90 cursor-default">
+        <div class="relative flex h-3 w-3 items-center justify-center">
+            @if($status === 'healthy')
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            @elseif($status === 'error')
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+            @else
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-slate-400"></span>
+            @endif
+        </div>
+        <span class="text-[10px] font-black uppercase tracking-widest bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            AI Engine v2.2
+        </span>
+        <div class="h-3 w-px bg-gray-300 mx-1"></div>
+        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+            {{ $status === 'healthy' ? __('Online') : __('Offline') }}
+        </span>
     </div>
     
     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: stretch;">

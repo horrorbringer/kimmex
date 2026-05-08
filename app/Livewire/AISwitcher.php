@@ -16,7 +16,7 @@ class AISwitcher extends Component
     {
         $settings = SystemSetting::get('ai_settings', []);
         $this->provider = $settings['provider'] ?? 'gemini';
-        $this->model = $settings['model'] ?? '';
+        $this->model = $settings[$this->provider]['model'] ?? '';
         $this->loadModels();
     }
 
@@ -25,22 +25,25 @@ class AISwitcher extends Component
         try {
             $service = new \App\Services\AIGeneratorService();
             $settings = SystemSetting::get('ai_settings', []);
-            $apiKey = $settings['api_key'] ?? '';
-            $baseUrl = $settings['base_url'] ?? 'http://localhost:11434';
+            
+            $apiKey = $settings['gemini']['api_key'] ?? '';
+            $baseUrl = $settings['ollama']['base_url'] ?? 'http://localhost:11434';
 
             if ($this->provider === 'gemini' && empty($apiKey)) {
                 $this->availableModels = ['gemini-1.5-flash' => 'Gemini 1.5 Flash (Default)'];
-                return;
+            } else {
+                $this->availableModels = $service->getAvailableModels(
+                    $this->provider === 'gemini' ? $apiKey : $baseUrl, 
+                    $this->provider
+                );
             }
-
-            $this->availableModels = $service->getAvailableModels(
-                $this->provider === 'gemini' ? $apiKey : $baseUrl, 
-                $this->provider
-            );
 
             // If current model is not in available list, reset to first one
             if (!empty($this->availableModels) && !isset($this->availableModels[$this->model])) {
                 $this->model = array_key_first($this->availableModels);
+                // Also update the settings
+                $settings[$this->provider]['model'] = $this->model;
+                SystemSetting::set('ai_settings', $settings);
             }
         } catch (\Exception $e) {
             $this->availableModels = [];
@@ -53,7 +56,7 @@ class AISwitcher extends Component
         $settings['provider'] = $newProvider;
         
         // Use the saved model for this provider if it exists
-        $this->model = $settings['model'] ?? ''; 
+        $this->model = $settings[$newProvider]['model'] ?? ''; 
         
         SystemSetting::set('ai_settings', $settings);
         $this->provider = $newProvider;
@@ -69,7 +72,13 @@ class AISwitcher extends Component
     public function updatedModel($value)
     {
         $settings = SystemSetting::get('ai_settings', []);
-        $settings['model'] = $value;
+        
+        // Ensure provider array exists
+        if (!isset($settings[$this->provider])) {
+            $settings[$this->provider] = [];
+        }
+        
+        $settings[$this->provider]['model'] = $value;
         SystemSetting::set('ai_settings', $settings);
 
         Notification::make()

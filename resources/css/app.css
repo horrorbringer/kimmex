@@ -7,92 +7,111 @@
      ======================================================================== */
 
   /* ─── BRAND PALETTE ─── */
-  --color-kmd-navy:          #0B2B5C;   /* Primary brand (navbar, hero, CTA) */
-  --color-kmd-navy-light:    #0E3A7A;   /* Lighter variant for hovers/surfaces */
-  --color-kmd-navy-lighter:  #1A4E94;   /* Borders, subtle accents */
-  --color-kmd-navy-subtle:   #5A7BA5;   /* Muted text on dark surfaces */
+  --color-kmd-navy: #0B2B5C;
+  /* Primary brand (navbar, hero, CTA) */
+  --color-kmd-navy-light: #0E3A7A;
+  /* Lighter variant for hovers/surfaces */
+  --color-kmd-navy-lighter: #1A4E94;
+  /* Borders, subtle accents */
+  --color-kmd-navy-subtle: #5A7BA5;
+  /* Muted text on dark surfaces */
 
-  --color-kmd-blue:          #185FA5;   /* Accent (links, outlines, info) */
-  --color-kmd-blue-hover:    #124A82;   /* Blue hover state */
-  --color-kmd-blue-light:    #3A7FCA;   /* Light blue variant */
+  --color-kmd-blue: #185FA5;
+  /* Accent (links, outlines, info) */
+  --color-kmd-blue-hover: #124A82;
+  /* Blue hover state */
+  --color-kmd-blue-light: #3A7FCA;
+  /* Light blue variant */
 
-  --color-kmd-gold:          #D4A017;   /* Premium highlight (badges, hover — use sparingly) */
-  --color-kmd-gold-hover:    #B8890F;   /* Gold hover state */
-  --color-kmd-gold-light:    #F0C75E;   /* Soft gold for backgrounds */
+  --color-kmd-gold: #D4A017;
+  /* Premium highlight (badges, hover — use sparingly) */
+  --color-kmd-gold-hover: #B8890F;
+  /* Gold hover state */
+  --color-kmd-gold-light: #F0C75E;
+  /* Soft gold for backgrounds */
 
   /* ─── BACKGROUND PALETTE ─── */
-  --color-kmd-bg:            #F8F7F4;   /* Off-white page background */
-  --color-kmd-bg-white:      #FFFFFF;   /* Pure white cards/surfaces */
-  --color-kmd-bg-alt:        #F0EFE9;   /* Alternating section background */
-  --color-kmd-bg-section:    #ECEAE3;   /* Divider/muted section */
+  --color-kmd-bg: #F8F7F4;
+  /* Off-white page background */
+  --color-kmd-bg-white: #FFFFFF;
+  /* Pure white cards/surfaces */
+  --color-kmd-bg-alt: #F0EFE9;
+  /* Alternating section background */
+  --color-kmd-bg-section: #ECEAE3;
+  /* Divider/muted section */
 
   /* ─── SEMANTIC COLORS ─── */
-  --color-success:           #16A34A;   /* Success green */
-  --color-success-light:     #DCFCE7;
-  --color-warning:           #D97706;   /* Warning amber */
-  --color-warning-light:     #FEF3C7;
-  --color-error:             #DC2626;   /* Error red */
-  --color-error-light:       #FEE2E2;
-  --color-info:              #185FA5;   /* Info blue (= accent blue) */
-  --color-info-light:        #DBEAFE;
+  --color-success: #16A34A;
+  /* Success green */
+  --color-success-light: #DCFCE7;
+  --color-warning: #D97706;
+  /* Warning amber */
+  --color-warning-light: #FEF3C7;
+  --color-error: #DC2626;
+  /* Error red */
+  --color-error-light: #FEE2E2;
+  --color-info: #185FA5;
+  /* Info blue (= accent blue) */
+  --color-info-light: #DBEAFE;
 
   /* ─── SOCIAL BRAND COLORS ─── */
-  --color-social-facebook:   #1877F2;
-  --color-social-linkedin:   #0A66C2;
-  --color-social-telegram:   #24A1DE;
-  --color-social-youtube:    #FF0000;
-  --color-social-instagram:  #E4405F;
-  --color-social-tiktok:     #010101;
+  --color-social-facebook: #1877F2;
+  --color-social-linkedin: #0A66C2;
+  --color-social-telegram: #24A1DE;
+  --color-social-youtube: #FF0000;
+  --color-social-instagram: #E4405F;
+  --color-social-tiktok: #010101;
 
   /* ─── BACKWARD COMPAT: old titan-* aliases → new kmd-* values ─── */
   /* These map every existing Tailwind class (bg-titan-navy, text-titan-red, etc.)
      to the new brand palette so nothing breaks. */
-  --color-titan-navy:         var(--color-kmd-navy);
-  --color-titan-navy-light:   var(--color-kmd-navy-light);
+  --color-titan-navy: var(--color-kmd-navy);
+  --color-titan-navy-light: var(--color-kmd-navy-light);
   --color-titan-navy-lighter: var(--color-kmd-navy-lighter);
-  --color-titan-navy-subtle:  var(--color-kmd-navy-subtle);
-  --color-titan-red:          var(--color-kmd-gold);         /* Red accent → Gold */
-  --color-titan-red-hover:    var(--color-kmd-gold-hover);
-  --color-accent-orange:      var(--color-kmd-gold);
-  --color-accent-orange-hover:var(--color-kmd-gold-hover);
-  --color-accent-blue:        var(--color-kmd-blue);
-  --color-accent-lightblue:   var(--color-kmd-blue-light);
+  --color-titan-navy-subtle: var(--color-kmd-navy-subtle);
+  --color-titan-red: var(--color-kmd-gold);
+  /* Red accent → Gold */
+  --color-titan-red-hover: var(--color-kmd-gold-hover);
+  --color-accent-orange: var(--color-kmd-gold);
+  --color-accent-orange-hover: var(--color-kmd-gold-hover);
+  --color-accent-blue: var(--color-kmd-blue);
+  --color-accent-lightblue: var(--color-kmd-blue-light);
   --color-accent-lightblue-hover: var(--color-kmd-blue-hover);
-  --color-accent-yellow:      var(--color-kmd-gold-light);
-  --color-accent-green:       var(--color-success);
-  --color-accent-red:         var(--color-error);
-  --color-titan-gold:         var(--color-kmd-gold);
-  --color-titan-yellow:       var(--color-kmd-gold-light);
-  --color-titan-white:        var(--color-kmd-bg-white);
-  --color-titan-bg:           var(--color-kmd-bg);
-  --color-titan-bg-alt:       var(--color-kmd-bg-alt);
-  --color-titan-bg-section:   var(--color-kmd-bg-section);
+  --color-accent-yellow: var(--color-kmd-gold-light);
+  --color-accent-green: var(--color-success);
+  --color-accent-red: var(--color-error);
+  --color-titan-gold: var(--color-kmd-gold);
+  --color-titan-yellow: var(--color-kmd-gold-light);
+  --color-titan-white: var(--color-kmd-bg-white);
+  --color-titan-bg: var(--color-kmd-bg);
+  --color-titan-bg-alt: var(--color-kmd-bg-alt);
+  --color-titan-bg-section: var(--color-kmd-bg-section);
 
   /* ─── FONTS ─── */
-  --font-inter:    "Inter", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-khmer:    "Noto Sans Khmer", "Kantumruy Pro", sans-serif;
-  --font-heading:  "Inter", "Noto Sans Khmer", sans-serif;
-  --font-logo:     "Barlow Condensed", "Inter", sans-serif;
+  --font-inter: "Inter", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-khmer: "Noto Sans Khmer", "Kantumruy Pro", sans-serif;
+  --font-heading: "Inter", "Noto Sans Khmer", sans-serif;
+  --font-logo: "Barlow Condensed", "Inter", sans-serif;
 
   /* ─── SPACING SCALE (4-based) ─── */
-  --spacing-xs:    4px;
-  --spacing-sm:    8px;
-  --spacing-md:    12px;
-  --spacing-base:  16px;
-  --spacing-lg:    24px;
-  --spacing-xl:    40px;
-  --spacing-2xl:   80px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-base: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 80px;
 
   /* ─── BORDER RADIUS ─── */
-  --radius-sm:     4px;
-  --radius-md:     8px;
-  --radius-lg:     12px;
-  --radius-xl:     16px;
-  --radius-2xl:    24px;
-  --radius-full:   9999px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
 
   /* ─── SHADOWS ─── */
-  --shadow-card:   0 1px 3px rgba(11, 43, 92, 0.06), 0 1px 2px rgba(11, 43, 92, 0.04);
+  --shadow-card: 0 1px 3px rgba(11, 43, 92, 0.06), 0 1px 2px rgba(11, 43, 92, 0.04);
   --shadow-card-hover: 0 10px 25px rgba(11, 43, 92, 0.08), 0 4px 10px rgba(11, 43, 92, 0.04);
   --shadow-elevated: 0 20px 50px rgba(11, 43, 92, 0.12);
 }
@@ -102,25 +121,26 @@
   --foreground: var(--color-kmd-navy);
 
   /* ─── TYPOGRAPHY SCALE (per brand spec) ─── */
-  --text-h1:       28px;
-  --text-h2:       20px;
-  --text-h3:       16px;
-  --text-body:     14px;
-  --text-caption:  12px;
+  --text-h1: 28px;
+  --text-h2: 20px;
+  --text-h3: 16px;
+  --text-body: 14px;
+  --text-caption: 12px;
 
   --weight-normal: 400;
   --weight-medium: 500;
-  --weight-bold:   700;
+  --weight-bold: 700;
 
-  --leading-tight:   1.1;
-  --leading-snug:    1.3;
-  --leading-normal:  1.7;      /* brand spec body line-height */
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.7;
+  /* brand spec body line-height */
   --leading-relaxed: 1.8;
 
   --tracking-tighter: -0.05em;
-  --tracking-tight:   -0.02em;
-  --tracking-normal:   0em;
-  --tracking-wide:     0.025em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -139,16 +159,30 @@ body {
 }
 
 /* ─── Heading hierarchy (brand spec) ─── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: var(--weight-medium);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tighter);
   color: var(--color-kmd-navy);
 }
-h1 { font-size: var(--text-h1); }
-h2 { font-size: var(--text-h2); }
-h3 { font-size: var(--text-h3); }
+
+h1 {
+  font-size: var(--text-h1);
+}
+
+h2 {
+  font-size: var(--text-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+}
 
 .font-sans {
   font-family: var(--font-inter);
@@ -164,8 +198,8 @@ h3 { font-size: var(--text-h3); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
   font-size: var(--text-body);
   font-weight: var(--weight-medium);
   border-radius: var(--radius-md);
@@ -175,6 +209,7 @@ h3 { font-size: var(--text-h3); }
   border: 2px solid transparent;
   line-height: 1;
 }
+
 .btn:focus-visible {
   outline: 2px solid var(--color-kmd-blue);
   outline-offset: 2px;
@@ -185,6 +220,7 @@ h3 { font-size: var(--text-h3); }
   color: white;
   border-color: var(--color-kmd-navy);
 }
+
 .btn-primary:hover {
   background: var(--color-kmd-navy-light);
   border-color: var(--color-kmd-navy-light);
@@ -196,6 +232,7 @@ h3 { font-size: var(--text-h3); }
   color: var(--color-kmd-blue);
   border-color: var(--color-kmd-blue);
 }
+
 .btn-outline:hover {
   background: var(--color-kmd-blue);
   color: white;
@@ -206,17 +243,19 @@ h3 { font-size: var(--text-h3); }
   color: white;
   border-color: var(--color-kmd-gold);
 }
+
 .btn-gold:hover {
   background: var(--color-kmd-gold-hover);
   border-color: var(--color-kmd-gold-hover);
 }
 
 .btn-sm {
-  padding: var(--spacing-xs) var(--spacing-md);
+  padding: var(--space-xs) var(--space-md);
   font-size: var(--text-caption);
 }
+
 .btn-lg {
-  padding: var(--spacing-base) var(--spacing-xl);
+  padding: var(--space-base) var(--space-xl);
   font-size: var(--text-h3);
 }
 
@@ -224,33 +263,39 @@ h3 { font-size: var(--text-h3); }
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: 2px var(--spacing-sm);
+  gap: var(--space-xs);
+  padding: 2px var(--space-sm);
   font-size: var(--text-caption);
   font-weight: var(--weight-medium);
   border-radius: var(--radius-full);
   line-height: 1.5;
 }
+
 .badge-gold {
   background: var(--color-kmd-gold-light);
   color: var(--color-kmd-navy);
 }
+
 .badge-navy {
   background: var(--color-kmd-navy);
   color: white;
 }
+
 .badge-blue {
   background: var(--color-info-light);
   color: var(--color-kmd-blue);
 }
+
 .badge-success {
   background: var(--color-success-light);
   color: var(--color-success);
 }
+
 .badge-warning {
   background: var(--color-warning-light);
   color: var(--color-warning);
 }
+
 .badge-error {
   background: var(--color-error-light);
   color: var(--color-error);
@@ -264,18 +309,20 @@ h3 { font-size: var(--text-h3); }
   overflow: hidden;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
+
 .card:hover {
   box-shadow: var(--shadow-card-hover);
   transform: translateY(-2px);
 }
+
 .card-body {
-  padding: var(--spacing-lg);
+  padding: var(--space-lg);
 }
 
 /* ─── Form Inputs ─── */
 .form-input {
   width: 100%;
-  padding: var(--spacing-md) var(--spacing-base);
+  padding: var(--space-md) var(--space-base);
   font-size: var(--text-body);
   font-family: var(--font-inter);
   color: var(--color-kmd-navy);
@@ -284,11 +331,13 @@ h3 { font-size: var(--text-h3); }
   border-radius: var(--radius-md);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+
 .form-input:focus {
   outline: none;
   border-color: var(--color-kmd-blue);
   box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.12);
 }
+
 .form-input::placeholder {
   color: var(--color-kmd-navy-subtle);
 }
@@ -296,27 +345,32 @@ h3 { font-size: var(--text-h3); }
 /* ─── Stat Card ─── */
 .stat-card {
   text-align: center;
-  padding: var(--spacing-lg);
+  padding: var(--space-lg);
 }
+
 .stat-card-value {
   font-size: var(--text-h1);
   font-weight: var(--weight-bold);
   color: var(--color-kmd-navy);
   line-height: 1;
 }
+
 .stat-card-label {
   font-size: var(--text-caption);
   color: var(--color-kmd-navy-subtle);
-  margin-top: var(--spacing-xs);
+  margin-top: var(--space-xs);
 }
 
 /* ─── Links ─── */
-a.link, .link {
+a.link,
+.link {
   color: var(--color-kmd-blue);
   text-decoration: none;
   transition: color 0.2s ease;
 }
-a.link:hover, .link:hover {
+
+a.link:hover,
+.link:hover {
   color: var(--color-kmd-blue-hover);
   text-decoration: underline;
 }
@@ -327,13 +381,19 @@ a.link:hover, .link:hover {
 
 .font-khmer {
   font-family: var(--font-khmer);
-  line-height: 1.8; /* Khmer needs more vertical space */
+  line-height: 1.8;
+  /* Khmer needs more vertical space */
   letter-spacing: 0;
 }
 
 /* Sophisticated Typography Utilities */
-.text-balance { text-wrap: balance; }
-.text-pretty { text-wrap: pretty; }
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
 
 .heading-gradient {
   background: linear-gradient(135deg, var(--color-kmd-navy) 0%, var(--color-kmd-navy-light) 100%);
@@ -460,25 +520,47 @@ a.link:hover, .link:hover {
 }
 
 @keyframes slow-zoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.1); }
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
 }
+
 .animate-slow-zoom {
   animation: slow-zoom 20s ease-out forwards;
 }
 
 @keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
+
 .animate-bounce-slow {
   animation: bounce-slow 3s ease-in-out infinite;
 }
 
 @keyframes fade-in-up {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 .animate-fade-in-up {
   animation: fade-in-up 0.8s ease-out forwards;
 }
