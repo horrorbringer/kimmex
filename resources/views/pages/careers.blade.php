@@ -53,42 +53,41 @@
 }" class="bg-white min-h-screen text-titan-navy">
 
         <!-- === PREMIUM CAREERS HERO === -->
-        <section class="relative h-[55vh] min-h-[480px] flex items-center overflow-hidden bg-titan-navy">
-            {{-- Background Zoom Animation --}}
+        <section class="relative h-screen min-h-[800px] flex items-center overflow-hidden bg-titan-navy">
+            {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-5.jpg" alt="Careers Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                {{-- Refined gradient for better text legibility --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-titan-navy/20 to-titan-navy/60"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
+                <div class="absolute inset-0 bg-titan-navy/20"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
-            <div class="relative z-20 w-full max-w-[1240px] mx-auto px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <!-- Premium Glassmorphism Badge -->
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-4 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12 border border-white/10">
-                    <span class="relative flex h-2.5 w-2.5">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-titan-red"></span>
-                    </span>
-                    {{ __('Join Our Elite Team') }}
+            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-6 pt-32 pb-40" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <!-- Premium Badge -->
+                <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
+                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-2.5 glass-premium border border-white/10 rounded-full mb-12">
+                    <div class="w-2 h-2 rounded-full bg-titan-red animate-pulse"></div>
+                    <span class="text-white/90 text-[10px] font-black uppercase tracking-[0.3em]">{{ __('Join Our Elite Team') }}</span>
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(2.5rem, 7vw, 5rem);">
-                    {{ __('BUILD YOUR') }}<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-titan-red to-red-500">{{ __('LEGACY') }}</span>
+                    class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
+                    style="font-size: clamp(1.8rem, 5vw, 3.5rem); color: white !important; font-weight: 900 !important;">
+                    <span class="block">{{ __('BUILD YOUR') }}</span>
+                    <span class="block text-titan-red mt-2">{{ __('LEGACY') }}</span>
                 </h1>
 
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" 
-                     class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-8 mb-12 max-w-2xl">
-                    <p class="text-lg md:text-xl text-white/90 font-medium leading-relaxed">
-                        {{ __('Join a team of visionaries shaping the skyline and engineering future of Cambodia. We value excellence, impact, and continuous growth.') }}
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
+                     class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-10 mb-16 max-w-2xl">
+                    <p class="text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl" style="color: white !important;">
+                        {{ __('Join a team of visionaries') }}<br/>
+                        {{ __('shaping the future.') }}
                     </p>
                 </div>
 
-                <!-- Upgraded Action Buttons -->
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 delay-700 flex flex-wrap gap-6">
+                <!-- Action Buttons -->
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                    class="transition-all duration-1000 delay-700 flex flex-wrap gap-8">
                     <button @click="document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })"
                         class="bg-titan-red text-white px-10 py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-2xl hover:shadow-titan-red/40 hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6">
                         <span>{{ __('Explore Roles') }}</span>
@@ -98,7 +97,7 @@
                     </button>
 
                     <button @click="isApplyOpen = true"
-                        class="glass-premium hover:bg-white/20 text-white px-10 py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6 border border-white/10">
+                        class="glass-premium hover:bg-white/20 text-white px-10 py-5 rounded-2xl font-black text-[12px] uppercase tracking-widest shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6 border border-white/10 backdrop-blur-md">
                         <span>{{ __('Direct Apply') }}</span>
                         <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                             <x-lucide-send class="w-4 h-4" />
@@ -107,75 +106,57 @@
                 </div>
             </div>
 
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
+                <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
+                <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
         </section>
 
         <!-- WHY JOIN US -->
         <section x-data="{ revealed: false }" x-intersect.once="revealed = true"
-            class="pt-20 pb-24 max-w-[1200px] mx-auto px-6">
+            class="pt-32 pb-32 max-w-[1400px] mx-auto px-6">
             <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                class="transition-all duration-700 flex items-center gap-4 mb-12">
-                <div class="w-1 h-8 bg-titan-red rounded-full"></div>
+                class="transition-all duration-700 flex flex-col items-start gap-4 mb-20">
+                <div class="w-20 h-1.5 bg-titan-red rounded-full shadow-[0_0_15px_rgba(227,30,36,0.4)]"></div>
                 <div>
-                    <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tight">
+                    <h2 class="text-4xl font-black text-titan-navy uppercase tracking-tight">
                         {{ __('Why Work With Us?') }}
                     </h2>
-                    <p class="text-titan-navy/35 text-xs mt-0.5">{{ __('Build your future with Kimmex Construction.') }}
+                    <p class="text-titan-navy/40 text-sm font-bold uppercase tracking-widest mt-2">
+                        {{ __('Engineering Excellence, Together.') }}
                     </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                @php
+                    $values = [
+                        ['icon' => 'award', 'title' => __('Excellence'), 'desc' => __('We maintain the highest standards across all our large-scale construction and engineering projects.')],
+                        ['icon' => 'target', 'title' => __('Impact'), 'desc' => __('Our work contributes directly to the sustainable growth of infrastructure across Cambodia.')],
+                        ['icon' => 'users', 'title' => __('Growth'), 'desc' => __('We provide unmatched opportunities for professional development within our global-standard teams.')]
+                    ];
+                @endphp
+
+                @foreach($values as $i => $v)
                 <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-700 delay-200 relative group">
-                    <div
-                        class="bg-gray-50/50 border border-gray-100 rounded-2xl p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500">
-                        <div
-                            class="w-12 h-12 bg-white border border-gray-100 text-titan-red rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:bg-titan-red group-hover:text-white group-hover:border-titan-red transition-all duration-300">
-                            <x-lucide-award class="w-5 h-5" />
+                    class="transition-all duration-1000 group relative"
+                    style="transition-delay: {{ 200 + ($i * 150) }}ms">
+                    <div class="bg-white border border-gray-100 rounded-[2.5rem] p-12 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] hover:border-titan-red/20 transition-all duration-700 h-full relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-[5rem] -mr-10 -mt-10 group-hover:bg-titan-red/5 transition-colors duration-700"></div>
+                        
+                        <div class="w-20 h-20 bg-gray-50 text-titan-red rounded-3xl flex items-center justify-center mb-10 shadow-sm group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                            <x-dynamic-component :component="'lucide-' . $v['icon']" class="w-10 h-10" />
                         </div>
-                        <h3
-                            class="text-lg font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase tracking-tight mb-3">
-                            {{ __('Excellence') }}
+                        <h3 class="text-2xl font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase tracking-tight mb-6">
+                            {{ $v['title'] }}
                         </h3>
-                        <p class="text-titan-navy/40 text-sm leading-relaxed">
-                            {{ __('We maintain high standards across all our construction and engineering projects.') }}
+                        <p class="text-gray-500 text-lg leading-relaxed font-medium">
+                            {{ $v['desc'] }}
                         </p>
                     </div>
                 </div>
-                <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-700 delay-300 relative group">
-                    <div
-                        class="bg-gray-50/50 border border-gray-100 rounded-2xl p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500">
-                        <div
-                            class="w-12 h-12 bg-white border border-gray-100 text-titan-red rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:bg-titan-red group-hover:text-white group-hover:border-titan-red transition-all duration-300">
-                            <x-lucide-target class="w-5 h-5" />
-                        </div>
-                        <h3
-                            class="text-lg font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase tracking-tight mb-3">
-                            {{ __('Impact') }}
-                        </h3>
-                        <p class="text-titan-navy/40 text-sm leading-relaxed">
-                            {{ __('Our work contributes directly to the growth of infrastructure in Cambodia.') }}
-                        </p>
-                    </div>
-                </div>
-                <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-700 delay-400 relative group">
-                    <div
-                        class="bg-gray-50/50 border border-gray-100 rounded-2xl p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500">
-                        <div
-                            class="w-12 h-12 bg-white border border-gray-100 text-titan-red rounded-xl flex items-center justify-center mb-6 shadow-sm group-hover:bg-titan-red group-hover:text-white group-hover:border-titan-red transition-all duration-300">
-                            <x-lucide-users class="w-5 h-5" />
-                        </div>
-                        <h3
-                            class="text-lg font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase tracking-tight mb-3">
-                            {{ __('Growth') }}
-                        </h3>
-                        <p class="text-titan-navy/40 text-sm leading-relaxed">
-                            {{ __('We provide opportunities for professional development within our engineering teams.') }}
-                        </p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </section>
 

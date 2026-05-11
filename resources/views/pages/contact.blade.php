@@ -3,39 +3,42 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === PREMIUM CONTACT HERO === -->
-        <section
-            class="relative h-[75vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
-            {{-- Background Zoom Animation --}}
+        <section class="relative h-screen min-h-[800px] flex items-center overflow-hidden bg-titan-navy">
+            {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
                     class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                {{-- Lightened multi-stage gradient --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
+                <div class="absolute inset-0 bg-titan-navy/30"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
-            <div class="relative z-20 text-center max-w-5xl px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12">
+            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-6 pt-32 pb-40">
+                <!-- Premium Badge -->
+                <div class="inline-flex items-center gap-3 px-6 py-2.5 glass-premium border border-white/10 rounded-full mb-12">
                     <x-lucide-mail class="w-4 h-4 text-titan-red animate-pulse" />
-                    <span>{{ strtoupper(__('Get in Touch')) }}</span>
+                    <span class="text-white/90 text-[10px] font-black uppercase tracking-[0.3em]">{{ __('Get in Touch') }}</span>
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 text-5xl md:text-7xl lg:text-[6.5rem] font-black text-white mb-10 leading-[0.9] tracking-tighter uppercase">
-                    {{ __('CONNECT') }}<br />
-                    <span class="text-titan-red">{{ __('WITH US') }}</span>
+                <h1 class="font-heading font-[900] text-white mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
+                    style="font-size: clamp(1.8rem, 5vw, 3.5rem); color: white !important; font-weight: 900 !important;">
+                    <span class="block">{{ __('CONNECT') }}</span>
+                    <span class="block text-titan-red mt-2">{{ __('WITH US') }}</span>
                 </h1>
 
-                <div :class="shown ? 'opacity-100' : 'opacity-0'"
-                    class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
-                    <div class="h-[1px] w-12 bg-white/30"></div>
-                    <p class="text-sm md:text-base text-white/90 font-bold uppercase tracking-[0.4em]">
-                        {{ __('Building Relationships. Building Future.') }}
+                <div class="border-l-4 border-titan-red pl-10 mb-16 max-w-2xl">
+                    <p class="text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl" style="color: white !important;">
+                        {{ __('Building Relationships.') }}<br/>
+                        {{ __('Building Future.') }}
                     </p>
-                    <div class="h-[1px] w-12 bg-white/30"></div>
                 </div>
             </div>
 
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
+                <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
+                <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent"></div>
+            </div>
         </section>
 
         @php
@@ -79,46 +82,42 @@ $workingHours =
         @endphp
 
         <!-- CONTACT INFO BAR -->
-        <section class="max-w-[1200px] mx-auto px-6 relative z-40 -mt-12">
-            <div
-                class="bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+        <section class="max-w-[1400px] mx-auto px-6 relative z-40 -mt-20">
+            <div class="bg-white rounded-[3rem] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 <a href="{{ $googleMapsLink }}" target="_blank"
-                    class="flex items-center gap-4 p-7 group hover:bg-gray-50/50 transition-colors rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none">
-                    <div
-                        class="w-11 h-11 bg-titan-red/10 text-titan-red rounded-xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
-                        <x-lucide-map-pin class="w-5 h-5" />
+                    class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
+                    <div class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                        <x-lucide-map-pin class="w-7 h-7" />
                     </div>
                     <div>
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/30 mb-0.5">
+                        <div class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-2">
                             {{ __('Address') }}
                         </div>
-                        <div class="text-sm font-bold text-titan-navy">{{ $address }}</div>
+                        <div class="text-sm font-black text-titan-navy leading-relaxed">{{ $address }}</div>
                     </div>
                 </a>
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                    class="flex items-center gap-4 p-7 group hover:bg-gray-50/50 transition-colors">
-                    <div
-                        class="w-11 h-11 bg-titan-red/10 text-titan-red rounded-xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
-                        <x-lucide-phone class="w-5 h-5" />
+                    class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
+                    <div class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                        <x-lucide-phone class="w-7 h-7" />
                     </div>
                     <div>
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/30 mb-0.5">
+                        <div class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-2">
                             {{ __('Phone') }}
                         </div>
-                        <div class="text-sm font-bold text-titan-navy">{{ $phone }}</div>
+                        <div class="text-base font-black text-titan-navy leading-relaxed">{{ $phone }}</div>
                     </div>
                 </a>
                 <a href="mailto:{{ $email }}"
-                    class="flex items-center gap-4 p-7 group hover:bg-gray-50/50 transition-colors rounded-b-2xl md:rounded-r-2xl md:rounded-bl-none">
-                    <div
-                        class="w-11 h-11 bg-titan-red/10 text-titan-red rounded-xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
-                        <x-lucide-mail class="w-5 h-5" />
+                    class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
+                    <div class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                        <x-lucide-mail class="w-7 h-7" />
                     </div>
                     <div>
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/30 mb-0.5">
+                        <div class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-2">
                             {{ __('Email') }}
                         </div>
-                        <div class="text-sm font-bold text-titan-navy">{{ $email }}</div>
+                        <div class="text-base font-black text-titan-navy leading-relaxed">{{ $email }}</div>
                     </div>
                 </a>
             </div>

@@ -123,8 +123,8 @@ $sectors = [
             </div>
 
             <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
+                class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                style="font-size: clamp(1.5rem, 5vw, 2.8rem); color: white !important; font-weight: 900 !important;">
                 <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'ENGINEERING' }}</span> <br/>
                 <span class="text-kmd-gold">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
             </h1>

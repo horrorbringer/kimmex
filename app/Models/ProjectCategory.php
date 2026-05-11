@@ -31,4 +31,21 @@ class ProjectCategory extends Model
     {
         return $this->hasMany(Project::class);
     }
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('nav_categories_en');
+            \Illuminate\Support\Facades\Cache::forget('nav_categories_kh');
+            \Illuminate\Support\Facades\Cache::forget('projects_index_data_en');
+            \Illuminate\Support\Facades\Cache::forget('projects_index_data_kh');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('nav_categories_en');
+            \Illuminate\Support\Facades\Cache::forget('nav_categories_kh');
+            \Illuminate\Support\Facades\Cache::forget('projects_index_data_en');
+            \Illuminate\Support\Facades\Cache::forget('projects_index_data_kh');
+        });
+    }
 }

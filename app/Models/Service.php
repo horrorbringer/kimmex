@@ -36,4 +36,17 @@ class Service extends Model
         'features' => 'array',
         'isActive' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('nav_services_en');
+            \Illuminate\Support\Facades\Cache::forget('nav_services_kh');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('nav_services_en');
+            \Illuminate\Support\Facades\Cache::forget('nav_services_kh');
+        });
+    }
 }

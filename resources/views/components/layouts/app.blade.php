@@ -42,7 +42,7 @@
         $secondaryColor = $theme['secondary_color'] ?? '#0B2B5C'; 
         $fontEn = $theme['font_family_en'] ?? 'Inter';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
-        $fontHeading = 'Outfit'; // Premium heading font
+        $fontHeading = 'Montserrat'; // High-impact geometric heading font
         
         $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading])->unique()->filter();
         $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
@@ -58,7 +58,7 @@
             --secondary-color: {{ $secondaryColor }};
             --font-en: '{{ $fontEn }}', sans-serif;
             --font-km: '{{ $fontKm }}', sans-serif;
-            --font-heading: '{{ $fontHeading }}', '{{ $fontKm }}', sans-serif;
+            --font-heading:  "Montserrat", "Outfit", "Inter", "Noto Sans Khmer", sans-serif;
         }
         
         .font-sans { font-family: var(--font-en); }

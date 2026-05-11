@@ -11,10 +11,15 @@
         $aboutData = [
             'story' => $brand['company_story'] ?? __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner...'),
             'values' => array_map(function ($v) {
+                $icon = $v['icon'] ?? 'lucide-shield';
+                // If the icon was accidentally translated or contains invalid characters, fallback to a default
+                if (!preg_match('/^[a-zA-Z0-9\-]+$/', $icon)) {
+                    $icon = 'lucide-shield';
+                }
                 return [
                     'title' => $v['title'] ?? '',
                     'content' => $v['description'] ?? '',
-                    'icon' => $v['icon'] ?? 'lucide-shield'
+                    'icon' => $icon
                 ];
             }, $brand['values_list'] ?? [])
         ];
@@ -239,8 +244,8 @@
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
+                    class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                    style="font-size: clamp(1.5rem, 5vw, 2.8rem); color: white !important; font-weight: 900 !important;">
                     {{ __('BUILDING') }}<br />
                     <span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
                 </h1>

@@ -149,8 +149,8 @@
                 </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
+                    class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
+                    style="font-size: clamp(1.5rem, 5vw, 2.8rem); color: white !important; font-weight: 900 !important;">
                     {{ __('BUILT') }} <span class="text-titan-red">{{ __('LEGACY') }}</span>
                 </h1>
 

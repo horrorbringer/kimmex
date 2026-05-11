@@ -1,37 +1,21 @@
-<div
-    class="flex items-center px-3 py-1 ml-4 rounded-full shadow-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-    <div class="flex items-center space-x-3">
-        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider dark:text-gray-400">AI:</span>
+<div class="flex items-center gap-2 mr-2">
+    <button wire:click="switchProvider('{{ $provider === 'gemini' ? 'ollama' : 'gemini' }}')" 
+        class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        title="{{ $provider === 'gemini' ? 'Switch to Ollama' : 'Switch to Google Gemini' }}">
+        @if($provider === 'gemini')
+            <x-heroicon-m-sparkles class="text-blue-500" style="width: 18px; height: 18px;" />
+        @else
+            <x-heroicon-m-cpu-chip class="text-orange-500" style="width: 18px; height: 18px;" />
+        @endif
+    </button>
 
-        <div class="flex bg-gray-200 dark:bg-gray-700 p-0.5 rounded-lg">
-            <button wire:click="switchProvider('gemini')" @class([
-                'flex items-center px-2 py-1 text-xs font-medium rounded-md transition-all',
-                'bg-white dark:bg-gray-600 shadow-sm text-primary-600 dark:text-primary-400' =>
-                    $provider === 'gemini',
-                'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300' =>
-                    $provider !== 'gemini',
-            ]) title="Use Google Gemini">
-                <x-heroicon-m-sparkles @class(['w-3.5 h-3.5', 'text-blue-500' => $provider === 'gemini']) />
-            </button>
-
-            <button wire:click="switchProvider('ollama')" @class([
-                'flex items-center px-2 py-1 text-xs font-medium rounded-md transition-all',
-                'bg-white dark:bg-gray-600 shadow-sm text-primary-600 dark:text-primary-400' =>
-                    $provider === 'ollama',
-                'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300' =>
-                    $provider !== 'ollama',
-            ]) title="Use Ollama">
-                <x-heroicon-m-cpu-chip @class(['w-3.5 h-3.5', 'text-orange-500' => $provider === 'ollama']) />
-            </button>
-        </div>
-
-        <select wire:model.live="model"
-            class="text-[10px] py-0.5 pl-2 pr-6 border-none bg-transparent font-medium text-gray-700 dark:text-gray-300 focus:ring-0 cursor-pointer max-w-[120px]">
-            @forelse($availableModels as $key => $name)
-                <option value="{{ $key }}">{{ \Illuminate\Support\Str::limit($name, 20) }}</option>
-            @empty
-                <option value="">No models</option>
-            @endforelse
-        </select>
-    </div>
+    <select wire:model.live="model" 
+        class="block w-40 rounded-lg border-gray-300 bg-white py-1 px-3 text-sm text-gray-900 shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+        style="height: 36px;">
+        @forelse($availableModels as $key => $name)
+            <option value="{{ $key }}">{{ \Illuminate\Support\Str::limit($name, 22) }}</option>
+        @empty
+            <option value="">No models</option>
+        @endforelse
+    </select>
 </div>
