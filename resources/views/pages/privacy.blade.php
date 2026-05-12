@@ -28,7 +28,7 @@
 
         <!-- === TABLE OF CONTENTS === -->
         <section class="max-w-[900px] mx-auto px-6 relative z-40 -mt-16">
-            <div class="bg-white rounded-sm shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 p-8 lg:p-10">
+            <div class="bg-white rounded shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 p-8 lg:p-10">
                 <h2 class="text-sm font-black uppercase tracking-widest text-titan-navy/40 mb-6 flex items-center gap-3">
                     <x-lucide-list class="w-4 h-4 text-titan-red" />
                     {{ __('Table of Contents') }}
@@ -106,9 +106,9 @@
                         ];
                     @endphp
                     @foreach($infoTypes as $item)
-                        <div class="flex gap-6 p-6 bg-gray-50 rounded-sm border border-gray-100 hover:border-titan-red/20 transition-colors">
+                        <div class="flex gap-6 p-6 bg-gray-50 rounded border border-gray-100 hover:border-titan-red/20 transition-colors">
                             <div class="shrink-0">
-                                <div class="w-12 h-12 rounded-sm bg-titan-red/10 flex items-center justify-center text-titan-red">
+                                <div class="w-12 h-12 rounded bg-titan-red/10 flex items-center justify-center text-titan-red">
                                     <x-dynamic-component :component="$item['icon']" class="w-5 h-5" />
                                 </div>
                             </div>
@@ -146,7 +146,7 @@
                         ];
                     @endphp
                     @foreach($uses as $use)
-                        <div class="flex items-start gap-4 p-5 bg-white rounded-sm border border-gray-100 hover:shadow-lg hover:border-titan-red/20 transition-all">
+                        <div class="flex items-start gap-4 p-5 bg-white rounded border border-gray-100 hover:shadow-lg hover:border-titan-red/20 transition-all">
                             <div class="w-8 h-8 rounded-lg bg-titan-red/10 flex items-center justify-center text-titan-red shrink-0">
                                 <x-dynamic-component :component="$use['icon']" class="w-4 h-4" />
                             </div>
@@ -163,9 +163,9 @@
                     <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tight">{{ __('Data Storage & Security') }}</h2>
                 </div>
 
-                <div class="bg-titan-navy rounded-sm p-8 lg:p-10 text-white">
+                <div class="bg-titan-navy rounded p-8 lg:p-10 text-white">
                     <div class="flex items-start gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-sm bg-white/10 flex items-center justify-center text-white shrink-0">
+                        <div class="w-12 h-12 rounded bg-white/10 flex items-center justify-center text-white shrink-0">
                             <x-lucide-lock class="w-6 h-6" />
                         </div>
                         <div>
@@ -218,7 +218,7 @@
                         ];
                     @endphp
                     @foreach($sharing as $item)
-                        <div class="p-6 bg-gray-50 rounded-sm border-l-4 border-titan-red">
+                        <div class="p-6 bg-gray-50 rounded border-l-4 border-titan-red">
                             <h3 class="font-black text-titan-navy uppercase tracking-tight mb-2">{{ $item['title'] }}</h3>
                             <p class="text-titan-navy/60 text-sm leading-relaxed">{{ $item['desc'] }}</p>
                         </div>
@@ -248,7 +248,7 @@
                         ];
                     @endphp
                     @foreach($rights as $right)
-                        <div class="flex items-start gap-4 p-6 bg-white rounded-sm border border-gray-100 hover:border-titan-red/30 transition-colors">
+                        <div class="flex items-start gap-4 p-6 bg-white rounded border border-gray-100 hover:border-titan-red/30 transition-colors">
                             <div class="w-10 h-10 rounded-lg bg-titan-red/10 flex items-center justify-center text-titan-red shrink-0">
                                 <x-dynamic-component :component="$right['icon']" class="w-5 h-5" />
                             </div>
@@ -260,7 +260,7 @@
                     @endforeach
                 </div>
 
-                <div class="mt-8 p-6 bg-titan-red/10 rounded-sm border border-titan-red/20">
+                <div class="mt-8 p-6 bg-titan-red/10 rounded border border-titan-red/20">
                     <p class="text-titan-navy/80 text-sm leading-relaxed">
                         <strong class="text-titan-navy font-black">{{ __('To exercise these rights:') }}</strong>
                         {{ __('Contact us at privacy@kimmex.com.kh with your request. We will respond within 30 days.') }}
@@ -301,7 +301,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-gray-50 rounded-sm p-8 border border-gray-100">
+                    <div class="bg-gray-50 rounded p-8 border border-gray-100">
                         <h3 class="font-black text-titan-navy uppercase tracking-tight mb-4 flex items-center gap-3">
                             <x-lucide-settings class="w-5 h-5 text-titan-red" />
                             {{ __('Manage Cookies') }}
@@ -326,7 +326,7 @@
                     <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tight">{{ __('Contact Information') }}</h2>
                 </div>
 
-                <div class="bg-titan-navy rounded-sm p-8 lg:p-12 text-white relative overflow-hidden">
+                <div class="bg-titan-navy rounded p-8 lg:p-12 text-white relative overflow-hidden">
                     <!-- Decorative elements -->
                     <div class="absolute top-0 right-0 w-64 h-64 bg-titan-red/10 rounded-full blur-[100px] pointer-events-none"></div>
                     <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-[80px] pointer-events-none"></div>
@@ -337,7 +337,7 @@
                         </p>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <a href="mailto:privacy@kimmex.com.kh" class="flex items-center gap-4 p-6 bg-white/5 rounded-sm border border-white/10 hover:bg-white/10 transition-colors group">
+                            <a href="mailto:privacy@kimmex.com.kh" class="flex items-center gap-4 p-6 bg-white/5 rounded border border-white/10 hover:bg-white/10 transition-colors group">
                                 <div class="w-12 h-12 rounded-lg bg-titan-red/20 flex items-center justify-center text-titan-red group-hover:scale-110 transition-transform">
                                     <x-lucide-mail class="w-5 h-5" />
                                 </div>
@@ -347,7 +347,7 @@
                                 </div>
                             </a>
 
-                            <a href="tel:+85523999999" class="flex items-center gap-4 p-6 bg-white/5 rounded-sm border border-white/10 hover:bg-white/10 transition-colors group">
+                            <a href="tel:+85523999999" class="flex items-center gap-4 p-6 bg-white/5 rounded border border-white/10 hover:bg-white/10 transition-colors group">
                                 <div class="w-12 h-12 rounded-lg bg-titan-red/20 flex items-center justify-center text-titan-red group-hover:scale-110 transition-transform">
                                     <x-lucide-phone class="w-5 h-5" />
                                 </div>
@@ -357,7 +357,7 @@
                                 </div>
                             </a>
 
-                            <a href="/contact" class="flex items-center gap-4 p-6 bg-white/5 rounded-sm border border-white/10 hover:bg-white/10 transition-colors group">
+                            <a href="/contact" class="flex items-center gap-4 p-6 bg-white/5 rounded border border-white/10 hover:bg-white/10 transition-colors group">
                                 <div class="w-12 h-12 rounded-lg bg-titan-red/20 flex items-center justify-center text-titan-red group-hover:scale-110 transition-transform">
                                     <x-lucide-send class="w-5 h-5" />
                                 </div>
@@ -391,7 +391,7 @@
                 <p class="text-titan-navy/60 mb-8 max-w-xl mx-auto">
                     {{ __('Our team is here to address any privacy-related questions or concerns you may have.') }}
                 </p>
-                <a href="/contact" class="inline-flex items-center gap-3 bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded-sm font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-xl">
+                <a href="/contact" class="inline-flex items-center gap-3 bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-xl">
                     <x-lucide-message-circle class="w-4 h-4" />
                     {{ __('Contact Us') }}
                 </a>

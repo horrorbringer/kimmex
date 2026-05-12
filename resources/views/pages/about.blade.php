@@ -173,7 +173,7 @@
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="ease-in duration-200"
                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                 x-transition:leave-end="opacity-0 translate-y-8 scale-95"
-                class="relative bg-white rounded-sm overflow-hidden max-w-4xl w-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row max-h-[90vh] md:min-h-[500px] overflow-y-auto md:overflow-visible z-10">
+                class="relative bg-white rounded overflow-hidden max-w-4xl w-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col md:flex-row max-h-[90vh] md:min-h-[500px] overflow-y-auto md:overflow-visible z-10">
 
                 <button @click="selectedMember = null"
                     class="absolute top-4 right-4 md:top-6 md:right-6 z-30 w-10 h-10 bg-white/90 backdrop-blur-sm shadow-xl text-titan-navy hover:bg-titan-red hover:text-white rounded-full transition-all duration-300 flex items-center justify-center group">
@@ -285,27 +285,27 @@
                     <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
                         class="grid grid-cols-2 gap-6 transition-all duration-1000 relative">
                         <div class="space-y-6">
-                            <div class="aspect-[4/5] rounded-sm overflow-hidden shadow-2xl">
+                            <div class="aspect-[4/5] rounded overflow-hidden shadow-2xl">
                                 <img src="/images/projects/Thumbnail-1.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
                             </div>
-                            <div class="aspect-square rounded-sm overflow-hidden shadow-2xl">
+                            <div class="aspect-square rounded overflow-hidden shadow-2xl">
                                 <img src="/images/projects/Thumbnail-3.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
                             </div>
                         </div>
                         <div class="space-y-6 pt-12">
-                            <div class="aspect-square rounded-sm overflow-hidden shadow-2xl">
+                            <div class="aspect-square rounded overflow-hidden shadow-2xl">
                                 <img src="/images/projects/Thumbnail-2.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
                             </div>
-                            <div class="aspect-[4/5] rounded-sm overflow-hidden shadow-2xl relative">
+                            <div class="aspect-[4/5] rounded overflow-hidden shadow-2xl relative">
                                 <img src="/images/projects/Thumbnail-4.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" />
 
                                 <!-- Floating 25+ Years Badge -->
                                 <div
-                                    class="absolute -bottom-6 -right-6 bg-titan-red text-white p-8 rounded-sm shadow-[0_20px_40px_rgba(227,30,36,0.3)] z-20 flex flex-col items-center justify-center min-w-[140px] transform hover:scale-105 transition-transform">
+                                    class="absolute -bottom-6 -right-6 bg-titan-red text-white p-8 rounded shadow-[0_20px_40px_rgba(227,30,36,0.3)] z-20 flex flex-col items-center justify-center min-w-[140px] transform hover:scale-105 transition-transform">
                                     <span class="text-4xl font-black leading-none">25+</span>
                                     <span
                                         class="text-[10px] font-black uppercase tracking-[0.2em] mt-1">{{ __('Years') }}</span>
@@ -366,7 +366,7 @@
                              @click="active = (active === '{{ $item['id'] }}' ? null : '{{ $item['id'] }}')">
                             <div class="flex gap-6 items-start">
                                 <!-- Icon Box -->
-                                <div class="w-14 h-14 rounded-sm flex items-center justify-center shrink-0 transition-colors duration-500"
+                                <div class="w-14 h-14 rounded flex items-center justify-center shrink-0 transition-colors duration-500"
                                      :class="active === '{{ $item['id'] }}' ? 'bg-titan-red text-white' : 'bg-titan-red/10 text-titan-red'">
                                     @if($item['icon'] === 'eye')
                                         <x-lucide-eye class="w-6 h-6" stroke-width="2" />
@@ -413,7 +413,7 @@
             <div class="max-w-[1000px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 bg-gray-50 rounded-sm p-8 md:p-12 lg:p-16 border border-gray-100 shadow-sm relative overflow-hidden">
+                    class="transition-all duration-1000 bg-gray-50 rounded p-8 md:p-12 lg:p-16 border border-gray-100 shadow-sm relative overflow-hidden">
                     <!-- Decorative blurred background element -->
                     <div
                         class="absolute -top-24 -right-24 w-64 h-64 bg-titan-navy/5 rounded-full blur-3xl pointer-events-none">
@@ -424,12 +424,12 @@
                         <!-- Left: Image -->
                         <div class="w-[200px] md:w-[280px] shrink-0 relative">
                             <div
-                                class="aspect-[3/4] w-full rounded-sm overflow-hidden shadow-lg border-4 border-white">
+                                class="aspect-[3/4] w-full rounded overflow-hidden shadow-lg border-4 border-white">
                                 <img src="/images/team-leadership-professional/touch_kim.jpg" alt="Okhna. TOUCH KIM"
                                     class="object-cover object-top w-full h-full bg-titan-navy/5" loading="lazy" />
                             </div>
                             <div
-                                class="absolute -bottom-4 -right-4 w-16 h-16 bg-titan-red text-white flex items-center justify-center rounded-sm shadow-lg border-4 border-gray-50 rotate-3 hover:rotate-0 transition-transform cursor-default">
+                                class="absolute -bottom-4 -right-4 w-16 h-16 bg-titan-red text-white flex items-center justify-center rounded shadow-lg border-4 border-gray-50 rotate-3 hover:rotate-0 transition-transform cursor-default">
                                 <x-lucide-quote class="w-6 h-6" stroke-width="2" />
                             </div>
                         </div>
@@ -467,22 +467,33 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($aboutData['values'] as $i => $value)
-                        <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                            :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                        <div x-data="{ shown: false, hover: false }" x-intersect.once="shown = true"
+                            @mouseenter="hover = true" @mouseleave="hover = false"
+                            x-bind:class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                             class="transition-all duration-700" style="transition-delay: {{ $i * 100 }}ms">
                             <div
-                                class="bg-gray-50/50 p-10 rounded-sm border-2 border-transparent hover:border-gray-100 hover:bg-white hover:shadow-2xl hover:shadow-gray-200/30 group transition-all duration-500 h-full">
+                                class="bg-white p-10 rounded border-2 border-gray-100 transition-all duration-500 h-full relative overflow-hidden"
+                                x-bind:class="hover ? 'border-titan-red shadow-[0_30px_60px_-15px_rgba(227,30,36,0.1)] -translate-y-2' : ''">
+                                
                                 <div
-                                    class="w-16 h-16 bg-titan-red/5 rounded-sm flex items-center justify-center text-titan-red mb-8 group-hover:bg-titan-red group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-titan-red/30">
-                                    <x-dynamic-component :component="$value['icon']" class="w-7 h-7" />
+                                    class="w-16 h-16 rounded-full flex items-center justify-center text-titan-red mb-8 transition-all duration-500 border border-gray-100"
+                                    x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : 'bg-gray-50/50'">
+                                    <x-dynamic-component :component="$value['icon']" class="w-7 h-7" stroke-width="1.5" />
                                 </div>
+                                
                                 <h3
-                                    class="text-xl font-heading font-black text-titan-navy mb-4 group-hover:text-titan-red transition-colors duration-500">
+                                    class="text-xl font-heading font-black text-titan-navy mb-4 transition-colors duration-500"
+                                    x-bind:class="hover ? 'text-titan-red' : ''">
                                     {{ $value['title'] }}
                                 </h3>
-                                <p class="text-sm text-titan-navy/50 leading-relaxed font-medium">
+                                <p class="text-sm text-titan-navy/50 leading-relaxed font-medium transition-colors duration-500"
+                                    x-bind:class="hover ? 'text-titan-navy/70' : ''">
                                     {{ $value['content'] }}
                                 </p>
+
+                                <!-- Bottom Accent Line -->
+                                <div class="absolute bottom-0 left-0 right-0 h-1 bg-titan-red transition-all duration-500 transform origin-left"
+                                    x-bind:class="hover ? 'scale-x-100' : 'scale-x-0'"></div>
                             </div>
                         </div>
                     @endforeach
@@ -534,7 +545,7 @@
                                 
                                 <div x-show="open" x-collapse>
                                     <div
-                                        class="mt-6 p-6 bg-gray-50/80 rounded-sm border border-gray-100 text-titan-navy/60 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
+                                        class="mt-6 p-6 bg-gray-50/80 rounded border border-gray-100 text-titan-navy/60 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
                                         @if(!empty($milestone['detail']))
                                             {!! $milestone['detail'] !!}
                                         @else
@@ -551,7 +562,7 @@
 
                             <!-- Image Side -->
                             <div class="w-full md:w-5/12 pl-16 md:pl-0 z-10">
-                                <a class="block aspect-video rounded-sm overflow-hidden shadow-lg border border-gray-100 relative group cursor-pointer"
+                                <a class="block aspect-video rounded overflow-hidden shadow-lg border border-gray-100 relative group cursor-pointer"
                                     @click.prevent="open = !open">
                                     <img src="{{ $milestone['image'] }}"
                                         class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
@@ -598,7 +609,7 @@
                         class="transition-all duration-1000">
                         <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our
                             Standards') }}</span>
-                        <h2 class="text-3xl md:text-4xl font-heading font-black text-white mb-6 leading-tight">
+                        <h2 class="text-3xl md:text-4xl font-heading font-black text-white mb-6 leading-normal tracking-normal">
                             {{ __('Quality & Safety') }} <span class="text-titan-red uppercase">{{ __('First') }}</span>
                         </h2>
                         <p class="text-white/60 text-lg leading-relaxed mb-10">
@@ -627,7 +638,7 @@
                                 ];
                             @endphp
                             @foreach($qualityItems as $item)
-                                <div class="flex items-start gap-4 p-4 bg-white/5 rounded-sm border border-white/10">
+                                <div class="flex items-start gap-4 p-4 bg-white/5 rounded border border-white/10">
                                     <div
                                         class="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
                                         @if($item['icon'] === 'shield')
@@ -653,9 +664,9 @@
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         class="transition-all duration-1000 delay-200 relative">
                         <img src="/images/projects/Thumbnail-6.jpg" alt="Safety Inspection"
-                            class="rounded-sm shadow-2xl w-full h-auto" loading="lazy" />
+                            class="rounded shadow-2xl w-full h-auto" loading="lazy" />
                         <!-- Floating ISO Card -->
-                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-sm shadow-xl hidden md:block">
+                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded shadow-xl hidden md:block">
                             <div class="flex items-center gap-4">
                                 <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center">
                                     <x-lucide-check-circle-2 class="text-green-600 w-7 h-7" />
@@ -672,6 +683,14 @@
         </section>
 
         <!-- CTA SECTION -->
+        <section class="py-24 bg-titan-navy border-t border-white/10">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-heading font-black text-white mb-8 leading-tight tracking-normal">
+                    {{ __('READY TO BUILD YOUR') }} <br />
+                    <span class="text-titan-red">{{ __('NEXT LANDMARK?') }}</span>
+                </h2>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <a href="/contact"
                         class="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg">
                         {{ __('Contact Us') }}
                     </a>

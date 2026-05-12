@@ -83,7 +83,7 @@
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                     class="transition-all duration-1000 delay-700 flex flex-wrap gap-8">
                     <button @click="document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })"
-                        class="bg-titan-red text-white px-10 py-5 rounded-sm font-black text-[12px] uppercase tracking-widest shadow-2xl hover:shadow-titan-red/40 hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6">
+                        class="bg-titan-red text-white px-10 py-5 rounded font-black text-[12px] uppercase tracking-widest shadow-2xl hover:shadow-titan-red/40 hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6">
                         <span>{{ __('Explore Roles') }}</span>
                         <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                             <x-lucide-arrow-down class="w-4 h-4" />
@@ -91,7 +91,7 @@
                     </button>
 
                     <button @click="isApplyOpen = true"
-                        class="glass-premium hover:bg-white/20 text-white px-10 py-5 rounded-sm font-black text-[12px] uppercase tracking-widest shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6 border border-white/10 backdrop-blur-md">
+                        class="glass-premium hover:bg-white/20 text-white px-10 py-5 rounded font-black text-[12px] uppercase tracking-widest shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6 border border-white/10 backdrop-blur-md">
                         <span>{{ __('Direct Apply') }}</span>
                         <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                             <x-lucide-send class="w-4 h-4" />
@@ -133,21 +133,29 @@
                 @endphp
 
                 @foreach($values as $i => $v)
-                <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 group relative"
+                <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
+                    x-bind:class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+                    class="transition-all duration-1000 relative"
                     style="transition-delay: {{ 200 + ($i * 150) }}ms">
-                    <div class="bg-white border border-gray-100 rounded-sm p-12 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] hover:border-titan-red/20 transition-all duration-700 h-full relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-[5rem] -mr-10 -mt-10 group-hover:bg-titan-red/5 transition-colors duration-700"></div>
-                        
-                        <div class="w-20 h-20 bg-gray-50 text-titan-red rounded-sm flex items-center justify-center mb-10 shadow-sm group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
-                            <x-dynamic-component :component="'lucide-' . $v['icon']" class="w-10 h-10" />
+                    <div class="bg-white border-2 border-gray-100 rounded p-12 transition-all duration-500 h-full relative overflow-hidden"
+                        x-bind:class="hover ? 'border-titan-red shadow-[0_30px_60px_-15px_rgba(227,30,36,0.08)] -translate-y-1' : ''">
+
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center text-titan-red mb-10 transition-all duration-500 border border-gray-100"
+                            x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : 'bg-gray-50'">
+                            <x-dynamic-component :component="'lucide-' . $v['icon']" class="w-7 h-7" stroke-width="1.5" />
                         </div>
-                        <h3 class="text-2xl font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase tracking-tight mb-6">
+
+                        <h3 class="text-2xl font-black text-titan-navy uppercase tracking-tight mb-6 transition-colors duration-500"
+                            x-bind:class="hover ? 'text-titan-red' : ''">
                             {{ $v['title'] }}
                         </h3>
-                        <p class="text-gray-500 text-lg leading-relaxed font-medium">
+                        <p class="text-titan-navy/50 text-base leading-relaxed font-medium">
                             {{ $v['desc'] }}
                         </p>
+
+                        <!-- Bottom Accent Line -->
+                        <div class="absolute bottom-0 left-0 right-0 h-1 bg-titan-red transition-all duration-500 transform origin-left"
+                            x-bind:class="hover ? 'scale-x-100' : 'scale-x-0'"></div>
                     </div>
                 </div>
                 @endforeach
@@ -193,10 +201,10 @@
                             :style="'transition-delay: ' + (150 + ($i * 100)) + 'ms'"
                             class="transition-all duration-700 relative z-10 group">
                             <div
-                                class="bg-gray-50/50 border border-gray-100 rounded-sm p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 min-h-[180px]">
+                                class="bg-gray-50/50 border border-gray-100 rounded p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 min-h-[180px]">
                                 <!-- Number Badge -->
                                 <div
-                                    class="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-xs font-black text-titan-red mb-6 shadow-sm group-hover:bg-titan-red group-hover:text-white group-hover:border-titan-red transition-all duration-300">
+                                    class="w-10 h-10 rounded-full bg-white border-2 border-gray-100 flex items-center justify-center text-xs font-black text-titan-red mb-6 shadow-sm group-hover:border-titan-red group-hover:shadow-[0_0_0_4px_rgba(227,30,36,0.08)] transition-all duration-300">
                                     0{{ $i + 1 }}
                                 </div>
                                 <h3
@@ -233,20 +241,20 @@
             <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
                 class="transition-all duration-700 mb-12 relative z-40">
                 <div
-                    class="flex flex-col md:flex-row gap-3 w-full bg-gray-50 p-2 rounded-sm border border-gray-100 shadow-sm">
+                    class="flex flex-col md:flex-row gap-3 w-full bg-gray-50 p-2 rounded border border-gray-100 shadow-sm">
                     <!-- Search -->
                     <div class="relative flex-grow">
                         <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 text-titan-navy/20 w-4 h-4" />
                         <input type="text"
                             placeholder="{{ __('Search for specific roles (e.g. Engineer, Supervisor)...') }}"
                             x-model="searchQuery"
-                            class="w-full pl-11 pr-4 py-3.5 rounded-sm border-none bg-white text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/10 transition-all placeholder:text-titan-navy/25 shadow-sm" />
+                            class="w-full pl-11 pr-4 py-3.5 rounded border-none bg-white text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/10 transition-all placeholder:text-titan-navy/25 shadow-sm" />
                     </div>
 
                     <!-- Department Dropdown -->
                     <div class="relative shrink-0 md:w-64" x-data="{ open: false }">
                         <button @click="open = !open"
-                            class="w-full flex items-center gap-2 bg-white border-none px-5 py-3.5 rounded-sm text-sm font-bold text-titan-navy justify-between transition-all hover:bg-gray-50 shadow-sm"
+                            class="w-full flex items-center gap-2 bg-white border-none px-5 py-3.5 rounded text-sm font-bold text-titan-navy justify-between transition-all hover:bg-gray-50 shadow-sm"
                             :class="open ? 'ring-2 ring-titan-red/10' : ''">
                             <div class="flex items-center gap-2 min-w-0">
                                 <x-lucide-filter class="text-titan-red w-3.5 h-3.5 shrink-0" />
@@ -257,7 +265,7 @@
                                 ::class="open ? 'rotate-180' : ''" />
                         </button>
                         <div x-show="open" @click.away="open = false" style="display: none"
-                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded-sm shadow-xl py-2 z-50 overflow-hidden">
+                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded shadow-xl py-2 z-50 overflow-hidden">
                             @foreach($categories as $cat)
                                 <button @click="filterDept = '{{ addslashes($cat) }}'; open = false"
                                     class="w-full text-left px-5 py-2.5 text-[13px] font-bold hover:bg-gray-50 flex items-center justify-between transition-colors"
@@ -273,7 +281,7 @@
                     <!-- Location Dropdown -->
                     <div class="relative shrink-0 md:w-60" x-data="{ open: false }">
                         <button @click="open = !open"
-                            class="w-full flex items-center gap-2 bg-white border-none px-5 py-3.5 rounded-sm text-sm font-bold text-titan-navy justify-between transition-all hover:bg-gray-50 shadow-sm"
+                            class="w-full flex items-center gap-2 bg-white border-none px-5 py-3.5 rounded text-sm font-bold text-titan-navy justify-between transition-all hover:bg-gray-50 shadow-sm"
                             :class="open ? 'ring-2 ring-titan-red/10' : ''">
                             <div class="flex items-center gap-2 min-w-0">
                                 <x-lucide-map-pin class="text-titan-red w-3.5 h-3.5 shrink-0" />
@@ -284,7 +292,7 @@
                                 ::class="open ? 'rotate-180' : ''" />
                         </button>
                         <div x-show="open" @click.away="open = false" style="display: none"
-                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded-sm shadow-xl py-2 z-50 overflow-hidden">
+                            class="absolute top-full left-0 w-full mt-2 bg-white border border-gray-100 rounded shadow-xl py-2 z-50 overflow-hidden">
                             @foreach($locations as $loc)
                                 <button @click="filterLoc = '{{ addslashes($loc) }}'; open = false"
                                     class="w-full text-left px-5 py-2.5 text-[13px] font-bold hover:bg-gray-50 flex items-center justify-between transition-colors"
@@ -303,7 +311,7 @@
             <div class="space-y-6">
                 <template x-for="(job, index) in filteredJobs" :key="job.id">
                     <div
-                        class="bg-white border border-gray-100 rounded-sm p-8 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] hover:border-gray-200 transition-all duration-400 group relative overflow-hidden">
+                        class="bg-white border border-gray-100 rounded p-8 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] hover:border-gray-200 transition-all duration-400 group relative overflow-hidden">
                         <!-- Hover Accent Bar (Design-Z) -->
                         <div
                             class="absolute inset-y-0 left-0 w-0 group-hover:w-2 bg-titan-red transition-all duration-300">
@@ -373,7 +381,7 @@
                             <!-- Right: CTA -->
                             <div class="shrink-0 pt-4 lg:pt-0">
                                 <a :href="'/careers/' + job.slug"
-                                    class="bg-titan-navy text-white px-8 py-4 rounded-sm font-bold text-[11px] uppercase tracking-widest hover:bg-titan-red transition-all shadow-lg hover:-translate-y-0.5 flex items-center gap-3 group/btn">
+                                    class="border-2 border-titan-navy text-titan-navy px-8 py-4 rounded font-bold text-[11px] uppercase tracking-widest hover:border-titan-red hover:text-titan-red transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-3 group/btn bg-white">
                                     {{ __('Apply Now') }}
                                     <x-lucide-arrow-right
                                         class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -385,22 +393,22 @@
 
                 <!-- Empty State -->
                 <div x-show="filteredJobs.length === 0" style="display: none"
-                    class="text-center py-20 border border-dashed border-gray-200 rounded-sm">
-                    <div class="w-16 h-16 bg-gray-50 rounded-sm flex items-center justify-center mx-auto mb-5">
+                    class="text-center py-20 border border-dashed border-gray-200 rounded">
+                    <div class="w-16 h-16 bg-gray-50 rounded flex items-center justify-center mx-auto mb-5">
                         <x-lucide-search class="text-gray-200 w-7 h-7" />
                     </div>
                     <h3 class="text-lg font-black text-titan-navy mb-2">{{ __('No positions found') }}</h3>
                     <p class="text-titan-navy/35 text-sm mb-6">{{ __('Try adjusting your search or filters.') }}</p>
                     <button
                         @click="filterDept = '{{ __('All Departments') }}'; filterLoc = '{{ __('All Locations') }}'; searchQuery = ''"
-                        class="bg-titan-navy text-white px-6 py-3 rounded-sm font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors">
+                        class="bg-titan-navy text-white px-6 py-3 rounded font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors">
                         {{ __('Clear All Filters') }}
                     </button>
                 </div>
             </div>
 
             <!-- CTA Banner -->
-            <div class="mt-16 bg-titan-navy rounded-sm p-10 md:p-14 text-white relative overflow-hidden">
+            <div class="mt-16 bg-titan-navy rounded p-10 md:p-14 text-white relative overflow-hidden">
                 <div
                     class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
                 </div>
@@ -417,8 +425,8 @@
                         </p>
                     </div>
                     <button @click="isApplyOpen = true"
-                        class="shrink-0 bg-titan-red text-white px-8 py-4 rounded-sm font-bold text-xs uppercase tracking-widest hover:bg-white hover:text-titan-red transition-all shadow-lg flex items-center gap-2 group">
-                        {{ __('General Application') }}
+                        class="shrink-0 border-2 border-white/30 text-white px-8 py-4 rounded font-bold text-xs uppercase tracking-widest hover:border-white hover:bg-white hover:text-titan-navy transition-all duration-300 shadow-lg flex items-center gap-3 group">
+                        <span>{{ __('General Application') }}</span>
                         <x-lucide-send
                             class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </button>
@@ -432,7 +440,7 @@
             <div @click="isApplyOpen = false" class="absolute inset-0 bg-titan-navy/80 backdrop-blur-sm"></div>
 
             <div x-show="isApplyOpen" x-transition.scale.95.opacity
-                class="relative w-full max-w-2xl bg-white rounded-sm shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+                class="relative w-full max-w-2xl bg-white rounded shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-titan-navy to-titan-red"></div>
                 <button @click="isApplyOpen = false"
                     class="absolute top-4 right-4 text-gray-400 hover:text-titan-red transition-colors bg-gray-50 rounded-full p-2">
@@ -453,7 +461,7 @@
                     </div>
 
                     @if(session('success'))
-                        <div class="bg-green-50 text-green-700 p-4 rounded-sm mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2"
+                        <div class="bg-green-50 text-green-700 p-4 rounded mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2"
                             x-init="isApplyOpen = true">
                             <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
                             {{ session('success') }}
@@ -475,7 +483,7 @@
                             <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Full Name') }}
                                 <span class="text-titan-red">*</span></label>
                             <input type="text" name="full_name" value="{{ old('full_name') }}" required
-                                class="w-full bg-gray-50 border border-gray-100 rounded-sm px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('full_name') border-titan-red @enderror"
+                                class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('full_name') border-titan-red @enderror"
                                 placeholder="{{ __('John Doe') }}" />
                             @error('full_name') <p
                                 class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
@@ -488,7 +496,7 @@
                                 <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Email') }}
                                     <span class="text-titan-red">*</span></label>
                                 <input type="email" name="email" value="{{ old('email') }}" required
-                                    class="w-full bg-gray-50 border border-gray-100 rounded-sm px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('email') border-titan-red @enderror"
+                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('email') border-titan-red @enderror"
                                     placeholder="john@example.com" />
                                 @error('email') <p
                                     class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
@@ -499,7 +507,7 @@
                                 <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Phone') }}
                                     <span class="text-titan-red">*</span></label>
                                 <input type="tel" name="phone" value="{{ old('phone') }}" required
-                                    class="w-full bg-gray-50 border border-gray-100 rounded-sm px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('phone') border-titan-red @enderror"
+                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('phone') border-titan-red @enderror"
                                     placeholder="+855 12 345 678" />
                                 @error('phone') <p
                                     class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
@@ -512,14 +520,14 @@
                             <label
                                 class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Cover Letter / Message') }}</label>
                             <textarea name="message" rows="3"
-                                class="w-full bg-gray-50 border border-gray-100 rounded-sm px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none resize-none placeholder:text-gray-300"
+                                class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none resize-none placeholder:text-gray-300"
                                 placeholder="{{ __('Brief motivation cover letter...') }}">{{ old('message') }}</textarea>
                         </div>
 
                         <div class="space-y-2">
                             <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Resume / CV') }}
                                 <span class="text-titan-red">*</span></label>
-                            <div class="border-2 border-dashed border-gray-200 rounded-sm p-6 text-center hover:bg-gray-50/50 hover:border-gray-300 transition-all cursor-pointer relative @error('resume') border-titan-red @enderror"
+                            <div class="border-2 border-dashed border-gray-200 rounded p-6 text-center hover:bg-gray-50/50 hover:border-gray-300 transition-all cursor-pointer relative @error('resume') border-titan-red @enderror"
                                 x-data="{ fileName: '' }">
                                 <input type="file" name="resume" required
                                     class="absolute inset-0 opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx"
@@ -548,7 +556,7 @@
                         </div>
 
                         <button type="submit"
-                            class="w-full bg-titan-red hover:bg-titan-navy text-white font-bold text-xs uppercase tracking-widest py-4 rounded-sm transition-all shadow-md flex items-center justify-center gap-2 group">
+                            class="w-full bg-titan-red hover:bg-titan-navy text-white font-bold text-xs uppercase tracking-widest py-4 rounded transition-all shadow-md flex items-center justify-center gap-2 group">
                             {{ __('Submit Application') }}
                             <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </button>

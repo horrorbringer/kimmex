@@ -158,7 +158,7 @@ $sectors = [
         <div class="space-y-24 md:space-y-32">
             @foreach($services as $i => $service)
                 <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'" 
-                     class="group flex flex-col lg:flex-row gap-0 transition-all duration-700 bg-white h-full border border-gray-100 shadow-sm hover:shadow-xl rounded-sm overflow-hidden {{ $i % 2 === 1 ? 'lg:flex-row-reverse' : '' }}">
+                     class="group flex flex-col lg:flex-row gap-0 transition-all duration-700 bg-white h-full border border-gray-100 shadow-sm hover:shadow-xl rounded overflow-hidden {{ $i % 2 === 1 ? 'lg:flex-row-reverse' : '' }}">
                     
                     <!-- Image Side -->
                     <div class="lg:w-[45%] relative h-[350px] lg:h-auto overflow-hidden">
@@ -256,7 +256,7 @@ $sectors = [
 
                                 <!-- The Diamond Shape -->
                                 <div class="relative z-10 flex items-center justify-center transition-all duration-700 group-hover:scale-110 pointer-events-none"
-                                     class="w-[100px] h-[100px] bg-white border-[1.5px] border-gray-100 rounded-sm rotate-45 shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
+                                     class="w-[100px] h-[100px] bg-white border-[1.5px] border-gray-100 rounded rotate-45 shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
                                     <div style="transform: rotate(-45deg);">
                                         <x-dynamic-component :component="$s['icon']" class="w-8 h-8 text-titan-navy group-hover:text-titan-red transition-colors duration-500" />
                                     </div>
@@ -264,7 +264,7 @@ $sectors = [
 
                                 <!-- Floating Step Indicator -->
                                 <div class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110"
-                                     class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110 w-[30px] h-[30px] bg-titan-red rounded-sm bottom-[15px] right-[15px] text-[12px] shadow-[0_5px_15px_rgba(212,160,23,0.35)]">
+                                     class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110 w-[30px] h-[30px] bg-titan-red rounded bottom-[15px] right-[15px] text-[12px] shadow-[0_5px_15px_rgba(212,160,23,0.35)]">
                                     0{{ $i + 1 }}
                                 </div>
                             </div>
@@ -305,12 +305,12 @@ $sectors = [
                             ['icon' => 'lucide-clock', 'title' => ['en' => 'On-Time Delivery', 'kh' => 'ការប្រគល់ជូនទាន់ពេលវេលា'], 'desc' => ['en' => 'Rigorous scheduling and project management to meet deadlines.', 'kh' => 'ការរៀបចំកាលវិភាគ និងគ្រប់គ្រងគម្រោងយ៉ាងម៉ត់ចត់ដើម្បីឆ្លើយតបពេលវេលាកំណត់។']],
                             ['icon' => 'lucide-zap', 'title' => ['en' => 'Innovative Solutions', 'kh' => 'ដំណោះស្រាយច្នៃប្រឌិត'], 'desc' => ['en' => 'Using modern technologies to solve complex engineering challenges.', 'kh' => 'ប្រើប្រាស់បច្ចេកវិទ្យាទំនើបដើម្បីដោះស្រាយបញ្ហាវិស្វកម្មស្មុគស្មាញ។']],
                         ] as $item)
-                        <div class="group flex items-start gap-6 p-6 rounded-sm hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 relative overflow-hidden bg-transparent border border-transparent hover:border-gray-100">
+                        <div class="group flex items-start gap-6 p-6 rounded hover:bg-white hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 relative overflow-hidden bg-transparent border border-transparent hover:border-gray-100">
                             <!-- Animated left border accent -->
                             <div class="absolute left-0 top-0 bottom-0 w-1 bg-titan-red scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top"></div>
                             
-                            <div class="w-14 h-14 rounded-sm flex items-center justify-center text-titan-navy bg-white shadow-sm border border-gray-100 group-hover:bg-titan-red group-hover:text-white group-hover:shadow-md transition-all duration-500 shrink-0">
-                                <x-dynamic-component :component="$item['icon']" class="w-6 h-6" />
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-titan-red bg-gray-50 border border-gray-100 group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500 shrink-0">
+                                <x-dynamic-component :component="$item['icon']" class="w-5 h-5" stroke-width="1.5" />
                             </div>
                             <div>
                                 <h3 class="text-xl font-black text-titan-navy mb-2 uppercase tracking-wide group-hover:text-titan-red transition-colors">{{ $item['title'][$lang] }}</h3>
@@ -324,16 +324,16 @@ $sectors = [
                 <!-- Right Staggered Image Grid -->
                 <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'" class="transition-all duration-1000 delay-200 relative lg:ml-10 mt-10 lg:mt-0">
                     <!-- Architectural Accent Background -->
-                    <div class="absolute -inset-10 bg-gradient-to-br from-titan-navy/5 to-transparent rounded-sm -z-10 rotate-[-4deg]"></div>
+                    <div class="absolute -inset-10 bg-gradient-to-br from-titan-navy/5 to-transparent rounded -z-10 rotate-[-4deg]"></div>
 
                     <div class="grid grid-cols-2 gap-4 md:gap-6 relative z-10 w-full h-full">
                         <!-- Left Image -->
-                        <div class="relative h-[300px] md:h-[400px] rounded-sm shadow-2xl overflow-hidden translate-y-12 md:translate-y-20 group">
+                        <div class="relative h-[300px] md:h-[400px] rounded shadow-2xl overflow-hidden translate-y-12 md:translate-y-20 group">
                             <div class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
                             <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                         </div>
                         <!-- Right Image -->
-                        <div class="relative h-[350px] md:h-[480px] rounded-sm shadow-2xl overflow-hidden group">
+                        <div class="relative h-[350px] md:h-[480px] rounded shadow-2xl overflow-hidden group">
                             <div class="absolute inset-0 bg-titan-red/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
                             <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                         </div>
@@ -366,7 +366,7 @@ $sectors = [
                 @foreach($sectors as $i => $sector)
                     <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
                          style="transition-delay: {{ $i * 100 }}ms"
-                         class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded-sm bg-titan-navy cursor-pointer transition-all duration-700 shadow-2xl">
+                         class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded bg-titan-navy cursor-pointer transition-all duration-700 shadow-2xl">
                         
                         <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-100" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
                         
@@ -376,7 +376,7 @@ $sectors = [
                         <!-- Content -->
                         <div class="absolute inset-0 p-8 flex flex-col justify-end relative z-10">
                             <!-- Icon Badge (Design-Z signature) -->
-                            <div class="absolute top-10 right-10 w-16 h-16 bg-white/10 backdrop-blur-md rounded-sm border border-white/20 flex items-center justify-center text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 -translate-y-4 md:group-hover:translate-y-0 transition-all duration-500">
+                            <div class="absolute top-10 right-10 w-16 h-16 bg-white/10 backdrop-blur-md rounded border border-white/20 flex items-center justify-center text-white opacity-100 md:opacity-0 md:group-hover:opacity-100 -translate-y-4 md:group-hover:translate-y-0 transition-all duration-500">
                                 <x-dynamic-component :component="$sector['icon']" class="w-8 h-8" />
                             </div>
 
@@ -399,7 +399,7 @@ $sectors = [
     <!-- === CTA SECTION (Design-Z Premium) === -->
     <section class="py-20 md:py-32 bg-gray-50 relative overflow-hidden">
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
-            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="bg-titan-navy border border-white/5 rounded-sm shadow-[0_30px_60px_-15px_rgba(15,23,42,0.5)] overflow-hidden relative transition-all duration-1000">
+            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="bg-titan-navy border border-white/5 rounded shadow-[0_30px_60px_-15px_rgba(15,23,42,0.5)] overflow-hidden relative transition-all duration-1000">
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <!-- Left Content -->
@@ -414,11 +414,11 @@ $sectors = [
                         </p>
 
                         <div class="flex flex-col sm:flex-row gap-5">
-                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded-sm font-bold text-sm shadow-xl hover:scale-105 transition-all w-max bg-titan-red text-white">
+                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded font-bold text-sm shadow-xl hover:scale-105 transition-all w-max bg-titan-red text-white">
                                 <span>{{ __('Get a Free Quote') }}</span>
                                 <x-lucide-arrow-right class="w-4 h-4" />
                             </a>
-                            <a href="/projects" class="flex items-center justify-center gap-3 px-8 py-4 rounded-sm font-bold text-sm border hover:bg-white/5 hover:scale-105 transition-all w-max" style="border-color: rgba(255,255,255,0.2); color: white;">
+                            <a href="/projects" class="flex items-center justify-center gap-3 px-8 py-4 rounded font-bold text-sm border hover:bg-white/5 hover:scale-105 transition-all w-max" style="border-color: rgba(255,255,255,0.2); color: white;">
                                 <span>{{ __('View Our Portfolio') }}</span>
                             </a>
                         </div>
@@ -430,7 +430,7 @@ $sectors = [
                         <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" loading="lazy" />
                         
                         <!-- Floating Decorative Badge -->
-                        <div class="absolute top-12 right-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white p-5 rounded-sm z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">
+                        <div class="absolute top-12 right-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white p-5 rounded z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">
                             <div class="w-12 h-12 bg-titan-red rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,42,0,0.5)]">
                                 <x-lucide-phone class="w-5 h-5 text-white" />
                             </div>

@@ -8,7 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Kantumruy+Pro:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,7 @@
                         'titan-red': '#D4A017',
                     },
                     fontFamily: {
-                        'sans': ['Inter', 'Kantumruy Pro', 'sans-serif'],
+                        'sans': ['Plus Jakarta Sans', 'Kantumruy Pro', 'sans-serif'],
                         'khmer': ['Kantumruy Pro', 'sans-serif'],
                     }
                 }

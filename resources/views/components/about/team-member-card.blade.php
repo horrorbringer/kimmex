@@ -31,7 +31,7 @@
 
 @if($isDepartment)
     <div class="flex flex-col items-center group relative z-10 w-full">
-        <div class="{{ $styles['light'] }} border {{ $small ? 'px-4 py-2' : 'px-6 py-3' }} rounded-sm backdrop-blur-sm shadow-sm transition-all duration-500 group-hover:shadow-md group-hover:scale-105">
+        <div class="{{ $styles['light'] }} border {{ $small ? 'px-4 py-2' : 'px-6 py-3' }} rounded backdrop-blur-sm shadow-sm transition-all duration-500 group-hover:shadow-md group-hover:scale-105">
             <span class="{{ $small ? 'text-[8px]' : 'text-[10px]' }} font-black uppercase tracking-[0.2em] {{ $styles['text'] }} opacity-50 mb-0.5 block text-center italic">{{ __('DEPARTMENT') }}</span>
             <h3 class="{{ $small ? 'text-[10px]' : 'text-sm' }} font-black {{ $styles['text'] }} uppercase tracking-tight text-center whitespace-nowrap">
                 {{ $member['name'] }}

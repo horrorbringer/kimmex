@@ -92,9 +92,9 @@
   --color-titan-bg-section: var(--color-kmd-bg-section);
 
   /* ─── FONTS ─── */
-  --font-inter: "Inter", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-inter: "Plus Jakarta Sans", "Inter", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
   --font-khmer: "Noto Sans Khmer", "Kantumruy Pro", sans-serif;
-  --font-heading: "Montserrat", "Outfit", "Inter", "Noto Sans Khmer", sans-serif;
+  --font-heading: "Montserrat", "Plus Jakarta Sans", "Outfit", "Inter", "Noto Sans Khmer", sans-serif;
   --font-logo: "Barlow Condensed", "Inter", sans-serif;
 
   /* ─── SPACING SCALE (4-based) ─── */
@@ -142,7 +142,7 @@
   /* brand spec body line-height */
   --leading-relaxed: 1.8;
 
-  --tracking-tighter: -0.05em;
+  --tracking-tighter: -0.04em;
   --tracking-tight: -0.02em;
   --tracking-normal: 0em;
   --tracking-wide: 0.025em;
@@ -173,7 +173,7 @@ h6 {
   font-family: var(--font-heading);
   font-weight: var(--weight-medium);
   line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tighter);
+  letter-spacing: var(--tracking-normal);
   color: var(--color-kmd-navy);
 }
 
@@ -422,8 +422,23 @@ a.link:hover,
 }
 
 .khmer-optimized {
+  font-family: var(--font-km);
+  line-height: 1.8 !important; /* Critical for preventing Khmer characters from overlapping */
+  letter-spacing: 0 !important; /* Khmer must never use tight tracking */
+  word-break: break-word;
   font-feature-settings: "kern" 1, "liga" 1;
-  word-break: keep-all;
+  font-size: 1.05em; /* Boost size slightly for visual parity with English */
+}
+
+/* Ensure headings in Khmer also have enough space */
+.khmer-optimized h1, 
+.khmer-optimized h2, 
+.khmer-optimized h3, 
+.khmer-optimized h4, 
+.khmer-optimized h5, 
+.khmer-optimized h6 {
+  line-height: 1.5 !important;
+  letter-spacing: 0 !important;
 }
 
 /* Marquee Animation for Partner Logos */
@@ -591,8 +606,56 @@ a.link:hover,
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+
 .glass-dark {
   background: rgba(26, 26, 46, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* PREMIUM HOVER EFFECTS */
+.premium-hover-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-hover-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -150%;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(25deg);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.premium-hover-shine:hover::after {
+  left: 150%;
+}
+
+.hover-float {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-float:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+@keyframes icon-pulse-subtle {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.animate-icon-pulse:hover i, 
+.animate-icon-pulse:hover svg {
+  animation: icon-pulse-subtle 0.6s ease-in-out infinite;
 }

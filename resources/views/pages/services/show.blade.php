@@ -272,7 +272,7 @@
                 </a>
 
                 <div
-                    class="mx-auto w-20 h-20 bg-titan-red rounded-sm flex items-center justify-center mb-10 shadow-[0_20px_50px_rgba(255,42,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                    class="mx-auto w-20 h-20 bg-titan-red rounded flex items-center justify-center mb-10 shadow-[0_20px_50px_rgba(255,42,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500">
                     <x-dynamic-component :component="$service['icon'] ?? 'lucide-building'" class="w-10 h-10 text-white" />
                 </div>
 
@@ -311,7 +311,7 @@
                     </div>
 
                     @if (!empty($service['idealFor'][$lang] ?? ''))
-                        <div class="bg-gray-50 p-8 rounded-sm border-l-4 border-titan-red shadow-sm">
+                        <div class="bg-gray-50 p-8 rounded border-l-4 border-titan-red shadow-sm">
                             <h3 class="text-xl font-bold text-titan-navy mb-3 flex items-center gap-3">
                                 <div class="p-2 bg-titan-red/10 rounded-lg">
                                     <x-lucide-users class="w-5 h-5 text-titan-red" />
@@ -329,9 +329,9 @@
                     class="transition-all duration-1000 delay-200">
                     <div class="relative group">
                         <div
-                            class="absolute -inset-4 bg-titan-red/5 rounded-sm rotate-2 group-hover:rotate-1 transition-transform duration-500">
+                            class="absolute -inset-4 bg-titan-red/5 rounded rotate-2 group-hover:rotate-1 transition-transform duration-500">
                         </div>
-                        <div class="aspect-[4/3] rounded-sm overflow-hidden shadow-2xl relative z-10 bg-titan-navy">
+                        <div class="aspect-[4/3] rounded overflow-hidden shadow-2xl relative z-10 bg-titan-navy">
                             <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 loading="lazy" />
@@ -366,10 +366,10 @@
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 style="transition-delay: {{ $i * 100 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white/5 border border-white/10 rounded-sm hover:bg-white/10 hover:border-titan-red/30 transition-all duration-300 h-full">
+                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-titan-red/30 transition-all duration-300 h-full">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white transition-colors duration-300">
-                                    <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red group-hover:text-white" />
+                                    class="w-10 h-10 rounded-full bg-titan-red/10 border border-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red/20 group-hover:border-titan-red/40 transition-colors duration-300">
+                                    <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red" />
                                 </div>
                                 <span
                                     class="font-bold text-lg leading-tight pt-2 group-hover:text-titan-red transition-colors">{{ $item[$lang] }}</span>
@@ -423,7 +423,7 @@
 
                                     <!-- The Dark Diamond -->
                                     <div
-                                        class="w-[110px] h-[110px] bg-titan-navy rounded-sm flex items-center justify-center relative z-10 rotate-45 border-2 border-transparent group-hover:border-titan-red transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:shadow-[0_0_40px_rgba(227,30,36,0.2)]">
+                                        class="w-[110px] h-[110px] bg-titan-navy rounded flex items-center justify-center relative z-10 rotate-45 border-2 border-transparent group-hover:border-titan-red transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:shadow-[0_0_40px_rgba(227,30,36,0.2)]">
                                         <!-- Un-rotate the icon inside -->
                                         <div class="-rotate-45 flex flex-col items-center">
                                             <x-dynamic-component :component="$step['icon']"
@@ -433,7 +433,7 @@
 
                                     <!-- Step Number Badge (Orange box with white border) -->
                                     <div
-                                        class="absolute -bottom-2 -right-4 w-11 h-11 bg-titan-red rounded-sm flex items-center justify-center border-[4px] border-white z-20 transition-transform duration-500 group-hover:scale-110 shadow-sm">
+                                        class="absolute -bottom-2 -right-4 w-11 h-11 bg-titan-red rounded flex items-center justify-center border-[4px] border-white z-20 transition-transform duration-500 group-hover:scale-110 shadow-sm">
                                         <span
                                             class="text-[13px] font-black text-white tracking-tight">{{ $step['step'] }}</span>
                                     </div>
@@ -472,11 +472,11 @@
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         style="transition-delay: {{ $i * 100 }}ms"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="bg-white p-8 rounded-sm shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
+                        class="bg-white p-8 rounded shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
                         <div
-                            class="w-16 h-16 bg-titan-navy/5 rounded-sm flex items-center justify-center mb-6 group-hover:bg-titan-red group-hover:text-white transition-all duration-300">
+                            class="w-14 h-14 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-6 group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500">
                             <x-dynamic-component :component="$benefit['icon']"
-                                class="w-7 h-7 text-titan-navy group-hover:text-white transition-colors" />
+                                class="w-6 h-6 text-titan-red" stroke-width="1.5" />
                         </div>
                         <h3
                             class="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">
@@ -515,7 +515,7 @@
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                             class="w-full md:w-[calc(50%-1.25rem)] transition-all duration-1000">
                             <a href="/projects/{{ $project['id'] }}"
-                                class="group relative aspect-[16/9] overflow-hidden rounded-sm cursor-pointer block shadow-2xl h-full">
+                                class="group relative aspect-[16/9] overflow-hidden rounded cursor-pointer block shadow-2xl h-full">
                                 <img src="{{ $project['image'] }}" alt="{{ $project['title'][$lang] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                     loading="lazy" />
@@ -552,7 +552,7 @@
         <!-- === FOOTER CTA === -->
         <section class="py-24 bg-white text-center px-6">
             <div
-                class="max-w-3xl mx-auto bg-titan-red rounded-sm p-12 md:p-16 shadow-2xl shadow-titan-red/30 relative overflow-hidden">
+                class="max-w-3xl mx-auto bg-titan-red rounded p-12 md:p-16 shadow-2xl shadow-titan-red/30 relative overflow-hidden">
                 <div
                     class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[50px] translate-x-1/2 -translate-y-1/2 pointer-events-none">
                 </div>

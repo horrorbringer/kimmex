@@ -40,7 +40,7 @@
         $theme = $globalSettings['theme'] ?? [];
         $primaryColor = $theme['primary_color'] ?? '#D4A017'; 
         $secondaryColor = $theme['secondary_color'] ?? '#0B2B5C'; 
-        $fontEn = $theme['font_family_en'] ?? 'Inter';
+        $fontEn = $theme['font_family_en'] ?? 'Plus Jakarta Sans';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
         $fontHeading = 'Montserrat'; // High-impact geometric heading font
         

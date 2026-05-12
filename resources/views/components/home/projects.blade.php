@@ -55,7 +55,7 @@
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
-                        <div class="relative overflow-hidden rounded-sm shadow-lg h-80 w-full bg-titan-navy">
+                        <div class="relative overflow-hidden rounded shadow-lg h-80 w-full bg-titan-navy">
                             @if($p['image'])
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
                                     class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" />
