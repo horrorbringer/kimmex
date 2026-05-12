@@ -23,12 +23,12 @@
   --color-kmd-blue-light: #3A7FCA;
   /* Light blue variant */
 
-  --color-kmd-gold: #D4A017;
-  /* Premium highlight (badges, hover — use sparingly) */
-  --color-kmd-gold-hover: #B8890F;
-  /* Gold hover state */
-  --color-kmd-gold-light: #F0C75E;
-  /* Soft gold for backgrounds */
+  --color-kmd-gold: #185FA5;
+  /* Premium highlight -> Now mapped to Blue to remove yellow */
+  --color-kmd-gold-hover: #124A82;
+  /* Blue hover state */
+  --color-kmd-gold-light: #DBEAFE;
+  /* Soft blue for backgrounds */
 
   /* ─── BACKGROUND PALETTE ─── */
   --color-kmd-bg: #F8F7F4;
@@ -62,6 +62,10 @@
   --color-social-instagram: #E4405F;
   --color-social-tiktok: #010101;
 
+  --color-kmd-red: #E31E24;
+  --color-kmd-red-hover: #C8151D;
+  --color-kmd-red-light: #FCE8E9;
+
   /* ─── BACKWARD COMPAT: old titan-* aliases → new kmd-* values ─── */
   /* These map every existing Tailwind class (bg-titan-navy, text-titan-red, etc.)
      to the new brand palette so nothing breaks. */
@@ -69,11 +73,11 @@
   --color-titan-navy-light: var(--color-kmd-navy-light);
   --color-titan-navy-lighter: var(--color-kmd-navy-lighter);
   --color-titan-navy-subtle: var(--color-kmd-navy-subtle);
-  --color-titan-red: var(--color-kmd-gold);
-  /* Red accent → Gold */
-  --color-titan-red-hover: var(--color-kmd-gold-hover);
-  --color-accent-orange: var(--color-kmd-gold);
-  --color-accent-orange-hover: var(--color-kmd-gold-hover);
+  --color-titan-red: var(--color-kmd-red);
+  /* Red accent */
+  --color-titan-red-hover: var(--color-kmd-red-hover);
+  --color-accent-orange: var(--color-kmd-red);
+  --color-accent-orange-hover: var(--color-kmd-red-hover);
   --color-accent-blue: var(--color-kmd-blue);
   --color-accent-lightblue: var(--color-kmd-blue-light);
   --color-accent-lightblue-hover: var(--color-kmd-blue-hover);
@@ -81,7 +85,7 @@
   --color-accent-green: var(--color-success);
   --color-accent-red: var(--color-error);
   --color-titan-gold: var(--color-kmd-gold);
-  --color-titan-yellow: var(--color-kmd-gold-light);
+  --color-titan-yellow: var(--color-kmd-blue-light);
   --color-titan-white: var(--color-kmd-bg-white);
   --color-titan-bg: var(--color-kmd-bg);
   --color-titan-bg-alt: var(--color-kmd-bg-alt);
@@ -103,11 +107,11 @@
   --space-2xl: 80px;
 
   /* ─── BORDER RADIUS ─── */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-2xl: 8px;
   --radius-full: 9999px;
 
   /* ─── SHADOWS ─── */

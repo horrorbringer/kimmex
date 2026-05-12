@@ -168,9 +168,9 @@
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
-                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[280px] p-2">
+                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-sm border border-white/10 min-w-[280px] p-2">
                                 <a href="/about#profile"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                    class="flex items-center px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
                                             class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -183,7 +183,7 @@
                                     </div>
                                 </a>
                                 <a href="/about#leadership"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                    class="flex items-center px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
                                             class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -196,7 +196,7 @@
                                     </div>
                                 </a>
                                 <a href="/about#safety"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                    class="flex items-center px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
                                             class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -225,10 +225,10 @@
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
-                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[280px] p-2">
+                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-sm border border-white/10 min-w-[280px] p-2">
                                 @foreach($navServices as $navService)
                                     <a href="/services/{{ $navService['slug'] }}"
-                                        class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                                        class="group/sub flex items-center justify-between px-4 py-3 rounded-sm text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
                                         <span>{{ $navService['title'] }}</span>
                                         <x-lucide-arrow-right
                                             class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-titan-red" />
@@ -251,11 +251,11 @@
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
-                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[280px] p-2">
+                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-sm border border-white/10 min-w-[280px] p-2">
                                 <!-- Completed Projects with 3rd Level Flyout -->
                                 <div class="relative group/nested">
                                     <a href="/projects?status=completed"
-                                        class="flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                        class="flex items-center justify-between px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                         <div>
                                             <div
                                                 class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -272,10 +272,10 @@
                                     <div
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
-                                            class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[240px] p-2">
+                                            class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-sm border border-white/10 min-w-[240px] p-2">
                                             @foreach($navCategories as $navCat)
                                                 <a href="/projects?status=completed&type={{ urlencode($navCat['name_en']) }}"
-                                                    class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                                                    class="group/sub flex items-center justify-between px-4 py-3 rounded-sm text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
                                                     <span>{{ $navCat['name'] }}</span>
                                                     <x-lucide-arrow-right
                                                         class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-titan-red" />
@@ -288,7 +288,7 @@
                                 <!-- Projects in Progress with 3rd Level Flyout -->
                                 <div class="relative group/nested mt-1">
                                     <a href="/projects?status=in-progress"
-                                        class="flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                        class="flex items-center justify-between px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                         <div>
                                             <div
                                                 class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -305,10 +305,10 @@
                                     <div
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
-                                            class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[240px] p-2">
+                                            class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-sm border border-white/10 min-w-[240px] p-2">
                                             @foreach($navCategories as $navCat)
                                                 <a href="/projects?status=in-progress&type={{ urlencode($navCat['name_en']) }}"
-                                                    class="group/sub flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
+                                                    class="group/sub flex items-center justify-between px-4 py-3 rounded-sm text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all">
                                                     <span>{{ $navCat['name'] }}</span>
                                                     <x-lucide-arrow-right
                                                         class="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover/sub:opacity-100 group-hover/sub:translate-x-0 transition-all text-titan-red" />
@@ -334,9 +334,9 @@
                         <div
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
-                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-2xl border border-white/10 min-w-[280px] p-2">
+                                class="bg-titan-navy/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.5)] rounded-sm border border-white/10 min-w-[280px] p-2">
                                 <a href="/news"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                    class="flex items-center px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
                                             class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -349,7 +349,7 @@
                                     </div>
                                 </a>
                                 <a href="/documents"
-                                    class="flex items-center px-4 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-200 group/item">
+                                    class="flex items-center px-4 py-3.5 rounded-sm hover:bg-white/10 transition-all duration-200 group/item">
                                     <div>
                                         <div
                                             class="font-medium text-white/90 group-hover/item:text-titan-red text-sm transition-colors">
@@ -391,14 +391,14 @@
                 <div class="flex items-center gap-2 sm:gap-3">
                     <!-- Language Switcher -->
                     <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'"
-                        class="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 h-8 border border-white/5">
+                        class="hidden sm:flex items-center gap-0.5 rounded-sm p-0.5 h-8 border border-white/5">
                         <a href="{{ route('lang.switch', 'en') }}"
-                            class="h-full flex items-center px-2.5 rounded-md text-[9px] font-black tracking-widest transition-all"
+                            class="h-full flex items-center px-2.5 rounded-sm text-[9px] font-black tracking-widest transition-all"
                             :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
                             EN
                         </a>
                         <a href="{{ route('lang.switch', 'km') }}"
-                            class="h-full flex items-center px-2.5 rounded-md text-[9px] font-black tracking-widest transition-all"
+                            class="h-full flex items-center px-2.5 rounded-sm text-[9px] font-black tracking-widest transition-all"
                             :class="{{ app()->getLocale() === 'km' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
                             KH
                         </a>
@@ -407,14 +407,14 @@
                     <!-- Search Button -->
                     <button @click="isSearchOpen = true"
                         :class="navDark ? 'bg-gray-100 text-titan-navy' : 'bg-white/10 text-white hover:bg-white/20'"
-                        class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
+                        class="w-8 h-8 rounded-sm flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
                         <x-lucide-search class="w-3.5 h-3.5" />
                     </button>
 
                     <!-- Mobile Menu Button -->
                     <button @click="isMobileMenuOpen = !isMobileMenuOpen"
                         :class="navDark ? 'bg-titan-navy text-white' : 'bg-white/10 text-white'"
-                        class="lg:hidden w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
+                        class="lg:hidden w-8 h-8 rounded-sm flex items-center justify-center transition-colors">
                         <span x-show="!isMobileMenuOpen"><x-lucide-menu class="w-4 h-4" /></span>
                         <span x-show="isMobileMenuOpen" style="display:none"><x-lucide-x class="w-4 h-4" /></span>
                     </button>
@@ -433,7 +433,7 @@
             <div class="p-4 space-y-1">
                 <!-- About Us -->
                 <div>
-                    <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    <div class="flex items-center justify-between px-4 py-3 rounded-sm hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 0 ? null : 0">
                         <a href="/about"
                             class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('About Us') }}</a>
@@ -588,7 +588,7 @@
             x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
             x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
-            class="relative w-full max-w-2xl bg-white shadow-2xl overflow-hidden rounded-xl">
+            class="relative w-full max-w-2xl bg-white shadow-2xl overflow-hidden rounded-sm">
             <!-- Search Input -->
             <div class="relative">
                 <x-lucide-search class="absolute left-5 top-1/2 -translate-y-1/2 text-titan-navy/30 w-5 h-5" />
@@ -599,7 +599,7 @@
                     placeholder="{{ __('Search projects, services...') }}"
                     class="w-full bg-transparent pl-14 pr-24 py-5 text-lg font-medium text-titan-navy outline-none placeholder:text-titan-navy/30 border-b border-gray-100" />
                 <button @click="isSearchOpen = false"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-titan-navy/50 hover:text-titan-red transition-colors bg-gray-100 rounded-md">ESC</button>
+                    class="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-titan-navy/50 hover:text-titan-red transition-colors bg-gray-100 rounded-sm">ESC</button>
             </div>
             <!-- Quick Links -->
             <div class="p-5">
@@ -609,28 +609,28 @@
                 </p>
                 <div class="grid grid-cols-2 gap-2">
                     <a href="/projects"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-sm bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">🏗️</span>
                         <span class="text-sm">{{ __('Projects') }}</span>
                         <x-lucide-arrow-right
                             class="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                     <a href="/services"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-sm bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">⚙️</span>
                         <span class="text-sm">{{ __('Services') }}</span>
                         <x-lucide-arrow-right
                             class="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                     <a href="/about"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-sm bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">🏢</span>
                         <span class="text-sm">{{ __('About Us') }}</span>
                         <x-lucide-arrow-right
                             class="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                     <a href="/contact"
-                        class="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
+                        class="flex items-center gap-3 px-4 py-3 rounded-sm bg-gray-50 hover:bg-titan-red hover:text-white text-titan-navy font-medium transition-all group">
                         <span class="text-lg">📞</span>
                         <span class="text-sm">{{ __('Contact') }}</span>
                         <x-lucide-arrow-right
@@ -647,7 +647,7 @@
                 <div class="flex flex-wrap gap-2">
                     @foreach(['Commercial', 'Infrastructure', 'Industrial', 'Construction', 'Government'] as $tag)
                         <a href="/projects?search={{ $tag }}"
-                            class="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-full cursor-pointer hover:bg-titan-red hover:text-white transition-all">
+                            class="px-4 py-2 bg-titan-navy/5 text-titan-navy text-xs font-bold uppercase rounded-sm cursor-pointer hover:bg-titan-red hover:text-white transition-all">
                             {{ __($tag) }}
                         </a>
                     @endforeach

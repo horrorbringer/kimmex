@@ -84,11 +84,11 @@
         <!-- CONTACT INFO BAR -->
         <section class="max-w-[1400px] mx-auto px-6 relative z-40 -mt-20">
             <div
-                class="bg-white rounded-[3rem] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                class="bg-white rounded-sm shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 <a href="{{ $googleMapsLink }}" target="_blank"
                     class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
                     <div
-                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-sm flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
                         <x-lucide-map-pin class="w-7 h-7" />
                     </div>
                     <div>
@@ -101,7 +101,7 @@
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
                     class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
                     <div
-                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-sm flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
                         <x-lucide-phone class="w-7 h-7" />
                     </div>
                     <div>
@@ -114,7 +114,7 @@
                 <a href="mailto:{{ $email }}"
                     class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
                     <div
-                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-sm flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
                         <x-lucide-mail class="w-7 h-7" />
                     </div>
                     <div>
@@ -133,7 +133,7 @@
 
                 <!-- FORM (2/3) -->
                 <div class="lg:col-span-2">
-                    <div class="border border-gray-100 rounded-2xl p-8 md:p-12">
+                    <div class="border border-gray-100 rounded-sm p-8 md:p-12">
                         <div class="flex items-center gap-4 mb-8">
                             <div class="w-1 h-8 bg-titan-red rounded-full"></div>
                             <div>
@@ -148,7 +148,7 @@
 
                         @if (session('success'))
                             <div
-                                class="bg-green-50 text-green-700 p-4 rounded-xl mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2">
+                                class="bg-green-50 text-green-700 p-4 rounded-sm mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2">
                                 <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
                                 {{ session('success') }}
                             </div>
@@ -166,7 +166,7 @@
                                         <x-lucide-user
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="first_name" required
-                                            class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded-sm pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="{{ __('John') }}">
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@
                                         <x-lucide-user
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="last_name" required
-                                            class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded-sm pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="{{ __('Doe') }}">
                                     </div>
                                 </div>
@@ -189,7 +189,7 @@
                                     <x-lucide-at-sign
                                         class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                     <input type="email" name="email" required
-                                        class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                        class="w-full bg-gray-50 border border-gray-100 rounded-sm pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                         placeholder="{{ __('email@example.com') }}">
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
                                         <x-lucide-phone
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="phone"
-                                            class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded-sm pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="+855 12 345 678">
                                     </div>
                                 </div>
@@ -212,7 +212,7 @@
                                         <x-lucide-file-text
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="subject"
-                                            class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded-sm pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="{{ __('Project discussion') }}">
                                     </div>
                                 </div>
@@ -221,7 +221,7 @@
                                 <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Message') }}
                                     <span class="text-titan-red">*</span></label>
                                 <textarea name="message" required rows="5"
-                                    class="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none resize-none placeholder:text-gray-300"
+                                    class="w-full bg-gray-50 border border-gray-100 rounded-sm px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none resize-none placeholder:text-gray-300"
                                     placeholder="{{ __('Tell us about the details...') }}"></textarea>
                             </div>
                             <div>
@@ -231,7 +231,7 @@
                                     <x-lucide-paperclip
                                         class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none" />
                                     <input type="file" name="attachment"
-                                        class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
+                                        class="w-full bg-gray-50 border border-gray-100 rounded-sm pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
                                 </div>
                                 <p class="text-[10px] text-titan-navy/30 mt-1.5">
                                     {{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}</p>
@@ -241,7 +241,7 @@
                                     {{ __('All fields marked with * are required') }}
                                 </p>
                                 <button type="submit"
-                                    class="bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-3 shadow-md hover:shadow-lg group">
+                                    class="bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded-sm font-bold text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-3 shadow-md hover:shadow-lg group">
                                     {{ __('Send Message') }}
                                     <x-lucide-send
                                         class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -254,7 +254,7 @@
                 <!-- SIDEBAR (1/3) -->
                 <div class="lg:sticky lg:top-32 space-y-6 self-start">
                     <!-- Hours -->
-                    <div class="bg-gray-50 text-white rounded-2xl p-8 relative overflow-hidden">
+                    <div class="bg-gray-50 text-white rounded-sm p-8 relative overflow-hidden">
                         <div
                             class="absolute top-0 right-0 w-32 h-32 bg-titan-red/10 rounded-full blur-[60px] pointer-events-none">
                         </div>
@@ -274,7 +274,7 @@
                     </div>
 
                     <!-- Social -->
-                    <div class="bg-gray-50 rounded-2xl p-8">
+                    <div class="bg-gray-50 rounded-sm p-8">
                         <div class="flex items-center gap-3 mb-5">
                             <x-lucide-share-2 class="w-4 h-4 text-titan-red" />
                             <h3 class="text-xs font-black uppercase tracking-widest text-titan-navy/40">
@@ -312,7 +312,7 @@
         </section>
         
         <section class="max-w-[1200px] mx-auto px-6 mb-16 relative">
-            <div class="w-full h-[250px] md:h-[300px] bg-gray-100 rounded-[2rem] overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-1000 shadow-xl border border-gray-100">
+            <div class="w-full h-[250px] md:h-[300px] bg-gray-100 rounded-sm overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500 shadow-xl border-2 border-transparent hover:border-titan-red hover:shadow-2xl hover:shadow-titan-red/20">
                 <iframe 
                     src="{{ $googleMapsUrl }}" 
                     width="100%" 
@@ -343,7 +343,7 @@
                     </p>
                 </div>
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                    class="flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all duration-300 shrink-0 shadow-lg group">
+                    class="flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-8 py-4 rounded-sm font-bold text-sm uppercase tracking-widest transition-all duration-300 shrink-0 shadow-lg group">
                     <x-lucide-phone class="w-4 h-4 group-hover:animate-pulse" />
                     {{ __('Call Us Now') }}
                 </a>

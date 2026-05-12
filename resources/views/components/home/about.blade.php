@@ -43,19 +43,19 @@
                 class="transition-all duration-1000 delay-200 relative">
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+                    <div class="aspect-[4/3] rounded-sm overflow-hidden shadow-md">
                         <img src="/images/projects/Thumbnail-2.jpg" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
-                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+                    <div class="aspect-[4/3] rounded-sm overflow-hidden shadow-md">
                         <img src="/images/projects/Thumbnail-3.jpg" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
-                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+                    <div class="aspect-[4/3] rounded-sm overflow-hidden shadow-md">
                         <img src="/images/projects/Thumbnail-4.jpg" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
-                    <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+                    <div class="aspect-[4/3] rounded-sm overflow-hidden shadow-md">
                         <img src="/images/projects/Thumbnail-5.jpg" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>

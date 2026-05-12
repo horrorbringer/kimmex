@@ -59,7 +59,7 @@
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
                     <a href="/news/{{ $news['id'] }}"
-                        class="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
+                        class="group cursor-pointer bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
                         <div class="aspect-[16/10] relative overflow-hidden bg-titan-navy">
                             <div
                                 class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 z-10 rounded-md">

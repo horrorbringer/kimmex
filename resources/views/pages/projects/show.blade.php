@@ -213,7 +213,7 @@
 
                     <!-- Scope -->
                     @if(!empty($project['scope']))
-                        <div class="mb-16 bg-gray-50 p-10 rounded-xl border border-titan-navy/10 reveal-up">
+                        <div class="mb-16 bg-gray-50 p-10 rounded-sm border border-titan-navy/10 reveal-up">
                             <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                                 <x-lucide-activity class="w-6 h-6 text-titan-red" /> {{ __('Scope of Work') }}
                             </h2>
@@ -251,7 +251,7 @@
 
                 <!-- RIGHT: KEY FACTS SIDEBAR -->
                 <div class="lg:col-span-4">
-                    <div class="bg-white p-8 rounded-xl shadow-2xl border border-gray-100 sticky top-32">
+                    <div class="bg-white p-8 rounded-sm shadow-2xl border border-gray-100 sticky top-32">
                         <h3 class="text-xl font-black text-titan-navy mb-8 pb-4 border-b border-gray-100">
                             {{ __('Project Data') }}
                         </h3>
@@ -303,15 +303,15 @@
                             <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Project') }}</div>
                             <div class="flex items-center gap-4">
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                                    class="w-12 h-12 bg-social-facebook rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                                    class="w-12 h-12 bg-social-facebook rounded-sm flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
                                     <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                                    class="w-12 h-12 bg-social-linkedin rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                                    class="w-12 h-12 bg-social-linkedin rounded-sm flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
                                     <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
                                 </a>
                                 <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}" target="_blank" rel="noopener"
-                                    class="w-12 h-12 bg-social-telegram rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                                    class="w-12 h-12 bg-social-telegram rounded-sm flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
                                     <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
                                 </a>
                                 <div x-data="{ 
@@ -323,7 +323,7 @@
                                     }
                                 }" class="relative">
                                     <button @click="copyLink()"
-                                        class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
+                                        class="w-12 h-12 bg-white border border-gray-100 rounded-sm flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
                                         <x-lucide-link class="w-5 h-5" x-show="!copied" />
                                         <x-lucide-check class="w-5 h-5 text-green-500" x-show="copied" x-cloak />
                                     </button>

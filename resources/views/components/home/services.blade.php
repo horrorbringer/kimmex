@@ -47,14 +47,14 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     style="transition-delay: {{ $index * 100 }}ms"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="w-full sm:w-1/2 lg:w-1/4 bg-white p-10 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500 border border-gray-100 border-b-4 border-b-transparent hover:border-b-titan-red h-full relative overflow-hidden rounded-xl">
+                    class="w-full sm:w-1/2 lg:w-1/4 bg-white p-10 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500 border border-gray-100 border-b-4 border-b-transparent hover:border-b-titan-red h-full relative overflow-hidden rounded-sm">
                     <div
                         class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-700">
                         <x-dynamic-component :component="$s['icon']" class="text-titan-navy w-20 h-20" />
                     </div>
                     <div class="flex items-center justify-between mb-8">
                         <div
-                            class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center group-hover:bg-titan-red group-hover:shadow-lg group-hover:shadow-titan-red/30 transition-all duration-300">
+                            class="w-16 h-16 bg-gray-50 rounded-sm flex items-center justify-center group-hover:bg-titan-red group-hover:shadow-lg group-hover:shadow-titan-red/30 transition-all duration-300">
                             <x-dynamic-component :component="$s['icon']"
                                 class="text-titan-navy group-hover:text-white transition-colors w-7 h-7" />
                         </div>

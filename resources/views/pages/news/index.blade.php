@@ -90,7 +90,7 @@
             <section class="relative -mt-16 z-30 px-6 pb-32">
                 <div class="max-w-[1400px] mx-auto">
                     <a href="/news/{{ $featured['slug'] }}"
-                        class="group block bg-white rounded-[3.5rem] overflow-hidden shadow-[0_60px_120px_-20px_rgba(0,0,0,0.18)] border border-gray-100 transition-all duration-700 hover:-translate-y-3">
+                        class="group block bg-white rounded-sm overflow-hidden shadow-[0_60px_120px_-20px_rgba(0,0,0,0.18)] border border-gray-100 transition-all duration-700 hover:-translate-y-3">
                         <div class="flex flex-col lg:flex-row min-h-[550px]">
                             <!-- Content Area -->
                             <div
@@ -116,7 +116,7 @@
 
                                 <div class="flex items-center gap-5">
                                     <div
-                                        class="w-16 h-16 rounded-3xl bg-titan-navy flex items-center justify-center text-white group-hover:bg-titan-red group-hover:rounded-2xl transition-all duration-500 shadow-xl shadow-titan-navy/10 group-hover:shadow-titan-red/30">
+                                        class="w-16 h-16 rounded-sm bg-titan-navy flex items-center justify-center text-white group-hover:bg-titan-red group-hover:rounded-sm transition-all duration-500 shadow-xl shadow-titan-navy/10 group-hover:shadow-titan-red/30">
                                         <x-lucide-arrow-right
                                             class="w-7 h-7 transition-transform group-hover:translate-x-2" />
                                     </div>
@@ -173,7 +173,7 @@
                 <div class="hidden lg:flex items-center gap-6 border-l border-gray-100 pl-8 ml-8">
                     <span
                         class="text-[10px] font-black uppercase tracking-[0.3em] text-titan-navy/30">{{ __('Year') }}</span>
-                    <div class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
+                    <div class="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-sm border border-gray-100">
                         <x-lucide-calendar class="w-3.5 h-3.5 text-titan-red" />
                         <span
                             class="text-[10px] font-black uppercase tracking-widest text-titan-navy">{{ __('All') }}</span>
@@ -191,7 +191,7 @@
                 <template x-for="(article, index) in filteredArticles" :key="article.slug">
                     <!-- Article Card -->
                     <a :href="'/news/' + article.slug"
-                        class="group flex flex-col bg-white border border-gray-100 hover:border-titan-red/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 rounded-2xl shadow-sm hover:shadow-xl">
+                        class="group flex flex-col bg-white border border-gray-100 hover:border-titan-red/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 rounded-sm shadow-sm hover:shadow-xl">
 
                         <!-- Thumbnail -->
                         <div class="aspect-video relative overflow-hidden bg-titan-navy rounded-t-2xl">
@@ -232,7 +232,7 @@
                                 <span
                                     class="text-[10px] font-black uppercase tracking-[0.3em] text-titan-navy/20 group-hover:text-titan-red transition-colors">{{ __('Read Depth') }}</span>
                                 <div
-                                    class="w-9 h-9 bg-gray-50 flex items-center justify-center text-titan-navy/20 group-hover:bg-titan-red group-hover:text-white transition-all rounded-xl">
+                                    class="w-9 h-9 bg-gray-50 flex items-center justify-center text-titan-navy/20 group-hover:bg-titan-red group-hover:text-white transition-all rounded-sm">
                                     <x-lucide-arrow-right
                                         class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </div>
@@ -244,7 +244,7 @@
 
             <!-- Empty State -->
             <div x-show="filteredArticles.length === 0"
-                class="py-24 text-center bg-white border-2 border-dashed border-gray-100 rounded-2xl">
+                class="py-24 text-center bg-white border-2 border-dashed border-gray-100 rounded-sm">
                 <x-lucide-newspaper class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
                 <p class="text-titan-navy/30 font-black text-xs uppercase tracking-[0.3em]">
                     {{ __('No articles found in this category') }}

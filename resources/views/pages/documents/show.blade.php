@@ -198,7 +198,7 @@
                 </div>
                 @if($doc['fileUrl'])
                     <!-- PREMIUM DOWNLOAD BOX -->
-                    <div class="reveal-up mt-12 p-10 rounded-3xl bg-titan-navy flex flex-col items-center justify-center gap-8 relative overflow-hidden group">
+                    <div class="reveal-up mt-12 p-10 rounded-sm bg-titan-navy flex flex-col items-center justify-center gap-8 relative overflow-hidden group">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-titan-red/10 rounded-full blur-[80px] pointer-events-none group-hover:scale-110 transition-transform duration-1000"></div>
                         <div class="relative z-10 text-center">
                             <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em] mb-3">
@@ -210,7 +210,7 @@
                             </p>
                         </div>
                         <a href="{{ Storage::url($doc['fileUrl']) }}" download target="_blank"
-                            class="relative z-10 shrink-0 inline-flex items-center gap-3 bg-titan-red border border-titan-red/20 hover:bg-white hover:text-titan-navy text-white px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-xl hover:shadow-titan-red/20 group/dl">
+                            class="relative z-10 shrink-0 inline-flex items-center gap-3 bg-titan-red border border-titan-red/20 hover:bg-white hover:text-titan-navy text-white px-10 py-5 rounded-sm font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-xl hover:shadow-titan-red/20 group/dl">
                             <x-lucide-download class="w-5 h-5 transition-transform group-hover/dl:scale-110" />
                             {{ __('Download Now') }}
                         </a>
@@ -221,15 +221,15 @@
                     <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Document') }}</div>
                     <div class="flex items-center gap-4">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-social-facebook rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                            class="w-12 h-12 bg-social-facebook rounded-sm flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
                             <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
                         </a>
                         <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-social-linkedin rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                            class="w-12 h-12 bg-social-linkedin rounded-sm flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
                             <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
                         </a>
                         <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($doc['title']) }}" target="_blank" rel="noopener"
-                            class="w-12 h-12 bg-social-telegram rounded-2xl flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                            class="w-12 h-12 bg-social-telegram rounded-sm flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
                             <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
                         </a>
                         <div x-data="{ 
@@ -241,7 +241,7 @@
                             }
                         }" class="relative">
                             <button @click="copyLink()"
-                                class="w-12 h-12 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
+                                class="w-12 h-12 bg-white border border-gray-100 rounded-sm flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
                                 <x-lucide-link class="w-5 h-5" x-show="!copied" />
                                 <x-lucide-check class="w-5 h-5 text-green-500" x-show="copied" x-cloak />
                             </button>
@@ -258,7 +258,7 @@
                         <div class="text-[10px] font-black text-titan-navy/10 uppercase tracking-[0.4em] border-b border-gray-100 pb-4">
                             {{ __('Resource Preview') }}
                         </div>
-                        <div class="rounded-3xl overflow-hidden border border-gray-100 shadow-2xl aspect-[3/4] bg-gray-50 relative group flex items-center justify-center">
+                        <div class="rounded-sm overflow-hidden border border-gray-100 shadow-2xl aspect-[3/4] bg-gray-50 relative group flex items-center justify-center">
                             @if($doc['thumbnailUrl'])
                                 <img src="{{ Storage::url($doc['thumbnailUrl']) }}" alt="{{ $doc['title'] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[10s]" loading="lazy" />
@@ -275,7 +275,7 @@
                     </div>
 
                     <!-- Small Info Box -->
-                    <div class="reveal-up p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-4">
+                    <div class="reveal-up p-6 bg-gray-50 rounded-sm border border-gray-100 space-y-4">
                         <div class="flex items-center gap-3">
                             <x-lucide-shield-check class="w-4 h-4 text-titan-red" />
                             <span class="text-[10px] font-black text-titan-navy uppercase tracking-widest">{{ __('Verified Resource') }}</span>
@@ -303,9 +303,9 @@
                         @foreach($relatedDocs as $rel)
                             @php $relCatName = $rel['categoryName']; @endphp
                             <a href="/documents/{{ $rel['slug'] }}"
-                                class="group flex items-start gap-5 p-6 bg-white rounded-2xl border border-gray-100 hover:border-titan-red/20 hover:shadow-md transition-all duration-300">
+                                class="group flex items-start gap-5 p-6 bg-white rounded-sm border border-gray-100 hover:border-titan-red/20 hover:shadow-md transition-all duration-300">
                                 <div
-                                    class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center relative">
+                                    class="w-14 h-14 rounded-sm overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center relative">
                                     @if($rel['thumbnailUrl'])
                                         <img src="{{ Storage::url($rel['thumbnailUrl']) }}"
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />

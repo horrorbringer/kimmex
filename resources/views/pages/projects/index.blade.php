@@ -188,7 +188,7 @@
                     <!-- Status, Location & Search Controls -->
                     <div class="flex flex-wrap items-center gap-4 w-full xl:w-auto">
                         <!-- Status / Location Filter Group -->
-                        <div class="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl p-1 shrink-0">
+                        <div class="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-sm p-1 shrink-0">
                             <!-- Location Dropdown -->
                             <div class="relative min-w-[130px]">
                                 <select x-model="filterLoc"
@@ -223,7 +223,7 @@
                             <x-lucide-search
                                 class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/30" />
                             <input type="text" x-model="search" placeholder="Search projects..."
-                                class="w-full sm:w-[220px] bg-white border border-gray-100 focus:border-titan-red focus:ring-1 focus:ring-titan-red pl-11 pr-4 py-3 rounded-xl text-[12px] font-medium text-titan-navy transition-all placeholder:text-gray-400" />
+                                class="w-full sm:w-[220px] bg-white border border-gray-100 focus:border-titan-red focus:ring-1 focus:ring-titan-red pl-11 pr-4 py-3 rounded-sm text-[12px] font-medium text-titan-navy transition-all placeholder:text-gray-400" />
                         </div>
                     </div>
                 </div>
@@ -233,7 +233,7 @@
                     <template x-for="project in filteredProjects" :key="project.id">
                         <div class="animate-fade-in-up h-full">
                             <a :href="'/projects/' + project.id"
-                                class="group block relative bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 h-full">
+                                class="group block relative bg-white rounded-sm overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 h-full">
 
                                 <!-- Thumbnail Area - Uniform Aspect Ratio -->
                                 <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
@@ -297,7 +297,7 @@
 
                 <!-- Empty State -->
                 <div x-show="filteredProjects.length === 0" style="display: none;"
-                    class="text-center py-40 bg-gray-50 rounded-[4rem] border border-dashed border-gray-100">
+                    class="text-center py-40 bg-gray-50 rounded-sm border border-dashed border-gray-100">
                     <x-lucide-building class="w-12 h-12 text-titan-navy/10 mx-auto mb-8" />
                     <h3 class="text-2xl font-black text-titan-navy mb-4 uppercase tracking-tighter">
                         {{ __('No Built Legacy Found') }}

@@ -7,7 +7,7 @@
             <button 
                 @click="activeDept = '{{ $dept['slug'] }}'"
                 :class="activeDept === '{{ $dept['slug'] }}' ? 'bg-titan-navy text-white shadow-xl scale-105' : 'bg-gray-100 text-titan-navy hover:bg-gray-200'"
-                class="px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all duration-300 border border-transparent"
+                class="px-8 py-4 rounded-sm font-black uppercase text-[10px] tracking-[0.2em] transition-all duration-300 border border-transparent"
             >
                 {{ $dept['name'] }}
             </button>
