@@ -117,19 +117,13 @@
                     x-transition:leave-start="opacity-100 translate-x-0"
                     x-transition:leave-end="opacity-0 -translate-x-24">
 
-                    <div class="flex items-center gap-4 mb-8 lg:mb-12">
-                        <div class="transition-all duration-1000 delay-500 inline-flex items-center gap-4 glass-premium px-8 py-3 rounded-full border border-white/10">
-                            <div class="w-2.5 h-2.5 bg-titan-red animate-pulse rounded-full shadow-[0_0_15px_rgba(227,30,36,0.5)]"></div>
-                            <span class="{{ app()->getLocale() === 'km' ? 'font-khmer text-white/90 text-base tracking-normal' : 'text-white/90 font-bold tracking-[0.4em] uppercase text-xs' }}"
-                                x-text="slide.subtitle"></span>
-                        </div>
-                    </div>
 
-                    <h1 class="font-heading font-[900] mb-10 text-white uppercase leading-[0.9] tracking-tighter max-w-[900px] drop-shadow-2xl"
-                        style="color: white !important; font-weight: 900 !important; font-size: clamp(1.8rem, 5vw, 3.5rem);"
+
+                    <h1 class="font-heading font-[900] mb-8 text-white uppercase leading-[0.9] tracking-tighter max-w-[900px] drop-shadow-2xl"
+                        style="color: white !important; font-weight: 900 !important; font-size: clamp(2rem, 5vw, 3.5rem) !important;"
                         x-text="slide.title"></h1>
 
-                    <p class="text-white/90 max-w-[650px] mb-16 font-normal text-xl lg:text-2xl leading-relaxed drop-shadow-lg opacity-80"
+                    <p class="text-white/90 max-w-[650px] mb-12 font-normal text-lg lg:text-xl leading-relaxed drop-shadow-lg opacity-80"
                         x-text="slide.desc"></p>
 
                     <div class="flex flex-wrap gap-8">

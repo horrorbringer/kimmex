@@ -139,18 +139,11 @@
             <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
 
             <div class="relative z-20 text-center px-6 max-w-7xl pt-24" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-12">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-titan-red opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-titan-red"></span>
-                    </span>
-                    <span>{{ strtoupper(__('Portfolio Showcase')) }}</span>
-                </div>
+
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                     class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(1.5rem, 5vw, 2.8rem); color: white !important; font-weight: 900 !important;">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     {{ __('BUILT') }} <span class="text-titan-red">{{ __('LEGACY') }}</span>
                 </h1>
 
@@ -261,14 +254,6 @@
                                         class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-500">
                                     </div>
 
-                                    <!-- Status Overlay -->
-                                    <div class="absolute top-4 left-4 z-20">
-                                        <span
-                                            class="px-3 py-1.5 backdrop-blur-md rounded border border-white/20 text-white text-[9px] font-black tracking-widest uppercase shadow-lg"
-                                            :class="project.status === statusOptions[1] ? 'bg-green-600/90' : 'bg-amber-600/90'">
-                                            <span x-text="project.status"></span>
-                                        </span>
-                                    </div>
                                 </div>
 
                                 <!-- Content Block - Clean Typography -->
@@ -288,13 +273,16 @@
                                     <!-- Footer Meta -->
                                     <div
                                         class="mt-auto pt-5 border-t border-gray-100 flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
-                                            <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red/70" />
-                                            <span
-                                                class="text-[10px] font-black uppercase tracking-widest text-titan-navy/60"
-                                                x-text="project.location"></span>
-                                        </div>
-                                        <div
+                                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                                            <div class="flex items-center gap-2">
+                                                <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red/70" />
+                                                <span class="text-[10px] font-black uppercase tracking-widest text-titan-navy/60" x-text="project.location"></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <x-lucide-activity class="w-3.5 h-3.5 text-titan-red/70" />
+                                                <span class="text-[10px] font-black uppercase tracking-widest text-titan-navy/60" x-text="project.status"></span>
+                                            </div>
+                                        </div>                                        <div
                                             class="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-titan-navy group-hover:text-titan-red transition-colors">
                                             {{ __('View Details') }}
                                             <x-lucide-arrow-right

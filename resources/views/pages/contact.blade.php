@@ -8,35 +8,35 @@
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
                     class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent">
+                </div>
                 <div class="absolute inset-0 bg-titan-navy/30"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
             <div class="relative z-20 w-full max-w-[1400px] mx-auto px-6 pt-32 pb-40">
-                <!-- Premium Badge -->
-                <div class="inline-flex items-center gap-3 px-6 py-2.5 glass-premium border border-white/10 rounded-full mb-12">
-                    <x-lucide-mail class="w-4 h-4 text-titan-red animate-pulse" />
-                    <span class="text-white/90 text-[10px] font-black uppercase tracking-[0.3em]">{{ __('Get in Touch') }}</span>
-                </div>
+
 
                 <h1 class="font-heading font-[900] text-white mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
-                    style="font-size: clamp(1.8rem, 5vw, 3.5rem); color: white !important; font-weight: 900 !important;">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     <span class="block">{{ __('CONNECT') }}</span>
                     <span class="block text-titan-red mt-2">{{ __('WITH US') }}</span>
                 </h1>
 
                 <div class="border-l-4 border-titan-red pl-10 mb-16 max-w-2xl">
-                    <p class="text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl" style="color: white !important;">
-                        {{ __('Building Relationships.') }}<br/>
+                    <p class="text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl"
+                        style="color: white !important;">
+                        {{ __('Building Relationships.') }}<br />
                         {{ __('Building Future.') }}
                     </p>
                 </div>
             </div>
 
             <!-- Scroll Indicator -->
-            <div class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
-                <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
+            <div
+                class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
+                <span
+                    class="text-[9px] font-black uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
                 <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent"></div>
             </div>
         </section>
@@ -58,35 +58,37 @@
 
             if (!$isEmbed && !empty($googleMapsUrl)) {
                 // If it's not an embed link, we use the official Kimmex Embed fallback
-    $googleMapsUrl =
-        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
-} elseif (empty($googleMapsUrl)) {
-    // Default fallback if nothing provided
-    $googleMapsUrl =
-        'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
-}
+                $googleMapsUrl =
+                    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
+            } elseif (empty($googleMapsUrl)) {
+                // Default fallback if nothing provided
+                $googleMapsUrl =
+                    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
+            }
 
-// Clickable link fallback: prioritze user's link if provided and it's NOT an embed link
-$googleMapsLink =
-    !empty($originalMapsUrl) && !$isEmbed
-        ? $originalMapsUrl
-        : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($address);
+            // Clickable link fallback: prioritze user's link if provided and it's NOT an embed link
+            $googleMapsLink =
+                !empty($originalMapsUrl) && !$isEmbed
+                ? $originalMapsUrl
+                : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($address);
 
-$facebook = $profile['facebook'] ?? '#';
-$linkedin = $profile['linkedin'] ?? '#';
-$youtube = $profile['youtube'] ?? '#';
-$instagram = $profile['instagram'] ?? '#';
-$telegram = $profile['telegram'] ?? '#';
-$workingHours =
-    $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
+            $facebook = $profile['facebook'] ?? '#';
+            $linkedin = $profile['linkedin'] ?? '#';
+            $youtube = $profile['youtube'] ?? '#';
+            $instagram = $profile['instagram'] ?? '#';
+            $telegram = $profile['telegram'] ?? '#';
+            $workingHours =
+                $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
         @endphp
 
         <!-- CONTACT INFO BAR -->
         <section class="max-w-[1400px] mx-auto px-6 relative z-40 -mt-20">
-            <div class="bg-white rounded-[3rem] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <div
+                class="bg-white rounded-[3rem] shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 <a href="{{ $googleMapsLink }}" target="_blank"
                     class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
-                    <div class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                    <div
+                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
                         <x-lucide-map-pin class="w-7 h-7" />
                     </div>
                     <div>
@@ -98,7 +100,8 @@ $workingHours =
                 </a>
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
                     class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
-                    <div class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                    <div
+                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
                         <x-lucide-phone class="w-7 h-7" />
                     </div>
                     <div>
@@ -110,7 +113,8 @@ $workingHours =
                 </a>
                 <a href="mailto:{{ $email }}"
                     class="flex items-center gap-6 p-10 group hover:bg-gray-50 transition-all duration-500">
-                    <div class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
+                    <div
+                        class="w-16 h-16 bg-gray-50 text-titan-red rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:text-white group-hover:scale-110 transition-all duration-500">
                         <x-lucide-mail class="w-7 h-7" />
                     </div>
                     <div>
@@ -150,7 +154,8 @@ $workingHours =
                             </div>
                         @endif
 
-                        <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                        <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data"
+                            class="space-y-5">
                             @csrf
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div>
@@ -166,8 +171,7 @@ $workingHours =
                                     </div>
                                 </div>
                                 <div>
-                                    <label
-                                        class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Last Name') }}
+                                    <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Last Name') }}
                                         <span class="text-titan-red">*</span></label>
                                     <div class="relative">
                                         <x-lucide-user
@@ -179,8 +183,7 @@ $workingHours =
                                 </div>
                             </div>
                             <div>
-                                <label
-                                    class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Email Address') }}
+                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Email Address') }}
                                     <span class="text-titan-red">*</span></label>
                                 <div class="relative">
                                     <x-lucide-at-sign
@@ -222,14 +225,16 @@ $workingHours =
                                     placeholder="{{ __('Tell us about the details...') }}"></textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Attachment') }}</label>
+                                <label
+                                    class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Attachment') }}</label>
                                 <div class="relative">
                                     <x-lucide-paperclip
                                         class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none" />
                                     <input type="file" name="attachment"
                                         class="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
                                 </div>
-                                <p class="text-[10px] text-titan-navy/30 mt-1.5">{{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}</p>
+                                <p class="text-[10px] text-titan-navy/30 mt-1.5">
+                                    {{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}</p>
                             </div>
                             <div class="flex items-center justify-between pt-2">
                                 <p class="text-[11px] text-titan-navy/25 hidden sm:block">
@@ -302,32 +307,25 @@ $workingHours =
                             @endif
                         </div>
                     </div>
-
-                    <!-- Map -->
-                    <div class="rounded-2xl overflow-hidden h-[260px] relative group border border-gray-100 shadow-sm">
-                        <iframe src="{{ $googleMapsUrl }}"
-                            class="w-full h-full border-0 grayscale group-hover:grayscale-0 transition-all duration-500"
-                            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                        <div
-                            class="absolute top-4 left-4 bg-white px-3 py-1.5 rounded-lg shadow text-[10px] font-bold uppercase tracking-widest text-titan-navy flex items-center gap-1.5">
-                            <div class="w-1.5 h-1.5 bg-titan-red rounded-full animate-pulse"></div>
-                            {{ __('Phnom Penh') }}
-                        </div>
-
-                        <!-- Open in Maps Button -->
-                        <div
-                            class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <a href="{{ $googleMapsLink }}" target="_blank"
-                                class="bg-white hover:bg-titan-red hover:text-white text-titan-navy px-3 py-2 rounded-lg shadow-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 transition-all">
-                                <x-lucide-external-link class="w-3 h-3" />
-                                {{ __('Open in Maps') }}
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
+        
+        <section class="max-w-[1200px] mx-auto px-6 mb-16 relative">
+            <div class="w-full h-[250px] md:h-[300px] bg-gray-100 rounded-[2rem] overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-1000 shadow-xl border border-gray-100">
+                <iframe 
+                    src="{{ $googleMapsUrl }}" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_50px_rgba(0,0,0,0.05)]"></div>
+            </div>
+        </section>
+
 
         <!-- CTA BANNER -->
         <section class="bg-titan-navy py-16 relative overflow-hidden">

@@ -62,7 +62,7 @@
                         class="group cursor-pointer bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
                         <div class="aspect-[16/10] relative overflow-hidden bg-titan-navy">
                             <div
-                                class="absolute top-4 left-4 bg-titan-red text-white text-xs font-bold uppercase px-3 py-1 z-10 rounded">
+                                class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 z-10 rounded-md">
                                 {{ $news['category'] }}
                             </div>
                             @if($news['image'])

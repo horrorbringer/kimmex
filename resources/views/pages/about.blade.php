@@ -191,13 +191,6 @@
                     </template>
                     <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent">
                     </div>
-                    <div class="absolute bottom-6 left-6 right-6">
-                        <div
-                            class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-full text-white text-[10px] font-black uppercase tracking-[0.2em]">
-                            <x-lucide-shield class="text-titan-red animate-pulse w-3 h-3" />
-                            {{ __('Verified Leadership') }}
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Right Content -->
@@ -237,15 +230,10 @@
             </div>
 
             <div class="relative z-20 text-center max-w-5xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" 
-                     class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-bold uppercase tracking-[0.3em] mb-12">
-                    <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
-                    <span>{{ strtoupper(__('Our Legacy & Vision')) }}</span>
-                </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
                     class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(1.5rem, 5vw, 2.8rem); color: white !important; font-weight: 900 !important;">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     {{ __('BUILDING') }}<br />
                     <span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
                 </h1>
@@ -322,13 +310,6 @@
                                     <span
                                         class="text-[10px] font-black uppercase tracking-[0.2em] mt-1">{{ __('Years') }}</span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right: Content & MVG -->
-                <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 delay-200">
                     <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">
@@ -454,10 +435,6 @@
                             <div class="prose prose-titan max-w-none text-titan-navy mb-8">
                                 {!! $brand['ceo_message'] ?? __('Construction is not just about concrete and steel. It is about building trust, fostering communities, and leaving a legacy that stands the test of time.') !!}
                             </div>
-
-                            <div>
-                                <div class="text-titan-navy font-black text-lg uppercase mb-1">{{ $ceoName }}</div>
-                                <div class="text-titan-red text-[10px] font-bold uppercase tracking-[0.2em]">{{
     __('Founder & Chief Executive Officer') }}</div>
                             </div>
                         </div>
@@ -686,18 +663,6 @@
         </section>
 
         <!-- CTA SECTION -->
-        <section class="py-20 px-6 bg-titan-red">
-            <div class="max-w-[1200px] mx-auto text-center" x-data="{ shown: false }" x-intersect.once="shown = true"
-                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                class="transition-all duration-1000">
-                <h2 class="text-3xl md:text-5xl font-heading font-black text-white mb-6">{{ __('Ready to Build
-                    Together?') }}</h2>
-                <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                    {{ __('Partner with Cambodia\'s leading construction firm. Let\'s create infrastructure that lasts
-                    for generations.') }}
-                </p>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="/contact"
                         class="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg">
                         {{ __('Contact Us') }}
                     </a>

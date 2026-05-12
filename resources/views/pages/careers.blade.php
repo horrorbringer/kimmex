@@ -63,16 +63,10 @@
             </div>
 
             <div class="relative z-20 w-full max-w-[1400px] mx-auto px-6 pt-32 pb-40" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <!-- Premium Badge -->
-                <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-2.5 glass-premium border border-white/10 rounded-full mb-12">
-                    <div class="w-2 h-2 rounded-full bg-titan-red animate-pulse"></div>
-                    <span class="text-white/90 text-[10px] font-black uppercase tracking-[0.3em]">{{ __('Join Our Elite Team') }}</span>
-                </div>
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                     class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
-                    style="font-size: clamp(1.8rem, 5vw, 3.5rem); color: white !important; font-weight: 900 !important;">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     <span class="block">{{ __('BUILD YOUR') }}</span>
                     <span class="block text-titan-red mt-2">{{ __('LEGACY') }}</span>
                 </h1>

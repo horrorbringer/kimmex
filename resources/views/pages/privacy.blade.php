@@ -16,7 +16,7 @@
                     {{ __('Legal & Compliance') }}
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'" class="transition-all duration-700 delay-300 font-black text-white mb-6 leading-none tracking-tighter uppercase" style="font-size: clamp(2.5rem, 7vw, 5rem);">
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'" class="transition-all duration-700 delay-300 font-black text-white mb-6 leading-none tracking-tighter uppercase" style="font-size: clamp(2rem, 5vw, 3.5rem) !important;">
                     {{ __('Privacy Policy') }}
                 </h1>
 

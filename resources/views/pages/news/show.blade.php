@@ -204,15 +204,11 @@
             </div>
 
             <div class="relative z-20 text-center max-w-5xl px-6 pt-10" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-black uppercase tracking-[0.3em] mb-10 border border-white/10">
-                    <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
-                    <span>{{ strtoupper($article['category']) }}</span>
-                </div>
+
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                     class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[1] tracking-tighter uppercase drop-shadow-2xl"
-                    style="font-size: clamp(2rem, 6vw, 4rem);">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important;">
                     {{ $article['title'] }}
                 </h1>
 

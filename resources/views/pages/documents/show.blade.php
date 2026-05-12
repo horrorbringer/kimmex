@@ -142,7 +142,7 @@
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                     class="transition-all duration-1000 delay-300 font-black text-white mb-8 leading-[1.1] tracking-tighter uppercase"
-                    style="font-size: clamp(2rem, 6vw, 3.5rem);">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important;">
                     {{ $doc['title'] }}
                 </h1>
 

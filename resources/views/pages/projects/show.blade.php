@@ -147,15 +147,11 @@
 
             <div class="relative z-10 text-center max-w-6xl px-6" x-data="{ shown: false }"
                 x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                    class="transition-all duration-700 delay-100 inline-flex items-center gap-3 px-6 py-2 glass-premium text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-10">
-                    <div class="w-2 h-2 bg-titan-red rounded-full animate-pulse"></div>
-                    {{ $project['type'] }}
-                </div>
+
                 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
                     class="transition-all duration-1000 delay-300 font-black text-white uppercase tracking-tighter leading-[0.9] mb-8"
-                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important;">
                     {{ $project['title'] }}
                 </h1>
                 
@@ -299,10 +295,7 @@
                                 <div class="flex items-center gap-3 font-bold text-titan-navy text-lg">
                                     <x-lucide-calendar
                                         class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
-                                    {{ $project['year'] }} <span
-                                        class="text-xs px-2 py-1 rounded text-white {{ $project['status'] === __('Completed') || $project['status'] === 'Completed' || strtolower($project['status']) === 'completed' ? 'bg-green-600' : 'bg-orange-500' }}">{{ $project['status'] }}</span>
-                                </div>
-                            </div>
+                                    {{ $project['year'] }} <span class="text-xs font-black text-titan-navy/40 ml-2 uppercase tracking-widest">{{ $project['status'] }}</span>                            </div>
                         </div>
 
                         <!-- CENTERED SOCIAL SHARING -->
@@ -453,10 +446,6 @@
                                 <div
                                     class="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-sm">
                                     {{ $p['type'] }}
-                                </div>
-                            </div>
-                            <h3
-                                class="text-xl font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-1">
                                 {{ $p['title'] }}
                             </h3>
                         </a>

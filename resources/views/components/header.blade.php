@@ -33,7 +33,7 @@
         $logo = $profile['logo'] ?? null;
         $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
 
-        $navCategories = \Illuminate\Support\Facades\Cache::remember('nav_categories_'.$lang, now()->addHours(12), function() use ($lang) {
+        $navCategories = \Illuminate\Support\Facades\Cache::remember('nav_categories_' . $lang, now()->addHours(12), function () use ($lang) {
             return \App\Models\ProjectCategory::where('isActive', true)
                 ->get()
                 ->sortBy(fn($cat) => $cat->getTranslation('name', $lang))
@@ -46,7 +46,7 @@
                 ->all();
         });
 
-        $navServices = \Illuminate\Support\Facades\Cache::remember('nav_services_'.$lang, now()->addHours(12), function() use ($lang) {
+        $navServices = \Illuminate\Support\Facades\Cache::remember('nav_services_' . $lang, now()->addHours(12), function () use ($lang) {
             return \App\Models\Service::where('isActive', true)
                 ->get()
                 ->sortBy(fn($svc) => $svc->getTranslation('title', $lang))
@@ -63,7 +63,7 @@
         class="text-white text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden relative border-b">
         <div class="max-w-[1600px] mx-auto px-2 sm:px-6 h-full flex justify-between items-center">
             <div class="flex gap-2 sm:gap-6 items-center">
-                    <a href="tel:{{ str_replace(' ', '', $phone) }}"
+                <a href="tel:{{ str_replace(' ', '', $phone) }}"
                     class="flex items-center gap-1.5 hover:text-titan-red cursor-pointer transition whitespace-nowrap">
                     <x-lucide-phone class="text-titan-red shrink-0 w-3 h-3" />
                     <span class="text-[10px] sm:hidden">{{ \Illuminate\Support\Str::limit($phone, 8) }}</span>
@@ -390,7 +390,8 @@
                 <!-- Right Side Actions -->
                 <div class="flex items-center gap-2 sm:gap-3">
                     <!-- Language Switcher -->
-                    <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'" class="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 h-8 border border-white/5">
+                    <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'"
+                        class="hidden sm:flex items-center gap-0.5 rounded-lg p-0.5 h-8 border border-white/5">
                         <a href="{{ route('lang.switch', 'en') }}"
                             class="h-full flex items-center px-2.5 rounded-md text-[9px] font-black tracking-widest transition-all"
                             :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
@@ -434,7 +435,8 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 0 ? null : 0">
-                        <a href="/about" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('About Us') }}</a>
+                        <a href="/about"
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('About Us') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 0 ? 'rotate-180' : ''" />
                     </div>
@@ -461,7 +463,8 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 1 ? null : 1">
-                        <a href="/services" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Services') }}</a>
+                        <a href="/services"
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Services') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 1 ? 'rotate-180' : ''" />
                     </div>
@@ -480,7 +483,8 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 2 ? null : 2">
-                        <a href="/projects" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Projects') }}</a>
+                        <a href="/projects"
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Projects') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 2 ? 'rotate-180' : ''" />
                     </div>
@@ -518,7 +522,8 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 3 ? null : 3">
-                        <a href="/news" class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('News') }}</a>
+                        <a href="/news"
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('News') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 3 ? 'rotate-180' : ''" />
                     </div>
@@ -598,7 +603,9 @@
             </div>
             <!-- Quick Links -->
             <div class="p-5">
-                <p class="{{ app()->getLocale() === 'km' ? 'font-khmer text-xs text-titan-navy/60' : 'text-xs font-bold text-titan-navy/40 uppercase tracking-widest' }} mb-4">{{ __('Quick Links') }}
+                <p
+                    class="{{ app()->getLocale() === 'km' ? 'font-khmer text-xs text-titan-navy/60' : 'text-xs font-bold text-titan-navy/40 uppercase tracking-widest' }} mb-4">
+                    {{ __('Quick Links') }}
                 </p>
                 <div class="grid grid-cols-2 gap-2">
                     <a href="/projects"
@@ -633,7 +640,9 @@
             </div>
             <!-- Categories -->
             <div class="px-5 pb-5">
-                <p class="{{ app()->getLocale() === 'km' ? 'font-khmer text-xs text-titan-navy/60' : 'text-xs font-bold text-titan-navy/40 uppercase tracking-widest' }} mb-3">{{ __('Categories') }}
+                <p
+                    class="{{ app()->getLocale() === 'km' ? 'font-khmer text-xs text-titan-navy/60' : 'text-xs font-bold text-titan-navy/40 uppercase tracking-widest' }} mb-3">
+                    {{ __('Categories') }}
                 </p>
                 <div class="flex flex-wrap gap-2">
                     @foreach(['Commercial', 'Infrastructure', 'Industrial', 'Construction', 'Government'] as $tag)

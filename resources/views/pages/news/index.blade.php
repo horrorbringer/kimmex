@@ -66,15 +66,11 @@
 
             <div class="max-w-4xl mx-auto w-full px-6 relative z-20 pt-20" x-data="{ shown: false }"
                 x-init="setTimeout(() => shown = true, 100)">
-                <!-- Badge -->
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                    class="transition-all duration-1000 delay-100 inline-flex items-center px-8 py-2 bg-titan-navy/40 backdrop-blur-md border border-white/10 rounded-full mb-10 mx-auto">
-                    <span class="text-[9px] font-normal uppercase tracking-[0.6em] text-white/80">{{ __('Insights & Updates') }}</span>
-                </div>
+
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                     class="transition-all duration-1000 delay-300 font-heading font-[900] uppercase leading-none tracking-[-0.03em] mb-10 drop-shadow-2xl text-white"
-                    style="font-size: clamp(1.8rem, 5vw, 3.5rem); color: white !important; font-weight: 900 !important;">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     {{ __('TITAN') }} <span class="text-titan-red">{{ __('NEWSROOM') }}</span>
                 </h1>
 
@@ -103,16 +99,12 @@
                                     class="absolute top-0 left-0 w-1.5 h-full bg-titan-red transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500">
                                 </div>
 
-                                <div class="flex items-center gap-5 mb-12">
-                                    <span
-                                        class="bg-titan-red text-white text-[10px] font-black uppercase tracking-[0.2em] px-6 py-3 rounded-full shadow-lg shadow-titan-red/20">
-                                        {{ __('Featured Story') }}
+                                <div class="flex items-center gap-4 mb-10">
+                                    <span class="bg-titan-navy text-white text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-md">
+                                        {{ $featured["category"] }}
                                     </span>
-                                    <div class="w-1.5 h-1.5 rounded-full bg-titan-red/30"></div>
-                                    <span
-                                        class="text-[11px] font-bold text-titan-navy/40 uppercase tracking-[0.2em]">{{ $featured['date'] }}</span>
+                                    <span class="text-[9px] font-black text-titan-navy/20 uppercase tracking-[0.2em]">{{ $featured["date"] }}</span>
                                 </div>
-
                                 <h2
                                     class="text-4xl lg:text-5xl font-black text-titan-navy mb-10 group-hover:text-titan-red transition-colors duration-300 leading-[1.05] tracking-tight">
                                     {{ $featured['title'] }}

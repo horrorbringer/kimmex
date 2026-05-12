@@ -116,15 +116,11 @@ $sectors = [
         
         <!-- Hero Content -->
         <div class="relative z-20 text-center max-w-6xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'" 
-                 class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 px-6 py-3 glass-premium rounded-full text-white text-[10px] font-bold uppercase tracking-[0.3em] mb-10">
-                <x-lucide-settings class="w-4 h-4 text-kmd-gold animate-spin-slow" />
-                <span>{{ strtoupper(__('Services & Expertise')) }}</span>
-            </div>
+
 
             <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
                 class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                style="font-size: clamp(1.5rem, 5vw, 2.8rem); color: white !important; font-weight: 900 !important;">
+                style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                 <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'ENGINEERING' }}</span> <br/>
                 <span class="text-kmd-gold">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
             </h1>

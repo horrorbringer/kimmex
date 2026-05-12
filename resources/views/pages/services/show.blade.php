@@ -277,7 +277,7 @@
                 </div>
 
                 <h1 class="font-black text-white mb-8 uppercase tracking-tighter leading-[0.9]"
-                    style="font-size: clamp(2.5rem, 7vw, 4.5rem);">
+                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important;">
                     {{ $service['title'][$lang] }}
                 </h1>
 

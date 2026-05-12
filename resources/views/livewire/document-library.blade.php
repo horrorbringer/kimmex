@@ -24,7 +24,7 @@
                 <div class="max-w-3xl">
                     <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                         class="transition-all duration-1000 delay-300 font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
-                        style="font-size: clamp(3.5rem, 8vw, 6.5rem);">
+                        style="font-size: clamp(1.5rem, 5vw, 2.25rem) !important;">
                         {{ __('KNOWLEDGE') }}<span class="text-titan-red">.</span><br />
                         <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('RESOURCES') }}</span>

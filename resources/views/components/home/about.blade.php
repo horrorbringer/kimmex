@@ -22,11 +22,11 @@
                     {{ __('About Kimmex') }}
                 </span>
 
-                <h2 class="text-5xl md:text-6xl font-black text-gray-900 leading-[1.05] mb-8">
+                <h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-[1.05] mb-8">
                     {{ __('Experience &') }}<br>{{ __('Excellence') }}
                 </h2>
 
-                <p class="text-gray-500 text-lg leading-relaxed mb-10 max-w-md whitespace-pre-line">
+                <p class="text-gray-500 text-base md:text-lg leading-relaxed mb-10 max-w-md whitespace-pre-line">
                     {{ $story }}
                 </p>
 
@@ -61,14 +61,6 @@
                     </div>
                 </div>
 
-                {{-- 25+ Years Badge -- centered at grid intersection --}}
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10
-                            bg-titan-red text-white rounded-2xl shadow-xl p-5
-                            flex flex-col items-center justify-center text-center min-w-[110px]">
-                    <span class="text-3xl font-black leading-none">25+</span>
-                    <span
-                        class="text-[9px] font-black uppercase tracking-widest mt-1 leading-tight">{{ __('Years of') }}<br>{{ __('Excellence') }}</span>
-                </div>
 
             </div>
 
