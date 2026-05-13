@@ -40,7 +40,7 @@
                     <div class="flex flex-col flex-1">
                         <span
                             class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
-                        <span class="text-[10px] uppercase tracking-[0.2em] text-kmd-gold">{{ $tagline }}</span>
+                        <span class="text-[10px] uppercase tracking-[0.2em] text-kmd-gold-light">{{ $tagline }}</span>
                     </div>
                 </div>
                 <p class="text-white/50 text-sm leading-relaxed max-w-xs">

@@ -685,7 +685,7 @@
         <!-- CTA SECTION -->
         <section class="py-24 bg-titan-navy border-t border-white/10">
             <div class="max-w-4xl mx-auto px-6 text-center">
-                <h2 class="text-4xl md:text-5xl font-heading font-black text-white mb-8 leading-tight tracking-normal">
+                <h2 class="text-4xl md:text-5xl font-heading font-black mb-8 leading-tight tracking-normal" style="color: white !important;">
                     {{ __('READY TO BUILD YOUR') }} <br />
                     <span class="text-titan-red">{{ __('NEXT LANDMARK?') }}</span>
                 </h2>

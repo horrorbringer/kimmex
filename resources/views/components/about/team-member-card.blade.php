@@ -3,10 +3,7 @@
 @php
     $type = $member['type'] ?? 'staff';
     $styles = match($type) {
-        'director' => ['bg' => 'bg-indigo-600', 'border' => 'border-indigo-600', 'text' => 'text-indigo-600', 'light' => 'bg-indigo-50 border-indigo-200'],
-        'manager' => ['bg' => 'bg-amber-500', 'border' => 'border-amber-500', 'text' => 'text-amber-500', 'light' => 'bg-amber-50 border-amber-200'],
-        'staff' => ['bg' => 'bg-rose-500', 'border' => 'border-rose-500', 'text' => 'text-rose-500', 'light' => 'bg-rose-50 border-rose-200'],
-        'department' => ['bg' => 'bg-emerald-500', 'border' => 'border-emerald-500', 'text' => 'text-emerald-500', 'light' => 'bg-emerald-50 border-emerald-200'],
+        'department' => ['bg' => 'bg-titan-navy', 'border' => 'border-titan-navy', 'text' => 'text-titan-navy', 'light' => 'bg-titan-navy/5 border-titan-navy/10'],
         default => ['bg' => $isCEO ? 'bg-titan-red' : 'bg-titan-navy', 'border' => $isCEO ? 'border-titan-red' : 'border-titan-navy', 'text' => $isCEO ? 'text-titan-red' : 'text-titan-navy', 'light' => 'bg-gray-50 border-gray-200']
     };
 

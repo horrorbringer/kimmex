@@ -25,9 +25,9 @@
 
     @if($hasChildren)
         <div class="{{ $nodeSpacing }} w-full relative">
-            <div class="grid grid-cols-1 md:grid-cols-{{ min($childCount, 4) }} {{ $gapSize }} pt-0">
+            <div class="flex flex-row flex-nowrap justify-center {{ $gapSize }} pt-0 min-w-max mx-auto">
                 @foreach($node['children'] as $index => $child)
-                    <div class="relative {{ $paddingTop }} flex flex-col items-center">
+                    <div class="relative {{ $paddingTop }} flex flex-col items-center flex-none">
                         {{-- Horizontal 'Shoulder' Line --}}
                         @if($childCount > 1)
                             <div class="absolute top-0 h-[2px] bg-titan-red/20 
