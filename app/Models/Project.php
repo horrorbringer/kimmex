@@ -56,7 +56,7 @@ class Project extends Model
 
     public function images()
     {
-        return $this->hasMany(ProjectImage::class, 'projectId');
+        return $this->hasMany(ProjectImage::class, 'projectId')->orderBy('sort_order');
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -66,18 +66,22 @@ class Project extends Model
 
     protected static function booted()
     {
-        static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_en');
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_kh');
-            \Illuminate\Support\Facades\Cache::forget('home_featured_projects_en');
-            \Illuminate\Support\Facades\Cache::forget('home_featured_projects_kh');
+        static::saved(function ($project) {
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("home_projects_array_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("home_featured_projects_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("project_show_data_{$project->slug}_{$locale}");
+            }
         });
 
-        static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_en');
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_kh');
-            \Illuminate\Support\Facades\Cache::forget('home_featured_projects_en');
-            \Illuminate\Support\Facades\Cache::forget('home_featured_projects_kh');
+        static::deleted(function ($project) {
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("home_projects_array_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("home_featured_projects_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("project_show_data_{$project->slug}_{$locale}");
+            }
         });
     }
 }

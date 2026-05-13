@@ -56,9 +56,9 @@
         :root {
             --primary-color: {{ $primaryColor }};
             --secondary-color: {{ $secondaryColor }};
-            --font-en: '{{ $fontEn }}', sans-serif;
-            --font-km: '{{ $fontKm }}', sans-serif;
-            --font-heading:  "Montserrat", "Outfit", "Inter", "Noto Sans Khmer", sans-serif;
+            --font-en: '{{ $fontEn }}', 'Inter', sans-serif;
+            --font-km: '{{ $fontKm }}', 'Noto Sans Khmer', sans-serif;
+            --font-heading: {{ app()->getLocale() === 'km' ? "'$fontKm', 'Montserrat', sans-serif" : "'Montserrat', '$fontEn', sans-serif" }};
         }
         
         .font-sans { font-family: var(--font-en); }

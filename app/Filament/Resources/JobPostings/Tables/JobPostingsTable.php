@@ -66,6 +66,14 @@ class JobPostingsTable
                     ->color('info')
                     ->url(fn(\App\Models\JobPosting $record): string => route('careers.show', ['slug' => $record->slug]))
                     ->openUrlInNewTab(),
+                \Filament\Actions\Action::make('copy_link')
+                    ->label(__('Copy Link'))
+                    ->icon('heroicon-o-link')
+                    ->color('gray')
+                    ->extraAttributes(fn($record) => [
+                        'x-on:click' => "window.navigator.clipboard.writeText('" . route('careers.show', ['slug' => $record->slug]) . "')",
+                    ])
+                    ->action(fn() => \Filament\Notifications\Notification::make()->title(__('Link Copied'))->success()->send()),
                 EditAction::make(),
             ])
             ->toolbarActions([

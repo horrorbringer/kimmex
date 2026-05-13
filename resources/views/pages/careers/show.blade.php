@@ -255,10 +255,44 @@
                     <div class="p-8 border border-gray-100 rounded space-y-6 bg-white shadow-sm">
                          <h4 class="text-[10px] font-black text-titan-navy/30 uppercase tracking-[0.2em]">{{ __('Share this role') }}</h4>
                           <div class="flex gap-3">
-                             <a href="javascript:void(0)" onclick="navigator.clipboard.writeText(window.location.href); alert('{{ __('Link copied to clipboard!') }}')" 
-                                 class="w-10 h-10 rounded bg-gray-100 flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all shadow-lg shadow-gray-200">
-                                 <x-lucide-link class="w-4 h-4" />
-                             </a>
+                             <div x-data="{ 
+                                 copied: false, 
+                                 copyLink() {
+                                     const url = window.location.href;
+                                     if (navigator.clipboard && navigator.clipboard.writeText) {
+                                         navigator.clipboard.writeText(url).catch(() => {});
+                                     } else {
+                                         const el = document.createElement('textarea');
+                                         el.value = url;
+                                         document.body.appendChild(el);
+                                         el.select();
+                                         document.execCommand('copy');
+                                         document.body.removeChild(el);
+                                     }
+                                     this.copied = true;
+                                     setTimeout(() => this.copied = false, 2000);
+                                 }
+                             }" class="relative">
+                                 <button @click="copyLink()"
+                                     class="w-10 h-10 flex items-center justify-center rounded transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-lg group/link"
+                                     :class="copied ? 'bg-titan-red text-white border-titan-red' : 'bg-gray-100 text-titan-navy border border-transparent hover:border-titan-red/30 hover:text-titan-red'">
+                                     <x-lucide-link class="w-4 h-4" x-show="!copied" />
+                                     <x-lucide-check class="w-4 h-4" x-show="copied" x-cloak />
+                                 </button>
+
+                                 <!-- Tooltip -->
+                                 <div x-show="copied" 
+                                      x-transition:enter="transition ease-out duration-300"
+                                      x-transition:enter-start="opacity-0 translate-y-2"
+                                      x-transition:enter-end="opacity-100 translate-y-0"
+                                      x-transition:leave="transition ease-in duration-200"
+                                      x-transition:leave-start="opacity-100 translate-y-0"
+                                      x-transition:leave-end="opacity-0 translate-y-2"
+                                      class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-titan-navy text-white text-[9px] font-black uppercase tracking-widest rounded whitespace-nowrap shadow-xl z-50"
+                                      style="display: none;">
+                                     {{ __('Copied!') }}
+                                 </div>
+                             </div>
                              <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                  class="w-10 h-10 rounded bg-social-facebook flex items-center justify-center text-white hover:brightness-110 transition-all shadow-lg shadow-social-facebook/20">
                                  <x-lucide-facebook class="w-4 h-4" />

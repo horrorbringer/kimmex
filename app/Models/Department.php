@@ -41,4 +41,19 @@ class Department extends Model
     {
         return $this->hasMany(JobPosting::class, 'departmentId');
     }
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("careers_jobs_data_{$locale}");
+            }
+        });
+
+        static::deleted(function () {
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("careers_jobs_data_{$locale}");
+            }
+        });
+    }
 }

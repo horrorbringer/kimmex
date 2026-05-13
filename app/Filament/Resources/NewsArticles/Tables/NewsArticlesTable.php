@@ -75,6 +75,14 @@ class NewsArticlesTable
                     ->color('info')
                     ->url(fn(\App\Models\NewsArticle $record): string => route('news.show', ['slug' => $record->slug]))
                     ->openUrlInNewTab(),
+                \Filament\Actions\Action::make('copy_link')
+                    ->label(__('Copy Link'))
+                    ->icon('heroicon-o-link')
+                    ->color('gray')
+                    ->extraAttributes(fn($record) => [
+                        'x-on:click' => "window.navigator.clipboard.writeText('" . route('news.show', ['slug' => $record->slug]) . "')",
+                    ])
+                    ->action(fn() => \Filament\Notifications\Notification::make()->title(__('Link Copied'))->success()->send()),
                 EditAction::make(),
             ])
             ->toolbarActions([

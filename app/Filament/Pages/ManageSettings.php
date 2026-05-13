@@ -478,9 +478,26 @@ class ManageSettings extends Page implements HasForms
             });
     }
 
+    protected static ?int $navigationSort = 1;
+
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('clearCache')
+                ->label(__('Clear System Cache'))
+                ->icon('heroicon-o-trash')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading(__('Clear all cached data?'))
+                ->modalDescription(__('This will force the website to re-fetch all data from the database. Use this if dashboard changes are not showing up on the frontend.'))
+                ->action(function () {
+                    \Illuminate\Support\Facades\Cache::flush();
+                    Notification::make()
+                        ->title(__('Cache Purged'))
+                        ->body(__('Entire system cache has been successfully cleared.'))
+                        ->success()
+                        ->send();
+                }),
             Action::make('save')
                 ->label(__('Save All Configuration'))
                 ->action('save')

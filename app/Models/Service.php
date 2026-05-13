@@ -8,6 +8,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Support\Facades\Cache;
 
 class Service extends Model
 {
@@ -39,14 +40,20 @@ class Service extends Model
 
     protected static function booted()
     {
-        static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('nav_services_en');
-            \Illuminate\Support\Facades\Cache::forget('nav_services_kh');
+        static::saved(function ($service) {
+            foreach(['en', 'km', 'kh'] as $locale) {
+                Cache::forget('nav_services_' . $locale);
+                Cache::forget('home_services_array_' . $locale);
+            }
+            Cache::forget('services_index_data');
         });
 
-        static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('nav_services_en');
-            \Illuminate\Support\Facades\Cache::forget('nav_services_kh');
+        static::deleted(function ($service) {
+            foreach(['en', 'km', 'kh'] as $locale) {
+                Cache::forget('nav_services_' . $locale);
+                Cache::forget('home_services_array_' . $locale);
+            }
+            Cache::forget('services_index_data');
         });
     }
 }

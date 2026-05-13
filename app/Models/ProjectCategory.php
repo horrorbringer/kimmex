@@ -35,17 +35,17 @@ class ProjectCategory extends Model
     protected static function booted()
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('nav_categories_en');
-            \Illuminate\Support\Facades\Cache::forget('nav_categories_kh');
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_en');
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_kh');
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("nav_categories_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
+            }
         });
 
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('nav_categories_en');
-            \Illuminate\Support\Facades\Cache::forget('nav_categories_kh');
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_en');
-            \Illuminate\Support\Facades\Cache::forget('projects_index_data_kh');
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("nav_categories_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
+            }
         });
     }
 }

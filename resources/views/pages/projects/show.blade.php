@@ -40,21 +40,6 @@
     });
 
     if ($project) {
-
-        // Ensure at least 4 images so you can see the layout and "Load More" functionality
-        if (count($project['images']) < 4) {
-            $fallbacks = [
-                '/images/projects/Thumbnail-2.jpg',
-                '/images/projects/Thumbnail-3.jpg',
-                '/images/projects/Thumbnail-4.jpg',
-                '/images/projects/Thumbnail-5.jpg'
-            ];
-            foreach ($fallbacks as $fallback) {
-                if (count($project['images']) >= 4)
-                    break;
-                $project['images'][] = $fallback;
-            }
-        }
     } else {
         // Keep internal fallback for development if DB is empty
         $project = [
@@ -317,16 +302,40 @@
                                 <div x-data="{ 
                                     copied: false, 
                                     copyLink() {
-                                        navigator.clipboard.writeText(window.location.href);
+                                        const url = window.location.href;
+                                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                                            navigator.clipboard.writeText(url).catch(() => {});
+                                        } else {
+                                            const el = document.createElement('textarea');
+                                            el.value = url;
+                                            document.body.appendChild(el);
+                                            el.select();
+                                            document.execCommand('copy');
+                                            document.body.removeChild(el);
+                                        }
                                         this.copied = true;
                                         setTimeout(() => this.copied = false, 2000);
                                     }
                                 }" class="relative">
                                     <button @click="copyLink()"
-                                        class="w-12 h-12 bg-white border border-gray-100 rounded flex items-center justify-center text-titan-navy hover:bg-titan-navy hover:text-white transition-all transform hover:-translate-y-1 shadow-lg group/link">
+                                        class="w-12 h-12 flex items-center justify-center rounded transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-lg group/link"
+                                        :class="copied ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border border-gray-100 hover:border-titan-red/30 hover:text-titan-red'">
                                         <x-lucide-link class="w-5 h-5" x-show="!copied" />
-                                        <x-lucide-check class="w-5 h-5 text-green-500" x-show="copied" x-cloak />
+                                        <x-lucide-check class="w-5 h-5" x-show="copied" x-cloak />
                                     </button>
+
+                                    <!-- Tooltip -->
+                                    <div x-show="copied" 
+                                         x-transition:enter="transition ease-out duration-300"
+                                         x-transition:enter-start="opacity-0 translate-y-2"
+                                         x-transition:enter-end="opacity-100 translate-y-0"
+                                         x-transition:leave="transition ease-in duration-200"
+                                         x-transition:leave-start="opacity-100 translate-y-0"
+                                         x-transition:leave-end="opacity-0 translate-y-2"
+                                         class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-titan-navy text-white text-[9px] font-black uppercase tracking-widest rounded whitespace-nowrap shadow-xl z-50"
+                                         style="display: none;">
+                                        {{ __('Copied!') }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -440,12 +449,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     @foreach($project['related'] as $p)
                         <a href="/projects/{{ $p['id'] }}" class="block group">
-                            <div class="aspect-[4/3] rounded-lg overflow-hidden mb-4 relative">
+                            <div class="aspect-[16/10] rounded-xl overflow-hidden mb-6 relative shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500">
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
                                 <div
-                                    class="absolute top-4 left-4 bg-titan-navy text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded">
+                                    class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full">
                                     {{ $p['type'] }}
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-heading font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase leading-snug tracking-normal">
                                 {{ $p['title'] }}
                             </h3>
                         </a>

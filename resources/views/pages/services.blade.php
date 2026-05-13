@@ -72,9 +72,9 @@ $process = \Illuminate\Support\Facades\Cache::remember('process_index_array_'.ap
     return $processDb->map(function($step, $index) {
         return [
             "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
-            "icon" => $step->icon,
-            "title" => ["en" => $step->title, "kh" => $step->getTranslation('title', 'kh')],
-            "desc" => ["en" => $step->description, "kh" => $step->getTranslation('description', 'kh')]
+            "icon" => $step->icon ?: 'lucide-check-circle',
+            "title" => ["en" => $step->getTranslation('title', 'en'), "kh" => $step->getTranslation('title', 'km')],
+            "desc" => ["en" => $step->getTranslation('description', 'en'), "kh" => $step->getTranslation('description', 'km')]
         ];
     })->toArray();
 });
@@ -249,31 +249,30 @@ $sectors = [
                              class="flex-none w-full sm:w-[320px] md:w-[calc(20%-2rem)] snap-center flex flex-col items-center text-center group transition-all duration-1000">
                             
                             <div class="relative mb-12 flex justify-center items-center" style="width: 160px; height: 160px;">
-                                <!-- Ghost Number -->
-                                <div class="absolute font-black z-0 leading-none select-none tracking-tighter mb-4 pointer-events-none transition-colors duration-700" style="font-size: 120px; color: rgba(15,23,42,0.04); top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                <!-- Ghost Number (Large Backdrop) -->
+                                <div class="absolute inset-0 font-black leading-none select-none tracking-tighter flex items-center justify-center pointer-events-none transition-colors duration-700 text-titan-navy/5" 
+                                     style="font-size: 140px;">
                                     0{{ $i + 1 }}
                                 </div>
 
-                                <!-- The Diamond Shape -->
-                                <div class="relative z-10 flex items-center justify-center transition-all duration-700 group-hover:scale-110 pointer-events-none"
-                                     class="w-[100px] h-[100px] bg-white border-[1.5px] border-gray-100 rounded rotate-45 shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
-                                    <div style="transform: rotate(-45deg);">
-                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8 text-titan-navy group-hover:text-titan-red transition-colors duration-500" />
+                                <!-- The Main Diamond Container -->
+                                <div class="relative z-10 w-[80px] h-[80px] bg-white border border-gray-100 rounded-xl rotate-45 shadow-[0_20px_40px_rgba(0,0,0,0.04)] flex items-center justify-center group-hover:scale-110 group-hover:border-titan-red/30 transition-all duration-700 pointer-events-none">
+                                    <div class="-rotate-45 text-titan-navy group-hover:text-titan-red transition-colors duration-500">
+                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8" stroke-width="1.5" />
                                     </div>
                                 </div>
 
-                                <!-- Floating Step Indicator -->
-                                <div class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110"
-                                     class="absolute z-20 flex items-center justify-center font-bold text-white transition-transform duration-500 group-hover:scale-110 w-[30px] h-[30px] bg-titan-red rounded bottom-[15px] right-[15px] text-[12px] shadow-[0_5px_15px_rgba(212,160,23,0.35)]">
-                                    0{{ $i + 1 }}
+                                <!-- Floating Step Label -->
+                                <div class="absolute -bottom-2 right-1/2 translate-x-1/2 z-20 bg-titan-red text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg shadow-titan-red/20 uppercase tracking-widest transition-transform duration-500 group-hover:scale-110">
+                                    {{ __('Step') }} 0{{ $i + 1 }}
                                 </div>
                             </div>
 
-                            <div class="px-2 relative z-10 mt-2">
-                                <h3 class="font-black mb-3 uppercase tracking-wider text-titan-navy group-hover:text-titan-red transition-colors duration-300" style="font-size: 14px;">
+                            <div class="px-4 relative z-10">
+                                <h3 class="font-heading font-black mb-4 uppercase tracking-normal text-titan-navy group-hover:text-titan-red transition-colors duration-300 text-sm">
                                     {{ $s['title'][$lang] }}
                                 </h3>
-                                <p class="text-titan-navy/45 leading-relaxed max-w-[200px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70" style="font-size: 11px;">
+                                <p class="text-titan-navy/50 leading-relaxed max-w-[220px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70 text-[11px] font-medium">
                                     {{ $s['desc'][$lang] }}
                                 </p>
                             </div>

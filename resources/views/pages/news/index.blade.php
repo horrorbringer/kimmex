@@ -76,7 +76,8 @@
 
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 delay-500 max-w-3xl mx-auto">
-                    <p class="text-white/60 text-lg md:text-xl leading-relaxed font-normal tracking-wide drop-shadow-lg">
+                    <p
+                        class="text-white/60 text-lg md:text-xl leading-relaxed font-normal tracking-wide drop-shadow-lg">
                         {{ __('Your central hub for the latest construction announcements,') }}<br
                             class="hidden md:block" />
                         {{ __('project milestones, and industry insights from Kimmex.') }}
@@ -100,10 +101,12 @@
                                 </div>
 
                                 <div class="flex items-center gap-4 mb-10">
-                                    <span class="bg-titan-navy text-white text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-md">
+                                    <span
+                                        class="bg-titan-navy text-white text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-md">
                                         {{ $featured["category"] }}
                                     </span>
-                                    <span class="text-[9px] font-black text-titan-navy/20 uppercase tracking-[0.2em]">{{ $featured["date"] }}</span>
+                                    <span
+                                        class="text-[9px] font-black text-titan-navy/20 uppercase tracking-[0.2em]">{{ $featured["date"] }}</span>
                                 </div>
                                 <h2
                                     class="text-4xl lg:text-5xl font-black text-titan-navy mb-10 group-hover:text-titan-red transition-colors duration-300 leading-[1.05] tracking-tight">
@@ -140,9 +143,6 @@
                                         <x-lucide-newspaper class="w-32 h-32 text-white/5" />
                                     </div>
                                 @endif
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent opacity-0 lg:opacity-100">
-                                </div>
                                 <div
                                     class="absolute inset-0 bg-titan-navy/10 group-hover:opacity-0 transition-opacity duration-700">
                                 </div>

@@ -65,8 +65,22 @@ class ProjectsTable
             ->filters([
                 //
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
+                \Filament\Actions\Action::make('view_on_website')
+                    ->label(__('View on Website'))
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('info')
+                    ->url(fn($record) => url("/projects/{$record->slug}"))
+                    ->openUrlInNewTab(),
+                \Filament\Actions\Action::make('copy_link')
+                    ->label(__('Copy Link'))
+                    ->icon('heroicon-o-link')
+                    ->color('gray')
+                    ->extraAttributes(fn($record) => [
+                        'x-on:click' => "window.navigator.clipboard.writeText('" . url("/projects/{$record->slug}") . "')",
+                    ])
+                    ->action(fn() => \Filament\Notifications\Notification::make()->title(__('Link Copied'))->success()->send()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

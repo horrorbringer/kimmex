@@ -128,6 +128,8 @@ class ProjectForm
                     ->components([
                         \Filament\Forms\Components\Repeater::make('images')
                             ->relationship('images')
+                            ->reorderable('sort_order')
+                            ->orderColumn('sort_order')
                             ->schema([
                                 FileUpload::make('url')
                                     ->image()

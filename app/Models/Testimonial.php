@@ -28,4 +28,19 @@ class Testimonial extends Model
         'isFeatured' => 'boolean',
         'isActive' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::saved(function () {
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("home_testimonials_array_{$locale}");
+            }
+        });
+
+        static::deleted(function () {
+            foreach (['en', 'km', 'kh'] as $locale) {
+                \Illuminate\Support\Facades\Cache::forget("home_testimonials_array_{$locale}");
+            }
+        });
+    }
 }

@@ -1,10 +1,24 @@
 @php
-    $processes = [
-        ['icon' => 'lucide-clipboard-check', 'step' => '01', 'title' => __('Initial Consultation'), 'desc' => __('We meet to understand your goals, timeline, and conceptual limits.')],
-        ['icon' => 'lucide-ruler', 'step' => '02', 'title' => __('Design & Planning'), 'desc' => __('Our architects and engineers draft out the blueprints and 3D models.')],
-        ['icon' => 'lucide-hammer', 'step' => '03', 'title' => __('Execution phase'), 'desc' => __('Ground breaks and our professional workforce constructs the vision.')],
-        ['icon' => 'lucide-check-circle-2', 'step' => '04', 'title' => __('Final Handover'), 'desc' => __('Quality reviews are conducted before we proudly hand over keys.')],
-    ];
+    $processes = \Illuminate\Support\Facades\Cache::remember('process_index_array_'.app()->getLocale(), now()->addHours(12), function() {
+        $processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
+        return $processDb->map(function($step, $index) {
+            return [
+                "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
+                "icon" => $step->icon ?: 'lucide-check-circle',
+                "title" => $step->getTranslation('title', app()->getLocale()) ?: $step->getTranslation('title', 'en'),
+                "desc" => $step->getTranslation('description', app()->getLocale()) ?: $step->getTranslation('description', 'en')
+            ];
+        })->toArray();
+    });
+
+    if (empty($processes)) {
+        $processes = [
+            ['icon' => 'lucide-clipboard-check', 'step' => '01', 'title' => __('Initial Consultation'), 'desc' => __('We meet to understand your goals, timeline, and conceptual limits.')],
+            ['icon' => 'lucide-ruler', 'step' => '02', 'title' => __('Design & Planning'), 'desc' => __('Our architects and engineers draft out the blueprints and 3D models.')],
+            ['icon' => 'lucide-hammer', 'step' => '03', 'title' => __('Execution phase'), 'desc' => __('Ground breaks and our professional workforce constructs the vision.')],
+            ['icon' => 'lucide-check-circle-2', 'step' => '04', 'title' => __('Final Handover'), 'desc' => __('Quality reviews are conducted before we proudly hand over keys.')],
+        ];
+    }
 @endphp
 
 <section class="py-24 bg-gray-50">
