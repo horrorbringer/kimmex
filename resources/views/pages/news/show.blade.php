@@ -186,8 +186,8 @@
                             <span class="rounded border border-gray-200 bg-gray-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy/55">{{ $article['readTime'] }}</span>
                         </div>
 
-                        <h1 class="font-black uppercase leading-[0.92] tracking-normal text-titan-navy max-w-4xl"
-                            style="font-size: clamp(2.25rem, 6vw, 4.4rem) !important;">
+                        <h1 class="font-normal uppercase leading-[0.96] tracking-normal text-titan-navy max-w-4xl"
+                            style="font-size: clamp(1.9rem, 4vw, 3.2rem) !important;">
                             {{ $article['title'] }}
                         </h1>
 
@@ -247,7 +247,7 @@
                         {{ __('Story') }}
                     </div>
 
-                    <div class="prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.85] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-normal prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
+                    <div class="news-content prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.85] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-normal prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
                         {!! $article['content'] !!}
                     </div>
 
@@ -304,7 +304,7 @@
 
                 <aside class="space-y-4 lg:sticky lg:top-24">
                     <div class="rounded border border-gray-200 bg-white p-5">
-                        <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-4">
+                        <div class="text-[10px] font-normal uppercase tracking-[0.24em] text-titan-red mb-4">
                             {{ __('Related Stories') }}
                         </div>
                         <div class="space-y-3">
@@ -314,25 +314,25 @@
                                         <x-lucide-newspaper class="w-4 h-4 text-titan-navy/30 group-hover:text-titan-red transition-colors" />
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                        <div class="text-[9px] font-normal uppercase tracking-[0.16em] text-titan-red mb-1">
                                             {{ $rel['category'] }}
                                         </div>
-                                        <div class="text-sm font-black text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
+                                        <div class="text-sm font-normal text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
                                             {{ $rel['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-semibold">
+                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-normal">
                                             {{ $rel['date'] }}
                                         </div>
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-sm text-titan-navy/40 font-medium">{{ __('No related stories yet.') }}</div>
+                                <div class="text-sm text-titan-navy/40 font-normal">{{ __('No related stories yet.') }}</div>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="rounded border border-gray-200 bg-white p-5">
-                        <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-4">
+                        <div class="text-[10px] font-normal uppercase tracking-[0.24em] text-titan-red mb-4">
                             {{ __('Documents') }}
                         </div>
                         <div class="space-y-3">
@@ -342,25 +342,25 @@
                                         <x-lucide-file-text class="w-4 h-4 text-titan-navy/30 group-hover:text-titan-red transition-colors" />
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                        <div class="text-[9px] font-normal uppercase tracking-[0.16em] text-titan-red mb-1">
                                             {{ $doc['category'] }}
                                         </div>
-                                        <div class="text-sm font-black text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
+                                        <div class="text-sm font-normal text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
                                             {{ $doc['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-semibold">
+                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-normal">
                                             {{ strtoupper($doc['fileType']) }}{{ $doc['fileSize'] ? ' · ' . $doc['fileSize'] : '' }}
                                         </div>
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-sm text-titan-navy/40 font-medium">{{ __('No documents found.') }}</div>
+                                <div class="text-sm text-titan-navy/40 font-normal">{{ __('No documents found.') }}</div>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="rounded border border-gray-200 bg-titan-navy p-5 text-white">
-                        <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-3">
+                        <div class="text-[10px] font-normal uppercase tracking-[0.24em] text-titan-red mb-3">
                             {{ __('Careers') }}
                         </div>
                         <div class="space-y-3">
@@ -370,19 +370,19 @@
                                         <x-lucide-briefcase class="w-4 h-4 text-titan-red" />
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                        <div class="text-[9px] font-normal uppercase tracking-[0.16em] text-titan-red mb-1">
                                             {{ $job['dept'] }}
                                         </div>
-                                        <div class="text-sm font-black text-white leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
+                                        <div class="text-sm font-normal text-white leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
                                             {{ $job['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[10px] text-white/45 font-semibold">
+                                        <div class="mt-1 text-[10px] text-white/45 font-normal">
                                             {{ $job['location'] }} · {{ $job['type'] }}
                                         </div>
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-sm text-white/55 font-medium">{{ __('No open roles right now.') }}</div>
+                                <div class="text-sm text-white/55 font-normal">{{ __('No open roles right now.') }}</div>
                             @endforelse
                         </div>
                     </div>
@@ -407,5 +407,66 @@
             </div>
         </section>
     </div>
+
+    <style>
+        .news-content h2,
+        .news-content h3,
+        .news-content h4 {
+            margin-top: 2rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .news-content p + table,
+        .news-content h2 + table,
+        .news-content h3 + table,
+        .news-content h4 + table {
+            margin-top: 1rem;
+        }
+
+        .news-content table {
+            width: 100%;
+            table-layout: auto;
+            border-collapse: collapse;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            background: #FFFFFF;
+            margin: 1.25rem 0 1.5rem;
+        }
+
+        .news-content thead {
+            background: #F9FAFB;
+        }
+
+        .news-content th,
+        .news-content td {
+            border: 1px solid #E5E7EB;
+            padding: 0.7rem 0.85rem;
+            text-align: left;
+            vertical-align: top;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .news-content th {
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.7rem;
+            color: #0B2B5C;
+        }
+
+        .news-content td {
+            font-size: 0.92rem;
+            color: #334155;
+        }
+
+        .news-content tr:nth-child(even) td {
+            background: #FCFCFD;
+        }
+
+        .news-content table p {
+            margin: 0;
+        }
+    </style>
 
 </x-layouts.app>
