@@ -244,11 +244,11 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === 1. PREMIUM HERO === -->
-        <section class="relative h-[75vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
+        <section class="relative overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
                 @if ($service['image'])
                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                        class="w-full h-full object-cover opacity-100 scale-105 animate-slow-zoom" />
+                        class="w-full h-full object-cover opacity-90 scale-105 animate-slow-zoom" />
                 @else
                     <div
                         class="w-full h-full bg-[radial-gradient(circle_at_30%_20%,var(--color-kmd-navy)_0%,var(--color-kmd-navy)_100%)]">
@@ -256,40 +256,92 @@
                     </div>
                 @endif
                 
-                {{-- Deep multi-stage gradient for maximum text contrast --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-                <div class="absolute inset-0 bg-black/20"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/96 via-titan-navy/82 to-titan-navy/30"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-titan-navy/60"></div>
             </div>
 
-            <div class="relative z-10 text-center max-w-5xl px-6" x-data="{ shown: false }"
-                x-init="setTimeout(() => shown = true, 100)" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                class="transition-all duration-1000">
-                
-                <a href="/services"
-                    class="inline-flex items-center gap-3 text-white/90 hover:text-white transition-all font-bold uppercase tracking-[0.3em] text-[10px] mb-12 group bg-white/5 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-xl">
-                    <x-lucide-arrow-left class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
-                    {{ __('Back to Services') }}
-                </a>
+            <div class="relative z-10">
+                <div class="max-w-[1400px] mx-auto px-6 py-14 md:py-18 lg:py-24">
+                    <a href="/services"
+                        class="inline-flex items-center gap-3 text-white/85 hover:text-white transition-all font-black uppercase tracking-[0.22em] text-[10px] mb-8 group">
+                        <x-lucide-arrow-left class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
+                        {{ __('Back to Services') }}
+                    </a>
 
-                <div
-                    class="mx-auto w-20 h-20 bg-titan-red rounded flex items-center justify-center mb-10 shadow-[0_20px_50px_rgba(255,42,0,0.3)] transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <x-dynamic-component :component="$service['icon'] ?? 'lucide-building'" class="w-10 h-10 text-white" />
-                </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+                        <div class="max-w-2xl">
+                            <div class="inline-flex items-center gap-3 border border-white/12 bg-white/[0.08] px-4 py-2 rounded mb-6">
+                                <x-dynamic-component :component="$service['icon'] ?? 'lucide-building'" class="w-4 h-4 text-titan-red" />
+                                <span class="text-[10px] font-black uppercase tracking-[0.24em] text-white/80">
+                                    {{ __('Service Details') }}
+                                </span>
+                            </div>
 
-                <h1 class="font-black text-white mb-8 uppercase tracking-tighter leading-[0.9]"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important;">
-                    {{ $service['title'][$lang] }}
-                </h1>
+                            <h1 class="font-black text-white uppercase tracking-normal leading-[0.9] mb-6"
+                                style="font-size: clamp(2.35rem, 6vw, 4.5rem) !important;">
+                                {{ $service['title'][$lang] }}
+                            </h1>
 
-                <div class="flex items-center justify-center gap-4 mb-8">
-                    <div class="h-[1px] w-12 bg-titan-red"></div>
-                    <p class="text-sm md:text-lg text-white font-bold uppercase tracking-[0.4em]">
-                        {{ $service['tagline'][$lang] ?? $service['title'][$lang] }}
-                    </p>
-                    <div class="h-[1px] w-12 bg-titan-red"></div>
+                            <p class="text-white/75 text-base md:text-lg leading-relaxed max-w-xl font-medium">
+                                {{ $service['desc'][$lang] }}
+                            </p>
+
+                            <div class="mt-8 flex flex-wrap gap-3">
+                                <a href="#scope-of-work"
+                                    class="h-11 px-5 rounded bg-titan-red text-white inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all hover:bg-white hover:text-titan-navy">
+                                    <x-lucide-list class="w-4 h-4" />
+                                    {{ __('View Scope') }}
+                                </a>
+                                <a href="/contact"
+                                    class="h-11 px-5 rounded border border-white/15 bg-white/5 text-white inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all hover:bg-white hover:text-titan-navy">
+                                    <x-lucide-phone class="w-4 h-4" />
+                                    {{ __('Contact Us') }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="relative rounded overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.28)] bg-titan-navy min-h-[260px] md:min-h-[340px]">
+                                @if ($service['image'])
+                                    <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
+                                        class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+                                    <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/70 via-transparent to-transparent"></div>
+                                @else
+                                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
+                                @endif
+                                <div class="absolute left-5 bottom-5 right-5 flex items-end justify-between gap-4">
+                                    <div>
+                                        <div class="text-[9px] font-black uppercase tracking-[0.18em] text-white/60 mb-2">
+                                            {{ __('Key Scope') }}
+                                        </div>
+                                        <div class="text-white font-black text-lg uppercase tracking-normal">
+                                            {{ $service['title'][$lang] }}
+                                        </div>
+                                    </div>
+                                    <div class="w-11 h-11 rounded bg-white/10 backdrop-blur flex items-center justify-center shrink-0">
+                                        <x-lucide-arrow-up-right class="w-5 h-5 text-white" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if(!empty($service['scopeItems']))
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    @foreach(array_slice($service['scopeItems'], 0, 3) as $item)
+                                        <div class="rounded border border-white/10 bg-white/[0.06] backdrop-blur px-4 py-3 text-white">
+                                            <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                                {{ __('Included') }}
+                                            </div>
+                                            <div class="text-sm font-bold leading-tight text-white/85 line-clamp-2">
+                                                {{ $item[$lang] }}
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </section>
 
         <!-- === 2. SERVICE OVERVIEW === -->
@@ -345,7 +397,7 @@
         </section>
         <!-- === 3. SCOPE OF WORK === -->
         @if (!empty($service['scopeItems'] ?? []))
-            <section class="py-24 bg-[#111827] text-white relative overflow-hidden">
+            <section id="scope-of-work" class="py-24 bg-[#111827] text-white relative overflow-hidden">
                 <div
                     class="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/10 rounded-full blur-[120px] pointer-events-none">
                 </div>
