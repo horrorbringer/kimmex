@@ -163,6 +163,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+.hero-copy-shadow {
+  text-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.42),
+    0 12px 32px rgba(11, 43, 92, 0.55);
+}
+
 /* ─── Heading hierarchy (brand spec) ─── */
 h1,
 h2,

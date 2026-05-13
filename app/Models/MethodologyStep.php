@@ -31,12 +31,14 @@ class MethodologyStep extends Model
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget('process_index_array_' . $locale);
+                Cache::forget('services_process_array_' . $locale);
             }
         });
 
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget('process_index_array_' . $locale);
+                Cache::forget('services_process_array_' . $locale);
             }
         });
     }

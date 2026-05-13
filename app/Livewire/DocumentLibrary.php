@@ -53,7 +53,7 @@ class DocumentLibrary extends Component
         }
 
         return view('livewire.document-library', [
-            'documents' => $query->latest()->paginate(12),
+            'documents' => $query->orderByDesc('is_featured')->latest()->paginate(12),
             'categories' => $categories,
             'totalDocuments' => Document::where('isActive', true)->whereHas('documentCategory', fn($q) => $q->where('isActive', true))->count(),
             'totalCategories' => DocumentCategory::where('isActive', true)->count(),

@@ -48,19 +48,31 @@ class NewsArticle extends Model
 
     protected static function booted()
     {
-        static::saved(function () {
-            foreach (['en', 'km'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("home_news_array_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("news_index_data_{$locale}");
-            }
+        static::saved(function (NewsArticle $article) {
+            $article->forgetFrontendCaches();
         });
 
-        static::deleted(function () {
-            foreach (['en', 'km'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("home_news_array_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("news_index_data_{$locale}");
-            }
+        static::deleted(function (NewsArticle $article) {
+            $article->forgetFrontendCaches();
         });
+    }
+
+    public function forgetFrontendCaches(): void
+    {
+        $slugs = array_filter(array_unique([
+            $this->slug,
+            $this->getOriginal('slug'),
+        ]));
+
+        foreach (['en', 'km'] as $locale) {
+            \Illuminate\Support\Facades\Cache::forget("home_news_array_{$locale}");
+            \Illuminate\Support\Facades\Cache::forget("news_index_data_{$locale}");
+
+            foreach ($slugs as $slug) {
+                \Illuminate\Support\Facades\Cache::forget("news_article_data_{$slug}_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("news_related_array_{$slug}_{$locale}");
+            }
+        }
     }
 
     public function getActivitylogOptions(): LogOptions

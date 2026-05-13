@@ -67,14 +67,17 @@ if (empty($services)) {
     ];
 }
 
-$process = \Illuminate\Support\Facades\Cache::remember('process_index_array_'.app()->getLocale(), now()->addHours(12), function() {
+$process = \Illuminate\Support\Facades\Cache::remember('services_process_array_'.app()->getLocale(), now()->addHours(12), function() {
     $processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
     return $processDb->map(function($step, $index) {
         return [
             "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
             "icon" => $step->icon ?: 'lucide-check-circle',
             "title" => ["en" => $step->getTranslation('title', 'en'), "kh" => $step->getTranslation('title', 'km')],
-            "desc" => ["en" => $step->getTranslation('description', 'en'), "kh" => $step->getTranslation('description', 'km')]
+            "desc" => [
+                "en" => trim(strip_tags($step->getTranslation('description', 'en'))),
+                "kh" => trim(strip_tags($step->getTranslation('description', 'km'))),
+            ]
         ];
     })->toArray();
 });
@@ -270,10 +273,10 @@ $sectors = [
 
                             <div class="px-4 relative z-10">
                                 <h3 class="font-heading font-black mb-4 uppercase tracking-normal text-titan-navy group-hover:text-titan-red transition-colors duration-300 text-sm">
-                                    {{ $s['title'][$lang] }}
+                                    {{ is_array($s['title']) ? ($s['title'][$lang] ?? $s['title']['en'] ?? '') : $s['title'] }}
                                 </h3>
                                 <p class="text-titan-navy/50 leading-relaxed max-w-[220px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70 text-[11px] font-medium">
-                                    {{ $s['desc'][$lang] }}
+                                    {{ is_array($s['desc']) ? ($s['desc'][$lang] ?? $s['desc']['en'] ?? '') : $s['desc'] }}
                                 </p>
                             </div>
                         </div>

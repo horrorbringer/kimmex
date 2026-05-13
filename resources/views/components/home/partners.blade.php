@@ -6,7 +6,7 @@
             <div>
                 <span
                     class="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">{{ __('Our Partners') }}</span>
-                <h2 class="text-3xl md:text-4xl font-heading font-black text-white">
+                <h2 class="text-3xl md:text-4xl font-heading font-black !text-white">
                     {{ __('Trusted By Leading Institutions') }}</h2>
             </div>
             <div class="flex items-center gap-4">

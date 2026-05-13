@@ -1,267 +1,264 @@
-<div class="min-h-screen bg-white text-titan-navy">
+<div class="min-h-screen bg-[#F7F8FA] text-titan-navy">
 
-    <!-- === PREMIUM KNOWLEDGE HUB HERO === -->
-    <section class="relative h-[65vh] min-h-[550px] flex items-center overflow-hidden bg-titan-navy shadow-2xl">
-        {{-- Background Zoom Animation --}}
+    <!-- === DOCUMENT HUB HERO === -->
+    <section class="relative min-h-[440px] flex items-center overflow-hidden bg-titan-navy">
         <div class="absolute inset-0">
-            <img src="{{ asset('images/heroes/documents-bg.png') }}" alt="Knowledge Hub" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
-            {{-- Deep multi-stage gradient for maximum text contrast --}}
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-            <div class="absolute inset-0 bg-black/20"></div>
+            <img src="{{ asset('images/heroes/documents-bg.png') }}" alt="Knowledge Hub"
+                class="w-full h-full object-cover animate-slow-zoom" />
+            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/78 to-titan-navy/30"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-titan-navy/35"></div>
         </div>
 
-        <div class="max-w-[1240px] mx-auto w-full px-6 relative z-20" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-            <!-- Premium Glassmorphism Badge -->
-            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'"
-                class="transition-all duration-1000 delay-100 inline-flex items-center gap-3 glass-premium px-6 py-3 mb-12 rounded-full">
-                <x-lucide-award class="w-4 h-4 text-titan-red animate-pulse" />
-                <span
-                    class="text-[10px] font-black uppercase tracking-[0.3em] text-white/90">{{ __('Kimmex Knowledge Hub') }}</span>
-            </div>
-
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-12">
-                <!-- Title + Desc -->
-                <div class="max-w-3xl">
-                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                        class="transition-all duration-1000 delay-300 font-black text-white uppercase leading-[0.9] tracking-tighter mb-8"
-                        style="font-size: clamp(1.5rem, 5vw, 2.25rem) !important;">
-                        {{ __('KNOWLEDGE') }}<span class="text-titan-red">.</span><br />
-                        <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-white">{{ __('RESOURCES') }}</span>
-                    </h1>
-                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                         class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-8">
-                        <p class="text-white/80 text-base md:text-lg leading-relaxed max-w-lg font-medium">
-                            {{ __('Access our centralized repository of engineering standards, research papers, and corporate resources.') }}
-                        </p>
+        <div class="max-w-[1240px] mx-auto w-full px-6 relative z-20 py-20" x-data="{ shown: false }"
+            x-init="setTimeout(() => shown = true, 100)">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 items-end">
+                <div>
+                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'"
+                        class="transition-all duration-700 inline-flex items-center gap-3 border border-white/15 bg-white/10 px-4 py-2 rounded">
+                        <x-lucide-library class="w-4 h-4 text-titan-red" />
+                        <span class="text-[10px] font-black uppercase tracking-[0.26em] text-white/85">
+                            {{ __('Kimmex Knowledge Hub') }}
+                        </span>
                     </div>
+
+                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                        class="transition-all duration-700 delay-150 mt-8 mb-6 font-black uppercase leading-[0.95] tracking-normal !text-white"
+                        style="font-size: clamp(2rem, 5vw, 4rem) !important;">
+                        {{ __('Technical Documents') }}
+                    </h1>
+
+                    <p :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                        class="transition-all duration-700 delay-300 text-white/78 text-base md:text-lg leading-relaxed max-w-2xl font-medium">
+                        {{ __('Find engineering standards, company resources, case studies, and reference materials in one organized library.') }}
+                    </p>
                 </div>
 
-                <!-- Stats Grid (Premium Design) -->
-                <div :class="shown ? 'opacity-100 scale-100' : 'opacity-0 scale-95'"
-                    class="transition-all duration-1000 delay-700 flex items-center gap-10 bg-white/5 p-10 rounded-[2.5rem] backdrop-blur-xl border border-white/10 shadow-2xl">
-                    <div>
-                        <div class="text-5xl font-black text-titan-red leading-none mb-3">{{ $totalDocuments }}<span
-                                class="text-white/30 font-light">+</span></div>
-                        <div class="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                    class="transition-all duration-700 delay-500 grid grid-cols-2 gap-3">
+                    <div class="border border-white/12 bg-white/10 rounded p-5">
+                        <div class="text-3xl font-black text-white leading-none">{{ $totalDocuments }}</div>
+                        <div class="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/50">
                             {{ __('Documents') }}
                         </div>
                     </div>
-                    <div class="w-px h-16 bg-white/10"></div>
-                    <div>
-                        <div class="text-5xl font-black text-white leading-none mb-3">{{ $totalCategories }}</div>
-                        <div class="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+                    <div class="border border-white/12 bg-white/10 rounded p-5">
+                        <div class="text-3xl font-black text-titan-red leading-none">{{ $totalCategories }}</div>
+                        <div class="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/50">
                             {{ __('Categories') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        {{-- Decorative bottom edge --}}
-        <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
     </section>
 
-    <!-- === FILTER + SEARCH BAR (CLEAN) === -->
-    <section class="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-6 py-2 shadow-sm">
-        <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <!-- Scrollable Tabs -->
-            <div class="w-full md:w-auto flex items-center gap-1 overflow-x-auto no-scrollbar py-1" wire:ignore.self>
-                <button wire:click="setTab('all')" 
-                    class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2 shrink-0 {{ $activeTabId === 'all' ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-50' }}">
-                    <x-lucide-layers class="w-3.5 h-3.5" />
-                    {{ __('All') }}
-                </button>
-                @foreach($categories as $cat)
-                    @php
-                        $iconMap = [
-                            'heroicon-o-academic-cap' => 'lucide-graduation-cap',
-                            'heroicon-o-cog-6-tooth' => 'lucide-settings-2',
-                            'heroicon-o-shield-check' => 'lucide-shield-check',
-                            'heroicon-o-scale' => 'lucide-scale',
-                            'heroicon-o-wrench-screwdriver' => 'lucide-wrench',
-                            'heroicon-o-document-text' => 'lucide-file-text',
-                            'heroicon-o-clipboard-document-list' => 'lucide-clipboard-list',
-                            'heroicon-o-book-open' => 'lucide-book-open',
-                        ];
-                        $iconName = $iconMap[$cat->icon] ?? 'lucide-folder';
-                    @endphp
-                    <button wire:click="setTab('{{ $cat->id }}')" 
-                        class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2 shrink-0 {{ $activeTabId === $cat->id ? 'bg-titan-navy text-white shadow-md' : 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-50' }}">
-                        <x-dynamic-component :component="$iconName" class="w-3.5 h-3.5" />
-                        {{ $cat->getTranslation('name', app()->getLocale()) }}
-                    </button>
-                @endforeach
-            </div>
+    <!-- === SEARCH + FILTERS === -->
+    <section class="border-b border-gray-200 bg-white/95 backdrop-blur-xl sticky top-0 z-30">
+        <div class="max-w-[1240px] mx-auto px-6 py-4">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-center">
+                <div class="relative">
+                    <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/35" />
+                    <input type="text" wire:model.live.debounce.300ms="search"
+                        placeholder="{{ __('Search by title, description, or keyword') }}"
+                        class="w-full h-12 rounded border border-gray-200 bg-gray-50 pl-11 pr-12 text-sm font-semibold text-titan-navy placeholder:text-titan-navy/35 focus:bg-white focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all" />
+                    @if($search)
+                        <button type="button" wire:click="$set('search', '')"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-white border border-gray-200 flex items-center justify-center text-titan-navy/40 hover:text-titan-red hover:border-titan-red/30 transition-colors">
+                            <x-lucide-x class="w-3.5 h-3.5" />
+                        </button>
+                    @endif
+                </div>
 
-            <!-- Integrated Search -->
-            <div class="relative w-full md:w-72">
-                <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/30" />
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="{{ __('Search records...') }}"
-                    class="w-full bg-titan-navy/[0.03] border-none rounded-xl pl-10 pr-4 py-2 text-xs text-titan-navy placeholder:text-titan-navy/20 focus:ring-1 focus:ring-titan-red/30 transition-all font-bold" />
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0" wire:ignore.self>
+                    <button wire:click="setTab('all')"
+                        class="h-11 px-4 rounded border text-[10px] font-black uppercase tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shrink-0 {{ $activeTabId === 'all' ? 'bg-titan-navy text-white border-titan-navy' : 'bg-white text-titan-navy/55 border-gray-200 hover:text-titan-navy hover:border-titan-navy/30' }}">
+                        <x-lucide-layers class="w-3.5 h-3.5" />
+                        {{ __('All') }}
+                    </button>
+
+                    @foreach($categories as $cat)
+                        @php
+                            $iconMap = [
+                                'heroicon-o-academic-cap' => 'lucide-graduation-cap',
+                                'heroicon-o-cog-6-tooth' => 'lucide-settings-2',
+                                'heroicon-o-shield-check' => 'lucide-shield-check',
+                                'heroicon-o-scale' => 'lucide-scale',
+                                'heroicon-o-wrench-screwdriver' => 'lucide-wrench',
+                                'heroicon-o-document-text' => 'lucide-file-text',
+                                'heroicon-o-clipboard-document-list' => 'lucide-clipboard-list',
+                                'heroicon-o-book-open' => 'lucide-book-open',
+                            ];
+                            $iconName = $iconMap[$cat->icon] ?? 'lucide-folder';
+                        @endphp
+                        <button wire:click="setTab('{{ $cat->id }}')"
+                            class="h-11 px-4 rounded border text-[10px] font-black uppercase tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shrink-0 {{ $activeTabId === $cat->id ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy/55 border-gray-200 hover:text-titan-navy hover:border-titan-navy/30' }}">
+                            <x-dynamic-component :component="$iconName" class="w-3.5 h-3.5" />
+                            {{ $cat->getTranslation('name', app()->getLocale()) }}
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- === DOCUMENT GRID (ULTRA CLEAN) === -->
-    <section class="max-w-[1240px] mx-auto px-6 py-16 relative min-h-[600px]">
-        <!-- SKELETON LOADING GRID -->
-        <div wire:loading.grid class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+    <!-- === DOCUMENTS === -->
+    <section class="max-w-[1240px] mx-auto px-6 py-14 min-h-[620px]">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div>
+                <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-2">
+                    {{ __('Resource Library') }}
+                </div>
+                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-normal text-titan-navy">
+                    {{ __('Browse Documents') }}
+                </h2>
+            </div>
+            <div class="text-xs font-bold text-titan-navy/45">
+                {{ $documents->total() }} {{ __('items found') }}
+            </div>
+        </div>
+
+        <div wire:loading.grid class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             @for($i = 0; $i < 6; $i++)
-                <div class="animate-pulse flex flex-col rounded-2xl border border-gray-100 bg-white overflow-hidden h-full">
-                    <div class="aspect-video bg-gray-50"></div>
-                    <div class="p-6 space-y-3">
-                        <div class="h-3 w-20 bg-gray-100 rounded-full"></div>
-                        <div class="h-6 w-full bg-gray-100 rounded-lg"></div>
-                        <div class="h-3 w-2/3 bg-gray-50 rounded-lg"></div>
-                        <div class="pt-4 flex justify-between">
-                            <div class="h-4 w-12 bg-gray-50"></div>
-                            <div class="h-4 w-20 bg-gray-100 rounded-full"></div>
-                        </div>
-                    </div>
+                <div class="animate-pulse rounded border border-gray-200 bg-white p-5">
+                    <div class="h-10 w-10 rounded bg-gray-100 mb-6"></div>
+                    <div class="h-3 w-24 bg-gray-100 rounded mb-4"></div>
+                    <div class="h-6 w-10/12 bg-gray-100 rounded mb-3"></div>
+                    <div class="h-3 w-full bg-gray-100 rounded mb-2"></div>
+                    <div class="h-3 w-8/12 bg-gray-100 rounded"></div>
                 </div>
             @endfor
         </div>
 
-        <!-- ACTUAL CONTENT -->
-        <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             @forelse($documents as $doc)
                 @php
                     $isFirstFeatured = $doc->is_featured && ($loop->first && $documents->currentPage() === 1);
+                    $categoryName = $doc->documentCategory
+                        ? $doc->documentCategory->getTranslation('name', app()->getLocale())
+                        : ($doc->category ?: __('Resource'));
+                    $fileType = strtoupper($doc->fileType ?: 'PDF');
+                    $description = str(strip_tags($doc->description))->limit($isFirstFeatured ? 180 : 115);
                 @endphp
-                <div @class([
-                    'flex flex-col overflow-hidden transition-all duration-500 bg-white group border border-gray-100 relative',
-                    'md:col-span-2 lg:col-span-3 rounded-[2rem] border-titan-red/10 !flex-row min-h-[380px] shadow-lg bg-gradient-to-br from-white to-gray-50/30' => $isFirstFeatured,
-                    'rounded-2xl h-full hover:shadow-xl hover:border-titan-red/10' => !$isFirstFeatured
-                ])>
 
-                    <!-- Image/Thumbnail Container -->
-                    <div @class([
-                        'relative overflow-hidden bg-gray-50 flex items-center justify-center shrink-0',
-                        'w-2/5 min-h-[380px]' => $isFirstFeatured,
-                        'aspect-video' => !$isFirstFeatured
+                <article @class([
+                    'group bg-white border border-gray-200 rounded overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-titan-red/25 hover:shadow-elevated',
+                    'md:col-span-2 xl:col-span-3 grid grid-cols-1 lg:grid-cols-[360px_1fr] min-h-[300px]' => $isFirstFeatured,
+                    'flex flex-col min-h-[320px]' => !$isFirstFeatured,
+                ])>
+                    <a href="/documents/{{ $doc->slug }}" @class([
+                        'relative bg-titan-navy overflow-hidden flex items-center justify-center',
+                        'min-h-[240px] lg:min-h-full' => $isFirstFeatured,
+                        'h-36' => !$isFirstFeatured,
                     ])>
                         @if($doc->thumbnailUrl)
                             <img src="{{ Storage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[10s]" />
+                                class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/65 to-transparent"></div>
                         @else
-                            <div class="absolute inset-0 w-full h-full bg-titan-navy/[0.01] flex items-center justify-center">
-                                <div class="absolute inset-0 bg-[radial-gradient(rgba(11,43,92,0.03)_1px,transparent_1px)] [background-size:10px_10px]"></div>
-                                <x-lucide-file-text @class([
-                                    'text-titan-navy/10 group-hover:scale-110 group-hover:text-titan-red transition-all duration-700 relative z-10 opacity-30 drop-shadow-sm',
-                                    'w-24 h-24' => $isFirstFeatured,
-                                    'w-14 h-14' => !$isFirstFeatured
-                                ]) />
-                            </div>
+                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.18)_0%,transparent_46%)]"></div>
+                            <x-lucide-file-text class="w-14 h-14 text-white/25 group-hover:text-titan-red transition-colors duration-300" />
                         @endif
 
-                        <!-- Top Badges -->
-                        <div class="absolute top-4 left-4 z-20">
+                        <div class="absolute left-4 top-4 flex items-center gap-2">
+                            <span class="rounded bg-white text-titan-navy px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em]">
+                                {{ $fileType }}
+                            </span>
                             @if($doc->is_featured)
-                                <span class="bg-titan-red text-white text-[8px] font-black uppercase tracking-widest px-2.5 py-1.5 rounded-lg shadow-md">
-                                    {{ __('FEATURED') }}
+                                <span class="rounded bg-titan-red text-white px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em]">
+                                    {{ __('Featured') }}
                                 </span>
                             @endif
                         </div>
-                    </div>
+                    </a>
 
-                    <!-- Content Section -->
-                    <div @class([
-                        'flex flex-col flex-1',
-                        'p-10 justify-center' => $isFirstFeatured,
-                        'p-6' => !$isFirstFeatured
-                    ])>
-                        <!-- Category Header -->
-                        <div class="flex items-center gap-2.5 mb-3">
-                            <span class="text-[9px] font-black uppercase tracking-[0.15em] text-titan-red">
-                                {{ $doc->documentCategory ? $doc->documentCategory->getTranslation('name', app()->getLocale()) : ($doc->category ?: __('RESOURCE')) }}
+                    <div class="flex flex-col flex-1 p-5 {{ $isFirstFeatured ? 'lg:p-8' : '' }}">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-[10px] font-black uppercase tracking-[0.16em] text-titan-red">
+                                {{ $categoryName }}
                             </span>
-                            <span class="w-1 h-1 bg-gray-200 rounded-full"></span>
-                            <span class="text-[9px] font-bold text-titan-navy/30 uppercase tracking-[0.15em]">
-                                {{ $doc->fileType ?? 'PDF' }} · {{ $doc->fileSize ?? '' }}
+                            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                            <span class="text-[10px] font-bold uppercase tracking-[0.12em] text-titan-navy/35">
+                                {{ $doc->fileSize ?: __('Document') }}
                             </span>
                         </div>
 
-                        <!-- Title -->
-                        <a href="/documents/{{ $doc->slug }}" class="block mb-3">
-                            <h2 @class([
-                                'font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 leading-[1.2] tracking-tight',
-                                'text-3xl max-w-lg' => $isFirstFeatured,
-                                'text-lg line-clamp-2' => !$isFirstFeatured
+                        <a href="/documents/{{ $doc->slug }}" class="block">
+                            <h3 @class([
+                                'font-black text-titan-navy group-hover:text-titan-red transition-colors duration-200 leading-tight tracking-normal',
+                                'text-2xl md:text-3xl max-w-3xl' => $isFirstFeatured,
+                                'text-lg line-clamp-2' => !$isFirstFeatured,
                             ])>
                                 {{ $doc->title }}
-                            </h2>
+                            </h3>
                         </a>
 
-                        <!-- Excerpt -->
                         <p @class([
-                            'text-titan-navy/50 leading-relaxed mb-6',
-                            'text-base max-w-md' => $isFirstFeatured,
-                            'text-xs line-clamp-2' => !$isFirstFeatured
+                            'mt-4 text-titan-navy/60 leading-relaxed font-medium',
+                            'text-sm max-w-3xl' => $isFirstFeatured,
+                            'text-xs line-clamp-3' => !$isFirstFeatured,
                         ])>
-                            {{ str(strip_tags($doc->description))->limit(120) }}
+                            {{ $description }}
                         </p>
 
-                        <!-- Footer -->
-                        <div class="mt-auto flex items-center justify-between pt-5 border-t border-gray-50">
-                            <div class="flex items-center gap-2">
-                                <x-lucide-calendar class="w-3 h-3 text-titan-navy/20" />
-                                <span class="text-[9px] font-bold text-titan-navy/20 uppercase tracking-widest">
-                                    {{ $doc->created_at->format('M Y') }}
-                                </span>
+                        <div class="mt-auto pt-6 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-titan-navy/35">
+                                <x-lucide-calendar class="w-3.5 h-3.5" />
+                                {{ $doc->created_at->format('M Y') }}
                             </div>
 
-                            <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-2">
                                 @if($doc->fileUrl)
-                                    <a href="{{ Storage::url($doc->fileUrl) }}" download @click.stop 
-                                        class="w-8 h-8 rounded-lg bg-gray-50 text-titan-navy/30 hover:bg-titan-red hover:text-white flex items-center justify-center transition-all">
-                                        <x-lucide-download class="w-3.5 h-3.5" />
+                                    <a href="{{ Storage::url($doc->fileUrl) }}" download
+                                        class="w-9 h-9 rounded border border-gray-200 bg-white text-titan-navy/55 hover:bg-titan-red hover:text-white hover:border-titan-red flex items-center justify-center transition-all"
+                                        aria-label="{{ __('Download document') }}">
+                                        <x-lucide-download class="w-4 h-4" />
                                     </a>
                                 @endif
-                                <a href="/documents/{{ $doc->slug }}" 
-                                    class="inline-flex items-center gap-2 text-[10px] font-black text-titan-navy uppercase tracking-[0.2em] group/btn hover:text-titan-red transition-colors">
-                                    <span>{{ __('View') }}</span>
-                                    <x-lucide-arrow-right class="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                                <a href="/documents/{{ $doc->slug }}"
+                                    class="h-9 px-4 rounded bg-titan-navy text-white hover:bg-titan-red inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all">
+                                    {{ __('View') }}
+                                    <x-lucide-arrow-right class="w-3.5 h-3.5" />
                                 </a>
                             </div>
                         </div>
                     </div>
-                </div>
+                </article>
             @empty
-                <!-- Empty State -->
-                <div class="col-span-full py-24 text-center bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-100">
-                    <x-lucide-file-x class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
-                    <p class="text-titan-navy/30 font-black text-xs uppercase tracking-[0.3em]">{{ __('No documents found') }}</p>
+                <div class="col-span-full py-24 text-center bg-white rounded border border-dashed border-gray-300">
+                    <x-lucide-file-x class="w-12 h-12 text-titan-navy/15 mx-auto mb-4" />
+                    <h3 class="font-black uppercase tracking-normal text-titan-navy mb-2">{{ __('No documents found') }}</h3>
+                    <p class="text-sm text-titan-navy/45 font-medium">
+                        {{ __('Try another keyword or choose a different category.') }}
+                    </p>
                 </div>
             @endforelse
         </div>
 
-        <!-- Pagination -->
         @if($documents->hasPages())
-            <div class="mt-20 flex justify-center">
+            <div class="mt-14">
                 {{ $documents->links() }}
             </div>
         @endif
     </section>
 
     <!-- === CTA SECTION === -->
-    <section class="bg-titan-navy py-16 px-6">
-        <div class="max-w-[1240px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+    <section class="bg-white border-t border-gray-200 py-16 px-6">
+        <div class="max-w-[1240px] mx-auto grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
             <div>
-                <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.4em] mb-4">
+                <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.28em] mb-3">
                     {{ __('Need Specific Files?') }}
                 </div>
-                <h3 class="text-3xl font-black text-white uppercase tracking-tight mb-3">
-                    {{ __("Can't find what you need?") }}
-                </h3>
-                <p class="text-white/40 text-base max-w-md leading-relaxed font-medium">
-                    {{ __('Our team can prepare custom technical documentation and case studies upon request.') }}
+                <h2 class="text-2xl md:text-3xl font-black text-titan-navy uppercase tracking-normal mb-3">
+                    {{ __("Request technical support") }}
+                </h2>
+                <p class="text-titan-navy/55 text-sm md:text-base max-w-2xl leading-relaxed font-medium">
+                    {{ __('Our team can help locate project references, technical documents, and case studies for your request.') }}
                 </p>
             </div>
             <a href="/contact"
-                class="inline-flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-xl group">
-                <x-lucide-mail class="w-4 h-4 group-hover:scale-110 transition-transform" />
-                {{ __('Request Support') }}
+                class="h-12 px-6 rounded bg-titan-red hover:bg-titan-navy text-white inline-flex items-center justify-center gap-3 font-black text-xs uppercase tracking-[0.16em] transition-all shadow-lg shadow-titan-red/15">
+                <x-lucide-mail class="w-4 h-4" />
+                {{ __('Contact Us') }}
             </a>
         </div>
     </section>

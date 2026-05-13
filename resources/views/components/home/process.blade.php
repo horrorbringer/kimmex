@@ -2,11 +2,13 @@
     $processes = \Illuminate\Support\Facades\Cache::remember('process_index_array_'.app()->getLocale(), now()->addHours(12), function() {
         $processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
         return $processDb->map(function($step, $index) {
+            $description = $step->getTranslation('description', app()->getLocale()) ?: $step->getTranslation('description', 'en');
+
             return [
                 "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
                 "icon" => $step->icon ?: 'lucide-check-circle',
                 "title" => $step->getTranslation('title', app()->getLocale()) ?: $step->getTranslation('title', 'en'),
-                "desc" => $step->getTranslation('description', app()->getLocale()) ?: $step->getTranslation('description', 'en')
+                "desc" => trim(strip_tags($description))
             ];
         })->toArray();
     });

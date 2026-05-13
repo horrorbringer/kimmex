@@ -345,9 +345,9 @@
         </section>
         <!-- === 3. SCOPE OF WORK === -->
         @if (!empty($service['scopeItems'] ?? []))
-            <section class="py-24 bg-titan-navy text-white relative overflow-hidden">
+            <section class="py-24 bg-[#111827] text-white relative overflow-hidden">
                 <div
-                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/5 rounded-full blur-[120px] pointer-events-none">
+                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/10 rounded-full blur-[120px] pointer-events-none">
                 </div>
 
                 <div class="max-w-[1400px] mx-auto px-6 relative z-10">
@@ -356,7 +356,7 @@
                         class="text-center mb-16 transition-all duration-1000">
                         <span
                             class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'វិសាលភាពការងារ' : 'Scope of Work' }}</span>
-                        <h2 class="text-2xl md:text-3xl font-bold mb-5">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-5 !text-white">
                             {{ $lang === 'kh' ? 'សេវាកម្មដ៏ទូលំទូលាយ' : 'Comprehensive Coverage' }}
                         </h2>
                     </div>
@@ -366,7 +366,7 @@
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 style="transition-delay: {{ $i * 100 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-titan-red/30 transition-all duration-300 h-full">
+                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white/[0.07] border border-white/15 rounded hover:bg-white/[0.11] hover:border-titan-red/40 transition-all duration-300 h-full">
                                 <div
                                     class="w-10 h-10 rounded-full bg-titan-red/10 border border-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red/20 group-hover:border-titan-red/40 transition-colors duration-300">
                                     <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red" />
