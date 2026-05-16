@@ -1,15 +1,16 @@
 @php
+    $fallbackImage = '/images/projects/Thumbnail-5.jpg';
     $featuredProjects = \App\Models\Project::where('isFeatured', true)
         ->where('isActive', true)
         ->take(5)
         ->get();
     if ($featuredProjects->count() > 0) {
-        $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) {
+        $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) use ($fallbackImage) {
             return [
                 'id' => $index + 1,
                 'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                     ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                    : null,
+                    : $fallbackImage,
                 'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) : ($p->category ?: __('Featured Project')),
                 'title' => $p->getTranslation('title', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('title', 'en'),
                 'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('description', 'en')), 120),
@@ -86,21 +87,13 @@
             x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 -translate-x-12"
             class="absolute inset-0 w-full h-full">
 
-            <template x-if="slide.image">
-                <div class="relative w-full h-full overflow-hidden">
-                    <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" />
-                    {{-- Stronger left-side scrim keeps hero copy readable over bright project photos. --}}
-                    <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/55 to-transparent"></div>
-                    <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/25 via-transparent to-titan-navy/70"></div>
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(11,43,92,0.45)_0%,rgba(11,43,92,0.18)_38%,transparent_65%)]"></div>
-                </div>
-            </template>
-            <template x-if="!slide.image">
-                <div class="w-full h-full bg-titan-navy shadow-inner opacity-100">
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
-                </div>
-            </template>
+            <div class="relative w-full h-full overflow-hidden">
+                <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" />
+                {{-- Stronger left-side scrim keeps hero copy readable over bright project photos. --}}
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/55 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/25 via-transparent to-titan-navy/70"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(11,43,92,0.45)_0%,rgba(11,43,92,0.18)_38%,transparent_65%)]"></div>
+            </div>
         </div>
     </template>
 

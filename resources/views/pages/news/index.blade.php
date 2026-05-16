@@ -2,8 +2,9 @@
 
     @php
         $locale = app()->getLocale();
+        $fallbackImage = '/images/hero/hero-3.jpg';
 
-        $newsArticles = \Illuminate\Support\Facades\Cache::remember("news_index_data_{$locale}", now()->addHours(12), function () use ($locale) {
+        $newsArticles = \Illuminate\Support\Facades\Cache::remember("news_index_data_{$locale}", now()->addHours(12), function () use ($locale, $fallbackImage) {
             $newsArticlesDb = \App\Models\NewsArticle::where('isActive', true)
                 ->where('publishedAt', '<=', now())
                 ->orderByDesc('isFeatured')
@@ -27,7 +28,7 @@
                 return [
                     'slug' => $n->slug,
                     'category' => $n->getTranslation('category', $locale) ?: __('Updates'),
-                    'image' => $imageUrl,
+                    'image' => $imageUrl ?: $fallbackImage,
                     'title' => $n->getTranslation('title', $locale),
                     'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                     'excerpt' => $excerpt,
@@ -103,11 +104,11 @@
             </div>
 
             <div class="relative z-10 w-full">
-                <div class="max-w-[1240px] mx-auto px-6 py-20 md:py-24">
+                <div class="max-w-[1240px] mx-auto px-6 pt-28 pb-20 md:pt-32 md:pb-24">
                     <div class="max-w-3xl">
                         <div class="inline-flex items-center gap-3 border border-white/15 bg-white/10 px-4 py-2 rounded mb-7">
                             <x-lucide-newspaper class="w-4 h-4 text-titan-red" />
-                            <span class="text-[10px] font-black uppercase tracking-[0.24em] text-white/85">
+                            <span class="text-[10px] font-bold uppercase tracking-[0.24em] text-white/85">
                                 {{ __('Kimmex Newsroom') }}
                             </span>
                         </div>
@@ -117,7 +118,7 @@
                             {{ __('News') }} <span class="text-titan-red">{{ __('& Updates') }}</span>
                         </h1>
 
-                        <p class="text-white/75 text-base md:text-lg leading-relaxed max-w-2xl font-medium">
+                        <p class="text-white/75 text-base md:text-lg leading-relaxed max-w-2xl font-normal">
                             {{ __('A newsroom-style view of company announcements, project milestones, documents, and career updates from Kimmex.') }}
                         </p>
                     </div>
@@ -129,18 +130,18 @@
         <section class="max-w-[1240px] mx-auto px-6 -mt-10 relative z-20">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="rounded border border-gray-200 bg-white p-5 shadow-sm">
-                    <div class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Stories') }}</div>
+                    <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Stories') }}</div>
                     <div class="text-2xl font-black text-titan-navy">{{ count($newsArticles) }}</div>
                 </div>
                 <a href="/documents" class="rounded border border-gray-200 bg-white p-5 shadow-sm hover:border-titan-red/25 hover:shadow-md transition-all">
-                    <div class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Documents') }}</div>
+                    <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Documents') }}</div>
                     <div class="text-2xl font-black text-titan-navy">{{ count($sidebarDocs) }}</div>
-                    <div class="mt-2 text-sm text-titan-navy/45 font-medium">{{ __('Reference files and technical resources') }}</div>
+                    <div class="mt-2 text-sm text-titan-navy/45 font-normal">{{ __('Reference files and technical resources') }}</div>
                 </a>
                 <a href="/careers" class="rounded border border-gray-200 bg-white p-5 shadow-sm hover:border-titan-red/25 hover:shadow-md transition-all">
-                    <div class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Careers') }}</div>
+                    <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Careers') }}</div>
                     <div class="text-2xl font-black text-titan-navy">{{ count($sidebarJobs) }}</div>
-                    <div class="mt-2 text-sm text-titan-navy/45 font-medium">{{ __('Open roles and team opportunities') }}</div>
+                    <div class="mt-2 text-sm text-titan-navy/45 font-normal">{{ __('Open roles and team opportunities') }}</div>
                 </a>
             </div>
         </section>
@@ -170,20 +171,20 @@
                             </div>
 
                             <div class="p-8 md:p-10 lg:p-12 flex flex-col justify-center">
-                                <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-3">
+                                <div class="text-[10px] font-bold uppercase tracking-[0.24em] text-titan-red mb-3">
                                     {{ __('Featured Story') }}
                                 </div>
-                                <h2 class="text-3xl md:text-4xl font-black text-titan-navy leading-[1.05] tracking-normal group-hover:text-titan-red transition-colors">
+                                <h2 class="text-3xl md:text-4xl font-bold text-titan-navy leading-[1.05] tracking-normal group-hover:text-titan-red transition-colors">
                                     {{ $featured['title'] }}
                                 </h2>
-                                <div class="mt-5 text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/25">
+                                <div class="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/25">
                                     {{ $featured['date'] }}
                                 </div>
-                                <p class="mt-6 text-titan-navy/60 leading-relaxed font-medium line-clamp-4">
+                                <p class="mt-6 text-titan-navy/60 leading-relaxed font-normal line-clamp-4">
                                     {{ $featured['excerpt'] }}
                                 </p>
                                 <div class="mt-8 flex items-center gap-3">
-                                    <span class="text-[10px] font-black uppercase tracking-[0.22em] text-titan-red">
+                                    <span class="text-[10px] font-bold uppercase tracking-[0.22em] text-titan-red">
                                         {{ __('Read Story') }}
                                     </span>
                                     <x-lucide-arrow-right class="w-4 h-4 text-titan-red transition-transform group-hover:translate-x-1" />
@@ -197,14 +198,14 @@
                     <div class="rounded border border-gray-200 bg-white p-5">
                         <div class="flex items-end justify-between gap-4 mb-4">
                             <div>
-                                <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-1">
+                                <div class="text-[10px] font-bold uppercase tracking-[0.24em] text-titan-red mb-1">
                                     {{ __('Latest Headlines') }}
                                 </div>
-                                <div class="text-sm font-black uppercase tracking-normal text-titan-navy">
+                                <div class="text-sm font-bold uppercase tracking-normal text-titan-navy">
                                     {{ __('More news') }}
                                 </div>
                             </div>
-                            <a href="#story-grid" class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-red">
+                            <a href="#story-grid" class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red">
                                 {{ __('All stories') }}
                             </a>
                         </div>
@@ -216,25 +217,25 @@
                                         <x-lucide-newspaper class="w-4 h-4 text-titan-navy/30 group-hover:text-titan-red transition-colors" />
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                        <div class="text-[9px] font-bold uppercase tracking-[0.16em] text-titan-red mb-1">
                                             {{ $headline['category'] }}
                                         </div>
-                                        <div class="text-sm font-black text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
+                                        <div class="text-sm font-bold text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
                                             {{ $headline['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-semibold">
+                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-normal">
                                             {{ $headline['date'] }}
                                         </div>
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-sm text-titan-navy/40 font-medium">{{ __('No recent stories.') }}</div>
+                                <div class="text-sm text-titan-navy/40 font-normal">{{ __('No recent stories.') }}</div>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="rounded border border-gray-200 bg-white p-5">
-                        <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-4">
+                        <div class="text-[10px] font-bold uppercase tracking-[0.24em] text-titan-red mb-4">
                             {{ __('Latest Documents') }}
                         </div>
                         <div class="space-y-3">
@@ -244,25 +245,25 @@
                                         <x-lucide-file-text class="w-4 h-4 text-titan-navy/30 group-hover:text-titan-red transition-colors" />
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                        <div class="text-[9px] font-bold uppercase tracking-[0.16em] text-titan-red mb-1">
                                             {{ $doc['category'] }}
                                         </div>
-                                        <div class="text-sm font-black text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
+                                        <div class="text-sm font-bold text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
                                             {{ $doc['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-semibold">
+                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-normal">
                                             {{ strtoupper($doc['fileType']) }}{{ $doc['fileSize'] ? ' · ' . $doc['fileSize'] : '' }}
                                         </div>
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-sm text-titan-navy/40 font-medium">{{ __('No documents found.') }}</div>
+                                <div class="text-sm text-titan-navy/40 font-normal">{{ __('No documents found.') }}</div>
                             @endforelse
                         </div>
                     </div>
 
                     <div class="rounded border border-gray-200 bg-white p-5">
-                        <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-4">
+                        <div class="text-[10px] font-bold uppercase tracking-[0.24em] text-titan-red mb-4">
                             {{ __('Open Roles') }}
                         </div>
                         <div class="space-y-3">
@@ -272,19 +273,19 @@
                                         <x-lucide-briefcase class="w-4 h-4 text-titan-red" />
                                     </div>
                                     <div class="min-w-0 flex-1">
-                                        <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
+                                        <div class="text-[9px] font-bold uppercase tracking-[0.16em] text-titan-red mb-1">
                                             {{ $job['dept'] }}
                                         </div>
-                                        <div class="text-sm font-black text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
+                                        <div class="text-sm font-bold text-titan-navy leading-tight line-clamp-2 group-hover:text-titan-red transition-colors">
                                             {{ $job['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-semibold">
+                                        <div class="mt-1 text-[10px] text-titan-navy/30 font-normal">
                                             {{ $job['location'] }} · {{ $job['type'] }}
                                         </div>
                                     </div>
                                 </a>
                             @empty
-                                <div class="text-sm text-titan-navy/40 font-medium">{{ __('No open roles right now.') }}</div>
+                                <div class="text-sm text-titan-navy/40 font-normal">{{ __('No open roles right now.') }}</div>
                             @endforelse
                         </div>
                     </div>
@@ -300,12 +301,12 @@
                         <button
                             @click="activeCategory = @js($cat)"
                             :class="activeCategory === @js($cat) ? 'bg-titan-navy text-white border-titan-navy' : 'bg-white text-titan-navy/55 border-gray-200 hover:text-titan-navy hover:border-titan-red/30'"
-                            class="h-10 px-4 rounded border text-[10px] font-black uppercase tracking-[0.16em] transition-all duration-200 shrink-0">
+                            class="h-10 px-4 rounded border text-[10px] font-bold uppercase tracking-[0.16em] transition-all duration-200 shrink-0">
                             {{ $cat }}
                         </button>
                     @endforeach
                 </div>
-                <div class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/30">
+                <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/30">
                     {{ __('Latest coverage from Kimmex') }}
                 </div>
             </div>
@@ -322,22 +323,17 @@
                                 <img :src="article.image" :alt="article.title"
                                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-105" loading="lazy" />
                             </template>
-                            <template x-if="!article.image">
-                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)] flex items-center justify-center">
-                                    <x-lucide-newspaper class="w-12 h-12 text-white/10" />
-                                </div>
-                            </template>
                             <div class="absolute top-4 left-4">
-                                <span class="bg-titan-navy/90 backdrop-blur text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-md" x-text="article.category"></span>
+                                <span class="bg-titan-navy/90 backdrop-blur text-white text-[8px] font-bold uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-md" x-text="article.category"></span>
                             </div>
                         </div>
 
                         <div class="p-5 flex flex-col">
-                            <div class="text-[9px] font-black uppercase tracking-[0.18em] text-titan-navy/25 mb-3" x-text="article.date"></div>
-                            <h3 class="text-lg font-black text-titan-navy leading-tight mb-3 line-clamp-2 group-hover:text-titan-red transition-colors" x-text="article.title"></h3>
+                            <div class="text-[9px] font-bold uppercase tracking-[0.18em] text-titan-navy/25 mb-3" x-text="article.date"></div>
+                            <h3 class="text-lg font-bold text-titan-navy leading-tight mb-3 line-clamp-2 group-hover:text-titan-red transition-colors" x-text="article.title"></h3>
                             <p class="text-sm text-titan-navy/55 leading-relaxed line-clamp-3 mb-4" x-text="article.excerpt"></p>
                             <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                                <span class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-red">
+                                <span class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red">
                                     {{ __('Read Story') }}
                                 </span>
                                 <x-lucide-arrow-right class="w-4 h-4 text-titan-red group-hover:translate-x-1 transition-transform" />
@@ -349,7 +345,7 @@
 
             <div x-show="filteredArticles.length === 0" class="py-20 text-center bg-white border border-dashed border-gray-300 rounded mt-8">
                 <x-lucide-newspaper class="w-12 h-12 text-titan-navy/10 mx-auto mb-4" />
-                <p class="text-titan-navy/35 font-black text-xs uppercase tracking-[0.3em]">
+                <p class="text-titan-navy/35 font-bold text-xs uppercase tracking-[0.3em]">
                     {{ __('No articles found in this category') }}
                 </p>
             </div>

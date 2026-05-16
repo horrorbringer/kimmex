@@ -1,6 +1,7 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-    $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.app()->getLocale(), now()->addHours(12), function() {
+    $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+    $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.app()->getLocale(), now()->addHours(12), function() use ($fallbackImage) {
         $projectsDb = \App\Models\Project::where('isActive', true)
             ->with('projectCategory')
             ->orderBy('isFeatured', 'desc')
@@ -8,12 +9,12 @@
             ->take(3)
             ->get();
 
-        return $projectsDb->map(function ($p) {
+        return $projectsDb->map(function ($p) use ($fallbackImage) {
             return [
                 'slug' => $p->slug,
                 'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                     ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                    : null,
+                    : $fallbackImage,
                 'type' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale()) : ($p->category ?: __('Infrastructure')),
                 'title' => $p->getTranslation('title', app()->getLocale()),
                 'location' => $p->getTranslation('location', app()->getLocale()),
@@ -56,12 +57,8 @@
                     class="transition-all duration-1000">
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded shadow-lg h-80 w-full bg-titan-navy">
-                            @if($p['image'])
-                                <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                    class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                            @else
-                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
-                            @endif
+                            <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
+                                class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent z-10">
                             </div>

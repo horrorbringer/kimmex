@@ -7,8 +7,9 @@
 
     /** @var string $slug */
     $locale = app()->getLocale();
+    $fallbackImage = '/images/hero/hero-3.jpg';
 
-    $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale) {
+    $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage) {
         $articleDb = NewsArticle::where('isActive', true)->where('slug', $slug)->first();
 
         if (!$articleDb) {
@@ -21,7 +22,7 @@
         return [
             'slug' => $articleDb->slug,
             'category' => $articleDb->getTranslation('category', $locale) ?: __('Updates'),
-            'image' => ($articleDb->coverImage && Storage::disk('public')->exists($articleDb->coverImage)) ? Storage::url($articleDb->coverImage) : null,
+            'image' => ($articleDb->coverImage && Storage::disk('public')->exists($articleDb->coverImage)) ? Storage::url($articleDb->coverImage) : $fallbackImage,
             'title' => $articleDb->getTranslation('title', $locale),
             'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
             'author' => $articleDb->getTranslation('authorName', $locale) ?: 'Kimmex Editorial',
@@ -53,13 +54,22 @@
         $currentDb = NewsArticle::where('isActive', true)->where('slug', $slug)->first();
         $relatedDb = NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
 
-        $related = $relatedDb->map(function (NewsArticle $r) use ($locale) {
+        $related = $relatedDb->map(function (NewsArticle $r) use ($locale, $fallbackImage) {
+            $imageUrl = null;
+            if ($r->coverImage) {
+                if (\Illuminate\Support\Str::startsWith($r->coverImage, ['http', '/images'])) {
+                    $imageUrl = $r->coverImage;
+                } else {
+                    $imageUrl = Storage::disk('public')->url($r->coverImage);
+                }
+            }
+
             return [
                 'slug' => $r->slug,
                 'title' => $r->getTranslation('title', $locale),
                 'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
                 'category' => $r->getTranslation('category', $locale) ?: __('Updates'),
-                'image' => $r->coverImage,
+                'image' => $imageUrl ?: $fallbackImage,
             ];
         })->toArray();
 
@@ -310,8 +320,8 @@
                         <div class="space-y-3">
                             @forelse($relatedArticles as $rel)
                                 <a href="/news/{{ $rel['slug'] }}" class="group flex items-start gap-3 p-3 rounded hover:bg-gray-50 transition-colors">
-                                    <div class="w-10 h-10 rounded bg-titan-navy/5 flex items-center justify-center shrink-0">
-                                        <x-lucide-newspaper class="w-4 h-4 text-titan-navy/30 group-hover:text-titan-red transition-colors" />
+                                    <div class="w-10 h-10 rounded overflow-hidden bg-titan-navy/5 flex items-center justify-center shrink-0">
+                                        <img src="{{ $rel['image'] }}" alt="{{ $rel['title'] }}" class="w-full h-full object-cover" loading="lazy" />
                                     </div>
                                     <div class="min-w-0 flex-1">
                                         <div class="text-[9px] font-normal uppercase tracking-[0.16em] text-titan-red mb-1">

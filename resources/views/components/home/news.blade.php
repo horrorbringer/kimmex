@@ -1,12 +1,13 @@
 @php
-    $allNews = \Illuminate\Support\Facades\Cache::remember('home_news_array_'.app()->getLocale(), now()->addHours(12), function() {
+    $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+    $allNews = \Illuminate\Support\Facades\Cache::remember('home_news_array_'.app()->getLocale(), now()->addHours(12), function() use ($fallbackImage) {
         $newsDb = \App\Models\NewsArticle::where('isActive', true)
             ->where('publishedAt', '<=', now())
             ->orderBy('publishedAt', 'desc')
             ->take(3)
             ->get();
 
-        return $newsDb->map(function ($n) {
+        return $newsDb->map(function ($n) use ($fallbackImage) {
             $imageUrl = null;
             $cover = $n->coverImage;
             if ($cover) {
@@ -19,7 +20,7 @@
 
             return [
                 'id' => $n->slug,
-                'image' => $imageUrl,
+                'image' => $imageUrl ?: $fallbackImage,
                 'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                 'title' => $n->getTranslation('title', app()->getLocale()),
                 'category' => $n->getTranslation('category', app()->getLocale()) ?: __('Updates'),
@@ -65,14 +66,8 @@
                                 class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 z-10 rounded-md">
                                 {{ $news['category'] }}
                             </div>
-                            @if($news['image'])
-                                <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
-                                    class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                            @else
-                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)] flex items-center justify-center">
-                                    <x-lucide-newspaper class="w-12 h-12 text-white/10" />
-                                </div>
-                            @endif
+                            <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
+                                class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                         </div>
                         <div class="p-6 flex flex-col flex-grow">
                             <div

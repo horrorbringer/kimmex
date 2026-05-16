@@ -140,22 +140,22 @@
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Contact') }}
                 </h4>
-                <ul class="space-y-6 text-sm text-white/50">
-                    <li class="flex gap-4">
+                <ul class="space-y-3 text-sm text-white/50">
+                    <li class="flex gap-4 rounded border border-white/10 bg-white/5 p-4">
                         <x-lucide-map-pin class="text-kmd-gold shrink-0 w-5 h-5" />
                         <a href="{{ $googleMapsLink }}" target="_blank" rel="noopener noreferrer"
                             class="hover:text-kmd-gold transition-colors">
                             {{ $address }}
                         </a>
                     </li>
-                    <li class="flex gap-4 items-center">
+                    <li class="flex gap-4 items-center rounded border border-white/10 bg-white/5 p-4">
                         <x-lucide-phone class="text-kmd-gold shrink-0 w-5 h-5" />
                         <a href="tel:{{ str_replace(' ', '', $phone) }}"
                             class="hover:text-kmd-gold transition-colors">
                             {{ $phone }}
                         </a>
                     </li>
-                    <li class="flex gap-4 items-center">
+                    <li class="flex gap-4 items-center rounded border border-white/10 bg-white/5 p-4">
                         <x-lucide-mail class="text-kmd-gold shrink-0 w-5 h-5" />
                         <a href="mailto:{{ $email }}" class="hover:text-kmd-gold transition-colors">
                             {{ $email }}

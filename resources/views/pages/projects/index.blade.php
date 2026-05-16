@@ -3,7 +3,8 @@
 
     @php
         $locale = app()->getLocale();
-        $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() {
+        $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+        $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() use ($fallbackImage) {
             $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
                 ->orderBy('created_at', 'desc')
                 ->get();
@@ -22,11 +23,12 @@
 
             $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
 
-            $projects = $projectsDb->map(function ($p) {
+            $projects = $projectsDb->map(function ($p) use ($fallbackImage) {
                 /** @var \App\Models\Project $p */
                 return [
                     'id' => $p->slug,
                     'title' => $p->getTranslation('title', app()->getLocale()),
+                    'featured' => (bool) $p->isFeatured,
                     'location' => $p->getTranslation('location', app()->getLocale()),
                     'type' => $p->projectCategory
                         ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
@@ -34,7 +36,7 @@
                     'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
                     'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                         ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
-                        : null,
+                        : $fallbackImage,
                     'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
                 ];
             })->toArray();
@@ -50,7 +52,7 @@
         // Fallback for empty DB
         if (count($projects) === 0) {
             $projects = [
-                ['id' => 'mef', 'title' => __('Ministry of Economy Building'), 'location' => __('Phnom Penh'), 'type' => __('Government'), 'status' => __('Completed'), 'image' => '/images/projects/Thumbnail-1.jpg', 'summary' => __('Kimmex built legacy facility.')]
+                ['id' => 'mef', 'title' => __('Ministry of Economy Building'), 'featured' => true, 'location' => __('Phnom Penh'), 'type' => __('Government'), 'status' => __('Completed'), 'image' => '/images/projects/Thumbnail-1.jpg', 'summary' => __('Kimmex built legacy facility.')]
             ];
         }
     @endphp
@@ -60,6 +62,7 @@
         filterStatus: 'All',
         filterLoc: 'All',
         search: '',
+        sortBy: 'featured',
         projects: {{ Js::from($projects) }},
         categories: {{ Js::from($categories) }},
         locations: {{ Js::from($locations) }},
@@ -76,6 +79,14 @@
             } else {
                 this.filterStatus = this.statusOptions[0]; // All
             }
+        },
+
+        clearFilters() {
+            this.filterType = 'All';
+            this.filterStatus = this.statusOptions[0];
+            this.filterLoc = this.locations[0];
+            this.search = '';
+            this.sortBy = 'featured';
         },
 
         get filteredProjects() {
@@ -100,7 +111,28 @@
                                    p.summary.toLowerCase().includes(query);
                                    
                 return matchType && matchLoc && matchStatus && matchSearch;
+            }).sort((a, b) => {
+                if (this.sortBy === 'featured') {
+                    if ((a.featured ? 1 : 0) !== (b.featured ? 1 : 0)) {
+                        return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+                    }
+                    return a.title.localeCompare(b.title);
+                }
+
+                if (this.sortBy === 'title') {
+                    return a.title.localeCompare(b.title);
+                }
+
+                if (this.sortBy === 'status') {
+                    return a.status.localeCompare(b.status) || a.title.localeCompare(b.title);
+                }
+
+                return a.title.localeCompare(b.title);
             });
+        },
+
+        get activeCount() {
+            return this.filteredProjects.length;
         }
     }" class="bg-white min-h-screen text-titan-navy relative overflow-hidden">
 
@@ -166,64 +198,81 @@
         </section>
 
         <!-- INTEGRATED FILTER & GRID -->
-        <section id="portfolio-grid" class="py-24 px-6 bg-white relative">
+        <section id="portfolio-grid" class="py-20 px-6 bg-white relative">
             <div class="max-w-[1700px] mx-auto">
 
-                <!-- Clean Portfolio Filter Navigation -->
-                <div
-                    class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 mb-16 border-b border-gray-200 pb-6">
+                <!-- Filter Bar -->
+                <div class="sticky top-16 z-30 mb-10 rounded border border-gray-200 bg-white/95 backdrop-blur shadow-sm">
+                    <div class="border-b border-gray-100 px-4 py-3 md:px-5">
+                        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                            <div>
+                                <div class="text-[10px] font-bold uppercase tracking-[0.22em] text-titan-red">{{ __('Projects') }}</div>
+                                <div class="mt-1 text-sm font-bold text-titan-navy">
+                                    <span x-text="activeCount"></span> {{ __('projects found') }}
+                                </div>
+                            </div>
 
-                    <!-- Category Tabs -->
-                    <nav
-                        class="flex flex-wrap items-center gap-2 lg:gap-8 w-full xl:w-auto overflow-x-auto no-scrollbar">
-                        <template x-for="type in categories" :key="type">
-                            <button @click="filterType = type"
-                                class="pb-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300 border-b-2 whitespace-nowrap hover:text-titan-navy"
-                                :class="filterType === type ? 'border-titan-red text-titan-navy' : 'border-transparent text-gray-400'">
-                                <span x-text="type === 'All' ? 'All Portfolios' : type"></span>
-                            </button>
-                        </template>
-                    </nav>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button
+                                    @click="clearFilters()"
+                                    class="inline-flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors">
+                                    <x-lucide-rotate-ccw class="w-3.5 h-3.5" />
+                                    {{ __('Clear filters') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- Status, Location & Search Controls -->
-                    <div class="flex flex-wrap items-center gap-4 w-full xl:w-auto">
-                        <!-- Status / Location Filter Group -->
-                        <div class="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded p-1 shrink-0">
-                            <!-- Location Dropdown -->
-                            <div class="relative min-w-[130px]">
+                    <div class="px-4 py-4 md:px-5">
+                        <nav class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                            <template x-for="type in categories" :key="type">
+                                <button
+                                    @click="filterType = type"
+                                    class="shrink-0 rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300"
+                                    :class="filterType === type ? 'border-titan-red bg-titan-red text-white shadow-sm' : 'border-gray-200 bg-white text-titan-navy/55 hover:border-titan-red/30 hover:text-titan-navy'">
+                                    <span x-text="type === 'All' ? 'All Types' : type"></span>
+                                </button>
+                            </template>
+                        </nav>
+
+                        <div class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.7fr]">
+                            <label class="relative block">
+                                <span class="sr-only">{{ __('Search projects') }}</span>
+                                <x-lucide-search class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/30" />
+                                <input type="text" x-model="search" placeholder="Search projects..."
+                                    class="w-full rounded border border-gray-200 bg-white py-3 pl-11 pr-4 text-[12px] font-normal text-titan-navy transition-colors placeholder:text-gray-400 focus:border-titan-red focus:outline-none focus:ring-1 focus:ring-titan-red/20" />
+                            </label>
+
+                            <div class="relative">
                                 <select x-model="filterLoc"
-                                    class="appearance-none w-full bg-transparent pl-4 pr-10 py-2.5 text-[10px] font-black uppercase tracking-widest text-titan-navy transition-all cursor-pointer focus:outline-none focus:ring-0 border-0">
+                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
                                     <template x-for="loc in locations" :key="loc">
                                         <option :value="loc" x-text="loc === 'All' ? 'All Locations' : loc"></option>
                                     </template>
                                 </select>
-                                <x-lucide-chevron-down
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40 pointer-events-none" />
+                                <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
                             </div>
 
-                            <!-- Divider -->
-                            <div class="w-px h-5 bg-gray-200"></div>
-
-                            <!-- Status Badge Selector -->
-                            <div class="relative min-w-[130px]">
+                            <div class="relative">
                                 <select x-model="filterStatus"
-                                    class="appearance-none w-full bg-transparent pl-4 pr-10 py-2.5 text-[10px] font-black uppercase tracking-widest text-titan-navy transition-all cursor-pointer focus:outline-none focus:ring-0 border-0">
+                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
                                     <template x-for="stat in statusOptions" :key="stat">
-                                        <option :value="stat === 'All' ? 'All Status' : stat"
-                                            x-text="stat === 'All' ? 'Project Status' : stat"></option>
+                                        <option :value="stat"
+                                            x-text="stat === 'All' ? 'All Status' : stat"></option>
                                     </template>
                                 </select>
-                                <x-lucide-chevron-down
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40 pointer-events-none" />
+                                <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
                             </div>
-                        </div>
 
-                        <!-- Search Quick Input -->
-                        <div class="relative shrink-0 w-full sm:w-auto">
-                            <x-lucide-search
-                                class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/30" />
-                            <input type="text" x-model="search" placeholder="Search projects..."
-                                class="w-full sm:w-[220px] bg-white border border-gray-100 focus:border-titan-red focus:ring-1 focus:ring-titan-red pl-11 pr-4 py-3 rounded text-[12px] font-medium text-titan-navy transition-all placeholder:text-gray-400" />
+                            <div class="relative">
+                                <select x-model="sortBy"
+                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
+                                    <option value="featured">{{ __('Featured') }}</option>
+                                    <option value="title">{{ __('A-Z') }}</option>
+                                    <option value="status">{{ __('Status') }}</option>
+                                </select>
+                                <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -237,19 +286,8 @@
 
                                 <!-- Thumbnail Area - Uniform Aspect Ratio -->
                                 <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
-                                    <template x-if="project.image">
-                                        <img :src="project.image" :alt="project.title"
-                                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                                    </template>
-                                    <template x-if="!project.image">
-                                        <div class="w-full h-full bg-titan-navy flex items-center justify-center">
-                                            <div class="text-white/20">
-                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                    </template>
+                                    <img :src="project.image" :alt="project.title"
+                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                                     <div
                                         class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-500">
                                     </div>
