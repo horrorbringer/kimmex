@@ -1,15 +1,49 @@
 @php
+    use App\Models\Project;
+
     $locale = app()->getLocale();
+    $contentLocale = $locale === 'kh' ? 'km' : $locale;
+
+    $resolveContent = function (\Illuminate\Database\Eloquent\Model $projectDb, string $field, array $fallbackLocales = ['en']) use ($contentLocale): string {
+        $locales = array_values(array_unique(array_filter(array_merge([$contentLocale], $fallbackLocales))));
+
+        foreach ($locales as $candidateLocale) {
+            $candidate = $projectDb->getTranslation($field, $candidateLocale);
+
+            if (!is_string($candidate)) {
+                continue;
+            }
+
+            $candidate = trim($candidate);
+            if ($candidate !== '') {
+                return $candidate;
+            }
+        }
+
+        return '';
+    };
+
+    $normalizeDesignConcept = function (?string $content) use ($contentLocale): string {
+        $content = trim((string) $content);
+
+        if ($contentLocale === 'km') {
+            $content = preg_replace('#</h>\s*Mail\s*មុខងារ</h4>#iu', '<h4>មុខងារសំខាន់ៗ</h4>', $content) ?? $content;
+            $content = preg_replace('#</h>\s*Main Functions</h4>#iu', '<h4>មុខងារសំខាន់ៗ</h4>', $content) ?? $content;
+        }
+
+        return $content;
+    };
+
     // Use the $slug passed from the router to fetch the project
-    $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$locale}", now()->addHours(12), function() use ($slug, $locale) {
+    $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$contentLocale}", now()->addHours(12), function() use ($slug, $contentLocale, $resolveContent) {
         $projectDb = \App\Models\Project::where('isActive', true)->where('slug', $slug)->first();
         if (!$projectDb) return null;
 
         return [
             'id' => $projectDb->slug,
-            'title' => $projectDb->getTranslation('title', app()->getLocale()),
-            'type' => $projectDb->projectCategory ? $projectDb->projectCategory->getTranslation('name', app()->getLocale()) : ($projectDb->category ?: __('Infrastructure')),
-            'location' => $projectDb->getTranslation('location', app()->getLocale()),
+            'title' => $resolveContent($projectDb, 'title'),
+            'type' => $projectDb->projectCategory ? $resolveContent($projectDb->projectCategory, 'name') : ($projectDb->category ?: __('Infrastructure')),
+            'location' => $resolveContent($projectDb, 'location'),
             'status' => $projectDb->status?->getLabel() ?: __('Completed'),
             'date' => $projectDb->completionDate?->format('F Y') ?: __('Oct 2026'),
             'client' => $projectDb->client ?: __('Ministry of Economy and Finance'),
@@ -21,18 +55,19 @@
                 : null,
 
             'narrative' => [
-                'background' => $projectDb->getTranslation('background', app()->getLocale()) ?: $projectDb->getTranslation('description', app()->getLocale()),
-                'objectives' => $projectDb->getTranslation('objectives', app()->getLocale()) ?: '',
-                'design_concept' => $projectDb->getTranslation('designConcept', app()->getLocale()) ?: '',
-                'engineering_narrative' => $projectDb->getTranslation('engineeringNarrative', app()->getLocale()) ?: ''
+                'description' => $resolveContent($projectDb, 'description'),
+                'background' => $resolveContent($projectDb, 'background'),
+                'objectives' => $resolveContent($projectDb, 'objectives'),
+                'design_concept' => $resolveContent($projectDb, 'designConcept'),
+                'engineering_narrative' => $resolveContent($projectDb, 'engineeringNarrative')
             ],
 
-            'scope' => $projectDb->getTranslation('scopeContributions', app()->getLocale()),
+            'scope' => $resolveContent($projectDb, 'scopeContributions'),
 
             'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \Illuminate\Support\Facades\Storage::url($img->url))->toArray(),
             'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
-                'title' => $p->getTranslation('title', app()->getLocale()),
+                'title' => $resolveContent($p, 'title'),
                 'type' => $p->category ?: __('Infrastructure'),
                 'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage)) : '/images/projects/Thumbnail-5.jpg'
             ])->toArray()
@@ -44,17 +79,18 @@
         // Keep internal fallback for development if DB is empty
         $project = [
             'id' => $slug,
-            'title' => __('Ministry of Economy & Finance Building Expansion'),
-            'type' => __('Government Office Building'),
-            'location' => __('Phnom Penh, Cambodia'),
-            'status' => __('Completed'),
-            'date' => __('Oct 2026'),
+                'title' => __('Ministry of Economy & Finance Building Expansion'),
+                'type' => __('Government Office Building'),
+                'location' => __('Phnom Penh, Cambodia'),
+                'status' => __('Completed'),
+                'date' => __('Oct 2026'),
             'client' => __('MEF'),
             'built_area' => __('50,000 SQM'),
             'contract_value' => __('$120.5M'),
             'year' => __('2023 - 2026'),
             'heroImage' => '/images/projects/Thumbnail-1.jpg',
             'narrative' => [
+                'description' => __('A definitive case study on administrative centralization and public infrastructure integration for the Royal Government of Cambodia.'),
                 'background' => __('A definitive case study on administrative centralization and public infrastructure integration for the Royal Government of Cambodia.'),
                 'objectives' => __('To deliver a state-of-the-art office complex with Grade A specifications, ensuring maximum energy efficiency and seamless integration of governmental systems.'),
                 'design_concept' => __('The architectural design focuses on a "Solid Foundation" theme, utilizing heavy reinforced concrete with a glass facade that symbolizes transparency and strength.')
@@ -69,6 +105,50 @@
             ]
         ];
     }
+
+    $renderProjectContent = function (?string $content, string $mode = 'auto'): string {
+        $content = trim((string) $content);
+
+        if ($content === '') {
+            return '';
+        }
+
+        // RichEditor content should render as HTML, but older entries often contain
+        // empty paragraphs or <p> wrappers inside list items that make the layout look off.
+        $content = preg_replace('#<p>(?:\s|&nbsp;|<br\s*/?>)*</p>#i', '', $content) ?? $content;
+        $content = preg_replace('#<li>\s*<p>(.*?)</p>\s*</li>#is', '<li>$1</li>', $content) ?? $content;
+        $hasListMarkup = str_contains($content, '<ul') || str_contains($content, '<ol');
+
+        if ($hasListMarkup) {
+            $content = preg_replace('#</p>\s*<p>#i', '</li><li>', $content) ?? $content;
+            $content = preg_replace('#</p>\s*<li>#i', '</li><li>', $content) ?? $content;
+            $content = preg_replace('#</p>\s*</li>#i', '</li>', $content) ?? $content;
+        }
+
+        $content = preg_replace('#<h3><br\s*/?>#i', '<h3>', $content) ?? $content;
+        $content = preg_replace('#<h4><br\s*/?>#i', '<h4>', $content) ?? $content;
+        $content = preg_replace('#</h[1-6]>\s*<p>\s*<strong>#i', '</h4><p><strong>', $content) ?? $content;
+
+        if (preg_match('/<\s*[a-z][\s\S]*>/i', $content)) {
+            return $content;
+        }
+
+        $lines = preg_split('/\R+/', $content, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        if (in_array($mode, ['list', 'auto'], true) && count($lines) > 1) {
+            $items = array_map(function (string $line): string {
+                return '<li>' . e(trim($line)) . '</li>';
+            }, $lines);
+
+            return '<ul>' . implode('', $items) . '</ul>';
+        }
+
+        if (count($lines) > 1) {
+            return implode('', array_map(fn (string $line): string => '<p>' . e(trim($line)) . '</p>', $lines));
+        }
+
+        return '<p>' . e($content) . '</p>';
+    };
 @endphp
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
@@ -164,13 +244,23 @@
                         <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
                             <x-lucide-help-circle class="w-6 h-6 text-titan-red" /> {{ __('Project Overview') }}
                         </h2>
-                        <div class="space-y-8 text-lg text-titan-navy/70 leading-relaxed">
+                            <div class="space-y-8 text-lg text-titan-navy/70 leading-relaxed project-khmer-content">
+                                @if(!empty($project['narrative']['description']))
+                                    <div>
+                                        <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
+                                            {{ __('Description') }}
+                                        </h3>
+                                    <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                        {!! $renderProjectContent($project['narrative']['description'] ?? '') !!}
+                                    </div>
+                                </div>
+                            @endif
                             <div>
                                 <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
                                     {{ __('The Background') }}
                                 </h3>
-                                <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
-                                    {!! $project['narrative']['background'] !!}
+                                <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                    {!! $renderProjectContent($project['narrative']['background'] ?? '') !!}
                                 </div>
                             </div>
                             @if(!empty($project['narrative']['objectives']))
@@ -178,8 +268,8 @@
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
                                         {{ __('Objectives') }}
                                     </h3>
-                                    <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
-                                        {!! $project['narrative']['objectives'] !!}
+                            <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                        {!! $renderProjectContent($project['narrative']['objectives'] ?? '', 'list') !!}
                                     </div>
                                 </div>
                             @endif
@@ -188,8 +278,8 @@
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
                                         {{ __('Design Concept') }}
                                     </h3>
-                                    <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
-                                        {!! $project['narrative']['design_concept'] !!}
+                                    <div class="project-rich-content prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                        {!! $renderProjectContent($normalizeDesignConcept($project['narrative']['design_concept'] ?? '')) !!}
                                     </div>
                                 </div>
                             @endif
@@ -214,7 +304,9 @@
                                         @endforeach
                                     </ul>
                                 @else
-                                    {!! $project['scope'] !!}
+                                    <div class="project-rich-content">
+                                        {!! $renderProjectContent($project['scope'] ?? '', 'list') !!}
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -227,8 +319,8 @@
                                 <x-lucide-alert-triangle class="w-6 h-6 text-titan-red" />
                                 {{ __('Engineering Challenges & Solutions') }}
                             </h2>
-                            <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70">
-                                {!! $project['narrative']['engineering_narrative'] !!}
+                            <div class="project-rich-content prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                {!! $renderProjectContent($project['narrative']['engineering_narrative'] ?? '') !!}
                             </div>
                         </div>
                     @endif
@@ -236,7 +328,7 @@
 
                 <!-- RIGHT: KEY FACTS SIDEBAR -->
                 <div class="lg:col-span-4">
-                    <div class="bg-white p-8 rounded shadow-2xl border border-gray-100 sticky top-32">
+                    <div class="bg-white p-8 rounded shadow-lg border border-gray-100 sticky top-32">
                         <h3 class="text-xl font-black text-titan-navy mb-8 pb-4 border-b border-gray-100">
                             {{ __('Project Data') }}
                         </h3>
@@ -482,6 +574,45 @@
         .reveal-up {
             animation: revealUp 0.8s ease-out forwards;
             opacity: 0;
+        }
+
+        .project-rich-content :where(ul, ol) {
+            margin: 0.75rem 0;
+            padding-left: 1.4rem;
+        }
+
+        .project-rich-content ul {
+            list-style: disc;
+        }
+
+        .project-rich-content ol {
+            list-style: decimal;
+        }
+
+        .project-rich-content li {
+            margin: 0.3rem 0;
+        }
+
+        .project-rich-content h4 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: rgb(17 24 39);
+        }
+
+        .project-rich-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        .project-khmer-content {
+            word-break: normal !important;
+            overflow-wrap: break-word;
+            line-break: strict;
+        }
+
+        .project-khmer-content :where(p, li) {
+            line-height: 1.9;
         }
 
         @supports (view-timeline-name: --revealing) {

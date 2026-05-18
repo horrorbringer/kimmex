@@ -3,12 +3,18 @@
     @php
         /** @var string $slug */
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
+        $fallbackImages = [
+            'design-and-build' => '/images/projects/Thumbnail-1.jpg',
+            'construction' => '/images/projects/Thumbnail-1.jpg',
+            'project-management' => '/images/projects/Thumbnail-3.jpg',
+            'consultants' => '/images/projects/Thumbnail-4.jpg',
+        ];
 
         // Try to load from DB first
         $service = \Illuminate\Support\Facades\Cache::remember(
             "service_show_data_{$slug}_{$lang}",
             now()->addHours(12),
-            function () use ($slug) {
+            function () use ($slug, $fallbackImages) {
                 $serviceDb = \App\Models\Service::where('slug', $slug)->where('isActive', true)->first();
                 if ($serviceDb) {
                     return [
@@ -25,7 +31,7 @@
                             $serviceDb->image &&
                             \Illuminate\Support\Facades\Storage::disk('public')->exists($serviceDb->image)
                                 ? \Illuminate\Support\Facades\Storage::url($serviceDb->image)
-                                : null,
+                                : ($fallbackImages[$slug] ?? null),
                         'scopeItems' => is_array($serviceDb->features)
                             ? array_map(
                                 fn($f) => ['en' => $f['name'] ?? '', 'kh' => $f['name'] ?? ''],
@@ -57,7 +63,7 @@
                         'kh' =>
                             'ស័ក្តិសមសម្រាប់អ្នកអភិវឌ្ឍន៍អចលនទ្រព្យ ម្ចាស់អាជីវកម្មពាណិជ្ជកម្ម និងអ្នកវិនិយោគឯកជនដែលកំពុងស្វែងរកការទទួលខុសត្រូវតែមួយ។',
                     ],
-                    'image' => '/images/projects/Thumbnail-1.jpg',
+                    'image' => $fallbackImages['design-and-build'],
                     'icon' => 'lucide-pen-tool',
                     'scopeItems' => [
                         ['en' => 'Architectural & structural design', 'kh' => 'ការរចនាស្ថាបត្យកម្ម និងរចនាសម្ព័ន្ធ'],
@@ -81,7 +87,7 @@
                         'en' => 'Large-scale infrastructure and commercial building projects.',
                         'kh' => 'គម្រោងហេដ្ឋារចនាសម្ព័ន្ធខ្នាតធំ និងអគារពាណិជ្ជកម្ម។',
                     ],
-                    'image' => '/images/projects/Thumbnail-1.jpg',
+                    'image' => $fallbackImages['construction'],
                     'icon' => 'lucide-hammer',
                     'scopeItems' => [
                         ['en' => 'High-Rise Buildings', 'kh' => 'អគារខ្ពស់កប់ពពក'],
@@ -104,7 +110,7 @@
                             'Large-scale developers and institutions requiring professional oversight across multiple construction phases.',
                         'kh' => 'អ្នកអភិវឌ្ឍន៍ធំ និងស្ថាប័នដែលត្រូវការការត្រួតពិនិត្យជំនាញ។',
                     ],
-                    'image' => '/images/projects/Thumbnail-3.jpg',
+                    'image' => $fallbackImages['project-management'],
                     'icon' => 'lucide-briefcase',
                     'scopeItems' => [
                         [
@@ -130,7 +136,7 @@
                             'Government agencies, NGOs, and private investors seeking independent technical reviews and feasibility assessments.',
                         'kh' => 'ទីភ្នាក់ងាររដ្ឋាភិបាល អង្គការក្រៅរដ្ឋាភិបាល និងអ្នកវិនិយោគឯកជន។',
                     ],
-                    'image' => '/images/projects/Thumbnail-4.jpg',
+                    'image' => $fallbackImages['consultants'],
                     'icon' => 'lucide-lightbulb',
                     'scopeItems' => [
                         [
@@ -261,7 +267,7 @@
             </div>
 
             <div class="relative z-10">
-                <div class="max-w-[1400px] mx-auto px-6 py-14 md:py-18 lg:py-24">
+                <div class="max-w-[1400px] mx-auto px-6 py-14 pt-24 md:py-18 md:pt-28 lg:py-24 lg:pt-32">
                     <a href="/services"
                         class="inline-flex items-center gap-3 text-white/85 hover:text-white transition-all font-black uppercase tracking-[0.22em] text-[10px] mb-8 group">
                         <x-lucide-arrow-left class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />

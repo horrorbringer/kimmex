@@ -4,19 +4,34 @@
     $job = \Illuminate\Support\Facades\Cache::remember("career_job_show_data_{$slug}_".app()->getLocale(), now()->addHours(12), function() use ($slug) {
         $jobDb = \App\Models\JobPosting::where('isActive', true)->where('slug', $slug)->first();
         if ($jobDb) {
+            $pickTranslation = function ($model, string $field, array $fallbackLocales = []) {
+                $translations = $model->getTranslations($field);
+                $locales = $fallbackLocales ?: [app()->getLocale(), 'km', 'kh', 'en'];
+
+                foreach ($locales as $locale) {
+                    $value = trim((string) ($translations[$locale] ?? ''));
+
+                    if ($value !== '' && !str_contains($value, "\u{FFFD}")) {
+                        return $value;
+                    }
+                }
+
+                return trim((string) ($translations['km'] ?? $translations['kh'] ?? $translations['en'] ?? ''));
+            };
+
             return [
                 'id' => $jobDb->id,
-                'title' => $jobDb->getTranslation('title', app()->getLocale()),
-                'dept' => $jobDb->department ? $jobDb->department->getTranslation('name', app()->getLocale()) : __('General'),
-                'loc' => $jobDb->getTranslation('location', app()->getLocale()),
+                'title' => $pickTranslation($jobDb, 'title'),
+                'dept' => $jobDb->department ? $pickTranslation($jobDb->department, 'name') : __('General'),
+                'loc' => $pickTranslation($jobDb, 'location'),
                 'type' => __($jobDb->type ?? 'FULL_TIME'),
-                'salary' => $jobDb->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
-                'experience' => $jobDb->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
+                'salary' => $pickTranslation($jobDb, 'salary') ?: __('Negotiable'),
+                'experience' => $pickTranslation($jobDb, 'experience') ?: __('2-3 Years'),
                 'postedDate' => $jobDb->created_at ? $jobDb->created_at->format('M d, Y') : now()->format('M d, Y'),
-                'description' => $jobDb->getTranslation('summary', app()->getLocale()),
-                'responsibilities' => $jobDb->getTranslation('responsibilities', app()->getLocale()),
-                'requirements' => $jobDb->getTranslation('requirements', app()->getLocale()),
-                'benefits' => $jobDb->getTranslation('benefits', app()->getLocale()),
+                'description' => $pickTranslation($jobDb, 'summary'),
+                'responsibilities' => $pickTranslation($jobDb, 'responsibilities'),
+                'requirements' => $pickTranslation($jobDb, 'requirements'),
+                'benefits' => $pickTranslation($jobDb, 'benefits'),
             ];
         }
         return null;
@@ -38,6 +53,49 @@
             'benefits' => '<ul><li>' . __('Competitive compensation package') . '</li><li>' . __('Continuous professional development') . '</li><li>' . __('Opportunity to work on landmark projects') . '</li></ul>',
         ];
     }
+
+    $heroSummary = \Illuminate\Support\Str::limit(strip_tags($job['description'] ?? ''), 180);
+
+    $renderRichText = function (?string $content) {
+        $content = trim((string) $content);
+
+        if ($content === '') {
+            return '';
+        }
+
+        if (preg_match('/<\s*(ul|ol|li|p|h[1-6]|blockquote|table|img|br)\b/i', $content)) {
+            return $content;
+        }
+
+        $lines = preg_split('/\R+/', $content) ?: [];
+        $lines = array_values(array_filter(array_map('trim', $lines), fn ($line) => $line !== ''));
+
+        if (count($lines) > 1) {
+            $items = array_map(function ($line) {
+                return '<li>' . e($line) . '</li>';
+            }, $lines);
+
+            return '<ul>' . implode('', $items) . '</ul>';
+        }
+
+        return '<p>' . e($content) . '</p>';
+    };
+
+    $renderParagraphContent = function (?string $content) {
+        $content = trim((string) $content);
+
+        if ($content === '') {
+            return '';
+        }
+
+        if (preg_match('/<\s*(p|h[1-6]|blockquote|table|img|br)\b/i', $content)) {
+            return $content;
+        }
+
+        $content = preg_replace('/\s+/u', ' ', $content) ?: $content;
+
+        return '<p>' . e($content) . '</p>';
+    };
 @endphp
 
 @if(!$job)
@@ -53,129 +111,214 @@
 @else
     <div class="bg-white min-h-screen font-sans text-titan-navy">
         
-        <!-- HERO SECTION (Cinematic Image Background) -->
-        <section class="relative bg-titan-navy overflow-hidden pt-52 pb-20 min-h-[380px] flex items-start">
-            <!-- Background Image with Overlay -->
-            <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-1.jpg" alt="{{ $job['title'] }}" class="w-full h-full object-cover opacity-60 scale-105" />
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/60 to-titan-navy/40"></div>
-            </div>
+        <!-- HERO SECTION (Editorial Light Layout) -->
+        <section class="relative overflow-hidden bg-white py-24 md:py-28">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.05),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(15,23,42,0.03),transparent_32%)]"></div>
 
-            <div class="max-w-[1200px] mx-auto px-6 relative z-10 w-full">
-                <!-- Breadcrumbs -->
-                <nav class="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.2em] text-white/30 mb-12">
-                    <a href="{{ route('home') }}" class="hover:text-white transition-colors">{{ __('Home') }}</a>
-                    <span class="w-1 h-1 rounded-full bg-white/10"></span>
-                    <a href="{{ route('careers') }}" class="hover:text-white transition-colors">{{ __('Careers') }}</a>
-                    <span class="w-1 h-1 rounded-full bg-white/10"></span>
-                    <span class="text-white/60">{{ $job['title'] }}</span>
-                </nav>
+            <div class="max-w-[1000px] mx-auto px-6 relative z-10">
+                <div class="flex flex-wrap items-center gap-3 mb-6">
+                    <a href="{{ route('careers') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/65 hover:text-titan-red hover:border-titan-red/20 transition-all shadow-sm">
+                        <x-lucide-arrow-left class="w-3.5 h-3.5" />
+                        {{ __('Return to Openings') }}
+                    </a>
+                    <nav class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/35">
+                        <a href="{{ route('home') }}" class="hover:text-titan-navy transition-colors">{{ __('Home') }}</a>
+                        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                        <a href="{{ route('careers') }}" class="hover:text-titan-navy transition-colors">{{ __('Careers') }}</a>
+                        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                        <span class="text-titan-navy/60">{{ $job['title'] }}</span>
+                    </nav>
+                </div>
 
-                <div class="max-w-4xl">
-                    <!-- Department Badge -->
-                    <div class="inline-flex items-center gap-3 px-4 py-2 bg-white/5 rounded-lg border border-white/10 mb-8">
-                        <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
-                        <span class="text-[9px] font-black text-white/80 uppercase tracking-[0.2em]">{{ __($job['dept']) }}</span>
+                <div class="inline-flex items-center gap-3 px-4 py-2.5 bg-slate-50 rounded-full border border-slate-200 mb-6">
+                    <div class="w-2 h-2 rounded-full bg-titan-red"></div>
+                    <span class="text-[10px] font-bold text-titan-navy/70 uppercase tracking-[0.18em]">{{ __($job['dept']) }}</span>
+                </div>
+
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-titan-navy tracking-tight mb-5 leading-[0.94] max-w-4xl">
+                    {{ $job['title'] }}
+                </h1>
+
+                @if($heroSummary)
+                    <p class="max-w-2xl text-titan-navy/60 text-base md:text-lg leading-relaxed mb-8">
+                        {{ $heroSummary }}
+                    </p>
+                @endif
+
+                <div class="flex flex-wrap gap-3 sm:gap-4 text-titan-navy/70 text-[11px] font-bold">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
+                        <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red" />
+                        {{ $job['loc'] }}
                     </div>
-
-                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-10 leading-[0.9]">{{ $job['title'] }}</h1>
-                    
-                    <!-- Metadata Grid -->
-                    <div class="flex flex-wrap items-center gap-x-10 gap-y-6 text-white/50 text-[10px] font-black uppercase tracking-[0.2em]">
-                        <div class="flex items-center gap-2.5">
-                            <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red/50" />
-                            {{ $job['loc'] }}
-                        </div>
-                        <div class="flex items-center gap-2.5">
-                            <x-lucide-briefcase class="w-3.5 h-3.5 text-titan-red/50" />
-                            {{ $job['experience'] }}
-                        </div>
-                        <div class="flex items-center gap-2.5">
-                            <x-lucide-clock class="w-3.5 h-3.5 text-titan-red/50" />
-                            {{ $job['type'] }}
-                        </div>
-                        <div class="flex items-center gap-2.5">
-                            <x-lucide-calendar class="w-3.5 h-3.5 text-titan-red/50" />
-                            {{ __('Posted') }} {{ $job['postedDate'] }}
-                        </div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
+                        <x-lucide-briefcase class="w-3.5 h-3.5 text-titan-red" />
+                        {{ $job['experience'] }}
                     </div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
+                        <x-lucide-clock class="w-3.5 h-3.5 text-titan-red" />
+                        {{ $job['type'] }}
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
+                        <x-lucide-calendar class="w-3.5 h-3.5 text-titan-red" />
+                        {{ __('Posted') }} {{ $job['postedDate'] }}
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                        <a href="#apply-form" class="inline-flex items-center justify-center gap-2 rounded-xl bg-titan-navy text-white px-5 py-3.5 font-bold text-[11px] uppercase tracking-[0.18em] hover:bg-titan-red transition-all shadow-sm">
+                        {{ __('Jump to Form') }}
+                        <x-lucide-arrow-down class="w-4 h-4" />
+                    </a>
+                    <a href="mailto:careers@kimmex.com?subject=Application for {{ $job['title'] }}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 font-bold text-[11px] uppercase tracking-[0.18em] text-titan-navy hover:border-titan-red/20 hover:text-titan-red transition-all shadow-sm">
+                        {{ __('Or apply via email') }}
+                    </a>
                 </div>
             </div>
         </section>
 
         <!-- CONTENT SECTION -->
-        <section class="py-24 max-w-[1200px] mx-auto px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <section class="py-20 max-w-[1200px] mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-12">
                 
                 <!-- Main Content (8 cols) -->
                 <div class="lg:col-span-8">
                     
                     <!-- Simplified Job Content Area -->
-                    <div class="prose prose-lg max-w-none text-titan-navy/70 space-y-12">
+                    <div class="prose prose-lg max-w-none text-titan-navy/70 space-y-8">
                         
-                        <!-- 01: Job Summary -->
                         @if($job['description'])
-                        <section>
-                            <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Job Summary') }}</h2>
-                            <div class="leading-relaxed text-lg prose-p:mb-4">{!! $job['description'] !!}</div>
+                        <section class="rounded-xl border border-slate-200 bg-white p-6 md:p-8 shadow-sm">
+                            <div class="flex items-center gap-3 mb-5">
+                                <div class="w-10 h-px bg-titan-red"></div>
+                                <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Job Summary') }}</h2>
+                            </div>
+                            <div class="rich-text-content">{!! $renderParagraphContent($job['description'] ?? '') !!}</div>
                         </section>
                         @endif
 
                         <style>
-                            .rich-text-content ul { list-style: none; padding: 0; }
-                            .rich-text-content ul li { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
-                            .rich-text-content ul li::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 9999px; background-color: var(--color-kmd-gold); margin-top: 10px; flex-shrink: 0; }
-                            .rich-text-content p { margin-bottom: 1rem; }
-                            .rich-text-content p:last-child { margin-bottom: 0; }
+                            .rich-text-content {
+                                color: rgb(15 23 42 / 0.78);
+                                line-height: 1.85;
+                                font-size: 1rem;
+                            }
+                            .rich-text-content > :first-child { margin-top: 0; }
+                            .rich-text-content > :last-child { margin-bottom: 0; }
+                            .rich-text-content h1,
+                            .rich-text-content h2,
+                            .rich-text-content h3,
+                            .rich-text-content h4 {
+                                color: rgb(15 23 42);
+                                font-weight: 700;
+                                line-height: 1.2;
+                                margin: 1.75rem 0 0.9rem;
+                            }
+                            .rich-text-content h1 { font-size: 1.6rem; }
+                            .rich-text-content h2 { font-size: 1.35rem; }
+                            .rich-text-content h3 { font-size: 1.15rem; }
+                            .rich-text-content p,
+                            .rich-text-content ul,
+                            .rich-text-content ol,
+                            .rich-text-content blockquote,
+                            .rich-text-content table {
+                                margin-bottom: 1rem;
+                            }
+                            .rich-text-content ul,
+                            .rich-text-content ol {
+                                padding-left: 1.25rem;
+                            }
+                            .rich-text-content ul { list-style: disc; }
+                            .rich-text-content ol { list-style: decimal; }
+                            .rich-text-content li { margin: 0.35rem 0; }
+                            .rich-text-content a {
+                                color: rgb(220 38 38);
+                                text-decoration: underline;
+                                text-underline-offset: 0.15em;
+                            }
+                            .rich-text-content strong { color: rgb(15 23 42); font-weight: 700; }
+                            .rich-text-content blockquote {
+                                border-left: 3px solid rgb(220 38 38);
+                                background: rgb(248 250 252);
+                                padding: 0.85rem 1rem;
+                                border-radius: 0.75rem;
+                                color: rgb(51 65 85);
+                            }
+                            .rich-text-content img {
+                                width: 100%;
+                                height: auto;
+                                border-radius: 1rem;
+                                margin: 1.25rem 0;
+                            }
+                            .rich-text-content table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                overflow: hidden;
+                                border-radius: 1rem;
+                            }
+                            .rich-text-content th,
+                            .rich-text-content td {
+                                border: 1px solid rgb(226 232 240);
+                                padding: 0.75rem 0.9rem;
+                                text-align: left;
+                                vertical-align: top;
+                            }
+                            .rich-text-content th {
+                                background: rgb(248 250 252);
+                                color: rgb(15 23 42);
+                                font-weight: 700;
+                            }
                         </style>
 
-                        <!-- 02: Key Responsibilities -->
                         @if(!empty(trim(strip_tags($job['responsibilities']))))
-                        <section>
-                            <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Key Responsibilities') }}</h2>
-                            <div class="leading-relaxed text-lg rich-text-content">{!! $job['responsibilities'] !!}</div>
+                        <section class="rounded-xl border border-slate-200 bg-slate-50/70 p-6 md:p-8 shadow-sm">
+                            <div class="flex items-center gap-3 mb-5">
+                                <div class="w-10 h-px bg-titan-red"></div>
+                                <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Key Responsibilities') }}</h2>
+                            </div>
+                            <div class="rich-text-content">{!! $renderRichText($job['responsibilities'] ?? '') !!}</div>
                         </section>
                         @endif
 
-                        <!-- 03: Requirements -->
                         @if(!empty(trim(strip_tags($job['requirements']))))
-                        <section>
-                            <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-6">{{ __('Requirements') }}</h2>
-                            <div class="leading-relaxed text-lg rich-text-content">{!! $job['requirements'] !!}</div>
+                        <section class="rounded-xl border border-slate-200 bg-white p-6 md:p-8 shadow-sm">
+                            <div class="flex items-center gap-3 mb-5">
+                                <div class="w-10 h-px bg-titan-red"></div>
+                                <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Requirements') }}</h2>
+                            </div>
+                            <div class="rich-text-content">{!! $renderRichText($job['requirements'] ?? '') !!}</div>
                         </section>
                         @endif
 
-                        <!-- 04: Benefits -->
                         @if(!empty(trim(strip_tags($job['benefits']))))
-                        <section class="pt-10 border-t border-gray-100">
-                             <h2 class="text-2xl font-black text-titan-navy uppercase tracking-tighter mb-8">{{ __('Benefits') }}</h2>
-                             <div class="leading-relaxed text-lg rich-text-content">{!! $job['benefits'] !!}</div>
+                        <section class="rounded-xl border border-titan-red/10 bg-titan-red/5 p-6 md:p-8 shadow-sm">
+                             <div class="flex items-center gap-3 mb-5">
+                                <div class="w-10 h-px bg-titan-red"></div>
+                                <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Benefits') }}</h2>
+                            </div>
+                             <div class="rich-text-content">{!! $renderRichText($job['benefits'] ?? '') !!}</div>
                         </section>
                         @endif
 
                     </div>
 
-                    <!-- 05: Application Form (Aligned with Backend) -->
-                    <section id="apply-form" class="pt-16 border-t border-gray-100 mt-20">
-                    <!-- 05: Application Form (Aligned with Backend) -->
-                    <section id="apply-form" class="pt-16 border-t border-gray-100 mt-20">
-                        <div class="bg-white rounded p-8 md:p-12 border border-gray-100 shadow-sm transition-all">
-                            <div class="flex items-center gap-4 mb-10">
-                                <div class="w-1 h-10 bg-titan-navy rounded-full"></div>
+                    <section id="apply-form" class="pt-12 mt-14">
+                        <div class="bg-white rounded-xl p-6 md:p-10 border border-slate-200 shadow-sm transition-all">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-10 h-px bg-titan-red"></div>
                                 <div>
-                                    <h3 class="text-2xl font-black text-titan-navy uppercase tracking-tight">{{ __('Apply for this Role') }}</h3>
-                                    <p class="text-titan-navy/30 text-xs mt-1">{{ __('Complete the form below to submit your application for the') }} <span class="text-titan-navy font-bold">{{ $job['title'] }}</span></p>
+                                    <h3 class="text-xl md:text-2xl font-bold text-titan-navy">{{ __('Apply for this Role') }}</h3>
+                                    <p class="text-titan-navy/40 text-sm mt-1">{{ __('Complete the form below to submit your application for the') }} <span class="text-titan-navy font-semibold">{{ $job['title'] }}</span></p>
                                 </div>
                             </div>
 
                             @if(session('success'))
-                                <div class="bg-green-50 text-green-700 p-6 rounded mb-10 text-xs font-bold border border-green-100 flex items-center gap-3 animate-fade-in-up">
+                                <div class="bg-green-50 text-green-700 p-5 rounded-lg mb-8 text-xs font-bold border border-green-100 flex items-center gap-3 animate-fade-in-up">
                                     <x-lucide-check-circle class="w-5 h-5 text-green-500 shrink-0" />
                                     {{ session('success') }}
                                 </div>
                             @endif
 
-                            <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                            <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                                 @csrf
                                 
                                 <!-- Honeypot Field (Hidden from humans) -->
@@ -188,22 +331,22 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="space-y-2">
-                                        <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-widest ml-1">{{ __('Full Name') }} <span class="text-titan-red">*</span></label>
+                                        <label class="block text-[10px] font-bold text-titan-navy/40 uppercase tracking-[0.18em] ml-1">{{ __('Full Name') }} <span class="text-titan-red">*</span></label>
                                         <input type="text" name="full_name" value="{{ old('full_name') }}" required placeholder="{{ __('Enter your full name') }}" class="w-full bg-gray-50/50 border border-gray-100 rounded px-5 py-4 text-sm font-semibold text-titan-navy outline-none focus:bg-white focus:ring-1 focus:ring-titan-navy/10 transition-all placeholder:text-gray-300 @error('full_name') border-titan-red @enderror" />
                                     </div>
                                     <div class="space-y-2">
-                                        <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-widest ml-1">{{ __('Email Address') }} <span class="text-titan-red">*</span></label>
+                                        <label class="block text-[10px] font-bold text-titan-navy/40 uppercase tracking-[0.18em] ml-1">{{ __('Email Address') }} <span class="text-titan-red">*</span></label>
                                         <input type="email" name="email" value="{{ old('email') }}" required placeholder="example@email.com" class="w-full bg-gray-50/50 border border-gray-100 rounded px-5 py-4 text-sm font-semibold text-titan-navy outline-none focus:bg-white focus:ring-1 focus:ring-titan-navy/10 transition-all placeholder:text-gray-300 @error('email') border-titan-red @enderror" />
                                     </div>
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="space-y-2">
-                                        <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-widest ml-1">{{ __('Phone Number') }} <span class="text-titan-red">*</span></label>
+                                        <label class="block text-[10px] font-bold text-titan-navy/40 uppercase tracking-[0.18em] ml-1">{{ __('Phone Number') }} <span class="text-titan-red">*</span></label>
                                         <input type="tel" name="phone" value="{{ old('phone') }}" required placeholder="+855 12 345 678" class="w-full bg-gray-50/50 border border-gray-100 rounded px-5 py-4 text-sm font-semibold text-titan-navy outline-none focus:bg-white focus:ring-1 focus:ring-titan-navy/10 transition-all placeholder:text-gray-300 @error('phone') border-titan-red @enderror" />
                                     </div>
                                     <div class="space-y-2">
-                                        <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-widest ml-1">{{ __('Resume / CV') }} <span class="text-titan-red">*</span></label>
+                                        <label class="block text-[10px] font-bold text-titan-navy/40 uppercase tracking-[0.18em] ml-1">{{ __('Resume / CV') }} <span class="text-titan-red">*</span></label>
                                         <div class="relative w-full h-[54px]" x-data="{ fileName: '' }">
                                             <input type="file" name="resume" required class="absolute inset-0 opacity-0 cursor-pointer z-10 w-full" accept=".pdf,.doc,.docx" @change="fileName = $event.target.files[0]?.name || ''" />
                                             <div class="w-full h-full bg-gray-50/50 border border-gray-100 rounded px-5 py-4 flex items-center justify-between text-titan-navy/30 group-hover:border-titan-navy/20 transition-all overflow-hidden @error('resume') border-titan-red @enderror">
@@ -215,45 +358,44 @@
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-widest ml-1">{{ __('Cover Letter / Message') }}</label>
+                                    <label class="block text-[10px] font-bold text-titan-navy/40 uppercase tracking-[0.18em] ml-1">{{ __('Cover Letter / Message') }}</label>
                                     <textarea name="message" rows="4" placeholder="{{ __('Briefly introduce yourself and why you are interested in this role...') }}" class="w-full bg-gray-50/50 border border-gray-100 rounded px-5 py-4 text-sm font-semibold text-titan-navy outline-none focus:bg-white focus:ring-1 focus:ring-titan-navy/10 transition-all resize-none placeholder:text-gray-300"></textarea>
                                 </div>
 
                                 <div class="pt-4">
-                                    <button type="submit" class="w-full bg-titan-navy text-white py-5 rounded font-black text-[13px] uppercase tracking-widest hover:bg-titan-red transition-all shadow-xl shadow-titan-navy/10 flex items-center justify-center gap-4 group">
+                                    <button type="submit" class="w-full bg-titan-navy text-white py-4 rounded-xl font-bold text-[12px] uppercase tracking-[0.18em] hover:bg-titan-red transition-all shadow-sm flex items-center justify-center gap-4 group">
                                         {{ __('Submit My Application') }}
                                         <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </div>
 
-                                <p class="text-center text-[9px] text-titan-navy/20 font-bold uppercase tracking-[0.2em] pt-4">
+                                <p class="text-center text-[9px] text-titan-navy/25 font-bold uppercase tracking-[0.2em] pt-4">
                                     {{ __('By submitting, you agree to our privacy policy regarding recruitment data.') }}
                                 </p>
                             </form>
                         </div>
                     </section>
-                    </section>
                 </div>
 
                 <!-- Sidebar (4 cols) -->
-                <div class="lg:col-span-4 lg:sticky lg:top-[120px] h-fit space-y-8">
+                <div class="lg:col-span-4 lg:sticky lg:top-[120px] h-fit space-y-5">
                     
                     <!-- Quick Apply Box -->
-                    <div class="p-8 rounded bg-white border border-gray-100 shadow-sm relative overflow-hidden group">
-                        <h3 class="text-2xl font-black text-titan-navy uppercase tracking-tight mb-4">{{ __('Apply for this position') }}</h3>
-                        <p class="text-titan-navy/40 text-xs leading-relaxed mb-8">{{ __('Join a team of visionaries shaping the skyline of Cambodia. Submit your profile today.') }}</p>
+                    <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm relative overflow-hidden group">
+                        <h3 class="text-xl font-bold text-titan-navy mb-2">{{ __('Apply for this position') }}</h3>
+                        <p class="text-titan-navy/45 text-sm leading-relaxed mb-5">{{ __('Join a team of visionaries shaping the skyline of Cambodia. Submit your profile today.') }}</p>
                         
-                        <a href="#apply-form" class="w-full bg-titan-navy text-white py-5 rounded font-black text-[13px] uppercase tracking-widest hover:bg-titan-red transition-all flex items-center justify-center gap-4 shadow-xl shadow-titan-navy/5 mb-4 px-6 border border-titan-navy">
+                        <a href="#apply-form" class="w-full bg-titan-navy text-white py-4 rounded-xl font-bold text-[12px] uppercase tracking-[0.18em] hover:bg-titan-red transition-all flex items-center justify-center gap-3 shadow-sm mb-3 px-6 border border-titan-navy">
                             {{ __('Jump to Form') }}
-                            <x-lucide-arrow-down class="w-4 h-4 animate-bounce" />
+                            <x-lucide-arrow-down class="w-4 h-4" />
                         </a>
                         
-                        <a href="mailto:careers@kimmex.com?subject=Application for {{ $job['title'] }}" class="text-center block text-[10px] text-titan-navy/30 hover:text-titan-red transition-colors font-bold uppercase tracking-widest w-full py-2">{{ __('Or apply via email') }}</a>
+                        <a href="mailto:careers@kimmex.com?subject=Application for {{ $job['title'] }}" class="text-center block text-[10px] text-titan-navy/35 hover:text-titan-red transition-colors font-bold uppercase tracking-[0.18em] w-full py-2">{{ __('Or apply via email') }}</a>
                     </div>
 
                     <!-- Share Role -->
-                    <div class="p-8 border border-gray-100 rounded space-y-6 bg-white shadow-sm">
-                         <h4 class="text-[10px] font-black text-titan-navy/30 uppercase tracking-[0.2em]">{{ __('Share this role') }}</h4>
+                    <div class="p-6 border border-slate-200 rounded-xl space-y-4 bg-white shadow-sm">
+                         <h4 class="text-[10px] font-bold text-titan-navy/35 uppercase tracking-[0.2em]">{{ __('Share this role') }}</h4>
                           <div class="flex gap-3">
                              <div x-data="{ 
                                  copied: false, 
@@ -305,12 +447,12 @@
                     </div>
 
                     <!-- Quick Info -->
-                    <div class="p-8 border border-gray-100 rounded bg-gray-50/50">
-                        <h4 class="text-xs font-black text-titan-navy uppercase tracking-widest mb-6">{{ __('Kimmex Recruitment') }}</h4>
-                        <p class="text-xs text-titan-navy/40 leading-relaxed mb-6">
+                    <div class="p-6 border border-slate-200 rounded-xl bg-slate-50/70">
+                        <h4 class="text-xs font-bold text-titan-navy uppercase tracking-[0.18em] mb-5">{{ __('Kimmex Recruitment') }}</h4>
+                        <p class="text-xs text-titan-navy/45 leading-relaxed mb-5">
                             {{ __('Kimmex is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all employees.') }}
                         </p>
-                        <a href="{{ route('about') }}" class="text-[10px] font-black underline tracking-widest uppercase text-titan-red">{{ __('Learn about our culture') }}</a>
+                        <a href="{{ route('about') }}" class="text-[10px] font-bold underline tracking-[0.18em] uppercase text-titan-red">{{ __('Learn about our culture') }}</a>
                     </div>
 
                 </div>

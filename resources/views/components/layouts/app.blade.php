@@ -89,10 +89,32 @@
     <x-footer />
 
     <!-- Scroll to Top Button -->
-    <div x-data="{ show: false }" 
+    <div x-data="{
+            show: false,
+            scrollToTop() {
+                const start = window.pageYOffset || document.documentElement.scrollTop || 0;
+                const duration = 700;
+                const startTime = performance.now();
+                const easeInOutCubic = (t) => t < 0.5
+                    ? 4 * t * t * t
+                    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+                const step = (now) => {
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const eased = easeInOutCubic(progress);
+                    window.scrollTo(0, start * (1 - eased));
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    }
+                };
+
+                requestAnimationFrame(step);
+            }
+        }" 
          @scroll.window="show = window.pageYOffset > 500" 
          class="fixed bottom-8 right-8 z-[90]">
-        <button @click="window.scrollTo({ top: 0, behavior: 'smooth' })" 
+        <button @click="scrollToTop()" 
                 x-show="show" style="display: none;"
                 x-transition:enter="transition ease-out duration-300 transform"
                 x-transition:enter-start="opacity-0 translate-y-8"

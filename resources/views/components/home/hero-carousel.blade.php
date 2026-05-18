@@ -1,19 +1,20 @@
 @php
     $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+    $contentLocale = app()->getLocale() === 'kh' ? 'km' : app()->getLocale();
     $featuredProjects = \App\Models\Project::where('isFeatured', true)
         ->where('isActive', true)
         ->take(5)
         ->get();
     if ($featuredProjects->count() > 0) {
-        $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) use ($fallbackImage) {
+        $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {
             return [
                 'id' => $index + 1,
                 'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                     ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
                     : $fallbackImage,
-                'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) : ($p->category ?: __('Featured Project')),
-                'title' => $p->getTranslation('title', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('title', 'en'),
-                'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $p->getTranslation('description', 'en')), 120),
+                'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', $contentLocale) : ($p->category ?: __('Featured Project')),
+                'title' => $p->getTranslation('title', $contentLocale) ?: $p->getTranslation('title', 'en'),
+                'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', $contentLocale) ?: $p->getTranslation('description', 'en')), 120),
                 'link' => '/projects/' . $p->slug
             ];
         })->toArray();
@@ -82,9 +83,9 @@
     <!-- === SLIDES === -->
     <template x-for="(slide, index) in slides" :key="index">
         <div x-show="current === index" x-transition:enter="transition-all transform ease-out duration-[1200ms]"
-            x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0"
-            x-transition:leave="transition-all absolute transform ease-in duration-[1000ms] z-0"
-            x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 -translate-x-12"
+            x-transition:enter-start="opacity-0 scale-[1.04]" x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition-all absolute transform ease-in duration-[900ms] z-0"
+            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-[1.02]"
             class="absolute inset-0 w-full h-full">
 
             <div class="relative w-full h-full overflow-hidden">
@@ -105,11 +106,11 @@
                 <div x-show="current === index" 
                     class="w-full"
                     x-transition:enter="transition-all transform ease-out duration-[1200ms] delay-300"
-                    x-transition:enter-start="opacity-0 translate-x-24"
-                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:enter-start="opacity-0 translate-y-6"
+                    x-transition:enter-end="opacity-100 translate-y-0"
                     x-transition:leave="transition-all transform ease-in duration-700 absolute"
-                    x-transition:leave-start="opacity-100 translate-x-0"
-                    x-transition:leave-end="opacity-0 -translate-x-24">
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 translate-y-4">
 
 
 

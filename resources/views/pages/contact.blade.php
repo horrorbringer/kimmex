@@ -36,7 +36,7 @@
             <div
                 class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
                 <span
-                    class="text-[9px] font-black uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
+                    class="text-[9px] font-bold uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
                 <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent"></div>
             </div>
         </section>
@@ -98,10 +98,10 @@
                                 class="w-6 h-6 transition-all duration-300 text-titan-red" />
                         </div>
                         <div>
-                            <div class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
+                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
                                 {{ __('Address') }}
                             </div>
-                            <div class="text-sm font-black text-titan-navy leading-relaxed transition-colors duration-500"
+                            <div class="text-sm font-semibold text-titan-navy leading-relaxed transition-colors duration-500"
                                 x-bind:class="hover ? 'text-titan-red' : ''">
                                 {{ $address }}</div>
                         </div>
@@ -120,10 +120,10 @@
                                 class="w-6 h-6 transition-all duration-300 text-titan-red" />
                         </div>
                         <div>
-                            <div class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
+                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
                                 {{ __('Phone') }}
                             </div>
-                            <div class="text-base font-black text-titan-navy leading-relaxed transition-colors duration-500"
+                            <div class="text-base font-semibold text-titan-navy leading-relaxed transition-colors duration-500"
                                 x-bind:class="hover ? 'text-titan-red' : ''">
                                 {{ $phone }}</div>
                         </div>
@@ -142,10 +142,10 @@
                                 class="w-6 h-6 transition-all duration-300 text-titan-red" />
                         </div>
                         <div>
-                            <div class="text-[10px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
+                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
                                 {{ __('Email') }}
                             </div>
-                            <div class="text-base font-black text-titan-navy leading-relaxed transition-colors duration-500"
+                            <div class="text-base font-semibold text-titan-navy leading-relaxed transition-colors duration-500"
                                 x-bind:class="hover ? 'text-titan-red' : ''">
                                 {{ $email }}</div>
                         </div>
@@ -160,11 +160,11 @@
 
                 <!-- FORM (2/3) -->
                 <div class="lg:col-span-2">
-                    <div class="border border-gray-100 rounded p-8 md:p-12">
+                    <div class="bg-white border border-gray-100 rounded p-8 md:p-12 shadow-[0_28px_80px_-30px_rgba(11,43,92,0.28)]">
                         <div class="flex items-center gap-4 mb-8">
                             <div class="w-1 h-8 bg-titan-red rounded-full"></div>
                             <div>
-                                <h2 class="text-xl font-black text-titan-navy uppercase tracking-tight">
+                                <h2 class="text-xl font-bold text-titan-navy uppercase tracking-tight">
                                     {{ __('Send a Message') }}
                                 </h2>
                                 <p class="text-titan-navy/35 text-xs mt-0.5">
@@ -193,7 +193,7 @@
                                         <x-lucide-user
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="first_name" required
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="{{ __('John') }}">
                                     </div>
                                 </div>
@@ -204,7 +204,7 @@
                                         <x-lucide-user
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="last_name" required
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="{{ __('Doe') }}">
                                     </div>
                                 </div>
@@ -216,7 +216,7 @@
                                     <x-lucide-at-sign
                                         class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                     <input type="email" name="email" required
-                                        class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                        class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                         placeholder="{{ __('email@example.com') }}">
                                 </div>
                             </div>
@@ -228,7 +228,7 @@
                                         <x-lucide-phone
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="phone"
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="+855 12 345 678">
                                     </div>
                                 </div>
@@ -239,7 +239,7 @@
                                         <x-lucide-file-text
                                             class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                                         <input type="text" name="subject"
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="{{ __('Project discussion') }}">
                                     </div>
                                 </div>
@@ -248,7 +248,7 @@
                                 <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Message') }}
                                     <span class="text-titan-red">*</span></label>
                                 <textarea name="message" required rows="5"
-                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none resize-none placeholder:text-gray-300"
+                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none resize-none placeholder:text-gray-300"
                                     placeholder="{{ __('Tell us about the details...') }}"></textarea>
                             </div>
                             <div>
@@ -258,7 +258,7 @@
                                     <x-lucide-paperclip
                                         class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none" />
                                     <input type="file" name="attachment"
-                                        class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
+                                        class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
                                 </div>
                                 <p class="text-[10px] text-titan-navy/30 mt-1.5">
                                     {{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}
@@ -289,7 +289,7 @@
                         <div class="relative z-10">
                             <div class="flex items-center gap-3 mb-6">
                                 <x-lucide-clock class="w-4 h-4 text-titan-red" />
-                                <h3 class="text-xs font-black uppercase tracking-widest text-titan-navy/70">
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-titan-navy/70">
                                     {{ __('Working Hours') }}
                                 </h3>
                             </div>
@@ -305,41 +305,35 @@
                     <div class="bg-gray-50 rounded p-8">
                         <div class="flex items-center gap-3 mb-5">
                             <x-lucide-share-2 class="w-4 h-4 text-titan-red" />
-                            <h3 class="text-xs font-black uppercase tracking-widest text-titan-navy/40">
+                            <h3 class="text-xs font-bold uppercase tracking-widest text-titan-navy/40">
                                 {{ __('Follow Us') }}
                             </h3>
                         </div>
                         <div class="flex flex-wrap gap-3">
                             <a href="{{ $facebook }}" target="_blank" rel="noopener"
-                                class="group w-9 h-9 rounded bg-gray-100 flex items-center justify-center hover:!bg-titan-red transition-all shadow-sm">
-                                <x-lucide-facebook
-                                    class="w-4 h-4 text-titan-navy/60 group-hover:!text-white transition-colors" />
+                                class="group w-10 h-10 rounded bg-social-facebook flex items-center justify-center text-white shadow-lg shadow-social-facebook/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
+                                <x-lucide-facebook class="w-4 h-4 text-white transition-colors" />
                             </a>
                             <a href="{{ $linkedin }}" target="_blank" rel="noopener"
-                                class="group w-9 h-9 rounded bg-gray-100 flex items-center justify-center hover:!bg-titan-red transition-all shadow-sm">
-                                <x-lucide-linkedin
-                                    class="w-4 h-4 text-titan-navy/60 group-hover:!text-white transition-colors" />
+                                class="group w-10 h-10 rounded bg-social-linkedin flex items-center justify-center text-white shadow-lg shadow-social-linkedin/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
+                                <x-lucide-linkedin class="w-4 h-4 text-white transition-colors" />
                             </a>
                             @if ($youtube && $youtube !== '#')
                                 <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
-                                    class="group w-9 h-9 rounded bg-gray-100 flex items-center justify-center hover:!bg-titan-red transition-all shadow-sm">
-                                    <x-lucide-youtube
-                                        class="w-4 h-4 text-titan-navy/60 group-hover:!text-white transition-colors" />
+                                    class="group w-10 h-10 rounded bg-social-youtube flex items-center justify-center text-white shadow-lg shadow-social-youtube/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
+                                    <x-lucide-youtube class="w-4 h-4 text-white transition-colors" />
                                 </a>
                             @endif
                             @if ($instagram && $instagram !== '#')
                                 <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
-                                    class="group w-9 h-9 rounded bg-gray-100 flex items-center justify-center hover:!bg-titan-red transition-all shadow-sm">
-                                    <div class="group-hover:!text-white transition-colors">
-                                        <x-lucide-instagram class="w-4 h-4 text-titan-navy/60" />
-                                    </div>
+                                    class="group w-10 h-10 rounded bg-social-instagram flex items-center justify-center text-white shadow-lg shadow-social-instagram/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
+                                    <x-lucide-instagram class="w-4 h-4 text-white transition-colors" />
                                 </a>
                             @endif
                             @if ($telegram && $telegram !== '#')
                                 <a href="{{ $telegram }}" target="_blank" rel="noopener"
-                                    class="group w-9 h-9 rounded bg-gray-100 flex items-center justify-center hover:!bg-titan-red transition-all shadow-sm">
-                                    <x-lucide-send
-                                        class="w-4 h-4 text-titan-navy/60 group-hover:!text-white transition-colors" />
+                                    class="group w-10 h-10 rounded bg-social-telegram flex items-center justify-center text-white shadow-lg shadow-social-telegram/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
+                                    <x-lucide-send class="w-4 h-4 text-white transition-colors" />
                                 </a>
                             @endif
                         </div>
@@ -367,7 +361,7 @@
             <div
                 class="max-w-[1200px] mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div>
-                    <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-2">
+                    <h3 class="text-2xl font-bold text-white uppercase tracking-tight mb-2">
                         {{ __('Ready to Start Your Project?') }}
                     </h3>
                     <p class="text-white/40 text-sm">

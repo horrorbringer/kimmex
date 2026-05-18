@@ -209,6 +209,49 @@ h3 {
   font-size: var(--text-h3);
 }
 
+/* Lightweight form + scrollbar helpers for modal-style UIs */
+.form-field {
+  background: #fff;
+  border: 1px solid rgba(11, 43, 92, 0.08);
+  border-radius: 0.875rem;
+  color: var(--color-kmd-navy);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.form-field::placeholder {
+  color: rgba(11, 43, 92, 0.28);
+}
+
+.form-field:focus {
+  outline: none;
+  border-color: rgba(227, 30, 36, 0.22);
+  box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.08);
+}
+
+.scrollbar-clean {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(11, 43, 92, 0.24) rgba(11, 43, 92, 0.06);
+}
+
+.scrollbar-clean::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-clean::-webkit-scrollbar-track {
+  background: rgba(11, 43, 92, 0.06);
+  border-radius: 9999px;
+}
+
+.scrollbar-clean::-webkit-scrollbar-thumb {
+  background: rgba(11, 43, 92, 0.24);
+  border-radius: 9999px;
+  border: 2px solid rgba(11, 43, 92, 0.06);
+}
+
+.scrollbar-clean::-webkit-scrollbar-thumb:hover {
+  background: rgba(11, 43, 92, 0.34);
+}
+
 .font-sans {
   font-family: var(--font-inter);
   letter-spacing: var(--tracking-tight);

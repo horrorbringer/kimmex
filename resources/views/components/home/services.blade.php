@@ -33,47 +33,61 @@
     <div class="max-w-[1400px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="text-center max-w-2xl mx-auto mb-16 transition-all duration-1000">
-            <span
-                class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our Services') }}</span>
-            <h2 class="text-4xl font-heading font-black text-titan-navy mb-4">
+            class="max-w-3xl mx-auto mb-14 text-center transition-all duration-1000">
+            <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our Services') }}</span>
+            <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy mb-4">
                 {{ __('Comprehensive Construction Solutions') }}
             </h2>
-            <p class="text-titan-navy/50 text-lg">{{ __('From design to completion') }}</p>
+            <p class="text-titan-navy/60 text-base md:text-lg leading-relaxed">
+                {{ __('We bring design, construction, MEP, and infrastructure delivery together under one accountable team.') }}
+            </p>
         </div>
 
-        <div class="flex flex-wrap justify-center gap-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8">
             @foreach($services as $index => $s)
+                @php
+                    $features = array_slice($s['features'] ?? [], 0, 3);
+                @endphp
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     style="transition-delay: {{ $index * 100 }}ms"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="w-full sm:w-1/2 lg:w-1/4 bg-white p-10 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-500 border border-gray-100 border-b-4 border-b-transparent hover:border-b-titan-red h-full relative overflow-hidden rounded">
-                    <div
-                        class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-700">
-                        <x-dynamic-component :component="$s['icon']" class="text-titan-navy w-20 h-20" />
-                    </div>
-                    <div class="flex items-center justify-between mb-8">
-                        <div
-                            class="w-14 h-14 rounded-full border border-gray-100 bg-gray-50 flex items-center justify-center group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500">
-                            <x-dynamic-component :component="$s['icon']"
-                                class="text-titan-red transition-colors w-6 h-6" stroke-width="1.5" />
+                    class="transition-all duration-1000">
+                    <a href="/services/{{ $s['slug'] }}"
+                        class="group block h-full rounded border border-gray-100 bg-white overflow-hidden shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 transition-all duration-500">
+                        <div class="p-8 md:p-10 min-h-[300px] relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-700">
+                                <x-dynamic-component :component="$s['icon']" class="text-titan-navy w-20 h-20" />
+                            </div>
+
+                            <div class="relative z-10 flex h-full flex-col">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div class="w-14 h-14 rounded-full border border-gray-100 bg-gray-50 flex items-center justify-center group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500">
+                                        <x-dynamic-component :component="$s['icon']" class="text-titan-red transition-colors w-6 h-6" stroke-width="1.5" />
+                                    </div>
+                                </div>
+
+                                <h3 class="text-2xl font-heading font-black text-titan-navy group-hover:text-titan-red transition-colors mb-4 {{ app()->getLocale() === 'km' ? 'font-khmer' : 'uppercase tracking-tighter' }}">
+                                    {{ $s['title'] }}
+                                </h3>
+                                <p class="text-titan-navy/60 mb-6 text-sm leading-relaxed">
+                                    {{ $s['desc'] }}
+                                </p>
+
+                                <ul class="space-y-3 pt-6 border-t border-gray-100 mt-auto">
+                                    @foreach($features as $f)
+                                        <li class="text-xs font-bold uppercase tracking-widest text-titan-navy/45 group-hover:text-titan-navy/80 transition-colors">
+                                            {{ $f }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                <div class="mt-6 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red">
+                                    {{ __('Learn More') }}
+                                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <h3
-                        class="text-2xl font-heading font-black text-titan-navy group-hover:text-titan-red transition-colors mb-4 uppercase tracking-tighter">
-                        {{ $s['title'] }}
-                    </h3>
-                    <p class="text-titan-navy/60 mb-8 text-sm leading-relaxed">{{ $s['desc'] }}</p>
-                    <ul class="space-y-3 pt-8 border-t border-gray-100">
-                        @foreach($s['features'] as $f)
-                            <li
-                                class="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-titan-navy/40 group-hover:text-titan-navy/80 transition-colors">
-                                <div
-                                    class="w-1.5 h-1.5 bg-titan-red rounded-full group-hover:scale-150 transition-transform">
-                                </div> {{ $f }}
-                            </li>
-                        @endforeach
-                    </ul>
+                    </a>
                 </div>
             @endforeach
         </div>

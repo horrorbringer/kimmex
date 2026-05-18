@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class SetLocale
 {
-    protected array $supportedLocales = ['en', 'km'];
+    protected array $supportedLocales = ['en', 'km', 'kh'];
 
     public function handle(Request $request, Closure $next)
     {
@@ -16,9 +16,11 @@ class SetLocale
             ?? $this->getBrowserLocale($request)
             ?? config('app.locale', 'en');
 
-        if (in_array($locale, $this->supportedLocales)) {
-            app()->setLocale($locale);
-            session(['locale' => $locale]);
+        $normalizedLocale = $this->normalizeLocale($locale);
+
+        if (in_array($normalizedLocale, ['en', 'km'])) {
+            app()->setLocale($normalizedLocale);
+            session(['locale' => $normalizedLocale]);
         }
 
         return $next($request);
@@ -28,6 +30,15 @@ class SetLocale
     {
         $browserLang = substr($request->server('HTTP_ACCEPT_LANGUAGE', ''), 0, 2);
 
-        return in_array($browserLang, $this->supportedLocales) ? $browserLang : null;
+        return $this->normalizeLocale($browserLang);
+    }
+
+    protected function normalizeLocale(?string $locale): ?string
+    {
+        return match ($locale) {
+            'kh' => 'km',
+            'en', 'km' => $locale,
+            default => null,
+        };
     }
 }

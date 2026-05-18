@@ -8,6 +8,8 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditProjectCategory extends EditRecord
 {
+    use \LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
+
     protected static string $resource = ProjectCategoryResource::class;
 
     protected function getHeaderActions(): array

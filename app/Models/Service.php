@@ -41,17 +41,33 @@ class Service extends Model
     protected static function booted()
     {
         static::saved(function ($service) {
+            $slugs = array_filter(array_unique([
+                $service->slug,
+                $service->getOriginal('slug'),
+            ]));
+
             foreach(['en', 'km', 'kh'] as $locale) {
                 Cache::forget('nav_services_' . $locale);
                 Cache::forget('home_services_array_' . $locale);
+                foreach ($slugs as $slug) {
+                    Cache::forget("service_show_data_{$slug}_{$locale}");
+                }
             }
             Cache::forget('services_index_data');
         });
 
         static::deleted(function ($service) {
+            $slugs = array_filter(array_unique([
+                $service->slug,
+                $service->getOriginal('slug'),
+            ]));
+
             foreach(['en', 'km', 'kh'] as $locale) {
                 Cache::forget('nav_services_' . $locale);
                 Cache::forget('home_services_array_' . $locale);
+                foreach ($slugs as $slug) {
+                    Cache::forget("service_show_data_{$slug}_{$locale}");
+                }
             }
             Cache::forget('services_index_data');
         });

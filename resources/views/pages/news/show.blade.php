@@ -50,7 +50,7 @@
         ];
     }
 
-    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale) {
+    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage) {
         $currentDb = NewsArticle::where('isActive', true)->where('slug', $slug)->first();
         $relatedDb = NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
 
@@ -96,6 +96,22 @@
     $pageTitle = $article['title'] ?? __('News Details');
     $pageDesc = $article['excerpt'] ?? __('Read the latest news and updates from Kimmex.');
     $pageImage = $article['image'] ?? null;
+
+    $renderNewsContent = function (?string $content) {
+        $content = trim((string) $content);
+
+        if ($content === '') {
+            return '';
+        }
+
+        // RichEditor stores HTML. If the content already contains tags, render it as-is.
+        // Plain text fallback is wrapped in a paragraph for consistency.
+        if (preg_match('/<\s*[a-z][\s\S]*>/i', $content)) {
+            return $content;
+        }
+
+        return '<p>' . e($content) . '</p>';
+    };
 
     $sidebarDocs = Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale) {
         return Document::with('documentCategory')
@@ -257,8 +273,8 @@
                         {{ __('Story') }}
                     </div>
 
-                    <div class="news-content prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.85] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-normal prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
-                        {!! $article['content'] !!}
+                    <div class="news-content prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.85] prose-p:font-medium prose-headings:font-black prose-headings:tracking-normal prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
+                        {!! $renderNewsContent($article['content'] ?? '') !!}
                     </div>
 
                     @if(!empty($article['gallery']))

@@ -6,6 +6,7 @@ use App\Filament\Resources\ProjectCategoryResource\Pages;
 use App\Models\ProjectCategory;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -67,9 +68,14 @@ class ProjectCategoryResource extends Resource
                     ->label(__('Slug'))
                     ->required()
                     ->unique(ignoreRecord: true),
-                \Filament\Forms\Components\Select::make('parent_id')
+                Select::make('parent_id')
                     ->label(__('Parent Category'))
                     ->relationship('parent', 'name', fn($query) => $query->orderBy('name->en'))
+                    ->getOptionLabelFromRecordUsing(
+                        fn (ProjectCategory $record): string => $record->getTranslation('name', app()->getLocale())
+                            ?: $record->getTranslation('name', 'en')
+                            ?: $record->slug
+                    )
                     ->searchable()
                     ->preload(),
                 Textarea::make('description')

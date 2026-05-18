@@ -151,7 +151,7 @@ $sectors = [
         <section id="services-list" class="pt-8 pb-16 px-6 max-w-[1500px] mx-auto overflow-hidden">
         <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-8 transition-all duration-1000">
             <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
-            <h2 class="text-4xl md:text-6xl font-black text-titan-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
+            <h2 class="text-4xl md:text-6xl font-bold text-titan-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
             <div class="w-24 h-1.5 bg-titan-red mx-auto mb-8"></div>
             <p class="text-titan-navy/90 text-xl max-w-3xl mx-auto leading-relaxed">
                 {{ __('We bring decades of experience to every project, ensuring quality and efficiency at every stage.') }}
@@ -170,7 +170,7 @@ $sectors = [
                         
                         <!-- Overlay Title for Mobile -->
                         <div class="absolute bottom-0 left-0 right-0 p-8 lg:hidden bg-gradient-to-t from-titan-navy to-transparent text-white">
-                            <h3 class="text-3xl font-heading font-black uppercase tracking-tighter">{{ $service['title'][$lang] }}</h3>
+                            <h3 class="text-3xl font-heading font-bold uppercase tracking-tighter">{{ $service['title'][$lang] }}</h3>
                         </div>
                     </div>
 
@@ -183,7 +183,7 @@ $sectors = [
                                 <div class="h-[1px] w-16 bg-titan-red"></div>
                             </div>
                             
-                            <h3 class="text-4xl md:text-5xl font-heading font-black text-titan-navy mb-8 uppercase tracking-tighter leading-[1.1]">
+                            <h3 class="text-4xl md:text-5xl font-heading font-bold text-titan-navy mb-8 uppercase tracking-tighter leading-[1.1]">
                                 {{ $service['title'][$lang] }}
                             </h3>
                             
@@ -266,13 +266,13 @@ $sectors = [
                                 </div>
 
                                 <!-- Floating Step Label -->
-                                <div class="absolute -bottom-2 right-1/2 translate-x-1/2 z-20 bg-titan-red text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg shadow-titan-red/20 uppercase tracking-widest transition-transform duration-500 group-hover:scale-110">
+                                <div class="absolute -bottom-2 right-1/2 translate-x-1/2 z-20 bg-titan-red text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg shadow-titan-red/20 uppercase tracking-widest transition-transform duration-500 group-hover:scale-110">
                                     {{ __('Step') }} 0{{ $i + 1 }}
                                 </div>
                             </div>
 
                             <div class="px-4 relative z-10">
-                                <h3 class="font-heading font-black mb-4 uppercase tracking-normal text-titan-navy group-hover:text-titan-red transition-colors duration-300 text-sm">
+                                <h3 class="font-heading font-bold mb-4 uppercase tracking-normal text-titan-navy group-hover:text-titan-red transition-colors duration-300 text-sm">
                                     {{ is_array($s['title']) ? ($s['title'][$lang] ?? $s['title']['en'] ?? '') : $s['title'] }}
                                 </h3>
                                 <p class="text-titan-navy/50 leading-relaxed max-w-[220px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70 text-[11px] font-medium">
@@ -296,7 +296,7 @@ $sectors = [
                 <!-- Left Content -->
                 <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'" class="transition-all duration-1000">
                     <span class="text-titan-red font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('The Kimmex Advantage') }}</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-titan-navy mb-8 uppercase tracking-tighter leading-tight">{{ __('Why Partner With Us?') }}</h2>
+                    <h2 class="text-4xl md:text-5xl font-bold text-titan-navy mb-8 uppercase tracking-tighter leading-tight">{{ __('Why Partner With Us?') }}</h2>
                     <p class="text-titan-navy/60 text-lg leading-relaxed mb-12">
                         {{ __('We deliver more than just buildings; we deliver peace of mind. Our integrated approach ensures your project is handled with the utmost care and professionalism.') }}
                     </p>
@@ -315,7 +315,7 @@ $sectors = [
                                 <x-dynamic-component :component="$item['icon']" class="w-5 h-5" stroke-width="1.5" />
                             </div>
                             <div>
-                                <h3 class="text-xl font-black text-titan-navy mb-2 uppercase tracking-wide group-hover:text-titan-red transition-colors">{{ $item['title'][$lang] }}</h3>
+                                <h3 class="text-xl font-bold text-titan-navy mb-2 uppercase tracking-wide group-hover:text-titan-red transition-colors">{{ $item['title'][$lang] }}</h3>
                                 <p class="text-titan-navy/60 leading-relaxed text-sm">{{ $item['desc'][$lang] }}</p>
                             </div>
                         </div>
@@ -344,7 +344,7 @@ $sectors = [
                     <!-- Center Floating Glass Badge -->
                     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/70 backdrop-blur-2xl text-titan-navy p-6 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white z-20 flex flex-col items-center justify-center animate-bounce-slow" style="width: 130px; height: 130px;">
                         <x-lucide-award class="w-10 h-10 text-titan-red mb-2" />
-                        <span class="text-[9px] font-black uppercase tracking-[0.2em] text-center leading-tight">{{ __('ISO') }}<br/>{{ __('Certified') }}</span>
+                        <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-center leading-tight">{{ __('ISO') }}<br/>{{ __('Certified') }}</span>
                     </div>
                 </div>
             </div>
@@ -357,7 +357,7 @@ $sectors = [
             <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="flex flex-col md:flex-row md:items-end justify-between mb-20 transition-all duration-1000">
                 <div class="max-w-2xl">
                     <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('Industries & Sectors') }}</span>
-                    <h2 class="text-4xl md:text-6xl font-black text-titan-navy uppercase tracking-tighter leading-none">{{ __('Where We Operate') }}</h2>
+                    <h2 class="text-4xl md:text-6xl font-bold text-titan-navy uppercase tracking-tighter leading-none">{{ __('Where We Operate') }}</h2>
                 </div>
                 <div class="mt-8 md:mt-0">
                     <div class="w-32 h-1.5 bg-titan-red"></div>
@@ -383,7 +383,7 @@ $sectors = [
                             </div>
 
                             <div class="transform translate-y-0 transition-transform duration-500">
-                                <h3 class="text-3xl font-black text-white mb-4 uppercase tracking-tighter leading-tight">
+                                <h3 class="text-3xl font-bold text-white mb-4 uppercase tracking-tighter leading-tight">
                                     {{ $sector['title'][$lang] }}
                                 </h3>
                                 <div class="w-12 h-1.5 bg-titan-red group-hover:w-24 transition-all duration-500"></div>
@@ -438,7 +438,7 @@ $sectors = [
                             </div>
                             <div>
                                 <p class="text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mb-1">{{ __('Contact Us') }}</p>
-                                <p class="font-black text-lg tracking-tight">info@kimmex.com</p>
+                                <p class="font-bold text-lg tracking-tight">info@kimmex.com</p>
                             </div>
                         </div>
 

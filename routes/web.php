@@ -5,9 +5,11 @@ use App\Http\Controllers\FormController;
 
 // Language Switcher
 Route::get('/lang/{locale}', function (string $locale) {
-    if (in_array($locale, ['en', 'km'])) {
-        session(['locale' => $locale]);
-        app()->setLocale($locale);
+    $normalizedLocale = $locale === 'kh' ? 'km' : $locale;
+
+    if (in_array($normalizedLocale, ['en', 'km'])) {
+        session(['locale' => $normalizedLocale]);
+        app()->setLocale($normalizedLocale);
     }
     return redirect()->back();
 })->name('lang.switch');

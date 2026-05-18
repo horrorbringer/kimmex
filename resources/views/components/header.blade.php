@@ -564,7 +564,7 @@
                 <div class="mt-4 flex gap-2">
                     <a href="{{ route('lang.switch', 'en') }}"
                         class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'en' ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border-gray-200' }}">
-                        English
+                        {{ __('English') }}
                     </a>
                     <a href="{{ route('lang.switch', 'km') }}"
                         class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'km' ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border-gray-200' }}">

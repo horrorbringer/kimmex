@@ -1,4 +1,4 @@
-<x-layouts.app title="Careers" description="Join the Kimmex team and build your future in the construction industry.">
+<x-layouts.app title="{{ __('Careers') }}" description="{{ __('Join the Kimmex team and build your future in the construction industry.') }}">
 
     @php
         $jobs = \Illuminate\Support\Facades\Cache::remember('careers_jobs_data_'.app()->getLocale(), now()->addHours(12), function() {
@@ -36,6 +36,23 @@
         }
     @endphp
 
+    @php
+        $isKhmer = app()->getLocale() === 'km';
+        $heroCtaBase = 'inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-500';
+        $heroCtaPrimary = $heroCtaBase . ' bg-titan-red text-white';
+        $heroCtaSecondary = $heroCtaBase . ' text-white border border-white/15 bg-white/10 backdrop-blur-md hover:bg-white/15';
+        $heroCtaText = $isKhmer ? 'font-khmer text-sm normal-case tracking-normal leading-tight' : 'text-[11px] uppercase tracking-[0.28em]';
+        $heroSubtitleClass = $isKhmer
+            ? 'font-khmer text-lg md:text-xl text-white font-bold leading-relaxed tracking-normal normal-case drop-shadow-xl'
+            : 'text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl';
+        $heroBadgeLabelClass = $isKhmer
+            ? 'font-khmer text-xs font-bold tracking-normal normal-case text-white/75 mb-2'
+            : 'text-[10px] uppercase tracking-[0.3em] text-white/50 font-bold mb-2';
+        $heroScrollLabelClass = $isKhmer
+            ? 'font-khmer text-[10px] font-bold tracking-normal normal-case text-white [writing-mode:vertical-lr]'
+            : 'text-[9px] font-bold uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]';
+    @endphp
+
     <div x-data="{ 
     filterDept: '{{ __('All Departments') }}', 
     filterLoc: '{{ __('All Locations') }}', 
@@ -49,6 +66,11 @@
             if (this.searchQuery && !job.title.toLowerCase().includes(this.searchQuery.toLowerCase())) return false;
             return true;
         });
+    },
+    clearFilters() {
+        this.filterDept = '{{ __('All Departments') }}';
+        this.filterLoc = '{{ __('All Locations') }}';
+        this.searchQuery = '';
     }
 }" class="bg-white min-h-screen text-titan-navy">
 
@@ -56,7 +78,7 @@
         <section class="relative h-screen min-h-[800px] flex items-center overflow-hidden bg-titan-navy">
             {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-5.jpg" alt="Careers Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                <img src="/images/projects/Thumbnail-5.jpg" alt="{{ __('Careers Excellence') }}" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
                 <div class="absolute inset-0 bg-titan-navy/20"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
@@ -73,7 +95,7 @@
 
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
                      class="transition-all duration-1000 delay-500 border-l-4 border-titan-red pl-10 mb-16 max-w-2xl">
-                    <p class="text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl" style="color: white !important;">
+                    <p class="{{ $heroSubtitleClass }}" style="color: white !important;">
                         {{ __('Join a team of visionaries') }}<br/>
                         {{ __('shaping the future.') }}
                     </p>
@@ -81,28 +103,44 @@
 
                 <!-- Action Buttons -->
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-700 flex flex-wrap gap-8">
+                    class="transition-all duration-1000 delay-700 flex flex-wrap gap-4 sm:gap-6">
                     <button @click="document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })"
-                        class="bg-titan-red text-white px-10 py-5 rounded font-black text-[12px] uppercase tracking-widest shadow-2xl hover:shadow-titan-red/40 hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6">
-                        <span>{{ __('Explore Roles') }}</span>
-                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                        class="{{ $heroCtaPrimary }}">
+                        <span class="{{ $heroCtaText }}">{{ __('Explore Roles') }}</span>
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
                             <x-lucide-arrow-down class="w-4 h-4" />
                         </div>
                     </button>
 
                     <button @click="isApplyOpen = true"
-                        class="glass-premium hover:bg-white/20 text-white px-10 py-5 rounded font-black text-[12px] uppercase tracking-widest shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex items-center gap-6 border border-white/10 backdrop-blur-md">
-                        <span>{{ __('Direct Apply') }}</span>
-                        <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                        class="{{ $heroCtaSecondary }}">
+                        <span class="{{ $heroCtaText }}">{{ __('Direct Apply') }}</span>
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                             <x-lucide-send class="w-4 h-4" />
                         </div>
                     </button>
+                </div>
+
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
+                    class="transition-all duration-1000 delay-900 mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl">
+                    <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md px-5 py-4 text-white shadow-lg">
+                        <div class="{{ $heroBadgeLabelClass }}">{{ __('Fast response') }}</div>
+                        <div class="font-bold text-sm">{{ __('Applications are reviewed by our team.') }}</div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md px-5 py-4 text-white shadow-lg">
+                        <div class="{{ $heroBadgeLabelClass }}">{{ __('Clear process') }}</div>
+                        <div class="font-bold text-sm">{{ __('Know the next step before you apply.') }}</div>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md px-5 py-4 text-white shadow-lg">
+                        <div class="{{ $heroBadgeLabelClass }}">{{ __('Direct entry') }}</div>
+                        <div class="font-bold text-sm">{{ __('Apply to a role or send a general application.') }}</div>
+                    </div>
                 </div>
             </div>
 
             <!-- Scroll Indicator -->
             <div class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
-                <span class="text-[9px] font-black uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
+                <span class="{{ $heroScrollLabelClass }}">{{ __('Scroll') }}</span>
                 <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent"></div>
             </div>
         </section>
@@ -110,11 +148,11 @@
         <!-- WHY JOIN US -->
         <section x-data="{ revealed: false }" x-intersect.once="revealed = true"
             class="pt-32 pb-32 max-w-[1400px] mx-auto px-6">
-            <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                class="transition-all duration-700 flex flex-col items-start gap-4 mb-20">
-                <div class="w-20 h-1.5 bg-titan-red rounded-full shadow-[0_0_15px_rgba(227,30,36,0.4)]"></div>
-                <div>
-                    <h2 class="text-4xl font-black text-titan-navy uppercase tracking-tight">
+                <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+                    class="transition-all duration-700 flex flex-col items-start gap-4 mb-20">
+                    <div class="w-20 h-1.5 bg-titan-red rounded-full"></div>
+                    <div>
+                    <h2 class="text-4xl font-bold text-titan-navy uppercase tracking-tight">
                         {{ __('Why Work With Us?') }}
                     </h2>
                     <p class="text-titan-navy/40 text-sm font-bold uppercase tracking-widest mt-2">
@@ -138,14 +176,14 @@
                     class="transition-all duration-1000 relative"
                     style="transition-delay: {{ 200 + ($i * 150) }}ms">
                     <div class="bg-white border-2 border-gray-100 rounded p-12 transition-all duration-500 h-full relative overflow-hidden"
-                        x-bind:class="hover ? 'border-titan-red shadow-[0_30px_60px_-15px_rgba(227,30,36,0.08)] -translate-y-1' : ''">
+                        x-bind:class="hover ? 'border-titan-red shadow-[0_24px_50px_-18px_rgba(15,23,42,0.14)] -translate-y-1' : ''">
 
                         <div class="w-16 h-16 rounded-full flex items-center justify-center text-titan-red mb-10 transition-all duration-500 border border-gray-100"
                             x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : 'bg-gray-50'">
                             <x-dynamic-component :component="'lucide-' . $v['icon']" class="w-7 h-7" stroke-width="1.5" />
                         </div>
 
-                        <h3 class="text-2xl font-black text-titan-navy uppercase tracking-tight mb-6 transition-colors duration-500"
+                        <h3 class="text-2xl font-bold text-titan-navy uppercase tracking-tight mb-6 transition-colors duration-500"
                             x-bind:class="hover ? 'text-titan-red' : ''">
                             {{ $v['title'] }}
                         </h3>
@@ -171,10 +209,10 @@
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-[1px] bg-titan-red"></div>
                         <span
-                            class="text-[10px] font-black text-titan-red uppercase tracking-[0.3em]">{{ __('The Process') }}</span>
+                            class="text-[10px] font-bold text-titan-red uppercase tracking-[0.3em]">{{ __('The Process') }}</span>
                         <div class="w-10 h-[1px] bg-titan-red"></div>
                     </div>
-                    <h2 class="text-3xl font-black text-titan-navy uppercase tracking-tight">
+                    <h2 class="text-3xl font-bold text-titan-navy uppercase tracking-tight">
                         {{ __('Our Hiring Journey') }}
                     </h2>
                     <p class="text-titan-navy/35 text-xs max-w-md mt-4">
@@ -201,14 +239,14 @@
                             :style="'transition-delay: ' + (150 + ($i * 100)) + 'ms'"
                             class="transition-all duration-700 relative z-10 group">
                             <div
-                                class="bg-gray-50/50 border border-gray-100 rounded p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 min-h-[180px]">
+                                class="bg-gray-50/50 border border-gray-100 rounded p-8 hover:bg-white hover:border-titan-red/30 hover:shadow-[0_20px_45px_-18px_rgba(15,23,42,0.12)] transition-all duration-500 min-h-[180px]">
                                 <!-- Number Badge -->
                                 <div
-                                    class="w-10 h-10 rounded-full bg-white border-2 border-gray-100 flex items-center justify-center text-xs font-black text-titan-red mb-6 shadow-sm group-hover:border-titan-red group-hover:shadow-[0_0_0_4px_rgba(227,30,36,0.08)] transition-all duration-300">
+                                    class="w-10 h-10 rounded-full bg-white border-2 border-gray-100 flex items-center justify-center text-xs font-bold text-titan-red mb-6 shadow-sm group-hover:border-titan-red group-hover:shadow-[0_0_0_4px_rgba(15,23,42,0.06)] transition-all duration-300">
                                     0{{ $i + 1 }}
                                 </div>
                                 <h3
-                                    class="text-sm font-black text-titan-navy uppercase tracking-widest mb-3 group-hover:text-titan-red transition-colors">
+                                    class="text-sm font-bold text-titan-navy uppercase tracking-widest mb-3 group-hover:text-titan-red transition-colors">
                                     {{ $step['title'] }}
                                 </h3>
                                 <p class="text-titan-navy/40 text-[11px] leading-relaxed line-clamp-2">{{ $step['desc'] }}
@@ -224,15 +262,27 @@
         <section id="openings" x-data="{ revealed: false }" x-intersect.once="revealed = true"
             class="scroll-mt-32 pt-24 pb-24 max-w-[1200px] mx-auto px-6">
             <!-- Header Section -->
-            <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                class="transition-all duration-700 mb-10">
-                <div class="flex items-center gap-4 mb-2">
-                    <div class="w-1.5 h-10 bg-titan-red rounded-full"></div>
-                    <h2 class="text-3xl font-black text-titan-navy uppercase tracking-tight">
-                        {{ __('Current Openings') }}
-                    </h2>
+                <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
+                    class="transition-all duration-700 mb-10">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
+                    <div class="flex items-center gap-4">
+                        <div class="w-1.5 h-10 bg-titan-red rounded-full"></div>
+                        <h2 class="text-3xl font-bold text-titan-navy uppercase tracking-tight">
+                            {{ __('Current Openings') }}
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs uppercase tracking-[0.25em] text-titan-navy/35 font-bold">
+                            <span x-text="filteredJobs.length"></span> {{ __('roles available') }}
+                        </span>
+                        <button @click="clearFilters()"
+                            class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors shadow-sm">
+                            <x-lucide-rotate-ccw class="w-3.5 h-3.5" />
+                            {{ __('Clear filters') }}
+                        </button>
+                    </div>
                 </div>
-                <p class="text-titan-navy/35 text-sm ml-5.5">
+                <p class="text-titan-navy/35 text-sm ml-5">
                     {{ __('Find your place among Cambodia\'s most impactful engineering teams.') }}
                 </p>
             </div>
@@ -240,13 +290,24 @@
             <!-- Filters Section (One Line Full Width) -->
             <div :class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
                 class="transition-all duration-700 mb-12 relative z-40">
-                <div
-                    class="flex flex-col md:flex-row gap-3 w-full bg-gray-50 p-2 rounded border border-gray-100 shadow-sm">
+                <div class="rounded-3xl border border-gray-100 bg-gray-50/90 p-4 md:p-5 shadow-sm">
+                    <div class="flex items-center justify-between gap-3 mb-4">
+                        <div>
+                            <div class="text-[10px] font-bold uppercase tracking-[0.25em] text-titan-red">{{ __('Refine results') }}</div>
+                            <div class="text-sm text-titan-navy/55 mt-1">{{ __('Search by title, then narrow by department or location.') }}</div>
+                        </div>
+                        <button @click="clearFilters()"
+                            class="md:hidden inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors shadow-sm">
+                            <x-lucide-rotate-ccw class="w-3.5 h-3.5" />
+                            {{ __('Reset') }}
+                        </button>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-3 w-full">
                     <!-- Search -->
                     <div class="relative flex-grow">
                         <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 text-titan-navy/20 w-4 h-4" />
                         <input type="text"
-                            placeholder="{{ __('Search for specific roles (e.g. Engineer, Supervisor)...') }}"
+                            placeholder="{{ __('Search roles, e.g. Engineer or Supervisor') }}"
                             x-model="searchQuery"
                             class="w-full pl-11 pr-4 py-3.5 rounded border-none bg-white text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/10 transition-all placeholder:text-titan-navy/25 shadow-sm" />
                     </div>
@@ -304,6 +365,7 @@
                             @endforeach
                         </div>
                     </div>
+                    </div>
                 </div>
             </div>
 
@@ -311,7 +373,7 @@
             <div class="space-y-6">
                 <template x-for="(job, index) in filteredJobs" :key="job.id">
                     <div
-                        class="bg-white border border-gray-100 rounded p-8 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] hover:border-gray-200 transition-all duration-400 group relative overflow-hidden">
+                        class="bg-white border border-gray-100 rounded p-8 hover:shadow-[0_24px_50px_-18px_rgba(15,23,42,0.12)] hover:border-gray-200 transition-all duration-400 group relative overflow-hidden">
                         <!-- Hover Accent Bar (Design-Z) -->
                         <div
                             class="absolute inset-y-0 left-0 w-0 group-hover:w-2 bg-titan-red transition-all duration-300">
@@ -320,18 +382,22 @@
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
                             <!-- Left: Job Info -->
                             <div class="flex-1 min-w-0">
-                                <div class="flex items-center flex-wrap gap-2 mb-4">
-                                    <template x-for="tag in job.tags">
-                                        <span
-                                            class="px-3 py-1 bg-titan-red/5 text-titan-red text-[10px] font-black uppercase tracking-[0.1em] rounded-md border border-titan-red/10"
+                        <div class="flex items-center flex-wrap gap-2 mb-4">
+                            <template x-for="tag in job.tags">
+                                <span
+                                            class="px-3 py-1 bg-titan-red/5 text-titan-red text-[10px] font-bold uppercase tracking-[0.1em] rounded-md border border-titan-red/10"
                                             x-text="tag"></span>
-                                    </template>
-                                    <span
-                                        class="bg-gray-50 px-3 py-1 rounded-md border border-gray-100 text-[10px] font-bold text-titan-navy/30 flex items-center gap-1.5">
-                                        <x-lucide-calendar class="w-3 h-3" /> <span x-text="job.postedDate"></span>
-                                    </span>
-                                </div>
-                                <h3 class="text-2xl font-black text-titan-navy group-hover:text-titan-red transition-colors mb-3 tracking-tight"
+                            </template>
+                            <span
+                                class="bg-gray-50 px-3 py-1 rounded-md border border-gray-100 text-[10px] font-bold text-titan-navy/30 flex items-center gap-1.5">
+                                <x-lucide-calendar class="w-3 h-3" /> <span x-text="job.postedDate"></span>
+                            </span>
+                            <span class="bg-titan-navy/5 px-3 py-1 rounded-md border border-titan-navy/10 text-[10px] font-bold text-titan-navy/60 flex items-center gap-1.5">
+                                <x-lucide-dollar-sign class="w-3 h-3 text-titan-red" />
+                                <span x-text="job.salary"></span>
+                            </span>
+                        </div>
+                                <h3 class="text-2xl font-bold text-titan-navy group-hover:text-titan-red transition-colors mb-3 tracking-tight"
                                     x-text="job.title"></h3>
                                 <p class="text-titan-navy/40 text-[13px] leading-relaxed line-clamp-2 max-w-2xl"
                                     x-text="job.summary"></p>
@@ -342,10 +408,10 @@
                                 class="flex flex-wrap gap-8 text-sm shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-6 lg:pt-0 lg:pl-8">
                                 <div>
                                     <div
-                                        class="text-[10px] font-black uppercase tracking-widest text-titan-navy/20 mb-2">
+                                        class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/20 mb-2">
                                         {{ __('Location') }}
                                     </div>
-                                    <div class="font-black text-titan-navy flex items-center gap-2 text-xs">
+                                    <div class="font-semibold text-titan-navy flex items-center gap-2 text-xs">
                                         <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
                                             <x-lucide-map-pin class="w-3 h-3 text-titan-red" />
                                         </div>
@@ -354,10 +420,10 @@
                                 </div>
                                 <div>
                                     <div
-                                        class="text-[10px] font-black uppercase tracking-widest text-titan-navy/20 mb-2">
+                                        class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/20 mb-2">
                                         {{ __('Experience') }}
                                     </div>
-                                    <div class="font-black text-titan-navy flex items-center gap-2 text-xs">
+                                    <div class="font-semibold text-titan-navy flex items-center gap-2 text-xs">
                                         <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
                                             <x-lucide-briefcase class="w-3 h-3 text-titan-red" />
                                         </div>
@@ -366,10 +432,10 @@
                                 </div>
                                 <div>
                                     <div
-                                        class="text-[10px] font-black uppercase tracking-widest text-titan-navy/20 mb-2">
+                                        class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/20 mb-2">
                                         {{ __('Job Type') }}
                                     </div>
-                                    <div class="font-black text-titan-navy flex items-center gap-2 text-xs">
+                                    <div class="font-semibold text-titan-navy flex items-center gap-2 text-xs">
                                         <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
                                             <x-lucide-clock class="w-3 h-3 text-titan-red" />
                                         </div>
@@ -397,10 +463,10 @@
                     <div class="w-16 h-16 bg-gray-50 rounded flex items-center justify-center mx-auto mb-5">
                         <x-lucide-search class="text-gray-200 w-7 h-7" />
                     </div>
-                    <h3 class="text-lg font-black text-titan-navy mb-2">{{ __('No positions found') }}</h3>
+                    <h3 class="text-lg font-bold text-titan-navy mb-2">{{ __('No positions found') }}</h3>
                     <p class="text-titan-navy/35 text-sm mb-6">{{ __('Try adjusting your search or filters.') }}</p>
                     <button
-                        @click="filterDept = '{{ __('All Departments') }}'; filterLoc = '{{ __('All Locations') }}'; searchQuery = ''"
+                        @click="clearFilters()"
                         class="bg-titan-navy text-white px-6 py-3 rounded font-bold text-xs uppercase tracking-widest hover:bg-titan-red transition-colors">
                         {{ __('Clear All Filters') }}
                     </button>
@@ -408,24 +474,22 @@
             </div>
 
             <!-- CTA Banner -->
-            <div class="mt-16 bg-titan-navy rounded p-10 md:p-14 text-white relative overflow-hidden">
-                <div
-                    class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+            <div class="mt-16 rounded-2xl border border-gray-100 bg-gray-50 p-10 md:p-14 text-titan-navy relative overflow-hidden shadow-sm">
+                <div class="absolute inset-0 opacity-60 bg-[linear-gradient(135deg,rgba(11,43,92,0.03),transparent_55%)]">
                 </div>
-                <div
-                    class="absolute top-0 right-0 w-[300px] h-[300px] bg-titan-red/10 rounded-full blur-[100px] pointer-events-none">
+                <div class="absolute top-0 right-0 w-[300px] h-[300px] bg-titan-red/5 rounded-full blur-[100px] pointer-events-none">
                 </div>
                 <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                     <div>
-                        <h3 class="text-2xl font-black uppercase tracking-tight mb-2">
+                        <h3 class="text-2xl font-bold uppercase tracking-tight mb-2">
                             {{ __("Don't see your perfect role?") }}
                         </h3>
-                        <p class="text-white/40 text-sm">
+                        <p class="text-titan-navy/45 text-sm">
                             {{ __('Send us your CV and we\'ll contact you for future opportunities.') }}
                         </p>
                     </div>
                     <button @click="isApplyOpen = true"
-                        class="shrink-0 border-2 border-white/30 text-white px-8 py-4 rounded font-bold text-xs uppercase tracking-widest hover:border-white hover:bg-white hover:text-titan-navy transition-all duration-300 shadow-lg flex items-center gap-3 group">
+                        class="shrink-0 border-2 border-titan-navy/15 bg-white text-titan-navy px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest hover:border-titan-red hover:text-titan-red transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-3 group">
                         <span>{{ __('General Application') }}</span>
                         <x-lucide-send
                             class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -437,132 +501,187 @@
         <!-- APPLICATION MODAL -->
         <div x-show="isApplyOpen" style="display: none"
             class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <div @click="isApplyOpen = false" class="absolute inset-0 bg-titan-navy/80 backdrop-blur-sm"></div>
+            <div @click="isApplyOpen = false" class="absolute inset-0 bg-titan-navy/55 backdrop-blur-sm"></div>
 
             <div x-show="isApplyOpen" x-transition.scale.95.opacity
-                class="relative w-full max-w-2xl bg-white rounded shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+                class="relative w-full max-w-4xl bg-white rounded-2xl shadow-[0_24px_50px_-24px_rgba(15,23,42,0.22)] overflow-hidden max-h-[90vh] overflow-y-auto border border-gray-100 scrollbar-clean">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-titan-navy to-titan-red"></div>
                 <button @click="isApplyOpen = false"
-                    class="absolute top-4 right-4 text-gray-400 hover:text-titan-red transition-colors bg-gray-50 rounded-full p-2">
+                    class="absolute top-4 right-4 text-gray-400 hover:text-titan-red transition-colors bg-gray-50 rounded-full p-2 z-20">
                     <x-lucide-x class="w-5 h-5" />
                 </button>
 
-                <div class="p-8 md:p-12">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-1 h-8 bg-titan-red rounded-full"></div>
-                        <div>
-                            <h3 class="text-xl font-black text-titan-navy uppercase tracking-tight">
+                <div class="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr]">
+                    <aside class="bg-gray-50 text-titan-navy p-8 md:p-10 lg:p-12 relative overflow-hidden border-b lg:border-b-0 lg:border-r border-gray-100">
+                        <div class="absolute -top-24 -right-16 w-64 h-64 rounded-full bg-titan-red/5 blur-3xl"></div>
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-2 rounded-full border border-titan-red/10 bg-titan-red/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-titan-red mb-6">
                                 {{ __('General Application') }}
+                            </div>
+                            <h3 class="text-3xl md:text-4xl font-bold uppercase tracking-tight leading-tight">
+                                {{ __('Ready to join our team?') }}
                             </h3>
-                            <p class="text-titan-navy/35 text-xs mt-0.5">
-                                {{ __('Ready to join our team? Fill out the form below.') }}
+                            <p class="mt-4 text-titan-navy/55 leading-relaxed">
+                                {{ __('Send your details once and we will review them for current and future opportunities.') }}
                             </p>
+
+                            <div class="mt-8 space-y-3">
+                                <div class="flex items-start gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                                    <div class="mt-0.5 w-8 h-8 rounded-full bg-titan-red/5 flex items-center justify-center shrink-0">
+                                        <x-lucide-clock class="w-4 h-4 text-titan-red" />
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">{{ __('Fast review') }}</div>
+                                        <div class="text-sm text-titan-navy/45">{{ __('Applications are checked by our recruitment team.') }}</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                                    <div class="mt-0.5 w-8 h-8 rounded-full bg-titan-red/5 flex items-center justify-center shrink-0">
+                                        <x-lucide-file-up class="w-4 h-4 text-titan-red" />
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">{{ __('Simple upload') }}</div>
+                                        <div class="text-sm text-titan-navy/45">{{ __('Attach your CV in PDF, DOC, or DOCX format.') }}</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                                    <div class="mt-0.5 w-8 h-8 rounded-full bg-titan-red/5 flex items-center justify-center shrink-0">
+                                        <x-lucide-send class="w-4 h-4 text-titan-red" />
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">{{ __('Direct route') }}</div>
+                                        <div class="text-sm text-titan-navy/45">{{ __('Use this form for general applications and open roles.') }}</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </aside>
+
+                    <div class="p-6 md:p-10 lg:p-12 bg-white">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-1 h-8 bg-titan-red rounded-full"></div>
+                            <div>
+                                <h3 class="text-xl font-bold text-titan-navy uppercase tracking-tight">
+                                    {{ __('General Application') }}
+                                </h3>
+                                <p class="text-titan-navy/35 text-xs mt-0.5">
+                                    {{ __('Ready to join our team? Fill out the form below.') }}
+                                </p>
+                            </div>
+                        </div>
+
+                        @if(session('success'))
+                            <div class="bg-green-50 text-green-700 p-4 rounded mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2"
+                                x-init="isApplyOpen = true">
+                                <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data"
+                            class="space-y-5">
+                            @csrf
+
+                            <!-- Honeypot Field (Hidden from humans) -->
+                            <div class="hidden" aria-hidden="true">
+                                <input type="text" name="website_url" tabindex="-1" autocomplete="off" />
+                            </div>
+
+                            <input type="hidden" name="job_id" value="general-application">
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-titan-navy/35 mb-2 ml-1">{{ __('Full Name') }}
+                                    <span class="text-titan-red">*</span></label>
+                                <input type="text" name="full_name" value="{{ old('full_name') }}" required
+                                    class="form-field w-full px-3.5 py-2.5 text-[13px] font-semibold @error('full_name') border-titan-red @enderror"
+                                    placeholder="{{ __('Your full name') }}" />
+                                @error('full_name') <p
+                                    class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
+                                    {{ $message }}
+                                </p> @enderror
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-titan-navy/35 mb-2 ml-1">{{ __('Email') }}
+                                        <span class="text-titan-red">*</span></label>
+                                    <input type="email" name="email" value="{{ old('email') }}" required
+                                        class="form-field w-full px-3.5 py-2.5 text-[13px] font-semibold @error('email') border-titan-red @enderror"
+                                        placeholder="{{ __('Your email address') }}" />
+                                    @error('email') <p
+                                        class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
+                                        {{ $message }}
+                                    </p> @enderror
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-bold text-titan-navy/35 mb-2 ml-1">{{ __('Phone') }}
+                                        <span class="text-titan-red">*</span></label>
+                                    <input type="tel" name="phone" value="{{ old('phone') }}" required
+                                        class="form-field w-full px-3.5 py-2.5 text-[13px] font-semibold @error('phone') border-titan-red @enderror"
+                                        placeholder="{{ __('Your phone number') }}" />
+                                    @error('phone') <p
+                                        class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
+                                        {{ $message }}
+                                    </p> @enderror
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label
+                                    class="block text-xs font-bold text-titan-navy/35 mb-2 ml-1">{{ __('Cover Letter / Message') }}</label>
+                                <textarea name="message" rows="3"
+                                    class="form-field w-full px-3.5 py-2.5 text-[13px] font-semibold rounded-2xl resize-none"
+                                    placeholder="{{ __('Write a short cover letter or note...') }}">{{ old('message') }}</textarea>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-titan-navy/35 mb-2 ml-1">{{ __('Resume / CV') }}
+                                    <span class="text-titan-red">*</span></label>
+                                <div class="border-2 border-dashed border-gray-200 rounded-2xl p-5 text-center bg-white hover:bg-gray-50/70 hover:border-gray-300 transition-all cursor-pointer relative @error('resume') border-titan-red @enderror"
+                                    x-data="{ fileName: '' }">
+                                    <input type="file" name="resume" required
+                                        class="absolute inset-0 opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx"
+                                        @change="fileName = $event.target.files[0]?.name || ''" />
+                                    <template x-if="!fileName">
+                                        <div class="space-y-2">
+                                            <div class="mx-auto w-10 h-10 rounded-full bg-titan-red/5 flex items-center justify-center">
+                                                <x-lucide-upload class="text-titan-red w-4 h-4" />
+                                            </div>
+                                            <p class="text-[13px] font-bold text-titan-navy">
+                                                {{ __('Click to Upload or Drag & Drop') }}
+                                            </p>
+                                            <p class="text-[11px] text-titan-navy/35">{{ __('PDF, DOCX up to 10MB') }}</p>
+                                        </div>
+                                    </template>
+                                    <template x-if="fileName">
+                                        <div class="space-y-2">
+                                            <div class="mx-auto w-10 h-10 rounded-full bg-green-50 flex items-center justify-center">
+                                                <x-lucide-file-text class="text-green-600 w-4 h-4" />
+                                            </div>
+                                            <p class="text-[13px] font-bold text-titan-navy break-all" x-text="fileName"></p>
+                                            <p class="text-[11px] text-green-600 font-bold">{{ __('File Selected') }}</p>
+                                        </div>
+                                    </template>
+                                </div>
+                                @error('resume') <p
+                                    class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
+                                    {{ $message }}
+                                </p> @enderror
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
+                                <p class="text-[10px] text-titan-navy/30 sm:flex-1">
+                                    {{ __('All fields marked with * are required') }}
+                                </p>
+                                <button type="submit"
+                                    class="w-full sm:w-auto bg-titan-red hover:bg-titan-navy text-white font-bold text-[11px] uppercase tracking-widest py-3 px-6 rounded-full transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 group">
+                                    {{ __('Submit Application') }}
+                                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-                    @if(session('success'))
-                        <div class="bg-green-50 text-green-700 p-4 rounded mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2"
-                            x-init="isApplyOpen = true">
-                            <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data"
-                        class="space-y-5">
-                        @csrf
-
-                        <!-- Honeypot Field (Hidden from humans) -->
-                        <div class="hidden" aria-hidden="true">
-                            <input type="text" name="website_url" tabindex="-1" autocomplete="off" />
-                        </div>
-
-                        <input type="hidden" name="job_id" value="general-application">
-
-                        <div class="space-y-2">
-                            <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Full Name') }}
-                                <span class="text-titan-red">*</span></label>
-                            <input type="text" name="full_name" value="{{ old('full_name') }}" required
-                                class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('full_name') border-titan-red @enderror"
-                                placeholder="{{ __('John Doe') }}" />
-                            @error('full_name') <p
-                                class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
-                                {{ $message }}
-                            </p> @enderror
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <div class="space-y-2">
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Email') }}
-                                    <span class="text-titan-red">*</span></label>
-                                <input type="email" name="email" value="{{ old('email') }}" required
-                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('email') border-titan-red @enderror"
-                                    placeholder="john@example.com" />
-                                @error('email') <p
-                                    class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
-                                    {{ $message }}
-                                </p> @enderror
-                            </div>
-                            <div class="space-y-2">
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Phone') }}
-                                    <span class="text-titan-red">*</span></label>
-                                <input type="tel" name="phone" value="{{ old('phone') }}" required
-                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none placeholder:text-gray-300 @error('phone') border-titan-red @enderror"
-                                    placeholder="+855 12 345 678" />
-                                @error('phone') <p
-                                    class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
-                                    {{ $message }}
-                                </p> @enderror
-                            </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <label
-                                class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Cover Letter / Message') }}</label>
-                            <textarea name="message" rows="3"
-                                class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/30 transition-all outline-none resize-none placeholder:text-gray-300"
-                                placeholder="{{ __('Brief motivation cover letter...') }}">{{ old('message') }}</textarea>
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="block text-xs font-bold text-titan-navy/40 mb-2 ml-1">{{ __('Resume / CV') }}
-                                <span class="text-titan-red">*</span></label>
-                            <div class="border-2 border-dashed border-gray-200 rounded p-6 text-center hover:bg-gray-50/50 hover:border-gray-300 transition-all cursor-pointer relative @error('resume') border-titan-red @enderror"
-                                x-data="{ fileName: '' }">
-                                <input type="file" name="resume" required
-                                    class="absolute inset-0 opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx"
-                                    @change="fileName = $event.target.files[0]?.name || ''" />
-                                <template x-if="!fileName">
-                                    <div>
-                                        <x-lucide-upload class="mx-auto mb-2 text-gray-300 w-6 h-6" />
-                                        <p class="text-sm font-bold text-titan-navy">
-                                            {{ __('Click to Upload or Drag & Drop') }}
-                                        </p>
-                                        <p class="text-xs text-gray-300 mt-1">{{ __('PDF, DOCX up to 10MB') }}</p>
-                                    </div>
-                                </template>
-                                <template x-if="fileName">
-                                    <div>
-                                        <x-lucide-file-text class="mx-auto mb-2 text-titan-red w-6 h-6" />
-                                        <p class="text-sm font-bold text-titan-navy" x-text="fileName"></p>
-                                        <p class="text-xs text-green-500 mt-1 font-bold">{{ __('File Selected') }}</p>
-                                    </div>
-                                </template>
-                            </div>
-                            @error('resume') <p
-                                class="text-[10px] text-titan-red font-bold uppercase tracking-widest mt-1 ml-1">
-                                {{ $message }}
-                            </p> @enderror
-                        </div>
-
-                        <button type="submit"
-                            class="w-full bg-titan-red hover:bg-titan-navy text-white font-bold text-xs uppercase tracking-widest py-4 rounded transition-all shadow-md flex items-center justify-center gap-2 group">
-                            {{ __('Submit Application') }}
-                            <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>
-    </div>
 </x-layouts.app>

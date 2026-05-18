@@ -3,6 +3,10 @@
 
     @php
         $locale = app()->getLocale();
+        $isKhmer = $locale === 'km';
+        $allTypesLabel = $isKhmer ? __('All Types') : __('All Types');
+        $allLocationsLabel = $isKhmer ? __('All Locations') : __('All Locations');
+        $allStatusLabel = $isKhmer ? __('All Status') : __('All Status');
         $fallbackImage = '/images/projects/Thumbnail-5.jpg';
         $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() use ($fallbackImage) {
             $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
@@ -61,6 +65,9 @@
         filterType: 'All',
         filterStatus: 'All',
         filterLoc: 'All',
+        allTypesLabel: {{ Js::from($allTypesLabel) }},
+        allLocationsLabel: {{ Js::from($allLocationsLabel) }},
+        allStatusLabel: {{ Js::from($allStatusLabel) }},
         search: '',
         sortBy: 'featured',
         projects: {{ Js::from($projects) }},
@@ -190,7 +197,7 @@
                 <!-- Scroll Indicator -->
                 <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-700 flex flex-col items-center gap-4 cursor-pointer group"
                     onclick="document.getElementById('portfolio-grid').scrollIntoView({ behavior: 'smooth' })">
-                    <span class="text-[9px] uppercase tracking-[0.4em] font-black text-white/40 group-hover:text-titan-red transition-colors">{{ __('Scroll') }}</span>
+                    <span class="text-[9px] uppercase tracking-[0.4em] font-bold text-white/40 group-hover:text-titan-red transition-colors">{{ __('Scroll') }}</span>
                     <div class="w-[1px] h-16 bg-gradient-to-b from-titan-red to-transparent"></div>
                 </div>
             </div>
@@ -206,8 +213,8 @@
                     <div class="border-b border-gray-100 px-4 py-3 md:px-5">
                         <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                             <div>
-                                <div class="text-[10px] font-bold uppercase tracking-[0.22em] text-titan-red">{{ __('Projects') }}</div>
-                                <div class="mt-1 text-sm font-bold text-titan-navy">
+                                <div class="{{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.22em]' }} text-titan-red">{{ __('Projects') }}</div>
+                                <div class="mt-1 {{ $isKhmer ? 'text-sm font-khmer normal-case tracking-normal leading-tight' : 'text-sm font-bold' }} text-titan-navy">
                                     <span x-text="activeCount"></span> {{ __('projects found') }}
                                 </div>
                             </div>
@@ -215,7 +222,7 @@
                             <div class="flex flex-wrap items-center gap-2">
                                 <button
                                     @click="clearFilters()"
-                                    class="inline-flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors">
+                                    class="inline-flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors">
                                     <x-lucide-rotate-ccw class="w-3.5 h-3.5" />
                                     {{ __('Clear filters') }}
                                 </button>
@@ -228,26 +235,26 @@
                             <template x-for="type in categories" :key="type">
                                 <button
                                     @click="filterType = type"
-                                    class="shrink-0 rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300"
+                                    class="shrink-0 rounded-full border px-3.5 py-2 min-h-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} transition-all duration-300"
                                     :class="filterType === type ? 'border-titan-red bg-titan-red text-white shadow-sm' : 'border-gray-200 bg-white text-titan-navy/55 hover:border-titan-red/30 hover:text-titan-navy'">
-                                    <span x-text="type === 'All' ? 'All Types' : type"></span>
+                                    <span x-text="type === 'All' ? allTypesLabel : type"></span>
                                 </button>
                             </template>
                         </nav>
 
-                        <div class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.7fr]">
+                        <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.7fr]">
                             <label class="relative block">
                                 <span class="sr-only">{{ __('Search projects') }}</span>
                                 <x-lucide-search class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/30" />
                                 <input type="text" x-model="search" placeholder="Search projects..."
-                                    class="w-full rounded border border-gray-200 bg-white py-3 pl-11 pr-4 text-[12px] font-normal text-titan-navy transition-colors placeholder:text-gray-400 focus:border-titan-red focus:outline-none focus:ring-1 focus:ring-titan-red/20" />
+                                    class="w-full rounded border border-gray-200 bg-white py-3 pl-11 pr-4 {{ $isKhmer ? 'text-[12px] font-khmer normal-case tracking-normal leading-tight' : 'text-[12px] font-normal' }} text-titan-navy transition-colors placeholder:text-gray-400 focus:border-titan-red focus:outline-none focus:ring-1 focus:ring-titan-red/20" />
                             </label>
 
                             <div class="relative">
                                 <select x-model="filterLoc"
-                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
+                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
                                     <template x-for="loc in locations" :key="loc">
-                                        <option :value="loc" x-text="loc === 'All' ? 'All Locations' : loc"></option>
+                                        <option :value="loc" x-text="loc === 'All' ? allLocationsLabel : loc"></option>
                                     </template>
                                 </select>
                                 <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
@@ -255,10 +262,10 @@
 
                             <div class="relative">
                                 <select x-model="filterStatus"
-                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
+                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
                                     <template x-for="stat in statusOptions" :key="stat">
                                         <option :value="stat"
-                                            x-text="stat === 'All' ? 'All Status' : stat"></option>
+                                            x-text="stat === 'All' ? allStatusLabel : stat"></option>
                                     </template>
                                 </select>
                                 <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
@@ -266,7 +273,7 @@
 
                             <div class="relative">
                                 <select x-model="sortBy"
-                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
+                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
                                     <option value="featured">{{ __('Featured') }}</option>
                                     <option value="title">{{ __('A-Z') }}</option>
                                     <option value="status">{{ __('Status') }}</option>
@@ -300,9 +307,9 @@
                                     <div class="w-8 h-1 bg-titan-red mb-5 group-hover:w-12 transition-all duration-300">
                                     </div>
 
-                                    <h3 class="text-xl font-black text-titan-navy leading-tight mb-2 group-hover:text-titan-red transition-colors uppercase tracking-tight"
+                                    <h3 class="text-xl font-bold text-titan-navy leading-tight mb-2 group-hover:text-titan-red transition-colors uppercase tracking-tight"
                                         x-text="project.title"></h3>
-                                    <p class="text-titan-navy/40 text-[10px] font-black uppercase tracking-widest mb-4"
+                                    <p class="text-titan-navy/40 text-[10px] font-bold uppercase tracking-widest mb-4"
                                         x-text="project.type"></p>
 
                                     <p class="text-gray-500 text-sm leading-relaxed mb-6 font-medium line-clamp-2"
@@ -314,14 +321,14 @@
                                         <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
                                             <div class="flex items-center gap-2">
                                                 <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red/70" />
-                                                <span class="text-[10px] font-black uppercase tracking-widest text-titan-navy/60" x-text="project.location"></span>
+                                                <span class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/60" x-text="project.location"></span>
                                             </div>
                                             <div class="flex items-center gap-2">
                                                 <x-lucide-activity class="w-3.5 h-3.5 text-titan-red/70" />
-                                                <span class="text-[10px] font-black uppercase tracking-widest text-titan-navy/60" x-text="project.status"></span>
+                                                <span class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/60" x-text="project.status"></span>
                                             </div>
                                         </div>                                        <div
-                                            class="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 text-titan-navy group-hover:text-titan-red transition-colors">
+                                        class="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 text-titan-navy group-hover:text-titan-red transition-colors">
                                             {{ __('View Details') }}
                                             <x-lucide-arrow-right
                                                 class="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -337,7 +344,7 @@
                 <div x-show="filteredProjects.length === 0" style="display: none;"
                     class="text-center py-40 bg-gray-50 rounded border border-dashed border-gray-100">
                     <x-lucide-building class="w-12 h-12 text-titan-navy/10 mx-auto mb-8" />
-                    <h3 class="text-2xl font-black text-titan-navy mb-4 uppercase tracking-tighter">
+                    <h3 class="text-2xl font-bold text-titan-navy mb-4 uppercase tracking-tighter">
                         {{ __('No Built Legacy Found') }}
                     </h3>
                     <p class="text-titan-navy/40 text-sm max-w-sm mx-auto leading-relaxed">

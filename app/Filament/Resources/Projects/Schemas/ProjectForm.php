@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Projects\Schemas;
 
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Toggle;
@@ -58,20 +57,22 @@ class ProjectForm
                                 ->label(__('Scale'))
                                 ->placeholder('e.g., 50,000 sqm or 5-story building'),
                         ]),
-                        Textarea::make('background')
+                        RichEditor::make('background')
                             ->label(__('Project Background'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->hintActions([
                                 AIHelper::getImproveAction('background'),
                                 TranslationHelper::getAutoTranslateAction('background'),
-                            ])
-                            ->rows(3),
-                        Textarea::make('objectives')
+                            ]),
+                        RichEditor::make('objectives')
                             ->label(__('Project Objectives'))
+                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsVisibility('public')
                             ->hintActions([
                                 AIHelper::getImproveAction('objectives'),
                                 TranslationHelper::getAutoTranslateAction('objectives'),
-                            ])
-                            ->rows(3),
+                            ]),
                     ]),
 
                 Section::make(__('Engineering & Design'))

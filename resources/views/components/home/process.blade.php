@@ -30,7 +30,7 @@
             class="text-center max-w-2xl mx-auto mb-16 transition-all duration-1000">
             <span
                 class="text-titan-red font-bold uppercase tracking-widest text-xs mb-4 block">{{ __('Our Process') }}</span>
-            <h2 class="text-4xl font-black text-titan-navy mb-4 tracking-tighter uppercase">{{ __('How We Work') }}</h2>
+            <h2 class="text-4xl font-bold text-titan-navy mb-4 tracking-tighter uppercase">{{ __('How We Work') }}</h2>
             <p class="text-titan-navy/60 text-lg">{{ __('A streamlined approach') }}</p>
         </div>
 
@@ -55,14 +55,14 @@
                                     class="mb-2 transition-all duration-500 w-10 h-10 relative z-10 text-titan-red"
                                     x-bind:class="hover ? 'scale-110' : ''" />
                                 
-                                <span class="text-[10px] font-black transition-all duration-500 relative z-10 tracking-[0.2em] uppercase text-titan-navy/20"
+                                <span class="text-[10px] font-bold transition-all duration-500 relative z-10 tracking-[0.2em] uppercase text-titan-navy/20"
                                     x-bind:class="hover ? '!text-titan-red' : ''">{{ $s['step'] }}</span>
                             </div>
                         </div>
 
                         <div class="transition-all duration-500">
                             <h3 x-bind:class="hover ? 'text-titan-red' : 'text-titan-navy'"
-                                class="text-lg font-black mb-3 transition-all duration-500 tracking-tight uppercase">
+                                class="text-lg font-bold mb-3 transition-all duration-500 tracking-tight uppercase">
                                 {{ $s['title'] }}</h3>
                             <p class="text-xs max-w-[180px] mx-auto leading-relaxed text-titan-navy/50 transition-all duration-500 font-medium">
                                 {{ $s['desc'] }}</p>
