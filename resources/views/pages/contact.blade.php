@@ -160,7 +160,7 @@
 
                 <!-- FORM (2/3) -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white border border-gray-100 rounded p-8 md:p-12 shadow-[0_28px_80px_-30px_rgba(11,43,92,0.28)]">
+            <div class="bg-white border border-gray-100 rounded p-8 md:p-12 shadow-lg">
                         <div class="flex items-center gap-4 mb-8">
                             <div class="w-1 h-8 bg-titan-red rounded-full"></div>
                             <div>

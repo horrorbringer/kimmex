@@ -54,7 +54,7 @@ class AISwitcher extends Component
         
         // Use the saved model for this provider if it exists
         $this->model = $settings['model'] ?? ''; 
-        
+
         SystemSetting::set('ai_settings', $settings);
         $this->provider = $newProvider;
         $this->loadModels();
