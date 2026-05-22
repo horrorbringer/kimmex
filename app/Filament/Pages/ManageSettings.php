@@ -96,7 +96,7 @@ class ManageSettings extends Page implements HasForms
             'mission' => $brand['en']['mission'] ?? '',
             'vision' => $brand['en']['vision'] ?? '',
             'goal' => $brand['en']['goal'] ?? '',
-            'values' => $brand['en']['values_list'] ?? [],
+            'values' => $this->normalizeCoreValues($brand['en']['values_list'] ?? []),
 
             // AI
             'ai_provider' => $ai['provider'] ?? 'gemini',
@@ -194,9 +194,19 @@ class ManageSettings extends Page implements HasForms
                                 Section::make(__('Core Values'))
                                     ->schema([
                                         Repeater::make('values')
-                                            ->simple(TextInput::make('value'))
+                                            ->label(__('Core Values'))
+                                            ->schema([
+                                                FileUpload::make('image')
+                                                    ->label(__('Image'))
+                                                    ->image()
+                                                    ->disk('public')
+                                                    ->directory('brand/core-values')
+                                                    ->visibility('public')
+                                                    ->columnSpanFull(),
+                                            ])
                                             ->reorderable()
-                                            ->collapsible(),
+                                            ->collapsible()
+                                            ->itemLabel(fn (array $state): string => filled($state['image'] ?? null) ? __('Image') : __('New image')),
                                     ])->collapsible()->collapsed(),
                             ]),
 
@@ -547,12 +557,17 @@ class ManageSettings extends Page implements HasForms
             'mission' => $state['mission'],
             'vision' => $state['vision'],
             'goal' => $state['goal'],
-            'values_list' => $state['values'],
+            'values_list' => $this->normalizeCoreValues($state['values'] ?? []),
         ];
 
         $brandKm = $autoTranslate
-            ? $translator->translateArray($brandEn, [], 'km')
+            ? $translator->translateArray($brandEn, ['icon', 'image'], 'km')
             : (SystemSetting::get('brand_identity')['km'] ?? []);
+
+        $brandKm['values_list'] = $this->syncCoreValueAssets(
+            $brandEn['values_list'],
+            $brandKm['values_list'] ?? []
+        );
 
         SystemSetting::set('brand_identity', [
             'ceo_name' => $state['ceo_name'],
@@ -605,5 +620,53 @@ class ManageSettings extends Page implements HasForms
             ->body(__('All settings, including advanced AI persona and translations, have been updated.'))
             ->success()
             ->send();
+    }
+
+    protected function normalizeCoreValues(array $values): array
+    {
+        return collect($values)
+            ->map(function ($value) {
+                if (is_string($value)) {
+                    return [
+                        'title' => $value,
+                        'description' => '',
+                        'icon' => 'lucide-shield',
+                        'image' => null,
+                    ];
+                }
+
+                if (!is_array($value)) {
+                    return null;
+                }
+
+                return [
+                    'title' => $value['title'] ?? ($value['value'] ?? ''),
+                    'description' => $value['description'] ?? '',
+                    'icon' => $value['icon'] ?? 'lucide-shield',
+                    'image' => $value['image'] ?? null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    protected function syncCoreValueAssets(array $sourceValues, array $targetValues): array
+    {
+        $targetValues = $this->normalizeCoreValues($targetValues);
+
+        foreach ($sourceValues as $index => $value) {
+            if (!isset($targetValues[$index]) || !is_array($targetValues[$index])) {
+                $targetValues[$index] = [
+                    'title' => $value['title'] ?? '',
+                    'description' => $value['description'] ?? '',
+                ];
+            }
+
+            $targetValues[$index]['icon'] = $value['icon'] ?? 'lucide-shield';
+            $targetValues[$index]['image'] = $value['image'] ?? null;
+        }
+
+        return array_values($targetValues);
     }
 }

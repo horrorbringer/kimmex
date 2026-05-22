@@ -16,10 +16,19 @@
                 if (!preg_match('/^[a-zA-Z0-9\-]+$/', $icon)) {
                     $icon = 'lucide-shield';
                 }
+
+                $image = $v['image'] ?? null;
+                if ($image && !\Illuminate\Support\Str::startsWith($image, ['http://', 'https://', '/'])) {
+                    $image = \Illuminate\Support\Facades\Storage::disk('public')->exists($image)
+                        ? \Illuminate\Support\Facades\Storage::url($image)
+                        : null;
+                }
+
                 return [
                     'title' => $v['title'] ?? '',
                     'content' => $v['description'] ?? '',
-                    'icon' => $icon
+                    'icon' => $icon,
+                    'image' => $image,
                 ];
             }, $brand['values_list'] ?? [])
         ];
@@ -27,10 +36,10 @@
         // Fallback values if branding values list is empty
         if (empty($aboutData['values'])) {
             $aboutData['values'] = [
-                ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction sites.'), 'icon' => 'lucide-heart'],
-                ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.'), 'icon' => 'lucide-award'],
-                ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.'), 'icon' => 'lucide-shield'],
-                ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.'), 'icon' => 'lucide-lightbulb']
+                ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction sites.'), 'icon' => 'lucide-heart', 'image' => null],
+                ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.'), 'icon' => 'lucide-award', 'image' => null],
+                ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.'), 'icon' => 'lucide-shield', 'image' => null],
+                ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.'), 'icon' => 'lucide-lightbulb', 'image' => null]
             ];
         }
 
@@ -465,36 +474,15 @@
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="space-y-8">
                     @foreach($aboutData['values'] as $i => $value)
-                        <div x-data="{ shown: false, hover: false }" x-intersect.once="shown = true"
-                            @mouseenter="hover = true" @mouseleave="hover = false"
+                        @continue(empty($value['image']))
+
+                        <div x-data="{ shown: false }" x-intersect.once="shown = true"
                             x-bind:class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                             class="transition-all duration-700" style="transition-delay: {{ $i * 100 }}ms">
-                            <div
-                                class="bg-white p-10 rounded border-2 border-gray-100 transition-all duration-500 h-full relative overflow-hidden"
-                                x-bind:class="hover ? 'border-titan-red shadow-[0_30px_60px_-15px_rgba(227,30,36,0.1)] -translate-y-2' : ''">
-                                
-                                <div
-                                    class="w-16 h-16 rounded-full flex items-center justify-center text-titan-red mb-8 transition-all duration-500 border border-gray-100"
-                                    x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : 'bg-gray-50/50'">
-                                    <x-dynamic-component :component="$value['icon']" class="w-7 h-7" stroke-width="1.5" />
-                                </div>
-                                
-                                <h3
-                                    class="text-xl font-heading font-black text-titan-navy mb-4 transition-colors duration-500"
-                                    x-bind:class="hover ? 'text-titan-red' : ''">
-                                    {{ $value['title'] }}
-                                </h3>
-                                <p class="text-sm text-titan-navy/50 leading-relaxed font-medium transition-colors duration-500"
-                                    x-bind:class="hover ? 'text-titan-navy/70' : ''">
-                                    {{ $value['content'] }}
-                                </p>
-
-                                <!-- Bottom Accent Line -->
-                                <div class="absolute bottom-0 left-0 right-0 h-1 bg-titan-red transition-all duration-500 transform origin-left"
-                                    x-bind:class="hover ? 'scale-x-100' : 'scale-x-0'"></div>
-                            </div>
+                            <img src="{{ $value['image'] }}" alt=""
+                                class="block w-full max-w-none h-auto rounded">
                         </div>
                     @endforeach
                 </div>
