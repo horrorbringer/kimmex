@@ -27,6 +27,8 @@ class ServicesTable
                     ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction)),
                 \Filament\Tables\Columns\ToggleColumn::make('isActive')
                     ->label(__('Is Active'))
+                    ->onColor('success')
+                    ->offColor('danger')
                     ->sortable(),
                 TextColumn::make('orderIndex')
                     ->label(__('Order'))

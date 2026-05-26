@@ -189,8 +189,25 @@
                                 class="w-10 h-10 rounded bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all">
                                 <x-lucide-send class="w-4 h-4" />
                             </a>
-                            <button x-data="{ copied: false }"
-                                @click="navigator.clipboard?.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 1600)"
+                            <button x-data="{ 
+                                    copied: false,
+                                    copyLink() {
+                                        const url = window.location.href;
+                                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                                            navigator.clipboard.writeText(url).catch(() => {});
+                                        } else {
+                                            const el = document.createElement('textarea');
+                                            el.value = url;
+                                            document.body.appendChild(el);
+                                            el.select();
+                                            document.execCommand('copy');
+                                            document.body.removeChild(el);
+                                        }
+                                        this.copied = true;
+                                        setTimeout(() => this.copied = false, 1600);
+                                    }
+                                }"
+                                @click="copyLink()"
                                 class="h-10 px-4 rounded border border-gray-200 bg-white text-titan-navy hover:text-titan-red hover:border-titan-red/30 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] transition-all">
                                 <x-lucide-link class="w-4 h-4" />
                                 <span x-text="copied ? '{{ __('Copied') }}' : '{{ __('Copy') }}'"></span>

@@ -21,7 +21,9 @@ class ProjectsTable
                     ->disk('public')
                     ->circular(),
                 ToggleColumn::make('isActive')
-                    ->label(__('Active')),
+                    ->label(__('Active'))
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()

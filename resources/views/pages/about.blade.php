@@ -571,8 +571,27 @@
         </section>
 
         <!-- ORG CHART SECTON -->
+        @php
+            $orgProfile = \App\Models\SystemSetting::get('organization_profile', []);
+            $orgChartType = $orgProfile['org_chart_type'] ?? 'dynamic';
+            $orgChartImage = $orgProfile['org_chart_image'] ?? null;
+            $orgChartPdf = $orgProfile['org_chart_pdf'] ?? null;
+
+            if ($orgChartImage && !\Illuminate\Support\Str::startsWith($orgChartImage, ['http://', 'https://', '/'])) {
+                $orgChartImage = \Illuminate\Support\Facades\Storage::disk('public')->exists($orgChartImage)
+                    ? \Illuminate\Support\Facades\Storage::url($orgChartImage)
+                    : null;
+            }
+            if ($orgChartPdf && !\Illuminate\Support\Str::startsWith($orgChartPdf, ['http://', 'https://', '/'])) {
+                $orgChartPdf = \Illuminate\Support\Facades\Storage::disk('public')->exists($orgChartPdf)
+                    ? \Illuminate\Support\Facades\Storage::url($orgChartPdf)
+                    : null;
+            }
+        @endphp
+
         <section id="leadership" class="py-32 px-6 bg-gray-50 overflow-hidden relative border-b border-gray-100">
-            <div class="max-w-[1700px] mx-auto relative z-10 overflow-x-auto pb-12">
+            <div class="max-w-[1700px] mx-auto relative z-10 pb-12">
+                @if($orgChartType === 'dynamic')
                 <div class="text-center mb-24">
                     <span
                         class="text-titan-red font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('GOVERNANCE') }}</span>
@@ -580,10 +599,47 @@
                         {{ __('KIM MEX ORGANIZATION STRUCTURE') }}
                     </h2>
                 </div>
+                @endif
 
-                <div class="min-w-[800px] flex justify-center">
-                    <x-about.org-node :node="$orgChart" :level="0" :small="true" />
-                </div>
+                @if($orgChartType === 'image' && $orgChartImage)
+                    {{-- IMAGE MODE --}}
+                    <div class="flex justify-center" x-data="{ shown: false }" x-intersect.once="shown = true">
+                        <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                             class="transition-all duration-1000 w-full max-w-6xl mx-auto">
+                            <img src="{{ $orgChartImage }}"
+                                 alt="{{ __('Organization Structure') }}"
+                                 class="w-full h-auto rounded-lg shadow-xl border border-gray-200" loading="lazy" />
+                        </div>
+                    </div>
+
+                @elseif($orgChartType === 'pdf' && $orgChartPdf)
+                    {{-- PDF MODE --}}
+                    <div class="flex flex-col items-center gap-6" x-data="{ shown: false }" x-intersect.once="shown = true">
+                        <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                             class="transition-all duration-1000 w-full max-w-5xl mx-auto">
+                            <div class="rounded-lg shadow-xl border border-gray-200 overflow-hidden bg-white">
+                                <iframe src="{{ $orgChartPdf }}"
+                                        class="w-full border-0"
+                                        style="height: 80vh; min-height: 600px;"
+                                        title="{{ __('Organization Structure') }}">
+                                </iframe>
+                            </div>
+                            <div class="text-center mt-6">
+                                <a href="{{ $orgChartPdf }}" target="_blank" download
+                                   class="inline-flex items-center gap-2 bg-titan-navy text-white px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-titan-red transition-colors duration-300 shadow-md">
+                                    <x-lucide-download class="w-4 h-4" />
+                                    {{ __('Download Organization Chart') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                @else
+                    {{-- DYNAMIC INTERACTIVE MODE (default) --}}
+                    <div class="min-w-[800px] flex justify-center overflow-x-auto">
+                        <x-about.org-node :node="$orgChart" :level="0" :small="true" />
+                    </div>
+                @endif
             </div>
         </section>
 
@@ -679,7 +735,7 @@
                 </h2>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
                     <a href="/contact"
-                        class="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg">
+                        class="bg-white text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm border-2 border-white hover:!bg-titan-red hover:!border-titan-red hover:!text-white hover:-translate-y-0.5 hover:shadow-xl transition-all rounded-lg">
                         {{ __('Contact Us') }}
                     </a>
                     <a href="/projects"

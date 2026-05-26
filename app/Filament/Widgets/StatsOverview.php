@@ -6,17 +6,24 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use App\Models\JobApplication;
 use App\Models\Inquiry;
+use App\Models\MethodologyStep;
 use App\Models\Project;
 
 class StatsOverview extends BaseWidget
 {
     protected function getStats(): array
     {
+        $activeMethodologySteps = MethodologyStep::where('isActive', true)->count();
+
         return [
             Stat::make('Total Projects', Project::count())
                 ->description('All active and past projects')
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary'),
+            Stat::make('Methodology Steps', $activeMethodologySteps ?: 5)
+                ->description($activeMethodologySteps ? 'Active process steps on the website' : 'Demo process steps ready to generate')
+                ->descriptionIcon('heroicon-m-queue-list')
+                ->color('info'),
             Stat::make('New Job Applications', JobApplication::where('created_at', '>=', now()->subDays(7))->count())
                 ->description('Received in the last 7 days')
                 ->descriptionIcon('heroicon-m-document-check')

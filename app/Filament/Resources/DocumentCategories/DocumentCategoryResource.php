@@ -138,7 +138,9 @@ class DocumentCategoryResource extends Resource
                     ->label(__('Order'))
                     ->sortable(),
                 ToggleColumn::make('isActive')
-                    ->label(__('Active')),
+                    ->label(__('Active'))
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('created_at')
                     ->label(__('Created At'))
                     ->dateTime()

@@ -50,7 +50,8 @@ class AdminPanelProvider extends PanelProvider
             ->font('Kantumruy Pro')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex(self::getThemeColor('primary_color', '#E31E24')),
+                'secondary' => Color::hex(self::getThemeColor('secondary_color', '#1a1a2e')),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -86,6 +87,53 @@ class AdminPanelProvider extends PanelProvider
                 \Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'ai-switcher\')'),
             )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::HEAD_END,
+                function (): string {
+                    $primaryHover = self::getThemeColor('primary_color_hover', '#C8151D');
+                    $primaryColor = self::getThemeColor('primary_color', '#E31E24');
+                    
+                    $hex2rgb = function ($hex) {
+                        $hex = str_replace('#', '', $hex);
+                        if (strlen($hex) == 3) {
+                            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+                            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+                            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+                        } else {
+                            $r = hexdec(substr($hex, 0, 2));
+                            $g = hexdec(substr($hex, 2, 2));
+                            $b = hexdec(substr($hex, 4, 2));
+                        }
+                        return "$r, $g, $b";
+                    };
+                    
+                    $primaryHoverRgb = $hex2rgb($primaryHover);
+                    $primaryColorRgb = $hex2rgb($primaryColor);
+                    
+                    return "<style>
+                        :root {
+                            /* Override primary color shades */
+                            --primary-500: {$primaryColorRgb};
+                            --primary-600: {$primaryHoverRgb};
+                        }
+                        
+                        /* Dynamic hover overrides for links and specific interactive components */
+                        .fi-btn.fi-color-primary:not(.fi-btn-outline):hover {
+                            background-color: {$primaryHover} !important;
+                        }
+                        .fi-link.fi-color-primary:hover, .fi-link.fi-color-primary:focus {
+                            color: {$primaryHover} !important;
+                        }
+                        .fi-sidebar-item-button:hover, .fi-sidebar-item-button:focus {
+                            background-color: rgba({$primaryHoverRgb}, 0.08) !important;
+                        }
+                        .fi-tabs-item:hover {
+                            color: {$primaryHover} !important;
+                            border-color: {$primaryHover} !important;
+                        }
+                    </style>";
+                }
+            )
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()
                     ->label(fn() => __('Organization'))
@@ -109,5 +157,14 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+    }
+
+    protected static function getThemeColor(string $key, string $default): string
+    {
+        try {
+            return \App\Models\SystemSetting::get('theme_settings', [])[$key] ?? $default;
+        } catch (\Exception $e) {
+            return $default;
+        }
     }
 }

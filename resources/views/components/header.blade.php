@@ -133,22 +133,9 @@
             <div class="flex justify-between items-center h-20">
 
                 <!-- Logo -->
-                <a href="/" class="flex items-center gap-3 group cursor-pointer">
-                    <div class="relative">
-                        <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
-                            class="h-12 w-auto object-contain transition-all duration-300" />
-                    </div>
-                    <div class="leading-none flex flex-col justify-center">
-                        <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                            class="block {{ app()->getLocale() === 'km' ? 'font-khmer text-[20px] tracking-normal' : 'text-[25px] tracking-[0.15em] uppercase font-bold' }} transition-colors duration-300 mt-0.5 group-hover:text-titan-red"
-                            style="{{ app()->getLocale() !== 'km' ? "font-family: 'Bebas Neue', sans-serif;" : '' }}">
-                            {{ $companyName }}
-                        </span>
-                        <span :class="navDark ? 'text-titan-navy/50' : 'text-white/60'"
-                            class="hidden sm:block {{ app()->getLocale() === 'km' ? 'font-khmer text-[11px] tracking-normal' : 'text-[9px] font-bold tracking-[0.15em] uppercase' }} transition-colors duration-300 mt-0.5">
-                            {{ $tagline }}
-                        </span>
-                    </div>
+                <a href="/" class="flex items-center group cursor-pointer">
+                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
+                        class="h-14 w-auto object-contain transition-all duration-300" />
                 </a>
 
                 <!-- Desktop Menu -->

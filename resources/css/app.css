@@ -479,6 +479,17 @@ a.link:hover,
   font-size: 1.05em; /* Boost size slightly for visual parity with English */
 }
 
+/* Tailwind tracking/leading utilities on child elements break Khmer shaping. */
+.khmer-optimized :where(a, button, span, p, div, li, label, input, textarea, select, h1, h2, h3, h4, h5, h6) {
+  font-family: var(--font-km);
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.khmer-optimized :where(p, li, blockquote, dd, dt) {
+  line-height: 1.85 !important;
+}
+
 /* Ensure headings in Khmer also have enough space */
 .khmer-optimized h1, 
 .khmer-optimized h2, 

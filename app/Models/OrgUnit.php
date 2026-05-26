@@ -45,6 +45,11 @@ class OrgUnit extends Model
         return $this->belongsTo(OrgUnit::class, 'parentId');
     }
 
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OrgUnit::class, 'parentId');
+    }
+
     public function employee(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Employee::class, 'employeeId');

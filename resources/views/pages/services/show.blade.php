@@ -196,7 +196,7 @@
 
         $valueProp = [
             [
-                'icon' => 'lucide-users',
+                'icon' => 'lucide-handshake',
                 'title' => ['en' => 'Single Point of Contact', 'kh' => 'ចំណុចទំនាក់ទំនងតែមួយ'],
                 'desc' => [
                     'en' => 'Streamlined communication and accountability.',
@@ -212,7 +212,7 @@
                 ],
             ],
             [
-                'icon' => 'lucide-trending-up',
+                'icon' => 'lucide-dollar-sign',
                 'title' => ['en' => 'Cost Certainty', 'kh' => 'ភាពប្រាកដប្រជាថ្លៃដើម'],
                 'desc' => [
                     'en' => 'Reduced change orders and accurate budgeting.',
@@ -403,20 +403,19 @@
         </section>
         <!-- === 3. SCOPE OF WORK === -->
         @if (!empty($service['scopeItems'] ?? []))
-            <section id="scope-of-work" class="py-24 bg-[#111827] text-white relative overflow-hidden">
-                <div
-                    class="absolute top-0 right-0 w-[500px] h-[500px] bg-titan-red/10 rounded-full blur-[120px] pointer-events-none">
-                </div>
+            <section id="scope-of-work" class="py-24 bg-slate-50 text-titan-navy relative overflow-hidden border-y border-slate-200">
+                <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-titan-red/25 to-transparent pointer-events-none"></div>
 
                 <div class="max-w-[1400px] mx-auto px-6 relative z-10">
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="text-center mb-16 transition-all duration-1000">
+                        class="text-center max-w-2xl mx-auto mb-16 transition-all duration-1000">
                         <span
                             class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'វិសាលភាពការងារ' : 'Scope of Work' }}</span>
-                        <h2 class="text-2xl md:text-3xl font-bold mb-5 !text-white">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-4 text-titan-navy">
                             {{ $lang === 'kh' ? 'សេវាកម្មដ៏ទូលំទូលាយ' : 'Comprehensive Coverage' }}
                         </h2>
+                        <div class="w-16 h-1 bg-titan-red mx-auto rounded-full"></div>
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-6">
@@ -424,13 +423,13 @@
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 style="transition-delay: {{ $i * 100 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white/[0.07] border border-white/15 rounded hover:bg-white/[0.11] hover:border-titan-red/40 transition-all duration-300 h-full">
+                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white border border-slate-200 rounded shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-titan-red/30 transition-all duration-300 h-full">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-titan-red/10 border border-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red/20 group-hover:border-titan-red/40 transition-colors duration-300">
-                                    <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red" />
+                                    class="w-10 h-10 rounded-full bg-titan-red/10 border border-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:border-titan-red transition-colors duration-300">
+                                    <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red group-hover:text-white transition-colors duration-300" />
                                 </div>
                                 <span
-                                    class="font-bold text-lg leading-tight pt-2 group-hover:text-titan-red transition-colors">{{ $item[$lang] }}</span>
+                                    class="font-bold text-lg leading-tight pt-2 text-titan-navy group-hover:text-titan-red transition-colors">{{ $item[$lang] }}</span>
                             </div>
                         @endforeach
                     </div>
@@ -549,20 +548,20 @@
         </section>
 
         <!-- === 6. FEATURED PROJECTS === -->
-        <section class="py-24 bg-titan-navy text-white px-6">
+        <section class="py-24 bg-gray-50 text-titan-navy px-6">
             <div class="max-w-[1400px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8 transition-all duration-1000">
+                    class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-gray-200 pb-8 transition-all duration-1000">
                     <div>
                         <span
                             class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'ស្នាដៃ' : 'Portfolio' }}</span>
-                        <h2 class="text-2xl md:text-3xl font-bold">{{ __('Featured Projects') }}</h2>
+                        <h2 class="text-2xl md:text-3xl font-bold text-titan-navy">{{ __('Featured Projects') }}</h2>
                     </div>
                     <a href="/projects"
-                        class="mt-8 md:mt-0 px-8 py-3 bg-white/10 hover:bg-white hover:text-titan-navy transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg backdrop-blur-sm">
+                        class="mt-8 md:mt-0 px-8 py-3 bg-titan-navy hover:bg-titan-red text-white transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg">
                         {{ $lang === 'kh' ? 'មើលគម្រោងទាំងអស់' : 'View All Projects' }} <x-lucide-arrow-right
-                            class="w-4 h-4" />
+                            class="w-4 h-4 text-white" />
                     </a>
                 </div>
 
@@ -586,7 +585,7 @@
                                         class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                                         <span
                                             class="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{{ $project['category'][$lang] }}</span>
-                                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-2">
+                                        <h3 class="text-2xl md:text-3xl font-bold !text-white mb-2">
                                             {{ $project['title'][$lang] }}
                                         </h3>
                                         <div class="flex items-center gap-2 text-white/100 text-sm">
@@ -610,7 +609,7 @@
         <!-- === FOOTER CTA === -->
         <section class="py-24 bg-white text-center px-6">
             <div
-                class="max-w-3xl mx-auto bg-titan-red rounded p-12 md:p-16 shadow-2xl shadow-titan-red/30 relative overflow-hidden">
+                class="max-w-3xl mx-auto bg-titan-navy rounded p-12 md:p-16 shadow-2xl shadow-titan-navy/30 relative overflow-hidden">
                 <div
                     class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[50px] translate-x-1/2 -translate-y-1/2 pointer-events-none">
                 </div>
@@ -621,14 +620,14 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 relative z-10">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold !text-white mb-4">
                         {{ $lang === 'kh' ? 'រួចរាល់សម្រាប់ការចាប់ផ្តើម?' : 'Ready to start?' }}
                     </h2>
-                    <p class="text-white/100 text-base mb-8 font-medium">
+                    <p class="!text-white/80 text-base mb-8 font-normal">
                         {{ $lang === 'kh' ? 'ទាក់ទងក្រុមការងារជំនាញរបស់យើងថ្ងៃនេះ សម្រាប់ការពិគ្រោះយោបល់ និងការសិក្សាសមិទ្ធភាពដោយឥតគិតថ្លៃ។' : 'Contact our expert team today for a free consultation and feasibility study.' }}
                     </p>
                     <a href="/contact"
-                        class="inline-flex items-center gap-2 bg-white text-titan-red px-10 py-5 font-bold uppercase tracking-widest hover:bg-titan-navy hover:text-white transition-all shadow-xl rounded-lg group">
+                        class="inline-flex items-center gap-2 bg-titan-red text-white px-10 py-5 font-bold uppercase tracking-widest hover:bg-white hover:text-titan-navy transition-all shadow-xl rounded-lg group">
                         {{ $lang === 'kh' ? 'ស្នើសុំការប្រឹក្សា' : 'Request Quote' }} <x-lucide-arrow-right
                             class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </a>

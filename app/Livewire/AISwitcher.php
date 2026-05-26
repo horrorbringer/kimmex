@@ -16,7 +16,9 @@ class AISwitcher extends Component
     {
         $settings = SystemSetting::get('ai_settings', []);
         $this->provider = $settings['provider'] ?? 'gemini';
-        $this->model = $settings['model'] ?? '';
+        $this->model = $this->provider === 'ollama'
+            ? ($settings['ollama']['model'] ?? $settings['model'] ?? '')
+            : ($settings['gemini']['model'] ?? $settings['model'] ?? '');
         $this->loadModels();
     }
 
@@ -25,8 +27,8 @@ class AISwitcher extends Component
         try {
             $service = new \App\Services\AIGeneratorService();
             $settings = SystemSetting::get('ai_settings', []);
-            $apiKey = $settings['api_key'] ?? '';
-            $baseUrl = $settings['base_url'] ?? 'http://localhost:11434';
+            $apiKey = $settings['gemini']['api_key'] ?? $settings['api_key'] ?? '';
+            $baseUrl = $settings['ollama']['base_url'] ?? $settings['base_url'] ?? 'http://localhost:11434';
 
             if ($this->provider === 'gemini' && empty($apiKey)) {
                 $this->availableModels = ['gemini-1.5-flash' => 'Gemini 1.5 Flash (Default)'];
@@ -53,7 +55,9 @@ class AISwitcher extends Component
         $settings['provider'] = $newProvider;
         
         // Use the saved model for this provider if it exists
-        $this->model = $settings['model'] ?? ''; 
+        $this->model = $newProvider === 'ollama'
+            ? ($settings['ollama']['model'] ?? $settings['model'] ?? '')
+            : ($settings['gemini']['model'] ?? $settings['model'] ?? '');
 
         SystemSetting::set('ai_settings', $settings);
         $this->provider = $newProvider;
@@ -69,7 +73,9 @@ class AISwitcher extends Component
     public function updatedModel($value)
     {
         $settings = SystemSetting::get('ai_settings', []);
-        $settings['model'] = $value;
+        $providerSettings = $settings[$this->provider] ?? [];
+        $providerSettings['model'] = $value;
+        $settings[$this->provider] = $providerSettings;
         SystemSetting::set('ai_settings', $settings);
 
         Notification::make()

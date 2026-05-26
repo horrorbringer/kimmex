@@ -45,7 +45,9 @@ class NewsArticlesTable
                     ->boolean()
                     ->label(__('Is Trending')),
                 ToggleColumn::make('isActive')
-                    ->label(__('Active')),
+                    ->label(__('Active'))
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('readTime')
                     ->label(__('Read Time'))
                     ->suffix(__(' mins'))

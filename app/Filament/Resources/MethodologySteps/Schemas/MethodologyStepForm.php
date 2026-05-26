@@ -8,6 +8,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use App\Filament\Support\AIHelper;
 use App\Filament\Support\TranslationHelper;
 
 class MethodologyStepForm
@@ -21,11 +22,16 @@ class MethodologyStepForm
                         TextInput::make('title')
                             ->label(__('Title'))
                             ->required()
-                            ->suffixAction(TranslationHelper::getAutoTranslateAction('title')),
+                            ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
+                            ->hintAction(AIHelper::getImproveAction('title', 'Improve this methodology step title so it is concise and action-oriented.')),
                         RichEditor::make('description')
                             ->label(__('Description'))
                             ->required()
-                            ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
+                            ->hintActions([
+                                AIHelper::getGenerateAction('description', 'Methodology Step Description'),
+                                AIHelper::getImproveAction('description', 'Improve this methodology step description for a construction company workflow.'),
+                                TranslationHelper::getAutoTranslateAction('description'),
+                            ])
                             ->columnSpanFull(),
                         Grid::make(3)
                             ->components([

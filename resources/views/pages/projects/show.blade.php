@@ -3,6 +3,7 @@
 
     $locale = app()->getLocale();
     $contentLocale = $locale === 'kh' ? 'km' : $locale;
+    $defaultProjectImage = '/images/projects/Thumbnail-1.jpg';
 
     $resolveContent = function (\Illuminate\Database\Eloquent\Model $projectDb, string $field, array $fallbackLocales = ['en']) use ($contentLocale): string {
         $locales = array_values(array_unique(array_filter(array_merge([$contentLocale], $fallbackLocales))));
@@ -35,7 +36,7 @@
     };
 
     // Use the $slug passed from the router to fetch the project
-    $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$contentLocale}", now()->addHours(12), function() use ($slug, $contentLocale, $resolveContent) {
+    $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$contentLocale}", now()->addHours(12), function() use ($slug, $contentLocale, $resolveContent, $defaultProjectImage) {
         $projectDb = \App\Models\Project::where('isActive', true)->where('slug', $slug)->first();
         if (!$projectDb) return null;
 
@@ -52,7 +53,7 @@
             'year' => $projectDb->timeline ?: __('2023 - 2026'),
             'heroImage' => ($projectDb->heroImage && (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? file_exists(public_path($projectDb->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($projectDb->heroImage)))
                 ? (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? $projectDb->heroImage : \Illuminate\Support\Facades\Storage::url($projectDb->heroImage))
-                : null,
+                : $defaultProjectImage,
 
             'narrative' => [
                 'description' => $resolveContent($projectDb, 'description'),
@@ -88,7 +89,7 @@
             'built_area' => __('50,000 SQM'),
             'contract_value' => __('$120.5M'),
             'year' => __('2023 - 2026'),
-            'heroImage' => '/images/projects/Thumbnail-1.jpg',
+            'heroImage' => $defaultProjectImage,
             'narrative' => [
                 'description' => __('A definitive case study on administrative centralization and public infrastructure integration for the Royal Government of Cambodia.'),
                 'background' => __('A definitive case study on administrative centralization and public infrastructure integration for the Royal Government of Cambodia.'),
@@ -105,6 +106,8 @@
             ]
         ];
     }
+
+    $project['heroImage'] = $project['heroImage'] ?: $defaultProjectImage;
 
     $renderProjectContent = function (?string $content, string $mode = 'auto'): string {
         $content = trim((string) $content);
@@ -199,12 +202,8 @@
 
         <!-- --- PREMIUM NARRATIVE HERO --- -->
         <header class="relative w-full h-[75vh] min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
-            @if($project['heroImage'])
-                <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                    class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" />
-            @else
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--color-kmd-navy-light)_0%,var(--color-kmd-navy)_100%)]"></div>
-            @endif
+            <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
+                class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" />
             
             {{-- Deep multi-stage gradient for maximum text contrast --}}
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
@@ -215,19 +214,19 @@
 
                 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 delay-300 font-black text-white uppercase tracking-tighter leading-[0.9] mb-8"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important;">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 mx-auto max-w-5xl drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'uppercase tracking-tighter leading-[0.9]' }}"
+                    style="font-size: {{ $contentLocale === 'km' ? 'clamp(2rem, 3.6vw, 3.25rem)' : 'clamp(2rem, 5vw, 3.5rem)' }} !important; color: white !important;">
                     {{ $project['title'] }}
                 </h1>
                 
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                    class="transition-all duration-700 delay-500 flex items-center justify-center gap-6 text-white font-bold uppercase tracking-[0.4em] text-xs md:text-sm">
-                    <div class="h-[1px] w-12 bg-titan-red"></div>
-                    <div class="flex items-center gap-3">
-                        <x-lucide-map-pin class="w-4 h-4 text-titan-red" />
+                    class="transition-all duration-700 delay-500 flex flex-wrap items-center justify-center gap-4 md:gap-6 text-white font-bold {{ $contentLocale === 'km' ? 'tracking-normal text-sm md:text-base' : 'uppercase tracking-[0.4em] text-xs md:text-sm' }}">
+                    <div class="h-[1px] w-10 md:w-12 bg-titan-red"></div>
+                    <div class="flex items-center justify-center gap-3 max-w-3xl leading-relaxed">
+                        <x-lucide-map-pin class="w-4 h-4 text-titan-red shrink-0" />
                         {{ $project['location'] }}
                     </div>
-                    <div class="h-[1px] w-12 bg-titan-red"></div>
+                    <div class="h-[1px] w-10 md:w-12 bg-titan-red"></div>
                 </div>
             </div>
 

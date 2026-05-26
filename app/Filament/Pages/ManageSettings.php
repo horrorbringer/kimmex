@@ -117,9 +117,13 @@ class ManageSettings extends Page implements HasForms
             
             // Appearance
             'primary_color' => $theme['primary_color'] ?? '#E31E24',
+            'primary_color_hover' => $theme['primary_color_hover'] ?? '#C8151D',
             'secondary_color' => $theme['secondary_color'] ?? '#1a1a2e',
+            'secondary_color_hover' => $theme['secondary_color_hover'] ?? '#0E3A7A',
             'font_en' => $theme['font_family_en'] ?? 'Inter',
             'font_kh' => $theme['font_family_km'] ?? 'Kantumruy Pro',
+            'footer_bg_color' => $theme['footer_bg_color'] ?? '#0B2B5C',
+            'footer_accent_color' => $theme['footer_accent_color'] ?? '#D4A017',
         ];
 
         $provider = $this->data['ai_provider'];
@@ -445,7 +449,15 @@ class ManageSettings extends Page implements HasForms
                                     ->columns(2)
                                     ->schema([
                                         ColorPicker::make('primary_color')->label(__('Primary Accent')),
+                                        ColorPicker::make('primary_color_hover')->label(__('Primary Accent Hover')),
                                         ColorPicker::make('secondary_color')->label(__('Secondary Color')),
+                                        ColorPicker::make('secondary_color_hover')->label(__('Secondary Color Hover')),
+                                    ]),
+                                Section::make(__('Footer Appearance'))
+                                    ->columns(2)
+                                    ->schema([
+                                        ColorPicker::make('footer_bg_color')->label(__('Footer Background Color')),
+                                        ColorPicker::make('footer_accent_color')->label(__('Footer Accent/Link Color')),
                                     ]),
                                 Section::make(__('Typography'))
                                     ->columns(2)
@@ -602,9 +614,13 @@ class ManageSettings extends Page implements HasForms
         // 5. Theme Settings
         SystemSetting::set('theme_settings', [
             'primary_color' => $state['primary_color'],
+            'primary_color_hover' => $state['primary_color_hover'],
             'secondary_color' => $state['secondary_color'],
+            'secondary_color_hover' => $state['secondary_color_hover'],
             'font_family_en' => $state['font_en'],
             'font_family_km' => $state['font_kh'],
+            'footer_bg_color' => $state['footer_bg_color'] ?? '#0B2B5C',
+            'footer_accent_color' => $state['footer_accent_color'] ?? '#D4A017',
         ]);
 
         // 6. Global Cache Purge (Force Frontend Sync)

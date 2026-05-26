@@ -1,4 +1,4 @@
-<footer class="bg-kmd-navy text-white pt-24 pb-12 relative overflow-hidden">
+<footer style="background-color: var(--footer-bg); color: #fff;" class="pt-24 pb-12 relative overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-16">
             @php
@@ -33,15 +33,11 @@
                 $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
                 $tagline = $brand['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
             @endphp
+
             <!-- Column 1: Brand -->
             <div class="space-y-6">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-10 w-auto object-contain" />
-                    <div class="flex flex-col flex-1">
-                        <span
-                            class="font-bold text-xl leading-none tracking-tight text-white uppercase">{{ $companyName }}</span>
-                        <span class="text-[10px] uppercase tracking-[0.2em] text-kmd-gold-light">{{ $tagline }}</span>
-                    </div>
+                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-12 w-auto object-contain" />
                 </div>
                 <p class="text-white/50 text-sm leading-relaxed max-w-xs">
                     {{ \Illuminate\Support\Str::limit($brand['company_story'] ?? __('Over 25 years of excellence in building the future of Cambodia.'), 120) }}
@@ -82,32 +78,33 @@
 
             <!-- Column 2: Quick Links -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-kmd-gold flex items-center gap-2">
+                <h4 style="color: var(--footer-accent);" class="font-bold text-sm uppercase tracking-widest mb-8 flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Explore') }}
                 </h4>
                 <ul class="space-y-4 text-sm text-white/50">
                     <li><a href="/projects"
-                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('Projects') }}</a>
+                            style="--footer-hover: var(--footer-accent);"
+                            class="footer-link hover:pl-2 transition-all flex items-center gap-2">{{ __('Projects') }}</a>
                     </li>
                     <li><a href="/services"
-                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('Services') }}</a>
+                            class="footer-link hover:pl-2 transition-all flex items-center gap-2">{{ __('Services') }}</a>
                     </li>
                     <li><a href="/about"
-                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('About Us') }}</a>
+                            class="footer-link hover:pl-2 transition-all flex items-center gap-2">{{ __('About Us') }}</a>
                     </li>
                     <li><a href="/careers"
-                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('Careers') }}</a>
+                            class="footer-link hover:pl-2 transition-all flex items-center gap-2">{{ __('Careers') }}</a>
                     </li>
                     <li><a href="/news"
-                            class="hover:text-kmd-gold hover:pl-2 transition-all flex items-center gap-2">{{ __('News & Insights') }}</a>
+                            class="footer-link hover:pl-2 transition-all flex items-center gap-2">{{ __('News & Insights') }}</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Column 3: Services -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-kmd-gold flex items-center gap-2">
+                <h4 style="color: var(--footer-accent);" class="font-bold text-sm uppercase tracking-widest mb-8 flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Services') }}
                 </h4>
@@ -125,8 +122,8 @@
                 <ul class="space-y-4 text-sm text-white/50">
                     @foreach($footerServices as $fs)
                         <li><a href="/services/{{ $fs['slug'] }}"
-                                class="flex items-center gap-2 hover:text-kmd-gold transition-all group">
-                                <span class="w-1.5 h-1.5 bg-kmd-gold rounded-full group-hover:scale-125 transition-transform"></span>
+                                class="footer-link flex items-center gap-2 transition-all group">
+                                <span style="background-color: var(--footer-accent);" class="w-1.5 h-1.5 rounded-full group-hover:scale-125 transition-transform shrink-0"></span>
                                 {{ $fs['title'] }}
                             </a>
                         </li>
@@ -136,28 +133,28 @@
 
             <!-- Column 4: Contact -->
             <div>
-                <h4 class="font-bold text-sm uppercase tracking-widest mb-8 text-kmd-gold flex items-center gap-2">
+                <h4 style="color: var(--footer-accent);" class="font-bold text-sm uppercase tracking-widest mb-8 flex items-center gap-2">
                     <x-lucide-hard-hat class="w-3.5 h-3.5" />
                     {{ __('Contact') }}
                 </h4>
                 <ul class="space-y-3 text-sm text-white/50">
                     <li class="flex gap-4 rounded border border-white/10 bg-white/5 p-4">
-                        <x-lucide-map-pin class="text-kmd-gold shrink-0 w-5 h-5" />
+                        <x-lucide-map-pin style="color: var(--footer-accent);" class="shrink-0 w-5 h-5" />
                         <a href="{{ $googleMapsLink }}" target="_blank" rel="noopener noreferrer"
-                            class="hover:text-kmd-gold transition-colors">
+                            class="footer-link transition-colors">
                             {{ $address }}
                         </a>
                     </li>
                     <li class="flex gap-4 items-center rounded border border-white/10 bg-white/5 p-4">
-                        <x-lucide-phone class="text-kmd-gold shrink-0 w-5 h-5" />
+                        <x-lucide-phone style="color: var(--footer-accent);" class="shrink-0 w-5 h-5" />
                         <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                            class="hover:text-kmd-gold transition-colors">
+                            class="footer-link transition-colors">
                             {{ $phone }}
                         </a>
                     </li>
                     <li class="flex gap-4 items-center rounded border border-white/10 bg-white/5 p-4">
-                        <x-lucide-mail class="text-kmd-gold shrink-0 w-5 h-5" />
-                        <a href="mailto:{{ $email }}" class="hover:text-kmd-gold transition-colors">
+                        <x-lucide-mail style="color: var(--footer-accent);" class="shrink-0 w-5 h-5" />
+                        <a href="mailto:{{ $email }}" class="footer-link transition-colors">
                             {{ $email }}
                         </a>
                     </li>
@@ -166,14 +163,19 @@
         </div>
 
         <!-- Bottom Bar -->
-        <div
-            class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
-            <p>&copy; 2026 Kimmex Construction & Investment Co., Ltd. {{ __('All rights reserved') }}.</p>
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/40">
+            <p>&copy; 2026 Kimmex Construction &amp; Investment Co., Ltd. {{ __('All rights reserved') }}.</p>
             <div class="flex gap-6">
-                <a href="/privacy-policy"
-                    class="hover:text-kmd-gold transition-colors">{{ __('Privacy Policy') }}</a>
-                <a href="#" class="hover:text-kmd-gold transition-colors">{{ __('Terms of Service') }}</a>
+                <a href="/privacy-policy" class="footer-link transition-colors">{{ __('Privacy Policy') }}</a>
+                <a href="#" class="footer-link transition-colors">{{ __('Terms of Service') }}</a>
             </div>
         </div>
     </div>
+
+    {{-- Scoped footer styles — completely isolated, no global brand variables affected --}}
+    <style>
+        footer a.footer-link:hover {
+            color: var(--footer-accent) !important;
+        }
+    </style>
 </footer>

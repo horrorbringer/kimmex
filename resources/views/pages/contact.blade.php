@@ -361,7 +361,7 @@
             <div
                 class="max-w-[1200px] mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div>
-                    <h3 class="text-2xl font-bold text-white uppercase tracking-tight mb-2">
+                    <h3 class="text-2xl font-bold !text-white uppercase tracking-tight mb-2">
                         {{ __('Ready to Start Your Project?') }}
                     </h3>
                     <p class="text-white/40 text-sm">

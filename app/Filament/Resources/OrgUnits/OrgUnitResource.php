@@ -20,7 +20,7 @@ class OrgUnitResource extends Resource
 
     protected static ?string $model = OrgUnit::class;
 
-    protected static bool $shouldRegisterNavigation = true;
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function getNavigationLabel(): string
     {

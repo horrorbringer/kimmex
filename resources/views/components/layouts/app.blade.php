@@ -39,10 +39,14 @@
     @php
         $theme = $globalSettings['theme'] ?? [];
         $primaryColor = $theme['primary_color'] ?? '#D4A017'; 
+        $primaryHover = $theme['primary_color_hover'] ?? '#B8890F'; 
         $secondaryColor = $theme['secondary_color'] ?? '#0B2B5C'; 
+        $secondaryHover = $theme['secondary_color_hover'] ?? '#0E3A7A'; 
         $fontEn = $theme['font_family_en'] ?? 'Plus Jakarta Sans';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
         $fontHeading = 'Montserrat'; // High-impact geometric heading font
+        $footerBg     = $theme['footer_bg_color']     ?? '#0B2B5C';
+        $footerAccent = $theme['footer_accent_color']  ?? '#D4A017';
         
         $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading])->unique()->filter();
         $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
@@ -55,22 +59,39 @@
     <style>
         :root {
             --primary-color: {{ $primaryColor }};
+            --primary-color-hover: {{ $primaryHover }};
             --secondary-color: {{ $secondaryColor }};
+            --secondary-color-hover: {{ $secondaryHover }};
             --font-en: '{{ $fontEn }}', 'Inter', sans-serif;
             --font-km: '{{ $fontKm }}', 'Noto Sans Khmer', sans-serif;
             --font-heading: {{ app()->getLocale() === 'km' ? "'$fontKm', 'Montserrat', sans-serif" : "'Montserrat', '$fontEn', sans-serif" }};
+        }
+        
+        /* ─── FOOTER-ONLY color variables — isolated from global brand colors ─── */
+        footer {
+            --footer-bg:     {{ $footerBg }};
+            --footer-accent: {{ $footerAccent }};
         }
         
         .font-sans { font-family: var(--font-en); }
         .font-khmer { font-family: var(--font-km); }
         .font-heading { font-family: var(--font-heading); }
         
-        /* Overwrite specific brand colors */
+        /* Overwrite specific brand colors and hover states */
         .text-titan-red { color: var(--primary-color) !important; }
+        a.text-titan-red:hover, button.text-titan-red:hover { color: var(--primary-color-hover) !important; }
+        
         .bg-titan-red { background-color: var(--primary-color) !important; }
+        a.bg-titan-red:hover, button.bg-titan-red:hover { background-color: var(--primary-color-hover) !important; }
+        
         .border-titan-red { border-color: var(--primary-color) !important; }
+        a.border-titan-red:hover, button.border-titan-red:hover { border-color: var(--primary-color-hover) !important; }
+        
         .text-titan-navy { color: var(--secondary-color) !important; }
+        a.text-titan-navy:hover, button.text-titan-navy:hover { color: var(--secondary-color-hover) !important; }
+        
         .bg-titan-navy { background-color: var(--secondary-color) !important; }
+        a.bg-titan-navy:hover, button.bg-titan-navy:hover { background-color: var(--secondary-color-hover) !important; }
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

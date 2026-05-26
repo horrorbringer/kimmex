@@ -12,9 +12,10 @@ class AIGeneratorService
     {
         $settings = $overrideSettings ?: SystemSetting::get('ai_settings', []);
         $provider = $settings['provider'] ?? 'gemini';
-        $apiKey = $settings['api_key'] ?? '';
-        $model = $settings['model'] ?? 'gemini-1.5-flash';
-        $baseUrl = $settings['base_url'] ?? 'http://localhost:11434';
+        $providerConfig = $this->providerConfig($settings, $provider);
+        $apiKey = $providerConfig['api_key'];
+        $model = $providerConfig['model'];
+        $baseUrl = $providerConfig['base_url'];
         $systemPrompt = $settings['system_prompt'] ?? 'You are an expert copywriter.';
         $temperature = (float) ($settings['temperature'] ?? 0.7);
         $tone = $settings['tone'] ?? 'professional';
@@ -71,9 +72,10 @@ class AIGeneratorService
     {
         $settings = $overrideSettings ?: SystemSetting::get('ai_settings', []);
         $provider = $settings['provider'] ?? 'gemini';
-        $apiKey = $settings['api_key'] ?? '';
-        $model = $settings['model'] ?? 'gemini-1.5-flash';
-        $baseUrl = $settings['base_url'] ?? 'http://localhost:11434';
+        $providerConfig = $this->providerConfig($settings, $provider);
+        $apiKey = $providerConfig['api_key'];
+        $model = $providerConfig['model'];
+        $baseUrl = $providerConfig['base_url'];
         $systemPrompt = $settings['system_prompt'] ?? 'You are an expert copywriter.';
         $temperature = (float) ($settings['temperature'] ?? 0.7);
         $tone = $settings['tone'] ?? 'professional';
@@ -198,8 +200,9 @@ class AIGeneratorService
     public function getAvailableModels(?string $apiKey = null, ?string $provider = 'gemini', ?string $baseUrl = null): array
     {
         $settings = SystemSetting::get('ai_settings', []);
-        $apiKey = $apiKey ?: ($settings['api_key'] ?? '');
-        $baseUrl = $baseUrl ?: ($settings['base_url'] ?? 'http://localhost:11434');
+        $providerConfig = $this->providerConfig($settings, $provider ?? 'gemini');
+        $apiKey = $apiKey ?: $providerConfig['api_key'];
+        $baseUrl = $baseUrl ?: $providerConfig['base_url'];
         
         try {
             if ($provider === 'gemini') {
@@ -228,6 +231,24 @@ class AIGeneratorService
         return [
             'models/gemini-1.5-flash' => 'Gemini 1.5 Flash (Default)',
             'models/gemini-1.5-pro' => 'Gemini 1.5 Pro',
+        ];
+    }
+
+    protected function providerConfig(array $settings, string $provider): array
+    {
+        $gemini = $settings['gemini'] ?? [];
+        $ollama = $settings['ollama'] ?? [];
+
+        return [
+            'api_key' => $provider === 'gemini'
+                ? ($gemini['api_key'] ?? $settings['api_key'] ?? '')
+                : ($settings['api_key'] ?? ''),
+            'model' => $provider === 'ollama'
+                ? ($ollama['model'] ?? $settings['model'] ?? 'llama3.1')
+                : ($gemini['model'] ?? $settings['model'] ?? 'gemini-1.5-flash'),
+            'base_url' => $provider === 'ollama'
+                ? ($ollama['base_url'] ?? $settings['base_url'] ?? 'http://localhost:11434')
+                : ($settings['base_url'] ?? 'http://localhost:11434'),
         ];
     }
 }

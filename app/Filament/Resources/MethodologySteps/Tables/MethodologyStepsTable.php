@@ -27,7 +27,9 @@ class MethodologyStepsTable
                     ->label(__('Icon'))
                     ->fontFamily(\Filament\Support\Enums\FontFamily::Mono),
                 ToggleColumn::make('isActive')
-                    ->label(__('Is Active')),
+                    ->label(__('Is Active'))
+                    ->onColor('success')
+                    ->offColor('danger'),
             ])
             ->reorderable('orderIndex')
             ->defaultSort('orderIndex')

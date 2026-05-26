@@ -170,9 +170,9 @@
     }
     </script>
 
-    <div class="bg-[#F7F8FA] min-h-screen text-titan-navy font-sans antialiased">
+    <div class="bg-[#F7F8FA] min-h-screen text-titan-navy font-sans antialiased pt-28">
         <!-- TOP BAR -->
-        <div class="sticky top-0 z-[100] bg-white/95 backdrop-blur border-b border-gray-200">
+        <div class="sticky top-20 z-[80] bg-white/95 backdrop-blur border-b border-gray-200">
             <div class="h-1 bg-gray-100 w-full relative">
                 <div class="h-full bg-titan-red absolute left-0 top-0" style="width: 100%"></div>
             </div>
@@ -203,8 +203,8 @@
 
         <!-- ARTICLE HEADER -->
         <header class="border-b border-gray-200 bg-white">
-            <div class="max-w-[1240px] mx-auto px-6 py-10 md:py-14">
-                <div class="grid grid-cols-1 lg:grid-cols-[1.08fr_0.92fr] gap-8 items-center">
+            <div class="max-w-[1240px] mx-auto px-6 py-8 md:py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-[0.94fr_1.06fr] gap-8 lg:gap-12 items-center">
                     <div>
                         <div class="flex flex-wrap items-center gap-2 mb-4">
                             <span class="rounded bg-titan-red text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em]">{{ $article['category'] }}</span>
@@ -212,16 +212,16 @@
                             <span class="rounded border border-gray-200 bg-gray-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy/55">{{ $article['readTime'] }}</span>
                         </div>
 
-                        <h1 class="font-normal uppercase leading-[0.96] tracking-normal text-titan-navy max-w-4xl"
-                            style="font-size: clamp(1.9rem, 4vw, 3.2rem) !important;">
+                        <h1 class="font-bold uppercase leading-[1.04] tracking-normal text-titan-navy max-w-3xl"
+                            style="font-size: clamp(2rem, 3.35vw, 3.75rem) !important;">
                             {{ $article['title'] }}
                         </h1>
 
-                        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-titan-navy/60 font-medium">
+                        <p class="mt-5 max-w-2xl text-base md:text-lg leading-relaxed text-titan-navy/60 font-medium">
                             {{ $article['excerpt'] }}
                         </p>
 
-                        <div class="mt-8 flex flex-wrap items-center gap-3">
+                        <div class="mt-7 flex flex-wrap items-center gap-3">
                             <div class="inline-flex items-center gap-2 rounded border border-gray-200 bg-white px-4 py-2">
                                 <div class="w-8 h-8 rounded bg-titan-navy/5 flex items-center justify-center">
                                     <x-lucide-user class="w-4 h-4 text-titan-red" />
@@ -239,7 +239,7 @@
                     </div>
 
                     <div class="relative">
-                        <div class="rounded overflow-hidden border border-gray-200 bg-titan-navy shadow-[0_20px_60px_rgba(0,0,0,0.12)] aspect-[4/3]">
+                        <div class="relative rounded overflow-hidden border border-gray-200 bg-titan-navy shadow-[0_20px_60px_rgba(0,0,0,0.12)] aspect-[16/11]">
                             @if($article['image'])
                                 <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="w-full h-full object-cover" />
                             @else
@@ -251,11 +251,11 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-3 mt-3">
-                            <div class="rounded border border-gray-200 bg-white p-4">
+                            <div class="rounded border border-gray-200 bg-white p-4 shadow-sm">
                                 <div class="text-[9px] font-black uppercase tracking-[0.18em] text-titan-navy/35">{{ __('Category') }}</div>
                                 <div class="mt-1 text-sm font-black text-titan-navy line-clamp-1">{{ $article['category'] }}</div>
                             </div>
-                            <div class="rounded border border-gray-200 bg-white p-4">
+                            <div class="rounded border border-gray-200 bg-white p-4 shadow-sm">
                                 <div class="text-[9px] font-black uppercase tracking-[0.18em] text-titan-navy/35">{{ __('Tags') }}</div>
                                 <div class="mt-1 text-sm font-black text-titan-navy line-clamp-1">{{ implode(' · ', array_slice($article['tags'], 0, 2)) }}</div>
                             </div>
@@ -318,8 +318,25 @@
                             <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all">
                                 <x-lucide-send class="w-4 h-4" />
                             </a>
-                            <button x-data="{ copied: false }"
-                                @click="navigator.clipboard?.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 1600)"
+                            <button x-data="{ 
+                                    copied: false,
+                                    copyLink() {
+                                        const url = window.location.href;
+                                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                                            navigator.clipboard.writeText(url).catch(() => {});
+                                        } else {
+                                            const el = document.createElement('textarea');
+                                            el.value = url;
+                                            document.body.appendChild(el);
+                                            el.select();
+                                            document.execCommand('copy');
+                                            document.body.removeChild(el);
+                                        }
+                                        this.copied = true;
+                                        setTimeout(() => this.copied = false, 1600);
+                                    }
+                                }"
+                                @click="copyLink()"
                                 class="h-10 px-4 rounded border border-gray-200 bg-white text-titan-navy hover:text-titan-red hover:border-titan-red/30 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] transition-all">
                                 <x-lucide-link class="w-4 h-4" />
                                 <span x-text="copied ? '{{ __('Copied') }}' : '{{ __('Copy') }}'"></span>

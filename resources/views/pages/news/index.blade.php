@@ -11,7 +11,9 @@
                 ->orderByDesc('publishedAt')
                 ->get();
 
-            return $newsArticlesDb->map(function ($n) use ($locale) {
+            $fb = $fallbackImage; // local alias inside closure to be explicit
+
+            return $newsArticlesDb->map(function ($n) use ($locale, $fb) {
                 $excerpt = $n->getTranslation('excerpt', $locale)
                     ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 180);
 
@@ -26,12 +28,12 @@
                 }
 
                 return [
-                    'slug' => $n->slug,
-                    'category' => $n->getTranslation('category', $locale) ?: __('Updates'),
-                    'image' => $imageUrl ?: $fallbackImage,
-                    'title' => $n->getTranslation('title', $locale),
-                    'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-                    'excerpt' => $excerpt,
+                    'slug'       => $n->slug,
+                    'category'   => $n->getTranslation('category', $locale) ?: __('Updates'),
+                    'image'      => $imageUrl ?: $fb,
+                    'title'      => $n->getTranslation('title', $locale),
+                    'date'       => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                    'excerpt'    => $excerpt,
                     'isFeatured' => (bool) $n->isFeatured,
                 ];
             })->toArray();

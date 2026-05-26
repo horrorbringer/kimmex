@@ -1,25 +1,21 @@
 @props(['node', 'depth' => 0, 'preview' => false])
 
-<div class="relative group" data-id="{{ $node['id'] }}">
-    <!-- Node Content -->
+<div class="org-node" data-id="{{ $node['id'] }}">
     <div class="node-card">
-        <!-- Drag Handle -->
         @if(!$preview)
-            <div class="cursor-grab mr-4 text-gray-300 hover:text-titan-navy transition-colors">
+            <div class="node-drag-handle cursor-grab" title="{{ __('Drag to reorder') }}">
                 <x-heroicon-o-squares-2x2 class="org-icon-md" />
             </div>
         @endif
 
-        <!-- Collapse/Expand (if children) -->
         @if(!empty($node['children']))
-            <div class="mr-4 text-gray-400 hover:text-titan-navy cursor-pointer">
+            <div class="node-toggle-placeholder" title="{{ __('Has child units') }}">
                 <x-heroicon-o-chevron-down class="org-icon-sm" />
             </div>
         @else
-            <div class="mr-4 org-icon-sm"></div>
+            <div class="node-toggle-placeholder"></div>
         @endif
 
-        <!-- Avatar -->
         <div class="avatar-circle">
             @if($node['image'])
                 <img src="{{ \Illuminate\Support\Facades\Storage::url($node['image']) }}" 
@@ -31,19 +27,20 @@
             @endif
         </div>
 
-        <!-- Info -->
-        <div class="flex-grow">
-            <h4 class="node-name">{{ $node['name'] }}</h4>
+        <div class="node-content">
+            <div class="node-title-row">
+                <h4 class="node-name">{{ $node['name'] }}</h4>
+                <span class="node-type-pill">{{ $node['type'] }}</span>
+            </div>
             <p class="node-role">{{ $node['role'] }}</p>
         </div>
 
-        <!-- Actions -->
         @if(!$preview)
-            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="node-actions">
                 <button 
                     title="{{ __('Add Child') }}" 
                     wire:click="mountAction('addChild', { id: '{{ $node['id'] }}' })"
-                    class="node-action-btn btn-red">
+                    class="node-action-btn">
                     <x-heroicon-o-plus class="org-icon-sm" />
                 </button>
                 <button 
@@ -55,14 +52,13 @@
                 <button 
                     title="{{ __('Delete') }}" 
                     wire:click="mountAction('delete', { id: '{{ $node['id'] }}' })"
-                    class="node-action-btn btn-red">
+                    class="node-action-btn btn-danger">
                     <x-heroicon-o-trash class="org-icon-sm" />
                 </button>
             </div>
         @endif
     </div>
 
-    <!-- Recursive Children -->
     @if(!empty($node['children']))
         <div class="node-children children-container">
             @foreach($node['children'] as $child)

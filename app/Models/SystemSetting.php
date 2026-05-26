@@ -28,12 +28,16 @@ class SystemSetting extends Model
 
     public static function get(string $key, $default = null)
     {
-        $value = \Illuminate\Support\Facades\Cache::rememberForever("system_setting_{$key}", function () use ($key) {
-            $setting = static::where('key', $key)->first();
-            return $setting ? $setting->value : null;
-        });
-        
-        return $value !== null ? $value : $default;
+        try {
+            $value = \Illuminate\Support\Facades\Cache::rememberForever("system_setting_{$key}", function () use ($key) {
+                $setting = static::where('key', $key)->first();
+                return $setting ? $setting->value : null;
+            });
+            
+            return $value !== null ? $value : $default;
+        } catch (\Exception $e) {
+            return $default;
+        }
     }
 
     public static function set(string $key, $value)

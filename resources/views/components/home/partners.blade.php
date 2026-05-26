@@ -64,21 +64,21 @@
     @endphp
 
     <!-- Partner Logos Row 1 (assuming public/partners/1.png exists based on React code) -->
-    <div class="relative mb-6 flex overflow-x-hidden group">
+    <div class="relative mb-6 flex overflow-x-hidden">
         <!-- We use two identical divs for a seamless infinite marquee effect in Alpine/CSS -->
-        <div class="flex animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap">
+        <div class="flex animate-marquee whitespace-nowrap">
             @foreach($partners as $p)
                 @if($p['website'])
                     <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
                     </a>
                 @else
                     <div
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-default relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
                     </div>
                 @endif
             @endforeach
@@ -88,13 +88,13 @@
                     <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
                     </a>
                 @else
                     <div
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-default relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
                     </div>
                 @endif
             @endforeach
@@ -118,6 +118,10 @@
             animation: marquee 25s linear infinite;
             width: 200%;
             /* forces track to properly hold duplicated content inline */
+        }
+
+        .animate-marquee:hover {
+            animation-play-state: paused;
         }
     </style>
 </section>

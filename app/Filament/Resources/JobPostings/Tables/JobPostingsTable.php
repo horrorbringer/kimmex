@@ -34,7 +34,9 @@ class JobPostingsTable
                     ->label(__('Type'))
                     ->searchable(),
                 \Filament\Tables\Columns\ToggleColumn::make('isActive')
-                    ->label(__('Is Active')),
+                    ->label(__('Is Active'))
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('closingDate')
                     ->label(__('Closing Date'))
                     ->dateTime()

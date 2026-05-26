@@ -55,7 +55,9 @@ class OrgUnitForm
                     Grid::make(2)->components([
                         Select::make('parentId')
                             ->label(__('Reports To (Parent Unit)'))
-                            ->relationship('parent', 'title', fn($query) => $query->orderBy('title->en'))
+                            ->relationship('parent', 'title', fn($query, ?\Illuminate\Database\Eloquent\Model $record) => 
+                                $query->orderBy('title->en')->when($record, fn($q) => $q->where('id', '!=', $record->id))
+                            )
                             ->searchable()
                             ->preload()
                             ->placeholder(__('Select parent node...'))

@@ -1,179 +1,505 @@
 <x-filament-panels::page>
-    <div class="space-y-8">
+    <div class="space-y-6">
+        @php
+            $theme = \App\Models\SystemSetting::get('theme_settings', []);
+            $primaryColor = $theme['primary_color'] ?? '#D4A017'; 
+            $primaryHover = $theme['primary_color_hover'] ?? '#B8890F'; 
+            $secondaryColor = $theme['secondary_color'] ?? '#0B2B5C'; 
+            $secondaryHover = $theme['secondary_color_hover'] ?? '#0E3A7A'; 
+
+            $countNodes = function (array $nodes) use (&$countNodes): int {
+                return collect($nodes)->sum(fn ($node) => 1 + $countNodes($node['children'] ?? []));
+            };
+
+            $maxDepth = function (array $nodes, int $depth = 1) use (&$maxDepth): int {
+                if (empty($nodes)) {
+                    return 0;
+                }
+
+                return collect($nodes)->max(fn ($node) => max($depth, $maxDepth($node['children'] ?? [], $depth + 1)));
+            };
+
+            $rootCount = count($chartData);
+            $unitCount = $countNodes($chartData);
+            $depthCount = $maxDepth($chartData);
+        @endphp
         <style>
             :root {
-                --titan-red: #D4A017;
-                --titan-red-hover: #B8890F;
-                --titan-navy: #0B2B5C;
-                --titan-navy-light: #0E3A7A;
-                --titan-gray: #5A7BA5;
-                --card-bg: #ffffff;
-                --tab-bg: var(--titan-gray);
+                --org-accent: {{ $primaryColor }};
+                --org-accent-hover: {{ $primaryHover }};
+                --org-navy: {{ $secondaryColor }};
+                --org-navy-soft: {{ $secondaryHover }};
+                --org-border: #e2e8f0;
+                --org-muted: #64748b;
+                --org-panel: #ffffff;
+                --org-canvas: #f8fafc;
             }
 
-            /* Container & Layout */
-            .org-chart-wrapper { background: #fcfcfc; padding: 2rem; border-radius: 2.5rem; border: 1px solid var(--titan-gray); }
-            
-            /* Generic Helper Classes (since TW utilities might be purged) */
-            .org-flex { display: flex; align-items: center; }
-            .org-justify-between { justify-content: space-between; }
-            .org-mb-8 { margin-bottom: 2rem; }
-            .org-rounded-xl { border-radius: 0.75rem; }
-            .org-shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-            
-            /* Card Styling */
-            .node-card {
-                background: white;
-                border: 1px solid var(--titan-gray);
-                border-radius: 1.25rem;
+            .org-chart-wrapper {
+                background: var(--org-canvas);
+                border: 1px solid var(--org-border);
+                border-radius: 1rem;
+                overflow: hidden;
+            }
+
+            .org-chart-toolbar,
+            .org-chart-settings,
+            .org-chart-board {
+                background: var(--org-panel);
+            }
+
+            .org-chart-toolbar {
+                display: grid;
+                gap: 1.25rem;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
                 padding: 1.25rem;
-                margin-bottom: 0.75rem;
+                border-bottom: 1px solid var(--org-border);
+            }
+
+            .org-chart-title {
                 display: flex;
                 align-items: center;
-                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-                transition: all 0.3s;
+                gap: 0.75rem;
+                min-width: 0;
             }
-            
+
+            .org-chart-title-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                display: grid;
+                place-items: center;
+                border-radius: 0.75rem;
+                color: var(--org-navy);
+                background: color-mix(in srgb, var(--org-accent) 16%, white);
+                flex: none;
+            }
+
+            .org-chart-title h2 {
+                color: var(--org-navy);
+                font-size: 1rem;
+                font-weight: 800;
+                line-height: 1.25;
+                margin: 0;
+            }
+
+            .org-chart-title p {
+                color: var(--org-muted);
+                font-size: 0.8125rem;
+                line-height: 1.4;
+                margin: 0.125rem 0 0;
+            }
+
+            .org-chart-stats {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(5.5rem, 1fr));
+                gap: 0.625rem;
+                padding: 0 1.25rem 1.25rem;
+                background: var(--org-panel);
+                border-bottom: 1px solid var(--org-border);
+            }
+
+            .org-stat {
+                border: 1px solid var(--org-border);
+                border-radius: 0.75rem;
+                padding: 0.75rem;
+                background: #fff;
+            }
+
+            .org-stat-value {
+                color: var(--org-navy);
+                display: block;
+                font-size: 1.125rem;
+                font-weight: 800;
+                line-height: 1;
+            }
+
+            .org-stat-label {
+                color: var(--org-muted);
+                display: block;
+                font-size: 0.6875rem;
+                font-weight: 700;
+                margin-top: 0.35rem;
+                text-transform: uppercase;
+            }
+
+            .org-chart-settings {
+                padding: 1.25rem;
+                border-bottom: 1px solid var(--org-border);
+            }
+
+            .org-chart-settings-card {
+                border: 1px solid var(--org-border);
+                border-radius: 0.875rem;
+                padding: 1rem;
+            }
+
+            .org-chart-board {
+                padding: 1.25rem;
+            }
+
+            .org-tree {
+                max-width: 64rem;
+                margin: 0 auto;
+            }
+
+            .org-tree-root {
+                display: grid;
+                gap: 0.625rem;
+            }
+
+            .node-card {
+                background: #fff;
+                border: 1px solid var(--org-border);
+                border-radius: 0.875rem;
+                padding: 0.875rem;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                min-height: 4.5rem;
+                position: relative;
+                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+                transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            }
+
             .node-card:hover {
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-                transform: translateX(4px);
+                border-color: color-mix(in srgb, var(--org-navy) 30%, var(--org-border));
+                box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+                transform: translateY(-1px);
+            }
+
+            .node-drag-handle,
+            .node-toggle-placeholder {
+                color: #94a3b8;
+                width: 1.75rem;
+                height: 1.75rem;
+                display: grid;
+                place-items: center;
+                border-radius: 0.5rem;
+                flex: none;
+            }
+
+            .node-drag-handle {
+                cursor: grab;
+                background: #f8fafc;
+            }
+
+            .node-drag-handle:hover {
+                color: var(--org-navy);
+                background: #eef2f7;
+            }
+
+            .node-toggle-placeholder {
+                background: transparent;
             }
 
             .node-name {
-                color: var(--titan-navy);
-                font-weight: 900;
-                text-transform: uppercase;
-                font-size: 0.8rem;
+                color: var(--org-navy);
+                font-weight: 800;
+                font-size: 0.875rem;
+                line-height: 1.25;
                 margin: 0 !important;
-                letter-spacing: -0.01em;
             }
 
             .node-role {
-                color: #94a3b8;
-                font-size: 0.6rem;
-                font-weight: 600;
-                font-style: italic;
+                color: var(--org-muted);
+                font-size: 0.6875rem;
+                font-weight: 700;
                 text-transform: uppercase;
-                letter-spacing: 0.05em;
                 margin: 0 !important;
-                opacity: 0.8;
+                margin-top: 0.25rem !important;
             }
 
-            /* Avatar Circle Fixed */
             .avatar-circle {
-                width: 3rem !important;
-                height: 3rem !important;
+                width: 2.75rem !important;
+                height: 2.75rem !important;
                 border-radius: 50% !important;
                 object-fit: cover;
-                border: 2px solid white;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                border: 2px solid #fff;
+                box-shadow: 0 0 0 1px var(--org-border);
                 flex-shrink: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: #f8fafc;
+                background: color-mix(in srgb, var(--org-accent) 14%, #f8fafc);
                 overflow: hidden;
-                margin-right: 1.25rem;
+            }
+
+            .avatar-circle img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
             
             .avatar-initials {
-                color: #64748b;
+                color: var(--org-navy);
                 font-weight: 800;
                 font-size: 0.75rem;
             }
 
-            /* Tree Connections */
+            .node-content {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .node-title-row {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                min-width: 0;
+            }
+
+            .node-title-row .node-name {
+                overflow-wrap: anywhere;
+            }
+
+            .node-type-pill {
+                color: var(--org-navy);
+                background: #f8fafc;
+                border: 1px solid var(--org-border);
+                border-radius: 999px;
+                display: inline-flex;
+                align-items: center;
+                min-height: 1.375rem;
+                padding: 0.125rem 0.5rem;
+                font-size: 0.625rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                white-space: nowrap;
+                flex: none;
+            }
+
+            .node-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+                flex: none;
+            }
+
             .node-children {
                 position: relative;
-                margin-left: 3.5rem;
-                padding-left: 1.5rem;
+                display: grid;
+                gap: 0.625rem;
+                margin-left: 3.25rem;
+                padding-left: 1.25rem;
+                padding-top: 0.625rem;
             }
 
             .node-children::before {
                 content: '';
                 position: absolute;
                 left: 0;
-                top: -0.75rem;
-                bottom: 1.75rem; /* Terminates at the last child's hook */
-                width: 2px;
-                border-left: 2px dashed #e2e8f0;
+                top: 0;
+                bottom: 2.25rem;
+                border-left: 1px solid var(--org-border);
             }
 
-            /* Horizontal Hook for children */
-            .node-card { position: relative; }
             .node-children .node-card::before {
                 content: '';
                 position: absolute;
-                left: -1.5rem;
+                left: -1.25rem;
                 top: 50%;
-                width: 1.5rem;
-                height: 2px;
-                border-top: 2px dashed #e2e8f0;
+                width: 1.25rem;
+                border-top: 1px solid var(--org-border);
                 transform: translateY(-50%);
             }
             
-            /* Action Buttons */
             .node-action-btn {
-                padding: 0.5rem;
-                border-radius: 0.75rem;
+                width: 2rem;
+                height: 2rem;
+                display: grid;
+                place-items: center;
+                border-radius: 0.5rem;
                 transition: all 0.2s;
                 background: #f8fafc;
-                color: var(--titan-gray);
-                border: none;
+                color: var(--org-muted);
+                border: 1px solid transparent;
                 cursor: pointer;
             }
-            .node-action-btn:hover { background: var(--titan-gray); color: var(--titan-navy); }
-            .node-action-btn.btn-red:hover { background: #fee2e2; color: var(--titan-red); }
+
+            .node-action-btn:hover {
+                background: color-mix(in srgb, var(--org-navy) 8%, white);
+                color: var(--org-navy);
+                border-color: color-mix(in srgb, var(--org-navy) 18%, var(--org-border));
+            }
+
+            .node-action-btn.btn-danger:hover {
+                background: #fef2f2;
+                color: #b91c1c;
+                border-color: #fecaca;
+            }
+
+            .org-empty-state {
+                border: 1px dashed var(--org-border);
+                border-radius: 0.875rem;
+                padding: 3rem 1rem;
+                color: var(--org-muted);
+                text-align: center;
+                background: #fff;
+            }
+
+            .org-empty-state-icon {
+                width: 3rem;
+                height: 3rem;
+                border-radius: 0.875rem;
+                display: grid;
+                place-items: center;
+                margin: 0 auto 1rem;
+                color: var(--org-navy);
+                background: color-mix(in srgb, var(--org-accent) 14%, white);
+            }
+
+            .org-empty-state h3 {
+                color: var(--org-navy);
+                font-size: 0.9375rem;
+                font-weight: 800;
+                margin: 0;
+            }
+
+            .org-empty-state p {
+                margin: 0.35rem 0 0;
+                font-size: 0.8125rem;
+            }
+
+            .org-btn-primary {
+                background-color: var(--org-navy);
+                color: white !important;
+                min-height: 2.5rem;
+                padding: 0.625rem 1rem;
+                border-radius: 0.625rem;
+                font-weight: 800;
+                font-size: 0.8125rem;
+                border: none;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+                transition: all 0.2s ease;
+            }
+
+            .org-btn-primary:hover {
+                background-color: var(--org-navy-soft);
+                transform: translateY(-1px);
+            }
+
+            .org-btn-primary:disabled {
+                cursor: not-allowed;
+                opacity: 0.65;
+                transform: none;
+            }
             
-            /* Icon Sizing (Bypass TW Purge) */
             .org-icon-sm { width: 1.25rem !important; height: 1.25rem !important; }
             .org-icon-md { width: 1.5rem !important; height: 1.5rem !important; }
             .org-icon-lg { width: 2rem !important; height: 2rem !important; }
-            
-            /* Action Buttons Header */
-            .org-btn-primary {
-                background-color: var(--titan-navy);
-                color: white !important;
-                padding: 0.75rem 2rem;
-                border-radius: 0.75rem;
-                font-weight: 700;
-                font-size: 0.875rem;
-                border: none;
-                cursor: pointer;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                transition: all 0.2s;
+
+            .sortable-ghost .node-card {
+                border-color: var(--org-accent);
+                background: color-mix(in srgb, var(--org-accent) 10%, white);
             }
-            .org-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+            @media (max-width: 768px) {
+                .org-chart-toolbar,
+                .org-chart-stats {
+                    grid-template-columns: 1fr;
+                }
+
+                .org-chart-toolbar {
+                    align-items: stretch;
+                }
+
+                .node-card {
+                    align-items: flex-start;
+                    flex-wrap: wrap;
+                }
+
+                .node-actions {
+                    width: 100%;
+                    justify-content: flex-end;
+                    padding-left: 5.25rem;
+                }
+
+                .node-children {
+                    margin-left: 1rem;
+                    padding-left: 1rem;
+                }
+            }
         </style>
 
         <div class="org-chart-wrapper">
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-12 border-b border-gray-50 pb-8">
-                <div class="flex items-center gap-4 text-gray-400">
-                    <x-heroicon-o-magnifying-glass class="org-icon-md" />
-                    <span class="font-black uppercase tracking-[0.3em] text-xs">{{ __('MANAGEMENT') }}</span>
+            <div class="org-chart-toolbar">
+                <div class="org-chart-title">
+                    <div class="org-chart-title-icon">
+                        <x-heroicon-o-presentation-chart-line class="org-icon-md" />
+                    </div>
+                    <div>
+                        <h2>{{ __('Organization Chart') }}</h2>
+                        <p>{{ __('Arrange reporting lines, update display files, and save the public chart order.') }}</p>
+                    </div>
                 </div>
                 <button 
                     onclick="triggerSave()" 
-                    class="org-btn-primary flex items-center gap-2"
+                    class="org-btn-primary"
                     id="save-btn"
                 >
+                    <x-heroicon-o-bars-arrow-down class="org-icon-sm" />
                     <span id="save-btn-text">{{ __('Save Display Order') }}</span>
                     <div id="save-spinner" class="hidden animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
                 </button>
             </div>
 
-            <!-- Tree List -->
-            <div class="max-w-4xl mx-auto space-y-4" x-ref="treeRoot">
-                @foreach($chartData as $node)
-                    <x-org.chart-node :node="$node" />
-                @endforeach
+            <div class="org-chart-stats">
+                <div class="org-stat">
+                    <span class="org-stat-value">{{ $rootCount }}</span>
+                    <span class="org-stat-label">{{ __('Root Units') }}</span>
+                </div>
+                <div class="org-stat">
+                    <span class="org-stat-value">{{ $unitCount }}</span>
+                    <span class="org-stat-label">{{ __('Total Units') }}</span>
+                </div>
+                <div class="org-stat">
+                    <span class="org-stat-value">{{ $depthCount }}</span>
+                    <span class="org-stat-label">{{ __('Levels') }}</span>
+                </div>
+            </div>
+
+            <div class="org-chart-settings">
+                <form wire:submit="saveDisplaySettings" class="org-chart-settings-card">
+                    {{ $this->form }}
+                    <div class="mt-6 flex justify-end">
+                        <button type="submit" class="org-btn-primary" wire:loading.attr="disabled" wire:target="saveDisplaySettings">
+                            <x-heroicon-o-check class="org-icon-sm" />
+                            {{ __('Save Display Settings') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="org-chart-board">
+                @if(empty($chartData))
+                    <div class="org-empty-state">
+                        <div class="org-empty-state-icon">
+                            <x-heroicon-o-building-office-2 class="org-icon-lg" />
+                        </div>
+                        <h3>{{ __('No organizational units yet') }}</h3>
+                        <p>{{ __('Use Add Root Unit above to start building the hierarchy.') }}</p>
+                    </div>
+                @else
+                    <div class="org-tree">
+                        <div class="org-tree-root" x-ref="treeRoot">
+                            @foreach($chartData as $node)
+                                <x-org.chart-node :node="$node" />
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             @push('scripts')
                 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
                 <script>
-                    document.addEventListener('livewire:load', function () {
+                    document.addEventListener('livewire:init', function () {
                         const initAll = () => {
                             initSortable(document.querySelector('[x-ref="treeRoot"]'));
                             document.querySelectorAll('.children-container').forEach(initSortable);
@@ -187,10 +513,7 @@
                                 fallbackOnBody: true,
                                 swapThreshold: 0.65,
                                 handle: '.cursor-grab',
-                                ghostClass: 'bg-titan-navy/5',
-                                onEnd: function (evt) {
-                                    // Optional: Mark as dirty
-                                }
+                                ghostClass: 'sortable-ghost',
                             });
                         };
 
@@ -213,6 +536,10 @@
                             const text = document.getElementById('save-btn-text');
                             const spinner = document.getElementById('save-spinner');
 
+                            if (!btn || !text || !spinner) {
+                                return;
+                            }
+
                             btn.disabled = true;
                             text.innerText = "{{ __('Saving...') }}";
                             spinner.classList.remove('hidden');
@@ -234,12 +561,6 @@
                     });
                 </script>
             @endpush
-
-            @if(empty($chartData))
-                <div class="text-center py-24 text-titan-navy/30 italic">
-                    {{ __('No organizational units found. Start by adding a root node.') }}
-                </div>
-            @endif
         </div>
     </div>
 </x-filament-panels::page>

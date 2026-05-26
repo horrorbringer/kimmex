@@ -70,7 +70,7 @@
                             </div>
                             <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
                                 <h3
-                                    class="text-white text-2xl font-heading font-bold mb-2 group-hover:text-titan-red transition-colors">
+                                    class="!text-white text-2xl font-heading font-bold mb-2 group-hover:!text-titan-red transition-colors">
                                     {{ $p['title'] }}
                                 </h3>
                                 <div class="flex items-center gap-4 text-white/60 text-sm">

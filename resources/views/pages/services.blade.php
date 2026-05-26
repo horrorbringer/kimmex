@@ -82,17 +82,41 @@ $process = \Illuminate\Support\Facades\Cache::remember('services_process_array_'
     })->toArray();
 });
 
-// Fallback if empty
-if (empty($process)) {
-    $process = [
-        [
-            "step" => "01",
-            "icon" => "lucide-users",
-            "title" => ["en" => "Consultation & Analysis", "kh" => "ការពិគ្រោះយោបល់ និងការវិភាគ"],
-            "desc" => ["en" => "Understanding requirements, performing site data deep dives, and feasibility analysis.", "kh" => "ការស្វែងយល់ពីតម្រូវការ និងការវិភាគលទ្ធភាព។"]
-        ],
-        // ... (truncated fallback to keep it brief, but keeping the original logic)
-    ];
+$defaultProcess = [
+    [
+        "step" => "01",
+        "icon" => "lucide-users",
+        "title" => ["en" => "Consultation & Analysis", "kh" => "ការពិគ្រោះយោបល់ និងការវិភាគ"],
+        "desc" => ["en" => "We clarify project goals, review site conditions, and confirm practical requirements before work begins.", "kh" => "យើងកំណត់គោលដៅគម្រោង ពិនិត្យលក្ខខណ្ឌទីតាំង និងបញ្ជាក់តម្រូវការជាក់ស្តែងមុនចាប់ផ្តើមការងារ។"]
+    ],
+    [
+        "step" => "02",
+        "icon" => "lucide-ruler",
+        "title" => ["en" => "Planning & Design", "kh" => "ការរៀបចំផែនការ និងរចនា"],
+        "desc" => ["en" => "Our team prepares the scope, design direction, timeline, budget baseline, and approval path.", "kh" => "ក្រុមការងាររៀបចំវិសាលភាព ទិសដៅរចនា កាលវិភាគ ថវិកាមូលដ្ឋាន និងដំណើរការអនុម័ត។"]
+    ],
+    [
+        "step" => "03",
+        "icon" => "lucide-hard-hat",
+        "title" => ["en" => "Construction Execution", "kh" => "ការអនុវត្តសំណង់"],
+        "desc" => ["en" => "We coordinate teams, materials, site safety, and daily progress so the project moves according to plan.", "kh" => "យើងសម្របសម្រួលក្រុមការងារ សម្ភារៈ សុវត្ថិភាពទីតាំង និងវឌ្ឍនភាពប្រចាំថ្ងៃឲ្យគម្រោងដំណើរការតាមផែនការ។"]
+    ],
+    [
+        "step" => "04",
+        "icon" => "lucide-shield-check",
+        "title" => ["en" => "Quality Control", "kh" => "ការត្រួតពិនិត្យគុណភាព"],
+        "desc" => ["en" => "Each stage is checked against technical standards, drawings, and client expectations before moving forward.", "kh" => "រាល់ដំណាក់កាលត្រូវបានត្រួតពិនិត្យតាមស្តង់ដារបច្ចេកទេស គំនូសប្លង់ និងការរំពឹងទុករបស់អតិថិជនមុនបន្តការងារ។"]
+    ],
+    [
+        "step" => "05",
+        "icon" => "lucide-check-circle-2",
+        "title" => ["en" => "Handover & Support", "kh" => "ការប្រគល់ការងារ និងគាំទ្រ"],
+        "desc" => ["en" => "We complete documentation, final inspection, handover, and follow-up support for a clean project close.", "kh" => "យើងបញ្ចប់ឯកសារ ការត្រួតពិនិត្យចុងក្រោយ ការប្រគល់ការងារ និងការគាំទ្របន្តសម្រាប់បិទគម្រោងឲ្យបានរលូន។"]
+    ],
+];
+
+if (count($process) < 4) {
+    $process = array_slice(array_values(array_replace($defaultProcess, $process)), 0, 5);
 }
 
 $sectors = [
@@ -221,67 +245,49 @@ $sectors = [
     </div>
 
     <!-- === OUR METHODOLOGY (Design-Z Process) === -->
-    <section class="py-32 bg-gray-50 relative overflow-hidden">
-        <!-- Background Decor -->
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-titan-red/5 rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-titan-navy/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+    <section class="py-20 md:py-28 bg-gray-50 relative overflow-hidden">
 
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
-            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-24 transition-all duration-1000">
-                <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-sm mb-4 block">{{ __('HOW IT WORKS') }}</span>
-                <h2 class="text-5xl md:text-6xl font-bold mb-6 text-titan-navy tracking-tight">{{ __('Our Methodology') }}</h2>
-                <p class="text-titan-navy/50 text-lg max-w-2xl mx-auto leading-relaxed">
+            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12 md:mb-16 transition-all duration-1000">
+                <div class="max-w-3xl">
+                    <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs mb-4 block">{{ __('HOW IT WORKS') }}</span>
+                    <h2 class="text-4xl md:text-6xl font-bold mb-5 text-titan-navy tracking-tight">{{ __('Our Methodology') }}</h2>
+                    <p class="text-titan-navy/60 text-base md:text-lg max-w-2xl leading-relaxed">
                     {{ __('A systematic approach ensuring transparency, safety, and excellence from the first meeting to final handover.') }}
-                </p>
+                    </p>
+                </div>
+                <div class="hidden lg:flex items-center gap-3 text-titan-navy/50 text-xs font-bold uppercase tracking-[0.2em]">
+                    <span>{{ __('Planning') }}</span>
+                    <div class="w-16 h-px bg-titan-red/50"></div>
+                    <span>{{ __('Delivery') }}</span>
+                </div>
             </div>
-
-            <style>
-                .hide-scrollbar::-webkit-scrollbar { display: none; }
-                .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-            </style>
             
-            <div class="relative mt-10 md:mt-16">
-                <!-- Connecting Line (Desktop) -->
-                <div class="hidden md:block absolute top-[80px] left-[10%] right-[10%] h-[1px] bg-titan-navy/10 z-0">
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-titan-red/60 to-transparent w-1/4 h-full animate-line-flow"></div>
-                </div>
-
-                <div class="flex flex-wrap justify-center gap-8 md:gap-12 relative z-10 hide-scrollbar snap-x snap-mandatory pb-10 pt-10 px-6 md:px-0">
-                    @foreach($process as $i => $s)
-                        <div x-data="{ shown: false }" x-intersect.once="shown = true" style="transition-delay: {{ $i * 150 }}ms" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                             class="flex-none w-full sm:w-[320px] md:w-[calc(20%-2rem)] snap-center flex flex-col items-center text-center group transition-all duration-1000">
-                            
-                            <div class="relative mb-12 flex justify-center items-center" style="width: 160px; height: 160px;">
-                                <!-- Ghost Number (Large Backdrop) -->
-                                <div class="absolute inset-0 font-black leading-none select-none tracking-tighter flex items-center justify-center pointer-events-none transition-colors duration-700 text-titan-navy/5" 
-                                     style="font-size: 140px;">
-                                    0{{ $i + 1 }}
-                                </div>
-
-                                <!-- The Main Diamond Container -->
-                                <div class="relative z-10 w-[80px] h-[80px] bg-white border border-gray-100 rounded-xl rotate-45 shadow-[0_20px_40px_rgba(0,0,0,0.04)] flex items-center justify-center group-hover:scale-110 group-hover:border-titan-red/30 transition-all duration-700 pointer-events-none">
-                                    <div class="-rotate-45 text-titan-navy group-hover:text-titan-red transition-colors duration-500">
-                                        <x-dynamic-component :component="$s['icon']" class="w-8 h-8" stroke-width="1.5" />
-                                    </div>
-                                </div>
-
-                                <!-- Floating Step Label -->
-                                <div class="absolute -bottom-2 right-1/2 translate-x-1/2 z-20 bg-titan-red text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg shadow-titan-red/20 uppercase tracking-widest transition-transform duration-500 group-hover:scale-110">
-                                    {{ __('Step') }} 0{{ $i + 1 }}
-                                </div>
-                            </div>
-
-                            <div class="px-4 relative z-10">
-                                <h3 class="font-heading font-bold mb-4 uppercase tracking-normal text-titan-navy group-hover:text-titan-red transition-colors duration-300 text-sm">
-                                    {{ is_array($s['title']) ? ($s['title'][$lang] ?? $s['title']['en'] ?? '') : $s['title'] }}
-                                </h3>
-                                <p class="text-titan-navy/50 leading-relaxed max-w-[220px] mx-auto transition-colors duration-300 group-hover:text-titan-navy/70 text-[11px] font-medium">
-                                    {{ is_array($s['desc']) ? ($s['desc'][$lang] ?? $s['desc']['en'] ?? '') : $s['desc'] }}
-                                </p>
-                            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 md:gap-5">
+                @foreach($process as $i => $s)
+                    <article x-data="{ shown: false }" x-intersect.once="shown = true" style="transition-delay: {{ $i * 90 }}ms" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                        class="group relative min-h-[260px] bg-gray-50 border border-gray-100 p-6 md:p-7 overflow-hidden transition-all duration-700 hover:-translate-y-1 hover:bg-white hover:border-titan-red/25 hover:shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
+                        <div class="absolute top-5 right-5 text-6xl font-black leading-none text-titan-navy/[0.04] transition-colors group-hover:text-titan-red/[0.08]">
+                            {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}
                         </div>
-                    @endforeach
-                </div>
+                        <div class="relative z-10 flex h-full flex-col">
+                            <div class="mb-8 flex items-center justify-between gap-4">
+                                <div class="w-14 h-14 bg-white border border-gray-100 flex items-center justify-center text-titan-red shadow-sm transition-all duration-500 group-hover:bg-titan-red group-hover:text-white group-hover:border-titan-red">
+                                    <x-dynamic-component :component="$s['icon']" class="w-6 h-6 transition-colors duration-500 group-hover:!text-white" stroke-width="1.7" />
+                                </div>
+                                <span class="text-[10px] font-bold px-3 py-1 bg-white border border-gray-100 text-titan-navy/50 uppercase tracking-widest transition-all group-hover:border-titan-red/30 group-hover:text-titan-red">
+                                    {{ __('Step') }} {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}
+                                </span>
+                            </div>
+                            <h3 class="font-heading font-bold mb-4 uppercase text-titan-navy group-hover:text-titan-red transition-colors duration-300 text-base leading-tight">
+                                {{ is_array($s['title']) ? ($s['title'][$lang] ?? $s['title']['en'] ?? '') : $s['title'] }}
+                            </h3>
+                            <p class="text-titan-navy/60 leading-relaxed text-sm font-medium">
+                                {{ is_array($s['desc']) ? ($s['desc'][$lang] ?? $s['desc']['en'] ?? '') : $s['desc'] }}
+                            </p>
+                        </div>
+                    </article>
+                @endforeach
             </div>
         </div>
     </section>
@@ -383,7 +389,7 @@ $sectors = [
                             </div>
 
                             <div class="transform translate-y-0 transition-transform duration-500">
-                                <h3 class="text-3xl font-bold text-white mb-4 uppercase tracking-tighter leading-tight">
+                                <h3 class="text-3xl font-bold !text-white mb-4 uppercase tracking-tighter leading-tight">
                                     {{ $sector['title'][$lang] }}
                                 </h3>
                                 <div class="w-12 h-1.5 bg-titan-red group-hover:w-24 transition-all duration-500"></div>

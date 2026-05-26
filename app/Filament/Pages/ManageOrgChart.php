@@ -11,9 +11,14 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
-class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActions
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Form;
+
+class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActions, HasForms
 {
     use \Filament\Actions\Concerns\InteractsWithActions;
+    use InteractsWithForms;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
 
@@ -33,10 +38,72 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
 
     public $chartData = [];
+    public ?array $data = [];
 
     public function mount()
     {
+        $org = \App\Models\SystemSetting::get('organization_profile', []);
+        $this->form->fill([
+            'org_chart_type' => $org['org_chart_type'] ?? 'dynamic',
+            'org_chart_image' => $org['org_chart_image'] ?? null,
+            'org_chart_pdf' => $org['org_chart_pdf'] ?? null,
+        ]);
         $this->loadChartData();
+    }
+
+    public function form($form)
+    {
+        return $form
+            ->schema([
+                \Filament\Schemas\Components\Section::make(__('Display Mode'))
+                    ->description(__('Choose whether to build an interactive chart below, or upload a static file.'))
+                    ->schema([
+                        Select::make('org_chart_type')
+                            ->label(__('Chart Type'))
+                            ->options([
+                                'dynamic' => __('Interactive Chart (Builder Below)'),
+                                'image' => __('Upload Image (PNG/JPG)'),
+                                'pdf' => __('Upload PDF'),
+                            ])
+                            ->default('dynamic')
+                            ->required()
+                            ->live(),
+                        \Filament\Forms\Components\FileUpload::make('org_chart_image')
+                            ->label(__('Organization Chart Image'))
+                            ->image()
+                            ->disk('public')
+                            ->directory('organization')
+                            ->visibility('public')
+                            ->maxSize(102400) // 100MB
+                            ->visible(fn ($get) => $get('org_chart_type') === 'image'),
+                        \Filament\Forms\Components\FileUpload::make('org_chart_pdf')
+                            ->label(__('Organization Chart PDF'))
+                            ->disk('public')
+                            ->directory('organization')
+                            ->visibility('public')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->maxSize(1048576) // 1GB limit in app
+                            ->visible(fn ($get) => $get('org_chart_type') === 'pdf'),
+                    ])->columns(2),
+            ])
+            ->statePath('data');
+    }
+
+    public function saveDisplaySettings()
+    {
+        $org = \App\Models\SystemSetting::get('organization_profile', []);
+        $org = array_merge($org, $this->form->getState());
+        \App\Models\SystemSetting::set('organization_profile', $org);
+
+        // Clear cache
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_kh');
+        \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
+
+        Notification::make()
+            ->title(__('Display Settings Saved'))
+            ->success()
+            ->send();
     }
 
     protected function getHeaderActions(): array

@@ -40,7 +40,9 @@ class DocumentsTable
                 ToggleColumn::make('is_featured')
                     ->label(__('Featured')),
                 ToggleColumn::make('isActive')
-                    ->label(__('Active')),
+                    ->label(__('Active'))
+                    ->onColor('success')
+                    ->offColor('danger'),
                 TextColumn::make('downloadCount')
                     ->label(__('Downloads'))
                     ->numeric()
