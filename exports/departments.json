@@ -1,0 +1,56 @@
+[
+    {
+        "id": "019e5d6d-dba5-733b-9fb8-f6773b9a995e",
+        "name": "{\"en\":\"IT\",\"km\":\"\u17a2\u17b6\u1799\"}",
+        "description": "{\"en\":\"<p><\/p>\",\"km\":\"<p><\/p>\"}",
+        "created_at": "2026-05-25 04:39:01",
+        "updated_at": "2026-05-25 04:39:01",
+        "slug": "it",
+        "isActive": 1
+    },
+    {
+        "id": "019e5d6e-3e72-72f7-bb19-d75a490b35ff",
+        "name": "{\"en\":\"HR & Admin\",\"km\":\"\u1792\u1793\u1792\u17b6\u1793\u1798\u1793\u17bb\u179f\u17d2\u179f \u1793\u17b7\u1784\u17a2\u17d2\u1793\u1780\u1782\u17d2\u179a\u1794\u17cb\u1782\u17d2\u179a\u1784\"}",
+        "description": "{\"en\":\"<p><\/p>\",\"km\":\"<p><\/p>\"}",
+        "created_at": "2026-05-25 04:39:26",
+        "updated_at": "2026-05-25 04:39:26",
+        "slug": "hr-admin",
+        "isActive": 1
+    },
+    {
+        "id": "019e5d6e-98cc-734b-b8a3-1bb67bfe86f0",
+        "name": "{\"en\":\"Accounting\",\"km\":\"\u1782\u178e\u1793\u17c1\u1799\u17d2\u1799\"}",
+        "description": "{\"en\":\"<p><\/p>\",\"km\":\"<p><\/p>\"}",
+        "created_at": "2026-05-25 04:39:49",
+        "updated_at": "2026-05-25 04:39:49",
+        "slug": "accounting",
+        "isActive": 1
+    },
+    {
+        "id": "019e5d6e-de52-7365-bba7-477b53866031",
+        "name": "{\"en\":\"Audit\",\"km\":\"\u179f\u179c\u1793\u1780\u1798\u17d2\u1798\"}",
+        "description": "{\"en\":\"<p><\/p>\",\"km\":\"<p><\/p>\"}",
+        "created_at": "2026-05-25 04:40:07",
+        "updated_at": "2026-05-25 04:40:07",
+        "slug": "audit",
+        "isActive": 1
+    },
+    {
+        "id": "019e5d70-6a8f-702e-b7bd-e25bf57f65c4",
+        "name": "{\"en\":\"Architecture\",\"km\":\"\u179f\u17d2\u1790\u17b6\u1794\u178f\u17d2\u1799\u1780\u1798\u17d2\u1798\"}",
+        "description": "{\"en\":\"<p><\/p>\",\"km\":\"<p><\/p>\"}",
+        "created_at": "2026-05-25 04:41:48",
+        "updated_at": "2026-05-25 04:41:48",
+        "slug": "architecture",
+        "isActive": 1
+    },
+    {
+        "id": "019e5d70-b511-7208-833f-1ee6aff0322a",
+        "name": "{\"en\":\"Structure\",\"km\":\"\u179a\u1785\u1793\u17b6\u179f\u1798\u17d2\u1796\u17d0\u1793\u17d2\u1792\"}",
+        "description": "{\"en\":\"<p><\/p>\",\"km\":\"<p><\/p>\"}",
+        "created_at": "2026-05-25 04:42:08",
+        "updated_at": "2026-05-25 04:42:08",
+        "slug": "structure",
+        "isActive": 1
+    }
+]
