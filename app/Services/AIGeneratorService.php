@@ -100,6 +100,34 @@ class AIGeneratorService
         }
     }
 
+    public function translateContent(string $content, string $targetLanguage = 'Khmer', ?array $overrideSettings = null): ?string
+    {
+        $settings = $overrideSettings ?: SystemSetting::get('ai_settings', []);
+        $provider = $settings['provider'] ?? 'gemini';
+        $providerConfig = $this->providerConfig($settings, $provider);
+        $apiKey = $providerConfig['api_key'];
+        $model = $providerConfig['model'];
+        $baseUrl = $providerConfig['base_url'];
+        $temperature = 0.2;
+
+        if ($provider !== 'ollama' && empty($apiKey)) {
+            throw new Exception("AI API Key is not configured.");
+        }
+
+        try {
+            $result = match ($provider) {
+                'gemini' => $this->translateWithGemini($content, $targetLanguage, $apiKey, $model, $temperature),
+                'ollama' => $this->translateWithOllama($content, $targetLanguage, $baseUrl, $model, $temperature),
+                default => throw new Exception("Unsupported AI Provider: " . $provider),
+            };
+            $this->trackUsage($provider, true);
+            return $result;
+        } catch (Exception $e) {
+            $this->trackUsage($provider, false, $e->getMessage());
+            throw $e;
+        }
+    }
+
     protected function generateWithGemini(string $topic, string $type, ?string $customInstructions, string $apiKey, string $model, string $systemPrompt, float $temperature): ?string
     {
         $modelPath = str_starts_with($model, 'models/') ? $model : "models/{$model}";
@@ -130,6 +158,18 @@ class AIGeneratorService
         return $this->callGemini($url, $prompt, $temperature);
     }
 
+    protected function translateWithGemini(string $content, string $targetLanguage, string $apiKey, string $model, float $temperature): ?string
+    {
+        $modelPath = str_starts_with($model, 'models/') ? $model : "models/{$model}";
+        $url = "https://generativelanguage.googleapis.com/v1beta/{$modelPath}:generateContent?key={$apiKey}";
+
+        $prompt = "Task: Translate the following content into {$targetLanguage}.\n\n";
+        $prompt .= "Content:\n{$content}\n\n";
+        $prompt .= "Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.";
+
+        return $this->callGemini($url, $prompt, $temperature);
+    }
+
     protected function generateWithOllama(string $topic, string $type, ?string $customInstructions, string $baseUrl, string $model, string $systemPrompt, float $temperature): ?string
     {
         $url = rtrim($baseUrl, '/') . '/api/generate';
@@ -148,6 +188,15 @@ class AIGeneratorService
         $prompt = "System: {$systemPrompt}\nTask: Improve the content below.\nContent: {$content}";
         if ($instructions) $prompt .= "\nInstructions: {$instructions}";
         $prompt .= "\n\nReturn ONLY the improved text.";
+
+        return $this->callOllama($url, $prompt, $model, $temperature);
+    }
+
+    protected function translateWithOllama(string $content, string $targetLanguage, string $baseUrl, string $model, float $temperature): ?string
+    {
+        $url = rtrim($baseUrl, '/') . '/api/generate';
+
+        $prompt = "Task: Translate the following content into {$targetLanguage}.\n\nContent: {$content}\n\nReturn ONLY the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags.";
 
         return $this->callOllama($url, $prompt, $model, $temperature);
     }

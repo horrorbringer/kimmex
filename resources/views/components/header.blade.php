@@ -36,10 +36,10 @@
         $navCategories = \Illuminate\Support\Facades\Cache::remember('nav_categories_' . $lang, now()->addHours(12), function () use ($lang) {
             return \App\Models\ProjectCategory::where('isActive', true)
                 ->get()
-                ->sortBy(fn($cat) => $cat->getTranslation('name', $lang))
+                ->sortBy(fn($cat) => $cat->localizedName($lang))
                 ->map(fn($cat) => [
                     'slug' => $cat->slug,
-                    'name' => $cat->getTranslation('name', $lang),
+                    'name' => $cat->localizedName($lang),
                     'name_en' => $cat->getTranslation('name', 'en')
                 ])
                 ->values()

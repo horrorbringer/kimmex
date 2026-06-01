@@ -20,11 +20,17 @@ class AutoTranslateService
      */
     public function translate(string $text, string $targetLocale = 'km'): ?string
     {
+        return $this->translateFrom($text, $targetLocale, 'en');
+    }
+
+    public function translateFrom(string $text, string $targetLocale = 'km', ?string $sourceLocale = null): ?string
+    {
         if (empty(trim(strip_tags($text)))) {
             return $text;
         }
 
         try {
+            $this->translator->setSource($sourceLocale);
             $this->translator->setTarget($targetLocale);
 
             // Handle HTML content (from RichEditor)

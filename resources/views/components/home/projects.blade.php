@@ -1,7 +1,8 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
     $fallbackImage = '/images/projects/Thumbnail-5.jpg';
-    $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.app()->getLocale(), now()->addHours(12), function() use ($fallbackImage) {
+    $locale = app()->getLocale();
+    $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.$locale, now()->addHours(12), function() use ($fallbackImage, $locale) {
         $projectsDb = \App\Models\Project::where('isActive', true)
             ->with('projectCategory')
             ->orderBy('isFeatured', 'desc')
@@ -9,15 +10,15 @@
             ->take(3)
             ->get();
 
-        return $projectsDb->map(function ($p) use ($fallbackImage) {
+        return $projectsDb->map(function ($p) use ($fallbackImage, $locale) {
             return [
                 'slug' => $p->slug,
                 'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                     ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
                     : $fallbackImage,
-                'type' => $p->projectCategory ? $p->projectCategory->getTranslation('name', app()->getLocale()) : ($p->category ?: __('Infrastructure')),
-                'title' => $p->getTranslation('title', app()->getLocale()),
-                'location' => $p->getTranslation('location', app()->getLocale()),
+                'type' => $p->projectCategory ? $p->projectCategory->localizedName($locale) : ($p->category ?: __('Infrastructure')),
+                'title' => $p->getTranslation('title', $locale),
+                'location' => $p->getTranslation('location', $locale),
                 'status' => strtoupper($p->status->value ?? $p->status ?? 'COMPLETED'),
             ];
         })->toArray();

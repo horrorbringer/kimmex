@@ -8,40 +8,52 @@
         $allLocationsLabel = $isKhmer ? __('All Locations') : __('All Locations');
         $allStatusLabel = $isKhmer ? __('All Status') : __('All Status');
         $fallbackImage = '/images/projects/Thumbnail-5.jpg';
-        $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() use ($fallbackImage) {
+        $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() use ($fallbackImage, $locale) {
             $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
                 ->orderBy('created_at', 'desc')
                 ->get();
+            $projectCategories = \App\Models\ProjectCategory::where('isActive', true)->get();
+            $categoryLookup = $projectCategories->flatMap(function ($category) {
+                return [
+                    strtolower($category->slug) => $category,
+                    strtolower(\Illuminate\Support\Str::slug($category->getTranslation('name', 'en', false))) => $category,
+                ];
+            });
+            $localizedCategoryName = function ($project) use ($locale, $categoryLookup) {
+                if ($project->projectCategory) {
+                    return $project->projectCategory->localizedName($locale);
+                }
+
+                $legacyCategory = trim((string) $project->category);
+                $legacyKey = strtolower(\Illuminate\Support\Str::slug($legacyCategory));
+                $matchedCategory = $categoryLookup->get(strtolower($legacyCategory)) ?: $categoryLookup->get($legacyKey);
+
+                return $matchedCategory
+                    ? $matchedCategory->localizedName($locale)
+                    : ($legacyCategory ? __(\Illuminate\Support\Str::headline($legacyCategory)) : __('General'));
+            };
 
             // Dynamically build filter lists
-            $categories = $projectsDb->map(function ($p) {
-                $cat = $p->projectCategory;
-                if ($cat) {
-                    return $cat->getTranslation('name', app()->getLocale()) ?: ($cat->getTranslation('name', 'en') ?: $cat->name);
-                }
-                return $p->category ?: 'General';
-            })->unique()->values()->prepend(__('All'))->toArray();
+            $categories = $projectsDb->map($localizedCategoryName)->unique()->values()->prepend(__('All'))->toArray();
 
-            $locations = $projectsDb->map(fn($p) => $p->getTranslation('location', app()->getLocale()))
+            $locations = $projectsDb->map(fn($p) => $p->getTranslation('location', $locale))
                 ->unique()->values()->prepend(__('All'))->toArray();
 
             $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
 
-            $projects = $projectsDb->map(function ($p) use ($fallbackImage) {
+            $projects = $projectsDb->map(function ($p) use ($fallbackImage, $locale, $localizedCategoryName) {
                 /** @var \App\Models\Project $p */
                 return [
                     'id' => $p->slug,
-                    'title' => $p->getTranslation('title', app()->getLocale()),
+                    'title' => $p->getTranslation('title', $locale),
                     'featured' => (bool) $p->isFeatured,
-                    'location' => $p->getTranslation('location', app()->getLocale()),
-                    'type' => $p->projectCategory
-                        ? ($p->projectCategory->getTranslation('name', app()->getLocale()) ?: ($p->projectCategory->getTranslation('name', 'en') ?: $p->projectCategory->name))
-                        : ($p->category ?: 'General'),
+                    'location' => $p->getTranslation('location', $locale),
+                    'type' => $localizedCategoryName($p),
                     'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
                     'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
                         ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
                         : $fallbackImage,
-                    'summary' => strip_tags($p->getTranslation('description', app()->getLocale())),
+                    'summary' => strip_tags($p->getTranslation('description', $locale)),
                 ];
             })->toArray();
 

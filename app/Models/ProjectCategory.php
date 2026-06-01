@@ -32,6 +32,33 @@ class ProjectCategory extends Model
         return $this->hasMany(Project::class);
     }
 
+    public function localizedName(?string $locale = null): string
+    {
+        return $this->localizedField('name', $locale) ?: $this->slug;
+    }
+
+    public function localizedDescription(?string $locale = null): string
+    {
+        return $this->localizedField('description', $locale);
+    }
+
+    protected function localizedField(string $field, ?string $locale = null): string
+    {
+        $locale = $locale ?: app()->getLocale();
+        $fallbackLocales = $locale === 'km' ? ['kh', 'en'] : ($locale === 'kh' ? ['km', 'en'] : ['en']);
+        $locales = array_values(array_unique(array_filter(array_merge([$locale], $fallbackLocales))));
+
+        foreach ($locales as $candidateLocale) {
+            $value = $this->getTranslation($field, $candidateLocale, false);
+
+            if (is_string($value) && trim($value) !== '') {
+                return trim($value);
+            }
+        }
+
+        return '';
+    }
+
     protected static function booted()
     {
         static::saved(function () {

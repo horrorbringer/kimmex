@@ -3,11 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProjectCategoryResource\Pages;
+use App\Filament\Support\AIHelper;
 use App\Models\ProjectCategory;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -59,31 +62,51 @@ class ProjectCategoryResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->label(__('Name'))
-                    ->required()
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                TextInput::make('slug')
-                    ->label(__('Slug'))
-                    ->required()
-                    ->unique(ignoreRecord: true),
-                Select::make('parent_id')
-                    ->label(__('Parent Category'))
-                    ->relationship('parent', 'name', fn($query) => $query->orderBy('name->en'))
-                    ->getOptionLabelFromRecordUsing(
-                        fn (ProjectCategory $record): string => $record->getTranslation('name', app()->getLocale())
-                            ?: $record->getTranslation('name', 'en')
-                            ?: $record->slug
-                    )
-                    ->searchable()
-                    ->preload(),
-                Textarea::make('description')
-                    ->label(__('Description'))
-                    ->columnSpanFull(),
-                \Filament\Forms\Components\Toggle::make('isActive')
-                    ->label(__('Is Active'))
-                    ->default(true),
+                Section::make(__('Category Details'))
+                    ->components([
+                        Grid::make(2)->components([
+                            TextInput::make('name_en')
+                                ->label(__('Name') . ' (English)')
+                                ->required()
+                                ->live(onBlur: true)
+                                ->suffixAction(AIHelper::getTranslateAction('name_en', 'name_km', 'Khmer', 'km', 'en'))
+                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                            TextInput::make('name_km')
+                                ->label(__('Name') . ' (Khmer)')
+                                ->suffixAction(AIHelper::getTranslateAction('name_km', 'name_en', 'English', 'en', 'km')),
+                        ]),
+                        TextInput::make('slug')
+                            ->label(__('Slug'))
+                            ->required()
+                            ->unique(ignoreRecord: true),
+                        Grid::make(2)->components([
+                            Textarea::make('description_en')
+                                ->label(__('Description') . ' (English)')
+                                ->hintActions([
+                                    AIHelper::getGenerateAction('description_en', 'Project Category Description'),
+                                    AIHelper::getTranslateAction('description_en', 'description_km', 'Khmer', 'km', 'en'),
+                                ])
+                                ->rows(4),
+                            Textarea::make('description_km')
+                                ->label(__('Description') . ' (Khmer)')
+                                ->hintAction(AIHelper::getTranslateAction('description_km', 'description_en', 'English', 'en', 'km'))
+                                ->rows(4),
+                        ]),
+                    ]),
+                Section::make(__('Settings'))
+                    ->components([
+                        Select::make('parent_id')
+                            ->label(__('Parent Category'))
+                            ->relationship('parent', 'name', fn($query) => $query->orderBy('name->en'))
+                            ->getOptionLabelFromRecordUsing(
+                                fn(ProjectCategory $record): string => $record->localizedName()
+                            )
+                            ->searchable()
+                            ->preload(),
+                        \Filament\Forms\Components\Toggle::make('isActive')
+                            ->label(__('Is Active'))
+                            ->default(true),
+                    ]),
             ]);
     }
 
@@ -93,10 +116,15 @@ class ProjectCategoryResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(query: fn($query, $direction) => $query->orderBy('name->en', $direction)),
                 TextColumn::make('parent.name')
                     ->label(__('Parent Category'))
                     ->badge()
+                    ->formatStateUsing(
+                        fn (mixed $state, ProjectCategory $record): string => $record->parent?->localizedName()
+                            ?: (is_string($state) ? $state : '')
+                    )
                     ->placeholder(__('Top Level')),
                 TextColumn::make('slug')
                     ->label(__('Slug'))

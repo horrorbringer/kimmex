@@ -91,9 +91,9 @@
             <div class="relative w-full h-full overflow-hidden">
                 <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" />
                 {{-- Stronger left-side scrim keeps hero copy readable over bright project photos. --}}
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/90 via-titan-navy/55 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/25 via-transparent to-titan-navy/70"></div>
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(11,43,92,0.45)_0%,rgba(11,43,92,0.18)_38%,transparent_65%)]"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/70 via-titan-navy/32 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/10 via-transparent to-titan-navy/42"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(11,43,92,0.26)_0%,rgba(11,43,92,0.10)_38%,transparent_65%)]"></div>
             </div>
         </div>
     </template>
@@ -114,11 +114,13 @@
 
 
 
-                    <h1 class="hero-copy-shadow font-heading font-[900] mb-8 text-white uppercase leading-[0.9] tracking-normal max-w-[900px]"
-                        style="color: #ffffff !important; font-weight: 900 !important; font-size: clamp(2rem, 5vw, 3.5rem) !important;"
+                    <h1 class="hero-copy-shadow font-heading font-[900] mb-7 !text-white uppercase leading-[1.02] tracking-normal"
+                        :class="slide.title.length > 48
+                            ? 'max-w-[820px] text-[2rem] md:text-[2.65rem] xl:text-[3.05rem]'
+                            : 'max-w-[900px] text-[2.35rem] md:text-[3.15rem] xl:text-[3.75rem]'"
                         x-text="slide.title"></h1>
 
-                    <p class="hero-copy-shadow text-[#F8FAFC] max-w-[650px] mb-12 font-medium text-lg lg:text-xl leading-relaxed"
+                    <p class="hero-copy-shadow text-[#F8FAFC] max-w-[650px] mb-10 font-medium text-base lg:text-lg leading-relaxed"
                         x-text="slide.desc"></p>
 
                     <div class="flex flex-wrap gap-8">

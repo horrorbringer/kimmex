@@ -70,7 +70,11 @@ class AppServiceProvider extends ServiceProvider
                         $khmerIsEmpty = empty($translations['km']);
                         $englishChanged = !empty($currentEn) && ($currentEn !== $originalEn);
 
-                        if (!empty($currentEn) && ($khmerIsEmpty || $englishChanged)) {
+                        $shouldTranslate = $model instanceof \App\Models\ProjectCategory
+                            ? $khmerIsEmpty
+                            : ($khmerIsEmpty || $englishChanged);
+
+                        if (!empty($currentEn) && $shouldTranslate) {
                             // Translate English content to Khmer automatically
                             $translated = $translator->translate($currentEn, 'km');
                             if ($translated) {

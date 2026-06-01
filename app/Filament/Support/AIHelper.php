@@ -3,8 +3,10 @@
 namespace App\Filament\Support;
 
 use App\Services\AIGeneratorService;
+use App\Services\AutoTranslateService;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 
 class AIHelper
@@ -88,6 +90,19 @@ class AIHelper
                             ->send();
                     }
                 } catch (\Exception $e) {
+                    $fallback = self::buildFallbackContent($data['topic'], $type, $data['instructions'] ?? null);
+
+                    if ($fallback) {
+                        $set($fieldName, $fallback);
+
+                        Notification::make()
+                            ->warning()
+                            ->title(__('AI quota unavailable'))
+                            ->body(__('Used a local draft instead. You can edit it before saving.'))
+                            ->send();
+                        return;
+                    }
+
                     Notification::make()
                         ->danger()
                         ->title(__('AI Generation Failed'))
@@ -95,5 +110,133 @@ class AIHelper
                         ->send();
                 }
             });
+    }
+
+    protected static function buildFallbackContent(string $topic, string $type, ?string $instructions = null): ?string
+    {
+        $topic = trim($topic);
+
+        if ($topic === '') {
+            return null;
+        }
+
+        $instructionSentence = $instructions
+            ? ' ' . trim($instructions)
+            : '';
+
+        if (str_contains(strtolower($type), 'project category')) {
+            return "{$topic} projects cover planning, construction, and delivery work for clients who need reliable execution, clear coordination, and durable results. This category highlights Kimmex experience in managing project requirements, site conditions, quality control, and practical construction solutions.{$instructionSentence}";
+        }
+
+        return "{$topic} focuses on practical value, clear execution, and professional delivery. This content can be refined further to match the final message, audience, and tone.{$instructionSentence}";
+    }
+
+    public static function getTranslateAction(
+        string $sourceField,
+        ?string $targetField = null,
+        string $targetLanguage = 'Khmer',
+        string $targetLocale = 'km',
+        ?string $sourceLocale = null
+    ): Action {
+        $targetField ??= $sourceField;
+
+        return Action::make('aiTranslate_' . $sourceField . '_' . $targetField)
+            ->label(__('AI Translate'))
+            ->icon('heroicon-m-language')
+            ->tooltip(__('Translate with AI'))
+            ->action(function (Get $get, Set $set, $state, AIGeneratorService $ai, AutoTranslateService $translator) use ($sourceField, $targetField, $targetLanguage, $targetLocale, $sourceLocale) {
+                $sourceText = $state ?: $get($sourceField);
+                $sourceHasKhmer = self::containsKhmer((string) $sourceText);
+                $resolvedTargetLanguage = $sourceHasKhmer ? 'English' : $targetLanguage;
+                $resolvedTargetLocale = $sourceHasKhmer ? 'en' : $targetLocale;
+                $resolvedSourceLocale = $sourceHasKhmer ? 'km' : ($sourceLocale ?? 'en');
+
+                if (empty(trim(strip_tags((string) $sourceText)))) {
+                    Notification::make()
+                        ->warning()
+                        ->title(__('No source text found'))
+                        ->body(__('Please enter source text first.'))
+                        ->send();
+                    return;
+                }
+
+                try {
+                    $translated = $ai->translateContent($sourceText, $resolvedTargetLanguage);
+
+                    if ($translated) {
+                        $set($targetField, $translated);
+
+                        Notification::make()
+                            ->success()
+                            ->title(__('Translated successfully'))
+                            ->send();
+                    }
+                } catch (\Exception $e) {
+                    $fallback = $translator->translateFrom($sourceText, $resolvedTargetLocale, $resolvedSourceLocale);
+                    $fallback ??= self::buildLocalTranslationFallback($sourceText, $resolvedTargetLocale);
+
+                    if ($fallback) {
+                        $set($targetField, $fallback);
+
+                        Notification::make()
+                            ->warning()
+                            ->title(__('AI quota unavailable'))
+                            ->body(__('Used automatic translation fallback instead.'))
+                            ->send();
+                        return;
+                    }
+
+                    Notification::make()
+                        ->danger()
+                        ->title(__('AI Translation Failed'))
+                        ->body($e->getMessage())
+                        ->send();
+                }
+            });
+    }
+
+    protected static function buildLocalTranslationFallback(string $sourceText, string $targetLocale): ?string
+    {
+        if ($targetLocale !== 'en') {
+            return null;
+        }
+
+        $dictionary = [
+            'រដ្ឋាភិបាល' => 'Government',
+            'ហេដ្ឋារចនាសម្ព័ន្ធ' => 'Infrastructure',
+            'ពាណិជ្ជកម្ម' => 'Commercial',
+            'អប់រំ' => 'Education',
+            'ថាមពល និងប្រព័ន្ធសាធារណៈ' => 'Energy & Utilities',
+            'ថាមពល' => 'Energy',
+            'ប្រព័ន្ធសាធារណៈ' => 'Utilities',
+            'ប្រព័ន្ធសម្អាតទឹក' => 'Water Treatment',
+            'គម្រោង' => 'Project',
+            'សំណង់' => 'Construction',
+        ];
+
+        try {
+            foreach (\App\Models\ProjectCategory::query()->get() as $category) {
+                $english = $category->getTranslation('name', 'en', false);
+                $khmer = $category->getTranslation('name', 'km', false)
+                    ?: $category->getTranslation('name', 'kh', false);
+
+                if ($english && $khmer) {
+                    $dictionary[$khmer] = $english;
+                }
+            }
+        } catch (\Throwable) {
+            //
+        }
+
+        $translated = str_replace(array_keys($dictionary), array_values($dictionary), $sourceText);
+        $translated = preg_replace('/\s+/', ' ', trim($translated));
+        $translated = preg_replace('/\b([A-Za-z][A-Za-z& ]+)\s+\1\b/i', '$1', $translated);
+
+        return $translated !== trim($sourceText) ? $translated : null;
+    }
+
+    protected static function containsKhmer(string $text): bool
+    {
+        return preg_match('/[\x{1780}-\x{17FF}]/u', $text) === 1;
     }
 }

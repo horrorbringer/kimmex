@@ -7,7 +7,22 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateProjectCategory extends CreateRecord
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
-
     protected static string $resource = ProjectCategoryResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['name'] = [
+            'en' => $data['name_en'] ?? '',
+            'km' => $data['name_km'] ?? '',
+        ];
+
+        $data['description'] = [
+            'en' => $data['description_en'] ?? '',
+            'km' => $data['description_km'] ?? '',
+        ];
+
+        unset($data['name_en'], $data['name_km'], $data['description_en'], $data['description_km']);
+
+        return $data;
+    }
 }

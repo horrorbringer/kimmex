@@ -43,7 +43,7 @@
         return [
             'id' => $projectDb->slug,
             'title' => $resolveContent($projectDb, 'title'),
-            'type' => $projectDb->projectCategory ? $resolveContent($projectDb->projectCategory, 'name') : ($projectDb->category ?: __('Infrastructure')),
+            'type' => $projectDb->projectCategory ? $projectDb->projectCategory->localizedName($contentLocale) : ($projectDb->category ?: __('Infrastructure')),
             'location' => $resolveContent($projectDb, 'location'),
             'status' => $projectDb->status?->getLabel() ?: __('Completed'),
             'date' => $projectDb->completionDate?->format('F Y') ?: __('Oct 2026'),
@@ -66,10 +66,10 @@
             'scope' => $resolveContent($projectDb, 'scopeContributions'),
 
             'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \Illuminate\Support\Facades\Storage::url($img->url))->toArray(),
-            'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->take(3)->get()->map(fn(\App\Models\Project $p) => [
+            'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->with('projectCategory')->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
                 'title' => $resolveContent($p, 'title'),
-                'type' => $p->category ?: __('Infrastructure'),
+                'type' => $p->projectCategory ? $p->projectCategory->localizedName($contentLocale) : ($p->category ?: __('Infrastructure')),
                 'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage)) : '/images/projects/Thumbnail-5.jpg'
             ])->toArray()
         ];
