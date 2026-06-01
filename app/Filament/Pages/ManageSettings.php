@@ -81,6 +81,8 @@ class ManageSettings extends Page implements HasForms
             'address' => $org['en']['address'] ?? '',
             'google_maps_url' => $org['google_maps_url'] ?? '',
             'logo' => $org['logo'] ?? '',
+            'favicon' => $org['favicon'] ?? '',
+            'website_title' => $org['en']['website_title'] ?? '',
             
             // Social
             'facebook' => $org['facebook'] ?? '',
@@ -122,8 +124,8 @@ class ManageSettings extends Page implements HasForms
             'secondary_color_hover' => $theme['secondary_color_hover'] ?? '#0E3A7A',
             'font_en' => $theme['font_family_en'] ?? 'Inter',
             'font_kh' => $theme['font_family_km'] ?? 'Kantumruy Pro',
-            'footer_bg_color' => $theme['footer_bg_color'] ?? '#0B2B5C',
-            'footer_accent_color' => $theme['footer_accent_color'] ?? '#D4A017',
+            'footer_bg_color' => $theme['footer_bg_color'] ?? '#FFFFFF',
+            'footer_accent_color' => $theme['footer_accent_color'] ?? '#ED1C24',
         ];
 
         $provider = $this->data['ai_provider'];
@@ -153,11 +155,17 @@ class ManageSettings extends Page implements HasForms
                             ->schema([
                                 Grid::make(2)->schema([
                                     Section::make(__('Identity & Brand'))
-                                        ->description(__('Manage your logo, name, and catchphrase.'))
+                                        ->description(__('Manage your logo, favicon, name, and catchphrase.'))
                                         ->columnSpan(1)
                                         ->schema([
-                                            FileUpload::make('logo')->image()->disk('public')->directory('organization'),
+                                            Grid::make(2)->schema([
+                                                FileUpload::make('logo')->label(__('Logo'))->image()->disk('public')->directory('organization'),
+                                                FileUpload::make('favicon')->label(__('Favicon'))->image()->disk('public')->directory('organization'),
+                                            ]),
                                             TextInput::make('company_name')->label(__('Company Name'))->required(),
+                                            TextInput::make('website_title')
+                                                ->label(__('Website Title'))
+                                                ->helperText(__('Custom title used for browser tabs and SEO.')),
                                             TextInput::make('tagline')
                                                 ->label(__('Tagline'))
                                                 ->hintAction($this->getAiImproveAction('tagline', 'Improve this tagline for a construction company.')),
@@ -537,6 +545,7 @@ class ManageSettings extends Page implements HasForms
         // 1. Organization Profile
         $orgEn = [
             'company_name' => $state['company_name'],
+            'website_title' => $state['website_title'] ?? '',
             'tagline' => $state['tagline'],
             'address' => $state['address'],
             'working_hours' => $state['working_hours'],
@@ -553,6 +562,7 @@ class ManageSettings extends Page implements HasForms
             'email' => $state['email'],
             'google_maps_url' => $state['google_maps_url'],
             'logo' => $state['logo'],
+            'favicon' => $state['favicon'] ?? '',
             'facebook' => $state['facebook'],
             'linkedin' => $state['linkedin'],
             'youtube' => $state['youtube'],
@@ -619,8 +629,8 @@ class ManageSettings extends Page implements HasForms
             'secondary_color_hover' => $state['secondary_color_hover'],
             'font_family_en' => $state['font_en'],
             'font_family_km' => $state['font_kh'],
-            'footer_bg_color' => $state['footer_bg_color'] ?? '#0B2B5C',
-            'footer_accent_color' => $state['footer_accent_color'] ?? '#D4A017',
+            'footer_bg_color' => $state['footer_bg_color'] ?? '#FFFFFF',
+            'footer_accent_color' => $state['footer_accent_color'] ?? '#ED1C24',
         ]);
 
         // 6. Global Cache Purge (Force Frontend Sync)

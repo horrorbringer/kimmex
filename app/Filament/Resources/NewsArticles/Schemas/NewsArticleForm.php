@@ -94,6 +94,12 @@ class NewsArticleForm
                     ->panelLayout('grid')
                     ->helperText(__('Upload multiple images for the article gallery')),
 
+                TextInput::make('videoUrl')
+                    ->label(__('Video URL (YouTube/Vimeo)'))
+                    ->url()
+                    ->placeholder('https://www.youtube.com/watch?v=...')
+                    ->helperText(__('Paste a YouTube or Vimeo link to embed a video in this article.')),
+
                 Section::make(__('Publishing Info'))
                     ->icon('heroicon-o-calendar')
                     ->components([

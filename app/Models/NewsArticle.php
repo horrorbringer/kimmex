@@ -31,6 +31,7 @@ class NewsArticle extends Model
         'metaDescription',
         'authorName',
         'gallery',
+        'videoUrl',
         'isTrending',
         'readTime',
         'year',

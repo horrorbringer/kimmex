@@ -57,6 +57,13 @@ return new class extends Migration {
                 $tableData[$rowId] = $translations;
             }
 
+            // Drop unique index for departments.name before changing column type
+            if ($table === 'departments') {
+                Schema::table($table, function (Blueprint $tableAlter) {
+                    $tableAlter->dropUnique('departments_name_unique');
+                });
+            }
+
             // Change columns to json and drop Km columns
             Schema::table($table, function (Blueprint $tableAlter) use ($columns, $table) {
                 foreach ($columns as $baseField => $kmField) {

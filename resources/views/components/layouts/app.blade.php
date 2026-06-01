@@ -10,9 +10,11 @@
     @php
         $profile = $globalSettings['profile'] ?? [];
         $siteLocale = $siteLocale ?? app()->getLocale();
-        $siteName = $profile[$siteLocale]['company_name'] ?? $profile['en']['company_name'] ?? config('app.name', 'KIMMEX');
+        $siteName = $profile[$siteLocale]['website_title'] ?? $profile['en']['website_title'] ?? $profile[$siteLocale]['company_name'] ?? $profile['en']['company_name'] ?? config('app.name', 'KIMMEX');
         $logo = $profile['logo'] ?? null;
-        $faviconUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('favicon.ico');
+        
+        $favicon = $profile['favicon'] ?? null;
+        $faviconUrl = $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \Illuminate\Support\Facades\Storage::url($favicon)) : asset('favicon.ico');
         
         $pageTitle = $title ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
@@ -22,6 +24,8 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
     <link rel="icon" href="{{ $faviconUrl }}">
+    <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
+    <meta name="application-name" content="{{ $siteName }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -45,8 +49,23 @@
         $fontEn = $theme['font_family_en'] ?? 'Plus Jakarta Sans';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
         $fontHeading = 'Montserrat'; // High-impact geometric heading font
-        $footerBg     = $theme['footer_bg_color']     ?? '#0B2B5C';
-        $footerAccent = $theme['footer_accent_color']  ?? '#D4A017';
+        $footerBg     = $theme['footer_bg_color']     ?? '#FFFFFF';
+        $footerAccent = $theme['footer_accent_color']  ?? '#ED1C24';
+
+        $footerHex = ltrim($footerBg, '#');
+        if (strlen($footerHex) === 3) {
+            $footerHex = collect(str_split($footerHex))->map(fn($c) => $c.$c)->implode('');
+        }
+        $footerRgb = strlen($footerHex) === 6
+            ? [hexdec(substr($footerHex, 0, 2)), hexdec(substr($footerHex, 2, 2)), hexdec(substr($footerHex, 4, 2))]
+            : [255, 255, 255];
+        $footerLuminance = (($footerRgb[0] * 299) + ($footerRgb[1] * 587) + ($footerRgb[2] * 114)) / 1000;
+        $isLightFooter = $footerLuminance > 170;
+        $footerText = $isLightFooter ? '#0B2B5C' : '#FFFFFF';
+        $footerMuted = $isLightFooter ? 'rgba(11, 43, 92, 0.64)' : 'rgba(255, 255, 255, 0.56)';
+        $footerSubtle = $isLightFooter ? 'rgba(11, 43, 92, 0.42)' : 'rgba(255, 255, 255, 0.42)';
+        $footerBorder = $isLightFooter ? 'rgba(11, 43, 92, 0.10)' : 'rgba(255, 255, 255, 0.10)';
+        $footerSurface = $isLightFooter ? 'rgba(11, 43, 92, 0.035)' : 'rgba(255, 255, 255, 0.06)';
         
         $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading])->unique()->filter();
         $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
@@ -71,6 +90,11 @@
         footer {
             --footer-bg:     {{ $footerBg }};
             --footer-accent: {{ $footerAccent }};
+            --footer-text:   {{ $footerText }};
+            --footer-muted:  {{ $footerMuted }};
+            --footer-subtle: {{ $footerSubtle }};
+            --footer-border: {{ $footerBorder }};
+            --footer-surface: {{ $footerSurface }};
         }
         
         .font-sans { font-family: var(--font-en); }

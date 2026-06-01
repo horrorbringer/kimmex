@@ -31,6 +31,7 @@
             'content' => $articleDb->getTranslation('content', $locale),
             'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0 ? $articleDb->tags : [$articleDb->category ?: 'News'],
             'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => Storage::url($img))->toArray(),
+            'videoUrl' => $articleDb->videoUrl,
         ];
     });
 
@@ -47,6 +48,7 @@
             'content' => '<p>' . __('The content you are looking for might have been archived or moved during our site optimization. Please return to the news index to explore our latest updates.') . '</p>',
             'tags' => ['Announcement'],
             'gallery' => [],
+            'videoUrl' => null,
         ];
     }
 
@@ -111,6 +113,24 @@
         }
 
         return '<p>' . e($content) . '</p>';
+    };
+
+    $getVideoEmbedUrl = function (?string $url) {
+        if (!$url) return null;
+
+        // YouTube pattern
+        $ytPattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|watch\?v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
+        if (preg_match($ytPattern, $url, $matches)) {
+            return "https://www.youtube.com/embed/" . $matches[1];
+        }
+
+        // Vimeo pattern
+        $vimeoPattern = '/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i';
+        if (preg_match($vimeoPattern, $url, $matches)) {
+            return "https://player.vimeo.com/video/" . $matches[3];
+        }
+
+        return null;
     };
 
     $sidebarDocs = Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale) {
@@ -277,6 +297,23 @@
                         {!! $renderNewsContent($article['content'] ?? '') !!}
                     </div>
 
+                    @if(!empty($article['videoUrl']) && $getVideoEmbedUrl($article['videoUrl']))
+                        <section class="mt-12 pt-10 border-t border-gray-200">
+                            <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-2">
+                                {{ __('Video') }}
+                            </div>
+                            <h2 class="text-xl md:text-2xl font-black uppercase tracking-normal text-titan-navy mb-6">
+                                {{ __('Featured Media') }}
+                            </h2>
+                            <div class="aspect-[16/9] w-full overflow-hidden rounded-lg shadow-md border border-gray-200 bg-black">
+                                <iframe src="{{ $getVideoEmbedUrl($article['videoUrl']) }}" 
+                                        class="w-full h-full border-0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen></iframe>
+                            </div>
+                        </section>
+                    @endif
+
                     @if(!empty($article['gallery']))
                         <section class="mt-12 pt-10 border-t border-gray-200">
                             <div class="flex items-end justify-between gap-4 mb-6">
@@ -293,13 +330,61 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                @foreach($article['gallery'] as $img)
-                                    <button type="button" class="group relative aspect-square overflow-hidden rounded border border-gray-200 bg-gray-50">
-                                        <img src="{{ $img }}" alt="{{ $article['title'] }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                    </button>
-                                @endforeach
-                            </div>
+                            @php
+                                $galleryCount = count($article['gallery']);
+                            @endphp
+
+                            @if($galleryCount === 1)
+                                <div class="aspect-[16/9] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                    <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                </div>
+                            @elseif($galleryCount === 2)
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                    </div>
+                                    <div class="aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                        <img src="{{ $article['gallery'][1] }}" alt="Gallery 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Premium Grid Layout -->
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                    <!-- Main Big Image (Left) -->
+                                    <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                    </div>
+                                    <!-- Stacked Right Images -->
+                                    <div class="grid grid-rows-2 gap-2 h-auto md:h-[400px]">
+                                        @for($i = 1; $i <= 2; $i++)
+                                            @if(isset($article['gallery'][$i]))
+                                                <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                                    <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                </div>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                </div>
+
+                                <!-- Bottom row: Up to 5 thumbnails -->
+                                @if($galleryCount > 3)
+                                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-2">
+                                        @for($i = 3; $i < min($galleryCount, 8); $i++)
+                                            @php
+                                                $isLastVisible = ($i === 7 && $galleryCount > 8);
+                                            @endphp
+                                            <div class="relative aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                                <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                @if($isLastVisible)
+                                                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-black text-lg tracking-wider">
+                                                        +{{ $galleryCount - 7 }} {{ __('photos') }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endfor
+                                    </div>
+                                @endif
+                            @endif
                         </section>
                     @endif
 
