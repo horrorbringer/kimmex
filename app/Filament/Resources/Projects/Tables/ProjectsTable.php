@@ -18,7 +18,7 @@ class ProjectsTable
             ->columns([
                 ImageColumn::make('heroImage')
                     ->label(__('Photo'))
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 ToggleColumn::make('isActive')
                     ->label(__('Active'))

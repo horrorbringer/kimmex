@@ -24,7 +24,7 @@ class UsersTable
                     ->dateTime()
                     ->sortable(),
                 ImageColumn::make('image')
-                    ->disk('public'),
+                    ->disk(config('filesystems.public_uploads_disk')),
                 TextColumn::make('role')
                     ->searchable(),
                 TextColumn::make('created_at')

@@ -31,13 +31,13 @@ class AdminPanelProvider extends PanelProvider
             ->brandName(fn() => \App\Models\SystemSetting::get('organization_profile', [])['en']['website_title'] ?? \App\Models\SystemSetting::get('organization_profile', [])['en']['company_name'] ?? 'Kimmex Admin')
             ->brandLogo(function() {
                 $logo = \App\Models\SystemSetting::get('organization_profile', [])['logo'] ?? null;
-                $url = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('logo.png');
+                $url = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png');
                 return new \Illuminate\Support\HtmlString("<img src='{$url}' alt='Logo' style='height: 2.5rem; width: auto; object-fit: contain;'>");
             })
             ->favicon(function() {
                 $profile = \App\Models\SystemSetting::get('organization_profile', []);
                 $favicon = $profile['favicon'] ?? $profile['logo'] ?? null;
-                return $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \Illuminate\Support\Facades\Storage::url($favicon)) : asset('favicon.ico');
+                return $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \App\Support\PublicStorage::url($favicon)) : asset('favicon.ico');
             })
             ->brandLogoHeight('2.5rem')
             ->homeUrl('/')

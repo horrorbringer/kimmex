@@ -13,8 +13,8 @@ $services = \Illuminate\Support\Facades\Cache::remember('services_index_data', n
                 "en" => strip_tags($service->getTranslation('description', 'en')),
                 "kh" => strip_tags($service->getTranslation('description', 'km'))
             ],
-            "image" => ($service->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($service->image)) 
-                ? \Illuminate\Support\Facades\Storage::url($service->image)
+            "image" => ($service->image && \App\Support\PublicStorage::exists($service->image)) 
+                ? \App\Support\PublicStorage::url($service->image)
                 : "/images/projects/Thumbnail-1.jpg",
             "features" => is_array($service->features) ? $service->features : []
         ];

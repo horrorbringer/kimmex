@@ -30,7 +30,7 @@
                 $googleMapsLink = (!empty($googleMapsUrl) && !$isEmbed) ? $googleMapsUrl : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
 
                 $logo = $profile['logo'] ?? null;
-                $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : '/logo.png';
+                $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : '/logo.png';
                 $tagline = $brand['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
             @endphp
 

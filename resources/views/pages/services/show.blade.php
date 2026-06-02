@@ -29,8 +29,8 @@
                         ],
                         'image' =>
                             $serviceDb->image &&
-                            \Illuminate\Support\Facades\Storage::disk('public')->exists($serviceDb->image)
-                                ? \Illuminate\Support\Facades\Storage::url($serviceDb->image)
+                            \App\Support\PublicStorage::exists($serviceDb->image)
+                                ? \App\Support\PublicStorage::url($serviceDb->image)
                                 : ($fallbackImages[$slug] ?? null),
                         'scopeItems' => is_array($serviceDb->features)
                             ? array_map(

@@ -55,7 +55,7 @@ class MilestoneForm
                             FileUpload::make('image')
                                 ->label(__('Image'))
                                 ->image()
-                                ->disk('public')
+                                ->disk(config('filesystems.public_uploads_disk'))
                                 ->directory('milestones')
                                 ->visibility('public'),
                             TextInput::make('sortOrder')

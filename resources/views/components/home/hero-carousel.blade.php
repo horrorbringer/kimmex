@@ -9,8 +9,8 @@
         $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {
             return [
                 'id' => $index + 1,
-                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($p->heroImage)))
-                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage))
+                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \App\Support\PublicStorage::exists($p->heroImage)))
+                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage))
                     : $fallbackImage,
                 'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', $contentLocale) : ($p->category ?: __('Featured Project')),
                 'title' => $p->getTranslation('title', $contentLocale) ?: $p->getTranslation('title', 'en'),

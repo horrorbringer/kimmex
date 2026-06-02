@@ -18,7 +18,7 @@ class DocumentsTable
             ->columns([
                 ImageColumn::make('thumbnailUrl')
                     ->label(__('Thumbnail'))
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
 
                 TextColumn::make('title')

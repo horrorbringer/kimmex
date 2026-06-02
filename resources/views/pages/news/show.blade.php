@@ -22,7 +22,7 @@
         return [
             'slug' => $articleDb->slug,
             'category' => $articleDb->getTranslation('category', $locale) ?: __('Updates'),
-            'image' => ($articleDb->coverImage && Storage::disk('public')->exists($articleDb->coverImage)) ? Storage::url($articleDb->coverImage) : $fallbackImage,
+            'image' => ($articleDb->coverImage && \App\Support\PublicStorage::exists($articleDb->coverImage)) ? \App\Support\PublicStorage::url($articleDb->coverImage) : $fallbackImage,
             'title' => $articleDb->getTranslation('title', $locale),
             'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
             'author' => $articleDb->getTranslation('authorName', $locale) ?: 'Kimmex Editorial',
@@ -30,7 +30,7 @@
             'excerpt' => $excerpt,
             'content' => $articleDb->getTranslation('content', $locale),
             'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0 ? $articleDb->tags : [$articleDb->category ?: 'News'],
-            'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => Storage::url($img))->toArray(),
+            'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => \App\Support\PublicStorage::url($img))->toArray(),
             'videoUrl' => $articleDb->videoUrl,
         ];
     });
@@ -62,7 +62,7 @@
                 if (\Illuminate\Support\Str::startsWith($r->coverImage, ['http', '/images'])) {
                     $imageUrl = $r->coverImage;
                 } else {
-                    $imageUrl = Storage::disk('public')->url($r->coverImage);
+                    $imageUrl = \App\Support\PublicStorage::url($r->coverImage);
                 }
             }
 

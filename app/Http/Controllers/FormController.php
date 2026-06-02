@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Inquiry;
 use App\Models\JobApplication;
+use App\Support\PublicStorage;
 
 class FormController extends Controller
 {
@@ -32,7 +33,7 @@ class FormController extends Controller
 
         $attachmentPath = null;
         if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            $attachmentPath = $request->file('attachment')->store('attachments', PublicStorage::diskName());
         }
 
         $inquiry = Inquiry::create([
@@ -53,7 +54,8 @@ class FormController extends Controller
                 'email' => $inquiry->email,
                 'subject' => $inquiry->subject,
                 'message' => $inquiry->message,
-                'file_path' => $attachmentPath ? storage_path('app/public/' . $attachmentPath) : null,
+                'file_disk' => PublicStorage::diskName(),
+                'file_path' => $attachmentPath,
             ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
@@ -83,7 +85,7 @@ class FormController extends Controller
             return is_string($value) ? strip_tags($value) : $value;
         })->all();
 
-        $resumePath = $request->file('resume')->store('resumes', 'public');
+        $resumePath = $request->file('resume')->store('resumes', PublicStorage::diskName());
 
         $application = JobApplication::create([
             'jobId' => $sanitized['job_id'] === 'gen' ? null : $sanitized['job_id'],
@@ -112,7 +114,8 @@ class FormController extends Controller
                 'email' => $application->email,
                 'phone' => $application->phone,
                 'position' => $jobTitle,
-                'file_path' => storage_path('app/public/' . $resumePath),
+                'file_disk' => PublicStorage::diskName(),
+                'file_path' => $resumePath,
             ]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());

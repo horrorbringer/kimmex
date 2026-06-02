@@ -51,8 +51,8 @@
             'built_area' => $projectDb->scale ?: __('50,000 SQM'),
             'contract_value' => __('Contact for Details'),
             'year' => $projectDb->timeline ?: __('2023 - 2026'),
-            'heroImage' => ($projectDb->heroImage && (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? file_exists(public_path($projectDb->heroImage)) : \Illuminate\Support\Facades\Storage::disk('public')->exists($projectDb->heroImage)))
-                ? (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? $projectDb->heroImage : \Illuminate\Support\Facades\Storage::url($projectDb->heroImage))
+            'heroImage' => ($projectDb->heroImage && (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? file_exists(public_path($projectDb->heroImage)) : \App\Support\PublicStorage::exists($projectDb->heroImage)))
+                ? (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? $projectDb->heroImage : \App\Support\PublicStorage::url($projectDb->heroImage))
                 : $defaultProjectImage,
 
             'narrative' => [
@@ -65,12 +65,12 @@
 
             'scope' => $resolveContent($projectDb, 'scopeContributions'),
 
-            'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \Illuminate\Support\Facades\Storage::url($img->url))->toArray(),
+            'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \App\Support\PublicStorage::url($img->url))->toArray(),
             'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->with('projectCategory')->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
                 'title' => $resolveContent($p, 'title'),
                 'type' => $p->projectCategory ? $p->projectCategory->localizedName($contentLocale) : ($p->category ?: __('Infrastructure')),
-                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \Illuminate\Support\Facades\Storage::url($p->heroImage)) : '/images/projects/Thumbnail-5.jpg'
+                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage)) : '/images/projects/Thumbnail-5.jpg'
             ])->toArray()
         ];
     });

@@ -23,7 +23,7 @@
                     if (\Illuminate\Support\Str::startsWith($cover, ['http', '/images'])) {
                         $imageUrl = $cover;
                     } else {
-                        $imageUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($cover);
+                        $imageUrl = \App\Support\PublicStorage::url($cover);
                     }
                 }
 

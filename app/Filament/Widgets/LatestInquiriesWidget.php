@@ -35,7 +35,7 @@ class LatestInquiriesWidget extends BaseWidget
                     ->formatStateUsing(fn ($state) => $state ? __('View File') : __('No File'))
                     ->icon(fn ($state) => $state ? 'heroicon-o-paper-clip' : null)
                     ->color(fn ($state) => $state ? 'primary' : 'gray')
-                    ->url(fn ($record) => $record->attachment_url ? \Illuminate\Support\Facades\Storage::url($record->attachment_url) : null)
+                    ->url(fn ($record) => $record->attachment_url ? \App\Support\PublicStorage::url($record->attachment_url) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))

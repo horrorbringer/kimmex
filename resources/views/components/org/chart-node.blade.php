@@ -18,7 +18,7 @@
 
         <div class="avatar-circle">
             @if($node['image'])
-                <img src="{{ \Illuminate\Support\Facades\Storage::url($node['image']) }}" 
+                <img src="{{ \App\Support\PublicStorage::url($node['image']) }}" 
                      alt="{{ $node['name'] }}" />
             @else
                 <span class="avatar-initials">

@@ -49,7 +49,7 @@ class DocumentForm
                         Grid::make(2)->components([
                             FileUpload::make('fileUrl')
                                 ->label(__('Main Document File'))
-                                ->disk('public')
+                                ->disk(config('filesystems.public_uploads_disk'))
                                 ->visibility('public')
                                 ->directory('documents/files')
                                 ->preserveFilenames()
@@ -57,7 +57,7 @@ class DocumentForm
                             FileUpload::make('thumbnailUrl')
                                 ->label(__('Thumbnail Preview'))
                                 ->image()
-                                ->disk('public')
+                                ->disk(config('filesystems.public_uploads_disk'))
                                 ->visibility('public')
                                 ->directory('documents/thumbnails'),
                         ]),

@@ -19,8 +19,8 @@
 
                 $image = $v['image'] ?? null;
                 if ($image && !\Illuminate\Support\Str::startsWith($image, ['http://', 'https://', '/'])) {
-                    $image = \Illuminate\Support\Facades\Storage::disk('public')->exists($image)
-                        ? \Illuminate\Support\Facades\Storage::url($image)
+                    $image = \App\Support\PublicStorage::exists($image)
+                        ? \App\Support\PublicStorage::url($image)
                         : null;
                 }
 
@@ -52,8 +52,8 @@
                     'title' => $m->getTranslation('title', app()->getLocale()),
                     'desc' => $m->getTranslation('description', app()->getLocale()),
                     'detail' => $m->getTranslation('detailed_description', app()->getLocale()),
-                    'image' => ($m->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($m->image)) 
-                        ? \Illuminate\Support\Facades\Storage::url($m->image) 
+                    'image' => ($m->image && \App\Support\PublicStorage::exists($m->image)) 
+                        ? \App\Support\PublicStorage::url($m->image) 
                         : "/images/projects/Thumbnail-1.jpg",
                 ];
             })->toArray();
@@ -113,7 +113,7 @@
                     'name' => $name,
                     'role' => $role,
                     'type' => $type,
-                    'image' => $unit->employee?->image ? \Illuminate\Support\Facades\Storage::url($unit->employee->image) : null,
+                    'image' => $unit->employee?->image ? \App\Support\PublicStorage::url($unit->employee->image) : null,
                     'phone' => $unit->employee?->phone,
                     'bio' => $unit->employee?->bio,
                     'children' => \App\Models\OrgUnit::where('isActive', true)->where('parentId', $unit->id)
@@ -578,13 +578,13 @@
             $orgChartPdf = $orgProfile['org_chart_pdf'] ?? null;
 
             if ($orgChartImage && !\Illuminate\Support\Str::startsWith($orgChartImage, ['http://', 'https://', '/'])) {
-                $orgChartImage = \Illuminate\Support\Facades\Storage::disk('public')->exists($orgChartImage)
-                    ? \Illuminate\Support\Facades\Storage::url($orgChartImage)
+                $orgChartImage = \App\Support\PublicStorage::exists($orgChartImage)
+                    ? \App\Support\PublicStorage::url($orgChartImage)
                     : null;
             }
             if ($orgChartPdf && !\Illuminate\Support\Str::startsWith($orgChartPdf, ['http://', 'https://', '/'])) {
-                $orgChartPdf = \Illuminate\Support\Facades\Storage::disk('public')->exists($orgChartPdf)
-                    ? \Illuminate\Support\Facades\Storage::url($orgChartPdf)
+                $orgChartPdf = \App\Support\PublicStorage::exists($orgChartPdf)
+                    ? \App\Support\PublicStorage::url($orgChartPdf)
                     : null;
             }
         @endphp

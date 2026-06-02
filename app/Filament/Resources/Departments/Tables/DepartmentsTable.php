@@ -25,7 +25,7 @@ class DepartmentsTable
 
                 \Filament\Tables\Columns\ImageColumn::make('headUnit.employee.image')
                     ->label(__('Head / Manager'))
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->circular()
                     ->placeholder('-')
                     ->toggleable(),

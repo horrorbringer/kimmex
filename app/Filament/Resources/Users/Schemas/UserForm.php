@@ -25,7 +25,7 @@ class UserForm
                 DateTimePicker::make('email_verified_at'),
                 FileUpload::make('image')
                     ->image()
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->visibility('public'),
                 Select::make('role')
                     ->options([

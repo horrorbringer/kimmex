@@ -35,7 +35,7 @@ class TestimonialsTable
                     ->sortable(),
                 ImageColumn::make('image')
                     ->label(__('Photo'))
-                    ->disk('public'),
+                    ->disk(config('filesystems.public_uploads_disk')),
                 IconColumn::make('isFeatured')
                     ->label(__('Featured'))
                     ->boolean(),

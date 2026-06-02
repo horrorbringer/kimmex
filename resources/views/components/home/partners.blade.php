@@ -38,7 +38,7 @@
                     if (\Illuminate\Support\Str::startsWith($logo, ['http', '/images', '/partners'])) {
                         $logoUrl = $logo;
                     } else {
-                        $logoUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($logo);
+                        $logoUrl = \App\Support\PublicStorage::url($logo);
                     }
                 }
 

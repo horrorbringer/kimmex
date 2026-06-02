@@ -23,7 +23,7 @@ class PartnersTable
                     ->searchable(),
                 \Filament\Tables\Columns\ImageColumn::make('logoUrl')
                     ->label(__('Logo'))
-                    ->disk('public'),
+                    ->disk(config('filesystems.public_uploads_disk')),
                 TextColumn::make('website')
                     ->label(__('Website'))
                     ->searchable(),

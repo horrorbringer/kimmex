@@ -71,14 +71,14 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
                         \Filament\Forms\Components\FileUpload::make('org_chart_image')
                             ->label(__('Organization Chart Image'))
                             ->image()
-                            ->disk('public')
+                            ->disk(config('filesystems.public_uploads_disk'))
                             ->directory('organization')
                             ->visibility('public')
                             ->maxSize(102400) // 100MB
                             ->visible(fn ($get) => $get('org_chart_type') === 'image'),
                         \Filament\Forms\Components\FileUpload::make('org_chart_pdf')
                             ->label(__('Organization Chart PDF'))
-                            ->disk('public')
+                            ->disk(config('filesystems.public_uploads_disk'))
                             ->directory('organization')
                             ->visibility('public')
                             ->acceptedFileTypes(['application/pdf'])

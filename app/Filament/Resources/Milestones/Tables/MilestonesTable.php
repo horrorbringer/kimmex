@@ -22,7 +22,7 @@ class MilestonesTable
                     ->sortable(),
                 ImageColumn::make('image')
                     ->label(__('Image'))
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 TextColumn::make('title')
                     ->label(__('Title'))

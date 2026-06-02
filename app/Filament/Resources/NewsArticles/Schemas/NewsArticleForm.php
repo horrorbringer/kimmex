@@ -53,7 +53,7 @@ class NewsArticleForm
 
                 FileUpload::make('coverImage')
                     ->image()
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->visibility('public')
                     ->directory('news/covers')
                     ->label(__('Cover Image')),
@@ -88,7 +88,7 @@ class NewsArticleForm
                     ->image()
                     ->multiple()
                     ->reorderable()
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->visibility('public')
                     ->directory('news/gallery')
                     ->panelLayout('grid')

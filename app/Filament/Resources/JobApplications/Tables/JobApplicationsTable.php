@@ -32,7 +32,7 @@ class JobApplicationsTable
                     ->label(__('Resume'))
                     ->icon('heroicon-o-document-text')
                     ->color('success')
-                    ->url(fn ($record) => $record->resumeUrl ? \Illuminate\Support\Facades\Storage::url($record->resumeUrl) : null)
+                    ->url(fn ($record) => $record->resumeUrl ? \App\Support\PublicStorage::url($record->resumeUrl) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))

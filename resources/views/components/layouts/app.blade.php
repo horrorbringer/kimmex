@@ -14,11 +14,11 @@
         $logo = $profile['logo'] ?? null;
         
         $favicon = $profile['favicon'] ?? null;
-        $faviconUrl = $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \Illuminate\Support\Facades\Storage::url($favicon)) : asset('favicon.ico');
+        $faviconUrl = $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \App\Support\PublicStorage::url($favicon)) : asset('favicon.ico');
         
         $pageTitle = $title ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
-        $pageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \Illuminate\Support\Facades\Storage::url($logo)) : asset('logo.png'));
+        $pageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'));
     @endphp
 
     <title>{{ $pageTitle }}</title>

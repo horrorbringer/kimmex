@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\SystemSetting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TelegramService
 {
@@ -74,6 +75,35 @@ class TelegramService
     }
 
     /**
+     * Send a document from any configured Laravel filesystem disk.
+     */
+    public function sendStoredDocument(string $chatId, string $disk, string $path, string $caption = ''): bool
+    {
+        if (!$this->enabled || !$this->token || !$chatId || !Storage::disk($disk)->exists($path)) {
+            return false;
+        }
+
+        try {
+            $url = "https://api.telegram.org/bot{$this->token}/sendDocument";
+
+            $response = Http::attach(
+                'document',
+                Storage::disk($disk)->get($path),
+                basename($path)
+            )->post($url, [
+                'chat_id' => $chatId,
+                'caption' => $caption,
+                'parse_mode' => 'Markdown',
+            ]);
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            Log::error("Telegram Stored Document Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Send a notification for a new Job Application
      */
     public function notifyJobApplication(array $data): bool
@@ -90,7 +120,10 @@ class TelegramService
                  . "🎯 *Position:* {$data['position']}\n\n"
                  . "🔗 _Please check the admin panel for details._";
 
-        // If file exists, send as document
+        if (!empty($data['file_disk']) && !empty($data['file_path'])) {
+            return $this->sendStoredDocument($chatId, $data['file_disk'], $data['file_path'], $message);
+        }
+
         if (!empty($data['file_path']) && file_exists($data['file_path'])) {
             return $this->sendDocument($chatId, $data['file_path'], $message);
         }
@@ -114,7 +147,10 @@ class TelegramService
                  . "📝 *Subject:* " . ($data['subject'] ?? 'No Subject') . "\n\n"
                  . "💬 *Message:*\n_{$data['message']}_";
 
-        // If file exists, send as document
+        if (!empty($data['file_disk']) && !empty($data['file_path'])) {
+            return $this->sendStoredDocument($chatId, $data['file_disk'], $data['file_path'], $message);
+        }
+
         if (!empty($data['file_path']) && file_exists($data['file_path'])) {
             return $this->sendDocument($chatId, $data['file_path'], $message);
         }

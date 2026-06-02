@@ -26,7 +26,7 @@ class TestimonialForm
                                 ->required(),
                             FileUpload::make('image')
                                 ->image()
-                                ->disk('public')
+                                ->disk(config('filesystems.public_uploads_disk'))
                                 ->directory('testimonials')
                                 ->visibility('public')
                                 ->label(__('Client Avatar')),

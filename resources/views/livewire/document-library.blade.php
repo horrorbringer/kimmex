@@ -151,7 +151,7 @@
                         'h-36' => !$isFirstFeatured,
                     ])>
                         @if($doc->thumbnailUrl)
-                            <img src="{{ Storage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
+                            <img src="{{ \App\Support\PublicStorage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
                                 class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
                             <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/65 to-transparent"></div>
                         @else
@@ -208,7 +208,7 @@
 
                             <div class="flex items-center gap-2">
                                 @if($doc->fileUrl)
-                                    <a href="{{ Storage::url($doc->fileUrl) }}" download
+                                    <a href="{{ \App\Support\PublicStorage::url($doc->fileUrl) }}" download
                                         class="w-9 h-9 rounded border border-gray-200 bg-white text-titan-navy/55 hover:bg-titan-red hover:text-white hover:border-titan-red flex items-center justify-center transition-all"
                                         aria-label="{{ __('Download document') }}">
                                         <x-lucide-download class="w-4 h-4" />

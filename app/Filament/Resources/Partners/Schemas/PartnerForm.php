@@ -24,7 +24,7 @@ class PartnerForm
                                 ->required(),
                             FileUpload::make('logoUrl')
                                 ->image()
-                                ->disk('public')
+                                ->disk(config('filesystems.public_uploads_disk'))
                                 ->directory('partners')
                                 ->visibility('public')
                                 ->label(__('Partner Logo'))

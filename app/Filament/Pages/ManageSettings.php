@@ -159,8 +159,8 @@ class ManageSettings extends Page implements HasForms
                                         ->columnSpan(1)
                                         ->schema([
                                             Grid::make(2)->schema([
-                                                FileUpload::make('logo')->label(__('Logo'))->image()->disk('public')->directory('organization'),
-                                                FileUpload::make('favicon')->label(__('Favicon'))->image()->disk('public')->directory('organization'),
+                                                FileUpload::make('logo')->label(__('Logo'))->image()->disk(config('filesystems.public_uploads_disk'))->directory('organization'),
+                                                FileUpload::make('favicon')->label(__('Favicon'))->image()->disk(config('filesystems.public_uploads_disk'))->directory('organization'),
                                             ]),
                                             TextInput::make('company_name')->label(__('Company Name'))->required(),
                                             TextInput::make('website_title')
@@ -211,7 +211,7 @@ class ManageSettings extends Page implements HasForms
                                                 FileUpload::make('image')
                                                     ->label(__('Image'))
                                                     ->image()
-                                                    ->disk('public')
+                                                    ->disk(config('filesystems.public_uploads_disk'))
                                                     ->directory('brand/core-values')
                                                     ->visibility('public')
                                                     ->columnSpanFull(),

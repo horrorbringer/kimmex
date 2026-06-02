@@ -18,7 +18,7 @@ class EmployeesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label(__('Photo'))
-                    ->disk('public')
+                    ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 TextColumn::make('name')
                     ->label(__('Full Name'))

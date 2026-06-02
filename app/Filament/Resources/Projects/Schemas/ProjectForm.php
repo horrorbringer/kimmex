@@ -134,7 +134,7 @@ class ProjectForm
                             ->schema([
                                 FileUpload::make('url')
                                     ->image()
-                                    ->disk('public')
+                                    ->disk(config('filesystems.public_uploads_disk'))
                                     ->visibility('public')
                                     ->directory('projects/gallery')
                                     ->label(__('Photo'))
@@ -155,7 +155,7 @@ class ProjectForm
                     ->components([
                         FileUpload::make('heroImage')
                             ->image()
-                            ->disk('public')
+                            ->disk(config('filesystems.public_uploads_disk'))
                             ->visibility('public')
                             ->directory('projects/hero')
                             ->label(__('Hero Image'))

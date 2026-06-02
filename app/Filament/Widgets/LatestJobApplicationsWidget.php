@@ -32,7 +32,7 @@ class LatestJobApplicationsWidget extends BaseWidget
                     ->formatStateUsing(fn ($state) => $state ? __('View Resume') : __('No Resume'))
                     ->icon(fn ($state) => $state ? 'heroicon-o-document-text' : null)
                     ->color(fn ($state) => $state ? 'success' : 'gray')
-                    ->url(fn ($record) => $record->resumeUrl ? \Illuminate\Support\Facades\Storage::url($record->resumeUrl) : null)
+                    ->url(fn ($record) => $record->resumeUrl ? \App\Support\PublicStorage::url($record->resumeUrl) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
