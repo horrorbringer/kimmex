@@ -50,93 +50,198 @@
 
 <header x-data="{
         current: 0,
+        trackIndex: 1,
         direction: 1,
         slides: {{ Js::from($slides) }},
+        visualSlides: [],
         timer: null,
+        interval: 6500,
+        transitionDuration: 1150,
+        transitionEnabled: true,
+        isAnimating: false,
+        isPaused: false,
+        prefersReducedMotion: false,
         
         nextSlide() {
+            if (this.isAnimating || this.slides.length <= 1) {
+                return;
+            }
+
+            this.isAnimating = true;
             this.direction = 1;
+            this.trackIndex += 1;
             this.current = (this.current === this.slides.length - 1) ? 0 : this.current + 1;
+            this.preloadNext();
             this.resetTimer();
+            this.finishTrackMove();
         },
         prevSlide() {
+            if (this.isAnimating || this.slides.length <= 1) {
+                return;
+            }
+
+            this.isAnimating = true;
             this.direction = -1;
+            this.trackIndex -= 1;
             this.current = (this.current === 0) ? this.slides.length - 1 : this.current - 1;
+            this.preloadNext();
             this.resetTimer();
+            this.finishTrackMove();
         },
         goToSlide(index) {
+            if (this.isAnimating || index === this.current) {
+                return;
+            }
+
+            this.isAnimating = true;
             this.direction = index > this.current ? 1 : -1;
             this.current = index;
+            this.trackIndex = index + (this.slides.length > 1 ? 1 : 0);
+            this.preloadNext();
             this.resetTimer();
+            this.finishTrackMove();
+        },
+        finishTrackMove() {
+            window.setTimeout(() => {
+                if (this.trackIndex === this.slides.length + 1) {
+                    this.jumpTrackTo(1);
+                } else if (this.trackIndex === 0) {
+                    this.jumpTrackTo(this.slides.length);
+                }
+
+                this.isAnimating = false;
+            }, this.prefersReducedMotion ? 0 : this.transitionDuration);
+        },
+        jumpTrackTo(index) {
+            this.transitionEnabled = false;
+            this.trackIndex = index;
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    this.transitionEnabled = true;
+                });
+            });
         },
         resetTimer() {
             clearInterval(this.timer);
             this.startTimer();
         },
         startTimer() {
+            if (this.prefersReducedMotion || this.isPaused || this.slides.length <= 1) {
+                return;
+            }
+
             this.timer = setInterval(() => {
                 this.nextSlide();
-            }, 6000);
+            }, this.interval);
+        },
+        pause() {
+            this.isPaused = true;
+            clearInterval(this.timer);
+        },
+        resume() {
+            if (! this.isPaused) {
+                return;
+            }
+
+            this.isPaused = false;
+            this.startTimer();
+        },
+        preloadImage(src) {
+            if (! src) {
+                return;
+            }
+
+            const image = new Image();
+            image.decoding = 'async';
+            image.src = src;
+        },
+        preloadNext() {
+            if (this.slides.length <= 1) {
+                return;
+            }
+
+            this.preloadImage(this.slides[(this.current + 1) % this.slides.length]?.image);
+        },
+        initCarousel() {
+            this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            this.visualSlides = this.slides.length > 1
+                ? [this.slides[this.slides.length - 1], ...this.slides, this.slides[0]]
+                : this.slides;
+            this.trackIndex = this.slides.length > 1 ? 1 : 0;
+            this.preloadImage(this.slides[0]?.image);
+            this.preloadNext();
+            this.startTimer();
         }
-    }" x-init="startTimer()" class="relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white">
+    }"
+    x-init="initCarousel()"
+    @mouseenter="pause()"
+    @mouseleave="resume()"
+    @focusin="pause()"
+    @focusout="resume()"
+    @keydown.arrow-left.window="prevSlide()"
+    @keydown.arrow-right.window="nextSlide()"
+    class="relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white"
+    data-priority-image>
 
     <!-- === SLIDES === -->
-    <template x-for="(slide, index) in slides" :key="index">
-        <div x-show="current === index" x-transition:enter="transition-all transform ease-out duration-[1200ms]"
-            x-transition:enter-start="opacity-0 scale-[1.04]" x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition-all absolute transform ease-in duration-[900ms] z-0"
-            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-[1.02]"
-            class="absolute inset-0 w-full h-full">
-
-            <div class="relative w-full h-full overflow-hidden">
-                <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+    <div class="hero-slide-track absolute inset-0 flex h-full"
+        :class="prefersReducedMotion || !transitionEnabled ? 'transition-none' : 'transition-transform duration-[1150ms] ease-[cubic-bezier(0.22,1,0.36,1)]'"
+        :style="`transform: translate3d(-${trackIndex * 100}%, 0, 0);`">
+        <template x-for="(slide, index) in visualSlides" :key="`image-${index}`">
+            <div class="relative h-full min-w-full overflow-hidden">
+                <img :src="slide.image"
+                    :alt="slide.title"
+                    :class="trackIndex === index && !prefersReducedMotion ? 'animate-hero-kenburns' : ''"
+                    class="hero-slide-image object-cover w-full h-full opacity-100 scale-[1.03]"
+                    :loading="index <= 1 ? 'eager' : 'lazy'"
+                    decoding="async"
+                    :fetchpriority="index === 1 ? 'high' : 'auto'" />
                 {{-- Stronger left-side scrim keeps hero copy readable over bright project photos. --}}
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/70 via-titan-navy/32 to-transparent"></div>
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/10 via-transparent to-titan-navy/42"></div>
                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_50%,rgba(11,43,92,0.26)_0%,rgba(11,43,92,0.10)_38%,transparent_65%)]"></div>
             </div>
-        </div>
-    </template>
+        </template>
+    </div>
 
     <!-- === CONTENT OVERLAY === -->
     <div class="absolute inset-0 flex flex-col justify-center z-10 pt-32 lg:pt-10">
         <div class="max-w-[1400px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
 
-            <template x-for="(slide, index) in slides" :key="'content-'+index">
-                <div x-show="current === index" 
-                    class="w-full"
-                    x-transition:enter="transition-all transform ease-out duration-[1200ms] delay-300"
-                    x-transition:enter-start="opacity-0 translate-y-6"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition-all transform ease-in duration-700 absolute"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 translate-y-4">
+            <div class="overflow-hidden">
+                <div class="hero-content-track flex"
+                    :class="prefersReducedMotion || !transitionEnabled ? 'transition-none' : 'transition-transform duration-[1150ms] ease-[cubic-bezier(0.22,1,0.36,1)]'"
+                    :style="`transform: translate3d(-${trackIndex * 100}%, 0, 0);`">
+                    <template x-for="(slide, index) in visualSlides" :key="`content-${index}`">
+                        <div class="w-full min-w-full pr-2">
+                            <h1 class="hero-copy-shadow font-heading font-[900] mb-7 !text-white uppercase leading-[1.02] tracking-normal"
+                                :class="slide.title.length > 48
+                                    ? 'max-w-[820px] text-[2rem] md:text-[2.65rem] xl:text-[3.05rem]'
+                                    : 'max-w-[900px] text-[2.35rem] md:text-[3.15rem] xl:text-[3.75rem]'"
+                                x-text="slide.title"></h1>
 
+                            <p class="hero-copy-shadow text-[#F8FAFC] max-w-[650px] mb-10 font-medium text-base lg:text-lg leading-relaxed"
+                                x-text="slide.desc"></p>
 
-
-                    <h1 class="hero-copy-shadow font-heading font-[900] mb-7 !text-white uppercase leading-[1.02] tracking-normal"
-                        :class="slide.title.length > 48
-                            ? 'max-w-[820px] text-[2rem] md:text-[2.65rem] xl:text-[3.05rem]'
-                            : 'max-w-[900px] text-[2.35rem] md:text-[3.15rem] xl:text-[3.75rem]'"
-                        x-text="slide.title"></h1>
-
-                    <p class="hero-copy-shadow text-[#F8FAFC] max-w-[650px] mb-10 font-medium text-base lg:text-lg leading-relaxed"
-                        x-text="slide.desc"></p>
-
-                    <div class="flex flex-wrap gap-8">
-                        <a :href="slide.link"
-                            class="group relative overflow-hidden bg-titan-red text-white px-12 py-6 font-black transition-all duration-500 flex items-center gap-6 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-lg tracking-normal' : 'text-[13px] tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy' }}">
-                            <span class="relative z-10">{{ __('VIEW PROJECT') }}</span>
-                            <x-lucide-arrow-right class="group-hover:translate-x-2 transition-transform w-6 h-6 relative z-10" />
-                        </a>
-                        <a href="/contact"
-                            class="group border-2 border-white/20 backdrop-blur-md text-white px-12 py-6 font-black transition-all duration-500 flex items-center gap-6 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-lg tracking-normal' : 'text-[13px] tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
-                            <x-lucide-phone class="w-6 h-6 group-hover:rotate-12 transition-transform" />
-                            <span>{{ __('CONTACT US') }}</span>
-                        </a>
-                    </div>
+                            <div class="flex flex-wrap gap-8">
+                                <a :href="slide.link"
+                                    class="group relative overflow-hidden bg-titan-red text-white px-12 py-6 font-black transition-all duration-500 flex items-center gap-6 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-lg tracking-normal' : 'text-[13px] tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy' }}">
+                                    <span class="relative z-10">{{ __('VIEW PROJECT') }}</span>
+                                    <x-lucide-arrow-right class="group-hover:translate-x-2 transition-transform w-6 h-6 relative z-10" />
+                                </a>
+                                <a href="/contact"
+                                    class="group border-2 border-white/20 backdrop-blur-md text-white px-12 py-6 font-black transition-all duration-500 flex items-center gap-6 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-lg tracking-normal' : 'text-[13px] tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
+                                    <x-lucide-phone class="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                                    <span>{{ __('CONTACT US') }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </template>
                 </div>
-            </template>
+            </div>
+
+            <div></div>
 
         </div>
     </div>
@@ -145,12 +250,23 @@
     <div class="absolute bottom-12 left-0 right-0 z-20">
         <div class="max-w-[1400px] mx-auto px-6 flex items-end justify-between">
             <!-- Pagination Lines -->
-            <div class="flex gap-4">
-                <template x-for="(slide, index) in slides" :key="'dot-'+index">
-                    <button @click="goToSlide(index)"
-                        :class="index === current ? 'w-16 bg-titan-red' : 'w-8 bg-white/30 hover:bg-titan-red'"
-                        class="h-1.5 transition-all duration-300"></button>
-                </template>
+            <div class="flex items-center gap-5">
+                <div class="text-sm font-black tracking-[0.28em] text-white/90 tabular-nums">
+                    <span x-text="String(current + 1).padStart(2, '0')"></span>
+                    <span class="mx-2 text-white/35">/</span>
+                    <span class="text-white/55" x-text="String(slides.length).padStart(2, '0')"></span>
+                </div>
+                <div class="flex gap-3" role="tablist" aria-label="{{ __('Featured projects') }}">
+                    <template x-for="(slide, index) in slides" :key="'dot-'+index">
+                        <button @click="goToSlide(index)"
+                            type="button"
+                            :aria-label="`{{ __('Show slide') }} ${index + 1}: ${slide.title}`"
+                            :aria-selected="index === current"
+                            :class="index === current ? 'w-14 bg-titan-red' : 'w-7 bg-white/30 hover:bg-white/70'"
+                            class="h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-white/80">
+                        </button>
+                    </template>
+                </div>
             </div>
 
             <!-- Arrows -->
@@ -169,11 +285,15 @@
           
                 <div class="flex gap-2">
                     <button @click="prevSlide"
-                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">
+                        type="button"
+                        aria-label="{{ __('Previous slide') }}"
+                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white focus:outline-none focus:ring-2 focus:ring-white/80">
                         <x-lucide-chevron-left class="w-6 h-6" />
                     </button>
                     <button @click="nextSlide"
-                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white">
+                        type="button"
+                        aria-label="{{ __('Next slide') }}"
+                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white focus:outline-none focus:ring-2 focus:ring-white/80">
                         <x-lucide-chevron-right class="w-6 h-6" />
                     </button>
                 </div>

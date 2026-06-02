@@ -136,7 +136,7 @@
             return $content;
         }
 
-        $lines = preg_split('/\R+/', $content, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $lines = preg_split('/\R+/u', $content, -1, PREG_SPLIT_NO_EMPTY) ?: [];
 
         if (in_array($mode, ['list', 'auto'], true) && count($lines) > 1) {
             $items = array_map(function (string $line): string {
@@ -191,14 +191,16 @@
                         <span
                             class="text-[11px] font-black text-titan-navy truncate max-w-[200px] md:max-w-md uppercase tracking-tight">{{ $project['title'] }}</span>
                     </div>
-                    <div class="flex items-center gap-6">
-                        <a href="/projects"
-                            class="w-8 h-8 bg-titan-navy text-white rounded-lg flex items-center justify-center hover:bg-titan-red transition-all"><x-lucide-arrow-left
-                                class="w-4 h-4" /></a>
-                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- BACK BUTTON -->
+        <a href="/projects"
+            class="fixed top-16 right-6 z-[99] w-10 h-10 bg-titan-navy text-white rounded-lg flex items-center justify-center hover:bg-titan-red transition-all shadow-lg"
+            :class="scrolled ? 'translate-y-0' : '-translate-y-24'">
+            <x-lucide-arrow-left class="w-5 h-5" />
+        </a>
 
         <!-- --- PREMIUM NARRATIVE HERO --- -->
         <header class="relative w-full h-[75vh] min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
@@ -463,7 +465,8 @@
                                 <div @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
                                     class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full {{ $gridClass }}">
                                     <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
-                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count decoding="async" loading="lazy"> 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700" loading="lazy" />
+                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700"
+                                        loading="lazy" decoding="async" />
 
                                     @if($i === 2 && $count > 3)
                                         <div

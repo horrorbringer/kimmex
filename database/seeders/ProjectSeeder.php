@@ -5,7 +5,10 @@ namespace Database\Seeders;
 use App\Enums\ProjectStatus;
 use App\Models\Project;
 use App\Models\ProjectCategory;
+use App\Services\AutoTranslateService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -15,25 +18,31 @@ class ProjectSeeder extends Seeder
 {
     private const SOURCE_FILE = 'docs/Kim Mex Project List.xlsx';
 
+    private ?AutoTranslateService $translator = null;
+
     public function run(): void
     {
         $categories = ProjectCategory::all()->pluck('id', 'slug')->toArray();
+        $seededSlugs = [];
 
         foreach ($this->projectsFromSpreadsheet() as $projectData) {
             $categorySlug = $this->categorySlugFor($projectData);
+            $englishProject = $this->englishProjectData($projectData);
+            $slug = $this->slugFor($projectData);
+            $seededSlugs[] = $slug;
 
-            Project::updateOrCreate(
-                ['slug' => $this->slugFor($projectData)],
+            Project::withoutEvents(fn () => Project::updateOrCreate(
+                ['slug' => $slug],
                 [
                     'title' => [
-                        'en' => $projectData['project_name'],
-                        'km' => $projectData['project_name'],
+                        'en' => $englishProject['project_name'],
+                        'km' => $this->translateEnglishToKhmer($englishProject['project_name'], $projectData['project_name']),
                     ],
                     'location' => [
-                        'en' => $projectData['location'],
-                        'km' => $projectData['location'],
+                        'en' => $englishProject['location'],
+                        'km' => $this->translateEnglishToKhmer($englishProject['location'], $projectData['location']),
                     ],
-                    'client' => $projectData['client'],
+                    'client' => $englishProject['client'],
                     'scale' => $this->scaleFor($projectData),
                     'timeline' => $this->timelineFor($projectData),
                     'completionDate' => $this->dateFor($projectData['end_date']),
@@ -44,15 +53,25 @@ class ProjectSeeder extends Seeder
                     'isActive' => true,
                     'status' => $this->statusFor($projectData['end_date']),
                     'description' => [
-                        'en' => $this->descriptionFor($projectData),
-                        'km' => $this->descriptionFor($projectData),
+                        'en' => $this->descriptionFor($englishProject),
+                        'km' => $this->translateEnglishToKhmer($this->descriptionFor($englishProject), $this->khmerDescriptionFor($projectData)),
                     ],
                     'scopeContributions' => [
-                        'en' => $this->scopeFor($projectData),
-                        'km' => $this->scopeFor($projectData),
+                        'en' => $this->scopeFor($englishProject),
+                        'km' => $this->khmerScopeFor($projectData),
                     ],
                 ]
-            );
+            ));
+        }
+
+        foreach (['en', 'km', 'kh'] as $locale) {
+            Cache::forget("projects_index_data_{$locale}");
+            Cache::forget("home_projects_array_{$locale}");
+            Cache::forget("home_featured_projects_{$locale}");
+
+            foreach ($seededSlugs as $slug) {
+                Cache::forget("project_show_data_{$slug}_{$locale}");
+            }
         }
     }
 
@@ -355,9 +374,118 @@ class ProjectSeeder extends Seeder
     }
 
     /**
+     * Convert the Khmer spreadsheet source into English before saving.
+     *
+     * The application-level saving hook auto-translates non-empty English
+     * translations into Khmer, so the seeder intentionally stores only `en`.
+     *
+     * @param array<string, mixed> $project
+     * @return array<string, mixed>
+     */
+    private function englishProjectData(array $project): array
+    {
+        return array_merge($project, [
+            'project_name' => $this->translateSourceToEnglish($project['project_name']),
+            'client' => $this->translateSourceToEnglish($project['client']),
+            'location' => $this->translateSourceToEnglish($project['location']),
+            'floors' => $this->floorLabel($project['floors']),
+            'duration' => $this->englishDuration($project['duration']),
+        ]);
+    }
+
+    private function translateSourceToEnglish(string $value): string
+    {
+        $value = trim($value);
+
+        if ($value === '' || ! $this->containsKhmer($value)) {
+            return $value;
+        }
+
+        try {
+            $translated = $this->translator()->translateFrom($value, 'en', 'km');
+
+            if (is_string($translated) && trim($translated) !== '') {
+                return trim($translated);
+            }
+        } catch (\Throwable $exception) {
+            Log::warning('Project seeder Khmer-to-English translation failed.', [
+                'value' => $value,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return $value;
+    }
+
+    private function translateEnglishToKhmer(string $value, string $fallback): string
+    {
+        $value = trim($value);
+        $fallback = trim($fallback);
+
+        if ($value === '') {
+            return $fallback;
+        }
+
+        try {
+            $translated = $this->translator()->translateFrom($value, 'km', 'en');
+
+            if (is_string($translated) && trim($translated) !== '') {
+                return trim($translated);
+            }
+        } catch (\Throwable $exception) {
+            Log::warning('Project seeder English-to-Khmer translation failed.', [
+                'value' => $value,
+                'error' => $exception->getMessage(),
+            ]);
+        }
+
+        return $fallback !== '' ? $fallback : $value;
+    }
+
+    private function translator(): AutoTranslateService
+    {
+        return $this->translator ??= app(AutoTranslateService::class);
+    }
+
+    private function containsKhmer(string $value): bool
+    {
+        return preg_match('/[\x{1780}-\x{17FF}]/u', $value) === 1;
+    }
+
+    private function englishDuration(string $duration): string
+    {
+        $duration = trim($duration);
+
+        if ($duration === '') {
+            return '';
+        }
+
+        if (preg_match('/\d+/u', $duration, $matches)) {
+            $count = (int) $matches[0];
+
+            return $count === 1 ? '1 month' : "{$count} months";
+        }
+
+        return $this->translateSourceToEnglish($duration);
+    }
+
+    /**
      * @param array<string, mixed> $project
      */
     private function descriptionFor(array $project): string
+    {
+        return sprintf(
+            'Construction project: %s for %s, located in %s.',
+            $project['project_name'],
+            $project['client'],
+            $project['location'],
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $project
+     */
+    private function khmerDescriptionFor(array $project): string
     {
         return sprintf(
             'គម្រោងសាងសង់ %s សម្រាប់ %s មានទីតាំងនៅ %s។',
@@ -371,6 +499,23 @@ class ProjectSeeder extends Seeder
      * @param array<string, mixed> $project
      */
     private function scopeFor(array $project): string
+    {
+        $items = [
+            'Project owner: '.$project['client'],
+            'Construction location: '.$project['location'],
+            'Construction value: '.$project['construction_value'],
+            'Built area: '.$project['area'],
+            'Floors: '.$project['floors'],
+            'Duration: '.$project['duration'],
+        ];
+
+        return '<ul><li>'.implode('</li><li>', array_filter($items)).'</li></ul>';
+    }
+
+    /**
+     * @param array<string, mixed> $project
+     */
+    private function khmerScopeFor(array $project): string
     {
         $items = [
             'ម្ចាស់គម្រោង: '.$project['client'],

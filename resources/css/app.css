@@ -627,6 +627,49 @@ a.link:hover,
   animation: slow-zoom 20s ease-out forwards;
 }
 
+@keyframes hero-kenburns {
+  0% {
+    transform: scale(1.03) translate3d(-0.6%, 0, 0);
+  }
+
+  100% {
+    transform: scale(1.1) translate3d(0.8%, -0.6%, 0);
+  }
+}
+
+.animate-hero-kenburns {
+  animation: hero-kenburns 8s ease-out both;
+}
+
+.hero-slide-track,
+.hero-content-track {
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.hero-slide-frame {
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
+}
+
+.hero-slide-image {
+  backface-visibility: hidden;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-kenburns {
+    animation: none;
+  }
+
+  .hero-slide-frame {
+    filter: none !important;
+    transform: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+
 @keyframes bounce-slow {
 
   0%,

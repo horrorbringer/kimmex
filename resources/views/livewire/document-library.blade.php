@@ -151,8 +151,9 @@
                         'h-36' => !$isFirstFeatured,
                     ])>
                         @if($doc->thumbnailUrl)
-                            <img src="{{ \App\Support\PublicStorage::url($doc- decoding="async" loading="lazy">thumbnailUrl) }}" alt="{{ $doc->title }}"
-                                class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
+                            <img src="{{ \App\Support\PublicStorage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
+                                class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                                loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/65 to-transparent"></div>
                         @else
                             <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.18)_0%,transparent_46%)]"></div>
