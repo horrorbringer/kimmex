@@ -3,7 +3,7 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === PREMIUM CONTACT HERO === -->
-        <section class="relative h-[70vh] md:h-screen min-h-[600px] md:min-h-[800px] flex items-center overflow-hidden bg-titan-navy">
+        <section class="relative min-h-[520px] md:min-h-[760px] md:h-screen flex items-center overflow-hidden bg-titan-navy">
             {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
@@ -14,17 +14,17 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
-            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-24 md:pb-40">
+            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-4 sm:px-6 pt-28 md:pt-32 pb-16 md:pb-40">
 
 
-                <h1 class="font-heading font-[900] text-white mb-8 md:mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
+                <h1 class="font-heading font-[900] text-white mb-6 md:mb-10 leading-none tracking-normal uppercase drop-shadow-2xl"
                     style="font-size: clamp(1.75rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     <span class="block">{{ __('CONNECT') }}</span>
                     <span class="block text-titan-red mt-2">{{ __('WITH US') }}</span>
                 </h1>
 
-                <div class="border-l-4 border-titan-red pl-6 md:pl-10 mb-12 md:mb-16 max-w-2xl">
-                    <p class="text-lg md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl"
+                <div class="border-l-4 border-titan-red pl-4 sm:pl-6 md:pl-10 mb-8 md:mb-16 max-w-2xl">
+                    <p class="text-base sm:text-lg md:text-2xl text-white font-bold leading-snug md:leading-tight uppercase tracking-[0.08em] md:tracking-[0.15em] drop-shadow-xl"
                         style="color: white !important;">
                         {{ __('Building Relationships.') }}<br />
                         {{ __('Building Future.') }}
@@ -82,26 +82,26 @@
         @endphp
 
         <!-- CONTACT INFO BAR -->
-        <section class="max-w-[1400px] mx-auto px-6 relative z-40 -mt-20">
+        <section class="max-w-[1400px] mx-auto px-4 sm:px-6 relative z-40 -mt-12 md:-mt-20">
             <div
-                class="bg-white rounded shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                class="bg-white rounded shadow-[0_28px_70px_-34px_rgba(0,0,0,0.18)] md:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
                 <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
                     class="flex flex-col">
                     <a href="{{ $googleMapsLink }}" target="_blank"
-                        class="flex items-center gap-6 p-10 h-full transition-all duration-500 relative bg-white"
+                        class="flex items-start sm:items-center gap-4 md:gap-6 p-4 sm:p-5 md:p-10 h-full transition-all duration-500 relative bg-white"
                         x-bind:class="hover ? 'shadow-[inset_0_-4px_0_0_#E31E24]' : ''">
                         
                         <div
-                            class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
                             x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : ''">
                             <x-lucide-map-pin stroke-width="1.5"
-                                class="w-6 h-6 transition-all duration-300 text-titan-red" />
+                                class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 text-titan-red" />
                         </div>
                         <div>
                             <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
                                 {{ __('Address') }}
                             </div>
-                            <div class="text-sm font-semibold text-titan-navy leading-relaxed transition-colors duration-500"
+                            <div class="text-sm font-semibold text-titan-navy leading-relaxed transition-colors duration-500 break-words"
                                 x-bind:class="hover ? 'text-titan-red' : ''">
                                 {{ $address }}</div>
                         </div>
@@ -110,14 +110,14 @@
                 <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
                     class="flex flex-col">
                     <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                        class="flex items-center gap-6 p-10 h-full transition-all duration-500 relative bg-white"
+                        class="flex items-center gap-4 md:gap-6 p-4 sm:p-5 md:p-10 h-full transition-all duration-500 relative bg-white"
                         x-bind:class="hover ? 'shadow-[inset_0_-4px_0_0_#E31E24]' : ''">
                         
                         <div
-                            class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
                             x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : ''">
                             <x-lucide-phone stroke-width="1.5"
-                                class="w-6 h-6 transition-all duration-300 text-titan-red" />
+                                class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 text-titan-red" />
                         </div>
                         <div>
                             <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
@@ -132,20 +132,20 @@
                 <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
                     class="flex flex-col">
                     <a href="mailto:{{ $email }}"
-                        class="flex items-center gap-6 p-10 h-full transition-all duration-500 relative bg-white"
+                        class="flex items-center gap-4 md:gap-6 p-4 sm:p-5 md:p-10 h-full transition-all duration-500 relative bg-white"
                         x-bind:class="hover ? 'shadow-[inset_0_-4px_0_0_#E31E24]' : ''">
                         
                         <div
-                            class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
                             x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : ''">
                             <x-lucide-mail stroke-width="1.5"
-                                class="w-6 h-6 transition-all duration-300 text-titan-red" />
+                                class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 text-titan-red" />
                         </div>
                         <div>
                             <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
                                 {{ __('Email') }}
                             </div>
-                            <div class="text-base font-semibold text-titan-navy leading-relaxed transition-colors duration-500"
+                            <div class="text-sm md:text-base font-semibold text-titan-navy leading-relaxed transition-colors duration-500 break-all sm:break-normal"
                                 x-bind:class="hover ? 'text-titan-red' : ''">
                                 {{ $email }}</div>
                         </div>
@@ -155,16 +155,16 @@
         </section>
 
         <!-- FORM + SIDEBAR -->
-        <section class="py-24 max-w-[1200px] mx-auto px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <section class="py-14 md:py-24 max-w-[1200px] mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16">
 
                 <!-- FORM (2/3) -->
                 <div class="lg:col-span-2">
-            <div class="bg-white border border-gray-100 rounded p-8 md:p-12 shadow-lg">
-                        <div class="flex items-center gap-4 mb-8">
-                            <div class="w-1 h-8 bg-titan-red rounded-full"></div>
+            <div class="bg-white border border-gray-100 rounded p-5 sm:p-6 md:p-10 lg:p-12 shadow-lg">
+                        <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-6 md:mb-8">
+                            <div class="w-1 h-8 bg-titan-red rounded-full shrink-0"></div>
                             <div>
-                                <h2 class="text-xl font-bold text-titan-navy uppercase tracking-tight">
+                                <h2 class="text-lg md:text-xl font-bold text-titan-navy uppercase tracking-normal">
                                     {{ __('Send a Message') }}
                                 </h2>
                                 <p class="text-titan-navy/35 text-xs mt-0.5">
@@ -264,12 +264,12 @@
                                     {{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}
                                 </p>
                             </div>
-                            <div class="flex items-center justify-between pt-2">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
                                 <p class="text-[11px] text-titan-navy/25 hidden sm:block">
                                     {{ __('All fields marked with * are required') }}
                                 </p>
                                 <button type="submit"
-                                    class="bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded font-bold text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-3 shadow-md hover:shadow-lg group">
+                                    class="w-full sm:w-auto justify-center bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded font-bold text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-3 shadow-md hover:shadow-lg group">
                                     {{ __('Send Message') }}
                                     <x-lucide-send
                                         class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -282,7 +282,7 @@
                 <!-- SIDEBAR (1/3) -->
                 <div class="lg:sticky lg:top-32 space-y-6 self-start">
                     <!-- Hours -->
-                    <div class="bg-gray-50 text-white rounded p-8 relative overflow-hidden">
+                    <div class="bg-gray-50 text-white rounded p-5 md:p-8 relative overflow-hidden">
                         <div
                             class="absolute top-0 right-0 w-32 h-32 bg-titan-red/10 rounded-full blur-[60px] pointer-events-none">
                         </div>
@@ -302,7 +302,7 @@
                     </div>
 
                     <!-- Social -->
-                    <div class="bg-gray-50 rounded p-8">
+                    <div class="bg-gray-50 rounded p-5 md:p-8">
                         <div class="flex items-center gap-3 mb-5">
                             <x-lucide-share-2 class="w-4 h-4 text-titan-red" />
                             <h3 class="text-xs font-bold uppercase tracking-widest text-titan-navy/40">
@@ -342,9 +342,9 @@
             </div>
         </section>
 
-        <section class="max-w-[1200px] mx-auto px-6 mb-16 relative">
+        <section class="max-w-[1200px] mx-auto px-4 sm:px-6 mb-10 md:mb-16 relative">
             <div
-                class="w-full h-[250px] md:h-[300px] bg-gray-100 rounded overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-500 shadow-xl border-2 border-transparent hover:border-titan-red hover:shadow-2xl hover:shadow-titan-red/20">
+                class="w-full h-[260px] md:h-[340px] bg-gray-100 rounded overflow-hidden relative md:grayscale md:hover:grayscale-0 transition-all duration-500 shadow-xl border border-gray-100 md:border-2 md:border-transparent md:hover:border-titan-red md:hover:shadow-2xl md:hover:shadow-titan-red/20">
                 <iframe src="{{ $googleMapsUrl }}" width="100%" height="100%" style="border:0;" allowfullscreen=""
                     loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
@@ -359,9 +359,9 @@
                 class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
             </div>
             <div
-                class="max-w-[1200px] mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                class="max-w-[1200px] mx-auto px-4 sm:px-6 relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
                 <div>
-                    <h3 class="text-2xl font-bold !text-white uppercase tracking-tight mb-2">
+                    <h3 class="text-xl md:text-2xl font-bold !text-white uppercase tracking-normal mb-2">
                         {{ __('Ready to Start Your Project?') }}
                     </h3>
                     <p class="text-white/40 text-sm">
@@ -369,7 +369,7 @@
                     </p>
                 </div>
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                    class="flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-8 py-4 rounded font-bold text-sm uppercase tracking-widest transition-all duration-300 shrink-0 shadow-lg group">
+                    class="w-full md:w-auto justify-center flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-8 py-4 rounded font-bold text-sm uppercase tracking-widest transition-all duration-300 shrink-0 shadow-lg group">
                     <x-lucide-phone class="w-4 h-4 group-hover:animate-pulse" />
                     {{ __('Call Us Now') }}
                 </a>

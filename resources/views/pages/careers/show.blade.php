@@ -158,7 +158,7 @@
                         <x-lucide-clock class="w-3.5 h-3.5 text-titan-red" />
                         <span class="truncate">{{ $job['type'] }}</span>
                     </div>
-                    <div class="inline-flex min-w-0 items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
+                    <div class="hidden sm:inline-flex min-w-0 items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
                         <x-lucide-calendar class="w-3.5 h-3.5 text-titan-red" />
                         <span class="truncate">{{ __('Posted') }} {{ $job['postedDate'] }}</span>
                     </div>
@@ -184,12 +184,12 @@
                 <div class="lg:col-span-8">
                     
                     <!-- Simplified Job Content Area -->
-                    <div class="prose prose-lg max-w-none text-titan-navy/70 space-y-8">
+                    <div class="prose prose-lg max-w-none text-titan-navy/70 space-y-5 md:space-y-8">
                         
                         @if($job['description'])
                         <section class="rounded-xl border border-slate-200 bg-white p-5 md:p-8 shadow-sm">
-                            <div class="flex items-center gap-3 mb-5">
-                                <div class="w-10 h-px bg-titan-red"></div>
+                            <div class="flex items-center gap-3 mb-4 md:mb-5">
+                                <div class="w-8 md:w-10 h-px bg-titan-red"></div>
                                 <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Job Summary') }}</h2>
                             </div>
                             <div class="rich-text-content">{!! $renderParagraphContent($job['description'] ?? '') !!}</div>
@@ -271,8 +271,8 @@
 
                         @if(!empty(trim(strip_tags($job['responsibilities']))))
                         <section class="rounded-xl border border-slate-200 bg-slate-50/70 p-5 md:p-8 shadow-sm">
-                            <div class="flex items-center gap-3 mb-5">
-                                <div class="w-10 h-px bg-titan-red"></div>
+                            <div class="flex items-center gap-3 mb-4 md:mb-5">
+                                <div class="w-8 md:w-10 h-px bg-titan-red"></div>
                                 <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Key Responsibilities') }}</h2>
                             </div>
                             <div class="rich-text-content">{!! $renderRichText($job['responsibilities'] ?? '') !!}</div>
@@ -281,8 +281,8 @@
 
                         @if(!empty(trim(strip_tags($job['requirements']))))
                         <section class="rounded-xl border border-slate-200 bg-white p-5 md:p-8 shadow-sm">
-                            <div class="flex items-center gap-3 mb-5">
-                                <div class="w-10 h-px bg-titan-red"></div>
+                            <div class="flex items-center gap-3 mb-4 md:mb-5">
+                                <div class="w-8 md:w-10 h-px bg-titan-red"></div>
                                 <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Requirements') }}</h2>
                             </div>
                             <div class="rich-text-content">{!! $renderRichText($job['requirements'] ?? '') !!}</div>
@@ -291,8 +291,8 @@
 
                         @if(!empty(trim(strip_tags($job['benefits']))))
                         <section class="rounded-xl border border-titan-red/10 bg-titan-red/5 p-5 md:p-8 shadow-sm">
-                             <div class="flex items-center gap-3 mb-5">
-                                <div class="w-10 h-px bg-titan-red"></div>
+                             <div class="flex items-center gap-3 mb-4 md:mb-5">
+                                <div class="w-8 md:w-10 h-px bg-titan-red"></div>
                                 <h2 class="text-lg md:text-xl font-bold text-titan-navy">{{ __('Benefits') }}</h2>
                             </div>
                              <div class="rich-text-content">{!! $renderRichText($job['benefits'] ?? '') !!}</div>
@@ -301,13 +301,13 @@
 
                     </div>
 
-                    <section id="apply-form" class="pt-12 mt-14">
+                    <section id="apply-form" class="pt-8 md:pt-12 mt-10 md:mt-14">
                         <div class="bg-white rounded-xl p-5 md:p-10 border border-slate-200 shadow-sm transition-all">
                             <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-6">
                                 <div class="w-8 sm:w-10 h-px bg-titan-red mt-3 sm:mt-0 shrink-0"></div>
                                 <div>
                                     <h3 class="text-xl md:text-2xl font-bold text-titan-navy">{{ __('Apply for this Role') }}</h3>
-                                    <p class="text-titan-navy/40 text-sm mt-1">{{ __('Complete the form below to submit your application for the') }} <span class="text-titan-navy font-semibold">{{ $job['title'] }}</span></p>
+                                    <p class="text-titan-navy/40 text-sm mt-1">{{ __('Complete the form below to submit your application.') }}</p>
                                 </div>
                             </div>
 
@@ -394,7 +394,7 @@
                     </div>
 
                     <!-- Share Role -->
-                    <div class="p-5 md:p-6 border border-slate-200 rounded-xl space-y-4 bg-white shadow-sm">
+                    <div class="hidden sm:block p-5 md:p-6 border border-slate-200 rounded-xl space-y-4 bg-white shadow-sm">
                          <h4 class="text-[10px] font-bold text-titan-navy/35 uppercase tracking-[0.2em]">{{ __('Share this role') }}</h4>
                           <div class="flex gap-3">
                              <div x-data="{ 

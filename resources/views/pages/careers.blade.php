@@ -122,7 +122,7 @@
                 </div>
 
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-900 mt-8 md:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-4xl">
+                    class="hidden md:grid transition-all duration-1000 delay-900 mt-12 grid-cols-3 gap-4 max-w-4xl">
                     <div class="rounded-xl sm:rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md px-4 sm:px-5 py-3.5 sm:py-4 text-white shadow-lg">
                         <div class="{{ $heroBadgeLabelClass }}">{{ __('Fast response') }}</div>
                         <div class="font-bold text-sm">{{ __('Applications are reviewed by our team.') }}</div>
@@ -161,7 +161,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-10">
                 @php
                     $values = [
                         ['icon' => 'award', 'title' => __('Excellence'), 'desc' => __('We maintain the highest standards across all our large-scale construction and engineering projects.')],
@@ -175,10 +175,10 @@
                     x-bind:class="revealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
                     class="transition-all duration-1000 relative"
                     style="transition-delay: {{ 200 + ($i * 150) }}ms">
-                    <div class="bg-white border-2 border-gray-100 rounded p-6 md:p-12 transition-all duration-500 h-full relative overflow-hidden"
+                    <div class="bg-white border border-gray-100 md:border-2 rounded p-5 md:p-12 transition-all duration-500 h-full relative overflow-hidden"
                         x-bind:class="hover ? 'border-titan-red shadow-[0_24px_50px_-18px_rgba(15,23,42,0.14)] -translate-y-1' : ''">
 
-                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-titan-red mb-6 md:mb-10 transition-all duration-500 border border-gray-100"
+                        <div class="w-11 h-11 md:w-16 md:h-16 rounded-full flex items-center justify-center text-titan-red mb-4 md:mb-10 transition-all duration-500 border border-gray-100"
                             x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : 'bg-gray-50'">
                             <x-dynamic-component :component="'lucide-' . $v['icon']" class="w-7 h-7" stroke-width="1.5" />
                         </div>
@@ -187,7 +187,7 @@
                             x-bind:class="hover ? 'text-titan-red' : ''">
                             {{ $v['title'] }}
                         </h3>
-                        <p class="text-titan-navy/50 text-base leading-relaxed font-medium">
+                        <p class="text-titan-navy/50 text-sm md:text-base leading-relaxed font-medium">
                             {{ $v['desc'] }}
                         </p>
 
@@ -294,7 +294,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                         <div class="min-w-0">
                             <div class="text-[10px] font-bold uppercase tracking-[0.25em] text-titan-red">{{ __('Refine results') }}</div>
-                            <div class="text-sm text-titan-navy/55 mt-1">{{ __('Search by title, then narrow by department or location.') }}</div>
+                            <div class="hidden sm:block text-sm text-titan-navy/55 mt-1">{{ __('Search by title, then narrow by department or location.') }}</div>
                         </div>
                         <button @click="clearFilters()"
                             class="md:hidden inline-flex self-start items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors shadow-sm">
@@ -372,89 +372,61 @@
             <!-- Job Cards -->
             <div class="space-y-6">
                 <template x-for="(job, index) in filteredJobs" :key="job.id">
-                    <div
-                        class="bg-white border border-gray-100 rounded p-4 sm:p-6 md:p-8 hover:shadow-[0_24px_50px_-18px_rgba(15,23,42,0.12)] hover:border-gray-200 transition-all duration-400 group relative overflow-hidden">
-                        <!-- Hover Accent Bar (Design-Z) -->
-                        <div
-                            class="absolute inset-y-0 left-0 w-0 group-hover:w-2 bg-titan-red transition-all duration-300">
-                        </div>
+                    <article
+                        class="group relative overflow-hidden rounded border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-titan-red/25 hover:shadow-[0_16px_34px_-22px_rgba(11,43,92,0.24)] md:p-5">
+                        <div class="absolute inset-y-0 left-0 w-1 bg-titan-red opacity-80"></div>
 
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 md:gap-8 relative z-10">
-                            <!-- Left: Job Info -->
-                            <div class="flex-1 min-w-0">
-                        <div class="flex items-center flex-wrap gap-2 mb-4">
-                            <template x-for="tag in job.tags">
-                                <span
-                                            class="max-w-full break-words px-3 py-1 bg-titan-red/5 text-titan-red text-[10px] font-bold uppercase tracking-[0.1em] rounded-md border border-titan-red/10"
+                        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                            <div class="min-w-0 flex-1 pl-2">
+                                <div class="mb-2 flex flex-wrap items-center gap-2">
+                                    <template x-for="tag in job.tags">
+                                        <span
+                                            class="max-w-full truncate rounded border border-titan-red/10 bg-titan-red/5 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] text-titan-red"
                                             x-text="tag"></span>
-                            </template>
-                            <span
-                                class="bg-gray-50 px-3 py-1 rounded-md border border-gray-100 text-[10px] font-bold text-titan-navy/30 flex items-center gap-1.5">
-                                <x-lucide-calendar class="w-3 h-3" /> <span x-text="job.postedDate"></span>
-                            </span>
-                            <span class="bg-titan-navy/5 px-3 py-1 rounded-md border border-titan-navy/10 text-[10px] font-bold text-titan-navy/60 flex items-center gap-1.5">
-                                <x-lucide-dollar-sign class="w-3 h-3 text-titan-red" />
-                                <span x-text="job.salary"></span>
-                            </span>
-                        </div>
-                                <h3 class="text-xl md:text-2xl font-bold text-titan-navy group-hover:text-titan-red transition-colors mb-3 tracking-normal leading-tight"
-                                    x-text="job.title"></h3>
-                                <p class="text-titan-navy/40 text-[13px] leading-relaxed line-clamp-2 max-w-2xl"
+                                    </template>
+                                    <span class="hidden items-center gap-1.5 rounded border border-gray-100 bg-gray-50 px-2 py-0.5 text-[9px] font-bold text-titan-navy/35 sm:inline-flex">
+                                        <x-lucide-calendar class="w-3 h-3" />
+                                        <span x-text="job.postedDate"></span>
+                                    </span>
+                                </div>
+
+                                <a :href="'/careers/' + job.slug" class="block">
+                                    <h3 class="text-lg font-black leading-tight tracking-normal text-titan-navy transition-colors group-hover:text-titan-red md:text-xl"
+                                        x-text="job.title"></h3>
+                                </a>
+
+                                <p class="mt-2 max-w-3xl text-xs font-medium leading-relaxed text-titan-navy/50 line-clamp-1 md:text-[13px]"
                                     x-text="job.summary"></p>
-                            </div>
 
-                            <!-- Middle: Details -->
-                            <div
-                                class="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:flex-wrap gap-4 sm:gap-6 lg:gap-8 text-sm shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-5 lg:pt-0 lg:pl-8">
-                                <div>
-                                    <div
-                                        class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/20 mb-2">
-                                        {{ __('Location') }}
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <div class="flex min-w-0 items-center gap-1.5 rounded bg-gray-50 px-2.5 py-1.5 text-[11px] font-bold text-titan-navy/70">
+                                        <x-lucide-map-pin class="w-3.5 h-3.5 shrink-0 text-titan-red" />
+                                        <span class="truncate" x-text="job.loc"></span>
                                     </div>
-                                    <div class="font-semibold text-titan-navy flex items-center gap-2 text-xs">
-                                        <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
-                                            <x-lucide-map-pin class="w-3 h-3 text-titan-red" />
-                                        </div>
-                                        <span x-text="job.loc"></span>
+                                    <div class="flex min-w-0 items-center gap-1.5 rounded bg-gray-50 px-2.5 py-1.5 text-[11px] font-bold text-titan-navy/70">
+                                        <x-lucide-briefcase class="w-3.5 h-3.5 shrink-0 text-titan-red" />
+                                        <span class="truncate" x-text="job.experience"></span>
                                     </div>
-                                </div>
-                                <div>
-                                    <div
-                                        class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/20 mb-2">
-                                        {{ __('Experience') }}
+                                    <div class="flex min-w-0 items-center gap-1.5 rounded bg-gray-50 px-2.5 py-1.5 text-[11px] font-bold text-titan-navy/70">
+                                        <x-lucide-clock class="w-3.5 h-3.5 shrink-0 text-titan-red" />
+                                        <span class="truncate" x-text="job.type"></span>
                                     </div>
-                                    <div class="font-semibold text-titan-navy flex items-center gap-2 text-xs">
-                                        <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
-                                            <x-lucide-briefcase class="w-3 h-3 text-titan-red" />
-                                        </div>
-                                        <span x-text="job.experience"></span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div
-                                        class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/20 mb-2">
-                                        {{ __('Job Type') }}
-                                    </div>
-                                    <div class="font-semibold text-titan-navy flex items-center gap-2 text-xs">
-                                        <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center">
-                                            <x-lucide-clock class="w-3 h-3 text-titan-red" />
-                                        </div>
-                                        <span x-text="job.type"></span>
+                                    <div class="hidden min-w-0 items-center gap-1.5 rounded bg-titan-navy/[0.03] px-2.5 py-1.5 text-[11px] font-bold text-titan-navy/70 sm:flex">
+                                        <x-lucide-dollar-sign class="w-4 h-4 text-titan-red" />
+                                        <span class="truncate" x-text="job.salary"></span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Right: CTA -->
-                            <div class="shrink-0 pt-2 lg:pt-0">
+                            <div class="shrink-0 border-t border-gray-100 pt-3 lg:border-t-0 lg:pt-0">
                                 <a :href="'/careers/' + job.slug"
-                                    class="w-full sm:w-auto border-2 border-titan-navy text-titan-navy px-6 md:px-8 py-3.5 md:py-4 rounded font-bold text-[11px] uppercase tracking-widest hover:border-titan-red hover:text-titan-red transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-3 group/btn bg-white">
+                                    class="inline-flex h-10 w-full items-center justify-center gap-2 rounded bg-titan-navy px-5 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:bg-titan-red lg:w-auto">
                                     {{ __('Apply Now') }}
-                                    <x-lucide-arrow-right
-                                        class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                    <x-lucide-arrow-right class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                                 </a>
                             </div>
                         </div>
-                    </div>
+                    </article>
                 </template>
 
                 <!-- Empty State -->
@@ -479,12 +451,12 @@
                 </div>
                 <div class="absolute top-0 right-0 w-[300px] h-[300px] bg-titan-red/5 rounded-full blur-[100px] pointer-events-none">
                 </div>
-                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
+                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 md:gap-8">
                     <div>
                         <h3 class="text-xl md:text-2xl font-bold uppercase tracking-normal mb-2">
                             {{ __("Don't see your perfect role?") }}
                         </h3>
-                        <p class="text-titan-navy/45 text-sm">
+                            <p class="text-titan-navy/45 text-sm leading-relaxed">
                             {{ __('Send us your CV and we\'ll contact you for future opportunities.') }}
                         </p>
                     </div>
@@ -525,7 +497,7 @@
                                 {{ __('Send your details once and we will review them for current and future opportunities.') }}
                             </p>
 
-                            <div class="mt-6 md:mt-8 space-y-3">
+                            <div class="hidden md:block mt-8 space-y-3">
                                 <div class="flex items-start gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
                                     <div class="mt-0.5 w-8 h-8 rounded-full bg-titan-red/5 flex items-center justify-center shrink-0">
                                         <x-lucide-clock class="w-4 h-4 text-titan-red" />
