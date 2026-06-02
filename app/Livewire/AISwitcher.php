@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\SystemSetting;
 use Filament\Notifications\Notification;
 
-class AISwitcher extends Component
+class AiSwitcher extends Component
 {
     public string $provider = 'gemini';
     public string $model = '';
@@ -36,7 +36,7 @@ class AISwitcher extends Component
             }
 
             $this->availableModels = $service->getAvailableModels(
-                $this->provider === 'gemini' ? $apiKey : $baseUrl, 
+                $this->provider === 'gemini' ? $apiKey : $baseUrl,
                 $this->provider
             );
 
@@ -53,7 +53,7 @@ class AISwitcher extends Component
     {
         $settings = SystemSetting::get('ai_settings', []);
         $settings['provider'] = $newProvider;
-        
+
         // Use the saved model for this provider if it exists
         $this->model = $newProvider === 'ollama'
             ? ($settings['ollama']['model'] ?? $settings['model'] ?? '')
