@@ -230,7 +230,7 @@
 
 
         <!-- === PREMIUM ABOUT HERO === -->
-        <section class="relative h-[75vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
+        <section class="relative h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
                 <img src="/images/hero/hero-1.jpg" alt="Construction Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
@@ -238,29 +238,29 @@
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
 
-            <div class="relative z-20 text-center max-w-5xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+            <div class="relative z-20 text-center max-w-5xl px-4 md:px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                    class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
+                    class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-6 md:mb-8 leading-[0.9] tracking-tighter uppercase"
+                    style="font-size: clamp(1.75rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     {{ __('BUILDING') }}<br />
                     <span class="text-titan-red">{{ __('CAMBODIA FUTURE') }}</span>
                 </h1>
 
-                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
-                    <div class="h-[1px] w-12 bg-white/30"></div>
-                    <p class="text-sm md:text-base text-white/90 font-bold uppercase tracking-[0.4em]">
+                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-4 md:gap-6">
+                    <div class="h-[1px] w-8 md:w-12 bg-white/30 hidden sm:block"></div>
+                    <p class="text-xs md:text-base text-white/90 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em]">
                         {{ __('Precision. Integrity. Excellence.') }}
                     </p>
-                    <div class="h-[1px] w-12 bg-white/30"></div>
+                    <div class="h-[1px] w-8 md:w-12 bg-white/30 hidden sm:block"></div>
                 </div>
             </div>
 
         </section>
 
         <!-- STATS BAR -->
-        <section class="bg-titan-navy py-16 border-t border-white/10">
-            <div class="max-w-[1400px] mx-auto px-6">
+        <section class="bg-titan-navy py-12 md:py-16 border-t border-white/10">
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                     @php
                         $stats = [

@@ -19,6 +19,7 @@ class NewsArticlesTable
             ->columns([
                 ImageColumn::make('coverImage')
                     ->label(__('Cover Image'))
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->coverImage))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 TextColumn::make('title')

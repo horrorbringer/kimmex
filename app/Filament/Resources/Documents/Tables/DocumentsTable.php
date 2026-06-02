@@ -18,6 +18,7 @@ class DocumentsTable
             ->columns([
                 ImageColumn::make('thumbnailUrl')
                     ->label(__('Thumbnail'))
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->thumbnailUrl))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
 

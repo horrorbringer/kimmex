@@ -3,31 +3,31 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === HERO SECTION === -->
-        <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy" style="min-height: 400px;">
+        <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy" style="min-height: 360px;">
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-6.jpg" alt="Privacy" class="w-full h-full object-cover opacity-60" decoding="async" loading="lazy" />
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70">
                 </div>
             </div>
 
-            <div class="relative z-20 text-center max-w-4xl px-6 pt-48" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'" class="transition-all duration-700 delay-100 inline-flex items-center gap-2 px-5 py-2.5 bg-white/5 backdrop-blur-sm rounded-full text-white/80 text-[11px] font-bold uppercase tracking-widest mb-8 border border-white/10">
+            <div class="relative z-20 text-center max-w-4xl px-4 md:px-6 pt-40 md:pt-48" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'" class="transition-all duration-700 delay-100 inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 bg-white/5 backdrop-blur-sm rounded-full text-white/80 text-[10px] md:text-[11px] font-bold uppercase tracking-widest mb-6 md:mb-8 border border-white/10">
                     <x-lucide-shield-check class="w-3.5 h-3.5 text-titan-red" />
                     {{ __('Legal & Compliance') }}
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'" class="transition-all duration-700 delay-300 font-black text-white mb-6 leading-none tracking-tighter uppercase" style="font-size: clamp(2rem, 5vw, 3.5rem) !important;">
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'" class="transition-all duration-700 delay-300 font-black text-white mb-5 md:mb-6 leading-none tracking-tighter uppercase" style="font-size: clamp(1.75rem, 5vw, 3.5rem) !important;">
                     {{ __('Privacy Policy') }}
                 </h1>
 
-                <p :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-700 delay-500 text-base text-white/50 max-w-xl mx-auto leading-relaxed">
+                <p :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-700 delay-500 text-sm md:text-base text-white/50 max-w-xl mx-auto leading-relaxed">
                     {{ __('Last Updated: January 1, 2026') }}
                 </p>
             </div>
         </section>
 
         <!-- === TABLE OF CONTENTS === -->
-        <section class="max-w-[900px] mx-auto px-6 relative z-40 -mt-16">
+        <section class="max-w-[900px] mx-auto px-4 md:px-6 relative z-40 -mt-16">
             <div class="bg-white rounded shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 p-8 lg:p-10">
                 <h2 class="text-sm font-black uppercase tracking-widest text-titan-navy/40 mb-6 flex items-center gap-3">
                     <x-lucide-list class="w-4 h-4 text-titan-red" />

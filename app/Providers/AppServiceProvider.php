@@ -46,6 +46,49 @@ class AppServiceProvider extends ServiceProvider
             $column->toggleable();
         });
 
+        \Filament\Forms\Components\FileUpload::configureUsing(function (\Filament\Forms\Components\FileUpload $upload) {
+            $upload->getUploadedFileUsing(static function (\Filament\Forms\Components\BaseFileUpload $component, string $file, string | array | null $storedFileNames): ?array {
+                $storage = $component->getDisk();
+                $shouldFetchFileInformation = $component->shouldFetchFileInformation();
+
+                if ($shouldFetchFileInformation) {
+                    try {
+                        if (! $storage->exists($file)) {
+                            return null;
+                        }
+                    } catch (\League\Flysystem\UnableToCheckFileExistence) {
+                        return null;
+                    }
+                }
+
+                $url = null;
+
+                if ($component->getDiskName() === \App\Support\PublicStorage::diskName()) {
+                    $url = \App\Support\PublicStorage::url($file);
+                }
+
+                if (! $url && $component->getVisibility() === 'private') {
+                    try {
+                        $url = $storage->temporaryUrl(
+                            $file,
+                            now()->addMinutes(30)->endOfHour(),
+                        );
+                    } catch (\Throwable) {
+                        //
+                    }
+                }
+
+                $url ??= $storage->url($file);
+
+                return [
+                    'name' => ($component->isMultiple() ? ($storedFileNames[$file] ?? null) : $storedFileNames) ?? basename($file),
+                    'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
+                    'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
+                    'url' => $url,
+                ];
+            });
+        });
+
         // Global Auto-Translation for Translatable Models
         \Illuminate\Support\Facades\Event::listen('eloquent.saving: *', function (string $eventName, array $data) {
             $model = $data[0] ?? null;

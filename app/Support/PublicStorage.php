@@ -43,11 +43,20 @@ class PublicStorage
             return $path;
         }
 
+        if (self::usesPublicProxy()) {
+            return route('media.show', ['path' => ltrim($path, '/')]);
+        }
+
         return self::disk()->url($path);
     }
 
     public static function isRemoteDisk(): bool
     {
         return in_array(self::diskName(), self::REMOTE_DISKS, true);
+    }
+
+    public static function usesPublicProxy(): bool
+    {
+        return self::isRemoteDisk() && blank(config('filesystems.disks.'.self::diskName().'.url'));
     }
 }

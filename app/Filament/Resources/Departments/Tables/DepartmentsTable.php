@@ -25,6 +25,7 @@ class DepartmentsTable
 
                 \Filament\Tables\Columns\ImageColumn::make('headUnit.employee.image')
                     ->label(__('Head / Manager'))
+                    ->getStateUsing(fn (Department $record) => \App\Support\PublicStorage::url($record->headUnit?->employee?->image))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular()
                     ->placeholder('-')

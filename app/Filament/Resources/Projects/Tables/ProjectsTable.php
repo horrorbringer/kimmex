@@ -18,6 +18,7 @@ class ProjectsTable
             ->columns([
                 ImageColumn::make('heroImage')
                     ->label(__('Photo'))
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->heroImage))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 ToggleColumn::make('isActive')

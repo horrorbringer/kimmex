@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\MediaController;
 
 // Language Switcher
 Route::get('/lang/{locale}', function (string $locale) {
@@ -16,6 +17,9 @@ Route::get('/lang/{locale}', function (string $locale) {
 
 Route::post('/contact', [FormController::class, 'submitContact'])->name('contact.submit')->middleware('throttle:5,1');
 Route::post('/careers/apply', [FormController::class, 'submitApplication'])->name('careers.apply')->middleware('throttle:5,1');
+Route::get('/media/{path}', [MediaController::class, 'show'])
+    ->where('path', '.*')
+    ->name('media.show');
 
 // Home Page
 Route::get('/', function () {

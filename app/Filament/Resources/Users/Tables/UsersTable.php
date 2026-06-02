@@ -24,6 +24,7 @@ class UsersTable
                     ->dateTime()
                     ->sortable(),
                 ImageColumn::make('image')
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->image))
                     ->disk(config('filesystems.public_uploads_disk')),
                 TextColumn::make('role')
                     ->searchable(),

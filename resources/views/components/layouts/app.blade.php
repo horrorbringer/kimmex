@@ -10,13 +10,20 @@
     @php
         $profile = $globalSettings['profile'] ?? [];
         $siteLocale = $siteLocale ?? app()->getLocale();
-        $siteName = $profile[$siteLocale]['website_title'] ?? $profile['en']['website_title'] ?? $profile[$siteLocale]['company_name'] ?? $profile['en']['company_name'] ?? config('app.name', 'KIMMEX');
+        $siteName = collect([
+            $profile[$siteLocale]['website_title'] ?? null,
+            $profile['en']['website_title'] ?? null,
+            $profile[$siteLocale]['company_name'] ?? null,
+            $profile['en']['company_name'] ?? null,
+            config('app.name'),
+            'KIMMEX',
+        ])->first(fn ($value) => filled($value));
         $logo = $profile['logo'] ?? null;
         
         $favicon = $profile['favicon'] ?? null;
         $faviconUrl = $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \App\Support\PublicStorage::url($favicon)) : asset('favicon.ico');
         
-        $pageTitle = $title ? "{$title} | {$siteName}" : $siteName;
+        $pageTitle = filled($title) ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
         $pageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'));
     @endphp

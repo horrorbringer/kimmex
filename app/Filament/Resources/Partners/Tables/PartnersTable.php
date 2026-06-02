@@ -23,6 +23,7 @@ class PartnersTable
                     ->searchable(),
                 \Filament\Tables\Columns\ImageColumn::make('logoUrl')
                     ->label(__('Logo'))
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->logoUrl))
                     ->disk(config('filesystems.public_uploads_disk')),
                 TextColumn::make('website')
                     ->label(__('Website'))

@@ -3,7 +3,7 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === PREMIUM CONTACT HERO === -->
-        <section class="relative h-screen min-h-[800px] flex items-center overflow-hidden bg-titan-navy">
+        <section class="relative h-[70vh] md:h-screen min-h-[600px] md:min-h-[800px] flex items-center overflow-hidden bg-titan-navy">
             {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
@@ -14,17 +14,17 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
-            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-6 pt-32 pb-40">
+            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-24 md:pb-40">
 
 
-                <h1 class="font-heading font-[900] text-white mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
+                <h1 class="font-heading font-[900] text-white mb-8 md:mb-10 leading-none tracking-tighter uppercase drop-shadow-2xl"
+                    style="font-size: clamp(1.75rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                     <span class="block">{{ __('CONNECT') }}</span>
                     <span class="block text-titan-red mt-2">{{ __('WITH US') }}</span>
                 </h1>
 
-                <div class="border-l-4 border-titan-red pl-10 mb-16 max-w-2xl">
-                    <p class="text-xl md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl"
+                <div class="border-l-4 border-titan-red pl-6 md:pl-10 mb-12 md:mb-16 max-w-2xl">
+                    <p class="text-lg md:text-2xl text-white font-bold leading-tight uppercase tracking-[0.15em] drop-shadow-xl"
                         style="color: white !important;">
                         {{ __('Building Relationships.') }}<br />
                         {{ __('Building Future.') }}

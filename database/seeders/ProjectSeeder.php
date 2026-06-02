@@ -230,12 +230,12 @@ class ProjectSeeder extends Seeder
     private function heroImageFor(string $categorySlug): string
     {
         return match ($categorySlug) {
-            'healthcare' => 'projects/realproject/hospital.png',
-            'education' => 'projects/realproject/school.png',
-            'energy' => 'projects/realproject/energy-utility.jpg',
-            'commercial' => 'projects/realproject/factory.png',
-            'infrastructure' => 'projects/realproject/water-treatment.png',
-            default => 'projects/realproject/government-building.png',
+            'healthcare' => '/images/projects/dambe-clinic.jpg',
+            'education' => '/images/projects/Thumbnail-8.jpg',
+            'energy' => '/images/projects/Thumbnail-7.jpg',
+            'commercial' => '/images/projects/customs-excise.jpg',
+            'infrastructure' => '/images/projects/mondulkiri-water.jpg',
+            default => '/images/projects/mpt-office.jpg',
         };
     }
 

@@ -18,6 +18,7 @@ class OrgUnitsTable
             ->columns([
                 \Filament\Tables\Columns\ImageColumn::make('employee.image')
                     ->label('')
+                    ->getStateUsing(fn (OrgUnit $record) => \App\Support\PublicStorage::url($record->employee?->image))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular()
                     ->placeholder('-'),

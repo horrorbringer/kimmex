@@ -183,69 +183,64 @@
                 <div class="h-full bg-titan-red absolute left-0 top-0 transition-all duration-150"
                     :style="'width: ' + progress + '%'"></div>
             </div>
-            <div class="bg-white/95 backdrop-blur-md border-b border-gray-100 h-12 flex items-center px-6">
-                <div class="max-w-[1400px] mx-auto w-full flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <span
-                            class="text-[9px] font-black text-titan-red uppercase tracking-widest hidden md:block">{{ __('Project:') }}</span>
-                        <span
-                            class="text-[11px] font-black text-titan-navy truncate max-w-[200px] md:max-w-md uppercase tracking-tight">{{ $project['title'] }}</span>
+            <div class="bg-white/95 backdrop-blur-md border-b border-gray-100 h-10 md:h-11 flex items-center px-6">
+                <div class="max-w-[1400px] mx-auto w-full flex items-center gap-3">
+                    <a href="/projects" class="w-7 h-7 rounded border border-gray-200 bg-white text-titan-navy flex items-center justify-center hover:border-titan-red/30 hover:text-titan-red transition-colors shrink-0">
+                        <x-lucide-arrow-left class="w-4 h-4" />
+                    </a>
+                    <div class="min-w-0">
+                        <div class="text-[8px] font-black uppercase tracking-[0.24em] text-titan-red leading-none">{{ __('Project:') }}</div>
+                        <div class="text-[10px] font-black uppercase tracking-tight text-titan-navy truncate max-w-[180px] md:max-w-[360px] leading-tight">{{ $project['title'] }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- BACK BUTTON -->
-        <a href="/projects"
-            class="fixed top-16 right-6 z-[99] w-10 h-10 bg-titan-navy text-white rounded-lg flex items-center justify-center hover:bg-titan-red transition-all shadow-lg"
-            :class="scrolled ? 'translate-y-0' : '-translate-y-24'">
-            <x-lucide-arrow-left class="w-5 h-5" />
-        </a>
-
         <!-- --- PREMIUM NARRATIVE HERO --- -->
-        <header class="relative w-full h-[75vh] min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
+        <header class="relative w-full h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
             <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+                class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high"
+                onerror="this.onerror=null; this.dataset.imageError='false'; this.src='{{ $defaultProjectImage }}';" />
             
             {{-- Deep multi-stage gradient for maximum text contrast --}}
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
-            <div class="absolute inset-0 bg-black/30"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/35 via-titan-navy/5 to-titan-navy/65"></div>
+            <div class="absolute inset-0 bg-black/10"></div>
 
-            <div class="relative z-10 text-center max-w-6xl px-6" x-data="{ shown: false }"
+            <div class="relative z-10 text-center max-w-6xl px-4 md:px-6" x-data="{ shown: false }"
                 x-init="setTimeout(() => shown = true, 100)">
 
                 
                 <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 delay-300 font-black text-white mb-8 mx-auto max-w-5xl drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'uppercase tracking-tighter leading-[0.9]' }}"
-                    style="font-size: {{ $contentLocale === 'km' ? 'clamp(2rem, 3.6vw, 3.25rem)' : 'clamp(2rem, 5vw, 3.5rem)' }} !important; color: white !important;">
+                    class="transition-all duration-1000 delay-300 font-black text-white mb-6 md:mb-8 mx-auto max-w-5xl drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'uppercase tracking-tighter leading-[0.9]' }}"
+                    style="font-size: {{ $contentLocale === 'km' ? 'clamp(1.75rem, 3.6vw, 3.25rem)' : 'clamp(1.75rem, 5vw, 3.5rem)' }} !important; color: white !important;">
                     {{ $project['title'] }}
                 </h1>
                 
                 <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                    class="transition-all duration-700 delay-500 flex flex-wrap items-center justify-center gap-4 md:gap-6 text-white font-bold {{ $contentLocale === 'km' ? 'tracking-normal text-sm md:text-base' : 'uppercase tracking-[0.4em] text-xs md:text-sm' }}">
-                    <div class="h-[1px] w-10 md:w-12 bg-titan-red"></div>
-                    <div class="flex items-center justify-center gap-3 max-w-3xl leading-relaxed">
-                        <x-lucide-map-pin class="w-4 h-4 text-titan-red shrink-0" />
+                    class="transition-all duration-700 delay-500 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-white font-bold {{ $contentLocale === 'km' ? 'tracking-normal text-xs md:text-base' : 'uppercase tracking-[0.3em] md:tracking-[0.4em] text-[10px] md:text-sm' }}">
+                    <div class="h-[1px] w-8 md:w-12 bg-titan-red hidden sm:block"></div>
+                    <div class="flex items-center justify-center gap-2 md:gap-3 max-w-3xl leading-relaxed">
+                        <x-lucide-map-pin class="w-3.5 h-3.5 md:w-4 md:h-4 text-titan-red shrink-0" />
                         {{ $project['location'] }}
                     </div>
-                    <div class="h-[1px] w-10 md:w-12 bg-titan-red"></div>
+                    <div class="h-[1px] w-8 md:w-12 bg-titan-red hidden sm:block"></div>
                 </div>
             </div>
 
         </header>
 
         <!-- --- MAIN CONTENT SPLIT --- -->
-        <section class="py-24 px-6 max-w-[1400px] mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        <section class="py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-white via-slate-50/60 to-white">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 max-w-[1400px] mx-auto">
 
                 <!-- LEFT: CONTENT -->
                 <div class="lg:col-span-8">
                     <!-- Description -->
-                    <div class="mb-16 reveal-up">
-                        <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
-                            <x-lucide-help-circle class="w-6 h-6 text-titan-red" /> {{ __('Project Overview') }}
+                    <div class="mb-12 md:mb-16 reveal-up">
+                        <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
+                            <x-lucide-help-circle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" /> {{ __('Project Overview') }}
                         </h2>
-                            <div class="space-y-8 text-lg text-titan-navy/70 leading-relaxed project-khmer-content">
+                            <div class="space-y-6 md:space-y-8 text-base md:text-lg text-titan-navy/70 leading-relaxed project-khmer-content">
                                 @if(!empty($project['narrative']['description']))
                                     <div>
                                         <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
@@ -289,9 +284,9 @@
 
                     <!-- Scope -->
                     @if(!empty($project['scope']))
-                        <div class="mb-16 bg-gray-50 p-10 rounded border border-titan-navy/10 reveal-up">
-                            <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
-                                <x-lucide-activity class="w-6 h-6 text-titan-red" /> {{ __('Scope of Work') }}
+                        <div class="mb-12 md:mb-16 bg-gray-50 p-6 md:p-10 rounded border border-titan-navy/10 reveal-up">
+                            <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
+                                <x-lucide-activity class="w-5 h-5 md:w-6 md:h-6 text-titan-red" /> {{ __('Scope of Work') }}
                             </h2>
                             <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 
                                 [&_ul]:grid [&_ul]:grid-cols-1 [&_ul]:md:grid-cols-2 [&_ul]:gap-4 [&_ul]:list-none [&_ul]:p-0
@@ -316,8 +311,8 @@
                     <!-- Narrative -->
                     @if(!empty($project['narrative']['engineering_narrative']))
                         <div class="reveal-up">
-                            <h2 class="text-2xl font-black text-titan-navy mb-8 flex items-center gap-3">
-                                <x-lucide-alert-triangle class="w-6 h-6 text-titan-red" />
+                            <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
+                                <x-lucide-alert-triangle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" />
                                 {{ __('Engineering Challenges & Solutions') }}
                             </h2>
                             <div class="project-rich-content prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
@@ -329,8 +324,9 @@
 
                 <!-- RIGHT: KEY FACTS SIDEBAR -->
                 <div class="lg:col-span-4">
-                    <div class="bg-white p-8 rounded shadow-lg border border-gray-100 sticky top-32">
-                        <h3 class="text-xl font-black text-titan-navy mb-8 pb-4 border-b border-gray-100">
+                    <div class="bg-white/95 p-6 md:p-8 rounded-lg shadow-[0_18px_50px_rgba(11,43,92,0.08)] border border-titan-navy/10 lg:sticky lg:top-24 overflow-hidden relative">
+                        <div class="absolute inset-x-0 top-0 h-1 bg-titan-red"></div>
+                        <h3 class="text-lg md:text-xl font-black text-titan-navy mb-6 md:mb-8 pb-4 border-b border-titan-navy/10">
                             {{ __('Project Data') }}
                         </h3>
 
@@ -338,7 +334,7 @@
                             <div class="group">
                                 <span
                                     class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Client') }}</span>
-                                <div class="flex items-center gap-3 font-bold text-titan-navy text-lg">
+                                <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
                                     <x-lucide-user
                                         class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
                                     {{ $project['client'] }}
@@ -348,7 +344,7 @@
                             <div class="group">
                                 <span
                                     class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Location') }}</span>
-                                <div class="flex items-center gap-3 font-bold text-titan-navy text-lg">
+                                <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
                                     <x-lucide-map-pin
                                         class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
                                     {{ $project['location'] }}
@@ -359,7 +355,7 @@
                                 <div class="group">
                                     <span
                                         class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Built Area') }}</span>
-                                    <div class="flex items-center gap-3 font-bold text-titan-navy text-lg">
+                                    <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
                                         <x-lucide-maximize
                                             class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
                                         {{ $project['built_area'] }}
@@ -370,27 +366,27 @@
                             <div class="group">
                                 <span
                                     class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Year & Status') }}</span>
-                                <div class="flex items-center gap-3 font-bold text-titan-navy text-lg">
+                                <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
                                     <x-lucide-calendar
                                         class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
                                     {{ $project['year'] }} <span class="text-xs font-black text-titan-navy/40 ml-2 uppercase tracking-widest">{{ $project['status'] }}</span>                            </div>
                         </div>
 
                         <!-- CENTERED SOCIAL SHARING -->
-                        <div class="reveal-up pt-12 border-t border-gray-100 mt-12 flex flex-col items-center gap-6">
+                        <div class="reveal-up pt-8 md:pt-12 border-t border-gray-100 mt-8 md:mt-12 flex flex-col items-center gap-4 md:gap-6">
                             <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Project') }}</div>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-3 md:gap-4">
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                                    class="w-12 h-12 bg-social-facebook rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
-                                    <x-lucide-facebook class="w-5 h-5 transition-transform group-hover/fb:scale-110" />
+                                    class="w-10 h-10 md:w-12 md:h-12 bg-social-facebook rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
+                                    <x-lucide-facebook class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/fb:scale-110" />
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                                    class="w-12 h-12 bg-social-linkedin rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
-                                    <x-lucide-linkedin class="w-5 h-5 transition-transform group-hover/li:scale-110" />
+                                    class="w-10 h-10 md:w-12 md:h-12 bg-social-linkedin rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
+                                    <x-lucide-linkedin class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/li:scale-110" />
                                 </a>
                                 <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}" target="_blank" rel="noopener"
-                                    class="w-12 h-12 bg-social-telegram rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
-                                    <x-lucide-send class="w-5 h-5 transition-transform group-hover/tg:scale-110" />
+                                    class="w-10 h-10 md:w-12 md:h-12 bg-social-telegram rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
+                                    <x-lucide-send class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/tg:scale-110" />
                                 </a>
                                 <div x-data="{ 
                                     copied: false, 
@@ -411,10 +407,10 @@
                                     }
                                 }" class="relative">
                                     <button @click="copyLink()"
-                                        class="w-12 h-12 flex items-center justify-center rounded transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-lg group/link"
+                                        class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-lg group/link"
                                         :class="copied ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border border-gray-100 hover:border-titan-red/30 hover:text-titan-red'">
-                                        <x-lucide-link class="w-5 h-5" x-show="!copied" />
-                                        <x-lucide-check class="w-5 h-5" x-show="copied" x-cloak />
+                                        <x-lucide-link class="w-4 h-4 md:w-5 md:h-5" x-show="!copied" />
+                                        <x-lucide-check class="w-4 h-4 md:w-5 md:h-5" x-show="copied" x-cloak />
                                     </button>
 
                                     <!-- Tooltip -->
@@ -440,11 +436,11 @@
 
         <!-- --- GALLERY SECTION --- -->
         @if(count($project['images']) > 0)
-            <section class="bg-titan-navy py-24 px-6 text-white"
+            <section class="bg-slate-50 py-12 md:py-24 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10"
                 x-data="{ lightboxOpen: false, lightboxIndex: 0, images: {{ json_encode($project['images']) }} }">
                 <div class="max-w-[1400px] mx-auto">
-                    <h2 class="text-3xl font-black mb-12 border-l-4 border-titan-red pl-6">{{ __('Project Gallery') }}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+                    <h2 class="text-2xl md:text-3xl font-black mb-8 md:mb-12 border-l-4 border-titan-red pl-4 md:pl-6">{{ __('Project Gallery') }}</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
                         @foreach($project['images'] as $i => $img)
                             @if($i < 3)
                                 @php
@@ -463,14 +459,14 @@
                                 @endphp
 
                                 <div @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
-                                    class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full {{ $gridClass }}">
+                                    class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full bg-white shadow-[0_16px_44px_rgba(11,43,92,0.10)] {{ $gridClass }}">
                                     <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
                                         class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700"
                                         loading="lazy" decoding="async" />
 
                                     @if($i === 2 && $count > 3)
                                         <div
-                                            class="absolute inset-0 bg-titan-navy/80 hover:bg-titan-navy/90 transition-colors duration-500 flex flex-col items-center justify-center z-10">
+                                            class="absolute inset-0 bg-titan-navy/70 hover:bg-titan-navy/80 transition-colors duration-500 flex flex-col items-center justify-center z-10">
                                             <span class="text-4xl md:text-5xl font-black text-white mb-2">+{{ $count - 3 }}</span>
                                             <span
                                                 class="text-xs font-bold text-titan-red uppercase tracking-widest">{{ __('More Gallery') }}</span>
@@ -500,28 +496,28 @@
                     style="display: none;">
 
                     <button @click="lightboxOpen = false"
-                        class="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                        <x-lucide-x class="w-6 h-6 text-white" />
+                        class="absolute top-4 md:top-6 right-4 md:right-6 z-50 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <x-lucide-x class="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </button>
 
                     <button @click="lightboxIndex = (lightboxIndex - 1 + images.length) % images.length"
-                        class="absolute left-6 z-50 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                        <x-lucide-chevron-left class="w-6 h-6 text-white" />
+                        class="absolute left-4 md:left-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <x-lucide-chevron-left class="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </button>
 
                     <button @click="lightboxIndex = (lightboxIndex + 1) % images.length"
-                        class="absolute right-6 z-50 w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                        <x-lucide-chevron-right class="w-6 h-6 text-white" />
+                        class="absolute right-4 md:right-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <x-lucide-chevron-right class="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </button>
 
-                    <div class="max-w-7xl max-h-[85vh] px-24 py-12">
+                    <div class="max-w-7xl max-h-[85vh] px-12 md:px-24 py-12">
                         <img :src="images[lightboxIndex]"
                             class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl" decoding="async" loading="lazy" />
                     </div>
 
                     <div
-                        class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/10">
-                        <span class="text-white/80 text-sm font-bold">
+                        class="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/10">
+                        <span class="text-white/80 text-xs md:text-sm font-bold">
                             <span x-text="lightboxIndex + 1"></span> / <span x-text="images.length"></span>
                         </span>
                     </div>
@@ -531,27 +527,27 @@
 
         <!-- --- RELATED PROJECTS --- -->
         @if(count($project['related']) > 0)
-            <section class="py-24 px-6 max-w-[1400px] mx-auto">
-                <div class="flex justify-between items-end mb-12">
-                    <h2 class="text-3xl font-black text-titan-navy">{{ __('Similar Projects') }}</h2>
+            <section class="py-12 md:py-24 px-4 md:px-6 max-w-[1400px] mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8 md:mb-12">
+                    <h2 class="text-2xl md:text-3xl font-black text-titan-navy">{{ __('Similar Projects') }}</h2>
                     <a href="/projects"
-                        class="font-bold text-titan-red hover:underline flex items-center gap-2 text-sm uppercase tracking-widest">
+                        class="font-bold text-titan-red hover:underline flex items-center gap-2 text-xs md:text-sm uppercase tracking-widest">
                         {{ __('View All') }} <x-lucide-arrow-right class="w-4 h-4" />
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                     @foreach($project['related'] as $p)
                         <a href="/projects/{{ $p['id'] }}" class="block group">
-                            <div class="aspect-[16/10] rounded-xl overflow-hidden mb-6 relative shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500">
+                            <div class="aspect-[16/10] rounded-xl overflow-hidden mb-4 md:mb-6 relative shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500">
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
                                 <div
-                                    class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full">
+                                    class="absolute top-3 md:top-4 left-3 md:left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] px-3 md:px-4 py-1.5 md:py-2 rounded-full">
                                     {{ $p['type'] }}
                                 </div>
                             </div>
-                            <h3 class="text-xl font-heading font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase leading-snug tracking-normal">
+                            <h3 class="text-lg md:text-xl font-heading font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase leading-snug tracking-normal">
                                 {{ $p['title'] }}
                             </h3>
                         </a>

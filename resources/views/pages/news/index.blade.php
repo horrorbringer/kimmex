@@ -98,7 +98,7 @@
         }"
     >
         <!-- HERO -->
-        <section class="relative overflow-hidden bg-titan-navy min-h-[420px] flex items-end">
+        <section class="relative overflow-hidden bg-titan-navy min-h-[380px] md:min-h-[420px] flex items-end">
             <div class="absolute inset-0">
                 <img src="/images/hero/hero-3.jpg" class="w-full h-full object-cover opacity-55 animate-slow-zoom" alt="News Background" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/78 to-titan-navy/35"></div>
@@ -106,21 +106,21 @@
             </div>
 
             <div class="relative z-10 w-full">
-                <div class="max-w-[1240px] mx-auto px-6 pt-28 pb-20 md:pt-32 md:pb-24">
+                <div class="max-w-[1240px] mx-auto px-4 md:px-6 pt-24 pb-16 md:pt-32 md:pb-24">
                     <div class="max-w-3xl">
-                        <div class="inline-flex items-center gap-3 border border-white/15 bg-white/10 px-4 py-2 rounded mb-7">
+                        <div class="inline-flex items-center gap-3 border border-white/15 bg-white/10 px-4 py-2 rounded mb-6 md:mb-7">
                             <x-lucide-newspaper class="w-4 h-4 text-titan-red" />
                             <span class="text-[10px] font-bold uppercase tracking-[0.24em] text-white/85">
                                 {{ __('Kimmex Newsroom') }}
                             </span>
                         </div>
 
-                        <h1 class="font-black uppercase leading-[0.92] tracking-normal !text-white mb-6"
-                            style="font-size: clamp(2.25rem, 6vw, 4.5rem) !important;">
+                        <h1 class="font-black uppercase leading-[0.92] tracking-normal !text-white mb-5 md:mb-6"
+                            style="font-size: clamp(2rem, 6vw, 4.5rem) !important;">
                             {{ __('News') }} <span class="text-titan-red">{{ __('& Updates') }}</span>
                         </h1>
 
-                        <p class="text-white/75 text-base md:text-lg leading-relaxed max-w-2xl font-normal">
+                        <p class="text-white/75 text-sm md:text-lg leading-relaxed max-w-2xl font-normal">
                             {{ __('A newsroom-style view of company announcements, project milestones, documents, and career updates from Kimmex.') }}
                         </p>
                     </div>
@@ -129,7 +129,7 @@
         </section>
 
         <!-- TOP STRIP -->
-        <section class="max-w-[1240px] mx-auto px-6 -mt-10 relative z-20">
+        <section class="max-w-[1240px] mx-auto px-4 md:px-6 -mt-10 relative z-20">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="rounded border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Stories') }}</div>

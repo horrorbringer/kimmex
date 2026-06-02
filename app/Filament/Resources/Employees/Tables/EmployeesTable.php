@@ -18,6 +18,7 @@ class EmployeesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label(__('Photo'))
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->image))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 TextColumn::make('name')

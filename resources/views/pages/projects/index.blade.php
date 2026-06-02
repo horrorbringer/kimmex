@@ -1,4 +1,4 @@
-<x-layouts.app title="Projects"
+<x-layouts.app :title="__('Projects')"
     description="View Kimmex's portfolio of successful construction and engineering projects.">
 
     @php

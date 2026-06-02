@@ -129,7 +129,7 @@ $sectors = [
 
 <div class="bg-white min-h-screen text-titan-navy">
     <!-- === HERO SECTION (Premium Design-Z) === -->
-    <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy h-[75vh] min-h-[600px]">
+    <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px]">
         {{-- Background Zoom Animation --}}
         <div class="absolute inset-0 bg-titan-navy">
             <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
@@ -142,27 +142,27 @@ $sectors = [
         <div class="absolute bottom-[20%] -right-40 w-[600px] h-[600px] border border-white/5 rounded-full hidden lg:block pointer-events-none"></div>
         
         <!-- Hero Content -->
-        <div class="relative z-20 text-center max-w-6xl px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
+        <div class="relative z-20 text-center max-w-6xl px-4 md:px-6" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
 
 
             <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" 
-                class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
+                class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-6 md:mb-8 leading-[0.9] tracking-tighter uppercase"
+                style="font-size: clamp(1.75rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
                 <span class="text-white">{{ $lang === 'kh' ? 'ជំនាញ' : 'ENGINEERING' }}</span> <br/>
                 <span class="text-titan-red">{{ $lang === 'kh' ? 'របស់យើង' : 'EXCELLENCE' }}</span>
             </h1>
 
-            <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6">
-                <div class="h-[1px] w-12 bg-white/30"></div>
-                <p class="text-sm md:text-base text-white/90 leading-relaxed font-bold uppercase tracking-[0.4em]">
+            <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-4 md:gap-6">
+                <div class="h-[1px] w-8 md:w-12 bg-white/30 hidden sm:block"></div>
+                <p class="text-xs md:text-base text-white/90 leading-relaxed font-bold uppercase tracking-[0.3em] md:tracking-[0.4em]">
                     {{ __('Precision. Innovation. Excellence.') }}
                 </p>
-                <div class="h-[1px] w-12 bg-white/30"></div>
+                <div class="h-[1px] w-8 md:w-12 bg-white/30 hidden sm:block"></div>
             </div>
         </div>
 
         <!-- Scroll Indicator -->
-        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer group z-20" @click="document.getElementById('services-list').scrollIntoView({ behavior: 'smooth' })">
+        <div class="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 md:gap-4 cursor-pointer group z-20" @click="document.getElementById('services-list').scrollIntoView({ behavior: 'smooth' })">
             <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-white/70 group-hover:text-white transition-colors">{{ strtoupper(__('Explore Services')) }}</span>
             <div class="w-6 h-10 border border-white/20 rounded-full flex justify-center pt-2 backdrop-blur-sm bg-transparent group-hover:border-titan-red transition-colors">
                 <div class="w-1.5 h-1.5 bg-titan-red rounded-full animate-bounce"></div>
@@ -172,17 +172,17 @@ $sectors = [
 
     <!-- === SERVICE CATEGORIES (Design-Z Staggered) === -->
     <div class="w-full bg-gray-50">
-        <section id="services-list" class="pt-8 pb-16 px-6 max-w-[1500px] mx-auto overflow-hidden">
+        <section id="services-list" class="pt-8 pb-12 md:pb-16 px-4 md:px-6 max-w-[1500px] mx-auto overflow-hidden">
         <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="text-center mb-8 transition-all duration-1000">
             <span class="text-titan-red font-bold uppercase tracking-[0.4em] text-xs mb-4 block">{{ __('What We Do') }}</span>
-            <h2 class="text-4xl md:text-6xl font-bold text-titan-navy mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
-            <div class="w-24 h-1.5 bg-titan-red mx-auto mb-8"></div>
-            <p class="text-titan-navy/90 text-xl max-w-3xl mx-auto leading-relaxed">
+            <h2 class="text-3xl md:text-6xl font-bold text-titan-navy mb-6 md:mb-8 uppercase tracking-tighter">{{ __('Capabilities & Expertise') }}</h2>
+            <div class="w-16 md:w-24 h-1.5 bg-titan-red mx-auto mb-6 md:mb-8"></div>
+            <p class="text-titan-navy/90 text-base md:text-xl max-w-3xl mx-auto leading-relaxed">
                 {{ __('We bring decades of experience to every project, ensuring quality and efficiency at every stage.') }}
             </p>
         </div>
 
-        <div class="space-y-24 md:space-y-32">
+        <div class="space-y-16 md:space-y-24 lg:space-y-32">
             @foreach($services as $i => $service)
                 <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'" 
                      class="group flex flex-col lg:flex-row gap-0 transition-all duration-700 bg-white h-full border border-gray-100 shadow-sm hover:shadow-xl rounded overflow-hidden {{ $i % 2 === 1 ? 'lg:flex-row-reverse' : '' }}">

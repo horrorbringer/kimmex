@@ -22,6 +22,7 @@ class MilestonesTable
                     ->sortable(),
                 ImageColumn::make('image')
                     ->label(__('Image'))
+                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->image))
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->circular(),
                 TextColumn::make('title')
