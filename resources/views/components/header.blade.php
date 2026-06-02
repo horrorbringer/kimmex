@@ -334,19 +334,21 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="/documents"
-                                    class="flex items-center px-4 py-3.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
-                                    <div>
-                                        <div
-                                            class="font-medium text-titan-navy group-hover/item:text-titan-red text-sm transition-colors">
-                                            {{ __('Doc Collection') }}
+                                @if($hasPublicDocuments)
+                                    <a href="/documents"
+                                        class="flex items-center px-4 py-3.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
+                                        <div>
+                                            <div
+                                                class="font-medium text-titan-navy group-hover/item:text-titan-red text-sm transition-colors">
+                                                {{ __('Doc Collection') }}
+                                            </div>
+                                            <div
+                                                class="text-[10px] text-titan-navy/40 mt-0.5 group-hover/item:text-titan-navy/60 transition-colors">
+                                                {{ __('Resources & documents') }}
+                                            </div>
                                         </div>
-                                        <div
-                                            class="text-[10px] text-titan-navy/40 mt-0.5 group-hover/item:text-titan-navy/60 transition-colors">
-                                            {{ __('Resources & documents') }}
-                                        </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -519,11 +521,13 @@
                             <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('News & Updates') }}</span>
                         </a>
-                        <a href="/documents"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
-                            <span class="text-sm font-medium">{{ __('Doc Collection') }}</span>
-                        </a>
+                        @if($hasPublicDocuments)
+                            <a href="/documents"
+                                class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                                <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
+                                <span class="text-sm font-medium">{{ __('Doc Collection') }}</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
 

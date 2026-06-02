@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\MediaController;
+use App\Models\Document;
 
 // Language Switcher
 Route::get('/lang/{locale}', function (string $locale) {
@@ -74,6 +75,8 @@ Route::get('/contact', function () {
 
 // Documents Page
 Route::get('/documents', function () {
+    abort_unless(Document::publicDocumentsExist(), 404);
+
     return view('pages.documents');
 })->name('documents');
 

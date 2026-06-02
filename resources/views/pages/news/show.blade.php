@@ -135,11 +135,7 @@
 
     $sidebarDocs = Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale) {
         return Document::with('documentCategory')
-            ->where('isActive', true)
-            ->where(function ($q) {
-                $q->whereNull('isPublic')->orWhere('isPublic', true)->orWhere('isPublic', 1);
-            })
-            ->whereHas('documentCategory', fn($q) => $q->where('isActive', true))
+            ->publiclyVisible()
             ->latest()
             ->take(3)
             ->get()

@@ -17,6 +17,17 @@ class DocumentCategory extends Model
 
     public $translatable = ['name', 'description'];
 
+    protected static function booted()
+    {
+        static::saved(function () {
+            Document::clearPublicDocumentCaches();
+        });
+
+        static::deleted(function () {
+            Document::clearPublicDocumentCaches();
+        });
+    }
+
     public function parent()
     {
         return $this->belongsTo(DocumentCategory::class, 'parent_id');

@@ -8,12 +8,8 @@
 
     $doc = Cache::remember("document_show_data_{$slug}_{$locale}", now()->addHours(12), function() use ($slug, $locale) {
         $d = Document::with('documentCategory')
-            ->where('isActive', true)
+            ->publiclyVisible()
             ->where('slug', $slug)
-            ->where('isPublic', true)
-            ->whereHas('documentCategory', function ($q) {
-                $q->where('isActive', true);
-            })
             ->first();
 
         if (!$d) return null;
@@ -42,13 +38,9 @@
     // For a related docs feel, just pull latest 4 from same category
     $relatedDocs = Cache::remember("document_related_{$doc['id']}_{$locale}", now()->addHours(12), function() use ($doc, $locale) {
         return Document::with('documentCategory')
+            ->publiclyVisible()
             ->where('document_category_id', $doc['document_category_id'])
             ->where('id', '!=', $doc['id'])
-            ->where('isPublic', true)
-            ->where('isActive', true)
-            ->whereHas('documentCategory', function ($q) {
-                $q->where('isActive', true);
-            })
             ->latest()
             ->take(3)
             ->get()

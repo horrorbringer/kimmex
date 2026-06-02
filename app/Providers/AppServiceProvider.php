@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('globalSettings', $settings);
             $view->with('siteLocale', $lang);
+            $view->with('hasPublicDocuments', \App\Models\Document::publicDocumentsExist());
         });
 
         \Filament\Support\Facades\FilamentView::registerRenderHook(

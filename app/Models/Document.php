@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
@@ -39,16 +40,43 @@ class Document extends Model
     protected static function booted()
     {
         static::saved(function () {
-            foreach (['en', 'km'] as $locale) {
-                Cache::forget("news_sidebar_documents_{$locale}");
-            }
+            static::clearPublicDocumentCaches();
         });
 
         static::deleted(function () {
-            foreach (['en', 'km'] as $locale) {
-                Cache::forget("news_sidebar_documents_{$locale}");
-            }
+            static::clearPublicDocumentCaches();
         });
+    }
+
+    public function scopePubliclyVisible(Builder $query): Builder
+    {
+        return $query
+            ->where('isActive', true)
+            ->where(function (Builder $query) {
+                $query
+                    ->whereNull('isPublic')
+                    ->orWhere('isPublic', true)
+                    ->orWhere('isPublic', 1);
+            })
+            ->whereHas('documentCategory', function (Builder $query) {
+                $query->where('isActive', true);
+            });
+    }
+
+    public static function publicDocumentsExist(): bool
+    {
+        return Cache::remember('public_documents_available', now()->addHours(12), function () {
+            return static::query()->publiclyVisible()->exists();
+        });
+    }
+
+    public static function clearPublicDocumentCaches(): void
+    {
+        Cache::forget('public_documents_available');
+
+        foreach (['en', 'km'] as $locale) {
+            Cache::forget("news_sidebar_documents_{$locale}");
+        }
     }
 
     public function documentCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
