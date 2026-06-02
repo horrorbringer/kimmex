@@ -59,7 +59,7 @@
         $fontEn = $theme['font_family_en'] ?? 'Plus Jakarta Sans';
         $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
         $fontHeading = 'Montserrat'; // High-impact geometric heading font
-        $footerBg     = $theme['footer_bg_color']     ?? '#FFFFFF';
+        $footerBg     = filled($theme['footer_bg_color'] ?? null) ? $theme['footer_bg_color'] : '#071A33';
         $footerAccent = $theme['footer_accent_color']  ?? '#ED1C24';
 
         $footerHex = ltrim($footerBg, '#');

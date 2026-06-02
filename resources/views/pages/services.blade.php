@@ -407,26 +407,26 @@ $sectors = [
     <!-- === CTA SECTION (Design-Z Premium) === -->
     <section class="py-20 md:py-32 bg-gray-50 relative overflow-hidden">
         <div class="max-w-[1400px] mx-auto px-6 relative z-10">
-            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="bg-titan-navy border border-white/5 rounded shadow-[0_30px_60px_-15px_rgba(15,23,42,0.5)] overflow-hidden relative transition-all duration-1000">
+            <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'" class="bg-white border border-titan-navy/10 rounded shadow-[0_24px_60px_rgba(15,23,42,0.08)] overflow-hidden relative transition-all duration-1000">
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <!-- Left Content -->
-                    <div class="p-10 md:p-20 flex flex-col items-center text-center justify-center relative z-10">
+                    <div class="p-8 md:p-20 flex flex-col items-center text-center justify-center relative z-10">
                         <span class="text-titan-red font-bold uppercase tracking-[0.3em] text-xs mb-6 block">{{ __('Work with us') }}</span>
-                        <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight leading-tight mx-auto">
+                        <h2 class="text-3xl md:text-6xl font-bold text-titan-navy mb-6 md:mb-8 tracking-tight leading-tight mx-auto">
                             {{ __('Ready to Start Your') }} <br/>
                             <span class="text-titan-red">{{ __('Next Visionary Project?') }}</span>
                         </h2>
-                        <p class="text-white/60 text-lg mb-12 leading-relaxed max-w-xl font-normal mx-auto">
+                        <p class="text-titan-navy/65 text-base md:text-lg mb-8 md:mb-12 leading-relaxed max-w-xl font-normal mx-auto">
                             {{ __('Join forces with Kimmex for engineering excellence and construction that defines the future.') }}
                         </p>
 
-                        <div class="flex flex-col sm:flex-row gap-5">
-                            <a href="/contact" class="flex items-center justify-center gap-3 px-8 py-4 rounded font-bold text-sm shadow-xl hover:scale-105 transition-all w-max bg-titan-red text-white">
+                        <div class="flex flex-col sm:flex-row gap-3 md:gap-5">
+                            <a href="/contact" class="flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded font-bold text-sm shadow-xl hover:scale-105 transition-all w-full sm:w-max bg-titan-red text-white">
                                 <span>{{ __('Get a Free Quote') }}</span>
                                 <x-lucide-arrow-right class="w-4 h-4" />
                             </a>
-                            <a href="/projects" class="flex items-center justify-center gap-3 px-8 py-4 rounded font-bold text-sm border hover:bg-white/5 hover:scale-105 transition-all w-max" style="border-color: rgba(255,255,255,0.2); color: white;">
+                            <a href="/projects" class="flex items-center justify-center gap-3 px-6 md:px-8 py-4 rounded font-bold text-sm border border-titan-navy/15 text-titan-navy hover:bg-titan-navy hover:text-white hover:scale-105 transition-all w-full sm:w-max">
                                 <span>{{ __('View Our Portfolio') }}</span>
                             </a>
                         </div>
@@ -434,22 +434,22 @@ $sectors = [
 
                     <!-- Right Image Area -->
                     <div class="relative min-h-[350px] lg:min-h-full hidden md:block">
-                        <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/60 to-transparent z-10 w-2/3 lg:w-1/2"></div>
-                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" loading="lazy" decoding="async" />
+                        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/65 to-transparent z-10 w-2/3 lg:w-1/2"></div>
+                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-95" loading="lazy" decoding="async" />
                         
                         <!-- Floating Decorative Badge -->
-                        <div class="absolute top-12 right-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white p-5 rounded z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">
-                            <div class="w-12 h-12 bg-titan-red rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,42,0,0.5)]">
+                        <div class="absolute top-12 right-12 bg-white/90 backdrop-blur-xl border border-titan-navy/10 text-titan-navy p-5 rounded z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">
+                            <div class="w-12 h-12 bg-titan-red rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(255,42,0,0.22)]">
                                 <x-lucide-phone class="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <p class="text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mb-1">{{ __('Contact Us') }}</p>
+                                <p class="text-[10px] text-titan-navy/45 uppercase tracking-[0.2em] font-bold mb-1">{{ __('Contact Us') }}</p>
                                 <p class="font-bold text-lg tracking-tight">info@kimmex.com</p>
                             </div>
                         </div>
 
                         <!-- Accent Glow -->
-                        <div class="absolute bottom-0 right-0 w-80 h-80 bg-titan-red/20 blur-[120px] rounded-full z-0 pointer-events-none"></div>
+                        <div class="absolute bottom-0 right-0 w-80 h-80 bg-titan-red/10 blur-[120px] rounded-full z-0 pointer-events-none"></div>
                     </div>
                 </div>
             </div>

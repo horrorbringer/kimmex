@@ -286,38 +286,38 @@
         </section>
 
         <!-- WHO WE ARE SECTION (Synced with Image) -->
-        <section class="py-32 px-6 bg-white overflow-hidden">
-            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
+        <section class="py-20 md:py-32 px-4 md:px-6 bg-white overflow-hidden">
+            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
 
                 <!-- Left: Aesthetic Image Grid with Badge -->
-                <div class="relative" x-data="{ shown: false }" x-intersect.once="shown = true">
+                <div class="relative w-full flex justify-center lg:block overflow-hidden" x-data="{ shown: false }" x-intersect.once="shown = true">
                     <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
-                        class="grid grid-cols-2 gap-6 transition-all duration-1000 relative">
-                        <div class="space-y-6">
-                            <div class="aspect-[4/5] rounded overflow-hidden shadow-2xl">
+                        class="grid grid-cols-2 gap-2.5 sm:gap-6 transition-all duration-1000 relative w-full max-w-[420px] sm:max-w-[560px] lg:max-w-full">
+                        <div class="space-y-3 sm:space-y-6">
+                            <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl">
                                 <img src="/images/projects/Thumbnail-1.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
-                            <div class="aspect-square rounded overflow-hidden shadow-2xl">
+                            <div class="aspect-[5/4] md:aspect-square rounded overflow-hidden shadow-lg md:shadow-2xl">
                                 <img src="/images/projects/Thumbnail-3.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                         </div>
-                        <div class="space-y-6 pt-12">
-                            <div class="aspect-square rounded overflow-hidden shadow-2xl">
+                        <div class="space-y-3 sm:space-y-6 pt-4 md:pt-12">
+                            <div class="aspect-[5/4] md:aspect-square rounded overflow-hidden shadow-lg md:shadow-2xl">
                                 <img src="/images/projects/Thumbnail-2.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
-                            <div class="aspect-[4/5] rounded overflow-hidden shadow-2xl relative">
+                            <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl relative">
                                 <img src="/images/projects/Thumbnail-4.jpg"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
 
                                 <!-- Floating 25+ Years Badge -->
                                 <div
-                                    class="absolute -bottom-6 -right-6 bg-titan-red text-white p-8 rounded shadow-[0_20px_40px_rgba(227,30,36,0.3)] z-20 flex flex-col items-center justify-center min-w-[140px] transform hover:scale-105 transition-transform">
-                                    <span class="text-4xl font-black leading-none">25+</span>
+                                    class="absolute bottom-3 right-3 md:-bottom-6 md:-right-6 bg-titan-red text-white p-3 sm:p-4 md:p-8 rounded shadow-[0_20px_40px_rgba(227,30,36,0.3)] z-20 flex flex-col items-center justify-center w-[72px] sm:w-[96px] md:w-auto md:min-w-[140px] transform hover:scale-105 transition-transform">
+                                    <span class="text-xl sm:text-2xl md:text-4xl font-black leading-none">25+</span>
                                     <span
-                                        class="text-[10px] font-black uppercase tracking-[0.2em] mt-1">{{ __('Years') }}</span>
+                                        class="text-[8px] md:text-[10px] font-black uppercase tracking-[0.16em] md:tracking-[0.2em] mt-1">{{ __('Years') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -549,7 +549,7 @@
                             </div>
 
                             <!-- Image Side -->
-                            <div class="w-full md:w-5/12 pl-16 md:pl-0 z-10">
+                            <div class="w-full md:w-5/12 pl-0 z-10">
                                 <a class="block aspect-video rounded overflow-hidden shadow-lg border border-gray-100 relative group cursor-pointer"
                                     @click.prevent="open = !open">
                                     <img src="{{ $milestone['image'] }}"
@@ -645,24 +645,24 @@
 
 
         <!-- QUALITY & SAFETY -->
-        <section id="safety" class="py-24 px-6 bg-titan-navy">
+        <section id="safety" class="py-16 md:py-24 px-4 md:px-6 bg-slate-50 border-y border-titan-navy/10">
             <div class="max-w-[1400px] mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         class="transition-all duration-1000">
-                        <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our
+                        <span class="text-titan-red font-bold uppercase tracking-widest text-xs md:text-sm mb-3 md:mb-4 block">{{ __('Our
                             Standards') }}</span>
-                        <h2 class="text-3xl md:text-4xl font-heading font-black text-white mb-6 leading-normal tracking-normal">
+                        <h2 class="text-2xl md:text-4xl font-heading font-black text-titan-navy mb-4 md:mb-6 leading-tight tracking-normal">
                             {{ __('Quality & Safety') }} <span class="text-titan-red uppercase">{{ __('First') }}</span>
                         </h2>
-                        <p class="text-white/60 text-lg leading-relaxed mb-10">
+                        <p class="text-titan-navy/65 text-base md:text-lg leading-relaxed mb-8 md:mb-10">
                             {{ __('We adhere to the highest international standards in construction quality and
                             workplace safety. Every project undergoes rigorous QA/QC protocols to ensure excellence from
                             foundation to finishing.') }}
                         </p>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6">
                             @php
                                 $qualityItems = [
                                     [
@@ -682,9 +682,9 @@
                                 ];
                             @endphp
                             @foreach($qualityItems as $item)
-                                <div class="flex items-start gap-4 p-4 bg-white/5 rounded border border-white/10">
+                                <div class="flex items-start gap-3 md:gap-4 p-4 bg-white rounded-lg border border-titan-navy/10 shadow-sm">
                                     <div
-                                        class="w-12 h-12 bg-titan-red/20 rounded-lg flex items-center justify-center text-titan-red shrink-0">
+                                        class="w-10 h-10 md:w-12 md:h-12 bg-titan-red/10 rounded-lg flex items-center justify-center text-titan-red shrink-0">
                                         @if($item['icon'] === 'shield')
                                             <x-lucide-shield class="w-5 h-5" />
                                         @elseif($item['icon'] === 'award')
@@ -696,8 +696,8 @@
                                         @endif
                                     </div>
                                     <div>
-                                        <div class="text-white font-bold">{{ $item['title'] }}</div>
-                                        <div class="text-white/40 text-sm">{{ $item['desc'] }}</div>
+                                        <div class="text-titan-navy font-bold leading-tight">{{ $item['title'] }}</div>
+                                        <div class="text-titan-navy/50 text-sm leading-snug mt-1">{{ $item['desc'] }}</div>
                                     </div>
                                 </div>
                             @endforeach
@@ -708,7 +708,7 @@
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         class="transition-all duration-1000 delay-200 relative">
                         <img src="/images/projects/Thumbnail-6.jpg" alt="Safety Inspection"
-                            class="rounded shadow-2xl w-full h-auto" loading="lazy" decoding="async" />
+                            class="rounded-lg shadow-[0_20px_60px_rgba(11,43,92,0.16)] w-full aspect-[4/3] md:aspect-auto object-cover" loading="lazy" decoding="async" />
                         <!-- Floating ISO Card -->
                         <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded shadow-xl hidden md:block">
                             <div class="flex items-center gap-4">

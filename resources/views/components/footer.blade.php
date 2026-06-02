@@ -1,4 +1,6 @@
 <footer style="background-color: var(--footer-bg); color: var(--footer-text);" class="pt-24 pb-12 relative overflow-hidden">
+    <div class="absolute inset-x-0 top-0 h-px bg-white/10"></div>
+    <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
     <div class="max-w-[1400px] mx-auto px-6 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 mb-16">
             @php

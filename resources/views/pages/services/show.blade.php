@@ -250,7 +250,7 @@
     <div class="bg-white min-h-screen text-titan-navy">
 
         <!-- === 1. PREMIUM HERO === -->
-        <section class="relative overflow-hidden bg-titan-navy">
+        <section class="relative overflow-hidden bg-slate-50">
             <div class="absolute inset-0">
                 @if ($service['image'])
                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
@@ -262,44 +262,44 @@
                     </div>
                 @endif
                 
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/96 via-titan-navy/82 to-titan-navy/30"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-titan-navy/60"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-white/96 via-white/88 to-white/45"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-white/70"></div>
             </div>
 
             <div class="relative z-10">
-                <div class="max-w-[1400px] mx-auto px-6 py-14 pt-24 md:py-18 md:pt-28 lg:py-24 lg:pt-32">
+                <div class="max-w-[1400px] mx-auto px-4 md:px-6 py-10 pt-24 md:py-18 md:pt-28 lg:py-24 lg:pt-32">
                     <a href="/services"
-                        class="inline-flex items-center gap-3 text-white/85 hover:text-white transition-all font-black uppercase tracking-[0.22em] text-[10px] mb-8 group">
+                        class="inline-flex items-center gap-3 text-titan-navy/65 hover:text-titan-red transition-all font-black uppercase tracking-[0.22em] text-[10px] mb-8 group">
                         <x-lucide-arrow-left class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
                         {{ __('Back to Services') }}
                     </a>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+                    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-7 md:gap-10 items-center">
                         <div class="max-w-2xl">
-                            <div class="inline-flex items-center gap-3 border border-white/12 bg-white/[0.08] px-4 py-2 rounded mb-6">
+                            <div class="inline-flex items-center gap-3 border border-titan-navy/10 bg-white/80 shadow-sm px-4 py-2 rounded mb-6">
                                 <x-dynamic-component :component="$service['icon'] ?? 'lucide-building'" class="w-4 h-4 text-titan-red" />
-                                <span class="text-[10px] font-black uppercase tracking-[0.24em] text-white/80">
+                                <span class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-navy/60">
                                     {{ __('Service Details') }}
                                 </span>
                             </div>
 
-                            <h1 class="font-black text-white uppercase tracking-normal leading-[0.9] mb-6"
-                                style="font-size: clamp(2.35rem, 6vw, 4.5rem) !important;">
+                            <h1 class="font-black text-titan-navy uppercase tracking-normal leading-[0.96] md:leading-[0.9] mb-5 md:mb-6"
+                                style="font-size: clamp(1.95rem, 10vw, 4.5rem) !important;">
                                 {{ $service['title'][$lang] }}
                             </h1>
 
-                            <p class="text-white/75 text-base md:text-lg leading-relaxed max-w-xl font-medium">
+                            <p class="text-titan-navy/70 text-base md:text-lg leading-relaxed max-w-xl font-medium">
                                 {{ $service['desc'][$lang] }}
                             </p>
 
-                            <div class="mt-8 flex flex-wrap gap-3">
+                            <div class="mt-7 md:mt-8 flex flex-wrap gap-3">
                                 <a href="#scope-of-work"
-                                    class="h-11 px-5 rounded bg-titan-red text-white inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all hover:bg-white hover:text-titan-navy">
+                                    class="h-10 md:h-11 px-4 md:px-5 rounded bg-titan-red text-white inline-flex items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.14em] md:tracking-[0.16em] transition-all hover:bg-white hover:text-titan-navy">
                                     <x-lucide-list class="w-4 h-4" />
                                     {{ __('View Scope') }}
                                 </a>
                                 <a href="/contact"
-                                    class="h-11 px-5 rounded border border-white/15 bg-white/5 text-white inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all hover:bg-white hover:text-titan-navy">
+                                    class="h-10 md:h-11 px-4 md:px-5 rounded border border-titan-navy/15 bg-white text-titan-navy inline-flex items-center gap-2 text-[9px] md:text-[10px] font-black uppercase tracking-[0.14em] md:tracking-[0.16em] transition-all hover:bg-titan-navy hover:text-white">
                                     <x-lucide-phone class="w-4 h-4" />
                                     {{ __('Contact Us') }}
                                 </a>
@@ -307,7 +307,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="relative rounded overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.28)] bg-titan-navy min-h-[260px] md:min-h-[340px]">
+                            <div class="relative rounded overflow-hidden border border-titan-navy/10 shadow-[0_18px_50px_rgba(11,43,92,0.14)] md:shadow-[0_25px_80px_rgba(11,43,92,0.16)] bg-white min-h-[190px] sm:min-h-[240px] md:min-h-[340px]">
                                 @if ($service['image'])
                                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
                                         class="absolute inset-0 w-full h-full object-cover" loading="eager" decoding="async" />
@@ -315,7 +315,7 @@
                                 @else
                                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
                                 @endif
-                                <div class="absolute left-5 bottom-5 right-5 flex items-end justify-between gap-4">
+                                <div class="absolute left-4 bottom-4 right-4 md:left-5 md:bottom-5 md:right-5 flex items-end justify-between gap-4">
                                     <div>
                                         <div class="text-[9px] font-black uppercase tracking-[0.18em] text-white/60 mb-2">
                                             {{ __('Key Scope') }}
@@ -331,13 +331,13 @@
                             </div>
 
                             @if(!empty($service['scopeItems']))
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 md:gap-3">
                                     @foreach(array_slice($service['scopeItems'], 0, 3) as $item)
-                                        <div class="rounded border border-white/10 bg-white/[0.06] backdrop-blur px-4 py-3 text-white">
+                                        <div class="rounded border border-titan-navy/10 bg-white/90 backdrop-blur px-3.5 md:px-4 py-3 text-titan-navy shadow-sm">
                                             <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
                                                 {{ __('Included') }}
                                             </div>
-                                            <div class="text-sm font-bold leading-tight text-white/85 line-clamp-2">
+                                            <div class="text-sm font-bold leading-tight text-titan-navy/80 line-clamp-2">
                                                 {{ $item[$lang] }}
                                             </div>
                                         </div>
@@ -351,8 +351,8 @@
         </section>
 
         <!-- === 2. SERVICE OVERVIEW === -->
-        <section class="py-24 px-6 max-w-[1400px] mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <section class="py-16 md:py-24 px-4 md:px-6 max-w-[1400px] mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 items-center">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
@@ -369,7 +369,7 @@
                     </div>
 
                     @if (!empty($service['idealFor'][$lang] ?? ''))
-                        <div class="bg-gray-50 p-8 rounded border-l-4 border-titan-red shadow-sm">
+                        <div class="bg-gray-50 p-5 md:p-8 rounded border-l-4 border-titan-red shadow-sm">
                             <h3 class="text-xl font-bold text-titan-navy mb-3 flex items-center gap-3">
                                 <div class="p-2 bg-titan-red/10 rounded-lg">
                                     <x-lucide-users class="w-5 h-5 text-titan-red" />
@@ -387,9 +387,9 @@
                     class="transition-all duration-1000 delay-200">
                     <div class="relative group">
                         <div
-                            class="absolute -inset-4 bg-titan-red/5 rounded rotate-2 group-hover:rotate-1 transition-transform duration-500">
+                            class="hidden md:block absolute -inset-4 bg-titan-red/5 rounded rotate-2 group-hover:rotate-1 transition-transform duration-500">
                         </div>
-                        <div class="aspect-[4/3] rounded overflow-hidden shadow-2xl relative z-10 bg-titan-navy">
+                        <div class="aspect-[4/3] rounded overflow-hidden shadow-lg md:shadow-2xl relative z-10 bg-titan-navy">
                             <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                 loading="lazy" decoding="async" />
@@ -403,13 +403,13 @@
         </section>
         <!-- === 3. SCOPE OF WORK === -->
         @if (!empty($service['scopeItems'] ?? []))
-            <section id="scope-of-work" class="py-24 bg-slate-50 text-titan-navy relative overflow-hidden border-y border-slate-200">
+            <section id="scope-of-work" class="py-16 md:py-24 bg-slate-50 text-titan-navy relative overflow-hidden border-y border-slate-200">
                 <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-titan-red/25 to-transparent pointer-events-none"></div>
 
-                <div class="max-w-[1400px] mx-auto px-6 relative z-10">
+                <div class="max-w-[1400px] mx-auto px-4 md:px-6 relative z-10">
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="text-center max-w-2xl mx-auto mb-16 transition-all duration-1000">
+                        class="text-center max-w-2xl mx-auto mb-10 md:mb-16 transition-all duration-1000">
                         <span
                             class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'វិសាលភាពការងារ' : 'Scope of Work' }}</span>
                         <h2 class="text-2xl md:text-3xl font-bold mb-4 text-titan-navy">
@@ -418,18 +418,18 @@
                         <div class="w-16 h-1 bg-titan-red mx-auto rounded-full"></div>
                     </div>
 
-                    <div class="flex flex-wrap justify-center gap-6">
+                    <div class="flex flex-wrap justify-center gap-3 md:gap-6">
                         @foreach ($service['scopeItems'] as $i => $item)
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 style="transition-delay: {{ $i * 100 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-5 p-8 bg-white border border-slate-200 rounded shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-titan-red/30 transition-all duration-300 h-full">
+                                class="w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1rem)] group flex items-start gap-4 md:gap-5 p-5 md:p-8 bg-white border border-slate-200 rounded shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-titan-red/30 transition-all duration-300 h-full">
                                 <div
                                     class="w-10 h-10 rounded-full bg-titan-red/10 border border-titan-red/20 flex items-center justify-center shrink-0 group-hover:bg-titan-red group-hover:border-titan-red transition-colors duration-300">
                                     <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red group-hover:text-white transition-colors duration-300" />
                                 </div>
                                 <span
-                                    class="font-bold text-lg leading-tight pt-2 text-titan-navy group-hover:text-titan-red transition-colors">{{ $item[$lang] }}</span>
+                                    class="font-bold text-base md:text-lg leading-tight pt-1.5 md:pt-2 text-titan-navy group-hover:text-titan-red transition-colors">{{ $item[$lang] }}</span>
                             </div>
                         @endforeach
                     </div>
@@ -438,11 +438,11 @@
         @endif
 
         <!-- === 4. PROCESS / HOW WE DELIVER === -->
-        <section class="py-24 px-6 bg-white">
+        <section class="py-16 md:py-24 px-4 md:px-6 bg-white">
             <div class="max-w-[1400px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="text-center max-w-2xl mx-auto mb-16 transition-all duration-1000">
+                    class="text-center max-w-2xl mx-auto mb-10 md:mb-16 transition-all duration-1000">
                     <span
                         class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'ដំណើរការរបស់យើង' : 'Our Process' }}</span>
                     <h2 class="text-2xl md:text-3xl font-bold text-titan-navy mb-4">
@@ -453,23 +453,23 @@
                     </p>
                 </div>
 
-                <div class="relative mt-32">
+                <div class="relative mt-12 md:mt-32">
                     <!-- Connecting Line -->
                     <div
                         class="hidden md:block absolute top-[55px] left-[10%] right-[10%] h-[1px] bg-titan-red/20 z-0">
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12 relative z-10">
                         @foreach ($roadmap as $i => $step)
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 style="transition-delay: {{ $i * 100 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                                 class="flex flex-col items-center text-center group transition-all duration-1000">
 
-                                <div class="relative mb-16 flex justify-center">
+                                <div class="relative mb-8 md:mb-16 flex justify-center">
                                     <!-- Large Background Number -->
                                     <div
-                                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[80px] font-black text-gray-50 group-hover:text-titan-red/[0.05] transition-colors duration-500 pointer-events-none z-0 tracking-tighter leading-none select-none">
+                                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[64px] md:text-[80px] font-black text-gray-50 group-hover:text-titan-red/[0.05] transition-colors duration-500 pointer-events-none z-0 tracking-tighter leading-none select-none">
                                         {{ $step['step'] }}
                                     </div>
 
@@ -480,7 +480,7 @@
 
                                     <!-- The Dark Diamond -->
                                     <div
-                                        class="w-[110px] h-[110px] bg-titan-navy rounded flex items-center justify-center relative z-10 rotate-45 border-2 border-transparent group-hover:border-titan-red transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:shadow-[0_0_40px_rgba(227,30,36,0.2)]">
+                                        class="w-[88px] h-[88px] md:w-[110px] md:h-[110px] bg-titan-navy rounded flex items-center justify-center relative z-10 rotate-45 border-2 border-transparent group-hover:border-titan-red transition-all duration-500 shadow-[0_20px_40px_rgba(0,0,0,0.08)] group-hover:shadow-[0_0_40px_rgba(227,30,36,0.2)]">
                                         <!-- Un-rotate the icon inside -->
                                         <div class="-rotate-45 flex flex-col items-center">
                                             <x-dynamic-component :component="$step['icon']"
@@ -490,7 +490,7 @@
 
                                     <!-- Step Number Badge (Orange box with white border) -->
                                     <div
-                                        class="absolute -bottom-2 -right-4 w-11 h-11 bg-titan-red rounded flex items-center justify-center border-[4px] border-white z-20 transition-transform duration-500 group-hover:scale-110 shadow-sm">
+                                        class="absolute -bottom-1 -right-3 md:-bottom-2 md:-right-4 w-10 h-10 md:w-11 md:h-11 bg-titan-red rounded flex items-center justify-center border-[4px] border-white z-20 transition-transform duration-500 group-hover:scale-110 shadow-sm">
                                         <span
                                             class="text-[13px] font-black text-white tracking-tight">{{ $step['step'] }}</span>
                                     </div>
@@ -513,10 +513,10 @@
         </section>
 
         <!-- === 5. KEY BENEFITS === -->
-        <section class="py-24 px-6 max-w-[1400px] mx-auto">
+        <section class="py-16 md:py-24 px-4 md:px-6 max-w-[1400px] mx-auto">
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                class="text-center mb-16 transition-all duration-1000">
+                class="text-center mb-10 md:mb-16 transition-all duration-1000">
                 <span
                     class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'ហេតុអ្វីជ្រើសរើសយើង' : 'Why Choose Us' }}</span>
                 <h2 class="text-2xl md:text-3xl font-bold text-titan-navy">
@@ -524,12 +524,12 @@
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                 @foreach ($valueProp as $i => $benefit)
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         style="transition-delay: {{ $i * 100 }}ms"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="bg-white p-8 rounded shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
+                        class="bg-white p-5 md:p-8 rounded shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
                         <div
                             class="w-14 h-14 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-6 group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500">
                             <x-dynamic-component :component="$benefit['icon']"
@@ -548,31 +548,31 @@
         </section>
 
         <!-- === 6. FEATURED PROJECTS === -->
-        <section class="py-24 bg-gray-50 text-titan-navy px-6">
+        <section class="py-16 md:py-24 bg-gray-50 text-titan-navy px-4 md:px-6">
             <div class="max-w-[1400px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-gray-200 pb-8 transition-all duration-1000">
+                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-10 md:mb-16 border-b border-gray-200 pb-6 md:pb-8 transition-all duration-1000">
                     <div>
                         <span
                             class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'ស្នាដៃ' : 'Portfolio' }}</span>
                         <h2 class="text-2xl md:text-3xl font-bold text-titan-navy">{{ __('Featured Projects') }}</h2>
                     </div>
                     <a href="/projects"
-                        class="mt-8 md:mt-0 px-8 py-3 bg-titan-navy hover:bg-titan-red text-white transition-all font-bold uppercase tracking-widest text-sm flex items-center gap-2 rounded-lg">
+                        class="px-5 md:px-8 py-3 bg-titan-navy hover:bg-titan-red text-white transition-all font-bold uppercase tracking-widest text-xs md:text-sm flex items-center gap-2 rounded-lg">
                         {{ $lang === 'kh' ? 'មើលគម្រោងទាំងអស់' : 'View All Projects' }} <x-lucide-arrow-right
                             class="w-4 h-4 text-white" />
                     </a>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-10">
+                <div class="flex flex-wrap justify-center gap-5 md:gap-10">
                     @foreach ($featuredProjects as $i => $project)
                         <div x-data="{ shown: false }" x-intersect.once="shown = true"
                             style="transition-delay: {{ $i * 100 }}ms"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                             class="w-full md:w-[calc(50%-1.25rem)] transition-all duration-1000">
                             <a href="/projects/{{ $project['id'] }}"
-                                class="group relative aspect-[16/9] overflow-hidden rounded cursor-pointer block shadow-2xl h-full">
+                                class="group relative aspect-[4/3] sm:aspect-[16/9] overflow-hidden rounded cursor-pointer block shadow-lg md:shadow-2xl h-full">
                                 <img src="{{ $project['image'] }}" alt="{{ $project['title'][$lang] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                     loading="lazy" decoding="async" />
@@ -580,12 +580,12 @@
                                     class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-95 group-hover:opacity-80 transition-opacity">
                                 </div>
 
-                                <div class="absolute bottom-0 left-0 p-8 w-full">
+                                <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full">
                                     <div
                                         class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                                         <span
                                             class="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{{ $project['category'][$lang] }}</span>
-                                        <h3 class="text-2xl md:text-3xl font-bold !text-white mb-2">
+                                        <h3 class="text-xl md:text-3xl font-bold !text-white mb-2 leading-tight">
                                             {{ $project['title'][$lang] }}
                                         </h3>
                                         <div class="flex items-center gap-2 text-white/100 text-sm">
@@ -607,27 +607,27 @@
         </section>
 
         <!-- === FOOTER CTA === -->
-        <section class="py-24 bg-white text-center px-6">
+        <section class="py-16 md:py-24 bg-white text-center px-4 md:px-6">
             <div
-                class="max-w-3xl mx-auto bg-titan-navy rounded p-12 md:p-16 shadow-2xl shadow-titan-navy/30 relative overflow-hidden">
+                class="max-w-3xl mx-auto bg-slate-50 border border-titan-navy/10 rounded p-7 md:p-16 shadow-xl md:shadow-2xl shadow-titan-navy/10 relative overflow-hidden">
                 <div
-                    class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[50px] translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                    class="absolute top-0 right-0 w-64 h-64 bg-titan-red/10 rounded-full blur-[50px] translate-x-1/2 -translate-y-1/2 pointer-events-none">
                 </div>
                 <div
-                    class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[50px] -translate-x-1/2 translate-y-1/2 pointer-events-none">
+                    class="absolute bottom-0 left-0 w-64 h-64 bg-titan-navy/5 rounded-full blur-[50px] -translate-x-1/2 translate-y-1/2 pointer-events-none">
                 </div>
 
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 relative z-10">
-                    <h2 class="text-2xl md:text-3xl font-bold !text-white mb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-titan-navy mb-4">
                         {{ $lang === 'kh' ? 'រួចរាល់សម្រាប់ការចាប់ផ្តើម?' : 'Ready to start?' }}
                     </h2>
-                    <p class="!text-white/80 text-base mb-8 font-normal">
+                    <p class="text-titan-navy/65 text-base mb-8 font-normal">
                         {{ $lang === 'kh' ? 'ទាក់ទងក្រុមការងារជំនាញរបស់យើងថ្ងៃនេះ សម្រាប់ការពិគ្រោះយោបល់ និងការសិក្សាសមិទ្ធភាពដោយឥតគិតថ្លៃ។' : 'Contact our expert team today for a free consultation and feasibility study.' }}
                     </p>
                     <a href="/contact"
-                        class="inline-flex items-center gap-2 bg-titan-red text-white px-10 py-5 font-bold uppercase tracking-widest hover:bg-white hover:text-titan-navy transition-all shadow-xl rounded-lg group">
+                        class="inline-flex items-center gap-2 bg-titan-red text-white px-6 md:px-10 py-4 md:py-5 font-bold uppercase tracking-widest text-xs md:text-sm hover:bg-white hover:text-titan-navy transition-all shadow-xl rounded-lg group">
                         {{ $lang === 'kh' ? 'ស្នើសុំការប្រឹក្សា' : 'Request Quote' }} <x-lucide-arrow-right
                             class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </a>

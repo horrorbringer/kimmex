@@ -41,14 +41,14 @@
     <div class="max-w-[1400px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-col md:flex-row justify-between items-end mb-16 transition-all duration-1000">
-            <div>
+            class="flex flex-row justify-center items-baseline gap-3 md:gap-6 mb-10 md:mb-16 text-center transition-all duration-1000">
+            <div class="min-w-0 flex items-baseline gap-2">
                 <span
-                    class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('News & Updates') }}</span>
-                <h2 class="text-4xl font-heading font-black text-titan-navy">{{ __('Latest Insights') }}</h2>
+                    class="text-titan-red font-bold uppercase tracking-widest text-[8px] sm:text-[10px] md:text-sm block whitespace-nowrap">{{ __('News & Updates') }}</span>
+                <h2 class="text-base sm:text-2xl md:text-4xl font-heading font-black text-titan-navy leading-tight whitespace-nowrap">{{ __('Latest Insights') }}</h2>
             </div>
             <a href="/news"
-                class="mt-6 md:mt-0 inline-flex items-center gap-2 text-titan-red font-bold uppercase tracking-widest text-sm hover:text-titan-navy transition-colors">
+                class="inline-flex items-center gap-1 md:gap-2 text-titan-red font-bold uppercase tracking-widest text-[8px] sm:text-[10px] md:text-sm hover:text-titan-navy transition-colors whitespace-nowrap shrink-0">
                 {{ __('View All News') }} <x-lucide-arrow-right class="w-4 h-4" />
             </a>
         </div>

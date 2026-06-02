@@ -156,7 +156,7 @@
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
 
-    <div class="bg-white min-h-screen text-titan-navy font-sans antialiased" x-data="{ 
+    <div class="bg-white min-h-screen text-titan-navy font-sans antialiased pt-28" x-data="{ 
         scrolled: false, 
         progress: 0,
         scrollY: 0,
@@ -177,14 +177,12 @@
     ">
 
         <!-- READING PROGRESS & STICKY NAV -->
-        <div class="fixed top-0 left-0 w-full z-[100] transition-transform duration-500"
-            :class="scrolled ? 'translate-y-0' : '-translate-y-full'">
+        <div class="sticky top-20 z-[80] bg-white/95 backdrop-blur border-b border-gray-200">
             <div class="h-1 bg-gray-100 w-full relative">
                 <div class="h-full bg-titan-red absolute left-0 top-0 transition-all duration-150"
                     :style="'width: ' + progress + '%'"></div>
             </div>
-            <div class="bg-white/95 backdrop-blur-md border-b border-gray-100 h-10 md:h-11 flex items-center px-6">
-                <div class="max-w-[1400px] mx-auto w-full flex items-center gap-3">
+            <div class="max-w-[1400px] mx-auto px-6 h-10 md:h-11 flex items-center gap-3">
                     <a href="/projects" class="w-7 h-7 rounded border border-gray-200 bg-white text-titan-navy flex items-center justify-center hover:border-titan-red/30 hover:text-titan-red transition-colors shrink-0">
                         <x-lucide-arrow-left class="w-4 h-4" />
                     </a>
@@ -192,7 +190,6 @@
                         <div class="text-[8px] font-black uppercase tracking-[0.24em] text-titan-red leading-none">{{ __('Project:') }}</div>
                         <div class="text-[10px] font-black uppercase tracking-tight text-titan-navy truncate max-w-[180px] md:max-w-[360px] leading-tight">{{ $project['title'] }}</div>
                     </div>
-                </div>
             </div>
         </div>
 

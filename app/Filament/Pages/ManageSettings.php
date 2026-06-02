@@ -125,7 +125,7 @@ class ManageSettings extends Page implements HasForms
             'secondary_color_hover' => $theme['secondary_color_hover'] ?? '#0E3A7A',
             'font_en' => $theme['font_family_en'] ?? 'Inter',
             'font_kh' => $theme['font_family_km'] ?? 'Kantumruy Pro',
-            'footer_bg_color' => $theme['footer_bg_color'] ?? '#FFFFFF',
+            'footer_bg_color' => $theme['footer_bg_color'] ?? '#071A33',
             'footer_accent_color' => $theme['footer_accent_color'] ?? '#ED1C24',
         ];
 
@@ -655,7 +655,7 @@ class ManageSettings extends Page implements HasForms
             'secondary_color_hover' => $state['secondary_color_hover'],
             'font_family_en' => $state['font_en'],
             'font_family_km' => $state['font_kh'],
-            'footer_bg_color' => $state['footer_bg_color'] ?? '#FFFFFF',
+            'footer_bg_color' => $state['footer_bg_color'] ?? '#071A33',
             'footer_accent_color' => $state['footer_accent_color'] ?? '#ED1C24',
         ]);
 

@@ -393,7 +393,7 @@
                     <!-- Search Button -->
                     <button @click="isSearchOpen = true"
                         :class="navDark ? 'bg-gray-100 text-titan-navy' : 'bg-white/10 text-white hover:bg-white/20'"
-                        class="w-8 h-8 rounded flex items-center justify-center hover:bg-titan-red hover:text-white transition-all">
+                        class="hidden lg:flex w-8 h-8 rounded items-center justify-center hover:bg-titan-red hover:text-white transition-all">
                         <x-lucide-search class="w-3.5 h-3.5" />
                     </button>
 
