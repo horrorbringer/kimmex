@@ -50,6 +50,24 @@ class PublicStorage
         return self::disk()->url($path);
     }
 
+    public static function delete(string|array|null $paths): void
+    {
+        $paths = collect((array) $paths)
+            ->flatten()
+            ->filter(fn ($path) => filled($path) && is_string($path))
+            ->reject(fn (string $path) => Str::startsWith($path, ['http://', 'https://', '/']))
+            ->map(fn (string $path) => ltrim($path, '/'))
+            ->unique()
+            ->values()
+            ->all();
+
+        if ($paths === []) {
+            return;
+        }
+
+        self::disk()->delete($paths);
+    }
+
     public static function isRemoteDisk(): bool
     {
         return in_array(self::diskName(), self::REMOTE_DISKS, true);

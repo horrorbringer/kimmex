@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Spatie\Translatable\HasTranslations;
 
 class Milestone extends Model
 {
-    use HasUuids, HasTranslations;
+    use HasUuids, HasTranslations, DeletesPublicUploads;
 
     public $translatable = ['title', 'description', 'detailed_description'];
 
@@ -21,6 +22,8 @@ class Milestone extends Model
         'sortOrder',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['image'];
 
     protected $casts = [
         'isActive' => 'boolean',

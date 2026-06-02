@@ -21,7 +21,7 @@ class ActivityLogResource extends Resource
     protected static ?string $slug = 'audit-logs';
     public static function getNavigationLabel(): string
     {
-        return __('Activity Logs');
+        return __('Admin History');
     }
 
     public static function getNavigationGroup(): ?string
@@ -31,12 +31,12 @@ class ActivityLogResource extends Resource
 
     public static function getLabel(): ?string
     {
-        return __('Activity Log');
+        return __('History Entry');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return __('Activity Logs');
+        return __('Admin History');
     }
 
     protected static ?int $navigationSort = 4;

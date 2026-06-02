@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
@@ -9,7 +10,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Testimonial extends Model
 {
-    use HasTranslations, HasUuids;
+    use HasTranslations, HasUuids, DeletesPublicUploads;
 
     public $translatable = ['clientName', 'clientRole', 'content'];
 
@@ -23,6 +24,8 @@ class Testimonial extends Model
         'isFeatured',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['image'];
 
     protected $casts = [
         'isFeatured' => 'boolean',

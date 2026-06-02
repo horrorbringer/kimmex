@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Project extends Model
 {
-    use LogsActivity, HasTranslations, HasUuids;
+    use LogsActivity, HasTranslations, HasUuids, DeletesPublicUploads;
 
     public $translatable = [
         'title', 'location', 'description',
@@ -41,6 +42,8 @@ class Project extends Model
         'isFeatured',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['heroImage'];
 
     protected $casts = [
         'status' => \App\Enums\ProjectStatus::class,

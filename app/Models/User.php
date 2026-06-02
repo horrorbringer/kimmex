@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Concerns\DeletesPublicUploads;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -17,7 +18,9 @@ use Spatie\Activitylog\LogOptions;
 class User extends Authenticatable implements \Filament\Models\Contracts\FilamentUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, LogsActivity;
+    use HasFactory, Notifiable, LogsActivity, DeletesPublicUploads;
+
+    protected array $publicUploadAttributes = ['image'];
 
     public function canAccessPanel(\Filament\Panel $panel): bool
     {

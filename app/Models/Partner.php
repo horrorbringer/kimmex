@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
@@ -9,7 +10,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Partner extends Model
 {
-    use HasTranslations, HasUuids;
+    use HasTranslations, HasUuids, DeletesPublicUploads;
 
     public $translatable = ['name'];
 
@@ -21,6 +22,8 @@ class Partner extends Model
         'orderIndex',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['logoUrl'];
 
     protected $casts = [
         'isActive' => 'boolean',

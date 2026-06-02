@@ -88,6 +88,16 @@ class AppServiceProvider extends ServiceProvider
                     'url' => $url,
                 ];
             });
+
+            $upload->deleteUploadedFileUsing(static function (string $file) use ($upload): void {
+                if ($upload->getDiskName() === \App\Support\PublicStorage::diskName()) {
+                    \App\Support\PublicStorage::delete($file);
+
+                    return;
+                }
+
+                $upload->getDisk()->delete($file);
+            });
         });
 
         // Global Auto-Translation for Translatable Models

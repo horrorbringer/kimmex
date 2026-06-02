@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Document extends Model
 {
-    use HasUuids, HasTranslations;
+    use HasUuids, HasTranslations, DeletesPublicUploads;
 
     public $translatable = ['title', 'description'];
 
@@ -30,6 +31,8 @@ class Document extends Model
         'downloadCount',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['fileUrl', 'thumbnailUrl'];
 
     protected $casts = [
         'isPublic' => 'boolean',

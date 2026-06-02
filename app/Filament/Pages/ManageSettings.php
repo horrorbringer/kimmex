@@ -94,6 +94,11 @@ class ManageSettings extends Page implements HasForms
 
             // Branding
             'ceo_name' => $brand['ceo_name'] ?? '',
+            'about_hero_image' => $brand['about_hero_image'] ?? '',
+            'about_section_image_1' => $brand['about_section_images'][0] ?? '',
+            'about_section_image_2' => $brand['about_section_images'][1] ?? '',
+            'about_section_image_3' => $brand['about_section_images'][2] ?? '',
+            'about_section_image_4' => $brand['about_section_images'][3] ?? '',
             'company_story' => $brand['en']['company_story'] ?? '',
             'ceo_message' => $brand['en']['ceo_message'] ?? '',
             'mission' => $brand['en']['mission'] ?? '',
@@ -199,6 +204,20 @@ class ManageSettings extends Page implements HasForms
                                             ->rows(4)
                                             ->hintAction($this->getAiImproveAction('company_story', 'Make this company story more inspiring and professional.')),
                                     ])->collapsible(),
+
+                                Section::make(__('About Page Images'))
+                                    ->description(__('Manage the About page hero image and the four images beside the Who We Are section.'))
+                                    ->columns(2)
+                                    ->schema([
+                                        $this->makeImageUpload('about_hero_image', __('About Hero Image'), 'brand/about')
+                                            ->helperText(__('Used as the large background image at the top of the About page.'))
+                                            ->columnSpanFull(),
+                                        $this->makeImageUpload('about_section_image_1', __('Who We Are Image 1'), 'brand/about'),
+                                        $this->makeImageUpload('about_section_image_2', __('Who We Are Image 2'), 'brand/about'),
+                                        $this->makeImageUpload('about_section_image_3', __('Who We Are Image 3'), 'brand/about'),
+                                        $this->makeImageUpload('about_section_image_4', __('Who We Are Image 4'), 'brand/about'),
+                                    ])
+                                    ->collapsible(),
                                 
                                 Section::make(__('Mission, Vision & Goals'))
                                     ->columns(3)
@@ -619,6 +638,13 @@ class ManageSettings extends Page implements HasForms
 
         SystemSetting::set('brand_identity', [
             'ceo_name' => $state['ceo_name'],
+            'about_hero_image' => $state['about_hero_image'] ?? '',
+            'about_section_images' => [
+                $state['about_section_image_1'] ?? '',
+                $state['about_section_image_2'] ?? '',
+                $state['about_section_image_3'] ?? '',
+                $state['about_section_image_4'] ?? '',
+            ],
             'en' => $brandEn,
             'km' => $brandKm,
         ]);

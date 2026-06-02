@@ -2,62 +2,97 @@
 
 namespace App\Filament\Resources\ActivityLogs\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ActivityLogsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('log_name')
-                    ->label(__('Log Name'))
+                TextColumn::make('event')
+                    ->label(__('Action'))
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => __(Str::headline($state ?: 'Updated')))
+                    ->color(fn (?string $state): string => match ($state) {
+                        'created' => 'success',
+                        'deleted' => 'danger',
+                        default => 'warning',
+                    })
+                    ->searchable(),
+                TextColumn::make('description')
+                    ->label(__('What Changed'))
+                    ->limit(60)
+                    ->wrap()
                     ->searchable(),
                 TextColumn::make('subject_type')
-                    ->label(__('Subject Type'))
+                    ->label(__('Changed Item'))
+                    ->getStateUsing(fn ($record): string => self::formatChangedItem($record))
                     ->searchable(),
-                TextColumn::make('subject_id')
-                    ->label(__('Subject ID'))
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('causer_type')
-                    ->label(__('Causer Type'))
-                    ->searchable(),
-                TextColumn::make('causer_id')
-                    ->label(__('Causer ID'))
-                    ->numeric()
+                TextColumn::make('causer.name')
+                    ->label(__('Changed By'))
+                    ->placeholder(__('System'))
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
+                    ->label(__('When'))
+                    ->since()
+                    ->sortable(),
+                TextColumn::make('causer_type')
+                    ->label(__('User Type'))
+                    ->formatStateUsing(fn (?string $state): string => $state ? Str::headline(class_basename($state)) : __('System'))
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('causer_id')
+                    ->label(__('User ID'))
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('log_name')
+                    ->label(__('Log Name'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->label(__('Updated At'))
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('event')
-                    ->label(__('Event'))
-                    ->searchable(),
                 TextColumn::make('batch_uuid')
                     ->label(__('Batch UUID'))
-                    ->searchable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
-            ->recordActions([
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->recordActions([])
+            ->toolbarActions([]);
+    }
+
+    protected static function formatChangedItem($record): string
+    {
+        $type = $record->subject_type
+            ? __(Str::headline(class_basename($record->subject_type)))
+            : __('System');
+
+        $subject = $record->subject;
+
+        if (! $subject instanceof Model) {
+            return $record->subject_id
+                ? "{$type}: " . __('Deleted record')
+                : $type;
+        }
+
+        foreach (['title', 'name', 'clientName', 'applicantName', 'email', 'subject', 'slug'] as $attribute) {
+            $value = $subject->getAttribute($attribute);
+
+            if (is_array($value)) {
+                $value = $value[app()->getLocale()] ?? $value['en'] ?? collect($value)->first();
+            }
+
+            if (filled($value)) {
+                return "{$type}: {$value}";
+            }
+        }
+
+        return $type;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Service extends Model
 {
-    use HasUuids, LogsActivity, HasTranslations;
+    use HasUuids, LogsActivity, HasTranslations, DeletesPublicUploads;
 
     public $translatable = ['title', 'summary', 'description'];
 
@@ -32,6 +33,8 @@ class Service extends Model
         'orderIndex',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['image'];
 
     protected $casts = [
         'features' => 'array',

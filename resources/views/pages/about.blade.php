@@ -7,6 +7,43 @@
         $localeKey = $locale === 'kh' ? 'km' : $locale;
         $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
         $ceoName = $brandProfile['ceo_name'] ?? 'Okhna. TOUCH KIM';
+        $aboutHeroImage = $brandProfile['about_hero_image'] ?? null;
+        $aboutHeroImageUrl = '/images/hero/hero-1.jpg';
+
+        if (filled($aboutHeroImage)) {
+            $aboutHeroImageUrl = \Illuminate\Support\Str::startsWith($aboutHeroImage, ['http://', 'https://', '/'])
+                ? $aboutHeroImage
+                : (\App\Support\PublicStorage::exists($aboutHeroImage)
+                    ? \App\Support\PublicStorage::url($aboutHeroImage)
+                    : $aboutHeroImageUrl);
+        }
+
+        $resolveAboutImage = function (?string $image, string $fallback): string {
+            if (! filled($image)) {
+                return $fallback;
+            }
+
+            if (\Illuminate\Support\Str::startsWith($image, ['http://', 'https://', '/'])) {
+                return $image;
+            }
+
+            return \App\Support\PublicStorage::exists($image)
+                ? \App\Support\PublicStorage::url($image)
+                : $fallback;
+        };
+
+        $aboutSectionImageDefaults = [
+            '/images/projects/Thumbnail-1.jpg',
+            '/images/projects/Thumbnail-3.jpg',
+            '/images/projects/Thumbnail-2.jpg',
+            '/images/projects/Thumbnail-4.jpg',
+        ];
+
+        $aboutSectionImages = array_map(
+            fn (string $fallback, int $index): string => $resolveAboutImage($brandProfile['about_section_images'][$index] ?? null, $fallback),
+            $aboutSectionImageDefaults,
+            array_keys($aboutSectionImageDefaults)
+        );
 
         $aboutData = [
             'story' => $brand['company_story'] ?? __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner...'),
@@ -46,15 +83,20 @@
         $milestones = \Illuminate\Support\Facades\Cache::remember('about_milestones_data_'.app()->getLocale(), now()->addHours(12), function() {
             $milestonesDb = \App\Models\Milestone::where('isActive', true)->orderBy('sortOrder')->get();
 
-            return $milestonesDb->map(function (\App\Models\Milestone $m) {
+            return $milestonesDb->values()->map(function (\App\Models\Milestone $m, int $index) {
+                $detail = $m->getTranslation('detailed_description', app()->getLocale());
+                $hasDetail = filled(trim(strip_tags((string) $detail)));
+                $fallbackImage = '/images/projects/Thumbnail-'.(($index % 6) + 1).'.jpg';
+
                 return [
                     'year' => $m->year,
                     'title' => $m->getTranslation('title', app()->getLocale()),
                     'desc' => $m->getTranslation('description', app()->getLocale()),
-                    'detail' => $m->getTranslation('detailed_description', app()->getLocale()),
+                    'detail' => $hasDetail ? $detail : '',
+                    'has_detail' => $hasDetail,
                     'image' => ($m->image && \App\Support\PublicStorage::exists($m->image)) 
                         ? \App\Support\PublicStorage::url($m->image) 
-                        : "/images/projects/Thumbnail-1.jpg",
+                        : $fallbackImage,
                 ];
             })->toArray();
         });
@@ -66,18 +108,24 @@
                     'year' => '1999',
                     'title' => __('Company Founded'),
                     'desc' => __('Started as a small dedicated engineering firm.'),
+                    'detail' => '',
+                    'has_detail' => false,
                     'image' => '/images/projects/Thumbnail-1.jpg'
                 ],
                 [
                     'year' => '2010',
                     'title' => __('First Mega Project'),
                     'desc' => __('Secured our first major government infrastructure contract.'),
+                    'detail' => '',
+                    'has_detail' => false,
                     'image' => '/images/projects/Thumbnail-2.jpg'
                 ],
                 [
                     'year' => '2026',
                     'title' => __('Industry Leaders'),
                     'desc' => __('Recognized as the top infrastructure firm in the Kingdom of Cambodia.'),
+                    'detail' => '',
+                    'has_detail' => false,
                     'image' => '/images/projects/Thumbnail-3.jpg'
                 ]
             ];
@@ -233,7 +281,7 @@
         <section class="relative h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="/images/hero/hero-1.jpg" alt="Construction Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+                <img src="{{ $aboutHeroImageUrl }}" alt="Construction Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 {{-- Lightened multi-stage gradient --}}
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
@@ -293,23 +341,23 @@
                 <div class="relative w-full flex justify-center lg:block overflow-hidden" x-data="{ shown: false }" x-intersect.once="shown = true">
                     <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
                         class="grid grid-cols-2 gap-2.5 sm:gap-6 transition-all duration-1000 relative w-full max-w-[420px] sm:max-w-[560px] lg:max-w-full">
-                        <div class="space-y-3 sm:space-y-6">
-                            <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl">
-                                <img src="/images/projects/Thumbnail-1.jpg"
+                            <div class="space-y-3 sm:space-y-6">
+                                <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl">
+                                <img src="{{ $aboutSectionImages[0] }}"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                             <div class="aspect-[5/4] md:aspect-square rounded overflow-hidden shadow-lg md:shadow-2xl">
-                                <img src="/images/projects/Thumbnail-3.jpg"
+                                <img src="{{ $aboutSectionImages[1] }}"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                         </div>
                         <div class="space-y-3 sm:space-y-6 pt-4 md:pt-12">
                             <div class="aspect-[5/4] md:aspect-square rounded overflow-hidden shadow-lg md:shadow-2xl">
-                                <img src="/images/projects/Thumbnail-2.jpg"
+                                <img src="{{ $aboutSectionImages[2] }}"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                             <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl relative">
-                                <img src="/images/projects/Thumbnail-4.jpg"
+                                <img src="{{ $aboutSectionImages[3] }}"
                                     class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
 
                                 <!-- Floating 25+ Years Badge -->
@@ -505,7 +553,13 @@
                     <div class="absolute left-[30px] md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-gray-100 via-titan-red/30 to-gray-100 hidden md:block -translate-x-1/2 z-0"></div>
 
                     @foreach($milestones as $idx => $milestone)
-                        <div x-data="{ shown: false, open: false }" x-intersect.once="shown = true"
+                        @php
+                            $hasMilestoneDetail = (bool) ($milestone['has_detail'] ?? false);
+                            $milestoneCursorClass = $hasMilestoneDetail ? 'cursor-pointer' : 'cursor-default';
+                            $milestoneAriaDisabled = $hasMilestoneDetail ? 'false' : 'true';
+                            $exploreDetailsClass = $hasMilestoneDetail ? '' : 'hidden';
+                        @endphp
+                        <div x-data="{ shown: false, open: false, hasDetail: @js($hasMilestoneDetail) }" x-intersect.once="shown = true"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
                             class="relative flex flex-col {{ $idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse' }} items-center gap-12 md:gap-24 transition-all duration-1000">
 
@@ -526,19 +580,15 @@
                                     [&>ol]:space-y-2 [&>ol]:mt-4 [&>ol]:inline-block [&>ol]:w-full [&>ol]:list-none 
                                     {{ $idx % 2 === 0 ? '[&>ul]:md:text-right [&>ol]:md:text-right' : '[&>ul]:md:text-left [&>ol]:md:text-left' }}
                                     [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_li]:text-[15px] [&_li]:font-bold [&_li]:text-titan-navy/80 [&_li]:hover:text-titan-red [&_li]:transition-colors
-                                    {{ $idx % 2 === 0 ? '[&_li]:md:flex-row-reverse [&_li]:md:text-right cursor-pointer' : '[&_li]:md:flex-row [&_li]:md:text-left cursor-pointer' }}
+                                    {{ $idx % 2 === 0 ? '[&_li]:md:flex-row-reverse [&_li]:md:text-right' : '[&_li]:md:flex-row [&_li]:md:text-left' }}
                                     ">
                                     {!! str_replace(['<li>', '</li>'], ['<li><div class="w-2 h-2 bg-titan-red rounded-full mt-1.5 shrink-0 block"></div><span>', '</span></li>'], $milestone['desc']) !!}
                                 </div>
                                 
-                                <div x-show="open" x-collapse>
+                                <div x-show="open && hasDetail" x-collapse>
                                     <div
                                         class="mt-6 p-6 bg-gray-50/80 rounded border border-gray-100 text-titan-navy/60 italic leading-relaxed text-sm max-w-xl {{ $idx % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto' }}">
-                                        @if(!empty($milestone['detail']))
-                                            {!! $milestone['detail'] !!}
-                                        @else
-                                            {{ __('This journey began as a vision of excellence. Through dedication and hard work, we expanded our footprint, technical expertise, and community impact, setting new standards in the Cambodian construction landscape.') }}
-                                        @endif
+                                        {!! $milestone['detail'] !!}
                                     </div>
                                 </div>
                             </div>
@@ -550,14 +600,15 @@
 
                             <!-- Image Side -->
                             <div class="w-full md:w-5/12 pl-0 z-10">
-                                <a class="block aspect-video rounded overflow-hidden shadow-lg border border-gray-100 relative group cursor-pointer"
-                                    @click.prevent="open = !open">
+                                <a class="block aspect-video rounded overflow-hidden shadow-lg border border-gray-100 relative group {{ $milestoneCursorClass }}"
+                                    @click.prevent="if (hasDetail) open = !open"
+                                    aria-disabled="{{ $milestoneAriaDisabled }}">
                                     <img src="{{ $milestone['image'] }}"
                                         class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                                         :class="open ? 'scale-105' : ''" loading="lazy" decoding="async" />
                                     <div class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-300"></div>
                                     <div
-                                        class="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+                                        class="{{ $exploreDetailsClass }} absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
                                         <span class="bg-white/95 backdrop-blur-sm text-titan-navy px-3 py-1.5 text-xs font-bold rounded-full shadow-sm">
                                             {{ __('Explore Details') }}
                                         </span>

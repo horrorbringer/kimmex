@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Employee extends Model
 {
-    use HasUuids;
+    use HasUuids, DeletesPublicUploads;
     protected $fillable = [
         'name',
         'email',
@@ -21,6 +22,8 @@ class Employee extends Model
         'user_id',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['image'];
 
     protected $casts = [
         'isActive' => 'boolean',

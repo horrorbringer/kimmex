@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class NewsArticle extends Model
 {
-    use LogsActivity, HasTranslations, HasUuids;
+    use LogsActivity, HasTranslations, HasUuids, DeletesPublicUploads;
 
     public $translatable = ['title', 'excerpt', 'content', 'authorName', 'readTime', 'metaTitle', 'metaDescription', 'category'];
 
@@ -37,6 +38,8 @@ class NewsArticle extends Model
         'year',
         'isActive',
     ];
+
+    protected array $publicUploadAttributes = ['coverImage', 'gallery'];
 
     protected $casts = [
         'gallery' => 'array',

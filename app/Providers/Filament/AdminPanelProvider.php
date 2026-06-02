@@ -139,6 +139,31 @@ class AdminPanelProvider extends PanelProvider
                             color: {$primaryHover} !important;
                             border-color: {$primaryHover} !important;
                         }
+
+                        /* Make status/toggle switches visible against white dashboard surfaces. */
+                        .fi-toggle.fi-toggle-on {
+                            background-color: {$primaryColor} !important;
+                            border-color: {$primaryColor} !important;
+                            box-shadow: 0 0 0 1px rgba({$primaryColorRgb}, 0.18), 0 8px 18px -12px rgba({$primaryColorRgb}, 0.75) !important;
+                        }
+                        .fi-toggle.fi-toggle-on:hover,
+                        .fi-toggle.fi-toggle-on:focus {
+                            background-color: {$primaryHover} !important;
+                            border-color: {$primaryHover} !important;
+                        }
+                        .fi-toggle.fi-toggle-off {
+                            background-color: rgb(226, 232, 240) !important;
+                            border-color: rgb(203, 213, 225) !important;
+                            box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
+                        }
+                        .dark .fi-toggle.fi-toggle-off {
+                            background-color: rgb(71, 85, 105) !important;
+                            border-color: rgb(100, 116, 139) !important;
+                        }
+                        .fi-toggle > div {
+                            background-color: #ffffff !important;
+                            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2) !important;
+                        }
                     </style>";
                 }
             )

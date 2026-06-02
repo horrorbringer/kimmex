@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class ProjectImage extends Model
 {
-    use HasUuids;
+    use HasUuids, DeletesPublicUploads;
 
     protected $fillable = ['url', 'caption', 'projectId', 'sort_order'];
+
+    protected array $publicUploadAttributes = ['url'];
 
     public function project()
     {
