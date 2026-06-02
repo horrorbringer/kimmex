@@ -2,7 +2,7 @@
 
     @php
         $locale = app()->getLocale();
-        $fallbackImage = '/images/hero/hero-3.jpg';
+        $fallbackImage = '/images/webp/hero/hero-3.webp';
 
         $newsArticles = \Illuminate\Support\Facades\Cache::remember("news_index_data_{$locale}", now()->addHours(12), function () use ($locale, $fallbackImage) {
             $newsArticlesDb = \App\Models\NewsArticle::where('isActive', true)
@@ -96,7 +96,7 @@
         <!-- HERO -->
         <section class="relative overflow-hidden bg-titan-navy min-h-[320px] md:min-h-[420px] flex items-end">
             <div class="absolute inset-0">
-                <img src="/images/hero/hero-3.jpg" class="w-full h-full object-cover opacity-55 animate-slow-zoom" alt="News Background" loading="eager" decoding="async" fetchpriority="high" />
+                <img src="/images/webp/hero/hero-3.webp" class="w-full h-full object-cover opacity-55 animate-slow-zoom" alt="News Background" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/86 via-titan-navy/64 to-titan-navy/25"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-titan-navy/30"></div>
             </div>

@@ -3,7 +3,7 @@
 
     $locale = app()->getLocale();
     $contentLocale = $locale === 'kh' ? 'km' : $locale;
-    $defaultProjectImage = '/images/projects/Thumbnail-1.jpg';
+    $defaultProjectImage = '/images/webp/projects/Thumbnail-1.webp';
 
     $resolveContent = function (\Illuminate\Database\Eloquent\Model $projectDb, string $field, array $fallbackLocales = ['en']) use ($contentLocale): string {
         $locales = array_values(array_unique(array_filter(array_merge([$contentLocale], $fallbackLocales))));
@@ -70,7 +70,7 @@
                 'id' => $p->slug,
                 'title' => $resolveContent($p, 'title'),
                 'type' => $p->projectCategory ? $p->projectCategory->localizedName($contentLocale) : ($p->category ?: __('Infrastructure')),
-                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage)) : '/images/projects/Thumbnail-5.jpg'
+                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage)) : '/images/webp/projects/Thumbnail-5.webp'
             ])->toArray()
         ];
     });
@@ -98,11 +98,11 @@
             ],
             'scope' => [__('General Contracting'), __('Structural Engineering'), __('MEP Systems Integration'), __('Interior Fit-out')],
             'challenges' => [['challenge' => __('Strict government security protocols.'), 'solution' => __('Developed a specialized vetting and access control system.')]],
-            'images' => ['/images/projects/Thumbnail-2.jpg', '/images/projects/Thumbnail-3.jpg', '/images/projects/Thumbnail-4.jpg'],
+            'images' => ['/images/webp/projects/Thumbnail-2.webp', '/images/webp/projects/Thumbnail-3.webp', '/images/webp/projects/Thumbnail-4.webp'],
             'related' => [
-                ['id' => '1', 'title' => __('National Bank HQ'), 'type' => __('Government'), 'image' => '/images/projects/Thumbnail-5.jpg'],
-                ['id' => '2', 'title' => __('Khleang Toeuk WTP'), 'type' => __('Infrastructure'), 'image' => '/images/projects/Thumbnail-2.jpg'],
-                ['id' => '3', 'title' => __('Mekong River Bank'), 'type' => __('Infrastructure'), 'image' => '/images/projects/Thumbnail-3.jpg']
+                ['id' => '1', 'title' => __('National Bank HQ'), 'type' => __('Government'), 'image' => '/images/webp/projects/Thumbnail-5.webp'],
+                ['id' => '2', 'title' => __('Khleang Toeuk WTP'), 'type' => __('Infrastructure'), 'image' => '/images/webp/projects/Thumbnail-2.webp'],
+                ['id' => '3', 'title' => __('Mekong River Bank'), 'type' => __('Infrastructure'), 'image' => '/images/webp/projects/Thumbnail-3.webp']
             ]
         ];
     }
@@ -152,6 +152,50 @@
 
         return '<p>' . e($content) . '</p>';
     };
+
+    $hasProjectContent = function (?string $content): bool {
+        $content = trim((string) $content);
+
+        if ($content === '') {
+            return false;
+        }
+
+        $plainText = trim(str_replace("\xc2\xa0", ' ', html_entity_decode(strip_tags($content), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+
+        return $plainText !== '';
+    };
+
+    $overviewSections = [
+        [
+            'title' => __('Description'),
+            'content' => $project['narrative']['description'] ?? '',
+            'mode' => 'auto',
+            'class' => '',
+        ],
+        [
+            'title' => __('The Background'),
+            'content' => $project['narrative']['background'] ?? '',
+            'mode' => 'auto',
+            'class' => '',
+        ],
+        [
+            'title' => __('Objectives'),
+            'content' => $project['narrative']['objectives'] ?? '',
+            'mode' => 'list',
+            'class' => 'mt-8',
+        ],
+        [
+            'title' => __('Design Concept'),
+            'content' => $normalizeDesignConcept($project['narrative']['design_concept'] ?? ''),
+            'mode' => 'auto',
+            'class' => 'mt-8',
+            'rich_class' => 'project-rich-content',
+        ],
+    ];
+
+    $overviewSections = array_values(array_filter($overviewSections, fn (array $section): bool => $hasProjectContent($section['content'] ?? '')));
+    $engineeringNarrative = $project['narrative']['engineering_narrative'] ?? '';
+    $hasEngineeringNarrative = $hasProjectContent($engineeringNarrative);
 @endphp
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
@@ -233,51 +277,25 @@
                 <!-- LEFT: CONTENT -->
                 <div class="lg:col-span-8">
                     <!-- Description -->
+                    @if(!empty($overviewSections))
                     <div class="mb-12 md:mb-16 reveal-up">
                         <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
                             <x-lucide-help-circle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" /> {{ __('Project Overview') }}
                         </h2>
-                            <div class="space-y-6 md:space-y-8 text-base md:text-lg text-titan-navy/70 leading-relaxed project-khmer-content">
-                                @if(!empty($project['narrative']['description']))
-                                    <div>
-                                        <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                            {{ __('Description') }}
-                                        </h3>
-                                    <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
-                                        {!! $renderProjectContent($project['narrative']['description'] ?? '') !!}
-                                    </div>
-                                </div>
-                            @endif
-                            <div>
-                                <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                    {{ __('The Background') }}
-                                </h3>
-                                <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
-                                    {!! $renderProjectContent($project['narrative']['background'] ?? '') !!}
-                                </div>
-                            </div>
-                            @if(!empty($project['narrative']['objectives']))
-                                <div class="mt-8">
+                        <div class="space-y-6 md:space-y-8 text-base md:text-lg text-titan-navy/70 leading-relaxed project-khmer-content">
+                            @foreach($overviewSections as $section)
+                                <div class="{{ $section['class'] ?? '' }}">
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                        {{ __('Objectives') }}
+                                        {{ $section['title'] }}
                                     </h3>
-                            <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
-                                        {!! $renderProjectContent($project['narrative']['objectives'] ?? '', 'list') !!}
+                                    <div class="{{ $section['rich_class'] ?? '' }} prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                        {!! $renderProjectContent($section['content'] ?? '', $section['mode'] ?? 'auto') !!}
                                     </div>
                                 </div>
-                            @endif
-                            @if(!empty($project['narrative']['design_concept']))
-                                <div class="mt-8">
-                                    <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                        {{ __('Design Concept') }}
-                                    </h3>
-                                    <div class="project-rich-content prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
-                                        {!! $renderProjectContent($normalizeDesignConcept($project['narrative']['design_concept'] ?? '')) !!}
-                                    </div>
-                                </div>
-                            @endif
+                            @endforeach
                         </div>
                     </div>
+                    @endif
 
                     <!-- Scope -->
                     @if(!empty($project['scope']))
@@ -306,14 +324,14 @@
                     @endif
 
                     <!-- Narrative -->
-                    @if(!empty($project['narrative']['engineering_narrative']))
+                    @if($hasEngineeringNarrative)
                         <div class="reveal-up">
                             <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
                                 <x-lucide-alert-triangle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" />
                                 {{ __('Engineering Challenges & Solutions') }}
                             </h2>
                             <div class="project-rich-content prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
-                                {!! $renderProjectContent($project['narrative']['engineering_narrative'] ?? '') !!}
+                                {!! $renderProjectContent($engineeringNarrative) !!}
                             </div>
                         </div>
                     @endif

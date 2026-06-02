@@ -1,5 +1,5 @@
 @php
-    $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+    $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
     $contentLocale = app()->getLocale() === 'kh' ? 'km' : app()->getLocale();
     $featuredProjects = \App\Models\Project::where('isFeatured', true)
         ->where('isActive', true)
@@ -22,7 +22,7 @@
         $slides = [
             [
                 'id' => 1,
-                'image' => '/images/hero/hero-1.jpg',
+                'image' => '/images/webp/hero/hero-1.webp',
                 'subtitle' => __('Government Infrastructure'),
                 'title' => __('Ministry of Economy'),
                 'desc' => __('Over 25 years of excellence in building the future of Cambodia. We deliver high-quality infrastructure.'),
@@ -30,7 +30,7 @@
             ],
             [
                 'id' => 2,
-                'image' => '/images/hero/hero-2.jpg',
+                'image' => '/images/webp/hero/hero-2.webp',
                 'subtitle' => __('Water Infrastructure'),
                 'title' => __('Khleang Toeuk WTP'),
                 'desc' => __('Ensuring clean and accessible water solutions through state-of-the-art treatment facilities and engineering.'),
@@ -38,7 +38,7 @@
             ],
             [
                 'id' => 3,
-                'image' => '/images/hero/hero-3.jpg',
+                'image' => '/images/webp/hero/hero-3.webp',
                 'subtitle' => __('Infrastructure Protection'),
                 'title' => __('Mekong Bank Protection'),
                 'desc' => __('Securing vulnerable riverbanks and developing resilient infrastructure to protect communities and commerce.'),

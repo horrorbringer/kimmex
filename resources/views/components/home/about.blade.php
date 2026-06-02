@@ -44,19 +44,19 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="aspect-[4/3] rounded overflow-hidden shadow-md">
-                        <img src="/images/projects/Thumbnail-2.jpg" alt="Project"
+                        <img src="/images/webp/projects/Thumbnail-2.webp" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" decoding="async" loading="lazy" />
                     </div>
                     <div class="aspect-[4/3] rounded overflow-hidden shadow-md">
-                        <img src="/images/projects/Thumbnail-3.jpg" alt="Project"
+                        <img src="/images/webp/projects/Thumbnail-3.webp" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" decoding="async" loading="lazy" />
                     </div>
                     <div class="aspect-[4/3] rounded overflow-hidden shadow-md">
-                        <img src="/images/projects/Thumbnail-4.jpg" alt="Project"
+                        <img src="/images/webp/projects/Thumbnail-4.webp" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" decoding="async" loading="lazy" />
                     </div>
                     <div class="aspect-[4/3] rounded overflow-hidden shadow-md">
-                        <img src="/images/projects/Thumbnail-5.jpg" alt="Project"
+                        <img src="/images/webp/projects/Thumbnail-5.webp" alt="Project"
                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" decoding="async" loading="lazy" />
                     </div>
                 </div>

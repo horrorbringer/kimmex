@@ -31,6 +31,16 @@ class UserResource extends Resource
         return auth()->user()?->isAdmin();
     }
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin() && $record->id !== auth()->id();
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()?->isAdmin();
+    }
+
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);

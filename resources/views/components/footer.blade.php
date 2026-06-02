@@ -111,13 +111,15 @@
                     {{ __('Services') }}
                 </h4>
                 @php
-                    $footerServices = \Illuminate\Support\Facades\Cache::remember('footer_services_'.app()->getLocale(), now()->addHours(12), function() {
+                    $footerServices = \Illuminate\Support\Facades\Cache::remember('nav_services_'.$lang, now()->addHours(12), function() use ($lang) {
                         return \App\Models\Service::where('isActive', true)
                             ->get()
+                            ->sortBy(fn($svc) => $svc->getTranslation('title', $lang))
                             ->map(fn($svc) => [
                                 'slug' => $svc->slug,
-                                'title' => $svc->getTranslation('title', app()->getLocale())
+                                'title' => $svc->getTranslation('title', $lang)
                             ])
+                            ->values()
                             ->all();
                     });
                 @endphp

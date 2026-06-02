@@ -78,7 +78,7 @@
         <section class="relative min-h-[680px] md:min-h-[800px] md:h-screen flex items-center overflow-hidden bg-titan-navy">
             {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-5.jpg" alt="{{ __('Careers Excellence') }}" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+                <img src="/images/webp/projects/Thumbnail-5.webp" alt="{{ __('Careers Excellence') }}" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent"></div>
                 <div class="absolute inset-0 bg-titan-navy/20"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>

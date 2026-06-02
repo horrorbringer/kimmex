@@ -1,5 +1,5 @@
 @php
-    $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+    $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
     $allNews = \Illuminate\Support\Facades\Cache::remember('home_news_array_'.app()->getLocale(), now()->addHours(12), function() use ($fallbackImage) {
         $newsDb = \App\Models\NewsArticle::where('isActive', true)
             ->where('publishedAt', '<=', now())
@@ -30,9 +30,9 @@
 
     if (empty($allNews)) {
         $allNews = [
-            ['id' => 'safety', 'category' => __('Updates'), 'image' => '/images/projects/Thumbnail-6.jpg', 'title' => __('Kimmex Safety Milestone at HQ'), 'date' => 'MAR 30, 2026'],
-            ['id' => 'tech', 'category' => __('Milestone'), 'image' => '/images/projects/Thumbnail-5.jpg', 'title' => __('New MEP Integration Techniques'), 'date' => 'MAR 15, 2026'],
-            ['id' => 'award', 'category' => __('Award'), 'image' => '/images/projects/Thumbnail-4.jpg', 'title' => __('Excellence in Construction 2026'), 'date' => 'MAR 05, 2026'],
+            ['id' => 'safety', 'category' => __('Updates'), 'image' => '/images/webp/projects/Thumbnail-6.webp', 'title' => __('Kimmex Safety Milestone at HQ'), 'date' => 'MAR 30, 2026'],
+            ['id' => 'tech', 'category' => __('Milestone'), 'image' => '/images/webp/projects/Thumbnail-5.webp', 'title' => __('New MEP Integration Techniques'), 'date' => 'MAR 15, 2026'],
+            ['id' => 'award', 'category' => __('Award'), 'image' => '/images/webp/projects/Thumbnail-4.webp', 'title' => __('Excellence in Construction 2026'), 'date' => 'MAR 05, 2026'],
         ];
     }
 @endphp

@@ -4,10 +4,10 @@
         /** @var string $slug */
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
         $fallbackImages = [
-            'design-and-build' => '/images/projects/Thumbnail-1.jpg',
-            'construction' => '/images/projects/Thumbnail-1.jpg',
-            'project-management' => '/images/projects/Thumbnail-3.jpg',
-            'consultants' => '/images/projects/Thumbnail-4.jpg',
+            'design-and-build' => '/images/webp/projects/Thumbnail-1.webp',
+            'construction' => '/images/webp/projects/Thumbnail-1.webp',
+            'project-management' => '/images/webp/projects/Thumbnail-3.webp',
+            'consultants' => '/images/webp/projects/Thumbnail-4.webp',
         ];
 
         // Try to load from DB first
@@ -235,14 +235,14 @@
                 'title' => ['en' => 'Vatthanak Capital Expansion', 'kh' => 'ការពង្រីកបរិវេណ វឌ្ឍនៈ កាពីតាល'],
                 'category' => ['en' => 'Commercial', 'kh' => 'ពាណិជ្ជកម្ម'],
                 'location' => ['en' => 'Phnom Penh', 'kh' => 'ភ្នំពេញ'],
-                'image' => '/images/projects/Thumbnail-1.jpg',
+                'image' => '/images/webp/projects/Thumbnail-1.webp',
             ],
             [
                 'id' => '2',
                 'title' => ['en' => 'Skyline Residences', 'kh' => 'អគារលំនៅដ្ឋាន Skyline'],
                 'category' => ['en' => 'Residential', 'kh' => 'លំនៅដ្ឋាន'],
                 'location' => ['en' => 'Siem Reap', 'kh' => 'សៀមរាប'],
-                'image' => '/images/projects/Thumbnail-2.jpg',
+                'image' => '/images/webp/projects/Thumbnail-2.webp',
             ],
         ];
     @endphp
@@ -254,7 +254,7 @@
             <div class="absolute inset-0">
                 @if ($service['image'])
                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                        class="w-full h-full object-cover opacity-90 scale-105 animate-slow-zoom" decoding="async" loading="lazy" />
+                        class="w-full h-full object-cover opacity-90 scale-105 animate-slow-zoom" decoding="async" loading="eager" fetchpriority="high" />
                 @else
                     <div
                         class="w-full h-full bg-[radial-gradient(circle_at_30%_20%,var(--color-kmd-navy)_0%,var(--color-kmd-navy)_100%)]">

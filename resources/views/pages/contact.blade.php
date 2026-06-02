@@ -6,7 +6,7 @@
         <section class="relative min-h-[520px] md:min-h-[760px] md:h-screen flex items-center overflow-hidden bg-titan-navy">
             {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
+                <img src="/images/webp/projects/Thumbnail-3.webp" alt="Contact Kimmex"
                     class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent">
                 </div>

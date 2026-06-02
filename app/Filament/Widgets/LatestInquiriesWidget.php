@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Inquiry;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\TextColumn;
@@ -13,6 +12,11 @@ class LatestInquiriesWidget extends BaseWidget
 {
     protected static ?int $sort = 2;
     protected int | string | array $columnSpan = 'full';
+
+    public static function canView(): bool
+    {
+        return Inquiry::query()->exists();
+    }
 
     public function table(Table $table): Table
     {

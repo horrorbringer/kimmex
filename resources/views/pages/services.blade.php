@@ -15,7 +15,7 @@ $services = \Illuminate\Support\Facades\Cache::remember('services_index_data', n
             ],
             "image" => ($service->image && \App\Support\PublicStorage::exists($service->image)) 
                 ? \App\Support\PublicStorage::url($service->image)
-                : "/images/projects/Thumbnail-1.jpg",
+                : "/images/webp/projects/Thumbnail-1.webp",
             "features" => is_array($service->features) ? $service->features : []
         ];
     })->toArray();
@@ -31,7 +31,7 @@ if (empty($services)) {
                 "en" => "End-to-end construction solutions from architectural design through to project completion, covering detail design, civil work, MEP work, finishing work, and decoration.",
                 "kh" => "ដំណោះស្រាយសំណង់ពីការរចនាស្ថាបត្យកម្មរហូតដល់ការបញ្ចប់គម្រោង រួមទាំងការរចនាលម្អិត ការងារស៊ីវិល ការងារ MEP ការងារបញ្ចប់ និងការតុបតែង។"
             ],
-            "image" => "/images/projects/Thumbnail-1.jpg",
+            "image" => "/images/webp/projects/Thumbnail-1.webp",
             "features" => [["name" => "Detail Design"], ["name" => "Civil Work"], ["name" => "MEP Work"], ["name" => "Finishing Work"], ["name" => "Decoration"]]
         ],
         [
@@ -41,7 +41,7 @@ if (empty($services)) {
                 "en" => "Premium civil construction services across Cambodia specializing in robust concrete work, high-rise buildings, and commercial spaces.",
                 "kh" => "សេវាកម្មសំណង់ស៊ីវិលលំដាប់ខ្ពស់ប្រចាំប្រទេសកម្ពុជាដែលមានជំនាញលើការងារបេតុងដ៏រឹងមាំ អគារខ្ពស់ៗ និងអគារពាណិជ្ជកម្ម។"
             ],
-            "image" => "/images/projects/Thumbnail-1.jpg",
+            "image" => "/images/webp/projects/Thumbnail-1.webp",
             "features" => [["name" => "High-Rise Buildings"], ["name" => "Commercial Spaces"], ["name" => "Quality Assurance"]]
         ],
         [
@@ -51,7 +51,7 @@ if (empty($services)) {
                 "en" => "Expert oversight and management of construction projects, ensuring on-time delivery, quality control, cost management, and safety compliance.",
                 "kh" => "ការត្រួតពិនិត្យ និងគ្រប់គ្រងគម្រោងសំណង់ ធានាការផ្តល់ទាន់ពេល ការត្រួតពិនិត្យគុណភាព ការគ្រប់គ្រងថ្លៃដើម និងការអនុលោមតាមសុវត្ថិភាព។"
             ],
-            "image" => "/images/projects/Thumbnail-3.jpg",
+            "image" => "/images/webp/projects/Thumbnail-3.webp",
             "features" => [["name" => "Scheduling & Planning"], ["name" => "Quality Control"], ["name" => "Cost Management"], ["name" => "Safety Compliance"]]
         ],
         [
@@ -61,7 +61,7 @@ if (empty($services)) {
                 "en" => "Professional consulting services including project feasibility studies, design consulting, structural analysis, and expert advisory for complex engineering challenges.",
                 "kh" => "សេវាកម្មប្រឹក្សាវិជ្ជាជីវៈ រួមទាំងការសិក្សាលទ្ធភាពគម្រោង ការប្រឹក្សាការរចនា ការវិភាគរចនាសម្ព័ន្ធ និងការប្រឹក្សាជំនាញ។"
             ],
-            "image" => "/images/projects/Thumbnail-4.jpg",
+            "image" => "/images/webp/projects/Thumbnail-4.webp",
             "features" => [["name" => "Project Feasibility"], ["name" => "Design Consulting"], ["name" => "Structural Analysis"]]
         ]
     ];
@@ -120,10 +120,10 @@ if (count($process) < 4) {
 }
 
 $sectors = [
-    ["title" => ["en" => "Government Offices", "kh" => "ការិយាល័យរដ្ឋាភិបាល"], "image" => "/images/projects/Thumbnail-1.jpg", "icon" => "lucide-landmark"],
-    ["title" => ["en" => "Education", "kh" => "អប់រំ"], "image" => "/images/projects/Thumbnail-2.jpg", "icon" => "lucide-graduation-cap"],
-    ["title" => ["en" => "Commercial", "kh" => "ពាណិជ្ជកម្ម"], "image" => "/images/projects/Thumbnail-3.jpg", "icon" => "lucide-building"],
-    ["title" => ["en" => "Infrastructure", "kh" => "ហេដ្ឋារចនាសម្ព័ន្ធ"], "image" => "/images/projects/Thumbnail-6.jpg", "icon" => "lucide-route"]
+    ["title" => ["en" => "Government Offices", "kh" => "ការិយាល័យរដ្ឋាភិបាល"], "image" => "/images/webp/projects/Thumbnail-1.webp", "icon" => "lucide-landmark"],
+    ["title" => ["en" => "Education", "kh" => "អប់រំ"], "image" => "/images/webp/projects/Thumbnail-2.webp", "icon" => "lucide-graduation-cap"],
+    ["title" => ["en" => "Commercial", "kh" => "ពាណិជ្ជកម្ម"], "image" => "/images/webp/projects/Thumbnail-3.webp", "icon" => "lucide-building"],
+    ["title" => ["en" => "Infrastructure", "kh" => "ហេដ្ឋារចនាសម្ព័ន្ធ"], "image" => "/images/webp/projects/Thumbnail-6.webp", "icon" => "lucide-route"]
 ];
 @endphp
 
@@ -132,7 +132,7 @@ $sectors = [
     <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px]">
         {{-- Background Zoom Animation --}}
         <div class="absolute inset-0 bg-titan-navy">
-            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+            <img src="/images/webp/projects/Thumbnail-1.webp" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
             {{-- Lightened multi-stage gradient --}}
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
         </div>
@@ -338,12 +338,12 @@ $sectors = [
                         <!-- Left Image -->
                         <div class="relative h-[300px] md:h-[400px] rounded shadow-2xl overflow-hidden translate-y-12 md:translate-y-20 group">
                             <div class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                            <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
+                            <img src="/images/webp/projects/Thumbnail-3.webp" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
                         </div>
                         <!-- Right Image -->
                         <div class="relative h-[350px] md:h-[480px] rounded shadow-2xl overflow-hidden group">
                             <div class="absolute inset-0 bg-titan-red/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                            <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
+                            <img src="/images/webp/projects/Thumbnail-5.webp" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
                         </div>
                     </div>
                     
@@ -435,7 +435,7 @@ $sectors = [
                     <!-- Right Image Area -->
                     <div class="relative min-h-[350px] lg:min-h-full hidden md:block">
                         <div class="absolute inset-0 bg-gradient-to-r from-white via-white/65 to-transparent z-10 w-2/3 lg:w-1/2"></div>
-                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-95" loading="lazy" decoding="async" />
+                        <img src="/images/webp/projects/Thumbnail-1.webp" alt="Work with us" class="w-full h-full object-cover opacity-95" loading="lazy" decoding="async" />
                         
                         <!-- Floating Decorative Badge -->
                         <div class="absolute top-12 right-12 bg-white/90 backdrop-blur-xl border border-titan-navy/10 text-titan-navy p-5 rounded z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">

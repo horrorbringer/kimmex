@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\JobApplication;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\TextColumn;
@@ -13,6 +12,11 @@ class LatestJobApplicationsWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
     protected int | string | array $columnSpan = 'full';
+
+    public static function canView(): bool
+    {
+        return JobApplication::query()->exists();
+    }
 
     public function table(Table $table): Table
     {

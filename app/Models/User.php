@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'image', 'role', 'is_active', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements \Filament\Models\Contracts\FilamentUser
 {
@@ -24,7 +24,7 @@ class User extends Authenticatable implements \Filament\Models\Contracts\Filamen
 
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        return $this->isAdmin() || $this->isEditor();
+        return $this->is_active && ($this->isAdmin() || $this->isEditor());
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -42,6 +42,7 @@ class User extends Authenticatable implements \Filament\Models\Contracts\Filamen
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 

@@ -1,6 +1,6 @@
 @php
     /** @var \Illuminate\Database\Eloquent\Collection|\App\Models\Project[] $projectsDb */
-    $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+    $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
     $locale = app()->getLocale();
     $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.$locale, now()->addHours(12), function() use ($fallbackImage, $locale) {
         $projectsDb = \App\Models\Project::where('isActive', true)
@@ -27,9 +27,9 @@
     // Fallback if no projects in DB
     if (empty($projects)) {
         $projects = [
-            ['slug' => 'mef', 'image' => '/images/projects/Thumbnail-1.jpg', 'type' => __('Government'), 'title' => __('Ministry of Economy Building'), 'location' => __('Phnom Penh'), 'status' => __('COMPLETED')],
-            ['slug' => 'water', 'image' => '/images/projects/Thumbnail-2.jpg', 'type' => __('Infrastructure'), 'title' => __('Water Treatment Plant'), 'location' => __('Siem Reap'), 'status' => __('COMPLETED')],
-            ['slug' => 'bank', 'image' => '/images/projects/Thumbnail-3.jpg', 'type' => __('Commercial'), 'title' => __('Commercial Bank HQ'), 'location' => __('Phnom Penh'), 'status' => __('ONGOING')],
+            ['slug' => 'mef', 'image' => '/images/webp/projects/Thumbnail-1.webp', 'type' => __('Government'), 'title' => __('Ministry of Economy Building'), 'location' => __('Phnom Penh'), 'status' => __('COMPLETED')],
+            ['slug' => 'water', 'image' => '/images/webp/projects/Thumbnail-2.webp', 'type' => __('Infrastructure'), 'title' => __('Water Treatment Plant'), 'location' => __('Siem Reap'), 'status' => __('COMPLETED')],
+            ['slug' => 'bank', 'image' => '/images/webp/projects/Thumbnail-3.webp', 'type' => __('Commercial'), 'title' => __('Commercial Bank HQ'), 'location' => __('Phnom Penh'), 'status' => __('ONGOING')],
         ];
     }
 @endphp

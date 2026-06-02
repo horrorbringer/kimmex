@@ -8,7 +8,7 @@
         $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
         $ceoName = $brandProfile['ceo_name'] ?? 'Okhna. TOUCH KIM';
         $aboutHeroImage = $brandProfile['about_hero_image'] ?? null;
-        $aboutHeroImageUrl = '/images/hero/hero-1.jpg';
+        $aboutHeroImageUrl = '/images/webp/hero/hero-1.webp';
 
         if (filled($aboutHeroImage)) {
             $aboutHeroImageUrl = \Illuminate\Support\Str::startsWith($aboutHeroImage, ['http://', 'https://', '/'])
@@ -33,10 +33,10 @@
         };
 
         $aboutSectionImageDefaults = [
-            '/images/projects/Thumbnail-1.jpg',
-            '/images/projects/Thumbnail-3.jpg',
-            '/images/projects/Thumbnail-2.jpg',
-            '/images/projects/Thumbnail-4.jpg',
+            '/images/webp/projects/Thumbnail-1.webp',
+            '/images/webp/projects/Thumbnail-3.webp',
+            '/images/webp/projects/Thumbnail-2.webp',
+            '/images/webp/projects/Thumbnail-4.webp',
         ];
 
         $aboutSectionImages = array_map(
@@ -86,7 +86,7 @@
             return $milestonesDb->values()->map(function (\App\Models\Milestone $m, int $index) {
                 $detail = $m->getTranslation('detailed_description', app()->getLocale());
                 $hasDetail = filled(trim(strip_tags((string) $detail)));
-                $fallbackImage = '/images/projects/Thumbnail-'.(($index % 6) + 1).'.jpg';
+                $fallbackImage = '/images/webp/projects/Thumbnail-'.(($index % 6) + 1).'.webp';
 
                 return [
                     'year' => $m->year,
@@ -110,7 +110,7 @@
                     'desc' => __('Started as a small dedicated engineering firm.'),
                     'detail' => '',
                     'has_detail' => false,
-                    'image' => '/images/projects/Thumbnail-1.jpg'
+                    'image' => '/images/webp/projects/Thumbnail-1.webp'
                 ],
                 [
                     'year' => '2010',
@@ -118,7 +118,7 @@
                     'desc' => __('Secured our first major government infrastructure contract.'),
                     'detail' => '',
                     'has_detail' => false,
-                    'image' => '/images/projects/Thumbnail-2.jpg'
+                    'image' => '/images/webp/projects/Thumbnail-2.webp'
                 ],
                 [
                     'year' => '2026',
@@ -126,7 +126,7 @@
                     'desc' => __('Recognized as the top infrastructure firm in the Kingdom of Cambodia.'),
                     'detail' => '',
                     'has_detail' => false,
-                    'image' => '/images/projects/Thumbnail-3.jpg'
+                    'image' => '/images/webp/projects/Thumbnail-3.webp'
                 ]
             ];
         }
@@ -758,7 +758,7 @@
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         class="transition-all duration-1000 delay-200 relative">
-                        <img src="/images/projects/Thumbnail-6.jpg" alt="Safety Inspection"
+                        <img src="/images/webp/projects/Thumbnail-6.webp" alt="Safety Inspection"
                             class="rounded-lg shadow-[0_20px_60px_rgba(11,43,92,0.16)] w-full aspect-[4/3] md:aspect-auto object-cover" loading="lazy" decoding="async" />
                         <!-- Floating ISO Card -->
                         <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded shadow-xl hidden md:block">

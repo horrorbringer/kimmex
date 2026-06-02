@@ -10,10 +10,22 @@
     searchQuery: '',
     init() {
         const self = this;
-        window.addEventListener('scroll', () => {
+        let ticking = false;
+        const syncScroll = () => {
             self.isScrolled = window.scrollY > 50;
-        });
-        window.addEventListener('resize', () => { if (window.innerWidth >= 1024) self.isMobileMenuOpen = false; });
+            ticking = false;
+        };
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(syncScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) self.isMobileMenuOpen = false;
+        }, { passive: true });
     }
 }" class="fixed top-0 left-0 w-full z-[100]">
 

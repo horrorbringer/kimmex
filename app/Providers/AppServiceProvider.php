@@ -21,20 +21,27 @@ class AppServiceProvider extends ServiceProvider
     {
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
             $lang = app()->getLocale();
-            $settings = \Illuminate\Support\Facades\Cache::remember('global_settings_' . $lang, now()->addHours(12), function () use ($lang) {
+            static $settingsByLocale = [];
+            static $hasPublicDocuments = null;
+
+            $settings = $settingsByLocale[$lang] ??= \Illuminate\Support\Facades\Cache::remember('global_settings_' . $lang, now()->addHours(12), function () use ($lang) {
+                $brandIdentity = \App\Models\SystemSetting::get('brand_identity', []);
+
                 return [
                     'profile' => \App\Models\SystemSetting::get('organization_profile', []),
-                    'brand' => \App\Models\SystemSetting::get('brand_identity', [])[$lang] 
-                               ?? \App\Models\SystemSetting::get('brand_identity', [])['en'] 
+                    'brand' => $brandIdentity[$lang]
+                               ?? $brandIdentity['en']
                                ?? [],
                     'theme' => \App\Models\SystemSetting::get('theme_settings', []),
                     'integrations' => \App\Models\SystemSetting::get('integration_settings', []),
                 ];
             });
 
+            $hasPublicDocuments ??= \App\Models\Document::publicDocumentsExist();
+
             $view->with('globalSettings', $settings);
             $view->with('siteLocale', $lang);
-            $view->with('hasPublicDocuments', \App\Models\Document::publicDocumentsExist());
+            $view->with('hasPublicDocuments', $hasPublicDocuments);
         });
 
         \Filament\Support\Facades\FilamentView::registerRenderHook(

@@ -7,7 +7,7 @@
         $allTypesLabel = $isKhmer ? __('All Types') : __('All Types');
         $allLocationsLabel = $isKhmer ? __('All Locations') : __('All Locations');
         $allStatusLabel = $isKhmer ? __('All Status') : __('All Status');
-        $fallbackImage = '/images/projects/Thumbnail-5.jpg';
+        $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
         $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() use ($fallbackImage, $locale) {
             $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
                 ->orderBy('created_at', 'desc')
@@ -68,7 +68,7 @@
         // Fallback for empty DB
         if (count($projects) === 0) {
             $projects = [
-                ['id' => 'mef', 'title' => __('Ministry of Economy Building'), 'featured' => true, 'location' => __('Phnom Penh'), 'type' => __('Government'), 'status' => __('Completed'), 'image' => '/images/projects/Thumbnail-1.jpg', 'summary' => __('Kimmex built legacy facility.')]
+                ['id' => 'mef', 'title' => __('Ministry of Economy Building'), 'featured' => true, 'location' => __('Phnom Penh'), 'type' => __('Government'), 'status' => __('Completed'), 'image' => '/images/webp/projects/Thumbnail-1.webp', 'summary' => __('Kimmex built legacy facility.')]
             ];
         }
     @endphp
@@ -181,7 +181,7 @@
         <section class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-5.jpg" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 {{-- Lightened multi-stage gradient --}}
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>

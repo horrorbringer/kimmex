@@ -83,7 +83,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="{{ $fontUrl }}" rel="stylesheet">
+    <link rel="preload" as="style" href="{{ $fontUrl }}">
+    <link href="{{ $fontUrl }}" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="{{ $fontUrl }}" rel="stylesheet"></noscript>
 
     <style>
         :root {
@@ -139,6 +141,23 @@
             opacity: 0.7;
             background:
                 linear-gradient(135deg, rgba(11, 43, 92, 0.08), rgba(237, 28, 36, 0.08));
+        }
+
+        main > section,
+        main > div > section {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 900px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 

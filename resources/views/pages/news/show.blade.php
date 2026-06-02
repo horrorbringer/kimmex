@@ -7,7 +7,7 @@
 
     /** @var string $slug */
     $locale = app()->getLocale();
-    $fallbackImage = '/images/hero/hero-3.jpg';
+    $fallbackImage = '/images/webp/hero/hero-3.webp';
 
     $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage) {
         $articleDb = NewsArticle::where('isActive', true)->where('slug', $slug)->first();
@@ -39,7 +39,7 @@
         $article = [
             'slug' => 'error',
             'category' => __('Announcement'),
-            'image' => '/images/projects/Thumbnail-4.jpg',
+            'image' => '/images/webp/projects/Thumbnail-4.webp',
             'title' => __('Article Unavailable'),
             'date' => now()->format('M d, Y'),
             'author' => 'System',
