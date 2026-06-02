@@ -59,7 +59,7 @@
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded shadow-lg h-80 w-full bg-titan-navy">
                             <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                                class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" loading="lazy" decoding="async" />
                             <div
                                 class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/20 to-transparent z-10">
                             </div>

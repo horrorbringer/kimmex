@@ -4,7 +4,7 @@
     <section class="relative min-h-[440px] flex items-center overflow-hidden bg-titan-navy">
         <div class="absolute inset-0">
             <img src="{{ asset('images/heroes/documents-bg.png') }}" alt="Knowledge Hub"
-                class="w-full h-full object-cover animate-slow-zoom" />
+                class="w-full h-full object-cover animate-slow-zoom" decoding="async" loading="lazy" />
             <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/78 to-titan-navy/30"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-titan-navy/35"></div>
         </div>
@@ -151,7 +151,7 @@
                         'h-36' => !$isFirstFeatured,
                     ])>
                         @if($doc->thumbnailUrl)
-                            <img src="{{ \App\Support\PublicStorage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
+                            <img src="{{ \App\Support\PublicStorage::url($doc- decoding="async" loading="lazy">thumbnailUrl) }}" alt="{{ $doc->title }}"
                                 class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
                             <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/65 to-transparent"></div>
                         @else

@@ -30,7 +30,7 @@
             <div class="node-avatar">
                 @if($node['image'])
                     <img src="{{ $node['image'] }}"
-                        onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($node['name']) }}&background=f8fafc&color=cbd5e1'" />
+                        onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($node['name']) }}&background=f8fafc&color=cbd5e1'" decoding="async" loading="lazy" />
                 @else
                     @if($isDeep)
                         <svg viewBox="0 0 24 24" fill="none" stroke="#5A7BA5" stroke-width="1.5">

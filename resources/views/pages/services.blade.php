@@ -132,7 +132,7 @@ $sectors = [
     <section class="relative z-10 flex items-center justify-center overflow-hidden bg-titan-navy h-[75vh] min-h-[600px]">
         {{-- Background Zoom Animation --}}
         <div class="absolute inset-0 bg-titan-navy">
-            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+            <img src="/images/projects/Thumbnail-1.jpg" alt="Kimmex Expertise" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
             {{-- Lightened multi-stage gradient --}}
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
         </div>
@@ -189,7 +189,7 @@ $sectors = [
                     
                     <!-- Image Side -->
                     <div class="lg:w-[45%] relative h-[350px] lg:h-auto overflow-hidden">
-                        <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out" loading="lazy" />
+                        <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out" loading="lazy" decoding="async" />
                         <div class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-700"></div>
                         
                         <!-- Overlay Title for Mobile -->
@@ -338,12 +338,12 @@ $sectors = [
                         <!-- Left Image -->
                         <div class="relative h-[300px] md:h-[400px] rounded shadow-2xl overflow-hidden translate-y-12 md:translate-y-20 group">
                             <div class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                            <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                            <img src="/images/projects/Thumbnail-3.jpg" alt="Excellence" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
                         </div>
                         <!-- Right Image -->
                         <div class="relative h-[350px] md:h-[480px] rounded shadow-2xl overflow-hidden group">
                             <div class="absolute inset-0 bg-titan-red/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                            <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                            <img src="/images/projects/Thumbnail-5.jpg" alt="Innovation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
                         </div>
                     </div>
                     
@@ -376,7 +376,7 @@ $sectors = [
                          style="transition-delay: {{ $i * 100 }}ms"
                          class="group relative h-[500px] w-full md:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)] overflow-hidden rounded bg-titan-navy cursor-pointer transition-all duration-700 shadow-2xl">
                         
-                        <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-100" alt="{{ $sector['title'][$lang] }}" loading="lazy" />
+                        <img src="{{ $sector['image'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 opacity-100" alt="{{ $sector['title'][$lang] }}" loading="lazy" decoding="async" />
                         
                         <!-- Gradient Overlay always present to ensure text contrast -->
                         <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent transition-opacity duration-300"></div>
@@ -435,7 +435,7 @@ $sectors = [
                     <!-- Right Image Area -->
                     <div class="relative min-h-[350px] lg:min-h-full hidden md:block">
                         <div class="absolute inset-0 bg-gradient-to-r from-titan-navy via-titan-navy/60 to-transparent z-10 w-2/3 lg:w-1/2"></div>
-                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" loading="lazy" />
+                        <img src="/images/projects/Thumbnail-1.jpg" alt="Work with us" class="w-full h-full object-cover opacity-80" loading="lazy" decoding="async" />
                         
                         <!-- Floating Decorative Badge -->
                         <div class="absolute top-12 right-12 bg-white/10 backdrop-blur-xl border border-white/20 text-white p-5 rounded z-20 shadow-2xl flex items-center gap-5 animate-bounce-slow shrink-0" style="animation-duration: 4s;">

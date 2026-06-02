@@ -67,7 +67,7 @@
                                 {{ $news['category'] }}
                             </div>
                             <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
-                                class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                                class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                         </div>
                         <div class="p-6 flex flex-col flex-grow">
                             <div

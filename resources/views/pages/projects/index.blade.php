@@ -181,7 +181,7 @@
         <section class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="/images/projects/Thumbnail-5.jpg" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                <img src="/images/projects/Thumbnail-5.jpg" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 {{-- Lightened multi-stage gradient --}}
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
@@ -306,7 +306,7 @@
                                 <!-- Thumbnail Area - Uniform Aspect Ratio -->
                                 <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
                                     <img :src="project.image" :alt="project.title"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
                                     <div
                                         class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-500">
                                     </div>

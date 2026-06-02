@@ -89,7 +89,7 @@
             class="absolute inset-0 w-full h-full">
 
             <div class="relative w-full h-full overflow-hidden">
-                <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" />
+                <img :src="slide.image" :alt="slide.title" class="object-cover w-full h-full opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 {{-- Stronger left-side scrim keeps hero copy readable over bright project photos. --}}
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/70 via-titan-navy/32 to-transparent"></div>
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/10 via-transparent to-titan-navy/42"></div>

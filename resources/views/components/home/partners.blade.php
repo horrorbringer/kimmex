@@ -72,13 +72,13 @@
                     <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" decoding="async" />
                     </a>
                 @else
                     <div
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-default relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" decoding="async" />
                     </div>
                 @endif
             @endforeach
@@ -88,13 +88,13 @@
                     <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-pointer relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" decoding="async" />
                     </a>
                 @else
                     <div
                         class="w-44 h-20 mx-4 bg-white rounded flex items-center justify-center p-4 hover:scale-105 transition-transform duration-300 cursor-default relative shrink-0">
                         <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
-                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" />
+                            class="object-contain w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300 p-2" loading="lazy" decoding="async" />
                     </div>
                 @endif
             @endforeach

@@ -37,7 +37,7 @@
             <!-- Column 1: Brand -->
             <div class="space-y-6">
                 <div class="flex items-center gap-3">
-                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-12 w-auto object-contain" />
+                    <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="h-12 w-auto object-contain" loading="lazy" decoding="async" />
                 </div>
                 <p class="footer-muted text-sm leading-relaxed max-w-xs">
                     {{ \Illuminate\Support\Str::limit($brand['company_story'] ?? __('Over 25 years of excellence in building the future of Cambodia.'), 120) }}

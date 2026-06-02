@@ -254,7 +254,7 @@
             <div class="absolute inset-0">
                 @if ($service['image'])
                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                        class="w-full h-full object-cover opacity-90 scale-105 animate-slow-zoom" />
+                        class="w-full h-full object-cover opacity-90 scale-105 animate-slow-zoom" decoding="async" loading="lazy" />
                 @else
                     <div
                         class="w-full h-full bg-[radial-gradient(circle_at_30%_20%,var(--color-kmd-navy)_0%,var(--color-kmd-navy)_100%)]">
@@ -310,7 +310,7 @@
                             <div class="relative rounded overflow-hidden border border-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.28)] bg-titan-navy min-h-[260px] md:min-h-[340px]">
                                 @if ($service['image'])
                                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                                        class="absolute inset-0 w-full h-full object-cover" loading="eager" />
+                                        class="absolute inset-0 w-full h-full object-cover" loading="eager" decoding="async" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/70 via-transparent to-transparent"></div>
                                 @else
                                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
@@ -392,7 +392,7 @@
                         <div class="aspect-[4/3] rounded overflow-hidden shadow-2xl relative z-10 bg-titan-navy">
                             <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                loading="lazy" />
+                                loading="lazy" decoding="async" />
                             <div
                                 class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500">
                             </div>
@@ -575,7 +575,7 @@
                                 class="group relative aspect-[16/9] overflow-hidden rounded cursor-pointer block shadow-2xl h-full">
                                 <img src="{{ $project['image'] }}" alt="{{ $project['title'][$lang] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                    loading="lazy" />
+                                    loading="lazy" decoding="async" />
                                 <div
                                     class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-95 group-hover:opacity-80 transition-opacity">
                                 </div>

@@ -14,6 +14,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Slider;
+use Illuminate\Validation\ValidationException;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
@@ -159,8 +160,12 @@ class ManageSettings extends Page implements HasForms
                                         ->columnSpan(1)
                                         ->schema([
                                             Grid::make(2)->schema([
-                                                FileUpload::make('logo')->label(__('Logo'))->image()->disk(config('filesystems.public_uploads_disk'))->directory('organization'),
-                                                FileUpload::make('favicon')->label(__('Favicon'))->image()->disk(config('filesystems.public_uploads_disk'))->directory('organization'),
+                                                $this->makeImageUpload('logo', __('Logo'), 'organization')
+                                                    ->helperText(__('PNG, JPG, WebP, or SVG. Maximum size: 5 MB.')),
+                                                $this->makeImageUpload('favicon', __('Favicon'), 'organization')
+                                                    ->helperText(__('PNG, ICO, JPG, WebP, or SVG. Maximum size: 2 MB.'))
+                                                    ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/svg+xml'])
+                                                    ->maxSize(2048),
                                             ]),
                                             TextInput::make('company_name')->label(__('Company Name'))->required(),
                                             TextInput::make('website_title')
@@ -538,7 +543,28 @@ class ManageSettings extends Page implements HasForms
 
     public function save(): void
     {
-        $state = $this->form->getState();
+        try {
+            $state = $this->form->getState();
+        } catch (ValidationException $exception) {
+            Notification::make()
+                ->title(__('Upload failed'))
+                ->body(__('Please check the selected file type and size, then try again. Images must be valid PNG, JPG, WebP, SVG, or ICO files within the allowed size.'))
+                ->danger()
+                ->send();
+
+            throw $exception;
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            Notification::make()
+                ->title(__('Upload failed'))
+                ->body($this->getUploadFailureMessage($exception))
+                ->danger()
+                ->send();
+
+            return;
+        }
+
         $translator = new AutoTranslateService();
         $autoTranslate = $state['auto_translate'] ?? true;
 
@@ -646,6 +672,36 @@ class ManageSettings extends Page implements HasForms
             ->body(__('All settings, including advanced AI persona and translations, have been updated.'))
             ->success()
             ->send();
+    }
+
+    protected function makeImageUpload(string $name, string $label, string $directory): FileUpload
+    {
+        return FileUpload::make($name)
+            ->label($label)
+            ->validationAttribute($label)
+            ->image()
+            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'])
+            ->maxSize(5120)
+            ->disk(config('filesystems.public_uploads_disk'))
+            ->directory($directory)
+            ->validationMessages([
+                'uploaded' => __('The :attribute could not be uploaded. Please check your connection and storage settings, then try again.'),
+                'image' => __('The :attribute must be a valid image file.'),
+                'mimetypes' => __('The :attribute must be PNG, JPG, WebP, or SVG.'),
+                'mimes' => __('The :attribute must be PNG, JPG, WebP, or SVG.'),
+                'max' => __('The :attribute is too large. Please upload a smaller file.'),
+            ]);
+    }
+
+    protected function getUploadFailureMessage(\Throwable $exception): string
+    {
+        $disk = config('filesystems.public_uploads_disk', 'public');
+
+        if ($disk === 'r2') {
+            return __('Cloudflare R2 could not store this file. Check R2 bucket name, endpoint, access key, secret key, and bucket permissions, then try again.');
+        }
+
+        return __('The server could not store this file. Check that storage is writable and that the public storage link exists, then try again.');
     }
 
     protected function normalizeCoreValues(array $values): array

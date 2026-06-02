@@ -261,7 +261,7 @@
                     <div class="relative">
                         <div class="relative rounded overflow-hidden border border-gray-200 bg-titan-navy shadow-[0_20px_60px_rgba(0,0,0,0.12)] aspect-[16/11]">
                             @if($article['image'])
-                                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="w-full h-full object-cover" />
+                                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="w-full h-full object-cover" decoding="async" loading="lazy" />
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.16)_0%,transparent_50%)]">
                                     <x-lucide-newspaper class="w-20 h-20 text-white/10" />
@@ -336,15 +336,15 @@
 
                             @if($galleryCount === 1)
                                 <div class="aspect-[16/9] overflow-hidden rounded-lg shadow-sm border border-gray-200">
-                                    <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                    <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                 </div>
                             @elseif($galleryCount === 2)
                                 <div class="grid grid-cols-2 gap-2">
                                     <div class="aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
-                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
                                     <div class="aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
-                                        <img src="{{ $article['gallery'][1] }}" alt="Gallery 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                        <img src="{{ $article['gallery'][1] }}" alt="Gallery 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
                                 </div>
                             @else
@@ -352,14 +352,14 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                                     <!-- Main Big Image (Left) -->
                                     <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded-lg shadow-sm border border-gray-200">
-                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
                                     <!-- Stacked Right Images -->
                                     <div class="grid grid-rows-2 gap-2 h-auto md:h-[400px]">
                                         @for($i = 1; $i <= 2; $i++)
                                             @if(isset($article['gallery'][$i]))
                                                 <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded-lg shadow-sm border border-gray-200">
-                                                    <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                    <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 </div>
                                             @endif
                                         @endfor
@@ -374,7 +374,7 @@
                                                 $isLastVisible = ($i === 7 && $galleryCount > 8);
                                             @endphp
                                             <div class="relative aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
-                                                <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 @if($isLastVisible)
                                                     <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-black text-lg tracking-wider">
                                                         +{{ $galleryCount - 7 }} {{ __('photos') }}
@@ -439,7 +439,7 @@
                             @forelse($relatedArticles as $rel)
                                 <a href="/news/{{ $rel['slug'] }}" class="group flex items-start gap-3 p-3 rounded hover:bg-gray-50 transition-colors">
                                     <div class="w-10 h-10 rounded overflow-hidden bg-titan-navy/5 flex items-center justify-center shrink-0">
-                                        <img src="{{ $rel['image'] }}" alt="{{ $rel['title'] }}" class="w-full h-full object-cover" loading="lazy" />
+                                        <img src="{{ $rel['image'] }}" alt="{{ $rel['title'] }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                     </div>
                                     <div class="min-w-0 flex-1">
                                         <div class="text-[9px] font-normal uppercase tracking-[0.16em] text-titan-red mb-1">

@@ -38,6 +38,9 @@
     <meta property="twitter:title" content="{{ $pageTitle }}">
     <meta property="twitter:description" content="{{ $pageDesc }}">
     <meta property="twitter:image" content="{{ $pageImage }}">
+    @if(\Illuminate\Support\Str::startsWith($pageImage, ['http://', 'https://']))
+        <link rel="preconnect" href="{{ parse_url($pageImage, PHP_URL_SCHEME) . '://' . parse_url($pageImage, PHP_URL_HOST) }}" crossorigin>
+    @endif
 
     <!-- Dynamic Theme Styles -->
     @php
@@ -116,6 +119,20 @@
         
         .bg-titan-navy { background-color: var(--secondary-color) !important; }
         a.bg-titan-navy:hover, button.bg-titan-navy:hover { background-color: var(--secondary-color-hover) !important; }
+
+        img[loading="lazy"] {
+            background-color: rgba(11, 43, 92, 0.04);
+        }
+
+        img[data-image-loaded="true"] {
+            background-color: transparent;
+        }
+
+        img[data-image-error="true"] {
+            opacity: 0.7;
+            background:
+                linear-gradient(135deg, rgba(11, 43, 92, 0.08), rgba(237, 28, 36, 0.08));
+        }
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -132,6 +149,29 @@
     </main>
 
     <x-footer />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('img').forEach((image, index) => {
+                if (!image.hasAttribute('decoding')) {
+                    image.setAttribute('decoding', 'async');
+                }
+
+                if (!image.hasAttribute('loading')) {
+                    const isLikelyHero = index === 0 || image.closest('header') || image.closest('[data-priority-image]');
+                    image.setAttribute('loading', isLikelyHero ? 'eager' : 'lazy');
+                }
+
+                image.addEventListener('load', () => {
+                    image.dataset.imageLoaded = 'true';
+                }, { once: true });
+
+                image.addEventListener('error', () => {
+                    image.dataset.imageError = 'true';
+                }, { once: true });
+            });
+        });
+    </script>
 
     <!-- Scroll to Top Button -->
     <div x-data="{

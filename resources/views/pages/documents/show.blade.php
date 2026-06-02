@@ -160,7 +160,7 @@
                         <div class="relative aspect-[4/5] bg-titan-navy flex items-center justify-center">
                             @if($doc['thumbnailUrl'])
                                 <img src="{{ \App\Support\PublicStorage::url($doc['thumbnailUrl']) }}" alt="{{ $doc['title'] }}"
-                                    class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                                    class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/70 via-transparent to-transparent"></div>
                             @else
                                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.16)_0%,transparent_48%)]"></div>
@@ -279,7 +279,7 @@
                                     class="w-12 h-12 rounded overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center relative">
                                     @if($rel['thumbnailUrl'])
                                         <img src="{{ \App\Support\PublicStorage::url($rel['thumbnailUrl']) }}"
-                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" />
                                     @else
                                         <x-lucide-file-text
                                             class="w-5 h-5 text-titan-navy/20 relative z-10 group-hover:text-titan-red transition-colors" />

@@ -71,6 +71,9 @@ return [
             'url' => env('R2_URL'),
             'endpoint' => env('R2_ENDPOINT'),
             'use_path_style_endpoint' => env('R2_USE_PATH_STYLE_ENDPOINT', false),
+            'options' => [
+                'CacheControl' => env('R2_CACHE_CONTROL', 'public, max-age=31536000, immutable'),
+            ],
             'throw' => false,
             'report' => false,
         ],

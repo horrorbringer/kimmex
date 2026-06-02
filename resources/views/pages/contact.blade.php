@@ -7,7 +7,7 @@
             {{-- Background Image with Brighter Overlay --}}
             <div class="absolute inset-0">
                 <img src="/images/projects/Thumbnail-3.jpg" alt="Contact Kimmex"
-                    class="w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                    class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent">
                 </div>
                 <div class="absolute inset-0 bg-titan-navy/30"></div>

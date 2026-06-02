@@ -9,6 +9,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Enums\ThemeMode;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -41,6 +42,8 @@ class AdminPanelProvider extends PanelProvider
             })
             ->brandLogoHeight('2.5rem')
             ->homeUrl('/')
+            ->darkMode()
+            ->defaultThemeMode(ThemeMode::Light)
             ->navigationItems([
                 \Filament\Navigation\NavigationItem::make('visit_website')
                     ->label(fn () => __('Visit Website'))
@@ -127,6 +130,10 @@ class AdminPanelProvider extends PanelProvider
                         }
                         .fi-sidebar-item-button:hover, .fi-sidebar-item-button:focus {
                             background-color: rgba({$primaryHoverRgb}, 0.08) !important;
+                        }
+                        .dark .fi-sidebar-item-button:hover,
+                        .dark .fi-sidebar-item-button:focus {
+                            background-color: rgba({$primaryHoverRgb}, 0.16) !important;
                         }
                         .fi-tabs-item:hover {
                             color: {$primaryHover} !important;

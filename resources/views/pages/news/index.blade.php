@@ -100,7 +100,7 @@
         <!-- HERO -->
         <section class="relative overflow-hidden bg-titan-navy min-h-[420px] flex items-end">
             <div class="absolute inset-0">
-                <img src="/images/hero/hero-3.jpg" class="w-full h-full object-cover opacity-55 animate-slow-zoom" alt="News Background" />
+                <img src="/images/hero/hero-3.jpg" class="w-full h-full object-cover opacity-55 animate-slow-zoom" alt="News Background" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/78 to-titan-navy/35"></div>
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-titan-navy/40"></div>
             </div>
@@ -158,7 +158,7 @@
                             <div class="relative overflow-hidden bg-titan-navy min-h-[300px] xl:min-h-full">
                                 @if($featured['image'])
                                     <img src="{{ $featured['image'] }}" alt="{{ $featured['title'] }}"
-                                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+                                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" decoding="async" loading="lazy" />
                                 @else
                                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.14)_0%,transparent_50%)] flex items-center justify-center">
                                         <x-lucide-newspaper class="w-20 h-20 text-white/10" />
@@ -323,7 +323,7 @@
                         <div class="relative aspect-[16/10] overflow-hidden bg-titan-navy">
                             <template x-if="article.image">
                                 <img :src="article.image" :alt="article.title"
-                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-105" loading="lazy" />
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-105" loading="lazy" decoding="async" />
                             </template>
                             <div class="absolute top-4 left-4">
                                 <span class="bg-titan-navy/90 backdrop-blur text-white text-[8px] font-bold uppercase tracking-[0.2em] px-2.5 py-1.5 rounded-md" x-text="article.category"></span>

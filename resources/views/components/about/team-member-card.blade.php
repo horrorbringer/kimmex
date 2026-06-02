@@ -41,7 +41,7 @@
         
         <div class="relative rounded-full overflow-hidden border-[3px] border-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:shadow-lg {{ $imageSize }}">
             @if(isset($member['image']) && $member['image'])
-                <img src="{{ $member['image'] }}" alt="{{ $member['name'] }}" class="object-cover object-top w-full h-full" />
+                <img src="{{ $member['image'] }}" alt="{{ $member['name'] }}" class="object-cover object-top w-full h-full" decoding="async" loading="lazy" />
             @else
                 <div class="absolute inset-0 bg-gray-50 flex items-center justify-center text-gray-300">
                     <x-lucide-users class="{{ $isCEO ? ($small ? 'w-8 h-8' : 'w-12 h-12') : ($small ? 'w-6 h-6' : 'w-8 h-8') }}" />

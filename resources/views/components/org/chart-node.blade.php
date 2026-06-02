@@ -19,7 +19,7 @@
         <div class="avatar-circle">
             @if($node['image'])
                 <img src="{{ \App\Support\PublicStorage::url($node['image']) }}" 
-                     alt="{{ $node['name'] }}" />
+                     alt="{{ $node['name'] }}" decoding="async" loading="lazy" />
             @else
                 <span class="avatar-initials">
                     {{ strtoupper(substr($node['name'], 0, 1)) }}{{ strtoupper(substr(strrchr($node['name'], ' ') ?: '', 1, 1)) ?: '' }}

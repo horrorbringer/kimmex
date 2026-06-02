@@ -203,7 +203,7 @@
         <!-- --- PREMIUM NARRATIVE HERO --- -->
         <header class="relative w-full h-[75vh] min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
             <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" />
+                class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
             
             {{-- Deep multi-stage gradient for maximum text contrast --}}
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/60 via-transparent to-titan-navy/90"></div>
@@ -463,7 +463,7 @@
                                 <div @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
                                     class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full {{ $gridClass }}">
                                     <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
-                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700" loading="lazy" />
+                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count decoding="async" loading="lazy"> 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700" loading="lazy" />
 
                                     @if($i === 2 && $count > 3)
                                         <div
@@ -513,7 +513,7 @@
 
                     <div class="max-w-7xl max-h-[85vh] px-24 py-12">
                         <img :src="images[lightboxIndex]"
-                            class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl" />
+                            class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl" decoding="async" loading="lazy" />
                     </div>
 
                     <div
@@ -542,7 +542,7 @@
                         <a href="/projects/{{ $p['id'] }}" class="block group">
                             <div class="aspect-[16/10] rounded-xl overflow-hidden mb-6 relative shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500">
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
                                 <div
                                     class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full">
                                     {{ $p['type'] }}

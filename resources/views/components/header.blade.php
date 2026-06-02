@@ -135,7 +135,7 @@
                 <!-- Logo -->
                 <a href="/" class="flex items-center group cursor-pointer">
                     <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
-                        class="h-14 w-auto object-contain transition-all duration-300" />
+                        class="h-14 w-auto object-contain transition-all duration-300" loading="eager" decoding="async" />
                 </a>
 
                 <!-- Desktop Menu -->
