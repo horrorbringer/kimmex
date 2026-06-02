@@ -86,7 +86,7 @@
     @endphp
 
     <div
-        class="bg-[#F7F8FA] min-h-screen text-titan-navy"
+        class="bg-[#F7F8FA] min-h-screen text-titan-navy pt-28"
         x-data="{
             activeCategory: @js(__('All Topics')),
             allLabel: @js(__('All Topics')),
@@ -98,29 +98,29 @@
         }"
     >
         <!-- HERO -->
-        <section class="relative overflow-hidden bg-titan-navy min-h-[380px] md:min-h-[420px] flex items-end">
+        <section class="relative overflow-hidden bg-titan-navy min-h-[320px] md:min-h-[420px] flex items-end">
             <div class="absolute inset-0">
                 <img src="/images/hero/hero-3.jpg" class="w-full h-full object-cover opacity-55 animate-slow-zoom" alt="News Background" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/78 to-titan-navy/35"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy via-transparent to-titan-navy/40"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/86 via-titan-navy/64 to-titan-navy/25"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-titan-navy/30"></div>
             </div>
 
             <div class="relative z-10 w-full">
-                <div class="max-w-[1240px] mx-auto px-4 md:px-6 pt-24 pb-16 md:pt-32 md:pb-24">
+                <div class="max-w-[1240px] mx-auto px-4 md:px-6 pt-10 pb-12 md:pt-16 md:pb-24">
                     <div class="max-w-3xl">
-                        <div class="inline-flex items-center gap-3 border border-white/15 bg-white/10 px-4 py-2 rounded mb-6 md:mb-7">
+                        <div class="inline-flex items-center gap-2 md:gap-3 border border-white/15 bg-white/10 px-3 md:px-4 py-2 rounded mb-5 md:mb-7">
                             <x-lucide-newspaper class="w-4 h-4 text-titan-red" />
-                            <span class="text-[10px] font-bold uppercase tracking-[0.24em] text-white/85">
+                            <span class="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.24em] text-white/85">
                                 {{ __('Kimmex Newsroom') }}
                             </span>
                         </div>
 
-                        <h1 class="font-black uppercase leading-[0.92] tracking-normal !text-white mb-5 md:mb-6"
-                            style="font-size: clamp(2rem, 6vw, 4.5rem) !important;">
+                        <h1 class="font-black uppercase leading-[0.98] md:leading-[0.92] tracking-normal !text-white mb-4 md:mb-6"
+                            style="font-size: clamp(1.85rem, 10vw, 4.5rem) !important;">
                             {{ __('News') }} <span class="text-titan-red">{{ __('& Updates') }}</span>
                         </h1>
 
-                        <p class="text-white/75 text-sm md:text-lg leading-relaxed max-w-2xl font-normal">
+                        <p class="text-white/78 text-sm md:text-lg leading-relaxed max-w-2xl font-normal">
                             {{ __('A newsroom-style view of company announcements, project milestones, documents, and career updates from Kimmex.') }}
                         </p>
                     </div>
@@ -129,33 +129,33 @@
         </section>
 
         <!-- TOP STRIP -->
-        <section class="max-w-[1240px] mx-auto px-4 md:px-6 -mt-10 relative z-20">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="rounded border border-gray-200 bg-white p-5 shadow-sm">
+        <section class="max-w-[1240px] mx-auto px-4 md:px-6 -mt-7 md:-mt-10 relative z-20">
+            <div class="grid grid-cols-3 gap-2 md:gap-4">
+                <div class="rounded border border-gray-200 bg-white p-3 md:p-5 shadow-sm">
                     <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Stories') }}</div>
-                    <div class="text-2xl font-black text-titan-navy">{{ count($newsArticles) }}</div>
+                    <div class="text-xl md:text-2xl font-black text-titan-navy">{{ count($newsArticles) }}</div>
                 </div>
-                <a href="/documents" class="rounded border border-gray-200 bg-white p-5 shadow-sm hover:border-titan-red/25 hover:shadow-md transition-all">
+                <a href="/documents" class="rounded border border-gray-200 bg-white p-3 md:p-5 shadow-sm hover:border-titan-red/25 hover:shadow-md transition-all">
                     <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Documents') }}</div>
-                    <div class="text-2xl font-black text-titan-navy">{{ count($sidebarDocs) }}</div>
-                    <div class="mt-2 text-sm text-titan-navy/45 font-normal">{{ __('Reference files and technical resources') }}</div>
+                    <div class="text-xl md:text-2xl font-black text-titan-navy">{{ count($sidebarDocs) }}</div>
+                    <div class="hidden md:block mt-2 text-sm text-titan-navy/45 font-normal">{{ __('Reference files and technical resources') }}</div>
                 </a>
-                <a href="/careers" class="rounded border border-gray-200 bg-white p-5 shadow-sm hover:border-titan-red/25 hover:shadow-md transition-all">
+                <a href="/careers" class="rounded border border-gray-200 bg-white p-3 md:p-5 shadow-sm hover:border-titan-red/25 hover:shadow-md transition-all">
                     <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-red mb-2">{{ __('Careers') }}</div>
-                    <div class="text-2xl font-black text-titan-navy">{{ count($sidebarJobs) }}</div>
-                    <div class="mt-2 text-sm text-titan-navy/45 font-normal">{{ __('Open roles and team opportunities') }}</div>
+                    <div class="text-xl md:text-2xl font-black text-titan-navy">{{ count($sidebarJobs) }}</div>
+                    <div class="hidden md:block mt-2 text-sm text-titan-navy/45 font-normal">{{ __('Open roles and team opportunities') }}</div>
                 </a>
             </div>
         </section>
 
         <!-- FEATURED + SIDEBAR -->
-        <section class="max-w-[1240px] mx-auto px-6 py-10 md:py-12">
+        <section class="max-w-[1240px] mx-auto px-4 md:px-6 py-8 md:py-12">
             <div class="grid grid-cols-1 lg:grid-cols-[1.18fr_0.82fr] gap-6 items-start">
                 @if($featured)
                     <a href="/news/{{ $featured['slug'] }}"
                         class="group bg-white border border-gray-200 rounded overflow-hidden shadow-sm hover:shadow-xl hover:border-titan-red/15 transition-all duration-500">
-                        <div class="grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] min-h-[520px]">
-                            <div class="relative overflow-hidden bg-titan-navy min-h-[300px] xl:min-h-full">
+                        <div class="grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] md:min-h-[520px]">
+                            <div class="relative overflow-hidden bg-titan-navy min-h-[220px] sm:min-h-[280px] xl:min-h-full">
                                 @if($featured['image'])
                                     <img src="{{ $featured['image'] }}" alt="{{ $featured['title'] }}"
                                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" decoding="async" loading="lazy" />
@@ -172,20 +172,20 @@
                                 </div>
                             </div>
 
-                            <div class="p-8 md:p-10 lg:p-12 flex flex-col justify-center">
+                            <div class="p-5 md:p-10 lg:p-12 flex flex-col justify-center">
                                 <div class="text-[10px] font-bold uppercase tracking-[0.24em] text-titan-red mb-3">
                                     {{ __('Featured Story') }}
                                 </div>
-                                <h2 class="text-3xl md:text-4xl font-bold text-titan-navy leading-[1.05] tracking-normal group-hover:text-titan-red transition-colors">
+                                <h2 class="text-xl sm:text-2xl md:text-4xl font-bold text-titan-navy leading-tight md:leading-[1.05] tracking-normal group-hover:text-titan-red transition-colors">
                                     {{ $featured['title'] }}
                                 </h2>
                                 <div class="mt-5 text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/25">
                                     {{ $featured['date'] }}
                                 </div>
-                                <p class="mt-6 text-titan-navy/60 leading-relaxed font-normal line-clamp-4">
+                                <p class="mt-4 md:mt-6 text-sm md:text-base text-titan-navy/60 leading-relaxed font-normal line-clamp-3 md:line-clamp-4">
                                     {{ $featured['excerpt'] }}
                                 </p>
-                                <div class="mt-8 flex items-center gap-3">
+                                <div class="mt-6 md:mt-8 flex items-center gap-3">
                                     <span class="text-[10px] font-bold uppercase tracking-[0.22em] text-titan-red">
                                         {{ __('Read Story') }}
                                     </span>
@@ -196,7 +196,7 @@
                     </a>
                 @endif
 
-                <div class="space-y-4">
+                <div class="space-y-3 md:space-y-4">
                     <div class="rounded border border-gray-200 bg-white p-5">
                         <div class="flex items-end justify-between gap-4 mb-4">
                             <div>
@@ -296,31 +296,31 @@
         </section>
 
         <!-- FILTERS -->
-        <section class="sticky top-0 z-30 bg-white/96 backdrop-blur border-y border-gray-200 px-6">
-            <div class="max-w-[1240px] mx-auto py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <section class="sticky top-20 z-30 bg-white/96 backdrop-blur border-y border-gray-200 px-4 md:px-6">
+            <div class="max-w-[1240px] mx-auto py-3 md:py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 md:gap-4">
                 <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
                     @foreach($categories as $cat)
                         <button
                             @click="activeCategory = @js($cat)"
                             :class="activeCategory === @js($cat) ? 'bg-titan-navy text-white border-titan-navy' : 'bg-white text-titan-navy/55 border-gray-200 hover:text-titan-navy hover:border-titan-red/30'"
-                            class="h-10 px-4 rounded border text-[10px] font-bold uppercase tracking-[0.16em] transition-all duration-200 shrink-0">
+                            class="h-9 md:h-10 px-3 md:px-4 rounded border text-[9px] md:text-[10px] font-bold uppercase tracking-[0.14em] md:tracking-[0.16em] transition-all duration-200 shrink-0">
                             {{ $cat }}
                         </button>
                     @endforeach
                 </div>
-                <div class="text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/30">
+                <div class="hidden sm:block text-[10px] font-bold uppercase tracking-[0.18em] text-titan-navy/30">
                     {{ __('Latest coverage from Kimmex') }}
                 </div>
             </div>
         </section>
 
         <!-- STORY GRID -->
-        <section id="story-grid" class="max-w-[1240px] mx-auto px-6 py-12 md:py-14">
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <section id="story-grid" class="max-w-[1240px] mx-auto px-4 md:px-6 py-8 md:py-14">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
                 <template x-for="article in filteredArticles" :key="article.slug">
                     <a :href="'/news/' + article.slug"
                         class="group bg-white border border-gray-200 rounded overflow-hidden hover:shadow-xl hover:border-titan-red/15 transition-all duration-300">
-                        <div class="relative aspect-[16/10] overflow-hidden bg-titan-navy">
+                        <div class="relative aspect-[16/9] md:aspect-[16/10] overflow-hidden bg-titan-navy">
                             <template x-if="article.image">
                                 <img :src="article.image" :alt="article.title"
                                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] group-hover:scale-105" loading="lazy" decoding="async" />
@@ -330,7 +330,7 @@
                             </div>
                         </div>
 
-                        <div class="p-5 flex flex-col">
+                        <div class="p-4 md:p-5 flex flex-col">
                             <div class="text-[9px] font-bold uppercase tracking-[0.18em] text-titan-navy/25 mb-3" x-text="article.date"></div>
                             <h3 class="text-lg font-bold text-titan-navy leading-tight mb-3 line-clamp-2 group-hover:text-titan-red transition-colors" x-text="article.title"></h3>
                             <p class="text-sm text-titan-navy/55 leading-relaxed line-clamp-3 mb-4" x-text="article.excerpt"></p>

@@ -61,12 +61,12 @@
     <!-- TOP BAR -->
     <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-8 opacity-100 border-gray-100 bg-white'"
         class="text-titan-navy text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden relative border-b">
-        <div class="max-w-[1600px] mx-auto px-2 sm:px-6 h-full flex justify-between items-center">
+        <div class="max-w-[1600px] mx-auto px-3 sm:px-6 h-full flex justify-between items-center">
             <div class="flex gap-2 sm:gap-6 items-center">
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
                     class="flex items-center gap-1.5 hover:text-titan-red cursor-pointer transition whitespace-nowrap text-titan-navy/60 hover:text-titan-red">
                     <x-lucide-phone class="text-titan-red shrink-0 w-3 h-3" />
-                    <span class="text-[10px] sm:hidden">{{ \Illuminate\Support\Str::limit($phone, 8) }}</span>
+                    <span class="text-[11px] sm:hidden font-semibold tracking-normal">{{ $phone }}</span>
                     <span class="hidden sm:inline">{{ $phone }}</span>
                 </a>
                 <a href="mailto:{{ $email }}"
