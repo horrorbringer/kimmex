@@ -30,6 +30,7 @@ class LatestJobApplicationsWidget extends BaseWidget
                     ->searchable(),
                 TextColumn::make('job.title')
                     ->label(__('Position'))
+                    ->formatStateUsing(fn (?string $state): string => $state ?: __('General Application'))
                     ->searchable(),
                 TextColumn::make('resumeUrl')
                     ->label(__('Resume'))

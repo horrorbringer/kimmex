@@ -71,8 +71,12 @@ class FormController extends Controller
             return redirect()->back(); // Fail silently for bots
         }
 
+        if (in_array($request->input('job_id'), ['gen', 'general-application'], true)) {
+            $request->merge(['job_id' => null]);
+        }
+
         $validated = $request->validate([
-            'job_id' => 'required|string|max:255',
+            'job_id' => 'present|nullable|uuid|exists:job_postings,id',
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:50',
@@ -88,7 +92,7 @@ class FormController extends Controller
         $resumePath = $request->file('resume')->store('resumes', PublicStorage::diskName());
 
         $application = JobApplication::create([
-            'jobId' => $sanitized['job_id'] === 'gen' ? null : $sanitized['job_id'],
+            'jobId' => $sanitized['job_id'] ?? null,
             'applicantName' => $sanitized['full_name'],
             'email' => $sanitized['email'],
             'phone' => $sanitized['phone'],

@@ -17,6 +17,7 @@ class JobApplicationsTable
             ->columns([
                 TextColumn::make('job.title')
                     ->label(__('Job Title'))
+                    ->getStateUsing(fn ($record): string => $record->job?->title ?? __('General Application'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('applicantName')

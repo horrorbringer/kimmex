@@ -37,9 +37,9 @@ class DatabaseSeeder extends Seeder
             ProjectCategorySeeder::class,
             ProjectSeeder::class,
             TestimonialSeeder::class,
-            DocumentSeeder::class,
+            // DocumentSeeder::class,
             MilestoneSeeder::class,
-            NewsArticleSeeder::class,
+            // NewsArticleSeeder::class,
             JobPostingSeeder::class,
             OrgStructureSeeder::class,
         ]);

@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\JobApplications\Schemas;
 
+use App\Support\PublicStorage;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Select;
-use Filament\Actions\Action;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Storage;
 
 class JobApplicationForm
 {
@@ -22,11 +22,13 @@ class JobApplicationForm
                     ->description(__('Candidate status and job information'))
                     ->components([
                         Grid::make(3)->components([
-                            Select::make('jobId')
+                            TextInput::make('jobTitle')
                                 ->label(__('Job Portfolio'))
-                                ->relationship('job', 'title', fn($query) => $query->orderBy('title->en'))
                                 ->disabled()
-                                ->required(),
+                                ->dehydrated(false)
+                                ->afterStateHydrated(function (TextInput $component, $record): void {
+                                    $component->state($record?->job?->title ?? __('General Application'));
+                                }),
                             Select::make('status')
                                 ->label(__('Management Status'))
                                 ->options([
@@ -72,7 +74,7 @@ class JobApplicationForm
                                     Action::make('openResume')
                                         ->icon('heroicon-m-arrow-top-right-on-square')
                                         ->tooltip(__('Open Resume'))
-                                        ->url(fn(?string $state): ?string => $state ? asset('storage/' . $state) : null)
+                                        ->url(fn(?string $state): ?string => $state ? PublicStorage::url($state) : null)
                                         ->openUrlInNewTab()
                                 ),
                         ]),
