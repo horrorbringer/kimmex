@@ -27,7 +27,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
+            ->passwordReset()
             ->brandName(fn() => \App\Models\SystemSetting::get('organization_profile', [])['en']['website_title'] ?? \App\Models\SystemSetting::get('organization_profile', [])['en']['company_name'] ?? 'Kimmex Admin')
             ->brandLogo(function() {
                 $logo = \App\Models\SystemSetting::get('organization_profile', [])['logo'] ?? null;
@@ -122,6 +123,97 @@ class AdminPanelProvider extends PanelProvider
                         /* Dynamic hover overrides for links and specific interactive components */
                         .fi-btn.fi-color-primary:not(.fi-btn-outline):hover {
                             background-color: {$primaryHover} !important;
+                        }
+                        .fi-btn.fi-color-primary:not(.fi-btn-outline) {
+                            background-color: {$primaryColor} !important;
+                            color: #ffffff !important;
+                            border-color: {$primaryColor} !important;
+                        }
+                        .fi-page .fi-page-header-main-ctn .fi-btn,
+                        .fi-page .fi-page-content .fi-ac .fi-btn,
+                        .fi-page .fi-form-actions .fi-btn,
+                        .fi-modal-footer-actions .fi-btn,
+                        .fi-ta-actions .fi-btn {
+                            background-color: #0f172a !important;
+                            color: #ffffff !important;
+                            border: 1px solid #0f172a !important;
+                            box-shadow: 0 8px 18px -14px rgba(15, 23, 42, 0.9) !important;
+                        }
+                        .fi-page .fi-page-header-main-ctn .fi-btn:hover,
+                        .fi-page .fi-page-header-main-ctn .fi-btn:focus,
+                        .fi-page .fi-page-content .fi-ac .fi-btn:hover,
+                        .fi-page .fi-page-content .fi-ac .fi-btn:focus,
+                        .fi-page .fi-form-actions .fi-btn:hover,
+                        .fi-page .fi-form-actions .fi-btn:focus,
+                        .fi-modal-footer-actions .fi-btn:hover,
+                        .fi-modal-footer-actions .fi-btn:focus,
+                        .fi-ta-actions .fi-btn:hover,
+                        .fi-ta-actions .fi-btn:focus {
+                            background-color: {$primaryColor} !important;
+                            color: #ffffff !important;
+                            border-color: {$primaryColor} !important;
+                        }
+                        .fi-page .fi-page-header-main-ctn .fi-btn.fi-color-danger,
+                        .fi-page .fi-page-content .fi-ac .fi-btn.fi-color-danger,
+                        .fi-page .fi-form-actions .fi-btn.fi-color-danger,
+                        .fi-modal-footer-actions .fi-btn.fi-color-danger,
+                        .fi-ta-actions .fi-btn.fi-color-danger {
+                            background-color: #dc2626 !important;
+                            border-color: #dc2626 !important;
+                            color: #ffffff !important;
+                        }
+                        .fi-page .fi-page-header-main-ctn .fi-btn *,
+                        .fi-page .fi-page-content .fi-ac .fi-btn *,
+                        .fi-page .fi-form-actions .fi-btn *,
+                        .fi-modal-footer-actions .fi-btn *,
+                        .fi-ta-actions .fi-btn * {
+                            color: currentColor !important;
+                        }
+                        .fi-btn.fi-color-gray,
+                        .fi-btn.fi-btn-color-gray,
+                        .fi-btn.fi-color-neutral,
+                        .fi-btn.fi-btn-color-neutral,
+                        .fi-btn.fi-color-white,
+                        .fi-btn.fi-btn-color-white,
+                        .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']) {
+                            background-color: #0f172a !important;
+                            color: #ffffff !important;
+                            border: 1px solid #0f172a !important;
+                            box-shadow: 0 8px 18px -14px rgba(15, 23, 42, 0.9) !important;
+                        }
+                        .fi-btn.fi-color-gray:hover,
+                        .fi-btn.fi-color-gray:focus,
+                        .fi-btn.fi-btn-color-gray:hover,
+                        .fi-btn.fi-btn-color-gray:focus,
+                        .fi-btn.fi-color-neutral:hover,
+                        .fi-btn.fi-color-neutral:focus,
+                        .fi-btn.fi-btn-color-neutral:hover,
+                        .fi-btn.fi-btn-color-neutral:focus,
+                        .fi-btn.fi-color-white:hover,
+                        .fi-btn.fi-color-white:focus,
+                        .fi-btn.fi-btn-color-white:hover,
+                        .fi-btn.fi-btn-color-white:focus,
+                        .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']):hover,
+                        .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']):focus {
+                            background-color: {$primaryColor} !important;
+                            color: #ffffff !important;
+                            border-color: {$primaryColor} !important;
+                        }
+                        .fi-btn.fi-color-gray .fi-btn-label,
+                        .fi-btn.fi-btn-color-gray .fi-btn-label,
+                        .fi-btn.fi-color-neutral .fi-btn-label,
+                        .fi-btn.fi-btn-color-neutral .fi-btn-label,
+                        .fi-btn.fi-color-white .fi-btn-label,
+                        .fi-btn.fi-btn-color-white .fi-btn-label,
+                        .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']) .fi-btn-label,
+                        .fi-btn.fi-color-gray svg,
+                        .fi-btn.fi-btn-color-gray svg,
+                        .fi-btn.fi-color-neutral svg,
+                        .fi-btn.fi-btn-color-neutral svg,
+                        .fi-btn.fi-color-white svg,
+                        .fi-btn.fi-btn-color-white svg,
+                        .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']) svg {
+                            color: currentColor !important;
                         }
                         .fi-link.fi-color-primary:hover, .fi-link.fi-color-primary:focus {
                             color: {$primaryHover} !important;

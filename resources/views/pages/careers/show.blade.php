@@ -1,5 +1,3 @@
-<x-layouts.app :title="__('Job Details')" description="Join our team of experts in the construction and investment industry.">
-
 @php
     $job = \Illuminate\Support\Facades\Cache::remember("career_job_show_data_{$slug}_".app()->getLocale(), now()->addHours(12), function() use ($slug) {
         $jobDb = \App\Models\JobPosting::where('isActive', true)->where('slug', $slug)->first();
@@ -54,7 +52,14 @@
         ];
     }
 
+    if (!$job) {
+        abort(404);
+    }
+
     $heroSummary = \Illuminate\Support\Str::limit(strip_tags($job['description'] ?? ''), 180);
+    $pageTitle = $job['title'] ?? __('Job Details');
+    $pageDesc = $heroSummary ?: __('Join our team of experts in the construction and investment industry.');
+    $canonicalUrl = $slug === 'gen' ? url('/careers/gen') : route('careers.show', ['slug' => $slug]);
 
     $renderRichText = function (?string $content) {
         $content = trim((string) $content);
@@ -97,6 +102,8 @@
         return '<p>' . e($content) . '</p>';
     };
 @endphp
+
+<x-layouts.app :title="$pageTitle" :description="$pageDesc" :canonical="$canonicalUrl">
 
 @if(!$job)
     <div class="py-40 text-center bg-gray-50 min-h-screen">

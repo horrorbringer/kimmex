@@ -75,36 +75,8 @@
         ];
     });
 
-    if ($project) {
-    } else {
-        // Keep internal fallback for development if DB is empty
-        $project = [
-            'id' => $slug,
-                'title' => __('Ministry of Economy & Finance Building Expansion'),
-                'type' => __('Government Office Building'),
-                'location' => __('Phnom Penh, Cambodia'),
-                'status' => __('Completed'),
-                'date' => __('Oct 2026'),
-            'client' => __('MEF'),
-            'built_area' => __('50,000 SQM'),
-            'contract_value' => __('$120.5M'),
-            'year' => __('2023 - 2026'),
-            'heroImage' => $defaultProjectImage,
-            'narrative' => [
-                'description' => __('A definitive case study on administrative centralization and public infrastructure integration for the Royal Government of Cambodia.'),
-                'background' => __('A definitive case study on administrative centralization and public infrastructure integration for the Royal Government of Cambodia.'),
-                'objectives' => __('To deliver a state-of-the-art office complex with Grade A specifications, ensuring maximum energy efficiency and seamless integration of governmental systems.'),
-                'design_concept' => __('The architectural design focuses on a "Solid Foundation" theme, utilizing heavy reinforced concrete with a glass facade that symbolizes transparency and strength.')
-            ],
-            'scope' => [__('General Contracting'), __('Structural Engineering'), __('MEP Systems Integration'), __('Interior Fit-out')],
-            'challenges' => [['challenge' => __('Strict government security protocols.'), 'solution' => __('Developed a specialized vetting and access control system.')]],
-            'images' => ['/images/webp/projects/Thumbnail-2.webp', '/images/webp/projects/Thumbnail-3.webp', '/images/webp/projects/Thumbnail-4.webp'],
-            'related' => [
-                ['id' => '1', 'title' => __('National Bank HQ'), 'type' => __('Government'), 'image' => '/images/webp/projects/Thumbnail-5.webp'],
-                ['id' => '2', 'title' => __('Khleang Toeuk WTP'), 'type' => __('Infrastructure'), 'image' => '/images/webp/projects/Thumbnail-2.webp'],
-                ['id' => '3', 'title' => __('Mekong River Bank'), 'type' => __('Infrastructure'), 'image' => '/images/webp/projects/Thumbnail-3.webp']
-            ]
-        ];
+    if (!$project) {
+        abort(404);
     }
 
     $project['heroImage'] = $project['heroImage'] ?: $defaultProjectImage;

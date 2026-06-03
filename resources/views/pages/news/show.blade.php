@@ -3,14 +3,28 @@
     use App\Models\JobPosting;
     use App\Models\NewsArticle;
     use Illuminate\Support\Facades\Cache;
-    use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Str;
 
     /** @var string $slug */
     $locale = app()->getLocale();
     $fallbackImage = '/images/webp/hero/hero-3.webp';
+    $resolveNewsImage = function (?string $path, string $fallback) {
+        if (! filled($path)) {
+            return $fallback;
+        }
 
-    $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage) {
-        $articleDb = NewsArticle::where('isActive', true)->where('slug', $slug)->first();
+        if (Str::startsWith($path, ['http://', 'https://', '/images'])) {
+            return $path;
+        }
+
+        return \App\Support\PublicStorage::url($path) ?: $fallback;
+    };
+
+    $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage) {
+        $articleDb = NewsArticle::where('isActive', true)
+            ->where('publishedAt', '<=', now())
+            ->where('slug', $slug)
+            ->first();
 
         if (!$articleDb) {
             return null;
@@ -22,64 +36,63 @@
         return [
             'slug' => $articleDb->slug,
             'category' => $articleDb->getTranslation('category', $locale) ?: __('Updates'),
-            'image' => ($articleDb->coverImage && \App\Support\PublicStorage::exists($articleDb->coverImage)) ? \App\Support\PublicStorage::url($articleDb->coverImage) : $fallbackImage,
+            'image' => $resolveNewsImage($articleDb->coverImage, $fallbackImage),
             'title' => $articleDb->getTranslation('title', $locale),
+            'metaTitle' => $articleDb->getTranslation('metaTitle', $locale),
+            'metaDescription' => $articleDb->getTranslation('metaDescription', $locale),
             'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
+            'publishedAt' => ($articleDb->publishedAt ?: $articleDb->created_at)->toIso8601String(),
+            'updatedAt' => $articleDb->updated_at->toIso8601String(),
             'author' => $articleDb->getTranslation('authorName', $locale) ?: 'Kimmex Editorial',
             'readTime' => $articleDb->getTranslation('readTime', $locale) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', $locale))) / 200) . ' min read'),
             'excerpt' => $excerpt,
             'content' => $articleDb->getTranslation('content', $locale),
             'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0 ? $articleDb->tags : [$articleDb->category ?: 'News'],
-            'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => \App\Support\PublicStorage::url($img))->toArray(),
+            'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => $resolveNewsImage($img, ''))->filter()->values()->toArray(),
             'videoUrl' => $articleDb->videoUrl,
         ];
     });
 
     if (!$article) {
-        $article = [
-            'slug' => 'error',
-            'category' => __('Announcement'),
-            'image' => '/images/webp/projects/Thumbnail-4.webp',
-            'title' => __('Article Unavailable'),
-            'date' => now()->format('M d, Y'),
-            'author' => 'System',
-            'readTime' => '1 min',
-            'excerpt' => __('We are currently updating our news archive. Please try again soon.'),
-            'content' => '<p>' . __('The content you are looking for might have been archived or moved during our site optimization. Please return to the news index to explore our latest updates.') . '</p>',
-            'tags' => ['Announcement'],
-            'gallery' => [],
-            'videoUrl' => null,
-        ];
+        abort(404);
     }
 
-    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage) {
-        $currentDb = NewsArticle::where('isActive', true)->where('slug', $slug)->first();
-        $relatedDb = NewsArticle::where('isActive', true)->where('slug', '!=', $slug)->latest()->take(3)->get();
+    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage) {
+        $currentDb = NewsArticle::where('isActive', true)
+            ->where('publishedAt', '<=', now())
+            ->where('slug', $slug)
+            ->first();
+        $relatedDb = NewsArticle::where('isActive', true)
+            ->where('publishedAt', '<=', now())
+            ->where('slug', '!=', $slug)
+            ->orderByDesc('publishedAt')
+            ->take(3)
+            ->get();
 
-        $related = $relatedDb->map(function (NewsArticle $r) use ($locale, $fallbackImage) {
-            $imageUrl = null;
-            if ($r->coverImage) {
-                if (\Illuminate\Support\Str::startsWith($r->coverImage, ['http', '/images'])) {
-                    $imageUrl = $r->coverImage;
-                } else {
-                    $imageUrl = \App\Support\PublicStorage::url($r->coverImage);
-                }
-            }
-
+        $related = $relatedDb->map(function (NewsArticle $r) use ($locale, $fallbackImage, $resolveNewsImage) {
             return [
                 'slug' => $r->slug,
                 'title' => $r->getTranslation('title', $locale),
                 'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
                 'category' => $r->getTranslation('category', $locale) ?: __('Updates'),
-                'image' => $imageUrl ?: $fallbackImage,
+                'image' => $resolveNewsImage($r->coverImage, $fallbackImage),
             ];
         })->toArray();
 
         $next = null;
         $prev = null;
         if ($currentDb) {
-            $nextDb = NewsArticle::where('isActive', true)->where('id', '>', $currentDb->id)->orderBy('id', 'asc')->first();
-            $prevDb = NewsArticle::where('isActive', true)->where('id', '<', $currentDb->id)->orderBy('id', 'desc')->first();
+            $currentPublishedAt = $currentDb->publishedAt ?: $currentDb->created_at;
+            $nextDb = NewsArticle::where('isActive', true)
+                ->where('publishedAt', '<=', now())
+                ->where('publishedAt', '<', $currentPublishedAt)
+                ->orderByDesc('publishedAt')
+                ->first();
+            $prevDb = NewsArticle::where('isActive', true)
+                ->where('publishedAt', '<=', now())
+                ->where('publishedAt', '>', $currentPublishedAt)
+                ->orderBy('publishedAt')
+                ->first();
             if ($nextDb) {
                 $next = ['slug' => $nextDb->slug, 'title' => $nextDb->getTranslation('title', $locale)];
             }
@@ -95,9 +108,66 @@
     $nextArticle = $relatedData['next'] ?? null;
     $prevArticle = $relatedData['prev'] ?? null;
 
-    $pageTitle = $article['title'] ?? __('News Details');
-    $pageDesc = $article['excerpt'] ?? __('Read the latest news and updates from Kimmex.');
+    $pageTitle = ($article['metaTitle'] ?? null) ?: ($article['title'] ?? __('News Details'));
+    $pageDesc = ($article['metaDescription'] ?? null) ?: ($article['excerpt'] ?? __('Read the latest news and updates from Kimmex.'));
     $pageImage = $article['image'] ?? null;
+    $structuredImage = ($pageImage && Str::startsWith($pageImage, ['http://', 'https://']))
+        ? $pageImage
+        : url($pageImage ?: '/logo.png');
+    $canonicalUrl = route('news.show', ['slug' => $article['slug']]);
+    $articleSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'NewsArticle',
+        'mainEntityOfPage' => [
+            '@type' => 'WebPage',
+            '@id' => $canonicalUrl,
+        ],
+        'headline' => $article['title'] ?? '',
+        'description' => $pageDesc,
+        'image' => [$structuredImage],
+        'datePublished' => $article['publishedAt'] ?? now()->toIso8601String(),
+        'dateModified' => $article['updatedAt'] ?? ($article['publishedAt'] ?? now()->toIso8601String()),
+        'author' => [
+            '@type' => 'Person',
+            'name' => $article['author'] ?? 'Kimmex Editorial',
+        ],
+        'publisher' => [
+            '@type' => 'Organization',
+            'name' => 'Kimmex',
+            'logo' => [
+                '@type' => 'ImageObject',
+                'url' => url('/logo.png'),
+            ],
+        ],
+        'articleSection' => $article['category'] ?? __('Updates'),
+        'keywords' => implode(', ', $article['tags'] ?? []),
+        'url' => $canonicalUrl,
+    ];
+    $breadcrumbSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => __('Home'),
+                'item' => route('home'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => __('News'),
+                'item' => route('news.index'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 3,
+                'name' => $article['title'] ?? '',
+                'item' => $canonicalUrl,
+            ],
+        ],
+    ];
+    $schema = [$articleSchema, $breadcrumbSchema];
 
     $renderNewsContent = function (?string $content) {
         $content = trim((string) $content);
@@ -169,21 +239,9 @@
     });
 @endphp
 
-<x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage">
+<x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage" :canonical="$canonicalUrl" og-type="article">
     <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "NewsArticle",
-        "headline": "{{ $article['title'] ?? '' }}",
-        "image": [
-            "{{ $article['image'] ? url($article['image']) : url('/logo.png') }}"
-        ],
-        "datePublished": "{{ isset($article['date']) ? \Carbon\Carbon::parse($article['date'])->toIso8601String() : now()->toIso8601String() }}",
-        "author": [{
-            "@@type": "Person",
-            "name": "{{ $article['author'] ?? 'Kimmex Editorial' }}"
-        }]
-    }
+        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
 
     <div class="bg-[#F7F8FA] min-h-screen text-titan-navy font-sans antialiased pt-28">
@@ -301,7 +359,7 @@
                             <h2 class="text-xl md:text-2xl font-black uppercase tracking-normal text-titan-navy mb-6">
                                 {{ __('Featured Media') }}
                             </h2>
-                            <div class="aspect-[16/9] w-full overflow-hidden rounded-lg shadow-md border border-gray-200 bg-black">
+                            <div class="aspect-[16/9] w-full overflow-hidden rounded shadow-md border border-gray-200 bg-black">
                                 <iframe src="{{ $getVideoEmbedUrl($article['videoUrl']) }}" 
                                         class="w-full h-full border-0" 
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -331,15 +389,15 @@
                             @endphp
 
                             @if($galleryCount === 1)
-                                <div class="aspect-[16/9] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                <div class="aspect-[16/9] overflow-hidden rounded shadow-sm border border-gray-200">
                                     <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                 </div>
                             @elseif($galleryCount === 2)
                                 <div class="grid grid-cols-2 gap-2">
-                                    <div class="aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                    <div class="aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200">
                                         <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
-                                    <div class="aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                    <div class="aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200">
                                         <img src="{{ $article['gallery'][1] }}" alt="Gallery 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
                                 </div>
@@ -347,14 +405,14 @@
                                 <!-- Premium Grid Layout -->
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                                     <!-- Main Big Image (Left) -->
-                                    <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                    <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded shadow-sm border border-gray-200">
                                         <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
                                     <!-- Stacked Right Images -->
                                     <div class="grid grid-rows-2 gap-2 h-auto md:h-[400px]">
                                         @for($i = 1; $i <= 2; $i++)
                                             @if(isset($article['gallery'][$i]))
-                                                <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                                <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded shadow-sm border border-gray-200">
                                                     <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 </div>
                                             @endif
@@ -369,7 +427,7 @@
                                             @php
                                                 $isLastVisible = ($i === 7 && $galleryCount > 8);
                                             @endphp
-                                            <div class="relative aspect-[4/3] overflow-hidden rounded-lg shadow-sm border border-gray-200">
+                                            <div class="relative aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200">
                                                 <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 @if($isLastVisible)
                                                     <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-black text-lg tracking-wider">
@@ -538,6 +596,21 @@
         .news-content h4 {
             margin-top: 2rem;
             margin-bottom: 0.85rem;
+        }
+
+        .news-content img {
+            border: 1px solid #E5E7EB;
+            border-radius: 0.25rem;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+        }
+
+        .news-content iframe,
+        .news-content video {
+            border: 1px solid #E5E7EB;
+            border-radius: 0.25rem;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
         }
 
         .news-content p + table,

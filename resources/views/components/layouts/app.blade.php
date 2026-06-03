@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'image' => null])
+@props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website'])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -23,31 +23,70 @@
         $favicon = $profile['favicon'] ?? null;
         $faviconUrl = $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \App\Support\PublicStorage::url($favicon)) : asset('favicon.ico');
         
+        $absoluteUrl = function (?string $value, ?string $fallback = null) {
+            $value = filled($value) ? $value : $fallback;
+
+            if (! filled($value)) {
+                return null;
+            }
+
+            return \Illuminate\Support\Str::startsWith($value, ['http://', 'https://'])
+                ? $value
+                : url($value);
+        };
+
         $pageTitle = filled($title) ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
-        $pageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'));
+        $rawPageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'));
+        $pageImage = $absoluteUrl($rawPageImage, asset('logo.png'));
+        $canonicalUrl = $absoluteUrl($canonical, url()->current());
+        $organizationLogo = $absoluteUrl($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'), asset('logo.png'));
+        $organizationSameAs = collect([
+            $profile['facebook'] ?? null,
+            $profile['linkedin'] ?? null,
+            $profile['youtube'] ?? null,
+            $profile['instagram'] ?? null,
+            $profile['telegram'] ?? null,
+        ])->filter(fn ($value) => filled($value) && $value !== '#')->values()->all();
+        $organizationSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $profile[$siteLocale]['company_name'] ?? $profile['en']['company_name'] ?? $siteName,
+            'url' => url('/'),
+            'logo' => $organizationLogo,
+            'email' => $profile['email'] ?? null,
+            'telephone' => $profile['phone'] ?? null,
+            'address' => $profile[$siteLocale]['address'] ?? $profile['en']['address'] ?? null,
+            'sameAs' => $organizationSameAs,
+        ];
     @endphp
 
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
     <link rel="icon" href="{{ $faviconUrl }}">
     <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
     <meta name="application-name" content="{{ $siteName }}">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $ogType }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:image" content="{{ $pageImage }}">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="{{ $pageTitle }}">
-    <meta property="twitter:description" content="{{ $pageDesc }}">
-    <meta property="twitter:image" content="{{ $pageImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDesc }}">
+    <meta name="twitter:image" content="{{ $pageImage }}">
     @if(\Illuminate\Support\Str::startsWith($pageImage, ['http://', 'https://']))
         <link rel="preconnect" href="{{ parse_url($pageImage, PHP_URL_SCHEME) . '://' . parse_url($pageImage, PHP_URL_HOST) }}" crossorigin>
     @endif
+
+    <script type="application/ld+json">
+        {!! json_encode($organizationSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
 
     <!-- Dynamic Theme Styles -->
     @php

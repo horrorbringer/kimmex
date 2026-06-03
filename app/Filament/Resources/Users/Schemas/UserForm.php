@@ -35,9 +35,17 @@ class UserForm
                             ->label(__('Password'))
                             ->password()
                             ->revealable()
+                            ->minLength(8)
                             ->required(fn (string $operation): bool => $operation === 'create')
                             ->dehydrated(fn (?string $state) => filled($state))
                             ->helperText(__('Leave blank when editing to keep the current password.')),
+                        TextInput::make('password_confirmation')
+                            ->label(__('Confirm password'))
+                            ->password()
+                            ->revealable()
+                            ->same('password')
+                            ->requiredWith('password')
+                            ->dehydrated(false),
                         DateTimePicker::make('email_verified_at')
                             ->label(__('Email Verified At')),
                     ]),

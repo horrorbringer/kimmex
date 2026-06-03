@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\MediaController;
 use App\Models\Document;
+use App\Models\JobPosting;
+use App\Models\NewsArticle;
+use App\Models\Project;
+use App\Models\Service;
 
 // Language Switcher
 Route::get('/lang/{locale}', function (string $locale) {
@@ -21,6 +25,58 @@ Route::post('/careers/apply', [FormController::class, 'submitApplication'])->nam
 Route::get('/media/{path}', [MediaController::class, 'show'])
     ->where('path', '.*')
     ->name('media.show');
+
+Route::get('/robots.txt', function () {
+    return response(implode("\n", [
+        'User-agent: *',
+        'Disallow:',
+        'Sitemap: ' . url('/sitemap.xml'),
+        '',
+    ]), 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+})->name('robots');
+
+Route::get('/sitemap.xml', function () {
+    $urls = collect();
+    $add = function (string $loc, ?\Carbon\CarbonInterface $lastmod = null, string $changefreq = 'monthly', string $priority = '0.7') use ($urls) {
+        $urls->push([
+            'loc' => url($loc),
+            'lastmod' => $lastmod?->toAtomString(),
+            'changefreq' => $changefreq,
+            'priority' => $priority,
+        ]);
+    };
+
+    $add('/', null, 'weekly', '1.0');
+    $add('/about', null, 'monthly', '0.8');
+    $add('/services', Service::where('isActive', true)->max('updated_at') ? \Carbon\Carbon::parse(Service::where('isActive', true)->max('updated_at')) : null, 'weekly', '0.9');
+    $add('/projects', Project::where('isActive', true)->max('updated_at') ? \Carbon\Carbon::parse(Project::where('isActive', true)->max('updated_at')) : null, 'weekly', '0.9');
+    $add('/news', NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at') ? \Carbon\Carbon::parse(NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at')) : null, 'weekly', '0.8');
+    $add('/careers', JobPosting::where('isActive', true)->max('updated_at') ? \Carbon\Carbon::parse(JobPosting::where('isActive', true)->max('updated_at')) : null, 'weekly', '0.7');
+    $add('/contact', null, 'monthly', '0.7');
+
+    if (Document::publicDocumentsExist()) {
+        $add('/documents', Document::publiclyVisible()->max('updated_at') ? \Carbon\Carbon::parse(Document::publiclyVisible()->max('updated_at')) : null, 'weekly', '0.7');
+    }
+
+    Service::where('isActive', true)->select('slug', 'updated_at')->orderBy('orderIndex')->get()
+        ->each(fn (Service $service) => $add(route('services.show', ['slug' => $service->slug], false), $service->updated_at, 'monthly', '0.8'));
+
+    Project::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->get()
+        ->each(fn (Project $project) => $add(route('projects.show', ['slug' => $project->slug], false), $project->updated_at, 'monthly', '0.8'));
+
+    NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->select('slug', 'updated_at')->orderByDesc('publishedAt')->get()
+        ->each(fn (NewsArticle $article) => $add(route('news.show', ['slug' => $article->slug], false), $article->updated_at, 'weekly', '0.7'));
+
+    Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->get()
+        ->each(fn (Document $document) => $add(route('documents.show', ['slug' => $document->slug], false), $document->updated_at, 'monthly', '0.6'));
+
+    JobPosting::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->get()
+        ->each(fn (JobPosting $job) => $add(route('careers.show', ['slug' => $job->slug], false), $job->updated_at, 'weekly', '0.6'));
+
+    return response()
+        ->view('sitemap', ['urls' => $urls], 200)
+        ->header('Content-Type', 'application/xml; charset=UTF-8');
+})->name('sitemap');
 
 // Home Page
 Route::get('/', function () {

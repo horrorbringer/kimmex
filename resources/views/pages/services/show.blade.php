@@ -1,6 +1,4 @@
-<x-layouts.app :title="'Service Details'" :description="'Detailed information about Kimmex construction services.'">
-
-    @php
+@php
         /** @var string $slug */
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
         $fallbackImages = [
@@ -45,114 +43,7 @@
         );
 
         if (!$service) {
-            // Fallback service data
-            $fallbackServices = [
-                'design-and-build' => [
-                    'id' => 'design-and-build',
-                    'title' => ['en' => 'Design & Build', 'kh' => 'រចនា និងសាងសង់'],
-                    'tagline' => ['en' => 'From Concept to Creation', 'kh' => 'ពីគំនិតដល់ការបង្កើត'],
-                    'desc' => [
-                        'en' =>
-                            'Our flagship service combines architectural creativity with engineering precision. We manage the entire project lifecycle, ensuring seamless transition from blueprints to handover. This integrated approach minimizes risk and accelerates delivery.',
-                        'kh' =>
-                            'សេវាកម្មដ៏សំខាន់របស់យើងរួមបញ្ចូលភាពច្នៃប្រឌិតស្ថាបត្យកម្ម និងភាពជាក់លាក់នៃវិស្វកម្ម។ យើងគ្រប់គ្រងវដ្តជីវិតគម្រោងទាំងមូល ធានាបាននូវការផ្លាស់ប្តូរយ៉ាងរលូនពីការគូសប្លង់រហូតដល់ការប្រគល់ជូន។ វិធីសាស្រ្តរួមនេះកាត់បន្ថយហានិភ័យ និងជំរុញការចែកចាយឲ្យបានរហ័ស។',
-                    ],
-                    'idealFor' => [
-                        'en' =>
-                            'Real estate developers, commercial business owners, and private investors looking for single-point accountability.',
-                        'kh' =>
-                            'ស័ក្តិសមសម្រាប់អ្នកអភិវឌ្ឍន៍អចលនទ្រព្យ ម្ចាស់អាជីវកម្មពាណិជ្ជកម្ម និងអ្នកវិនិយោគឯកជនដែលកំពុងស្វែងរកការទទួលខុសត្រូវតែមួយ។',
-                    ],
-                    'image' => $fallbackImages['design-and-build'],
-                    'icon' => 'lucide-pen-tool',
-                    'scopeItems' => [
-                        ['en' => 'Architectural & structural design', 'kh' => 'ការរចនាស្ថាបត្យកម្ម និងរចនាសម្ព័ន្ធ'],
-                        ['en' => 'Civil & foundation works', 'kh' => 'ការងារស៊ីវិល និងគ្រឹះ'],
-                        ['en' => 'MEP systems installation', 'kh' => 'ការដំឡើងប្រព័ន្ធ MEP'],
-                        ['en' => 'Interior finishing & decoration', 'kh' => 'ការបញ្ចប់ខាងក្នុង និងការតុបតែង'],
-                        ['en' => 'Exterior cladding & landscaping', 'kh' => 'ការបិទខាងក្រៅ និងការរៀបចំទេសភាព'],
-                    ],
-                ],
-                'construction' => [
-                    'id' => 'construction',
-                    'title' => ['en' => 'Construction', 'kh' => 'សាងសង់'],
-                    'tagline' => ['en' => 'Building the Future', 'kh' => 'កសាងអនាគត'],
-                    'desc' => [
-                        'en' =>
-                            'Premium civil construction services across Cambodia specializing in robust concrete work, high-rise buildings, and commercial spaces.',
-                        'kh' =>
-                            'សេវាកម្មសំណង់ស៊ីវិលលំដាប់ខ្ពស់ប្រចាំប្រទេសកម្ពុជាដែលមានជំនាញលើការងារបេតុងដ៏រឹងមាំ អគារខ្ពស់ៗ និងអគារពាណិជ្ជកម្ម។',
-                    ],
-                    'idealFor' => [
-                        'en' => 'Large-scale infrastructure and commercial building projects.',
-                        'kh' => 'គម្រោងហេដ្ឋារចនាសម្ព័ន្ធខ្នាតធំ និងអគារពាណិជ្ជកម្ម។',
-                    ],
-                    'image' => $fallbackImages['construction'],
-                    'icon' => 'lucide-hammer',
-                    'scopeItems' => [
-                        ['en' => 'High-Rise Buildings', 'kh' => 'អគារខ្ពស់កប់ពពក'],
-                        ['en' => 'Commercial Spaces', 'kh' => 'អគារពាណិជ្ជកម្ម'],
-                        ['en' => 'Quality Assurance', 'kh' => 'ការធានាគុណភាព'],
-                    ],
-                ],
-                'project-management' => [
-                    'id' => 'project-management',
-                    'title' => ['en' => 'Project Management', 'kh' => 'ការគ្រប់គ្រងគម្រោង'],
-                    'tagline' => ['en' => 'Delivering On Time', 'kh' => 'ផ្តល់ទាន់ពេលវេលា'],
-                    'desc' => [
-                        'en' =>
-                            'Expert oversight and management of construction projects, ensuring on-time delivery, quality control, cost management, and safety compliance. Our experienced managers keep everything on track.',
-                        'kh' =>
-                            'ការត្រួតពិនិត្យ និងគ្រប់គ្រងគម្រោងសំណង់ ធានាការផ្តល់ទាន់ពេល ការត្រួតពិនិត្យគុណភាព ការគ្រប់គ្រងថ្លៃដើម និងការអនុលោមតាមសុវត្ថិភាព។',
-                    ],
-                    'idealFor' => [
-                        'en' =>
-                            'Large-scale developers and institutions requiring professional oversight across multiple construction phases.',
-                        'kh' => 'អ្នកអភិវឌ្ឍន៍ធំ និងស្ថាប័នដែលត្រូវការការត្រួតពិនិត្យជំនាញ។',
-                    ],
-                    'image' => $fallbackImages['project-management'],
-                    'icon' => 'lucide-briefcase',
-                    'scopeItems' => [
-                        [
-                            'en' => 'Project scheduling & timeline management',
-                            'kh' => 'កាលវិភាគគម្រោង និងការគ្រប់គ្រងពេលវេលា',
-                        ],
-                        ['en' => 'Budget tracking & cost control', 'kh' => 'ការតាមដានថវិកា និងការគ្រប់គ្រងចំណាយ'],
-                        ['en' => 'Quality assurance & control', 'kh' => 'ការធានា និងត្រួតពិនិត្យគុណភាព'],
-                    ],
-                ],
-                'consultants' => [
-                    'id' => 'consultants',
-                    'title' => ['en' => 'Consultants', 'kh' => 'ទីប្រឹក្សា'],
-                    'tagline' => ['en' => 'Expert Guidance', 'kh' => 'ការណែនាំជំនាញ'],
-                    'desc' => [
-                        'en' =>
-                            'Professional consulting services including project feasibility studies, design consulting, structural analysis, and expert advisory for complex engineering challenges.',
-                        'kh' =>
-                            'សេវាកម្មប្រឹក្សាវិជ្ជាជីវៈ រួមទាំងការសិក្សាលទ្ធភាពគម្រោង ការប្រឹក្សាការរចនា ការវិភាគរចនាសម្ព័ន្ធ និងការប្រឹក្សាជំនាញ។',
-                    ],
-                    'idealFor' => [
-                        'en' =>
-                            'Government agencies, NGOs, and private investors seeking independent technical reviews and feasibility assessments.',
-                        'kh' => 'ទីភ្នាក់ងាររដ្ឋាភិបាល អង្គការក្រៅរដ្ឋាភិបាល និងអ្នកវិនិយោគឯកជន។',
-                    ],
-                    'image' => $fallbackImages['consultants'],
-                    'icon' => 'lucide-lightbulb',
-                    'scopeItems' => [
-                        [
-                            'en' => 'Feasibility studies & site assessment',
-                            'kh' => 'ការសិក្សាលទ្ធភាព និងការវាយតម្លៃទីតាំង',
-                        ],
-                        ['en' => 'Design review & optimization', 'kh' => 'ការពិនិត្យការរចនា និងការបង្កើនប្រសិទ្ធភាព'],
-                        ['en' => 'Structural & geotechnical analysis', 'kh' => 'ការវិភាគរចនាសម្ព័ន្ធ និងភូមិសាស្ត្រ'],
-                    ],
-                ],
-            ];
-
-            $service = $fallbackServices[$slug] ?? null;
-            if (!$service) {
-                abort(404);
-            }
+            abort(404);
         }
 
         $roadmap = [
@@ -245,7 +136,13 @@
                 'image' => '/images/webp/projects/Thumbnail-2.webp',
             ],
         ];
+
+        $pageTitle = $service['title'][$lang] ?? $service['title']['en'] ?? __('Service Details');
+        $pageDesc = \Illuminate\Support\Str::limit($service['desc'][$lang] ?? $service['desc']['en'] ?? __('Detailed information about Kimmex construction services.'), 160);
+        $canonicalUrl = route('services.show', ['slug' => $service['id']]);
     @endphp
+
+<x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$service['image']" :canonical="$canonicalUrl">
 
     <div class="bg-white min-h-screen text-titan-navy">
 
