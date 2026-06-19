@@ -171,7 +171,6 @@
             <p>&copy; 2026 Kimmex Construction &amp; Investment Co., Ltd. {{ __('All rights reserved') }}.</p>
             <div class="flex gap-6">
                 <a href="/privacy-policy" class="footer-link transition-colors">{{ __('Privacy Policy') }}</a>
-                <a href="#" class="footer-link transition-colors">{{ __('Terms of Service') }}</a>
             </div>
         </div>
     </div>

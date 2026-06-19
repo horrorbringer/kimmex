@@ -15,7 +15,12 @@ From the project root:
 bash scripts/prepare-cpanel-zip.sh
 ```
 
-The zip is written to `deploy/kimmex-cpanel.zip`.
+The script writes two zip files:
+
+```text
+deploy/kimmex-app.zip          Extract this outside public_html as kimmex_app
+deploy/kimmex-public-html.zip  Extract this inside public_html when cPanel cannot point the domain to kimmex_app/public
+```
 
 ## Upload Layout
 
@@ -39,6 +44,8 @@ require __DIR__.'/../kimmex_app/vendor/autoload.php';
 $app = require_once __DIR__.'/../kimmex_app/bootstrap/app.php';
 ```
 
+If you use `deploy/kimmex-public-html.zip`, this path edit is already done for you.
+
 ## Environment
 
 1. Copy `.env.cpanel.example` to `.env` on the server.
@@ -48,6 +55,15 @@ $app = require_once __DIR__.'/../kimmex_app/bootstrap/app.php';
 ```bash
 php artisan key:generate --force
 ```
+
+For cPanel without Terminal/SSH, keep uploads on the direct public disk:
+
+```env
+FILESYSTEM_DISK=cpanel_public
+PUBLIC_UPLOADS_DISK=cpanel_public
+```
+
+Admin uploads will be stored in `public/uploads`, so you do not need to run `php artisan storage:link`.
 
 ## Database
 

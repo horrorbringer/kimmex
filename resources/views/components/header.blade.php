@@ -555,13 +555,13 @@
             <!-- Mobile Contact Info -->
             <div class="p-4 bg-gray-50 border-t border-gray-100">
                 <div class="flex flex-col gap-2 text-sm">
-                    <a href="tel:+85523999888" class="flex items-center gap-2 text-titan-navy/70">
+                    <a href="tel:{{ str_replace(' ', '', $phone) }}" class="flex items-center gap-2 text-titan-navy/70">
                         <x-lucide-phone class="text-titan-red w-3.5 h-3.5" />
-                        +855 23 999 888
+                        {{ $phone }}
                     </a>
-                    <a href="mailto:info@kimmex.com" class="flex items-center gap-2 text-titan-navy/70">
+                    <a href="mailto:{{ $email }}" class="flex items-center gap-2 text-titan-navy/70">
                         <x-lucide-mail class="text-titan-red w-3.5 h-3.5" />
-                        info@kimmex.com
+                        {{ $email }}
                     </a>
                 </div>
                 <div class="mt-4 flex gap-2">
