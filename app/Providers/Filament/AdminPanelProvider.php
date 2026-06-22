@@ -176,10 +176,10 @@ class AdminPanelProvider extends PanelProvider
                         .fi-btn.fi-color-white,
                         .fi-btn.fi-btn-color-white,
                         .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']) {
-                            background-color: #0f172a !important;
-                            color: #ffffff !important;
-                            border: 1px solid #0f172a !important;
-                            box-shadow: 0 8px 18px -14px rgba(15, 23, 42, 0.9) !important;
+                            background-color: #ffffff !important;
+                            color: #334155 !important;
+                            border: 1px solid #cbd5e1 !important;
+                            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
                         }
                         .fi-btn.fi-color-gray:hover,
                         .fi-btn.fi-color-gray:focus,
@@ -195,9 +195,10 @@ class AdminPanelProvider extends PanelProvider
                         .fi-btn.fi-btn-color-white:focus,
                         .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']):hover,
                         .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']):focus {
-                            background-color: {$primaryColor} !important;
-                            color: #ffffff !important;
-                            border-color: {$primaryColor} !important;
+                            background-color: #f8fafc !important;
+                            color: #0f172a !important;
+                            border-color: #94a3b8 !important;
+                            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1) !important;
                         }
                         .fi-btn.fi-color-gray .fi-btn-label,
                         .fi-btn.fi-btn-color-gray .fi-btn-label,
@@ -214,6 +215,65 @@ class AdminPanelProvider extends PanelProvider
                         .fi-btn.fi-btn-color-white svg,
                         .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']) svg {
                             color: currentColor !important;
+                        }
+                        .dark .fi-btn.fi-color-gray,
+                        .dark .fi-btn.fi-btn-color-gray,
+                        .dark .fi-btn.fi-color-neutral,
+                        .dark .fi-btn.fi-btn-color-neutral,
+                        .dark .fi-btn.fi-color-white,
+                        .dark .fi-btn.fi-btn-color-white,
+                        .dark .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']) {
+                            background-color: #1e293b !important;
+                            color: #e2e8f0 !important;
+                            border-color: #475569 !important;
+                        }
+                        .dark .fi-btn.fi-color-gray:hover,
+                        .dark .fi-btn.fi-color-gray:focus,
+                        .dark .fi-btn.fi-btn-color-gray:hover,
+                        .dark .fi-btn.fi-btn-color-gray:focus,
+                        .dark .fi-btn.fi-color-neutral:hover,
+                        .dark .fi-btn.fi-color-neutral:focus,
+                        .dark .fi-btn.fi-btn-color-neutral:hover,
+                        .dark .fi-btn.fi-btn-color-neutral:focus,
+                        .dark .fi-btn.fi-color-white:hover,
+                        .dark .fi-btn.fi-color-white:focus,
+                        .dark .fi-btn.fi-btn-color-white:hover,
+                        .dark .fi-btn.fi-btn-color-white:focus,
+                        .dark .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']):hover,
+                        .dark .fi-btn:not([class*='fi-color-']):not([class*='fi-btn-color-']):focus {
+                            background-color: #334155 !important;
+                            color: #f8fafc !important;
+                            border-color: #64748b !important;
+                        }
+                        /* Keep focused fields and selected checkboxes visible on light surfaces. */
+                        .fi-input-wrp {
+                            background-color: #ffffff !important;
+                            box-shadow: 0 0 0 1px #cbd5e1 !important;
+                        }
+                        .fi-input-wrp:focus-within {
+                            box-shadow: 0 0 0 2px {$primaryColor}, 0 0 0 4px rgba({$primaryColorRgb}, 0.14) !important;
+                        }
+                        input[type='checkbox'].fi-checkbox-input {
+                            background-color: #ffffff !important;
+                            box-shadow: 0 0 0 1px #94a3b8 !important;
+                        }
+                        input[type='checkbox'].fi-checkbox-input:checked {
+                            background-color: {$primaryColor} !important;
+                            box-shadow: 0 0 0 1px {$primaryColor} !important;
+                        }
+                        input[type='checkbox'].fi-checkbox-input:focus-visible {
+                            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px {$primaryColor} !important;
+                        }
+                        .dark .fi-input-wrp {
+                            background-color: rgb(30, 41, 59) !important;
+                            box-shadow: 0 0 0 1px rgb(71, 85, 105) !important;
+                        }
+                        .dark .fi-input-wrp:focus-within {
+                            box-shadow: 0 0 0 2px {$primaryColor}, 0 0 0 4px rgba({$primaryColorRgb}, 0.2) !important;
+                        }
+                        .dark input[type='checkbox'].fi-checkbox-input:not(:checked) {
+                            background-color: rgb(30, 41, 59) !important;
+                            box-shadow: 0 0 0 1px rgb(100, 116, 139) !important;
                         }
                         .fi-link.fi-color-primary:hover, .fi-link.fi-color-primary:focus {
                             color: {$primaryHover} !important;

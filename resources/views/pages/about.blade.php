@@ -334,31 +334,43 @@
         </section>
 
         <!-- WHO WE ARE SECTION (Synced with Image) -->
-        <section class="py-20 md:py-32 px-4 md:px-6 bg-white overflow-hidden">
-            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
+        <section class="py-16 sm:py-20 md:py-32 px-4 sm:px-6 bg-white overflow-hidden">
+            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-10 sm:gap-12 md:gap-20 items-center">
 
                 <!-- Left: Aesthetic Image Grid with Badge -->
                 <div class="relative w-full flex justify-center lg:block overflow-hidden" x-data="{ shown: false }" x-intersect.once="shown = true">
                     <div :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'"
-                        class="grid grid-cols-2 gap-2.5 sm:gap-6 transition-all duration-1000 relative w-full max-w-[420px] sm:max-w-[560px] lg:max-w-full">
+                        class="grid grid-cols-2 gap-2.5 sm:gap-6 transition-all duration-1000 relative w-full max-w-[420px] sm:max-w-[560px] lg:max-w-full mx-auto">
                             <div class="space-y-3 sm:space-y-6">
-                                <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl">
+                                <div x-data="{ loaded: false }" class="relative aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden bg-slate-100 shadow-lg md:shadow-2xl">
+                                <div x-cloak x-show="!loaded" class="absolute inset-0 animate-pulse bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100"></div>
                                 <img src="{{ $aboutSectionImages[0] }}"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                    x-on:load="loaded = true" x-on:error="loaded = true"
+                                    :class="loaded ? 'opacity-100' : 'opacity-0'"
+                                    class="relative z-10 object-cover w-full h-full hover:scale-105 transition-all duration-700" loading="lazy" decoding="async" />
                             </div>
-                            <div class="aspect-[5/4] md:aspect-square rounded overflow-hidden shadow-lg md:shadow-2xl">
+                            <div x-data="{ loaded: false }" class="relative aspect-[5/4] md:aspect-square rounded overflow-hidden bg-slate-100 shadow-lg md:shadow-2xl">
+                                <div x-cloak x-show="!loaded" class="absolute inset-0 animate-pulse bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100"></div>
                                 <img src="{{ $aboutSectionImages[1] }}"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                    x-on:load="loaded = true" x-on:error="loaded = true"
+                                    :class="loaded ? 'opacity-100' : 'opacity-0'"
+                                    class="relative z-10 object-cover w-full h-full hover:scale-105 transition-all duration-700" loading="lazy" decoding="async" />
                             </div>
                         </div>
                         <div class="space-y-3 sm:space-y-6 pt-4 md:pt-12">
-                            <div class="aspect-[5/4] md:aspect-square rounded overflow-hidden shadow-lg md:shadow-2xl">
+                            <div x-data="{ loaded: false }" class="relative aspect-[5/4] md:aspect-square rounded overflow-hidden bg-slate-100 shadow-lg md:shadow-2xl">
+                                <div x-cloak x-show="!loaded" class="absolute inset-0 animate-pulse bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100"></div>
                                 <img src="{{ $aboutSectionImages[2] }}"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                    x-on:load="loaded = true" x-on:error="loaded = true"
+                                    :class="loaded ? 'opacity-100' : 'opacity-0'"
+                                    class="relative z-10 object-cover w-full h-full hover:scale-105 transition-all duration-700" loading="lazy" decoding="async" />
                             </div>
-                            <div class="aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden shadow-lg md:shadow-2xl relative">
+                            <div x-data="{ loaded: false }" class="relative aspect-[5/4] md:aspect-[4/5] rounded overflow-hidden bg-slate-100 shadow-lg md:shadow-2xl">
+                                <div x-cloak x-show="!loaded" class="absolute inset-0 animate-pulse bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100"></div>
                                 <img src="{{ $aboutSectionImages[3] }}"
-                                    class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                    x-on:load="loaded = true" x-on:error="loaded = true"
+                                    :class="loaded ? 'opacity-100' : 'opacity-0'"
+                                    class="relative z-10 object-cover w-full h-full hover:scale-105 transition-all duration-700" loading="lazy" decoding="async" />
 
                                 <!-- Floating 25+ Years Badge -->
                                 <div
@@ -375,11 +387,11 @@
                 <!-- Right: Text Content -->
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 delay-200">
+                    class="text-center lg:text-left transition-all duration-1000 delay-200">
                     <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">
                         {{ __('WHO WE ARE') }}
                     </span>
-                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5 sm:mb-6">
                         @php
                             $profile = \App\Models\SystemSetting::get('organization_profile', []);
                             $locale = app()->getLocale();
@@ -389,12 +401,12 @@
                         {{ $tagline }}
                     </h2>
                     
-                    <p class="text-gray-500 text-lg leading-relaxed mb-12 whitespace-pre-line">
+                    <p class="text-center lg:text-left text-gray-500 text-base sm:text-lg leading-relaxed mb-8 sm:mb-12 whitespace-pre-line">
                         {{ $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}
                     </p>
 
                     <!-- Mission/Vision/Goal Interactive List -->
-                    <div class="space-y-6" x-data="{ active: 'vision' }">
+                    <div class="space-y-4 text-left sm:space-y-6" x-data="{ active: 'vision' }">
                         @php
                             $mvg_items = [
                                 [
@@ -419,11 +431,11 @@
                         @endphp
 
                         @foreach($mvg_items as $item)
-                        <div class="group cursor-pointer border-b border-gray-100 last:border-b-0 pb-6"
+                        <div class="group cursor-pointer border-b border-gray-100 last:border-b-0 pb-4 sm:pb-6"
                              @click="active = (active === '{{ $item['id'] }}' ? null : '{{ $item['id'] }}')">
-                            <div class="flex gap-6 items-start">
+                            <div class="flex gap-3 sm:gap-6 items-start">
                                 <!-- Icon Box -->
-                                <div class="w-14 h-14 rounded flex items-center justify-center shrink-0 transition-colors duration-500"
+                                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded flex items-center justify-center shrink-0 transition-colors duration-500"
                                      :class="active === '{{ $item['id'] }}' ? 'bg-titan-red text-white' : 'bg-titan-red/10 text-titan-red'">
                                     @if($item['icon'] === 'eye')
                                         <x-lucide-eye class="w-6 h-6" stroke-width="2" />
@@ -435,25 +447,25 @@
                                 </div>
 
                                 <!-- Text Content -->
-                                <div class="flex-grow">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h3 class="text-xl font-bold text-gray-900 transition-colors duration-500"
+                                <div class="min-w-0 flex-grow">
+                                    <div class="flex items-center justify-between gap-3 mb-2">
+                                        <h3 class="min-w-0 text-lg sm:text-xl font-bold text-gray-900 transition-colors duration-500"
                                             :class="active === '{{ $item['id'] }}' ? 'text-titan-red' : ''">
                                             {{ $item['title'] }}
                                         </h3>
-                                        <div class="w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500"
+                                        <div class="w-8 h-8 shrink-0 rounded-full border flex items-center justify-center transition-all duration-500"
                                              :class="active === '{{ $item['id'] }}' ? 'border-titan-red text-titan-red rotate-180' : 'border-gray-200 text-gray-400'">
                                             <x-lucide-chevron-down class="w-4 h-4" />
                                         </div>
                                     </div>
                                     
                                     <div x-show="active === '{{ $item['id'] }}'" x-collapse>
-                                        <p class="text-gray-500 text-base leading-relaxed whitespace-pre-line pb-4">
+                                        <p class="text-gray-500 text-sm sm:text-base leading-relaxed whitespace-pre-line pb-4">
                                             {{ $item['desc'] }}
                                         </p>
                                     </div>
                                     
-                                    <p x-show="active !== '{{ $item['id'] }}'" class="text-gray-400 text-sm italic truncate max-w-md">
+                                    <p x-show="active !== '{{ $item['id'] }}'" class="w-full text-gray-400 text-sm italic truncate">
                                         {{ \Illuminate\Support\Str::limit($item['desc'], 80) }}
                                     </p>
                                 </div>
