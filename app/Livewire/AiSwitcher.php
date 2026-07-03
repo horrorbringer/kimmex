@@ -16,9 +16,7 @@ class AiSwitcher extends Component
     {
         $settings = SystemSetting::get('ai_settings', []);
         $this->provider = $settings['provider'] ?? 'gemini';
-        $this->model = $this->provider === 'ollama'
-            ? ($settings['ollama']['model'] ?? $settings['model'] ?? '')
-            : ($settings['gemini']['model'] ?? $settings['model'] ?? '');
+        $this->model = $this->modelForProvider($settings, $this->provider);
         $this->loadModels();
     }
 
@@ -27,17 +25,18 @@ class AiSwitcher extends Component
         try {
             $service = new \App\Services\AIGeneratorService();
             $settings = SystemSetting::get('ai_settings', []);
-            $apiKey = $settings['gemini']['api_key'] ?? $settings['api_key'] ?? '';
+            $apiKey = $this->apiKeyForProvider($settings, $this->provider);
             $baseUrl = $settings['ollama']['base_url'] ?? $settings['base_url'] ?? 'http://localhost:11434';
 
             if ($this->provider === 'gemini' && empty($apiKey)) {
-                $this->availableModels = ['gemini-1.5-flash' => 'Gemini 1.5 Flash (Default)'];
+                $this->availableModels = ['gemini-3.1-flash-lite' => 'Gemini 3.1 Flash-Lite (Free, recommended)'];
                 return;
             }
 
             $this->availableModels = $service->getAvailableModels(
-                $this->provider === 'gemini' ? $apiKey : $baseUrl,
-                $this->provider
+                in_array($this->provider, ['gemini', 'openrouter'], true) ? $apiKey : null,
+                $this->provider,
+                $this->provider === 'ollama' ? $baseUrl : null
             );
 
             // If current model is not in available list, reset to first one
@@ -55,9 +54,7 @@ class AiSwitcher extends Component
         $settings['provider'] = $newProvider;
 
         // Use the saved model for this provider if it exists
-        $this->model = $newProvider === 'ollama'
-            ? ($settings['ollama']['model'] ?? $settings['model'] ?? '')
-            : ($settings['gemini']['model'] ?? $settings['model'] ?? '');
+        $this->model = $this->modelForProvider($settings, $newProvider);
 
         SystemSetting::set('ai_settings', $settings);
         $this->provider = $newProvider;
@@ -65,7 +62,7 @@ class AiSwitcher extends Component
 
         Notification::make()
             ->title(__('AI Provider Switched'))
-            ->body(__('Now using ' . ($newProvider === 'gemini' ? 'Google Gemini' : 'Ollama')))
+            ->body(__('Now using ' . $this->providerLabel($newProvider)))
             ->success()
             ->send();
     }
@@ -88,5 +85,41 @@ class AiSwitcher extends Component
     public function render()
     {
         return view('livewire.ai-switcher');
+    }
+
+    public function nextProvider(): string
+    {
+        return match ($this->provider) {
+            'gemini' => 'openrouter',
+            'openrouter' => 'ollama',
+            default => 'gemini',
+        };
+    }
+
+    protected function modelForProvider(array $settings, string $provider): string
+    {
+        return match ($provider) {
+            'ollama' => $settings['ollama']['model'] ?? $settings['model'] ?? '',
+            'openrouter' => $settings['openrouter']['model'] ?? 'deepseek/deepseek-chat-v3-0324:free',
+            default => $settings['gemini']['model'] ?? $settings['model'] ?? 'gemini-3.1-flash-lite',
+        };
+    }
+
+    protected function apiKeyForProvider(array $settings, string $provider): string
+    {
+        return match ($provider) {
+            'openrouter' => $settings['openrouter']['api_key'] ?? '',
+            'gemini' => $settings['gemini']['api_key'] ?? $settings['api_key'] ?? '',
+            default => '',
+        };
+    }
+
+    protected function providerLabel(string $provider): string
+    {
+        return match ($provider) {
+            'openrouter' => 'OpenRouter',
+            'ollama' => 'Ollama',
+            default => 'Google Gemini',
+        };
     }
 }

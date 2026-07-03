@@ -109,7 +109,9 @@ class ManageSettings extends Page implements HasForms
             // AI
             'ai_provider' => $ai['provider'] ?? 'gemini',
             'gemini_api_key' => $ai['gemini']['api_key'] ?? ($ai['api_key'] ?? ''),
-            'gemini_model' => $ai['gemini']['model'] ?? ($ai['model'] ?? 'gemini-1.5-flash'),
+            'gemini_model' => $ai['gemini']['model'] ?? ($ai['model'] ?? 'gemini-3.1-flash-lite'),
+            'openrouter_api_key' => $ai['openrouter']['api_key'] ?? '',
+            'openrouter_model' => $ai['openrouter']['model'] ?? 'deepseek/deepseek-chat-v3-0324:free',
             'ollama_base_url' => $ai['ollama']['base_url'] ?? ($ai['base_url'] ?? 'http://localhost:11434'),
             'ollama_model' => $ai['ollama']['model'] ?? ($ai['model'] ?? ''),
             'ai_system_prompt' => $ai['system_prompt'] ?? 'You are an expert copywriter and corporate communications specialist. Write engaging, professional, and SEO-optimized content. Return pure text or basic HTML without markdown blocks.',
@@ -136,12 +138,20 @@ class ManageSettings extends Page implements HasForms
 
         $provider = $this->data['ai_provider'];
         $this->availableModels = (new \App\Services\AIGeneratorService())->getAvailableModels(
-            $provider === 'gemini' ? $this->data['gemini_api_key'] : null,
+            match ($provider) {
+                'gemini' => $this->data['gemini_api_key'],
+                'openrouter' => $this->data['openrouter_api_key'],
+                default => null,
+            },
             $provider,
             $provider === 'ollama' ? $this->data['ollama_base_url'] : null
         );
 
-        $currentModel = $provider === 'gemini' ? $this->data['gemini_model'] : $this->data['ollama_model'];
+        $currentModel = match ($provider) {
+            'ollama' => $this->data['ollama_model'],
+            'openrouter' => $this->data['openrouter_model'],
+            default => $this->data['gemini_model'],
+        };
         if (!empty($currentModel) && !isset($this->availableModels[$currentModel])) {
             $this->availableModels[$currentModel] = $currentModel;
         }
@@ -263,9 +273,32 @@ class ManageSettings extends Page implements HasForms
                                                 ->label(__('Active AI Provider'))
                                                 ->options([
                                                     'gemini' => 'Google Gemini (Cloud)',
+                                                    'openrouter' => 'OpenRouter (Cloud)',
                                                     'ollama' => 'Ollama (Local)',
                                                 ])
-                                                ->required()->live(),
+                                                ->required()
+                                                ->live()
+                                                ->afterStateUpdated(function ($state, $get, $set, \App\Services\AIGeneratorService $ai) {
+                                                    $this->availableModels = $ai->getAvailableModels(
+                                                        match ($state) {
+                                                            'gemini' => $get('gemini_api_key'),
+                                                            'openrouter' => $get('openrouter_api_key'),
+                                                            default => null,
+                                                        },
+                                                        $state,
+                                                        $state === 'ollama' ? $get('ollama_base_url') : null
+                                                    );
+
+                                                    $modelField = match ($state) {
+                                                        'openrouter' => 'openrouter_model',
+                                                        'ollama' => 'ollama_model',
+                                                        default => 'gemini_model',
+                                                    };
+
+                                                    if (! $get($modelField) && $this->availableModels !== []) {
+                                                        $set($modelField, array_key_first($this->availableModels));
+                                                    }
+                                                }),
                                             
                                             // Gemini Fields
                                             Group::make()
@@ -287,6 +320,27 @@ class ManageSettings extends Page implements HasForms
                                                         ->options(fn() => $this->availableModels)->searchable(),
                                                 ]),
 
+                                            // OpenRouter Fields
+                                            Group::make()
+                                                ->visible(fn ($get) => $get('ai_provider') === 'openrouter')
+                                                ->schema([
+                                                    TextInput::make('openrouter_api_key')
+                                                        ->label(__('OpenRouter API Key'))
+                                                        ->password()->revealable()
+                                                        ->helperText(__('Use an OpenRouter key. Free models usually end with :free.'))
+                                                        ->hintAction(
+                                                            \Filament\Actions\Action::make('fetchOpenRouterModels')
+                                                                ->icon('heroicon-o-arrow-path')
+                                                                ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
+                                                                    $this->availableModels = $ai->getAvailableModels($state, 'openrouter');
+                                                                    \Filament\Notifications\Notification::make()->title(__('OpenRouter Models Updated'))->success()->send();
+                                                                })
+                                                        ),
+                                                    Select::make('openrouter_model')
+                                                        ->label(__('Active Model'))
+                                                        ->options(fn() => $this->availableModels)->searchable(),
+                                                ]),
+
                                             // Ollama Fields
                                             Group::make()
                                                 ->visible(fn ($get) => $get('ai_provider') === 'ollama')
@@ -298,7 +352,7 @@ class ManageSettings extends Page implements HasForms
                                                             \Filament\Actions\Action::make('fetchOllamaModels')
                                                                 ->icon('heroicon-o-arrow-path')
                                                                 ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
-                                                                    $this->availableModels = $ai->getAvailableModels($state, 'ollama');
+                                                                    $this->availableModels = $ai->getAvailableModels(null, 'ollama', $state);
                                                                     \Filament\Notifications\Notification::make()->title(__('Ollama Models Updated'))->success()->send();
                                                                 })
                                                         ),
@@ -356,8 +410,18 @@ class ManageSettings extends Page implements HasForms
                                                         $provider = $get('ai_provider');
                                                         $settings = [
                                                             'provider' => $provider,
-                                                            'api_key' => $get('gemini_api_key'),
-                                                            'model' => $provider === 'gemini' ? $get('gemini_model') : $get('ollama_model'),
+                                                            'gemini' => [
+                                                                'api_key' => $get('gemini_api_key'),
+                                                                'model' => $get('gemini_model'),
+                                                            ],
+                                                            'openrouter' => [
+                                                                'api_key' => $get('openrouter_api_key'),
+                                                                'model' => $get('openrouter_model'),
+                                                            ],
+                                                            'ollama' => [
+                                                                'base_url' => $get('ollama_base_url'),
+                                                                'model' => $get('ollama_model'),
+                                                            ],
                                                             'base_url' => $get('ollama_base_url'),
                                                             'system_prompt' => $get('ai_system_prompt'),
                                                             'temperature' => $get('ai_temperature'),
@@ -520,8 +584,18 @@ class ManageSettings extends Page implements HasForms
                 if (empty($state)) return;
                 $settings = [
                     'provider' => $get('ai_provider'),
-                    'api_key' => $get('gemini_api_key'),
-                    'model' => $get('ai_provider') === 'gemini' ? $get('gemini_model') : $get('ollama_model'),
+                    'gemini' => [
+                        'api_key' => $get('gemini_api_key'),
+                        'model' => $get('gemini_model'),
+                    ],
+                    'openrouter' => [
+                        'api_key' => $get('openrouter_api_key'),
+                        'model' => $get('openrouter_model'),
+                    ],
+                    'ollama' => [
+                        'base_url' => $get('ollama_base_url'),
+                        'model' => $get('ollama_model'),
+                    ],
                     'base_url' => $get('ollama_base_url'),
                     'system_prompt' => $get('ai_system_prompt'),
                     'temperature' => $get('ai_temperature'),
@@ -654,7 +728,11 @@ class ManageSettings extends Page implements HasForms
             'provider' => $state['ai_provider'] ?? 'gemini',
             'gemini' => [
                 'api_key' => $state['gemini_api_key'] ?? '',
-                'model' => $state['gemini_model'] ?? '',
+                'model' => $state['gemini_model'] ?? 'gemini-3.1-flash-lite',
+            ],
+            'openrouter' => [
+                'api_key' => $state['openrouter_api_key'] ?? '',
+                'model' => $state['openrouter_model'] ?? 'deepseek/deepseek-chat-v3-0324:free',
             ],
             'ollama' => [
                 'base_url' => $state['ollama_base_url'] ?? '',

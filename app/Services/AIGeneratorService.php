@@ -29,6 +29,7 @@ class AIGeneratorService
         try {
             $result = match ($provider) {
                 'gemini' => $this->generateWithGemini($topic, $type, $customInstructions, $apiKey, $model, $systemPrompt, $temperature),
+                'openrouter' => $this->generateWithOpenRouter($topic, $type, $customInstructions, $apiKey, $model, $systemPrompt, $temperature),
                 'ollama' => $this->generateWithOllama($topic, $type, $customInstructions, $baseUrl, $model, $systemPrompt, $temperature),
                 default => throw new Exception("Unsupported AI Provider: " . $provider),
             };
@@ -89,6 +90,7 @@ class AIGeneratorService
         try {
             $result = match ($provider) {
                 'gemini' => $this->improveWithGemini($content, $instructions, $apiKey, $model, $systemPrompt, $temperature),
+                'openrouter' => $this->improveWithOpenRouter($content, $instructions, $apiKey, $model, $systemPrompt, $temperature),
                 'ollama' => $this->improveWithOllama($content, $instructions, $baseUrl, $model, $systemPrompt, $temperature),
                 default => throw new Exception("Unsupported AI Provider: " . $provider),
             };
@@ -117,6 +119,7 @@ class AIGeneratorService
         try {
             $result = match ($provider) {
                 'gemini' => $this->translateWithGemini($content, $targetLanguage, $apiKey, $model, $temperature),
+                'openrouter' => $this->translateWithOpenRouter($content, $targetLanguage, $apiKey, $model, $temperature),
                 'ollama' => $this->translateWithOllama($content, $targetLanguage, $baseUrl, $model, $temperature),
                 default => throw new Exception("Unsupported AI Provider: " . $provider),
             };
@@ -168,6 +171,38 @@ class AIGeneratorService
         $prompt .= "Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.";
 
         return $this->callGemini($url, $prompt, $temperature);
+    }
+
+    protected function generateWithOpenRouter(string $topic, string $type, ?string $customInstructions, string $apiKey, string $model, string $systemPrompt, float $temperature): ?string
+    {
+        $prompt = "Task: Write a {$type} about '{$topic}'.";
+        if ($customInstructions) {
+            $prompt .= "\n\nSpecific User Instructions: {$customInstructions}";
+        }
+        $prompt .= "\n\nFormat: Provide formatted text (HTML allowed if necessary) but ONLY return the content. Do not include markdown code blocks.";
+
+        return $this->callOpenRouter($apiKey, $model, $systemPrompt, $prompt, $temperature);
+    }
+
+    protected function improveWithOpenRouter(string $content, ?string $instructions, string $apiKey, string $model, string $systemPrompt, float $temperature): ?string
+    {
+        $prompt = "Task: Improve the following content to be more professional, engaging, and clear.\n\n";
+        $prompt .= "Original Content:\n{$content}\n\n";
+        if ($instructions) {
+            $prompt .= "Specific User Instructions: {$instructions}\n\n";
+        }
+        $prompt .= "Format: ONLY return the improved text. Do not explain what you changed. Keep the same HTML structure if present.";
+
+        return $this->callOpenRouter($apiKey, $model, $systemPrompt, $prompt, $temperature);
+    }
+
+    protected function translateWithOpenRouter(string $content, string $targetLanguage, string $apiKey, string $model, float $temperature): ?string
+    {
+        $prompt = "Task: Translate the following content into {$targetLanguage}.\n\n";
+        $prompt .= "Content:\n{$content}\n\n";
+        $prompt .= "Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.";
+
+        return $this->callOpenRouter($apiKey, $model, 'You are a precise professional translator.', $prompt, $temperature);
     }
 
     protected function generateWithOllama(string $topic, string $type, ?string $customInstructions, string $baseUrl, string $model, string $systemPrompt, float $temperature): ?string
@@ -246,6 +281,40 @@ class AIGeneratorService
         throw new Exception("Ollama Error: " . $response->body());
     }
 
+    protected function callOpenRouter(string $apiKey, string $model, string $systemPrompt, string $prompt, float $temperature): ?string
+    {
+        $response = Http::withToken($apiKey)
+            ->withHeaders([
+                'HTTP-Referer' => config('app.url'),
+                'X-OpenRouter-Title' => config('app.name', 'Kimmex'),
+            ])
+            ->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model' => $model,
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $systemPrompt,
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $prompt,
+                    ],
+                ],
+                'temperature' => $temperature,
+            ]);
+
+        if ($response->successful()) {
+            $text = $response->json('choices.0.message.content');
+            $text = preg_replace('/^```(?:html)?\n/s', '', (string) $text);
+            $text = preg_replace('/\n```$/s', '', $text);
+
+            return trim($text);
+        }
+
+        $error = $response->json('error.message') ?? $response->body();
+        throw new Exception("OpenRouter Error: " . $error);
+    }
+
     public function getAvailableModels(?string $apiKey = null, ?string $provider = 'gemini', ?string $baseUrl = null): array
     {
         $settings = SystemSetting::get('ai_settings', []);
@@ -255,7 +324,9 @@ class AIGeneratorService
         
         try {
             if ($provider === 'gemini') {
-                if (empty($apiKey)) return [];
+                if (empty($apiKey)) {
+                    return $this->defaultModels('gemini');
+                }
                 $response = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
                 if ($response->successful()) {
                     return collect($response->json()['models'] ?? [])
@@ -273,31 +344,83 @@ class AIGeneratorService
                         ->toArray();
                 }
             }
+
+            if ($provider === 'openrouter') {
+                if (empty($apiKey)) {
+                    return $this->defaultModels('openrouter');
+                }
+
+                $response = Http::withToken($apiKey)->get('https://openrouter.ai/api/v1/models');
+                if ($response->successful()) {
+                    $models = collect($response->json('data') ?? [])
+                        ->filter(fn ($m) => in_array('text', $m['architecture']['input_modalities'] ?? ['text'], true))
+                        ->mapWithKeys(function ($m) {
+                            $id = $m['id'] ?? null;
+                            $name = $m['name'] ?? $id;
+                            $pricing = $m['pricing'] ?? [];
+                            $isFree = ($pricing['prompt'] ?? null) === '0' && ($pricing['completion'] ?? null) === '0';
+
+                            return $id ? [$id => $name . ($isFree ? ' (Free)' : '')] : [];
+                        })
+                        ->toArray();
+
+                    return $models ?: $this->defaultModels('openrouter');
+                }
+            }
         } catch (Exception $e) {
-            return [];
+            return $this->defaultModels($provider ?? 'gemini');
         }
 
-        return [
-            'models/gemini-1.5-flash' => 'Gemini 1.5 Flash (Default)',
-            'models/gemini-1.5-pro' => 'Gemini 1.5 Pro',
-        ];
+        return $this->defaultModels($provider ?? 'gemini');
     }
 
     protected function providerConfig(array $settings, string $provider): array
     {
         $gemini = $settings['gemini'] ?? [];
+        $openrouter = $settings['openrouter'] ?? [];
         $ollama = $settings['ollama'] ?? [];
 
         return [
-            'api_key' => $provider === 'gemini'
-                ? ($gemini['api_key'] ?? $settings['api_key'] ?? '')
-                : ($settings['api_key'] ?? ''),
-            'model' => $provider === 'ollama'
-                ? ($ollama['model'] ?? $settings['model'] ?? 'llama3.1')
-                : ($gemini['model'] ?? $settings['model'] ?? 'gemini-1.5-flash'),
+            'api_key' => match ($provider) {
+                'gemini' => $gemini['api_key'] ?? $settings['api_key'] ?? '',
+                'openrouter' => $openrouter['api_key'] ?? '',
+                default => $settings['api_key'] ?? '',
+            },
+            'model' => match ($provider) {
+                'ollama' => $ollama['model'] ?? $settings['model'] ?? 'llama3.1',
+                'openrouter' => $openrouter['model'] ?? 'deepseek/deepseek-chat-v3-0324:free',
+                default => $gemini['model'] ?? $settings['model'] ?? 'gemini-3.1-flash-lite',
+            },
             'base_url' => $provider === 'ollama'
                 ? ($ollama['base_url'] ?? $settings['base_url'] ?? 'http://localhost:11434')
                 : ($settings['base_url'] ?? 'http://localhost:11434'),
+        ];
+    }
+
+    protected function defaultModels(string $provider): array
+    {
+        if ($provider === 'ollama') {
+            return [
+                'llama3.1' => 'llama3.1',
+                'qwen2.5' => 'qwen2.5',
+                'mistral' => 'mistral',
+            ];
+        }
+
+        if ($provider === 'openrouter') {
+            return [
+                'deepseek/deepseek-chat-v3-0324:free' => 'DeepSeek Chat V3 0324 (Free)',
+                'qwen/qwen3-235b-a22b:free' => 'Qwen3 235B A22B (Free)',
+                'meta-llama/llama-3.3-70b-instruct:free' => 'Llama 3.3 70B Instruct (Free)',
+                'google/gemini-2.0-flash-exp:free' => 'Gemini 2.0 Flash Experimental (Free)',
+            ];
+        }
+
+        return [
+            'gemini-3.1-flash-lite' => 'Gemini 3.1 Flash-Lite (Free, recommended)',
+            'gemini-3.5-flash' => 'Gemini 3.5 Flash',
+            'models/gemini-3.1-flash-lite' => 'Gemini 3.1 Flash-Lite',
+            'models/gemini-3.5-flash' => 'Gemini 3.5 Flash',
         ];
     }
 }

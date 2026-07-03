@@ -7,7 +7,12 @@
     // Determine provider for quota info
     $aiSettings = \App\Models\SystemSetting::get('ai_settings', []);
     $provider = $aiSettings['provider'] ?? 'gemini';
-    $quota = $provider === 'gemini' ? '15 RPM / 1,500 RPD' : 'Unlimited (Local)';
+    $quota = match ($provider) {
+        'gemini' => 'Free tier varies by model',
+        'openrouter' => 'Depends on selected model',
+        'ollama' => 'Unlimited (Local)',
+        default => 'Unknown',
+    };
 @endphp
 
 <div class="w-full pb-8">

@@ -1,9 +1,11 @@
 <div class="flex items-center gap-2 mr-2">
-    <button wire:click="switchProvider('{{ $provider === 'gemini' ? 'ollama' : 'gemini' }}')" 
+    <button wire:click="switchProvider('{{ $this->nextProvider() }}')" 
         class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        title="{{ $provider === 'gemini' ? 'Switch to Ollama' : 'Switch to Google Gemini' }}">
+        title="{{ __('Switch AI provider') }}">
         @if($provider === 'gemini')
             <x-heroicon-m-sparkles class="text-blue-500" style="width: 18px; height: 18px;" />
+        @elseif($provider === 'openrouter')
+            <x-heroicon-m-cloud class="text-purple-500" style="width: 18px; height: 18px;" />
         @else
             <x-heroicon-m-cpu-chip class="text-orange-500" style="width: 18px; height: 18px;" />
         @endif
