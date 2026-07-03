@@ -16,9 +16,10 @@
             <div class="node-toggle-placeholder"></div>
         @endif
 
+        @php $nodeImageUrl = \App\Support\PublicStorage::urlIfExists($node['image'] ?? null); @endphp
         <div class="avatar-circle">
-            @if($node['image'])
-                <img src="{{ \App\Support\PublicStorage::url($node['image']) }}" 
+            @if($nodeImageUrl)
+                <img src="{{ $nodeImageUrl }}" 
                      alt="{{ $node['name'] }}" decoding="async" loading="lazy" />
             @else
                 <span class="avatar-initials">

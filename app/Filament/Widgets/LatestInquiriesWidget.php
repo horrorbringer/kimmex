@@ -57,10 +57,8 @@ class LatestInquiriesWidget extends BaseWidget
                     ->sortable(),
             ])
             ->actions([
-                \Filament\Actions\Action::make('view')
-                    ->label(__('View'))
-                    ->url(fn (Inquiry $record): string => \App\Filament\Resources\Inquiries\InquiryResource::getUrl('edit', ['record' => $record]))
-                    ->icon('heroicon-m-eye'),
+                \Filament\Actions\ViewAction::make()
+                    ->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
             ]);
     }
 }

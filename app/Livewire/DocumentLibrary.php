@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Document;
 use App\Models\DocumentCategory;
+use Illuminate\Support\Facades\Cache;
 
 class DocumentLibrary extends Component
 {
@@ -27,7 +28,9 @@ class DocumentLibrary extends Component
 
     public function render()
     {
-        $categories = DocumentCategory::where('isActive', true)->orderBy('name->en')->get();
+        $categories = Cache::remember('document_library_categories', now()->addMinutes(10), fn () => DocumentCategory::where('isActive', true)
+            ->orderBy('name->en')
+            ->get());
 
         $query = Document::with('documentCategory')->publiclyVisible();
 
@@ -47,8 +50,8 @@ class DocumentLibrary extends Component
         return view('livewire.document-library', [
             'documents' => $query->orderByDesc('is_featured')->latest()->paginate(12),
             'categories' => $categories,
-            'totalDocuments' => Document::publiclyVisible()->count(),
-            'totalCategories' => DocumentCategory::where('isActive', true)->count(),
+            'totalDocuments' => Cache::remember('document_library_total_documents', now()->addMinutes(10), fn () => Document::publiclyVisible()->count()),
+            'totalCategories' => Cache::remember('document_library_total_categories', now()->addMinutes(10), fn () => DocumentCategory::where('isActive', true)->count()),
         ]);
     }
 }

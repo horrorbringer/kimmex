@@ -138,6 +138,8 @@
                         : ($doc->category ?: __('Resource'));
                     $fileType = strtoupper($doc->fileType ?: 'PDF');
                     $description = str(strip_tags($doc->description))->limit($isFirstFeatured ? 180 : 115);
+                    $thumbnailUrl = \App\Support\PublicStorage::urlIfExists($doc->thumbnailUrl);
+                    $fileUrl = \App\Support\PublicStorage::urlIfExists($doc->fileUrl);
                 @endphp
 
                 <article @class([
@@ -150,8 +152,8 @@
                         'min-h-[200px] md:min-h-[240px] lg:min-h-full' => $isFirstFeatured,
                         'h-32 md:h-36' => !$isFirstFeatured,
                     ])>
-                        @if($doc->thumbnailUrl)
-                            <img src="{{ \App\Support\PublicStorage::url($doc->thumbnailUrl) }}" alt="{{ $doc->title }}"
+                        @if($thumbnailUrl)
+                            <img src="{{ $thumbnailUrl }}" alt="{{ $doc->title }}"
                                 class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
                                 loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/65 to-transparent"></div>
@@ -208,8 +210,8 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                @if($doc->fileUrl)
-                                    <a href="{{ \App\Support\PublicStorage::url($doc->fileUrl) }}" download
+                                @if($fileUrl)
+                                    <a href="{{ $fileUrl }}" download
                                         class="w-9 h-9 rounded border border-gray-200 bg-white text-titan-navy/55 hover:bg-titan-red hover:text-white hover:border-titan-red flex items-center justify-center transition-all"
                                         aria-label="{{ __('Download document') }}">
                                         <x-lucide-download class="w-4 h-4" />

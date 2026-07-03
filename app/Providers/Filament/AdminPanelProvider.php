@@ -29,16 +29,20 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(\App\Filament\Pages\Auth\Login::class)
             ->passwordReset()
-            ->brandName(fn() => \App\Models\SystemSetting::get('organization_profile', [])['en']['website_title'] ?? \App\Models\SystemSetting::get('organization_profile', [])['en']['company_name'] ?? 'Kimmex Admin')
+            ->brandName(function () {
+                $profile = \App\Models\SystemSetting::get('organization_profile', []);
+
+                return $profile['en']['website_title'] ?? $profile['en']['company_name'] ?? 'Kimmex Admin';
+            })
             ->brandLogo(function() {
                 $logo = \App\Models\SystemSetting::get('organization_profile', [])['logo'] ?? null;
-                $url = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png');
+                $url = \App\Support\PublicStorage::urlIfExists($logo, asset('logo.png'));
                 return new \Illuminate\Support\HtmlString("<img src='{$url}' alt='Logo' style='height: 2.5rem; width: auto; object-fit: contain;'>");
             })
             ->favicon(function() {
                 $profile = \App\Models\SystemSetting::get('organization_profile', []);
                 $favicon = $profile['favicon'] ?? $profile['logo'] ?? null;
-                return $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \App\Support\PublicStorage::url($favicon)) : asset('favicon.ico');
+                return \App\Support\PublicStorage::urlIfExists($favicon, asset('favicon.ico'));
             })
             ->brandLogoHeight('2.5rem')
             ->homeUrl('/')
@@ -65,7 +69,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
                 \App\Filament\Widgets\StatsOverview::class,
                 \App\Filament\Widgets\LatestInquiriesWidget::class,
                 \App\Filament\Widgets\LatestJobApplicationsWidget::class,
@@ -95,7 +98,7 @@ class AdminPanelProvider extends PanelProvider
                 function (): string {
                     $primaryHover = self::getThemeColor('primary_color_hover', '#C8151D');
                     $primaryColor = self::getThemeColor('primary_color', '#E31E24');
-                    
+
                     $hex2rgb = function ($hex) {
                         $hex = str_replace('#', '', $hex);
                         if (strlen($hex) == 3) {
@@ -109,17 +112,17 @@ class AdminPanelProvider extends PanelProvider
                         }
                         return "$r, $g, $b";
                     };
-                    
+
                     $primaryHoverRgb = $hex2rgb($primaryHover);
                     $primaryColorRgb = $hex2rgb($primaryColor);
-                    
+
                     return "<style>
                         :root {
                             /* Override primary color shades */
                             --primary-500: {$primaryColorRgb};
                             --primary-600: {$primaryHoverRgb};
                         }
-                        
+
                         /* Dynamic hover overrides for links and specific interactive components */
                         .fi-btn.fi-color-primary:not(.fi-btn-outline):hover {
                             background-color: {$primaryHover} !important;

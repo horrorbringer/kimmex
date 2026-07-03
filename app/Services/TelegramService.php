@@ -79,7 +79,15 @@ class TelegramService
      */
     public function sendStoredDocument(string $chatId, string $disk, string $path, string $caption = ''): bool
     {
-        if (!$this->enabled || !$this->token || !$chatId || !Storage::disk($disk)->exists($path)) {
+        if (!$this->enabled || !$this->token || !$chatId) {
+            return false;
+        }
+
+        try {
+            if (! Storage::disk($disk)->exists($path)) {
+                return false;
+            }
+        } catch (\Throwable) {
             return false;
         }
 

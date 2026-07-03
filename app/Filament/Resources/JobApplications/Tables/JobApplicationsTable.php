@@ -6,7 +6,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 
 class JobApplicationsTable
@@ -14,27 +13,13 @@ class JobApplicationsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('job'))
             ->columns([
                 TextColumn::make('job.title')
                     ->label(__('Job Title'))
                     ->getStateUsing(fn ($record): string => $record->job?->title ?? __('General Application'))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('applicantName')
-                    ->label(__('Applicant Name'))
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label(__('Email'))
-                    ->searchable(),
-                TextColumn::make('phone')
-                    ->label(__('Phone'))
-                    ->searchable(),
-                IconColumn::make('resumeUrl')
-                    ->label(__('Resume'))
-                    ->icon('heroicon-o-document-text')
-                    ->color('success')
-                    ->url(fn ($record) => $record->resumeUrl ? \App\Support\PublicStorage::url($record->resumeUrl) : null)
-                    ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->badge()
@@ -50,22 +35,12 @@ class JobApplicationsTable
                     ->label(__('Submitted At'))
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make(),
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([

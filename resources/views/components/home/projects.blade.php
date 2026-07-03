@@ -13,9 +13,7 @@
         return $projectsDb->map(function ($p) use ($fallbackImage, $locale) {
             return [
                 'slug' => $p->slug,
-                'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \App\Support\PublicStorage::exists($p->heroImage)))
-                    ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage))
-                    : $fallbackImage,
+                'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
                 'type' => $p->projectCategory ? $p->projectCategory->localizedName($locale) : ($p->category ?: __('Infrastructure')),
                 'title' => $p->getTranslation('title', $locale),
                 'location' => $p->getTranslation('location', $locale),

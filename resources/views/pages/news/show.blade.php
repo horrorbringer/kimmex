@@ -13,11 +13,7 @@
             return $fallback;
         }
 
-        if (Str::startsWith($path, ['http://', 'https://', '/images'])) {
-            return $path;
-        }
-
-        return \App\Support\PublicStorage::url($path) ?: $fallback;
+        return \App\Support\PublicStorage::urlIfExists($path, $fallback);
     };
 
     $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage) {
@@ -57,11 +53,7 @@
         abort(404);
     }
 
-    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage) {
-        $currentDb = NewsArticle::where('isActive', true)
-            ->where('publishedAt', '<=', now())
-            ->where('slug', $slug)
-            ->first();
+    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage, $article) {
         $relatedDb = NewsArticle::where('isActive', true)
             ->where('publishedAt', '<=', now())
             ->where('slug', '!=', $slug)
@@ -81,8 +73,8 @@
 
         $next = null;
         $prev = null;
-        if ($currentDb) {
-            $currentPublishedAt = $currentDb->publishedAt ?: $currentDb->created_at;
+        if (! empty($article['publishedAt'])) {
+            $currentPublishedAt = \Illuminate\Support\Carbon::parse($article['publishedAt']);
             $nextDb = NewsArticle::where('isActive', true)
                 ->where('publishedAt', '<=', now())
                 ->where('publishedAt', '<', $currentPublishedAt)
@@ -240,6 +232,12 @@
 @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage" :canonical="$canonicalUrl" og-type="article">
+    @push('head')
+        <meta property="article:published_time" content="{{ $article['publishedAt'] }}">
+        <meta property="article:modified_time" content="{{ $article['updatedAt'] }}">
+        <meta property="article:author" content="{{ $article['author'] }}">
+    @endpush
+
     <script type="application/ld+json">
         {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>

@@ -15,18 +15,8 @@ class PartnersTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->searchable(),
                 TextColumn::make('name')
                     ->label(__('Name'))
-                    ->searchable(),
-                \Filament\Tables\Columns\ImageColumn::make('logoUrl')
-                    ->label(__('Logo'))
-                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->logoUrl))
-                    ->disk(config('filesystems.public_uploads_disk')),
-                TextColumn::make('website')
-                    ->label(__('Website'))
                     ->searchable(),
                 TextColumn::make('type')
                     ->label(__('Type'))
@@ -39,21 +29,12 @@ class PartnersTable
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

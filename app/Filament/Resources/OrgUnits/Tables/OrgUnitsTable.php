@@ -15,14 +15,8 @@ class OrgUnitsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['employee', 'department']))
             ->columns([
-                \Filament\Tables\Columns\ImageColumn::make('employee.image')
-                    ->label('')
-                    ->getStateUsing(fn (OrgUnit $record) => \App\Support\PublicStorage::url($record->employee?->image))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular()
-                    ->placeholder('-'),
-
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->description(fn(OrgUnit $record) => $record->getPath())
@@ -81,12 +75,6 @@ class OrgUnitsTable
                     ->onColor('success')
                     ->offColor('danger'),
 
-                TextColumn::make('updated_at')
-                    ->label(__('Last Update'))
-                    ->dateTime()
-                    ->since()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('orderIndex')
             ->groups([
@@ -113,6 +101,7 @@ class OrgUnitsTable
                     ->relationship('department', 'name', fn($query) => $query->orderBy('name->en')),
             ])
             ->recordActions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

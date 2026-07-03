@@ -34,13 +34,7 @@
                 $logo = $p->logoUrl;
                 $logoUrl = $fallbackLogo;
                 
-                if ($logo) {
-                    if (\Illuminate\Support\Str::startsWith($logo, ['http', '/images', '/partners'])) {
-                        $logoUrl = $logo;
-                    } else {
-                        $logoUrl = \App\Support\PublicStorage::url($logo);
-                    }
-                }
+                $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, $fallbackLogo);
 
                 return [
                     'name' => $p->getTranslation('name', app()->getLocale()),

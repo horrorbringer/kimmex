@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Filesystem\CloudinaryAdapter;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use League\Flysystem\Filesystem;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +15,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        Storage::extend('cloudinary', function ($app, array $config): FilesystemAdapter {
+            $adapter = new CloudinaryAdapter($config);
+
+            return new FilesystemAdapter(
+                new Filesystem($adapter, $config),
+                $adapter,
+                $config,
+            );
+        });
     }
 
     /**
@@ -64,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
                         if (! $storage->exists($file)) {
                             return null;
                         }
-                    } catch (\League\Flysystem\UnableToCheckFileExistence) {
+                    } catch (\Throwable) {
                         return null;
                     }
                 }
@@ -88,10 +100,22 @@ class AppServiceProvider extends ServiceProvider
 
                 $url ??= $storage->url($file);
 
+                try {
+                    $size = $shouldFetchFileInformation ? $storage->size($file) : 0;
+                } catch (\Throwable) {
+                    $size = 0;
+                }
+
+                try {
+                    $type = $shouldFetchFileInformation ? $storage->mimeType($file) : null;
+                } catch (\Throwable) {
+                    $type = null;
+                }
+
                 return [
                     'name' => ($component->isMultiple() ? ($storedFileNames[$file] ?? null) : $storedFileNames) ?? basename($file),
-                    'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
-                    'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
+                    'size' => $size,
+                    'type' => $type,
                     'url' => $url,
                 ];
             });

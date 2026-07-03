@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class PublicStorage
 {
-    protected const REMOTE_DISKS = ['r2', 's3'];
+    protected const REMOTE_DISKS = ['r2', 's3', 'cloudinary'];
 
     public static function diskName(): string
     {
@@ -24,6 +24,10 @@ class PublicStorage
     {
         if (! filled($path) || Str::startsWith($path, ['http://', 'https://', '/'])) {
             return false;
+        }
+
+        if (self::diskName() === 'cloudinary') {
+            return self::disk()->exists($path);
         }
 
         if (self::isRemoteDisk()) {
@@ -48,6 +52,23 @@ class PublicStorage
         }
 
         return self::disk()->url($path);
+    }
+
+    public static function urlIfExists(?string $path, ?string $fallback = null): ?string
+    {
+        if (! filled($path)) {
+            return $fallback;
+        }
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        if (Str::startsWith($path, '/')) {
+            return file_exists(public_path(ltrim($path, '/'))) ? $path : $fallback;
+        }
+
+        return self::exists($path) ? self::url($path) : $fallback;
     }
 
     public static function delete(string|array|null $paths): void
@@ -75,6 +96,8 @@ class PublicStorage
 
     public static function usesPublicProxy(): bool
     {
-        return self::isRemoteDisk() && blank(config('filesystems.disks.'.self::diskName().'.url'));
+        return self::isRemoteDisk()
+            && self::diskName() !== 'cloudinary'
+            && blank(config('filesystems.disks.'.self::diskName().'.url'));
     }
 }

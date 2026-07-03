@@ -157,17 +157,19 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
     public function loadChartData()
     {
-        $this->chartData = $this->buildTree();
+        $unitsByParent = OrgUnit::with(['employee', 'department'])
+            ->orderBy('orderIndex')
+            ->get()
+            ->groupBy(fn (OrgUnit $unit): string => (string) ($unit->parentId ?? '__root__'));
+
+        $this->chartData = $this->buildTree($unitsByParent);
         $this->dispatch('chartUpdated');
     }
 
-    protected function buildTree($parentId = null)
+    protected function buildTree($unitsByParent, $parentId = null)
     {
-        return OrgUnit::where('parentId', $parentId)
-            ->with(['employee', 'department'])
-            ->orderBy('orderIndex')
-            ->get()
-            ->map(function (OrgUnit $unit) {
+        return $unitsByParent->get((string) ($parentId ?? '__root__'), collect())
+            ->map(function (OrgUnit $unit) use ($unitsByParent) {
                 return [
                     'id' => $unit->id,
                     'title' => $unit->getTranslation('title', app()->getLocale()),
@@ -175,7 +177,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
                     'name' => $unit->employee?->name ?? ($unit->department ? $unit->department->getTranslation('name', app()->getLocale()) : 'N/A'),
                     'role' => $unit->employee?->role ?? $unit->type,
                     'image' => $unit->employee?->image,
-                    'children' => $this->buildTree($unit->id),
+                    'children' => $this->buildTree($unitsByParent, $unit->id),
                 ];
             })->toArray();
     }

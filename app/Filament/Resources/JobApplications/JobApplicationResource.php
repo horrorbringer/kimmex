@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\JobApplications;
 
-use App\Filament\Resources\JobApplications\Pages\CreateJobApplication;
 use App\Filament\Resources\JobApplications\Pages\EditJobApplication;
 use App\Filament\Resources\JobApplications\Pages\ListJobApplications;
 use App\Filament\Resources\JobApplications\Schemas\JobApplicationForm;

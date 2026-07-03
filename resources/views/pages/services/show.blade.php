@@ -25,11 +25,7 @@
                             'en' => strip_tags($serviceDb->getTranslation('description', 'en')),
                             'kh' => strip_tags($serviceDb->getTranslation('description', 'km')),
                         ],
-                        'image' =>
-                            $serviceDb->image &&
-                            \App\Support\PublicStorage::exists($serviceDb->image)
-                                ? \App\Support\PublicStorage::url($serviceDb->image)
-                                : ($fallbackImages[$slug] ?? null),
+                        'image' => \App\Support\PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
                         'scopeItems' => is_array($serviceDb->features)
                             ? array_map(
                                 fn($f) => ['en' => $f['name'] ?? '', 'kh' => $f['name'] ?? ''],
@@ -143,6 +139,19 @@
     @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$service['image']" :canonical="$canonicalUrl">
+    @push('head')
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => route('home')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('Services'), 'item' => route('services.index')],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $pageTitle, 'item' => $canonicalUrl],
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+    @endpush
 
     <div class="bg-white min-h-screen text-titan-navy">
 

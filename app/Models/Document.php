@@ -76,6 +76,9 @@ class Document extends Model
     public static function clearPublicDocumentCaches(): void
     {
         Cache::forget('public_documents_available');
+        Cache::forget('document_library_categories');
+        Cache::forget('document_library_total_documents');
+        Cache::forget('document_library_total_categories');
 
         foreach (['en', 'km'] as $locale) {
             Cache::forget("news_sidebar_documents_{$locale}");

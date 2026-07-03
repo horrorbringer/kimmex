@@ -11,11 +11,7 @@
         $aboutHeroImageUrl = '/images/webp/hero/hero-1.webp';
 
         if (filled($aboutHeroImage)) {
-            $aboutHeroImageUrl = \Illuminate\Support\Str::startsWith($aboutHeroImage, ['http://', 'https://', '/'])
-                ? $aboutHeroImage
-                : (\App\Support\PublicStorage::exists($aboutHeroImage)
-                    ? \App\Support\PublicStorage::url($aboutHeroImage)
-                    : $aboutHeroImageUrl);
+            $aboutHeroImageUrl = \App\Support\PublicStorage::urlIfExists($aboutHeroImage, $aboutHeroImageUrl);
         }
 
         $resolveAboutImage = function (?string $image, string $fallback): string {
@@ -23,13 +19,7 @@
                 return $fallback;
             }
 
-            if (\Illuminate\Support\Str::startsWith($image, ['http://', 'https://', '/'])) {
-                return $image;
-            }
-
-            return \App\Support\PublicStorage::exists($image)
-                ? \App\Support\PublicStorage::url($image)
-                : $fallback;
+            return \App\Support\PublicStorage::urlIfExists($image, $fallback);
         };
 
         $aboutSectionImageDefaults = [
@@ -55,11 +45,7 @@
                 }
 
                 $image = $v['image'] ?? null;
-                if ($image && !\Illuminate\Support\Str::startsWith($image, ['http://', 'https://', '/'])) {
-                    $image = \App\Support\PublicStorage::exists($image)
-                        ? \App\Support\PublicStorage::url($image)
-                        : null;
-                }
+                $image = \App\Support\PublicStorage::urlIfExists($image);
 
                 return [
                     'title' => $v['title'] ?? '',
@@ -94,9 +80,7 @@
                     'desc' => $m->getTranslation('description', app()->getLocale()),
                     'detail' => $hasDetail ? $detail : '',
                     'has_detail' => $hasDetail,
-                    'image' => ($m->image && \App\Support\PublicStorage::exists($m->image)) 
-                        ? \App\Support\PublicStorage::url($m->image) 
-                        : $fallbackImage,
+                    'image' => \App\Support\PublicStorage::urlIfExists($m->image, $fallbackImage),
                 ];
             })->toArray();
         });
@@ -132,7 +116,13 @@
         }
 
         $orgChart = \Illuminate\Support\Facades\Cache::remember('about_orgchart_'.app()->getLocale(), now()->addHours(12), function() {
-            $buildNode = function ($unit) use (&$buildNode) {
+            $unitsByParent = \App\Models\OrgUnit::where('isActive', true)
+                ->with(['employee', 'department'])
+                ->orderBy('orderIndex')
+                ->get()
+                ->groupBy(fn (\App\Models\OrgUnit $unit): string => (string) ($unit->parentId ?? '__root__'));
+
+            $buildNode = function ($unit) use (&$buildNode, $unitsByParent) {
                 // Determine name based on Employee or local Title
                 $name = $unit->employee?->name ?? $unit->getTranslation('title', app()->getLocale());
 
@@ -157,26 +147,23 @@
                     $type = 'director';
                 }
 
+                $employeeImage = $unit->employee?->image;
+                $employeeImage = \App\Support\PublicStorage::urlIfExists($employeeImage);
+
                 return [
                     'name' => $name,
                     'role' => $role,
                     'type' => $type,
-                    'image' => $unit->employee?->image ? \App\Support\PublicStorage::url($unit->employee->image) : null,
+                    'image' => $employeeImage,
                     'phone' => $unit->employee?->phone,
                     'bio' => $unit->employee?->bio,
-                    'children' => \App\Models\OrgUnit::where('isActive', true)->where('parentId', $unit->id)
-                        ->orderBy('orderIndex')
-                        ->with(['employee', 'department'])
-                        ->get()
+                    'children' => $unitsByParent->get((string) $unit->id, collect())
                         ->map(fn($child) => $buildNode($child))
                         ->toArray()
                 ];
             };
 
-            $roots = \App\Models\OrgUnit::where('isActive', true)->whereNull('parentId')
-                ->orderBy('orderIndex')
-                ->with(['employee', 'department'])
-                ->get();
+            $roots = $unitsByParent->get('__root__', collect());
 
             if ($roots->isEmpty()) {
                 // Fallback to placeholder if nothing in DB
@@ -641,14 +628,10 @@
             $orgChartPdf = $orgProfile['org_chart_pdf'] ?? null;
 
             if ($orgChartImage && !\Illuminate\Support\Str::startsWith($orgChartImage, ['http://', 'https://', '/'])) {
-                $orgChartImage = \App\Support\PublicStorage::exists($orgChartImage)
-                    ? \App\Support\PublicStorage::url($orgChartImage)
-                    : null;
+                $orgChartImage = \App\Support\PublicStorage::urlIfExists($orgChartImage);
             }
             if ($orgChartPdf && !\Illuminate\Support\Str::startsWith($orgChartPdf, ['http://', 'https://', '/'])) {
-                $orgChartPdf = \App\Support\PublicStorage::exists($orgChartPdf)
-                    ? \App\Support\PublicStorage::url($orgChartPdf)
-                    : null;
+                $orgChartPdf = \App\Support\PublicStorage::urlIfExists($orgChartPdf);
             }
         @endphp
 

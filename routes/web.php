@@ -26,6 +26,29 @@ Route::get('/media/{path}', [MediaController::class, 'show'])
     ->where('path', '.*')
     ->name('media.show');
 
+Route::get('/sw.js', function () {
+    $path = public_path('build/sw.js');
+    if (! file_exists($path)) {
+        return response('', 404);
+    }
+    return response()->file($path, [
+        'Content-Type' => 'application/javascript',
+        'Service-Worker-Allowed' => '/',
+        'Cache-Control' => 'no-cache',
+    ]);
+})->name('pwa.sw');
+
+Route::get('/manifest.json', function () {
+    $path = public_path('build/manifest.webmanifest');
+    if (! file_exists($path)) {
+        return response('', 404);
+    }
+    return response()->file($path, [
+        'Content-Type' => 'application/manifest+json',
+        'Cache-Control' => 'public, max-age=3600',
+    ]);
+})->name('pwa.manifest');
+
 Route::get('/robots.txt', function () {
     return response(implode("\n", [
         'User-agent: *',
@@ -48,29 +71,35 @@ Route::get('/sitemap.xml', function () {
 
     $add('/', null, 'weekly', '1.0');
     $add('/about', null, 'monthly', '0.8');
-    $add('/services', Service::where('isActive', true)->max('updated_at') ? \Carbon\Carbon::parse(Service::where('isActive', true)->max('updated_at')) : null, 'weekly', '0.9');
-    $add('/projects', Project::where('isActive', true)->max('updated_at') ? \Carbon\Carbon::parse(Project::where('isActive', true)->max('updated_at')) : null, 'weekly', '0.9');
-    $add('/news', NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at') ? \Carbon\Carbon::parse(NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at')) : null, 'weekly', '0.8');
-    $add('/careers', JobPosting::where('isActive', true)->max('updated_at') ? \Carbon\Carbon::parse(JobPosting::where('isActive', true)->max('updated_at')) : null, 'weekly', '0.7');
+    $serviceLastModified = Service::where('isActive', true)->max('updated_at');
+    $projectLastModified = Project::where('isActive', true)->max('updated_at');
+    $newsLastModified = NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at');
+    $jobLastModified = JobPosting::where('isActive', true)->max('updated_at');
+    $documentLastModified = Document::publiclyVisible()->max('updated_at');
+
+    $add('/services', $serviceLastModified ? \Carbon\Carbon::parse($serviceLastModified) : null, 'weekly', '0.9');
+    $add('/projects', $projectLastModified ? \Carbon\Carbon::parse($projectLastModified) : null, 'weekly', '0.9');
+    $add('/news', $newsLastModified ? \Carbon\Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
+    $add('/careers', $jobLastModified ? \Carbon\Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
     $add('/contact', null, 'monthly', '0.7');
 
-    if (Document::publicDocumentsExist()) {
-        $add('/documents', Document::publiclyVisible()->max('updated_at') ? \Carbon\Carbon::parse(Document::publiclyVisible()->max('updated_at')) : null, 'weekly', '0.7');
+    if ($documentLastModified) {
+        $add('/documents', $documentLastModified ? \Carbon\Carbon::parse($documentLastModified) : null, 'weekly', '0.7');
     }
 
-    Service::where('isActive', true)->select('slug', 'updated_at')->orderBy('orderIndex')->get()
+    Service::where('isActive', true)->select('slug', 'updated_at')->orderBy('orderIndex')->lazy()
         ->each(fn (Service $service) => $add(route('services.show', ['slug' => $service->slug], false), $service->updated_at, 'monthly', '0.8'));
 
-    Project::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->get()
+    Project::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (Project $project) => $add(route('projects.show', ['slug' => $project->slug], false), $project->updated_at, 'monthly', '0.8'));
 
-    NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->select('slug', 'updated_at')->orderByDesc('publishedAt')->get()
+    NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->select('slug', 'updated_at')->orderByDesc('publishedAt')->lazy()
         ->each(fn (NewsArticle $article) => $add(route('news.show', ['slug' => $article->slug], false), $article->updated_at, 'weekly', '0.7'));
 
-    Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->get()
+    Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (Document $document) => $add(route('documents.show', ['slug' => $document->slug], false), $document->updated_at, 'monthly', '0.6'));
 
-    JobPosting::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->get()
+    JobPosting::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (JobPosting $job) => $add(route('careers.show', ['slug' => $job->slug], false), $job->updated_at, 'weekly', '0.6'));
 
     return response()

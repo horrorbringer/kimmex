@@ -19,10 +19,12 @@ class SystemSetting extends Model
     {
         static::saved(function ($setting) {
             \Illuminate\Support\Facades\Cache::forget("system_setting_{$setting->key}");
+            static::clearGlobalSettingsCache();
         });
 
         static::deleted(function ($setting) {
             \Illuminate\Support\Facades\Cache::forget("system_setting_{$setting->key}");
+            static::clearGlobalSettingsCache();
         });
     }
 
@@ -44,6 +46,14 @@ class SystemSetting extends Model
     {
         $setting = static::updateOrCreate(['key' => $key], ['value' => $value]);
         \Illuminate\Support\Facades\Cache::forget("system_setting_{$key}");
+        static::clearGlobalSettingsCache();
         return $setting;
+    }
+
+    protected static function clearGlobalSettingsCache(): void
+    {
+        foreach (['en', 'km', 'kh'] as $locale) {
+            \Illuminate\Support\Facades\Cache::forget("global_settings_{$locale}");
+        }
     }
 }

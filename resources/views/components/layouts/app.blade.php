@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website'])
+@props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -21,7 +21,7 @@
         $logo = $profile['logo'] ?? null;
         
         $favicon = $profile['favicon'] ?? null;
-        $faviconUrl = $favicon ? (\Illuminate\Support\Str::startsWith($favicon, 'http') ? $favicon : \App\Support\PublicStorage::url($favicon)) : asset('favicon.ico');
+        $faviconUrl = \App\Support\PublicStorage::urlIfExists($favicon, asset('favicon.ico'));
         
         $absoluteUrl = function (?string $value, ?string $fallback = null) {
             $value = filled($value) ? $value : $fallback;
@@ -37,10 +37,11 @@
 
         $pageTitle = filled($title) ? "{$title} | {$siteName}" : $siteName;
         $pageDesc = $description ?? 'Kimmex is a leading construction and engineering company delivering high-quality building and management solutions.';
-        $rawPageImage = $image ?? ($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'));
+        $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, asset('logo.png'));
+        $rawPageImage = $image ?? $logoUrl;
         $pageImage = $absoluteUrl($rawPageImage, asset('logo.png'));
         $canonicalUrl = $absoluteUrl($canonical, url()->current());
-        $organizationLogo = $absoluteUrl($logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : asset('logo.png'), asset('logo.png'));
+        $organizationLogo = $absoluteUrl($logoUrl, asset('logo.png'));
         $organizationSameAs = collect([
             $profile['facebook'] ?? null,
             $profile['linkedin'] ?? null,
@@ -67,6 +68,19 @@
     <link rel="icon" href="{{ $faviconUrl }}">
     <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
     <meta name="application-name" content="{{ $siteName }}">
+    <meta name="theme-color" content="{{ $theme['primary_color'] ?? '#D4A017' }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="{{ $siteName }}">
+    <link rel="manifest" href="{{ url('manifest.json') }}">
+    <meta name="robots" content="{{ $robots ?? 'index, follow' }}">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
+    <link rel="alternate" hreflang="km" href="{{ $canonicalUrl }}">
+    <link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
+
+    @stack('head')
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="{{ $ogType }}">
@@ -74,6 +88,8 @@
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:image" content="{{ $pageImage }}">
+    <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">

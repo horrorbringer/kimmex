@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Documents\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -15,13 +14,8 @@ class DocumentsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['documentCategory', 'department']))
             ->columns([
-                ImageColumn::make('thumbnailUrl')
-                    ->label(__('Thumbnail'))
-                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->thumbnailUrl))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular(),
-
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
@@ -33,13 +27,8 @@ class DocumentsTable
                     ->badge()
                     ->color('info')
                     ->searchable(),
-                TextColumn::make('department.name')
-                    ->label(__('Department'))
-                    ->searchable(),
                 ToggleColumn::make('isPublic')
                     ->label(__('Public')),
-                ToggleColumn::make('is_featured')
-                    ->label(__('Featured')),
                 ToggleColumn::make('isActive')
                     ->label(__('Active'))
                     ->onColor('success')
@@ -48,16 +37,12 @@ class DocumentsTable
                     ->label(__('Downloads'))
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 \Filament\Actions\Action::make('view_on_website')
                     ->label(__('View on Website'))

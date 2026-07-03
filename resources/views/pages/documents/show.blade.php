@@ -57,6 +57,8 @@
     });
 
     $categoryName = $doc['categoryName'];
+    $thumbnailUrl = \App\Support\PublicStorage::urlIfExists($doc['thumbnailUrl']);
+    $fileUrl = \App\Support\PublicStorage::urlIfExists($doc['fileUrl']);
 @endphp
 
 <x-layouts.app :title="$doc['title']" :description="$doc['description'] ?? ''">
@@ -126,8 +128,8 @@
                             </div>
                         </div>
 
-                        @if($doc['fileUrl'])
-                            <a href="{{ \App\Support\PublicStorage::url($doc['fileUrl']) }}" download target="_blank"
+                        @if($fileUrl)
+                            <a href="{{ $fileUrl }}" download target="_blank"
                                 class="w-full h-12 rounded bg-titan-red hover:bg-white hover:text-titan-navy text-white inline-flex items-center justify-center gap-3 font-black text-xs uppercase tracking-[0.16em] transition-all">
                                 <x-lucide-download class="w-4 h-4" />
                                 {{ __('Download File') }}
@@ -150,8 +152,8 @@
                 <aside class="lg:sticky lg:top-28 space-y-5">
                     <div class="rounded border border-gray-200 bg-white overflow-hidden">
                         <div class="relative aspect-[4/5] bg-titan-navy flex items-center justify-center">
-                            @if($doc['thumbnailUrl'])
-                                <img src="{{ \App\Support\PublicStorage::url($doc['thumbnailUrl']) }}" alt="{{ $doc['title'] }}"
+                            @if($thumbnailUrl)
+                                <img src="{{ $thumbnailUrl }}" alt="{{ $doc['title'] }}"
                                     class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
                                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/70 via-transparent to-transparent"></div>
                             @else
@@ -232,8 +234,8 @@
                                 </div>
                             </div>
 
-                            @if($doc['fileUrl'])
-                                <a href="{{ \App\Support\PublicStorage::url($doc['fileUrl']) }}" download target="_blank"
+                            @if($fileUrl)
+                                <a href="{{ $fileUrl }}" download target="_blank"
                                     class="h-11 px-5 rounded bg-titan-navy hover:bg-titan-red text-white inline-flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all shrink-0">
                                     <x-lucide-download class="w-4 h-4" />
                                     {{ __('Download') }}
@@ -269,8 +271,9 @@
                                 class="group flex items-start gap-4 p-4 bg-white rounded border border-gray-200 hover:border-titan-red/25 hover:shadow-md transition-all duration-300">
                                 <div
                                     class="w-12 h-12 rounded overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center relative">
-                                    @if($rel['thumbnailUrl'])
-                                        <img src="{{ \App\Support\PublicStorage::url($rel['thumbnailUrl']) }}"
+                                    @php $relThumbnailUrl = \App\Support\PublicStorage::urlIfExists($rel['thumbnailUrl']); @endphp
+                                    @if($relThumbnailUrl)
+                                        <img src="{{ $relThumbnailUrl }}"
                                             class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" decoding="async" />
                                     @else
                                         <x-lucide-file-text

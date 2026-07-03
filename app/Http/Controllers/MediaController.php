@@ -21,7 +21,11 @@ class MediaController extends Controller
 
         $disk = PublicStorage::disk();
 
-        if (! $disk->exists($path)) {
+        try {
+            if (! $disk->exists($path)) {
+                abort(404);
+            }
+        } catch (\Throwable) {
             abort(404);
         }
 
@@ -56,13 +60,21 @@ class MediaController extends Controller
             }
         }
 
-        $stream = $disk->readStream($path);
+        try {
+            $stream = $disk->readStream($path);
+        } catch (\Throwable) {
+            abort(404);
+        }
 
         if ($stream === false) {
             abort(404);
         }
 
-        $mimeType = $disk->mimeType($path) ?: 'application/octet-stream';
+        try {
+            $mimeType = $disk->mimeType($path) ?: 'application/octet-stream';
+        } catch (\Throwable) {
+            $mimeType = 'application/octet-stream';
+        }
 
         $headers = [
             'Content-Type' => $mimeType,

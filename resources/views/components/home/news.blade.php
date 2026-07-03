@@ -8,19 +8,11 @@
             ->get();
 
         return $newsDb->map(function ($n) use ($fallbackImage) {
-            $imageUrl = null;
-            $cover = $n->coverImage;
-            if ($cover) {
-                if (\Illuminate\Support\Str::startsWith($cover, ['http', '/images'])) {
-                    $imageUrl = $cover;
-                } else {
-                    $imageUrl = \App\Support\PublicStorage::url($cover);
-                }
-            }
+            $imageUrl = \App\Support\PublicStorage::urlIfExists($n->coverImage, $fallbackImage);
 
             return [
                 'id' => $n->slug,
-                'image' => $imageUrl ?: $fallbackImage,
+                'image' => $imageUrl,
                 'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                 'title' => $n->getTranslation('title', app()->getLocale()),
                 'category' => $n->getTranslation('category', app()->getLocale()) ?: __('Updates'),

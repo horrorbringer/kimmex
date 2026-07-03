@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Milestones\Pages;
 
 use App\Filament\Resources\Milestones\MilestoneResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateMilestone extends CreateRecord

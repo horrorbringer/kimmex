@@ -14,27 +14,15 @@ class InquiriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label(__('ID'))
-                    ->searchable(),
                 TextColumn::make('name')
                     ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('email')
                     ->label(__('Email'))
                     ->searchable(),
-                TextColumn::make('phone')
-                    ->label(__('Phone'))
-                    ->searchable(),
                 TextColumn::make('subject')
                     ->label(__('Subject'))
                     ->searchable(),
-                \Filament\Tables\Columns\IconColumn::make('attachment_url')
-                    ->label(__('Attachment'))
-                    ->icon(fn ($state) => $state ? 'heroicon-o-paper-clip' : null)
-                    ->color('primary')
-                    ->url(fn ($record) => $record->attachment_url ? \App\Support\PublicStorage::url($record->attachment_url) : null)
-                    ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->searchable(),
@@ -43,17 +31,12 @@ class InquiriesTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make(),
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([

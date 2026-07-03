@@ -5,8 +5,6 @@ namespace App\Filament\Resources\NewsArticles\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -17,11 +15,6 @@ class NewsArticlesTable
     {
         return $table
             ->columns([
-                ImageColumn::make('coverImage')
-                    ->label(__('Cover Image'))
-                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->coverImage))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular(),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
@@ -39,39 +32,16 @@ class NewsArticlesTable
                     ->label(__('Published At'))
                     ->dateTime('M d, Y')
                     ->sortable(),
-                IconColumn::make('isFeatured')
-                    ->boolean()
-                    ->label(__('Is Featured')),
-                IconColumn::make('isTrending')
-                    ->boolean()
-                    ->label(__('Is Trending')),
                 ToggleColumn::make('isActive')
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
-                TextColumn::make('readTime')
-                    ->label(__('Read Time'))
-                    ->suffix(__(' mins'))
-                    ->toggleable(),
-                TextColumn::make('year')
-                    ->label(__('Year'))
-                    ->toggleable(),
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 \Filament\Actions\Action::make('viewOnWebsite')
                     ->label(__('View on Website'))
                     ->icon('heroicon-o-arrow-top-right-on-square')

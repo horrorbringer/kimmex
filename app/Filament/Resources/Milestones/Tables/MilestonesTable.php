@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Milestones\Tables;
 
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -20,11 +19,6 @@ class MilestonesTable
                 TextColumn::make('year')
                     ->label(__('Year'))
                     ->sortable(),
-                ImageColumn::make('image')
-                    ->label(__('Image'))
-                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->image))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular(),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
@@ -36,18 +30,13 @@ class MilestonesTable
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('year', 'desc')
             ->filters([
                 //
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make(),
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])

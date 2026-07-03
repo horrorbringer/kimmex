@@ -17,20 +17,12 @@
                 $excerpt = $n->getTranslation('excerpt', $locale)
                     ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 180);
 
-                $imageUrl = null;
-                $cover = $n->coverImage;
-                if ($cover) {
-                    if (\Illuminate\Support\Str::startsWith($cover, ['http', '/images'])) {
-                        $imageUrl = $cover;
-                    } else {
-                        $imageUrl = \App\Support\PublicStorage::url($cover);
-                    }
-                }
+                $imageUrl = \App\Support\PublicStorage::urlIfExists($n->coverImage, $fb);
 
                 return [
                     'slug'       => $n->slug,
                     'category'   => $n->getTranslation('category', $locale) ?: __('Updates'),
-                    'image'      => $imageUrl ?: $fb,
+                    'image'      => $imageUrl,
                     'title'      => $n->getTranslation('title', $locale),
                     'date'       => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                     'excerpt'    => $excerpt,

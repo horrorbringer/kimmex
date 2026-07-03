@@ -18,7 +18,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Str;
 use BackedEnum;
-use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
@@ -113,6 +112,7 @@ class ProjectCategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('parent')->withCount('projects'))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
@@ -126,9 +126,6 @@ class ProjectCategoryResource extends Resource
                             ?: (is_string($state) ? $state : '')
                     )
                     ->placeholder(__('Top Level')),
-                TextColumn::make('slug')
-                    ->label(__('Slug'))
-                    ->searchable(),
                 TextColumn::make('projects_count')
                     ->counts('projects')
                     ->label(__('Projects')),
@@ -136,16 +133,12 @@ class ProjectCategoryResource extends Resource
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])

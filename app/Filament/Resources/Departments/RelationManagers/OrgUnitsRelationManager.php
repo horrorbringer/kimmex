@@ -10,10 +10,9 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class OrgUnitsRelationManager extends RelationManager
@@ -34,6 +33,7 @@ class OrgUnitsRelationManager extends RelationManager
                 AssociateAction::make(),
             ])
             ->recordActions([
+                ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 DissociateAction::make(),
                 DeleteAction::make(),

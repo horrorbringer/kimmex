@@ -87,6 +87,21 @@ return [
             'report' => false,
         ],
 
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+            'api_key' => env('CLOUDINARY_API_KEY'),
+            'api_secret' => env('CLOUDINARY_API_SECRET'),
+            'folder' => env('CLOUDINARY_FOLDER', 'kimmex'),
+            'resource_type' => env('CLOUDINARY_RESOURCE_TYPE', 'auto'),
+            'upload_resource_type' => env('CLOUDINARY_UPLOAD_RESOURCE_TYPE', 'auto'),
+            'url' => env('CLOUDINARY_URL_BASE'),
+            'visibility' => 'public',
+            'timeout' => env('CLOUDINARY_TIMEOUT', 30),
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*

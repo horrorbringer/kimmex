@@ -119,6 +119,7 @@ class DocumentCategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('parent')->withCount('documents'))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Name'))
@@ -128,9 +129,6 @@ class DocumentCategoryResource extends Resource
                     ->label(__('Parent Category'))
                     ->badge()
                     ->placeholder(__('Top Level')),
-                TextColumn::make('slug')
-                    ->label(__('Slug'))
-                    ->searchable(),
                 TextColumn::make('documents_count')
                     ->counts('documents')
                     ->label(__('Resources')),
@@ -141,14 +139,10 @@ class DocumentCategoryResource extends Resource
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('sort_order', 'asc')
             ->recordActions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Projects\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -15,12 +14,8 @@ class ProjectsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('projectCategory'))
             ->columns([
-                ImageColumn::make('heroImage')
-                    ->label(__('Photo'))
-                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->heroImage))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular(),
                 ToggleColumn::make('isActive')
                     ->label(__('Active'))
                     ->onColor('success')
@@ -38,37 +33,17 @@ class ProjectsTable
                     ->label(__('Status'))
                     ->badge()
                     ->searchable(),
-                TextColumn::make('location')
-                    ->label(__('Location'))
-                    ->searchable()
-                    ->toggleable(),
-                TextColumn::make('client')
-                    ->label(__('Client'))
-                    ->searchable()
-                    ->toggleable(),
                 TextColumn::make('completionDate')
                     ->label(__('Completion Date'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
-                TextColumn::make('id')
-                    ->label(__('ID'))
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 \Filament\Actions\Action::make('view_on_website')
                     ->label(__('View on Website'))

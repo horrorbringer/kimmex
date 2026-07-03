@@ -15,6 +15,9 @@ class DepartmentsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query
+                ->with(['headUnit.employee'])
+                ->withCount(['orgUnits', 'jobPostings']))
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Department Name'))
@@ -23,26 +26,11 @@ class DepartmentsTable
                     ->weight('bold')
                     ->toggleable(),
 
-                \Filament\Tables\Columns\ImageColumn::make('headUnit.employee.image')
-                    ->label(__('Head / Manager'))
-                    ->getStateUsing(fn (Department $record) => \App\Support\PublicStorage::url($record->headUnit?->employee?->image))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular()
-                    ->placeholder('-')
-                    ->toggleable(),
-
                 TextColumn::make('headUnit.employee.name')
                     ->label(__('Department Head'))
                     ->description(fn(Department $record) => $record->headUnit?->employee?->role ?? '-')
                     ->placeholder('-')
                     ->toggleable(),
-
-                TextColumn::make('slug')
-                    ->label(__('Public URL'))
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->color('gray')
-                    ->fontFamily('mono')
-                    ->searchable(),
 
                 TextColumn::make('orgUnits_count')
                     ->label(__('Active Units'))
@@ -52,30 +40,17 @@ class DepartmentsTable
                     ->sortable()
                     ->toggleable(),
 
-                TextColumn::make('jobPostings_count')
-                    ->label(__('Job Openings'))
-                    ->counts('jobPostings')
-                    ->badge()
-                    ->color('warning')
-                    ->sortable()
-                    ->toggleable(),
                 ToggleColumn::make('isActive')
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
 
-                TextColumn::make('updated_at')
-                    ->label(__('Last Edit'))
-                    ->dateTime()
-                    ->since()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make(),
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make()->visible(fn() => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([

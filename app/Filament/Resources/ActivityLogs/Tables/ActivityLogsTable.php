@@ -12,6 +12,7 @@ class ActivityLogsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('causer'))
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('event')
@@ -52,10 +53,6 @@ class ActivityLogsTable
                 TextColumn::make('log_name')
                     ->label(__('Log Name'))
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('batch_uuid')
                     ->label(__('Batch UUID'))
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -63,7 +60,9 @@ class ActivityLogsTable
             ->filters([
                 //
             ])
-            ->recordActions([])
+            ->recordActions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+            ])
             ->toolbarActions([]);
     }
 

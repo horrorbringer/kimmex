@@ -43,7 +43,7 @@
         $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
         $tagline = $globalSettings['brand']['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
         $logo = $profile['logo'] ?? null;
-        $logoUrl = $logo ? (\Illuminate\Support\Str::startsWith($logo, 'http') ? $logo : \App\Support\PublicStorage::url($logo)) : '/logo.png';
+        $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.png');
 
         $navCategories = \Illuminate\Support\Facades\Cache::remember('nav_categories_' . $lang, now()->addHours(12), function () use ($lang) {
             return \App\Models\ProjectCategory::where('isActive', true)

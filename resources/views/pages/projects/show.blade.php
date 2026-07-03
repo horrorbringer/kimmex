@@ -37,7 +37,10 @@
 
     // Use the $slug passed from the router to fetch the project
     $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$contentLocale}", now()->addHours(12), function() use ($slug, $contentLocale, $resolveContent, $defaultProjectImage) {
-        $projectDb = \App\Models\Project::where('isActive', true)->where('slug', $slug)->first();
+        $projectDb = \App\Models\Project::where('isActive', true)
+            ->where('slug', $slug)
+            ->with(['projectCategory', 'images'])
+            ->first();
         if (!$projectDb) return null;
 
         return [
@@ -51,9 +54,7 @@
             'built_area' => $projectDb->scale ?: __('50,000 SQM'),
             'contract_value' => __('Contact for Details'),
             'year' => $projectDb->timeline ?: __('2023 - 2026'),
-            'heroImage' => ($projectDb->heroImage && (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? file_exists(public_path($projectDb->heroImage)) : \App\Support\PublicStorage::exists($projectDb->heroImage)))
-                ? (\Illuminate\Support\Str::startsWith($projectDb->heroImage, '/') ? $projectDb->heroImage : \App\Support\PublicStorage::url($projectDb->heroImage))
-                : $defaultProjectImage,
+            'heroImage' => \App\Support\PublicStorage::urlIfExists($projectDb->heroImage, $defaultProjectImage),
 
             'narrative' => [
                 'description' => $resolveContent($projectDb, 'description'),
@@ -65,12 +66,16 @@
 
             'scope' => $resolveContent($projectDb, 'scopeContributions'),
 
-            'images' => $projectDb->images->map(fn($img) => \Illuminate\Support\Str::startsWith($img->url, '/') ? $img->url : \App\Support\PublicStorage::url($img->url))->toArray(),
+            'images' => $projectDb->images
+                ->map(fn($img) => \App\Support\PublicStorage::urlIfExists($img->url))
+                ->filter()
+                ->values()
+                ->toArray(),
             'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->with('projectCategory')->take(3)->get()->map(fn(\App\Models\Project $p) => [
                 'id' => $p->slug,
                 'title' => $resolveContent($p, 'title'),
                 'type' => $p->projectCategory ? $p->projectCategory->localizedName($contentLocale) : ($p->category ?: __('Infrastructure')),
-                'image' => $p->heroImage ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage)) : '/images/webp/projects/Thumbnail-5.webp'
+                'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, '/images/webp/projects/Thumbnail-5.webp')
             ])->toArray()
         ];
     });
@@ -171,6 +176,19 @@
 @endphp
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
+    @push('head')
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => route('home')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('Projects'), 'item' => route('projects.index')],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $project['title'], 'item' => route('projects.show', ['slug' => $project['slug']])],
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+    @endpush
 
     <div class="bg-white min-h-screen text-titan-navy font-sans antialiased pt-28" x-data="{ 
         scrolled: false, 

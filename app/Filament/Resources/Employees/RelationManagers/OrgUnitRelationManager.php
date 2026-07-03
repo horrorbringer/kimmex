@@ -33,6 +33,7 @@ class OrgUnitRelationManager extends RelationManager
                 \Filament\Tables\Actions\AssociateAction::make(),
             ])
             ->recordActions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 \Filament\Tables\Actions\EditAction::make(),
                 \Filament\Tables\Actions\DissociateAction::make(),
                 \Filament\Tables\Actions\DeleteAction::make(),

@@ -5,9 +5,7 @@ namespace App\Filament\Resources\Services\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 
 class ServicesTable
@@ -16,12 +14,6 @@ class ServicesTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image')
-                    ->label(__('Image'))
-                    ->getStateUsing(fn ($record) => \App\Support\PublicStorage::url($record->image))
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->circular()
-                    ->defaultImageUrl('https://ui-avatars.com/api/?name=Service&color=7F9CF5&background=EBF4FF'),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
@@ -35,23 +27,13 @@ class ServicesTable
                     ->label(__('Order'))
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('slug')
-                    ->label(__('Slug'))
-                    ->searchable(),
-                TextColumn::make('id')
-                    ->label(__('ID'))
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('orderIndex', 'asc')
             ->filters([
                 //
             ])
             ->recordActions([
+                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

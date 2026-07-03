@@ -50,9 +50,7 @@
                     'location' => $p->getTranslation('location', $locale),
                     'type' => $localizedCategoryName($p),
                     'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
-                    'image' => ($p->heroImage && (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? file_exists(public_path($p->heroImage)) : \App\Support\PublicStorage::exists($p->heroImage)))
-                        ? (\Illuminate\Support\Str::startsWith($p->heroImage, '/') ? $p->heroImage : \App\Support\PublicStorage::url($p->heroImage))
-                        : $fallbackImage,
+                    'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
                     'summary' => strip_tags($p->getTranslation('description', $locale)),
                 ];
             })->toArray();

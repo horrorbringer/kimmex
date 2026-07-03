@@ -55,10 +55,8 @@ class LatestJobApplicationsWidget extends BaseWidget
                     ->sortable(),
             ])
             ->actions([
-                \Filament\Actions\Action::make('view')
-                    ->label(__('View'))
-                    ->url(fn (JobApplication $record): string => \App\Filament\Resources\JobApplications\JobApplicationResource::getUrl('edit', ['record' => $record]))
-                    ->icon('heroicon-m-eye'),
+                \Filament\Actions\ViewAction::make()
+                    ->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
             ]);
     }
 }

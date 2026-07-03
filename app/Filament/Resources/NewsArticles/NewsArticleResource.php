@@ -11,7 +11,6 @@ use App\Models\NewsArticle;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class NewsArticleResource extends Resource

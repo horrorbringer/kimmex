@@ -104,6 +104,19 @@
 @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :canonical="$canonicalUrl">
+    @push('head')
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => route('home')],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => __('Careers'), 'item' => route('careers')],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $pageTitle, 'item' => $canonicalUrl],
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
+    @endpush
 
 @if(!$job)
     <div class="py-40 text-center bg-gray-50 min-h-screen">

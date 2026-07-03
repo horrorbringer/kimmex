@@ -13,9 +13,7 @@ $services = \Illuminate\Support\Facades\Cache::remember('services_index_data', n
                 "en" => strip_tags($service->getTranslation('description', 'en')),
                 "kh" => strip_tags($service->getTranslation('description', 'km'))
             ],
-            "image" => ($service->image && \App\Support\PublicStorage::exists($service->image)) 
-                ? \App\Support\PublicStorage::url($service->image)
-                : "/images/webp/projects/Thumbnail-1.webp",
+            "image" => \App\Support\PublicStorage::urlIfExists($service->image, "/images/webp/projects/Thumbnail-1.webp"),
             "features" => is_array($service->features) ? $service->features : []
         ];
     })->toArray();

@@ -40,8 +40,8 @@ class AutoTranslateService
             }
 
             return $this->translator->translate($text);
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("AutoTranslateService Failure: " . $e->getMessage(), [
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("AutoTranslateService skipped translation: " . $e->getMessage(), [
                 'text' => $text,
                 'target' => $targetLocale
             ]);
