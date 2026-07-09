@@ -1,5 +1,6 @@
 <?php
-if (($_GET['token'] ?? '') !== getenv('DEPLOY_TOKEN')) {
+$expectedToken = require __DIR__.'/../deploy-token.php';
+if (!hash_equals($expectedToken, $_GET['token'] ?? '')) {
     http_response_code(403);
     exit('forbidden');
 }
