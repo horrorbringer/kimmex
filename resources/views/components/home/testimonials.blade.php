@@ -14,15 +14,9 @@
         return [];
     });
     
-    if (empty($testimonials)) {
-        $testimonials = [
-            ['quote' => __('They delivered our commercial building ahead of schedule and with impeccable quality.'), 'rating' => 5, 'author' => __('Sok V.'), 'role' => __('CEO, Alpha Corp')],
-            ['quote' => __('The attention to detail and safety standards were outstanding during the water plant project.'), 'rating' => 5, 'author' => __('Dr. Cham'), 'role' => __('Director of Infrastructure')],
-            ['quote' => __('Highly professional team. They handled all the MEP complexities without a single delay.'), 'rating' => 5, 'author' => __('Mr. Rithy'), 'role' => __('Property Developer')],
-        ];
-    }
 @endphp
 
+@if(!empty($testimonials))
 <section class="py-24 bg-white">
     <div class="max-w-[1400px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
@@ -67,3 +61,4 @@
         </div>
     </div>
 </section>
+@endif

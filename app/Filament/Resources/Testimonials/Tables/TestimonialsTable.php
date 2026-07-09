@@ -36,7 +36,12 @@ class TestimonialsTable
                 ToggleColumn::make('isActive')
                     ->label(__('Active'))
                     ->onColor('success')
-                    ->offColor('danger'),
+                    ->offColor('danger')
+                    ->afterStateUpdated(function () {
+                        foreach (['en', 'km', 'kh'] as $locale) {
+                            \Illuminate\Support\Facades\Cache::forget("home_testimonials_array_{$locale}");
+                        }
+                    }),
             ])
             ->filters([
                 //
