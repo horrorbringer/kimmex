@@ -92,10 +92,10 @@
   --color-titan-bg-section: var(--color-kmd-bg-section);
 
   /* ─── FONTS ─── */
-  --font-inter: "Plus Jakarta Sans", "Inter", "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-khmer: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
-  --font-heading: "Montserrat", "Plus Jakarta Sans", "Kantumruy Pro", sans-serif;
-  --font-logo: "Barlow Condensed", "Inter", sans-serif;
+  --font-inter: "Droid Serif", "Georgia", "Times New Roman", serif;
+  --font-khmer: "Suwannaphum", "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
+  --font-heading: "Droid Serif", "Suwannaphum", "Georgia", serif;
+  --font-logo: "Droid Serif", "Georgia", serif;
 
   /* ─── SPACING SCALE (4-based) ─── */
   --space-xs: 4px;
@@ -125,22 +125,22 @@
   --foreground: var(--color-kmd-navy);
 
   /* ─── TYPOGRAPHY SCALE (per brand spec) ─── */
-  --text-h1: 28px;
-  --text-h2: 20px;
-  --text-h3: 16px;
-  --text-body: 14px;
-  --text-caption: 12px;
+  --text-h1: 36px;
+  --text-h2: 26px;
+  --text-h3: 20px;
+  --text-body: 17px;
+  --text-caption: 14px;
 
   --weight-normal: 400;
   --weight-medium: 500;
   --weight-bold: 700;
   --weight-black: 900;
 
-  --leading-tight: 1.1;
-  --leading-snug: 1.3;
-  --leading-normal: 1.7;
+  --leading-tight: 1.4;
+  --leading-snug: 1.6;
+  --leading-normal: 1.9;
   /* brand spec body line-height */
-  --leading-relaxed: 1.8;
+  --leading-relaxed: 2.0;
 
   --tracking-tighter: -0.04em;
   --tracking-tight: -0.02em;
@@ -163,6 +163,26 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* ─── Paragraph Spacing ─── */
+p {
+  margin-bottom: 1.25em;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Content areas with prose classes get comfortable paragraph spacing */
+.prose p,
+article p {
+  margin-bottom: 1.5em;
+}
+
+.prose p:last-child,
+article p:last-child {
+  margin-bottom: 0;
+}
+
 .hero-copy-shadow {
   text-shadow:
     0 2px 6px rgba(0, 0, 0, 0.42),
@@ -178,7 +198,7 @@ h5,
 h6 {
   font-family: var(--font-heading);
   font-weight: var(--weight-medium);
-  line-height: var(--leading-tight);
+  line-height: var(--leading-snug);
   letter-spacing: var(--tracking-normal);
   color: var(--color-kmd-navy);
 }
@@ -449,7 +469,7 @@ a.link:hover,
 
 .font-khmer {
   font-family: var(--font-khmer);
-  line-height: 1.8;
+  line-height: 2.0;
   /* Khmer needs more vertical space */
   letter-spacing: 0;
 }
@@ -472,7 +492,7 @@ a.link:hover,
 
 .khmer-optimized {
   font-family: var(--font-km);
-  line-height: 1.8 !important; /* Critical for preventing Khmer characters from overlapping */
+  line-height: 2.0 !important; /* Critical for preventing Khmer characters from overlapping */
   letter-spacing: 0 !important; /* Khmer must never use tight tracking */
   word-break: break-word;
   font-feature-settings: "kern" 1, "liga" 1;
@@ -487,7 +507,7 @@ a.link:hover,
 }
 
 .khmer-optimized :where(p, li, blockquote, dd, dt) {
-  line-height: 1.85 !important;
+  line-height: 2.0 !important;
 }
 
 /* Ensure headings in Khmer also have enough space */
@@ -497,7 +517,7 @@ a.link:hover,
 .khmer-optimized h4, 
 .khmer-optimized h5, 
 .khmer-optimized h6 {
-  line-height: 1.5 !important;
+  line-height: 1.7 !important;
   letter-spacing: 0 !important;
 }
 

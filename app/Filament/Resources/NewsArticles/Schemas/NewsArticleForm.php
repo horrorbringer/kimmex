@@ -4,6 +4,7 @@ namespace App\Filament\Resources\NewsArticles\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
+use App\Filament\Support\OptimizedFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\RichEditor;
@@ -50,17 +51,14 @@ class NewsArticleForm
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn(Set $set, ?string $state) => $set('metaDescription', $state)),
 
-                FileUpload::make('coverImage')
-                    ->image()
-                    ->disk(config('filesystems.public_uploads_disk'))
-                    ->visibility('public')
+                OptimizedFileUpload::hero('coverImage')
                     ->directory('news/covers')
                     ->label(__('Cover Image')),
 
                 RichEditor::make('content')
                     ->label(__('Content'))
                     ->required()
-                    ->fileAttachmentsDisk('public')
+                    ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                     ->fileAttachmentsVisibility('public')
                     ->fileAttachmentsDirectory('news/content')
                     ->hintActions([
@@ -86,12 +84,18 @@ class NewsArticleForm
                     ->label(__('Gallery'))
                     ->image()
                     ->multiple()
+                    ->maxFiles(12)
                     ->reorderable()
                     ->disk(config('filesystems.public_uploads_disk'))
                     ->visibility('public')
                     ->directory('news/gallery')
+                    ->imageResizeMode('cover')
+                    ->imageResizeTargetWidth('1920')
+                    ->imageResizeTargetHeight('1080')
+                    ->maxSize(5120)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                     ->panelLayout('grid')
-                    ->helperText(__('Upload multiple images for the article gallery')),
+                    ->helperText(__('Upload multiple images for the article gallery (max 12, auto-optimized)')),
 
                 TextInput::make('videoUrl')
                     ->label(__('Video URL (YouTube/Vimeo)'))

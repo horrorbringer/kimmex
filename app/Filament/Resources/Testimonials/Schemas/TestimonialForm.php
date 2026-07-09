@@ -57,7 +57,7 @@ class TestimonialForm
                         RichEditor::make('content')
                             ->label(__('Content'))
                             ->required()
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                     ]),

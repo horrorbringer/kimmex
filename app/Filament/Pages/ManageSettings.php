@@ -130,8 +130,8 @@ class ManageSettings extends Page implements HasForms
             'primary_color_hover' => $theme['primary_color_hover'] ?? '#C8151D',
             'secondary_color' => $theme['secondary_color'] ?? '#1a1a2e',
             'secondary_color_hover' => $theme['secondary_color_hover'] ?? '#0E3A7A',
-            'font_en' => $theme['font_family_en'] ?? 'Inter',
-            'font_kh' => $theme['font_family_km'] ?? 'Kantumruy Pro',
+            'font_en' => $theme['font_family_en'] ?? 'Droid Serif',
+            'font_kh' => $theme['font_family_km'] ?? 'Suwannaphum',
             'footer_bg_color' => $theme['footer_bg_color'] ?? '#071A33',
             'footer_accent_color' => $theme['footer_accent_color'] ?? '#ED1C24',
         ];
@@ -208,7 +208,7 @@ class ManageSettings extends Page implements HasForms
                                 Section::make(__('Executive Message & Bio'))
                                     ->schema([
                                         TextInput::make('ceo_name')->label(__('CEO Name')),
-                                        RichEditor::make('ceo_message')->label(__('CEO Official Message'))->columnSpanFull(),
+                                        RichEditor::make('ceo_message')->label(__('CEO Official Message'))->columnSpanFull()->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))->fileAttachmentsVisibility('public'),
                                         Textarea::make('company_story')
                                             ->label(__('Our Story'))
                                             ->rows(4)
@@ -559,11 +559,13 @@ class ManageSettings extends Page implements HasForms
                                     ->columns(2)
                                     ->schema([
                                         Select::make('font_en')->label(__('Latin Font (EN)'))->options([
+                                            'Droid Serif' => 'Droid Serif',
                                             'Inter' => 'Inter',
                                             'Roboto' => 'Roboto',
                                             'Outfit' => 'Outfit',
                                         ]),
                                         Select::make('font_kh')->label(__('Khmer Font (KH)'))->options([
+                                            'Suwannaphum' => 'Suwannaphum',
                                             'Kantumruy Pro' => 'Kantumruy Pro',
                                             'Hanuman' => 'Hanuman',
                                             'Moul' => 'Moul',

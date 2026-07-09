@@ -86,49 +86,7 @@
 
     $project['heroImage'] = $project['heroImage'] ?: $defaultProjectImage;
 
-    $renderProjectContent = function (?string $content, string $mode = 'auto'): string {
-        $content = trim((string) $content);
-
-        if ($content === '') {
-            return '';
-        }
-
-        // RichEditor content should render as HTML, but older entries often contain
-        // empty paragraphs or <p> wrappers inside list items that make the layout look off.
-        $content = preg_replace('#<p>(?:\s|&nbsp;|<br\s*/?>)*</p>#i', '', $content) ?? $content;
-        $content = preg_replace('#<li>\s*<p>(.*?)</p>\s*</li>#is', '<li>$1</li>', $content) ?? $content;
-        $hasListMarkup = str_contains($content, '<ul') || str_contains($content, '<ol');
-
-        if ($hasListMarkup) {
-            $content = preg_replace('#</p>\s*<p>#i', '</li><li>', $content) ?? $content;
-            $content = preg_replace('#</p>\s*<li>#i', '</li><li>', $content) ?? $content;
-            $content = preg_replace('#</p>\s*</li>#i', '</li>', $content) ?? $content;
-        }
-
-        $content = preg_replace('#<h3><br\s*/?>#i', '<h3>', $content) ?? $content;
-        $content = preg_replace('#<h4><br\s*/?>#i', '<h4>', $content) ?? $content;
-        $content = preg_replace('#</h[1-6]>\s*<p>\s*<strong>#i', '</h4><p><strong>', $content) ?? $content;
-
-        if (preg_match('/<\s*[a-z][\s\S]*>/i', $content)) {
-            return $content;
-        }
-
-        $lines = preg_split('/\R+/u', $content, -1, PREG_SPLIT_NO_EMPTY) ?: [];
-
-        if (in_array($mode, ['list', 'auto'], true) && count($lines) > 1) {
-            $items = array_map(function (string $line): string {
-                return '<li>' . e(trim($line)) . '</li>';
-            }, $lines);
-
-            return '<ul>' . implode('', $items) . '</ul>';
-        }
-
-        if (count($lines) > 1) {
-            return implode('', array_map(fn (string $line): string => '<p>' . e(trim($line)) . '</p>', $lines));
-        }
-
-        return '<p>' . e($content) . '</p>';
-    };
+    $renderProjectContent = fn (?string $content, string $mode = 'auto') => \App\Support\RichContent::renderProject($content, $mode);
 
     $hasProjectContent = function (?string $content): bool {
         $content = trim((string) $content);
@@ -278,7 +236,7 @@
                                     <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
                                         {{ $section['title'] }}
                                     </h3>
-                                    <div class="{{ $section['rich_class'] ?? '' }} prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                                    <div class="{{ $section['rich_class'] ?? '' }} prose prose-base xl:prose-lg max-w-none text-titan-navy/70 project-khmer-content">
                                         {!! $renderProjectContent($section['content'] ?? '', $section['mode'] ?? 'auto') !!}
                                     </div>
                                 </div>
@@ -293,7 +251,7 @@
                             <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
                                 <x-lucide-activity class="w-5 h-5 md:w-6 md:h-6 text-titan-red" /> {{ __('Scope of Work') }}
                             </h2>
-                            <div class="prose prose-sm xl:prose-base max-w-none text-titan-navy/70 
+                            <div class="prose prose-base xl:prose-lg max-w-none text-titan-navy/70 
                                 [&_ul]:grid [&_ul]:grid-cols-1 [&_ul]:md:grid-cols-2 [&_ul]:gap-4 [&_ul]:list-none [&_ul]:p-0
                                 [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:p-4 [&_li]:bg-white [&_li]:rounded-lg [&_li]:shadow-sm [&_li]:border [&_li]:border-transparent [&_li]:hover:border-titan-red/20 [&_li]:transition-all [&_li]:font-bold [&_li]:text-titan-navy
                                 [&_li:before]:content-[''] [&_li:before]:w-5 [&_li:before]:h-5 [&_li:before]:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjZCMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjIgMTEuMDhWMTJBMTAgMTAgMCAxIDEgMTcgNC40NyIvPjxwYXRoIGQ9Ik0yMiA0IDEyIDE0LjAxIDkgMTEiLz48L3N2Zz4=')] [&_li:before]:bg-contain [&_li:before]:bg-no-repeat
@@ -320,7 +278,7 @@
                                 <x-lucide-alert-triangle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" />
                                 {{ __('Engineering Challenges & Solutions') }}
                             </h2>
-                            <div class="project-rich-content prose prose-sm xl:prose-base max-w-none text-titan-navy/70 project-khmer-content">
+                            <div class="project-rich-content prose prose-base xl:prose-lg max-w-none text-titan-navy/70 project-khmer-content">
                                 {!! $renderProjectContent($engineeringNarrative) !!}
                             </div>
                         </div>
@@ -615,7 +573,7 @@
         }
 
         .project-khmer-content :where(p, li) {
-            line-height: 1.9;
+            line-height: 2.0;
         }
 
         @supports (view-timeline-name: --revealing) {

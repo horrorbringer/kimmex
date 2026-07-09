@@ -96,22 +96,22 @@ class JobPostingForm
                     ->components([
                         RichEditor::make('summary')
                             ->label(__('Summary'))
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('responsibilities')
                             ->label(__('Responsibilities'))
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('requirements')
                             ->label(__('Requirements'))
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('benefits')
                             ->label(__('Benefits'))
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                     ]),

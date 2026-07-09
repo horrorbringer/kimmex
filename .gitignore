@@ -37,3 +37,5 @@ migrate_status.txt
 milestones*.txt
 tmp_org.json
 db_dump.json
+
+.nvmrc

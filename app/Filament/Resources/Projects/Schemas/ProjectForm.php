@@ -2,14 +2,13 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
-use Filament\Forms\Components\TextInput;
+use App\Filament\Support\OptimizedFileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Set;
 use App\Filament\Support\TranslationHelper;
@@ -53,7 +52,7 @@ class ProjectForm
                                     ->components([
                                         RichEditor::make('description')
                                             ->label(__('Description'))
-                                            ->fileAttachmentsDisk('public')
+                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
                                             ->hintActions([
                                                 AIHelper::getGenerateAction('description', 'Project Description'),
@@ -74,7 +73,7 @@ class ProjectForm
                                             ->placeholder('e.g., 50,000 sqm or 5-story building'),
                                         RichEditor::make('background')
                                             ->label(__('Project Background'))
-                                            ->fileAttachmentsDisk('public')
+                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
                                             ->hintActions([
                                                 AIHelper::getImproveAction('background'),
@@ -83,7 +82,7 @@ class ProjectForm
                                             ->columnSpanFull(),
                                         RichEditor::make('objectives')
                                             ->label(__('Project Objectives'))
-                                            ->fileAttachmentsDisk('public')
+                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
                                             ->hintActions([
                                                 AIHelper::getImproveAction('objectives'),
@@ -98,15 +97,15 @@ class ProjectForm
                                     ->components([
                                         RichEditor::make('designConcept')
                                             ->label(__('Design Concept & Functions'))
-                                            ->fileAttachmentsDisk('public')
+                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public'),
                                         RichEditor::make('scopeContributions')
                                             ->label(__('Specific Kimmex Contributions'))
-                                            ->fileAttachmentsDisk('public')
+                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public'),
                                         RichEditor::make('engineeringNarrative')
                                             ->label(__('Challenges & Solutions (Engineering Narrative)'))
-                                            ->fileAttachmentsDisk('public')
+                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public'),
                                     ])
                                     ->collapsible()
@@ -118,10 +117,7 @@ class ProjectForm
                                 Section::make(__('Visual Assets'))
                                     ->columns(2)
                                     ->components([
-                                        FileUpload::make('heroImage')
-                                            ->image()
-                                            ->disk(config('filesystems.public_uploads_disk'))
-                                            ->visibility('public')
+                                        OptimizedFileUpload::hero('heroImage')
                                             ->directory('projects/hero')
                                             ->label(__('Hero Image'))
                                             ->columnSpanFull(),
@@ -134,11 +130,9 @@ class ProjectForm
                                             ->relationship('images')
                                             ->reorderable('sort_order')
                                             ->orderColumn('sort_order')
+                                            ->maxItems(15)
                                             ->schema([
-                                                FileUpload::make('url')
-                                                    ->image()
-                                                    ->disk(config('filesystems.public_uploads_disk'))
-                                                    ->visibility('public')
+                                                OptimizedFileUpload::image('url')
                                                     ->directory('projects/gallery')
                                                     ->label(__('Photo'))
                                                     ->required(),

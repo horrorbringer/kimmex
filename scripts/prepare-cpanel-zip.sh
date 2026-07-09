@@ -24,6 +24,7 @@ rsync -a \
   --exclude='.phpunit.result.cache' \
   --exclude='node_modules' \
   --exclude='deploy' \
+  --exclude='docs' \
   --exclude='public/hot' \
   --exclude='storage/framework/cache/data/*' \
   --exclude='storage/framework/sessions/*' \

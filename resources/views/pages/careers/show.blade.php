@@ -61,30 +61,7 @@
     $pageDesc = $heroSummary ?: __('Join our team of experts in the construction and investment industry.');
     $canonicalUrl = $slug === 'gen' ? url('/careers/gen') : route('careers.show', ['slug' => $slug]);
 
-    $renderRichText = function (?string $content) {
-        $content = trim((string) $content);
-
-        if ($content === '') {
-            return '';
-        }
-
-        if (preg_match('/<\s*(ul|ol|li|p|h[1-6]|blockquote|table|img|br)\b/i', $content)) {
-            return $content;
-        }
-
-        $lines = preg_split('/\R+/', $content) ?: [];
-        $lines = array_values(array_filter(array_map('trim', $lines), fn ($line) => $line !== ''));
-
-        if (count($lines) > 1) {
-            $items = array_map(function ($line) {
-                return '<li>' . e($line) . '</li>';
-            }, $lines);
-
-            return '<ul>' . implode('', $items) . '</ul>';
-        }
-
-        return '<p>' . e($content) . '</p>';
-    };
+    $renderRichText = fn (?string $content) => \App\Support\RichContent::render($content);
 
     $renderParagraphContent = function (?string $content) {
         $content = trim((string) $content);

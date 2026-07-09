@@ -161,21 +161,7 @@
     ];
     $schema = [$articleSchema, $breadcrumbSchema];
 
-    $renderNewsContent = function (?string $content) {
-        $content = trim((string) $content);
-
-        if ($content === '') {
-            return '';
-        }
-
-        // RichEditor stores HTML. If the content already contains tags, render it as-is.
-        // Plain text fallback is wrapped in a paragraph for consistency.
-        if (preg_match('/<\s*[a-z][\s\S]*>/i', $content)) {
-            return $content;
-        }
-
-        return '<p>' . e($content) . '</p>';
-    };
+    $renderNewsContent = fn (?string $content) => \App\Support\RichContent::render($content);
 
     $getVideoEmbedUrl = function (?string $url) {
         if (!$url) return null;
@@ -345,7 +331,7 @@
                         {{ __('Story') }}
                     </div>
 
-                    <div class="news-content prose prose-lg md:prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.85] prose-p:font-medium prose-headings:font-black prose-headings:tracking-normal prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
+                    <div class="news-content prose prose-xl md:prose-2xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[2.0] prose-p:font-medium prose-headings:font-black prose-headings:tracking-normal prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
                         {!! $renderNewsContent($article['content'] ?? '') !!}
                     </div>
 

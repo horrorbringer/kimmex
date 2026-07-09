@@ -216,7 +216,7 @@
                         {{ __('Document Summary') }}
                     </div>
 
-                    <article class="prose prose-lg prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[1.8] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-normal prose-headings:text-titan-navy">
+                    <article class="prose prose-xl prose-slate max-w-none prose-p:text-titan-navy/70 prose-p:leading-[2.0] prose-p:font-medium prose-headings:font-black prose-headings:uppercase prose-headings:tracking-normal prose-headings:text-titan-navy">
                         {!! $doc['description'] !!}
                     </article>
 

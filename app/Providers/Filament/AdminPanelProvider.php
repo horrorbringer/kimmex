@@ -55,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-globe-alt')
                     ->sort(-1),
             ])
-            ->font('Kantumruy Pro')
+            ->font('Suwannaphum')
             ->sidebarCollapsibleOnDesktop()
             ->colors([
                 'primary' => Color::hex(self::getThemeColor('primary_color', '#E31E24')),
@@ -92,6 +92,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 \Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
                 fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'ai-switcher\')'),
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::BODY_END,
+                fn (): string => '<script src="' . \Illuminate\Support\Facades\Vite::asset('resources/js/admin-enhancements.js') . '"></script>',
             )
             ->renderHook(
                 \Filament\View\PanelsRenderHook::HEAD_END,

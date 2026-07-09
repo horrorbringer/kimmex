@@ -111,9 +111,9 @@
         $primaryHover = $theme['primary_color_hover'] ?? '#B8890F'; 
         $secondaryColor = $theme['secondary_color'] ?? '#0B2B5C'; 
         $secondaryHover = $theme['secondary_color_hover'] ?? '#0E3A7A'; 
-        $fontEn = $theme['font_family_en'] ?? 'Plus Jakarta Sans';
-        $fontKm = $theme['font_family_km'] ?? 'Kantumruy Pro';
-        $fontHeading = 'Montserrat'; // High-impact geometric heading font
+        $fontEn = $theme['font_family_en'] ?? 'Droid Serif';
+        $fontKm = $theme['font_family_km'] ?? 'Suwannaphum';
+        $fontHeading = 'Droid Serif'; // Serif heading font
         $footerBg     = filled($theme['footer_bg_color'] ?? null) ? $theme['footer_bg_color'] : '#071A33';
         $footerAccent = $theme['footer_accent_color']  ?? '#ED1C24';
 
@@ -148,9 +148,9 @@
             --primary-color-hover: {{ $primaryHover }};
             --secondary-color: {{ $secondaryColor }};
             --secondary-color-hover: {{ $secondaryHover }};
-            --font-en: '{{ $fontEn }}', 'Inter', sans-serif;
-            --font-km: '{{ $fontKm }}', 'Noto Sans Khmer', sans-serif;
-            --font-heading: {{ app()->getLocale() === 'km' ? "'$fontKm', 'Montserrat', sans-serif" : "'Montserrat', '$fontEn', sans-serif" }};
+            --font-en: '{{ $fontEn }}', 'Georgia', serif;
+            --font-km: '{{ $fontKm }}', 'Kantumruy Pro', sans-serif;
+            --font-heading: {{ app()->getLocale() === 'km' ? "'$fontKm', 'Suwannaphum', sans-serif" : "'Droid Serif', '$fontEn', serif" }};
         }
         
         /* ─── FOOTER-ONLY color variables — isolated from global brand colors ─── */

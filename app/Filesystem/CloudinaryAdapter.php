@@ -26,9 +26,15 @@ class CloudinaryAdapter implements FilesystemAdapter
     public function fileExists(string $path): bool
     {
         try {
-            return Http::timeout($this->timeout())
-                ->head($this->getUrl($path))
-                ->successful();
+            $publicId     = $this->publicId($path);
+            $resourceType = $this->resourceTypeForPath($path);
+            $type         = in_array($resourceType, ['image', 'video', 'raw'], true) ? $resourceType : 'image';
+
+            $response = Http::timeout($this->timeout())
+                ->withBasicAuth($this->apiKey(), $this->apiSecret())
+                ->get($this->apiEndpoint("resources/{$type}/upload/" . rawurlencode($publicId)));
+
+            return $response->successful();
         } catch (\Throwable) {
             return false;
         }
@@ -296,16 +302,19 @@ class CloudinaryAdapter implements FilesystemAdapter
         $folder = trim((string) ($this->config['folder'] ?? ''), '/');
         $path = $this->normalizePath($path);
 
-        return $folder === '' ? $path : $folder.'/'.$path;
+        return $folder === '' ? $path : $folder . '/' . $path;
     }
 
     private function deliveryPublicId(string $path): string
     {
-        $publicId = $this->publicId($path);
+        // public_id already contains the extension (e.g. "folder/file.jpg").
+        // Cloudinary delivery requires appending the extension again so the
+        // URL becomes /upload/folder/file.jpg which resolves correctly.
+        // PDFs need a double .pdf suffix for the same reason.
+        $publicId  = $this->publicId($path);
+        $extension = Str::lower(pathinfo($path, PATHINFO_EXTENSION));
 
-        return Str::lower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf'
-            ? $publicId.'.pdf'
-            : $publicId;
+        return $extension !== '' ? $publicId . '.' . $extension : $publicId;
     }
 
     private function normalizePath(string $path): string

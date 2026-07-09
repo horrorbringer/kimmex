@@ -35,7 +35,7 @@ class MilestoneForm
                     ->components([
                         RichEditor::make('description')
                             ->label(__('Description'))
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->toolbarButtons([
                                 'bold', 'italic', 'bulletList', 'orderedList', 'link', 'redo', 'undo'

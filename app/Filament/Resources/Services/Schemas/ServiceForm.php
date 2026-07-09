@@ -76,7 +76,7 @@ class ServiceForm
                                 ->maxLength(1000),
                             RichEditor::make('description')
                                 ->label(__('Description'))
-                                ->fileAttachmentsDisk('public')
+                                ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                 ->fileAttachmentsVisibility('public')
                                 ->hintActions([
                                     AIHelper::getGenerateAction('description', 'Service Description'),

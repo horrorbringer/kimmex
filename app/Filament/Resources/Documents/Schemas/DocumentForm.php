@@ -37,7 +37,7 @@ class DocumentForm
                     ->components([
                         RichEditor::make('description')
                             ->label(__('Description'))
-                            ->fileAttachmentsDisk('public')
+                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                     ]),
