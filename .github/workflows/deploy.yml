@@ -38,6 +38,10 @@ jobs:
             **/.env
             storage/framework/**
             storage/logs/**
+            .agents/**
+            .opencode/**
+            docs/**
+            graphify-out/**
 
       - name: Trigger post-deploy
-        run: curl -s "https://test.kimmex.com.kh/deploy-hook.php?token=${{ secrets.DEPLOY_TOKEN }}"
+        run: curl -s "http://test.kimmex.com.kh/deploy-hook.php?token=${{ secrets.DEPLOY_TOKEN }}"
