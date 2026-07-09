@@ -23,18 +23,19 @@ jobs:
       - name: Build frontend
         run: npm ci && npm run build
 
-      - name: Deploy via FTP
+      - name: Deploy app code
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+          server: ${{ secrets.PROD_FTP_HOST }}
+          username: ${{ secrets.PROD_FTP_USERNAME }}
+          password: ${{ secrets.PROD_FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /test.kimmex.com.kh/
+          server-dir: /kimmex_app/
           exclude: |
             **/.git*/**
             **/node_modules/**
             **/tests/**
+            **/public/**
             **/.env
             storage/framework/**
             storage/logs/**
@@ -43,5 +44,17 @@ jobs:
             docs/**
             graphify-out/**
 
+      - name: Deploy public assets
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.PROD_FTP_HOST }}
+          username: ${{ secrets.PROD_FTP_USERNAME }}
+          password: ${{ secrets.PROD_FTP_PASSWORD }}
+          local-dir: ./public/
+          server-dir: /public_html/
+          exclude: |
+            **/index.php
+            **/.htaccess
+
       - name: Trigger post-deploy
-        run: curl -s "http://test.kimmex.com.kh/deploy-hook.php?token=${{ secrets.DEPLOY_TOKEN }}"
+        run: curl -s "https://kimmex.com.kh/deploy-hook.php?token=${{ secrets.PROD_DEPLOY_TOKEN }}"
