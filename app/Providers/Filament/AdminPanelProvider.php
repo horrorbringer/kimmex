@@ -72,6 +72,8 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Widgets\StatsOverview::class,
                 \App\Filament\Widgets\LatestInquiriesWidget::class,
                 \App\Filament\Widgets\LatestJobApplicationsWidget::class,
+                \App\Filament\Widgets\InquiriesChartWidget::class,
+                \App\Filament\Widgets\JobApplicationsChartWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
