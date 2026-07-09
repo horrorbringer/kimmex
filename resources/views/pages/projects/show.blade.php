@@ -1,28 +1,7 @@
 @php
-    use App\Models\Project;
-
-    $locale = app()->getLocale();
-    $contentLocale = $locale === 'kh' ? 'km' : $locale;
-    $defaultProjectImage = '/images/webp/projects/Thumbnail-1.webp';
-
-    $resolveContent = function (\Illuminate\Database\Eloquent\Model $projectDb, string $field, array $fallbackLocales = ['en']) use ($contentLocale): string {
-        $locales = array_values(array_unique(array_filter(array_merge([$contentLocale], $fallbackLocales))));
-
-        foreach ($locales as $candidateLocale) {
-            $candidate = $projectDb->getTranslation($field, $candidateLocale);
-
-            if (!is_string($candidate)) {
-                continue;
-            }
-
-            $candidate = trim($candidate);
-            if ($candidate !== '') {
-                return $candidate;
-            }
-        }
-
-        return '';
-    };
+    /** @var array $project Passed from ProjectController */
+    /** @var string $contentLocale Passed from ProjectController */
+    /** @var string $defaultProjectImage Passed from ProjectController */
 
     $normalizeDesignConcept = function (?string $content) use ($contentLocale): string {
         $content = trim((string) $content);
@@ -35,57 +14,7 @@
         return $content;
     };
 
-    // Use the $slug passed from the router to fetch the project
-    $project = \Illuminate\Support\Facades\Cache::remember("project_show_data_{$slug}_{$contentLocale}", now()->addHours(12), function() use ($slug, $contentLocale, $resolveContent, $defaultProjectImage) {
-        $projectDb = \App\Models\Project::where('isActive', true)
-            ->where('slug', $slug)
-            ->with(['projectCategory', 'images'])
-            ->first();
-        if (!$projectDb) return null;
-
-        return [
-            'id' => $projectDb->slug,
-            'title' => $resolveContent($projectDb, 'title'),
-            'type' => $projectDb->projectCategory ? $projectDb->projectCategory->localizedName($contentLocale) : ($projectDb->category ?: __('Infrastructure')),
-            'location' => $resolveContent($projectDb, 'location'),
-            'status' => $projectDb->status?->getLabel() ?: __('Completed'),
-            'date' => $projectDb->completionDate?->format('F Y') ?: __('Oct 2026'),
-            'client' => $projectDb->client ?: __('Ministry of Economy and Finance'),
-            'built_area' => $projectDb->scale ?: __('50,000 SQM'),
-            'contract_value' => __('Contact for Details'),
-            'year' => $projectDb->timeline ?: __('2023 - 2026'),
-            'heroImage' => \App\Support\PublicStorage::urlIfExists($projectDb->heroImage, $defaultProjectImage),
-
-            'narrative' => [
-                'description' => $resolveContent($projectDb, 'description'),
-                'background' => $resolveContent($projectDb, 'background'),
-                'objectives' => $resolveContent($projectDb, 'objectives'),
-                'design_concept' => $resolveContent($projectDb, 'designConcept'),
-                'engineering_narrative' => $resolveContent($projectDb, 'engineeringNarrative')
-            ],
-
-            'scope' => $resolveContent($projectDb, 'scopeContributions'),
-
-            'images' => $projectDb->images
-                ->map(fn($img) => \App\Support\PublicStorage::urlIfExists($img->url))
-                ->filter()
-                ->values()
-                ->toArray(),
-            'related' => \App\Models\Project::where('isActive', true)->where('id', '!=', $projectDb->id)->where('status', $projectDb->status)->with('projectCategory')->take(3)->get()->map(fn(\App\Models\Project $p) => [
-                'id' => $p->slug,
-                'title' => $resolveContent($p, 'title'),
-                'type' => $p->projectCategory ? $p->projectCategory->localizedName($contentLocale) : ($p->category ?: __('Infrastructure')),
-                'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, '/images/webp/projects/Thumbnail-5.webp')
-            ])->toArray()
-        ];
-    });
-
-    if (!$project) {
-        abort(404);
-    }
-
-    $project['heroImage'] = $project['heroImage'] ?: $defaultProjectImage;
-
+    // Use the $project passed from ProjectController
     $renderProjectContent = fn (?string $content, string $mode = 'auto') => \App\Support\RichContent::renderProject($content, $mode);
 
     $hasProjectContent = function (?string $content): bool {

@@ -1,8 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CareerController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ServiceController;
 use App\Models\Document;
 use App\Models\JobPosting;
 use App\Models\NewsArticle;
@@ -122,36 +127,28 @@ Route::get('/careers', function () {
     return view('pages.careers');
 })->name('careers');
 
-Route::get('/careers/{slug}', function ($slug) {
-    return view('pages.careers.show', ['slug' => $slug]);
-})->name('careers.show');
+Route::get('/careers/{slug}', [CareerController::class, 'show'])->name('careers.show');
 
 // Services Archive
 Route::get('/services', function () {
     return view('pages.services');
 })->name('services.index');
 
-Route::get('/services/{slug}', function ($slug) {
-    return view('pages.services.show', ['slug' => $slug]);
-})->name('services.show');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 // Projects Archive & Single
 Route::get('/projects', function () {
     return view('pages.projects.index');
 })->name('projects.index');
 
-Route::get('/projects/{slug}', function ($slug) {
-    return view('pages.projects.show', ['slug' => $slug]);
-})->name('projects.show');
+Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 
 // News Archive & Single
 Route::get('/news', function () {
     return view('pages.news.index');
 })->name('news.index');
 
-Route::get('/news/{slug}', function ($slug) {
-    return view('pages.news.show', ['slug' => $slug]);
-})->name('news.show');
+Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 
 // Contact Page
 Route::get('/contact', function () {
@@ -165,9 +162,7 @@ Route::get('/documents', function () {
     return view('pages.documents');
 })->name('documents');
 
-Route::get('/documents/{slug}', function ($slug) {
-    return view('pages.documents.show', ['slug' => $slug]);
-})->name('documents.show');
+Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('documents.show');
 
 // Privacy Policy
 Route::get('/privacy-policy', function () {
