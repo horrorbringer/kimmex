@@ -134,6 +134,7 @@ class ManageSettings extends Page implements HasForms
             'font_kh' => $theme['font_family_km'] ?? 'Suwannaphum',
             'footer_bg_color' => $theme['footer_bg_color'] ?? '#071A33',
             'footer_accent_color' => $theme['footer_accent_color'] ?? '#ED1C24',
+            'news_page_bg_color' => $theme['news_page_bg_color'] ?? '#F7F8FA',
         ];
 
         $provider = $this->data['ai_provider'];
@@ -555,6 +556,13 @@ class ManageSettings extends Page implements HasForms
                                         ColorPicker::make('footer_bg_color')->label(__('Footer Background Color')),
                                         ColorPicker::make('footer_accent_color')->label(__('Footer Accent/Link Color')),
                                     ]),
+                                Section::make(__('Page Backgrounds'))
+                                    ->columns(2)
+                                    ->schema([
+                                        ColorPicker::make('news_page_bg_color')
+                                            ->label(__('News Article Page Background'))
+                                            ->helperText(__('Background color of the news article detail page.')),
+                                    ]),
                                 Section::make(__('Typography'))
                                     ->columns(2)
                                     ->schema([
@@ -763,6 +771,7 @@ class ManageSettings extends Page implements HasForms
             'font_family_km' => $state['font_kh'],
             'footer_bg_color' => $state['footer_bg_color'] ?? '#071A33',
             'footer_accent_color' => $state['footer_accent_color'] ?? '#ED1C24',
+            'news_page_bg_color' => $state['news_page_bg_color'] ?? '#F7F8FA',
         ]);
 
         // 6. Global Cache Purge (Force Frontend Sync)

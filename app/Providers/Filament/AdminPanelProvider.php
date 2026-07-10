@@ -60,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex(self::getThemeColor('primary_color', '#E31E24')),
                 'secondary' => Color::hex(self::getThemeColor('secondary_color', '#1a1a2e')),
+                'gray' => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
