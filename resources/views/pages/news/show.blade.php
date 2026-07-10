@@ -1,5 +1,4 @@
 @php
-@php
     $relatedArticles = $relatedData['related'] ?? [];
     $nextArticle     = $relatedData['next'] ?? null;
     $prevArticle     = $relatedData['prev'] ?? null;
