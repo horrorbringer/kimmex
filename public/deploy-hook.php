@@ -15,6 +15,7 @@ Illuminate\Support\Facades\Artisan::call('config:clear');
 Illuminate\Support\Facades\Artisan::call('view:clear');
 Illuminate\Support\Facades\Artisan::call('cache:clear');
 Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+Illuminate\Support\Facades\Artisan::call('filament:cache-components');
 Illuminate\Support\Facades\Artisan::call('filament:assets');
 Illuminate\Support\Facades\Artisan::call('config:cache');
 Illuminate\Support\Facades\Artisan::call('route:cache');
