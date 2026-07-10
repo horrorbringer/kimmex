@@ -79,9 +79,12 @@ class FormController extends Controller
             'job_id' => 'present|nullable|uuid|exists:job_postings,id',
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:50',
+            'phone' => ['required', 'string', 'max:30', 'regex:/^\+?[\d\s\-().]{7,25}$/'],
             'resume' => 'required|file|mimes:pdf,doc,docx|mimetypes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document|max:10240',
             'message' => 'nullable|string',
+        ], [
+            'phone.regex' => __('Please enter a valid phone number (e.g. +855 12 345 678).'),
+            'phone.max'   => __('Phone number is too long.'),
         ]);
 
         // 2. Sanitize Inputs

@@ -2,42 +2,20 @@
 
     <div class="bg-white min-h-screen text-titan-navy">
 
-        <!-- === PREMIUM CONTACT HERO === -->
-        <section class="relative min-h-[520px] md:min-h-[760px] md:h-screen flex items-center overflow-hidden bg-titan-navy">
-            {{-- Background Image with Brighter Overlay --}}
+        <!-- HERO -->
+        <section class="relative h-[320px] md:h-[380px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
                 <img src="/images/webp/projects/Thumbnail-3.webp" alt="Contact Kimmex"
-                    class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-titan-navy/30 to-transparent">
-                </div>
-                <div class="absolute inset-0 bg-titan-navy/30"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent"></div>
+                    class="w-full h-full object-cover opacity-50" loading="eager" decoding="async" fetchpriority="high" />
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
             </div>
-
-            <div class="relative z-20 w-full max-w-[1400px] mx-auto px-4 sm:px-6 pt-28 md:pt-32 pb-16 md:pb-40">
-
-
-                <h1 class="font-heading font-[900] text-white mb-6 md:mb-10 leading-none tracking-normal uppercase drop-shadow-2xl"
-                    style="font-size: clamp(1.75rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
-                    <span class="block">{{ __('CONNECT') }}</span>
-                    <span class="block text-titan-red mt-2">{{ __('WITH US') }}</span>
+            <div class="relative z-10 w-full max-w-[1200px] mx-auto px-6 pb-10 md:pb-12">
+                <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Kimmex') }}</p>
+                <h1 class="font-black text-white uppercase leading-none drop-shadow-lg"
+                    style="font-size: clamp(1.6rem, 4vw, 2.6rem) !important; color: white !important; font-weight: 900 !important;">
+                    {{ __('Get In Touch') }}
                 </h1>
-
-                <div class="border-l-4 border-titan-red pl-4 sm:pl-6 md:pl-10 mb-8 md:mb-16 max-w-2xl">
-                    <p class="text-base sm:text-lg md:text-2xl text-white font-bold leading-snug md:leading-tight uppercase tracking-[0.08em] md:tracking-[0.15em] drop-shadow-xl"
-                        style="color: white !important;">
-                        {{ __('Building Relationships.') }}<br />
-                        {{ __('Building Future.') }}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Scroll Indicator -->
-            <div
-                class="absolute bottom-10 right-10 flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500 hidden lg:flex">
-                <span
-                    class="text-[9px] font-bold uppercase tracking-[0.5em] text-white [writing-mode:vertical-lr]">{{ __('Scroll') }}</span>
-                <div class="w-[1px] h-20 bg-gradient-to-b from-white to-transparent"></div>
+                <p class="text-white/50 text-sm mt-2">{{ __('We respond within 24 hours on business days.') }}</p>
             </div>
         </section>
 
@@ -81,198 +59,162 @@
                 $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
         @endphp
 
-        <!-- CONTACT INFO BAR -->
-        <section class="max-w-[1400px] mx-auto px-4 sm:px-6 relative z-40 -mt-12 md:-mt-20">
-            <div
-                class="bg-white rounded shadow-[0_28px_70px_-34px_rgba(0,0,0,0.18)] md:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
-                    class="flex flex-col">
+        <!-- CONTACT INFO STRIP -->
+        <div class="bg-gray-50 border-b border-gray-100">
+            <div class="max-w-[1200px] mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200">
                     <a href="{{ $googleMapsLink }}" target="_blank"
-                        class="flex items-start sm:items-center gap-4 md:gap-6 p-4 sm:p-5 md:p-10 h-full transition-all duration-500 relative bg-white"
-                        x-bind:class="hover ? 'shadow-[inset_0_-4px_0_0_#E31E24]' : ''">
-                        
-                        <div
-                            class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
-                            x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : ''">
-                            <x-lucide-map-pin stroke-width="1.5"
-                                class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 text-titan-red" />
+                        class="flex items-center gap-3 py-4 md:py-5 md:pr-8 group">
+                        <div class="w-8 h-8 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-titan-red/30 transition-colors">
+                            <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red" stroke-width="1.5" />
                         </div>
-                        <div>
-                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
-                                {{ __('Address') }}
-                            </div>
-                            <div class="text-sm font-semibold text-titan-navy leading-relaxed transition-colors duration-500 break-words"
-                                x-bind:class="hover ? 'text-titan-red' : ''">
-                                {{ $address }}</div>
+                        <div class="min-w-0">
+                            <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-0.5">{{ __('Address') }}</div>
+                            <div class="text-[11px] font-semibold text-titan-navy/70 group-hover:text-titan-red transition-colors truncate">{{ $address }}</div>
                         </div>
                     </a>
-                </div>
-                <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
-                    class="flex flex-col">
                     <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                        class="flex items-center gap-4 md:gap-6 p-4 sm:p-5 md:p-10 h-full transition-all duration-500 relative bg-white"
-                        x-bind:class="hover ? 'shadow-[inset_0_-4px_0_0_#E31E24]' : ''">
-                        
-                        <div
-                            class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
-                            x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : ''">
-                            <x-lucide-phone stroke-width="1.5"
-                                class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 text-titan-red" />
+                        class="flex items-center gap-3 py-4 md:py-5 md:px-8 group">
+                        <div class="w-8 h-8 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-titan-red/30 transition-colors">
+                            <x-lucide-phone class="w-3.5 h-3.5 text-titan-red" stroke-width="1.5" />
                         </div>
                         <div>
-                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
-                                {{ __('Phone') }}
-                            </div>
-                            <div class="text-base font-semibold text-titan-navy leading-relaxed transition-colors duration-500"
-                                x-bind:class="hover ? 'text-titan-red' : ''">
-                                {{ $phone }}</div>
+                            <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-0.5">{{ __('Phone') }}</div>
+                            <div class="text-[11px] font-semibold text-titan-navy/70 group-hover:text-titan-red transition-colors">{{ $phone }}</div>
                         </div>
                     </a>
-                </div>
-                <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false"
-                    class="flex flex-col">
                     <a href="mailto:{{ $email }}"
-                        class="flex items-center gap-4 md:gap-6 p-4 sm:p-5 md:p-10 h-full transition-all duration-500 relative bg-white"
-                        x-bind:class="hover ? 'shadow-[inset_0_-4px_0_0_#E31E24]' : ''">
-                        
-                        <div
-                            class="w-10 h-10 md:w-14 md:h-14 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 border border-gray-100"
-                            x-bind:class="hover ? 'border-titan-red bg-titan-red/5' : ''">
-                            <x-lucide-mail stroke-width="1.5"
-                                class="w-5 h-5 md:w-6 md:h-6 transition-all duration-300 text-titan-red" />
+                        class="flex items-center gap-3 py-4 md:py-5 md:pl-8 group">
+                        <div class="w-8 h-8 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-titan-red/30 transition-colors">
+                            <x-lucide-mail class="w-3.5 h-3.5 text-titan-red" stroke-width="1.5" />
                         </div>
-                        <div>
-                            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-titan-navy/30 mb-1">
-                                {{ __('Email') }}
-                            </div>
-                            <div class="text-sm md:text-base font-semibold text-titan-navy leading-relaxed transition-colors duration-500 break-all sm:break-normal"
-                                x-bind:class="hover ? 'text-titan-red' : ''">
-                                {{ $email }}</div>
+                        <div class="min-w-0">
+                            <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-navy/30 mb-0.5">{{ __('Email') }}</div>
+                            <div class="text-[11px] font-semibold text-titan-navy/70 group-hover:text-titan-red transition-colors truncate">{{ $email }}</div>
                         </div>
                     </a>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- FORM + SIDEBAR -->
-        <section class="py-14 md:py-24 max-w-[1200px] mx-auto px-4 sm:px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-16">
+        <section class="py-10 md:py-14 max-w-[1200px] mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
 
                 <!-- FORM (2/3) -->
                 <div class="lg:col-span-2">
-            <div class="bg-white border border-gray-100 rounded p-5 sm:p-6 md:p-10 lg:p-12 shadow-lg">
-                        <div class="flex items-start sm:items-center gap-3 sm:gap-4 mb-6 md:mb-8">
-                            <div class="w-1 h-8 bg-titan-red rounded-full shrink-0"></div>
+                    <div class="bg-white border border-gray-100 rounded-lg p-5 md:p-8">
+                        <div class="flex items-center gap-2.5 mb-6">
+                            <div class="w-5 h-[2px] bg-titan-red rounded-full"></div>
                             <div>
-                                <h2 class="text-lg md:text-xl font-bold text-titan-navy uppercase tracking-normal">
-                                    {{ __('Send a Message') }}
-                                </h2>
-                                <p class="text-titan-navy/35 text-xs mt-0.5">
-                                    {{ __('We will get back to you within 24 hours.') }}
-                                </p>
+                                <h2 class="contact-section-title text-[11px] font-black text-titan-navy uppercase tracking-[0.2em]">{{ __('Send a Message') }}</h2>
+                                <p class="text-[10px] text-titan-navy/35 mt-0.5">{{ __('We will get back to you within 24 hours.') }}</p>
                             </div>
                         </div>
 
-                        @if (session('success'))
-                            <div
-                                class="bg-green-50 text-green-700 p-4 rounded mb-6 text-sm font-semibold border border-green-100 flex items-center gap-2">
+                        @if(session('success'))
+                            <div class="flex items-center gap-2 bg-green-50 border border-green-100 text-green-700 rounded p-3 mb-5 text-[11px] font-semibold">
                                 <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
                                 {{ session('success') }}
                             </div>
                         @endif
 
-                        <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data"
-                            class="space-y-5">
+                        <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
                             @csrf
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
-                                    <label
-                                        class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('First Name') }}
-                                        <span class="text-titan-red">*</span></label>
+                                    <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">{{ __('First Name') }} <span class="text-titan-red">*</span></label>
                                     <div class="relative">
-                                        <x-lucide-user
-                                            class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                                        <x-lucide-user class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/20 pointer-events-none" />
                                         <input type="text" name="first_name" required
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
-                                            placeholder="{{ __('John') }}">
+                                            class="w-full h-10 pl-9 pr-3 rounded border border-gray-200 bg-gray-50 text-[12px] font-semibold text-titan-navy placeholder:text-titan-navy/20 focus:outline-none focus:border-titan-red/40 focus:bg-white focus:ring-1 focus:ring-titan-red/10 transition-all @error('first_name') border-titan-red bg-red-50 @enderror"
+                                            placeholder="{{ __('First name') }}" />
                                     </div>
+                                    @error('first_name')<p class="text-[9px] text-titan-red font-bold mt-1">{{ $message }}</p>@enderror
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Last Name') }}
-                                        <span class="text-titan-red">*</span></label>
+                                    <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">{{ __('Last Name') }} <span class="text-titan-red">*</span></label>
                                     <div class="relative">
-                                        <x-lucide-user
-                                            class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                                        <x-lucide-user class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/20 pointer-events-none" />
                                         <input type="text" name="last_name" required
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
-                                            placeholder="{{ __('Doe') }}">
+                                            class="w-full h-10 pl-9 pr-3 rounded border border-gray-200 bg-gray-50 text-[12px] font-semibold text-titan-navy placeholder:text-titan-navy/20 focus:outline-none focus:border-titan-red/40 focus:bg-white focus:ring-1 focus:ring-titan-red/10 transition-all @error('last_name') border-titan-red bg-red-50 @enderror"
+                                            placeholder="{{ __('Last name') }}" />
                                     </div>
+                                    @error('last_name')<p class="text-[9px] text-titan-red font-bold mt-1">{{ $message }}</p>@enderror
                                 </div>
                             </div>
+
                             <div>
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Email Address') }}
-                                    <span class="text-titan-red">*</span></label>
+                                <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">{{ __('Email Address') }} <span class="text-titan-red">*</span></label>
                                 <div class="relative">
-                                    <x-lucide-at-sign
-                                        class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                                    <x-lucide-at-sign class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/20 pointer-events-none" />
                                     <input type="email" name="email" required
-                                        class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
-                                        placeholder="{{ __('email@example.com') }}">
+                                        class="w-full h-10 pl-9 pr-3 rounded border border-gray-200 bg-gray-50 text-[12px] font-semibold text-titan-navy placeholder:text-titan-navy/20 focus:outline-none focus:border-titan-red/40 focus:bg-white focus:ring-1 focus:ring-titan-red/10 transition-all @error('email') border-titan-red bg-red-50 @enderror"
+                                        placeholder="you@example.com" />
                                 </div>
+                                @error('email')<p class="text-[9px] text-titan-red font-bold mt-1">{{ $message }}</p>@enderror
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Phone') }}</label>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div x-data="{ phoneVal: '', phoneError: '' }">
+                                    <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">{{ __('Phone') }}</label>
                                     <div class="relative">
-                                        <x-lucide-phone
-                                            class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
-                                        <input type="text" name="phone"
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
-                                            placeholder="+855 12 345 678">
+                                        <x-lucide-phone class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/20 pointer-events-none" />
+                                        <input type="tel" name="phone" inputmode="tel"
+                                            x-model="phoneVal"
+                                            @blur="phoneError = phoneVal && !/^\+?[\d\s\-(). ]{7,25}$/.test(phoneVal.trim()) ? '{{ __('Enter a valid number') }}' : ''"
+                                            @input="if(phoneError) phoneError = ''"
+                                            :class="phoneError ? 'border-titan-red bg-red-50' : 'border-gray-200 bg-gray-50 focus:border-titan-red/40 focus:bg-white'"
+                                            class="w-full h-10 pl-9 pr-3 rounded border text-[12px] font-semibold text-titan-navy placeholder:text-titan-navy/20 focus:outline-none focus:ring-1 focus:ring-titan-red/10 transition-all"
+                                            placeholder="+855 12 345 678" />
                                     </div>
+                                    <p x-show="phoneError" x-text="phoneError" class="text-[9px] text-titan-red font-bold mt-1" style="display:none"></p>
                                 </div>
                                 <div>
-                                    <label
-                                        class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Subject') }}</label>
+                                    <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">{{ __('Subject') }}</label>
                                     <div class="relative">
-                                        <x-lucide-file-text
-                                            class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                                        <x-lucide-file-text class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/20 pointer-events-none" />
                                         <input type="text" name="subject"
-                                            class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none placeholder:text-gray-300"
-                                            placeholder="{{ __('Project discussion') }}">
+                                            class="w-full h-10 pl-9 pr-3 rounded border border-gray-200 bg-gray-50 text-[12px] font-semibold text-titan-navy placeholder:text-titan-navy/20 focus:outline-none focus:border-titan-red/40 focus:bg-white focus:ring-1 focus:ring-titan-red/10 transition-all"
+                                            placeholder="{{ __('Project discussion') }}" />
                                     </div>
                                 </div>
                             </div>
+
                             <div>
-                                <label class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Message') }}
-                                    <span class="text-titan-red">*</span></label>
+                                <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">{{ __('Message') }} <span class="text-titan-red">*</span></label>
                                 <textarea name="message" required rows="5"
-                                    class="w-full bg-gray-50 border border-gray-100 rounded px-4 py-3.5 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none resize-none placeholder:text-gray-300"
-                                    placeholder="{{ __('Tell us about the details...') }}"></textarea>
+                                    class="w-full px-3 py-2.5 rounded border border-gray-200 bg-gray-50 text-[12px] font-semibold text-titan-navy placeholder:text-titan-navy/20 focus:outline-none focus:border-titan-red/40 focus:bg-white focus:ring-1 focus:ring-titan-red/10 transition-all resize-none @error('message') border-titan-red bg-red-50 @enderror"
+                                    placeholder="{{ __('Tell us about your project…') }}"></textarea>
+                                @error('message')<p class="text-[9px] text-titan-red font-bold mt-1">{{ $message }}</p>@enderror
                             </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-bold text-titan-navy/40 mb-2">{{ __('Attachment') }}</label>
-                                <div class="relative">
-                                    <x-lucide-paperclip
-                                        class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none" />
-                                    <input type="file" name="attachment"
-                                        class="w-full bg-gray-50 border border-gray-100 rounded pl-11 pr-4 py-3 text-sm font-semibold text-titan-navy shadow-[inset_0_1px_2px_rgba(11,43,92,0.04)] focus:shadow-[0_0_0_4px_rgba(227,30,36,0.08),0_10px_24px_-18px_rgba(11,43,92,0.35)] focus:ring-2 focus:ring-titan-red/20 focus:border-titan-red/40 focus:bg-white transition-all outline-none file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-titan-navy/10 file:text-titan-navy hover:file:bg-titan-navy/20 cursor-pointer text-gray-400">
+
+                            <div x-data="{ fileName: '' }">
+                                <label class="block text-[10px] font-black text-titan-navy/40 uppercase tracking-[0.15em] mb-1.5">
+                                    {{ __('Attachment') }} <span class="text-titan-navy/20 font-medium normal-case tracking-normal text-[10px]">{{ __('(optional)') }}</span>
+                                </label>
+                                <div class="relative h-10 rounded border transition-all duration-200 cursor-pointer overflow-hidden"
+                                    :class="fileName ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-gray-50 hover:border-gray-300'">
+                                    <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.png"
+                                        class="absolute inset-0 opacity-0 cursor-pointer z-10 w-full"
+                                        @change="fileName = $event.target.files[0]?.name || ''" />
+                                    <div class="flex items-center justify-between h-full px-3">
+                                        <span class="text-[11px] font-semibold truncate"
+                                            :class="fileName ? 'text-green-700' : 'text-titan-navy/30'"
+                                            x-text="fileName || '{{ __('PDF, DOCX, JPG, PNG — max 5 MB') }}'"></span>
+                                        <template x-if="!fileName"><x-lucide-paperclip class="w-3.5 h-3.5 text-titan-navy/20 shrink-0" /></template>
+                                        <template x-if="fileName"><x-lucide-file-check class="w-3.5 h-3.5 text-green-500 shrink-0" /></template>
+                                    </div>
                                 </div>
-                                <p class="text-[10px] text-titan-navy/30 mt-1.5">
-                                    {{ __('Supported formats: PDF, DOCX, JPG, PNG (Max: 5MB)') }}
-                                </p>
                             </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
-                                <p class="text-[11px] text-titan-navy/25 hidden sm:block">
-                                    {{ __('All fields marked with * are required') }}
-                                </p>
+
+                            <div class="flex items-center justify-between gap-3 pt-2 border-t border-gray-100">
+                                <p class="text-[9px] text-titan-navy/25">* {{ __('required fields') }}</p>
                                 <button type="submit"
-                                    class="w-full sm:w-auto justify-center bg-titan-red hover:bg-titan-navy text-white px-8 py-4 rounded font-bold text-sm uppercase tracking-widest transition-all duration-300 flex items-center gap-3 shadow-md hover:shadow-lg group">
+                                    class="inline-flex items-center gap-2 h-9 px-6 rounded bg-titan-red hover:bg-titan-navy text-white font-black text-[9px] uppercase tracking-[0.2em] transition-all group">
                                     {{ __('Send Message') }}
-                                    <x-lucide-send
-                                        class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                    <x-lucide-send class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                                 </button>
                             </div>
                         </form>
@@ -280,98 +222,88 @@
                 </div>
 
                 <!-- SIDEBAR (1/3) -->
-                <div class="lg:sticky lg:top-32 space-y-6 self-start">
+                <div class="space-y-3 lg:sticky lg:top-28 self-start">
+
                     <!-- Hours -->
-                    <div class="bg-gray-50 text-white rounded p-5 md:p-8 relative overflow-hidden">
-                        <div
-                            class="absolute top-0 right-0 w-32 h-32 bg-titan-red/10 rounded-full blur-[60px] pointer-events-none">
+                    <div class="bg-white border border-gray-100 rounded-lg p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <x-lucide-clock class="w-3.5 h-3.5 text-titan-red shrink-0" />
+                            <p class="contact-section-title text-[9px] font-black uppercase tracking-[0.25em] text-titan-navy/40">{{ __('Working Hours') }}</p>
                         </div>
-                        <div class="relative z-10">
-                            <div class="flex items-center gap-3 mb-6">
-                                <x-lucide-clock class="w-4 h-4 text-titan-red" />
-                                <h3 class="text-xs font-bold uppercase tracking-widest text-titan-navy/70">
-                                    {{ __('Working Hours') }}
-                                </h3>
-                            </div>
-                            <div class="space-y-3 text-sm">
-                                <div class="text-titan-navy/80 font-medium leading-relaxed">
-                                    {{ $workingHours }}
-                                </div>
-                            </div>
-                        </div>
+                        <p class="text-[11px] font-semibold text-titan-navy/60 leading-relaxed">{{ $workingHours }}</p>
+                    </div>
+
+                    <!-- Map preview -->
+                    <div class="rounded-lg overflow-hidden border border-gray-100 h-[180px] md:h-[200px] relative group">
+                        <iframe src="{{ $googleMapsUrl }}" width="100%" height="100%" style="border:0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <a href="{{ $googleMapsLink }}" target="_blank"
+                            class="absolute bottom-2 right-2 inline-flex items-center gap-1.5 h-7 px-3 rounded bg-white/90 backdrop-blur-sm border border-gray-200 text-[9px] font-black uppercase tracking-[0.15em] text-titan-navy hover:text-titan-red transition-colors shadow-sm">
+                            <x-lucide-external-link class="w-3 h-3" />{{ __('Open Map') }}
+                        </a>
                     </div>
 
                     <!-- Social -->
-                    <div class="bg-gray-50 rounded p-5 md:p-8">
-                        <div class="flex items-center gap-3 mb-5">
-                            <x-lucide-share-2 class="w-4 h-4 text-titan-red" />
-                            <h3 class="text-xs font-bold uppercase tracking-widest text-titan-navy/40">
-                                {{ __('Follow Us') }}
-                            </h3>
-                        </div>
-                        <div class="flex flex-wrap gap-3">
+                    <div class="bg-white border border-gray-100 rounded-lg p-5">
+                        <p class="contact-section-title text-[9px] font-black uppercase tracking-[0.25em] text-titan-navy/40 mb-3">{{ __('Follow Us') }}</p>
+                        <div class="flex flex-wrap gap-2">
                             <a href="{{ $facebook }}" target="_blank" rel="noopener"
-                                class="group w-10 h-10 rounded bg-social-facebook flex items-center justify-center text-white shadow-lg shadow-social-facebook/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                <x-social-icon network="facebook" class="w-4 h-4 text-white transition-colors" />
+                                class="w-8 h-8 rounded bg-social-facebook flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                                <x-social-icon network="facebook" class="w-3.5 h-3.5" />
                             </a>
                             <a href="{{ $linkedin }}" target="_blank" rel="noopener"
-                                class="group w-10 h-10 rounded bg-social-linkedin flex items-center justify-center text-white shadow-lg shadow-social-linkedin/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                <x-social-icon network="linkedin" class="w-4 h-4 text-white transition-colors" />
+                                class="w-8 h-8 rounded bg-social-linkedin flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                                <x-social-icon network="linkedin" class="w-3.5 h-3.5" />
                             </a>
-                            @if ($youtube && $youtube !== '#')
-                                <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
-                                    class="group w-10 h-10 rounded bg-social-youtube flex items-center justify-center text-white shadow-lg shadow-social-youtube/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                    <x-social-icon network="youtube" class="w-4 h-4 text-white transition-colors" />
-                                </a>
+                            @if($youtube && $youtube !== '#')
+                            <a href="{{ $youtube }}" target="_blank" rel="noopener"
+                                class="w-8 h-8 rounded bg-social-youtube flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                                <x-social-icon network="youtube" class="w-3.5 h-3.5" />
+                            </a>
                             @endif
-                            @if ($instagram && $instagram !== '#')
-                                <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
-                                    class="group w-10 h-10 rounded bg-social-instagram flex items-center justify-center text-white shadow-lg shadow-social-instagram/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                    <x-social-icon network="instagram" class="w-4 h-4 text-white transition-colors" />
-                                </a>
+                            @if($instagram && $instagram !== '#')
+                            <a href="{{ $instagram }}" target="_blank" rel="noopener"
+                                class="w-8 h-8 rounded bg-social-instagram flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                                <x-social-icon network="instagram" class="w-3.5 h-3.5" />
+                            </a>
                             @endif
-                            @if ($telegram && $telegram !== '#')
-                                <a href="{{ $telegram }}" target="_blank" rel="noopener"
-                                    class="group w-10 h-10 rounded bg-social-telegram flex items-center justify-center text-white shadow-lg shadow-social-telegram/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                    <x-social-icon network="telegram" class="w-4 h-4 text-white transition-colors" />
-                                </a>
+                            @if($telegram && $telegram !== '#')
+                            <a href="{{ $telegram }}" target="_blank" rel="noopener"
+                                class="w-8 h-8 rounded bg-social-telegram flex items-center justify-center text-white hover:brightness-110 transition-all shadow-sm">
+                                <x-social-icon network="telegram" class="w-3.5 h-3.5" />
+                            </a>
                             @endif
                         </div>
                     </div>
+
+                    <!-- Direct CTA -->
+                    <a href="tel:{{ str_replace(' ', '', $phone) }}"
+                        class="flex items-center justify-center gap-2 h-10 w-full rounded bg-titan-navy text-white text-[9px] font-black uppercase tracking-[0.2em] hover:bg-titan-red transition-colors">
+                        <x-lucide-phone class="w-3.5 h-3.5" />{{ __('Call Us Now') }}
+                    </a>
                 </div>
             </div>
         </section>
 
-        <section class="max-w-[1200px] mx-auto px-4 sm:px-6 mb-10 md:mb-16 relative">
-            <div
-                class="w-full h-[260px] md:h-[340px] bg-gray-100 rounded overflow-hidden relative md:grayscale md:hover:grayscale-0 transition-all duration-500 shadow-xl border border-gray-100 md:border-2 md:border-transparent md:hover:border-titan-red md:hover:shadow-2xl md:hover:shadow-titan-red/20">
-                <iframe src="{{ $googleMapsUrl }}" width="100%" height="100%" style="border:0;" allowfullscreen=""
-                    loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-                <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_50px_rgba(0,0,0,0.05)]"></div>
+        <!-- FULL MAP -->
+        <div class="max-w-[1200px] mx-auto px-6 pb-10 md:pb-14">
+            <div class="w-full h-[220px] md:h-[280px] rounded-lg overflow-hidden border border-gray-100">
+                <iframe src="{{ $googleMapsUrl }}" width="100%" height="100%" style="border:0;"
+                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
-        </section>
-
+        </div>
 
         <!-- CTA BANNER -->
-        <section class="bg-titan-navy py-16 relative overflow-hidden">
-            <div
-                class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
-            </div>
-            <div
-                class="max-w-[1200px] mx-auto px-4 sm:px-6 relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8">
+        <section class="bg-titan-navy py-10 md:py-12">
+            <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h3 class="text-xl md:text-2xl font-bold !text-white uppercase tracking-normal mb-2">
-                        {{ __('Ready to Start Your Project?') }}
-                    </h3>
-                    <p class="text-white/40 text-sm">
-                        {{ __('Our expert team is here to help you every step of the way.') }}
-                    </p>
+                    <p class="text-[9px] font-black uppercase tracking-[0.3em] text-titan-red mb-1">{{ __('Ready?') }}</p>
+                    <h3 class="contact-section-title text-base font-black text-white uppercase tracking-tight">{{ __('Start Your Project Today') }}</h3>
+                    <p class="text-white/35 text-[11px] mt-1">{{ __('Our expert team is here to help every step of the way.') }}</p>
                 </div>
                 <a href="tel:{{ str_replace(' ', '', $phone) }}"
-                    class="w-full md:w-auto justify-center flex items-center gap-3 bg-titan-red hover:bg-white hover:text-titan-navy text-white px-8 py-4 rounded font-bold text-sm uppercase tracking-widest transition-all duration-300 shrink-0 shadow-lg group">
-                    <x-lucide-phone class="w-4 h-4 group-hover:animate-pulse" />
-                    {{ __('Call Us Now') }}
+                    class="shrink-0 inline-flex items-center gap-2 h-10 px-6 rounded bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.2em] hover:bg-white hover:text-titan-navy transition-all">
+                    <x-lucide-phone class="w-3.5 h-3.5" />{{ __('Call Us Now') }}
                 </a>
             </div>
         </section>
