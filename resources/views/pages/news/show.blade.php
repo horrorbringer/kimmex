@@ -47,6 +47,28 @@
         if (preg_match($vimeoPattern, $url, $matches)) return "https://player.vimeo.com/video/" . $matches[3];
         return null;
     };
+
+    $sidebarDocs = \Illuminate\Support\Facades\Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale) {
+        return \App\Models\Document::with('documentCategory')->publiclyVisible()->latest()->take(3)->get()
+            ->map(fn($d) => [
+                'slug'     => $d->slug,
+                'title'    => $d->getTranslation('title', $locale),
+                'category' => $d->documentCategory ? $d->documentCategory->getTranslation('name', $locale) : ($d->category ?: __('Documents')),
+                'fileType' => $d->fileType ?: 'PDF',
+                'fileSize' => $d->fileSize,
+            ])->toArray();
+    });
+
+    $sidebarJobs = \Illuminate\Support\Facades\Cache::remember("news_sidebar_jobs_{$locale}", now()->addHours(12), function () use ($locale) {
+        return \App\Models\JobPosting::where('isActive', true)->with('department')->orderByDesc('created_at')->take(3)->get()
+            ->map(fn($j) => [
+                'slug'     => $j->slug,
+                'title'    => $j->getTranslation('title', $locale),
+                'dept'     => $j->department ? $j->department->getTranslation('name', $locale) : __('General'),
+                'location' => $j->getTranslation('location', $locale),
+                'type'     => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
+            ])->toArray();
+    });
 @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage" :canonical="$canonicalUrl" og-type="article">
