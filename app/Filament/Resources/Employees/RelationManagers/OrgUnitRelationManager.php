@@ -10,6 +10,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
@@ -29,19 +30,19 @@ class OrgUnitRelationManager extends RelationManager
         return \App\Filament\Resources\OrgUnits\Tables\OrgUnitsTable::configure($table)
             ->recordTitleAttribute('title')
             ->headerActions([
-                \Filament\Tables\Actions\CreateAction::make(),
-                \Filament\Tables\Actions\AssociateAction::make(),
+                CreateAction::make(),
+                AssociateAction::make(),
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
-                \Filament\Tables\Actions\EditAction::make(),
-                \Filament\Tables\Actions\DissociateAction::make(),
-                \Filament\Tables\Actions\DeleteAction::make(),
+                ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                EditAction::make(),
+                DissociateAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
-                \Filament\Tables\Actions\BulkActionGroup::make([
-                    \Filament\Tables\Actions\DissociateBulkAction::make(),
-                    \Filament\Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DissociateBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
