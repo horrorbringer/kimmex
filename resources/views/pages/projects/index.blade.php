@@ -153,246 +153,131 @@
         }
     }" class="bg-white min-h-screen text-titan-navy relative overflow-hidden">
 
-        <style>
-            .projects-hero-container {
-                min-height: 600px;
-                /* No radius: Square architectural look */
-            }
-
-            /* Custom scroll animation */
-            @keyframes scrollLine {
-                0% {
-                    transform: translateY(-100%);
-                }
-
-                100% {
-                    transform: translateY(100%);
-                }
-            }
-
-            .animate-scroll-line {
-                animation: scrollLine 2s cubic-bezier(0.76, 0, 0.24, 1) infinite;
-            }
-        </style>
-
-        <!-- === PREMIUM PROJECTS HERO === -->
-        <section class="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-titan-navy">
-            {{-- Background Zoom Animation --}}
+        <!-- HERO -->
+        <section class="relative h-[320px] md:h-[380px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
-                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Built Legacy" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
-                {{-- Lightened multi-stage gradient --}}
-                <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
+                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Projects" class="w-full h-full object-cover opacity-50" loading="eager" decoding="async" fetchpriority="high" />
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
             </div>
-
-            <!-- Decorative Elements -->
-            <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-
-            <div class="relative z-20 text-center px-6 max-w-7xl pt-24" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 100)">
-
-
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'"
-                    class="transition-all duration-1000 delay-300 font-heading font-[900] text-white mb-8 leading-[0.9] tracking-tighter uppercase"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem) !important; color: white !important; font-weight: 900 !important;">
-                    {{ __('BUILT') }} <span class="text-titan-red">{{ __('LEGACY') }}</span>
+            <div class="relative z-10 w-full max-w-[1200px] mx-auto px-6 pb-10 md:pb-12">
+                <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Kimmex') }}</p>
+                <h1 class="font-black text-white uppercase leading-none"
+                    style="font-size: clamp(1.6rem, 4vw, 2.6rem) !important; color: white !important; font-weight: 900 !important;">
+                    {{ __('Our Projects') }}
                 </h1>
-
-                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-500 flex items-center justify-center gap-6 mb-16">
-                    <div class="h-[1px] w-12 bg-white/30"></div>
-                    <p class="text-[10px] md:text-xs text-white/90 font-bold uppercase tracking-[0.4em]">
-                        {{ __('Architecting the future through engineering precision.') }}
-                    </p>
-                    <div class="h-[1px] w-12 bg-white/30"></div>
-                </div>
-
-                <!-- Scroll Indicator -->
-                <div :class="shown ? 'opacity-100' : 'opacity-0'" class="transition-all duration-1000 delay-700 flex flex-col items-center gap-4 cursor-pointer group"
-                    onclick="document.getElementById('portfolio-grid').scrollIntoView({ behavior: 'smooth' })">
-                    <span class="text-[9px] uppercase tracking-[0.4em] font-bold text-white/40 group-hover:text-titan-red transition-colors">{{ __('Scroll') }}</span>
-                    <div class="w-[1px] h-16 bg-gradient-to-b from-titan-red to-transparent"></div>
-                </div>
+                <p class="text-white/50 text-sm mt-2">{{ __('Architecting the future through engineering precision.') }}</p>
             </div>
-
         </section>
 
-        <!-- INTEGRATED FILTER & GRID -->
-        <section id="portfolio-grid" class="py-20 px-6 bg-white relative">
-            <div class="max-w-[1700px] mx-auto">
+        <!-- FILTER & GRID -->
+        <section id="portfolio-grid" class="py-10 md:py-14 px-6 bg-white">
+            <div class="max-w-[1200px] mx-auto">
 
                 <!-- Filter Bar -->
-                <div class="sticky top-16 z-30 mb-10 rounded border border-gray-200 bg-white/95 backdrop-blur shadow-sm">
-                    <div class="border-b border-gray-100 px-4 py-3 md:px-5">
-                        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                            <div>
-                                <div class="{{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.22em]' }} text-titan-red">{{ __('Projects') }}</div>
-                                <div class="mt-1 {{ $isKhmer ? 'text-sm font-khmer normal-case tracking-normal leading-tight' : 'text-sm font-bold' }} text-titan-navy">
-                                    <span x-text="activeCount"></span> {{ __('projects found') }}
-                                </div>
-                            </div>
+                <div class="sticky top-16 z-30 mb-8 bg-white border-b border-gray-100 pb-5">
 
-                            <div class="flex flex-wrap items-center gap-2">
-                                <button
-                                    @click="clearFilters()"
-                                    class="inline-flex items-center gap-2 rounded border border-gray-200 bg-white px-3 py-2 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy hover:border-titan-red/30 hover:text-titan-red transition-colors">
-                                    <x-lucide-rotate-ccw class="w-3.5 h-3.5" />
-                                    {{ __('Clear filters') }}
-                                </button>
-                            </div>
+                    {{-- Search row --}}
+                    <div class="flex flex-col sm:flex-row gap-3 mb-5">
+                        <div class="relative flex-grow">
+                            <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/25" />
+                            <input type="text" x-model="search" placeholder="{{ __('Search projects by name…') }}"
+                                class="w-full h-11 pl-11 pr-4 rounded-lg border border-gray-200 bg-white text-sm font-semibold text-titan-navy placeholder:text-titan-navy/30 focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm" />
                         </div>
-                    </div>
-
-                    <div class="px-4 py-4 md:px-5">
-                        <nav class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                            <template x-for="type in categories" :key="type">
-                                <button
-                                    @click="filterType = type"
-                                    class="shrink-0 rounded-full border px-3.5 py-2 min-h-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} transition-all duration-300"
-                                    :class="filterType === type ? 'border-titan-red bg-titan-red text-white shadow-sm' : 'border-gray-200 bg-white text-titan-navy/55 hover:border-titan-red/30 hover:text-titan-navy'">
-                                    <span x-text="type === 'All' ? allTypesLabel : type"></span>
-                                </button>
-                            </template>
-                        </nav>
-
-                        <div class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.7fr]">
-                            <label class="relative block">
-                                <span class="sr-only">{{ __('Search projects') }}</span>
-                                <x-lucide-search class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/30" />
-                                <input type="text" x-model="search" placeholder="Search projects..."
-                                    class="w-full rounded border border-gray-200 bg-white py-3 pl-11 pr-4 {{ $isKhmer ? 'text-[12px] font-khmer normal-case tracking-normal leading-tight' : 'text-[12px] font-normal' }} text-titan-navy transition-colors placeholder:text-gray-400 focus:border-titan-red focus:outline-none focus:ring-1 focus:ring-titan-red/20" />
-                            </label>
-
+                        <div class="flex gap-2">
                             <div class="relative">
                                 <select x-model="filterLoc"
-                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
+                                    class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
                                     <template x-for="loc in locations" :key="loc">
                                         <option :value="loc" x-text="loc === 'All' ? allLocationsLabel : loc"></option>
                                     </template>
                                 </select>
-                                <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
+                                <x-lucide-map-pin class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
                             </div>
-
                             <div class="relative">
                                 <select x-model="filterStatus"
-                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
+                                    class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
                                     <template x-for="stat in statusOptions" :key="stat">
-                                        <option :value="stat"
-                                            x-text="stat === 'All' ? allStatusLabel : stat"></option>
+                                        <option :value="stat" x-text="stat === 'All' ? allStatusLabel : stat"></option>
                                     </template>
                                 </select>
-                                <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
+                                <x-lucide-activity class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="relative">
-                                <select x-model="sortBy"
-                                    class="appearance-none w-full rounded border border-gray-200 bg-white px-4 py-3 pr-10 {{ $isKhmer ? 'text-[11px] font-khmer normal-case tracking-normal leading-tight' : 'text-[10px] font-bold uppercase tracking-[0.18em]' }} text-titan-navy transition-colors cursor-pointer focus:outline-none focus:border-titan-red focus:ring-1 focus:ring-titan-red/20">
-                                    <option value="featured">{{ __('Featured') }}</option>
-                                    <option value="title">{{ __('A-Z') }}</option>
-                                    <option value="status">{{ __('Status') }}</option>
-                                </select>
-                                <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-navy/40" />
-                            </div>
+                    {{-- Category tabs + count --}}
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div class="flex flex-wrap gap-2 overflow-x-auto">
+                            <template x-for="type in categories" :key="type">
+                                <button @click="filterType = type"
+                                    class="h-8 px-4 rounded-full text-xs font-bold border transition-all duration-200 whitespace-nowrap"
+                                    :class="filterType === type
+                                        ? 'bg-titan-red text-white border-titan-red shadow-sm'
+                                        : 'bg-gray-50 text-titan-navy/60 border-gray-200 hover:border-titan-red/30 hover:text-titan-red'">
+                                    <span x-text="type === 'All' ? allTypesLabel : type"></span>
+                                </button>
+                            </template>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="text-xs font-bold text-titan-navy/35">
+                                <span x-text="activeCount"></span> {{ __('projects') }}
+                            </span>
+                            <button @click="clearFilters()"
+                                x-show="filterType !== 'All' || filterStatus !== statusOptions[0] || filterLoc !== locations[0] || search !== ''"
+                                style="display:none"
+                                class="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-gray-200 text-xs font-bold text-titan-navy/50 hover:text-titan-red hover:border-titan-red/30 transition-colors">
+                                <x-lucide-x class="w-3 h-3" />{{ __('Reset') }}
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Standard Grid - Clean & Professional UX -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <template x-for="project in filteredProjects" :key="project.id">
-                        <div class="animate-fade-in-up h-full">
-                            <a :href="'/projects/' + project.id"
-                                class="group block relative bg-white rounded overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 h-full">
+                        <a :href="'/projects/' + project.id"
+                            class="group block bg-white rounded-lg overflow-hidden border border-gray-100 hover:border-titan-red/20 hover:shadow-[0_8px_24px_-8px_rgba(11,43,92,0.14)] transition-all duration-300">
 
-                                <!-- Thumbnail Area - Uniform Aspect Ratio -->
-                                <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
-                                    <img :src="project.image" :alt="project.title"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
-                                    <div
-                                        class="absolute inset-0 bg-titan-navy/0 group-hover:bg-titan-navy/10 transition-colors duration-500">
-                                    </div>
-
+                            <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
+                                <img :src="project.image" :alt="project.title"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                <div class="absolute top-3 left-3">
+                                    <span class="inline-flex h-5 px-2 rounded bg-white/90 backdrop-blur-sm border border-gray-200/50 text-[8px] font-black uppercase tracking-[0.15em] text-titan-navy/70 items-center" x-text="project.status"></span>
                                 </div>
+                            </div>
 
-                                <!-- Content Block - Clean Typography -->
-                                <div class="p-8 flex flex-col flex-1">
-                                    <!-- Red Accent Bar -->
-                                    <div class="w-8 h-1 bg-titan-red mb-5 group-hover:w-12 transition-all duration-300">
+                            <div class="p-4 md:p-5">
+                                <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-red/60 mb-1.5" x-text="project.type"></div>
+                                <h3 class="projects-title text-base font-black text-titan-navy leading-tight mb-2 group-hover:text-titan-red transition-colors uppercase tracking-tight" x-text="project.title"></h3>
+                                <p class="text-xs text-titan-navy/45 leading-relaxed line-clamp-2 mb-3" x-text="project.summary"></p>
+                                <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                                    <div class="flex items-center gap-1.5 text-[10px] font-semibold text-titan-navy/40">
+                                        <x-lucide-map-pin class="w-3 h-3 text-titan-red/50" />
+                                        <span x-text="project.location"></span>
                                     </div>
-
-                                    <h3 class="text-xl font-bold text-titan-navy leading-tight mb-2 group-hover:text-titan-red transition-colors uppercase tracking-tight"
-                                        x-text="project.title"></h3>
-                                    <p class="text-titan-navy/40 text-[10px] font-bold uppercase tracking-widest mb-4"
-                                        x-text="project.type"></p>
-
-                                    <p class="text-gray-500 text-sm leading-relaxed mb-6 font-medium line-clamp-2"
-                                        x-text="project.summary"></p>
-
-                                    <!-- Footer Meta -->
-                                    <div
-                                        class="mt-auto pt-5 border-t border-gray-100 flex items-center justify-between">
-                                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-                                            <div class="flex items-center gap-2">
-                                                <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red/70" />
-                                                <span class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/60" x-text="project.location"></span>
-                                            </div>
-                                            <div class="flex items-center gap-2">
-                                                <x-lucide-activity class="w-3.5 h-3.5 text-titan-red/70" />
-                                                <span class="text-[10px] font-bold uppercase tracking-widest text-titan-navy/60" x-text="project.status"></span>
-                                            </div>
-                                        </div>                                        <div
-                                        class="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 text-titan-navy group-hover:text-titan-red transition-colors">
-                                            {{ __('View Details') }}
-                                            <x-lucide-arrow-right
-                                                class="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                                        </div>
-                                    </div>
+                                    <span class="text-[9px] font-black uppercase tracking-[0.15em] text-titan-navy/30 group-hover:text-titan-red transition-colors flex items-center gap-1">
+                                        {{ __('View') }}
+                                        <x-lucide-arrow-right class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                    </span>
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </template>
                 </div>
 
                 <!-- Empty State -->
                 <div x-show="filteredProjects.length === 0" style="display: none;"
-                    class="text-center py-40 bg-gray-50 rounded border border-dashed border-gray-100">
-                    <x-lucide-building class="w-12 h-12 text-titan-navy/10 mx-auto mb-8" />
-                    <h3 class="text-2xl font-bold text-titan-navy mb-4 uppercase tracking-tighter">
-                        {{ __('No Built Legacy Found') }}
-                    </h3>
-                    <p class="text-titan-navy/40 text-sm max-w-sm mx-auto leading-relaxed">
-                        {{ __('Refine your search parameters to explore other successful Kimmex deliveries.') }}
-                    </p>
+                    class="text-center py-20 bg-gray-50/50 rounded-lg border border-dashed border-gray-200 mt-4">
+                    <x-lucide-building class="w-8 h-8 text-titan-navy/15 mx-auto mb-4" />
+                    <p class="text-sm font-black text-titan-navy/30 uppercase tracking-widest mb-3">{{ __('No projects found') }}</p>
+                    <p class="text-xs text-titan-navy/30 mb-5">{{ __('Try adjusting your filters.') }}</p>
+                    <button @click="clearFilters()"
+                        class="h-8 px-4 rounded-full bg-titan-navy text-white text-[9px] font-black uppercase tracking-[0.18em] hover:bg-titan-red transition-colors">
+                        {{ __('Clear Filters') }}
+                    </button>
                 </div>
             </div>
         </section>
     </div>
-    </section>
 
-    </div>
-
-    <style>
-        @keyframes superSlowPan {
-            0% {
-                transform: scale(1.05) translate(0, 0);
-            }
-
-            100% {
-                transform: scale(1.1) translate(-2%, 2%);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in-up {
-            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    </style>
 </x-layouts.app>

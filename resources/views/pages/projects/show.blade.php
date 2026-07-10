@@ -115,9 +115,9 @@
         </div>
 
         <!-- --- PREMIUM NARRATIVE HERO --- -->
-        <header class="relative w-full h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px] overflow-hidden bg-titan-navy flex items-center justify-center">
+        <header class="relative w-full h-[50vh] md:h-[55vh] min-h-[360px] md:min-h-[420px] overflow-hidden bg-titan-navy flex items-center justify-center">
             <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
-                class="absolute inset-0 w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high"
+                class="absolute inset-0 w-full h-full object-cover opacity-100" loading="eager" decoding="async" fetchpriority="high"
                 onerror="this.onerror=null; this.dataset.imageError='false'; this.src='{{ $defaultProjectImage }}';" />
             
             {{-- Deep multi-stage gradient for maximum text contrast --}}
@@ -148,8 +148,8 @@
         </header>
 
         <!-- --- MAIN CONTENT SPLIT --- -->
-        <section class="py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-white via-slate-50/60 to-white">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 max-w-[1400px] mx-auto">
+        <section class="py-10 md:py-16 px-4 md:px-6 bg-gradient-to-b from-white via-slate-50/60 to-white">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 max-w-[1400px] mx-auto">
 
                 <!-- LEFT: CONTENT -->
                 <div class="lg:col-span-8">
@@ -328,10 +328,10 @@
 
         <!-- --- GALLERY SECTION --- -->
         @if(count($project['images']) > 0)
-            <section class="bg-slate-50 py-12 md:py-24 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10"
-                x-data="{ lightboxOpen: false, lightboxIndex: 0, images: {{ json_encode($project['images']) }} }">
+            <div x-data="{ lightboxOpen: false, lightboxIndex: 0, images: {{ Js::from($project['images']) }} }">
+            <section class="bg-slate-50 py-10 md:py-14 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10">
                 <div class="max-w-[1400px] mx-auto">
-                    <h2 class="text-2xl md:text-3xl font-black mb-8 md:mb-12 border-l-4 border-titan-red pl-4 md:pl-6">{{ __('Project Gallery') }}</h2>
+                    <h2 class="text-xl md:text-2xl font-black mb-6 md:mb-8 border-l-4 border-titan-red pl-4 md:pl-6">{{ __('Project Gallery') }}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
                         @foreach($project['images'] as $i => $img)
                             @if($i < 3)
@@ -379,67 +379,71 @@
                         @endforeach
                     </div>
                 </div>
-
-                <!-- LIGHTBOX -->
-                <div x-show="lightboxOpen" x-transition.opacity @keydown.escape.window="lightboxOpen = false"
-                    @keydown.arrow-right.window="lightboxIndex = (lightboxIndex + 1) % images.length"
-                    @keydown.arrow-left.window="lightboxIndex = (lightboxIndex - 1 + images.length) % images.length"
-                    class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center"
-                    style="display: none;">
-
-                    <button @click="lightboxOpen = false"
-                        class="absolute top-4 md:top-6 right-4 md:right-6 z-50 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                        <x-lucide-x class="w-5 h-5 md:w-6 md:h-6 text-white" />
-                    </button>
-
-                    <button @click="lightboxIndex = (lightboxIndex - 1 + images.length) % images.length"
-                        class="absolute left-4 md:left-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                        <x-lucide-chevron-left class="w-5 h-5 md:w-6 md:h-6 text-white" />
-                    </button>
-
-                    <button @click="lightboxIndex = (lightboxIndex + 1) % images.length"
-                        class="absolute right-4 md:right-6 z-50 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
-                        <x-lucide-chevron-right class="w-5 h-5 md:w-6 md:h-6 text-white" />
-                    </button>
-
-                    <div class="max-w-7xl max-h-[85vh] px-12 md:px-24 py-12">
-                        <img :src="images[lightboxIndex]"
-                            class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl" decoding="async" loading="lazy" />
-                    </div>
-
-                    <div
-                        class="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/10">
-                        <span class="text-white/80 text-xs md:text-sm font-bold">
-                            <span x-text="lightboxIndex + 1"></span> / <span x-text="images.length"></span>
-                        </span>
-                    </div>
-                </div>
             </section>
+
+            <!-- LIGHTBOX — outside section to avoid overflow/transform issues -->
+            <div x-show="lightboxOpen"
+                x-effect="document.body.style.overflow = lightboxOpen ? 'hidden' : ''"
+                @keydown.escape.window="lightboxOpen = false"
+                @keydown.arrow-right.window="if(lightboxOpen) { lightboxIndex = (lightboxIndex + 1) % images.length }"
+                @keydown.arrow-left.window="if(lightboxOpen) { lightboxIndex = (lightboxIndex - 1 + images.length) % images.length }"
+                class="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+                x-cloak>
+
+                <!-- Close -->
+                <button @click="lightboxOpen = false" type="button"
+                    class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
+                    <x-lucide-x class="w-5 h-5 text-white" />
+                </button>
+
+                <!-- Prev -->
+                <button @click="lightboxIndex = (lightboxIndex - 1 + images.length) % images.length" type="button"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
+                    <x-lucide-chevron-left class="w-5 h-5 text-white" />
+                </button>
+
+                <!-- Next -->
+                <button @click="lightboxIndex = (lightboxIndex + 1) % images.length" type="button"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
+                    <x-lucide-chevron-right class="w-5 h-5 text-white" />
+                </button>
+
+                <!-- Image -->
+                <img :src="images[lightboxIndex]"
+                    class="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-2xl select-none" decoding="async" />
+
+                <!-- Counter -->
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <span class="text-white/80 text-xs font-bold">
+                        <span x-text="lightboxIndex + 1"></span> / <span x-text="images.length"></span>
+                    </span>
+                </div>
+            </div>
+            </div>
         @endif
 
         <!-- --- RELATED PROJECTS --- -->
         @if(count($project['related']) > 0)
-            <section class="py-12 md:py-24 px-4 md:px-6 max-w-[1400px] mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8 md:mb-12">
-                    <h2 class="text-2xl md:text-3xl font-black text-titan-navy">{{ __('Similar Projects') }}</h2>
+            <section class="py-10 md:py-14 px-4 md:px-6 max-w-[1400px] mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 md:mb-8">
+                    <h2 class="text-xl md:text-2xl font-black text-titan-navy">{{ __('Similar Projects') }}</h2>
                     <a href="/projects"
                         class="font-bold text-titan-red hover:underline flex items-center gap-2 text-xs md:text-sm uppercase tracking-widest">
                         {{ __('View All') }} <x-lucide-arrow-right class="w-4 h-4" />
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                     @foreach($project['related'] as $p)
                         <a href="/projects/{{ $p['id'] }}" class="block group">
-                            <div class="aspect-[16/10] rounded-xl overflow-hidden mb-4 md:mb-6 relative shadow-sm group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500">
+                            <div class="aspect-[16/10] rounded-lg overflow-hidden mb-3 relative shadow-sm group-hover:shadow-lg transition-all duration-300">
                                 <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" decoding="async" />
-                                <div
-                                    class="absolute top-3 md:top-4 left-3 md:left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                <div class="absolute top-3 left-3 bg-titan-navy/90 backdrop-blur-sm text-white text-[9px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded">
                                     {{ $p['type'] }}
                                 </div>
                             </div>
-                            <h3 class="text-lg md:text-xl font-heading font-black text-titan-navy group-hover:text-titan-red transition-colors duration-300 uppercase leading-snug tracking-normal">
+                            <h3 class="projects-title text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors uppercase tracking-tight leading-tight">
                                 {{ $p['title'] }}
                             </h3>
                         </a>
