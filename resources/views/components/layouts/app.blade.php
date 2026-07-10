@@ -68,7 +68,7 @@
     <link rel="icon" href="{{ $faviconUrl }}">
     <link rel="apple-touch-icon" href="{{ $faviconUrl }}">
     <meta name="application-name" content="{{ $siteName }}">
-    <meta name="theme-color" content="{{ $theme['primary_color'] ?? '#ed1b24' }}">
+    <meta name="theme-color" content="{{ $theme['primary_color'] ?? '#ffffff' }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="{{ $siteName }}">

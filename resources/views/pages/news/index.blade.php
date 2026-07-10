@@ -94,7 +94,7 @@
         {{-- ══════════════════════════════════════
              PAGE HEADER
         ══════════════════════════════════════ --}}
-        <section class="bg-titan-navy border-b border-white/10 pt-28 pb-8">
+        <section class="bg-titan-navy-lighter border-b border-white/10 pt-28 pb-8">
             <div class="max-w-[1240px] mx-auto px-4 md:px-6">
                 <div class="flex items-center gap-2 mb-4">
                     <div class="w-1 h-4 bg-titan-red rounded-full"></div>
