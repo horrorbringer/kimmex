@@ -32,28 +32,29 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
-            $lang = app()->getLocale();
-            static $settingsByLocale = [];
-            static $hasPublicDocuments = null;
+            // Only run on web HTTP requests — skip CLI, queue workers, and Filament internals
+            if (! app()->runningInConsole() && request()->hasSession()) {
+                $lang = app()->getLocale();
+                static $settingsByLocale = [];
+                static $hasPublicDocuments = null;
 
-            $settings = $settingsByLocale[$lang] ??= \Illuminate\Support\Facades\Cache::remember('global_settings_' . $lang, now()->addHours(12), function () use ($lang) {
-                $brandIdentity = \App\Models\SystemSetting::get('brand_identity', []);
+                $settings = $settingsByLocale[$lang] ??= \Illuminate\Support\Facades\Cache::remember('global_settings_' . $lang, now()->addHours(12), function () use ($lang) {
+                    $brandIdentity = \App\Models\SystemSetting::get('brand_identity', []);
 
-                return [
-                    'profile' => \App\Models\SystemSetting::get('organization_profile', []),
-                    'brand' => $brandIdentity[$lang]
-                               ?? $brandIdentity['en']
-                               ?? [],
-                    'theme' => \App\Models\SystemSetting::get('theme_settings', []),
-                    'integrations' => \App\Models\SystemSetting::get('integration_settings', []),
-                ];
-            });
+                    return [
+                        'profile'      => \App\Models\SystemSetting::get('organization_profile', []),
+                        'brand'        => $brandIdentity[$lang] ?? $brandIdentity['en'] ?? [],
+                        'theme'        => \App\Models\SystemSetting::get('theme_settings', []),
+                        'integrations' => \App\Models\SystemSetting::get('integration_settings', []),
+                    ];
+                });
 
-            $hasPublicDocuments ??= \App\Models\Document::publicDocumentsExist();
+                $hasPublicDocuments ??= \App\Models\Document::publicDocumentsExist();
 
-            $view->with('globalSettings', $settings);
-            $view->with('siteLocale', $lang);
-            $view->with('hasPublicDocuments', $hasPublicDocuments);
+                $view->with('globalSettings', $settings);
+                $view->with('siteLocale', $lang);
+                $view->with('hasPublicDocuments', $hasPublicDocuments);
+            }
         });
 
         \Filament\Support\Facades\FilamentView::registerRenderHook(
@@ -131,44 +132,38 @@ class AppServiceProvider extends ServiceProvider
             });
         });
 
-        // Global Auto-Translation for Translatable Models
-        \Illuminate\Support\Facades\Event::listen('eloquent.saving: *', function (string $eventName, array $data) {
+        // Auto-Translation: dispatch async job instead of blocking the save request
+        \Illuminate\Support\Facades\Event::listen('eloquent.saved: *', function (string $eventName, array $data) {
+            // Only when AI auto-translate is enabled
+            $aiSettings = \App\Models\SystemSetting::get('ai_settings', []);
+            if (! ($aiSettings['auto_translate'] ?? true)) {
+                return;
+            }
+
             $model = $data[0] ?? null;
-            if ($model && in_array(\Spatie\Translatable\HasTranslations::class, class_uses_recursive($model))) {
-                if (property_exists($model, 'translatable')) {
-                    $translator = app(\App\Services\AutoTranslateService::class);
-                    foreach ($model->translatable as $field) {
-                        $translations = $model->getTranslations($field);
-                        $currentEn = $translations['en'] ?? null;
-                        
-                        // Check original database value to see if English text changed
-                        $original = $model->getOriginal($field);
-                        $originalEn = null;
-                        if ($original) {
-                            $originalArray = is_string($original) ? json_decode($original, true) : $original;
-                            $originalEn = $originalArray['en'] ?? null;
-                        }
+            if (! $model || ! in_array(\Spatie\Translatable\HasTranslations::class, class_uses_recursive($model))) {
+                return;
+            }
+            if (! property_exists($model, 'translatable') || empty($model->translatable)) {
+                return;
+            }
 
-                        // We translate if:
-                        // 1. Khmer is completely empty OR
-                        // 2. The English text was just modified/updated by the user
-                        $khmerIsEmpty = empty($translations['km']);
-                        $englishChanged = !empty($currentEn) && ($currentEn !== $originalEn);
-
-                        $shouldTranslate = $model instanceof \App\Models\ProjectCategory
-                            ? $khmerIsEmpty
-                            : ($khmerIsEmpty || $englishChanged);
-
-                        if (!empty($currentEn) && $shouldTranslate) {
-                            // Translate English content to Khmer automatically
-                            $translated = $translator->translate($currentEn, 'km');
-                            if ($translated) {
-                                $model->setTranslation($field, 'km', $translated);
-                            }
-                        }
-                    }
+            // Capture original EN values to pass to the job for change detection
+            $originals = [];
+            foreach ($model->translatable as $field) {
+                $original = $model->getOriginal($field);
+                if ($original) {
+                    $arr = is_string($original) ? json_decode($original, true) : $original;
+                    $originals[$field] = $arr['en'] ?? null;
                 }
             }
+
+            \App\Jobs\AutoTranslateModel::dispatch(
+                get_class($model),
+                $model->getKey(),
+                $model->translatable,
+                json_encode($originals),
+            )->onQueue('default');
         });
     }
 }

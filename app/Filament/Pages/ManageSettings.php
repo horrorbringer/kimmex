@@ -117,7 +117,7 @@ class ManageSettings extends Page implements HasForms
             'ai_system_prompt' => $ai['system_prompt'] ?? 'You are an expert copywriter and corporate communications specialist. Write engaging, professional, and SEO-optimized content. Return pure text or basic HTML without markdown blocks.',
             'ai_temperature' => $ai['temperature'] ?? 0.7,
             'ai_tone' => $ai['tone'] ?? 'professional',
-            'auto_translate' => $ai['auto_translate'] ?? true,
+            'auto_translate' => $ai['auto_translate'] ?? false,
             
             // Integration
             'telegram_enabled' => (bool) ($integration['telegram_enabled'] ?? false),
@@ -364,8 +364,8 @@ class ManageSettings extends Page implements HasForms
 
                                             Toggle::make('auto_translate')
                                                 ->label(__('Enable AI Auto-Translation'))
-                                                ->helperText(__('Generate Khmer translations automatically when saving.'))
-                                                ->default(true),
+                                                ->helperText(__('Automatically generate Khmer translations on save. Disable on shared hosting — enable only if you have a queue worker running.'))
+                                                ->default(false),
                                         ]),
 
                                     Section::make(__('Persona & Style'))
@@ -751,7 +751,7 @@ class ManageSettings extends Page implements HasForms
             'system_prompt' => $state['ai_system_prompt'] ?? '',
             'temperature' => $state['ai_temperature'] ?? 0.7,
             'tone' => $state['ai_tone'] ?? 'professional',
-            'auto_translate' => $state['auto_translate'] ?? true,
+            'auto_translate' => $state['auto_translate'] ?? false,
         ]);
 
         // 4. Integration Settings

@@ -1,162 +1,39 @@
 @php
-    use App\Models\Document;
-    use App\Models\JobPosting;
-    use App\Models\NewsArticle;
-    use Illuminate\Support\Facades\Cache;
-    use Illuminate\Support\Str;
-
-    /** @var string $slug */
-    $locale = app()->getLocale();
-    $fallbackImage = '/images/webp/hero/hero-3.webp';
-    $resolveNewsImage = function (?string $path, string $fallback) {
-        if (! filled($path)) {
-            return $fallback;
-        }
-
-        return \App\Support\PublicStorage::urlIfExists($path, $fallback);
-    };
-
-    $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage) {
-        $articleDb = NewsArticle::where('isActive', true)
-            ->where('publishedAt', '<=', now())
-            ->where('slug', $slug)
-            ->first();
-
-        if (!$articleDb) {
-            return null;
-        }
-
-        $excerpt = $articleDb->getTranslation('excerpt', $locale)
-            ?: \Illuminate\Support\Str::limit(strip_tags($articleDb->getTranslation('content', $locale)), 180);
-
-        return [
-            'slug' => $articleDb->slug,
-            'category' => $articleDb->getTranslation('category', $locale) ?: __('Updates'),
-            'image' => $resolveNewsImage($articleDb->coverImage, $fallbackImage),
-            'title' => $articleDb->getTranslation('title', $locale),
-            'metaTitle' => $articleDb->getTranslation('metaTitle', $locale),
-            'metaDescription' => $articleDb->getTranslation('metaDescription', $locale),
-            'date' => $articleDb->publishedAt ? $articleDb->publishedAt->format('M d, Y') : $articleDb->created_at->format('M d, Y'),
-            'publishedAt' => ($articleDb->publishedAt ?: $articleDb->created_at)->toIso8601String(),
-            'updatedAt' => $articleDb->updated_at->toIso8601String(),
-            'author' => $articleDb->getTranslation('authorName', $locale) ?: 'Kimmex Editorial',
-            'readTime' => $articleDb->getTranslation('readTime', $locale) ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', $locale))) / 200) . ' min read'),
-            'excerpt' => $excerpt,
-            'content' => $articleDb->getTranslation('content', $locale),
-            'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0 ? $articleDb->tags : [$articleDb->category ?: 'News'],
-            'gallery' => collect($articleDb->gallery ?? [])->map(fn($img) => $resolveNewsImage($img, ''))->filter()->values()->toArray(),
-            'videoUrl' => $articleDb->videoUrl,
-        ];
-    });
-
-    if (!$article) {
-        abort(404);
-    }
-
-    $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage, $article) {
-        $relatedDb = NewsArticle::where('isActive', true)
-            ->where('publishedAt', '<=', now())
-            ->where('slug', '!=', $slug)
-            ->orderByDesc('publishedAt')
-            ->take(3)
-            ->get();
-
-        $related = $relatedDb->map(function (NewsArticle $r) use ($locale, $fallbackImage, $resolveNewsImage) {
-            return [
-                'slug' => $r->slug,
-                'title' => $r->getTranslation('title', $locale),
-                'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
-                'category' => $r->getTranslation('category', $locale) ?: __('Updates'),
-                'image' => $resolveNewsImage($r->coverImage, $fallbackImage),
-            ];
-        })->toArray();
-
-        $next = null;
-        $prev = null;
-        if (! empty($article['publishedAt'])) {
-            $currentPublishedAt = \Illuminate\Support\Carbon::parse($article['publishedAt']);
-            $nextDb = NewsArticle::where('isActive', true)
-                ->where('publishedAt', '<=', now())
-                ->where('publishedAt', '<', $currentPublishedAt)
-                ->orderByDesc('publishedAt')
-                ->first();
-            $prevDb = NewsArticle::where('isActive', true)
-                ->where('publishedAt', '<=', now())
-                ->where('publishedAt', '>', $currentPublishedAt)
-                ->orderBy('publishedAt')
-                ->first();
-            if ($nextDb) {
-                $next = ['slug' => $nextDb->slug, 'title' => $nextDb->getTranslation('title', $locale)];
-            }
-            if ($prevDb) {
-                $prev = ['slug' => $prevDb->slug, 'title' => $prevDb->getTranslation('title', $locale)];
-            }
-        }
-
-        return compact('related', 'next', 'prev');
-    });
-
+@php
     $relatedArticles = $relatedData['related'] ?? [];
-    $nextArticle = $relatedData['next'] ?? null;
-    $prevArticle = $relatedData['prev'] ?? null;
+    $nextArticle     = $relatedData['next'] ?? null;
+    $prevArticle     = $relatedData['prev'] ?? null;
 
-    $pageTitle = ($article['metaTitle'] ?? null) ?: ($article['title'] ?? __('News Details'));
-    $pageDesc = ($article['metaDescription'] ?? null) ?: ($article['excerpt'] ?? __('Read the latest news and updates from Kimmex.'));
-    $pageImage = $article['image'] ?? null;
-    $structuredImage = ($pageImage && Str::startsWith($pageImage, ['http://', 'https://']))
+    $pageTitle   = ($article['metaTitle'] ?? null) ?: ($article['title'] ?? __('News Details'));
+    $pageDesc    = ($article['metaDescription'] ?? null) ?: ($article['excerpt'] ?? __('Read the latest news and updates from Kimmex.'));
+    $pageImage   = $article['image'] ?? null;
+    $structuredImage = ($pageImage && \Illuminate\Support\Str::startsWith($pageImage, ['http://', 'https://']))
         ? $pageImage
         : url($pageImage ?: '/logo.png');
     $canonicalUrl = route('news.show', ['slug' => $article['slug']]);
+
     $articleSchema = [
         '@context' => 'https://schema.org',
-        '@type' => 'NewsArticle',
-        'mainEntityOfPage' => [
-            '@type' => 'WebPage',
-            '@id' => $canonicalUrl,
-        ],
-        'headline' => $article['title'] ?? '',
-        'description' => $pageDesc,
-        'image' => [$structuredImage],
-        'datePublished' => $article['publishedAt'] ?? now()->toIso8601String(),
-        'dateModified' => $article['updatedAt'] ?? ($article['publishedAt'] ?? now()->toIso8601String()),
-        'author' => [
-            '@type' => 'Person',
-            'name' => $article['author'] ?? 'Kimmex Editorial',
-        ],
-        'publisher' => [
-            '@type' => 'Organization',
-            'name' => 'Kimmex',
-            'logo' => [
-                '@type' => 'ImageObject',
-                'url' => url('/logo.png'),
-            ],
-        ],
-        'articleSection' => $article['category'] ?? __('Updates'),
-        'keywords' => implode(', ', $article['tags'] ?? []),
-        'url' => $canonicalUrl,
+        '@type'    => 'NewsArticle',
+        'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $canonicalUrl],
+        'headline'         => $article['title'] ?? '',
+        'description'      => $pageDesc,
+        'image'            => [$structuredImage],
+        'datePublished'    => $article['publishedAt'] ?? now()->toIso8601String(),
+        'dateModified'     => $article['updatedAt'] ?? ($article['publishedAt'] ?? now()->toIso8601String()),
+        'author'           => ['@type' => 'Person', 'name' => $article['author'] ?? 'Kimmex Editorial'],
+        'publisher'        => ['@type' => 'Organization', 'name' => 'Kimmex', 'logo' => ['@type' => 'ImageObject', 'url' => url('/logo.png')]],
+        'articleSection'   => $article['category'] ?? __('Updates'),
+        'keywords'         => implode(', ', $article['tags'] ?? []),
+        'url'              => $canonicalUrl,
     ];
     $breadcrumbSchema = [
         '@context' => 'https://schema.org',
-        '@type' => 'BreadcrumbList',
+        '@type'    => 'BreadcrumbList',
         'itemListElement' => [
-            [
-                '@type' => 'ListItem',
-                'position' => 1,
-                'name' => __('Home'),
-                'item' => route('home'),
-            ],
-            [
-                '@type' => 'ListItem',
-                'position' => 2,
-                'name' => __('News'),
-                'item' => route('news.index'),
-            ],
-            [
-                '@type' => 'ListItem',
-                'position' => 3,
-                'name' => $article['title'] ?? '',
-                'item' => $canonicalUrl,
-            ],
+            ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'),  'item' => route('home')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => __('News'),  'item' => route('news.index')],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => $article['title'] ?? '', 'item' => $canonicalUrl],
         ],
     ];
     $schema = [$articleSchema, $breadcrumbSchema];
@@ -165,56 +42,12 @@
 
     $getVideoEmbedUrl = function (?string $url) {
         if (!$url) return null;
-
-        // YouTube pattern
         $ytPattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|shorts\/|watch\?v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
-        if (preg_match($ytPattern, $url, $matches)) {
-            return "https://www.youtube.com/embed/" . $matches[1];
-        }
-
-        // Vimeo pattern
+        if (preg_match($ytPattern, $url, $matches)) return "https://www.youtube.com/embed/" . $matches[1];
         $vimeoPattern = '/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/i';
-        if (preg_match($vimeoPattern, $url, $matches)) {
-            return "https://player.vimeo.com/video/" . $matches[3];
-        }
-
+        if (preg_match($vimeoPattern, $url, $matches)) return "https://player.vimeo.com/video/" . $matches[3];
         return null;
     };
-
-    $sidebarDocs = Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale) {
-        return Document::with('documentCategory')
-            ->publiclyVisible()
-            ->latest()
-            ->take(3)
-            ->get()
-            ->map(function ($d) use ($locale) {
-                return [
-                    'slug' => $d->slug,
-                    'title' => $d->getTranslation('title', $locale),
-                    'category' => $d->documentCategory ? $d->documentCategory->getTranslation('name', $locale) : ($d->category ?: __('Documents')),
-                    'fileType' => $d->fileType ?: 'PDF',
-                    'fileSize' => $d->fileSize,
-                ];
-            })->toArray();
-    });
-
-    $sidebarJobs = Cache::remember("news_sidebar_jobs_{$locale}", now()->addHours(12), function () use ($locale) {
-        return JobPosting::where('isActive', true)
-            ->with('department')
-            ->orderByDesc('created_at')
-            ->take(3)
-            ->get()
-            ->map(function ($j) use ($locale) {
-                $deptName = $j->department ? $j->department->getTranslation('name', $locale) : __('General');
-                return [
-                    'slug' => $j->slug,
-                    'title' => $j->getTranslation('title', $locale),
-                    'dept' => $deptName,
-                    'location' => $j->getTranslation('location', $locale),
-                    'type' => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
-                ];
-            })->toArray();
-    });
 @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$pageImage" :canonical="$canonicalUrl" og-type="article">
@@ -257,6 +90,17 @@
                         <x-social-icon network="telegram" class="w-3.5 h-3.5" />
                     </a>
                 </div>
+            </div>
+        </div>
+
+        <!-- BREADCRUMB -->
+        <div class="bg-white border-b border-gray-100">
+            <div class="max-w-[1240px] mx-auto px-6 h-10 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em]">
+                <a href="/" class="text-titan-navy/35 hover:text-titan-red transition-colors">{{ __('Home') }}</a>
+                <x-lucide-chevron-right class="w-3 h-3 text-titan-navy/20 shrink-0" />
+                <a href="{{ route('news.index') }}" class="text-titan-navy/35 hover:text-titan-red transition-colors">{{ __('News') }}</a>
+                <x-lucide-chevron-right class="w-3 h-3 text-titan-navy/20 shrink-0" />
+                <span class="text-titan-navy/60 truncate max-w-[260px] md:max-w-md">{{ $article['title'] }}</span>
             </div>
         </div>
 
