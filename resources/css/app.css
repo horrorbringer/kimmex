@@ -833,7 +833,10 @@ a.link:hover,
 .job-section-title,
 .contact-section-title,
 .services-title,
-.projects-title {
+.projects-title,
+.news-title,
+.about-title,
+.home-title {
   font-size: inherit !important;
 }
 

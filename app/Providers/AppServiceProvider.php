@@ -165,5 +165,8 @@ class AppServiceProvider extends ServiceProvider
                 json_encode($originals),
             )->onQueue('default');
         });
+
+        // Register model observers
+        \App\Models\JobApplication::observe(\App\Observers\JobApplicationObserver::class);
     }
 }

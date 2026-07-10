@@ -30,7 +30,7 @@
 @endphp
 
 <section class="py-24 bg-gray-50">
-    <div class="max-w-[1400px] mx-auto px-6">
+    <div class="max-w-[1200px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
             class="flex flex-row justify-center items-baseline gap-3 md:gap-6 mb-10 md:mb-16 text-center transition-all duration-1000">

@@ -1,8 +1,8 @@
 <section class="py-24 bg-white border-t border-gray-100">
-    <div class="max-w-[1400px] mx-auto px-6">
+    <div class="max-w-[1200px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="flex flex-col lg:flex-row items-center justify-between gap-8 transition-all duration-1000">
             <div class="text-center lg:text-left">
-                <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy mb-4">{{ __('Ready to Start Your Project?') }}</h2>
+                <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-4">{{ __('Ready to Start Your Project?') }}</h2>
                 <p class="text-titan-navy-subtle text-lg max-w-xl">{{ __('Contact us today for a free consultation and quote on your next big project.') }}</p>
             </div>
             <div class="flex flex-wrap gap-4">

@@ -1,12 +1,12 @@
 <section class="py-20 bg-titan-navy overflow-hidden">
-    <div class="max-w-[1400px] mx-auto px-6 mb-12">
+    <div class="max-w-[1200px] mx-auto px-6 mb-12">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
             class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 transition-all duration-1000">
             <div>
                 <span
                     class="text-titan-red font-bold uppercase tracking-widest text-sm mb-2 block">{{ __('Our Partners') }}</span>
-                <h2 class="text-3xl md:text-4xl font-heading font-black !text-white">
+                <h2 class="text-xl md:text-2xl font-heading font-black !text-white">
                     {{ __('Trusted By Leading Institutions') }}</h2>
             </div>
             <div class="flex items-center gap-4">

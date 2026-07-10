@@ -22,7 +22,7 @@
                     {{ __('About Kimmex') }}
                 </span>
 
-                <h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-normal tracking-normal mb-8">
+                <h2 class="text-2xl md:text-3xl font-black text-gray-900 leading-normal tracking-normal mb-8">
                     {{ __('Experience &') }}<br>{{ __('Excellence') }}
                 </h2>
 

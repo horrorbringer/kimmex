@@ -168,3 +168,19 @@ Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('docu
 Route::get('/privacy-policy', function () {
     return view('pages.privacy');
 })->name('privacy');
+
+// Newsletter Unsubscribe
+Route::get('/unsubscribe/{token}', function (string $token) {
+    $subscriber = \App\Models\Subscriber::where('unsubscribe_token', $token)->first();
+
+    if (!$subscriber) {
+        abort(404);
+    }
+
+    $subscriber->update([
+        'is_active' => false,
+        'unsubscribed_at' => now(),
+    ]);
+
+    return view('pages.unsubscribed', ['email' => $subscriber->email]);
+})->name('unsubscribe');

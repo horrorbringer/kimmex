@@ -61,6 +61,14 @@ class FormController extends Controller
             \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
         }
 
+        // 4. Auto-reply email to the user
+        try {
+            \Illuminate\Support\Facades\Mail::to($inquiry->email)
+                ->queue(new \App\Mail\ContactAutoReplyMail($inquiry));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Contact auto-reply email error: ' . $e->getMessage());
+        }
+
         return redirect()->back()->with('success', __('Thank you for your inquiry! We will get back to you shortly.'));
     }
 

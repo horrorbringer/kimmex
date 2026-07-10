@@ -199,7 +199,7 @@
         });
     @endphp
 
-    <div x-data="{ selectedMember: null }" class="bg-white min-h-screen text-titan-navy border-t border-gray-100">
+    <div x-data="{ selectedMember: null }" class="bg-white text-titan-navy border-t border-gray-100">
 
         <!-- Modal -->
         <div x-show="selectedMember" style="display: none"
@@ -246,7 +246,7 @@
                     <div class="mb-8 md:mb-12 relative">
                         <span class="text-titan-red font-black uppercase tracking-[0.3em] text-[10px] block mb-3"
                             x-text="selectedMember?.role"></span>
-                        <h3 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase leading-[1.1] tracking-tighter"
+                        <h3 class="text-2xl md:text-3xl font-heading font-black text-titan-navy uppercase leading-[1.1] tracking-tighter"
                             x-text="selectedMember?.name"></h3>
                         <div class="w-16 md:w-20 h-1.5 bg-titan-red mt-6 rounded-full"></div>
                     </div>
@@ -265,10 +265,10 @@
 
 
         <!-- === PREMIUM ABOUT HERO === -->
-        <section class="relative h-[60vh] md:h-[75vh] min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden bg-titan-navy">
+        <section class="relative h-[380px] md:h-[440px] flex items-center justify-center overflow-hidden bg-titan-navy">
             {{-- Background Zoom Animation --}}
             <div class="absolute inset-0">
-                <img src="{{ $aboutHeroImageUrl }}" alt="Construction Excellence" class="w-full h-full object-cover opacity-100 animate-slow-zoom" loading="eager" decoding="async" fetchpriority="high" />
+                <img src="{{ $aboutHeroImageUrl }}" alt="Construction Excellence" class="w-full h-full object-cover opacity-100" loading="eager" decoding="async" fetchpriority="high" />
                 {{-- Lightened multi-stage gradient --}}
                 <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/40 via-transparent to-titan-navy/70"></div>
             </div>
@@ -295,7 +295,7 @@
 
         <!-- STATS BAR -->
         <section class="bg-titan-navy py-12 md:py-16 border-t border-white/10">
-            <div class="max-w-[1400px] mx-auto px-4 md:px-6">
+            <div class="max-w-[1200px] mx-auto px-4 md:px-6">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                     @php
                         $stats = [
@@ -321,8 +321,8 @@
         </section>
 
         <!-- WHO WE ARE SECTION (Synced with Image) -->
-        <section class="py-16 sm:py-20 md:py-32 px-4 sm:px-6 bg-white overflow-hidden">
-            <div class="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-10 sm:gap-12 md:gap-20 items-center">
+        <section class="py-12 md:py-16 px-4 sm:px-6 bg-white overflow-hidden">
+            <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-6 md:gap-8 items-center">
 
                 <!-- Left: Aesthetic Image Grid with Badge -->
                 <div class="relative w-full flex justify-center lg:block overflow-hidden" x-data="{ shown: false }" x-intersect.once="shown = true">
@@ -511,7 +511,7 @@
 
         <!-- CORE VALUES -->
         <section class="py-24 px-6 bg-white">
-            <div class="max-w-[1400px] mx-auto">
+            <div class="max-w-[1200px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="text-center mb-16 transition-all duration-1000">
@@ -538,11 +538,11 @@
 
         <!-- MILESTONES (Our Journey) -->
         <section class="py-32 px-6 bg-white overflow-hidden relative border-t border-gray-100">
-            <div class="max-w-[1400px] mx-auto">
+            <div class="max-w-[1200px] mx-auto">
                 <div class="text-center mb-24">
                     <span
                         class="text-titan-red font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('OUR JOURNEY') }}</span>
-                    <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase tracking-tight">
+                    <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy uppercase tracking-tight">
                         {{ __('Company Milestones') }}
                     </h2>
                 </div>
@@ -641,7 +641,7 @@
                 <div class="text-center mb-24">
                     <span
                         class="text-titan-red font-black uppercase tracking-[0.3em] text-xs mb-4 block">{{ __('GOVERNANCE') }}</span>
-                    <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy uppercase tracking-tight">
+                    <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy uppercase tracking-tight">
                         {{ __('KIM MEX ORGANIZATION STRUCTURE') }}
                     </h2>
                 </div>
@@ -692,8 +692,8 @@
 
 
         <!-- QUALITY & SAFETY -->
-        <section id="safety" class="py-16 md:py-24 px-4 md:px-6 bg-slate-50 border-y border-titan-navy/10">
-            <div class="max-w-[1400px] mx-auto">
+        <section id="safety" class="py-10 md:py-14 px-4 md:px-6 bg-slate-50 border-y border-titan-navy/10">
+            <div class="max-w-[1200px] mx-auto">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"

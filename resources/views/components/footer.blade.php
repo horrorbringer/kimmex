@@ -166,6 +166,22 @@
             </div>
         </div>
 
+        <!-- Newsletter Subscribe -->
+        <div class="border-t border-white/10 pt-8 mt-8 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h4 style="color: var(--footer-accent);" class="font-bold text-sm uppercase tracking-widest mb-1 flex items-center gap-2">
+                        <x-lucide-mail class="w-3.5 h-3.5" />
+                        {{ __('Stay Updated') }}
+                    </h4>
+                    <p class="text-xs footer-muted">{{ __('Get the latest news and project updates delivered to your inbox.') }}</p>
+                </div>
+                <div class="w-full md:w-auto md:min-w-[360px]">
+                    <livewire:subscribe-form />
+                </div>
+            </div>
+        </div>
+
         <!-- Bottom Bar -->
         <div class="footer-bottom-bar border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
             <p>&copy; 2026 Kimmex Construction &amp; Investment Co., Ltd. {{ __('All rights reserved') }}.</p>

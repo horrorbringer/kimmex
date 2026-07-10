@@ -23,13 +23,15 @@ class JobApplicationsTable
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn ($state): string => match (is_string($state) ? $state : $state->value) {
                         'PENDING' => 'warning',
                         'REVIEWING' => 'info',
+                        'INTERVIEW' => 'warning',
                         'ACCEPTED' => 'success',
                         'REJECTED' => 'danger',
                         default => 'gray',
                     })
+                    ->formatStateUsing(fn ($state) => $state instanceof \App\Enums\ApplicationStatus ? $state->getLabel() : $state)
                     ->searchable(),
                 TextColumn::make('submittedAt')
                     ->label(__('Submitted At'))

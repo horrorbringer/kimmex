@@ -30,12 +30,12 @@
 @endphp
 
 <section class="py-24 bg-white">
-    <div class="max-w-[1400px] mx-auto px-6">
+    <div class="max-w-[1200px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
             class="max-w-3xl mx-auto mb-14 text-center transition-all duration-1000">
             <span class="text-titan-red font-bold uppercase tracking-widest text-sm mb-4 block">{{ __('Our Services') }}</span>
-            <h2 class="text-4xl md:text-5xl font-heading font-black text-titan-navy mb-4">
+            <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-4">
                 {{ __('Comprehensive Construction Solutions') }}
             </h2>
             <p class="text-titan-navy/60 text-base md:text-lg leading-relaxed">

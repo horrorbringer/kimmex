@@ -92,40 +92,34 @@
          }">
 
         {{-- ══════════════════════════════════════
-             PAGE HEADER
+             PAGE HEADER — compact hero
         ══════════════════════════════════════ --}}
-        <section class="bg-titan-navy-lighter border-b border-white/10 pt-28 pb-8">
-            <div class="max-w-[1240px] mx-auto px-4 md:px-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <div class="w-1 h-4 bg-titan-red rounded-full"></div>
-                    <span class="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">{{ __('Kimmex Newsroom') }}</span>
-                </div>
-                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                    <div>
-                        <h1 class="font-black uppercase leading-[0.93] text-white"
-                            style="font-size: clamp(1.75rem, 4vw, 3rem);">
-                            {{ __('News') }} <span class="text-titan-red">{{ __('& Updates') }}</span>
-                        </h1>
-                        <p class="text-white/40 text-sm mt-2 max-w-lg leading-relaxed">
-                            {{ __('Company announcements, project milestones, and industry updates from Kimmex.') }}
-                        </p>
+        <section class="relative h-[320px] md:h-[380px] flex items-end overflow-hidden bg-titan-navy">
+            <div class="absolute inset-0">
+                <img src="/images/webp/hero/hero-3.webp" alt="{{ __('News & Updates') }}" class="w-full h-full object-cover opacity-50" loading="eager" />
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
+            </div>
+            <div class="relative z-10 w-full max-w-[1200px] mx-auto px-6 pb-10 md:pb-12">
+                <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Kimmex') }}</p>
+                <h1 class="font-black uppercase leading-[0.93] text-white text-xl md:text-2xl">
+                    {{ __('News') }} <span class="text-titan-red">{{ __('& Updates') }}</span>
+                </h1>
+                <p class="text-white/50 text-sm mt-2">{{ __('Company announcements, project milestones, and industry updates from Kimmex.') }}</p>
+                <div class="flex items-center gap-5 mt-4">
+                    <div class="text-center">
+                        <div class="text-lg font-black text-white">{{ $totalArticles }}</div>
+                        <div class="text-[8px] font-black uppercase tracking-[0.2em] text-white/30">{{ __('Stories') }}</div>
                     </div>
-                    <div class="flex items-center gap-5 shrink-0">
-                        <div class="text-center">
-                            <div class="text-xl font-black text-white">{{ $totalArticles }}</div>
-                            <div class="text-[8px] font-black uppercase tracking-[0.2em] text-white/30">{{ __('Stories') }}</div>
-                        </div>
-                        <div class="w-px h-7 bg-white/20"></div>
-                        <a href="/documents" class="text-center hover:opacity-60 transition-opacity">
-                            <div class="text-xl font-black text-white">{{ count($sidebarDocs) }}</div>
-                            <div class="text-[8px] font-black uppercase tracking-[0.2em] text-white/30">{{ __('Documents') }}</div>
-                        </a>
-                        <div class="w-px h-7 bg-white/20"></div>
-                        <a href="/careers" class="text-center hover:opacity-60 transition-opacity">
-                            <div class="text-xl font-black text-white">{{ count($sidebarJobs) }}</div>
-                            <div class="text-[8px] font-black uppercase tracking-[0.2em] text-white/30">{{ __('Careers') }}</div>
-                        </a>
-                    </div>
+                    <div class="w-px h-7 bg-white/20"></div>
+                    <a href="/documents" class="text-center hover:opacity-60 transition-opacity">
+                        <div class="text-lg font-black text-white">{{ count($sidebarDocs) }}</div>
+                        <div class="text-[8px] font-black uppercase tracking-[0.2em] text-white/30">{{ __('Documents') }}</div>
+                    </a>
+                    <div class="w-px h-7 bg-white/20"></div>
+                    <a href="/careers" class="text-center hover:opacity-60 transition-opacity">
+                        <div class="text-lg font-black text-white">{{ count($sidebarJobs) }}</div>
+                        <div class="text-[8px] font-black uppercase tracking-[0.2em] text-white/30">{{ __('Careers') }}</div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -134,10 +128,10 @@
              FEATURED ARTICLE — full-width hero card
         ══════════════════════════════════════ --}}
         @if($featured)
-        <section class="max-w-[1240px] mx-auto px-4 md:px-6 pt-8 md:pt-10">
+        <section class="max-w-[1240px] mx-auto px-4 md:px-6 pt-6 md:pt-8">
             <a href="/news/{{ $featured['slug'] }}"
                class="group relative block rounded-2xl overflow-hidden bg-titan-navy shadow-xl hover:shadow-2xl transition-shadow duration-500"
-               style="min-height: 420px;">
+               style="min-height: 320px;">
 
                 {{-- Cover image --}}
                 <div class="absolute inset-0">
@@ -149,7 +143,7 @@
                 </div>
 
                 {{-- Content --}}
-                <div class="relative z-10 flex flex-col justify-end h-full p-6 md:p-10 lg:p-14" style="min-height: 420px;">
+                <div class="relative z-10 flex flex-col justify-end h-full p-6 md:p-10 lg:p-14" style="min-height: 320px;">
                     <div class="max-w-2xl">
                         <div class="flex items-center gap-3 mb-4">
                             <span class="bg-titan-red text-white text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded">
@@ -159,8 +153,7 @@
                                 {{ __('Featured') }} · {{ $featured['date'] }}
                             </span>
                         </div>
-                        <h2 class="font-black !text-white leading-tight mb-4 group-hover:!text-titan-red transition-colors"
-                            style="font-size: clamp(1.5rem, 3.5vw, 2.5rem);">
+                        <h2 class="font-black !text-white leading-tight mb-4 group-hover:!text-titan-red transition-colors text-xl md:text-2xl">
                             {{ $featured['title'] }}
                         </h2>
                         <p class="text-white/85 text-sm md:text-base leading-relaxed line-clamp-2 mb-6 hidden sm:block font-normal">
@@ -179,8 +172,8 @@
         {{-- ══════════════════════════════════════
              GRID + SIDEBAR
         ══════════════════════════════════════ --}}
-        <section class="max-w-[1240px] mx-auto px-4 md:px-6 py-8 md:py-12">
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_296px] gap-8 items-start">
+        <section class="max-w-[1240px] mx-auto px-4 md:px-6 py-6 md:py-10">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_296px] gap-4 items-start">
 
                 {{-- LEFT --}}
                 <div>

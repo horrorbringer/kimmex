@@ -115,7 +115,7 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative h-screen min-h-[700px] overflow-hidden bg-titan-navy text-white"
+    class="relative h-[480px] md:h-[560px] overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (crossfade stack) === -->
@@ -141,7 +141,7 @@
 
     <!-- === CONTENT OVERLAY === -->
     <div class="absolute inset-0 flex flex-col justify-center z-20 pt-32 lg:pt-10">
-        <div class="max-w-[1400px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
+        <div class="max-w-[1200px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
             <div>
                 <template x-for="(slide, index) in slides" :key="`content-${index}`">
                     <div x-show="index === current"
@@ -153,8 +153,8 @@
                         </p>
                         <h1 class="hero-copy-shadow font-heading font-[900] mb-7 !text-white uppercase leading-[1.02] tracking-normal"
                             :class="slide.title.length > 48
-                                ? 'max-w-[820px] text-[2rem] md:text-[2.65rem] xl:text-[3.05rem]'
-                                : 'max-w-[900px] text-[2.35rem] md:text-[3.15rem] xl:text-[3.75rem]'"
+                                ? 'max-w-[820px] text-[1.5rem] md:text-[2rem] xl:text-[2.3rem]'
+                                : 'max-w-[900px] text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]'"
                             x-text="slide.title"></h1>
 
                         <p class="hero-copy-shadow text-[#F8FAFC] max-w-[600px] mb-10 font-medium text-base lg:text-lg leading-relaxed"
@@ -181,7 +181,7 @@
 
     <!-- Navigation Controls -->
     <div class="absolute bottom-12 left-0 right-0 z-30">
-        <div class="max-w-[1400px] mx-auto px-6 flex items-end justify-between">
+        <div class="max-w-[1200px] mx-auto px-6 flex items-end justify-between">
             <!-- Pagination -->
             <div class="flex items-center gap-5">
                 <div class="text-sm font-black tracking-[0.28em] text-white/90 tabular-nums">

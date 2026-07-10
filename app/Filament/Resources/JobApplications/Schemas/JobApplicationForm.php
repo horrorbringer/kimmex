@@ -31,13 +31,7 @@ class JobApplicationForm
                                 }),
                             Select::make('status')
                                 ->label(__('Management Status'))
-                                ->options([
-                                    'PENDING' => __('Pending'),
-                                    'REVIEWED' => __('Reviewed'),
-                                    'INTERVIEWING' => __('Interviewing'),
-                                    'HIRED' => __('Hired'),
-                                    'REJECTED' => __('Rejected'),
-                                ])
+                                ->options(\App\Enums\ApplicationStatus::class)
                                 ->required()
                                 ->default('PENDING')
                                 ->selectablePlaceholder(false),
