@@ -354,7 +354,31 @@
                     @endif
 
                     @if(!empty($article['gallery']))
-                        <section class="mt-12 pt-10 border-t border-gray-200">
+                        <section class="mt-12 pt-10 border-t border-gray-200"
+                            x-data="{
+                                open: false,
+                                current: 0,
+                                images: {{ Js::from($article['gallery']) }},
+                                openAt(index) {
+                                    this.current = index;
+                                    this.open = true;
+                                    document.body.style.overflow = 'hidden';
+                                },
+                                close() {
+                                    this.open = false;
+                                    document.body.style.overflow = '';
+                                },
+                                prev() {
+                                    this.current = (this.current - 1 + this.images.length) % this.images.length;
+                                },
+                                next() {
+                                    this.current = (this.current + 1) % this.images.length;
+                                }
+                            }"
+                            @keydown.escape.window="close()"
+                            @keydown.arrow-left.window="open && prev()"
+                            @keydown.arrow-right.window="open && next()"
+                        >
                             <div class="flex items-end justify-between gap-4 mb-6">
                                 <div>
                                     <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-2">
@@ -369,35 +393,34 @@
                                 </div>
                             </div>
 
-                            @php
-                                $galleryCount = count($article['gallery']);
-                            @endphp
+                            @php $galleryCount = count($article['gallery']); @endphp
 
                             @if($galleryCount === 1)
-                                <div class="aspect-[16/9] overflow-hidden rounded shadow-sm border border-gray-200">
+                                <div class="aspect-[16/9] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
+                                     @click="openAt(0)">
                                     <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                 </div>
                             @elseif($galleryCount === 2)
                                 <div class="grid grid-cols-2 gap-2">
-                                    <div class="aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200">
-                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
-                                    </div>
-                                    <div class="aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200">
-                                        <img src="{{ $article['gallery'][1] }}" alt="Gallery 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
-                                    </div>
+                                    @foreach($article['gallery'] as $gi => $img)
+                                        <div class="aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
+                                             @click="openAt({{ $gi }})">
+                                            <img src="{{ $img }}" alt="Gallery {{ $gi + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
+                                        </div>
+                                    @endforeach
                                 </div>
                             @else
-                                <!-- Premium Grid Layout -->
+                                {{-- Main grid --}}
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                                    <!-- Main Big Image (Left) -->
-                                    <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded shadow-sm border border-gray-200">
+                                    <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
+                                         @click="openAt(0)">
                                         <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
-                                    <!-- Stacked Right Images -->
                                     <div class="grid grid-rows-2 gap-2 h-auto md:h-[400px]">
                                         @for($i = 1; $i <= 2; $i++)
                                             @if(isset($article['gallery'][$i]))
-                                                <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded shadow-sm border border-gray-200">
+                                                <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
+                                                     @click="openAt({{ $i }})">
                                                     <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 </div>
                                             @endif
@@ -405,17 +428,16 @@
                                     </div>
                                 </div>
 
-                                <!-- Bottom row: Up to 5 thumbnails -->
+                                {{-- Thumbnail row --}}
                                 @if($galleryCount > 3)
                                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-2">
                                         @for($i = 3; $i < min($galleryCount, 8); $i++)
-                                            @php
-                                                $isLastVisible = ($i === 7 && $galleryCount > 8);
-                                            @endphp
-                                            <div class="relative aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200">
+                                            @php $isLastVisible = ($i === 7 && $galleryCount > 8); @endphp
+                                            <div class="relative aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
+                                                 @click="openAt({{ $i }})">
                                                 <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 @if($isLastVisible)
-                                                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-black text-lg tracking-wider">
+                                                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-black text-lg tracking-wider pointer-events-none">
                                                         +{{ $galleryCount - 7 }} {{ __('photos') }}
                                                     </div>
                                                 @endif
@@ -424,6 +446,71 @@
                                     </div>
                                 @endif
                             @endif
+
+                            {{-- Lightbox --}}
+                            <template x-teleport="body">
+                                <div
+                                    x-show="open"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0"
+                                    x-transition:enter-end="opacity-100"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100"
+                                    x-transition:leave-end="opacity-0"
+                                    class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+                                    @click.self="close()"
+                                    style="display:none"
+                                >
+                                    {{-- Close --}}
+                                    <button @click="close()"
+                                        class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10">
+                                        <x-lucide-x class="w-5 h-5" />
+                                    </button>
+
+                                    {{-- Counter --}}
+                                    <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] font-black uppercase tracking-[0.2em] text-white/50">
+                                        <span x-text="current + 1"></span> / <span x-text="images.length"></span>
+                                    </div>
+
+                                    {{-- Prev --}}
+                                    <button @click="prev()"
+                                        class="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+                                        x-show="images.length > 1">
+                                        <x-lucide-chevron-left class="w-5 h-5" />
+                                    </button>
+
+                                    {{-- Image --}}
+                                    <div class="max-w-5xl max-h-[85vh] w-full px-16 flex items-center justify-center">
+                                        <img
+                                            :src="images[current]"
+                                            :alt="'Image ' + (current + 1)"
+                                            class="max-h-[85vh] max-w-full w-auto object-contain rounded shadow-2xl select-none"
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 scale-95"
+                                            x-transition:enter-end="opacity-100 scale-100"
+                                            draggable="false"
+                                        />
+                                    </div>
+
+                                    {{-- Next --}}
+                                    <button @click="next()"
+                                        class="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+                                        x-show="images.length > 1">
+                                        <x-lucide-chevron-right class="w-5 h-5" />
+                                    </button>
+
+                                    {{-- Dot indicators --}}
+                                    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5" x-show="images.length > 1">
+                                        <template x-for="(img, idx) in images" :key="idx">
+                                            <button
+                                                @click="current = idx"
+                                                class="w-1.5 h-1.5 rounded-full transition-all duration-200"
+                                                :class="current === idx ? 'bg-white w-4' : 'bg-white/35 hover:bg-white/60'"
+                                            ></button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
                         </section>
                     @endif
 
@@ -503,6 +590,7 @@
                         </div>
                     </div>
 
+                    @if(!empty($sidebarDocs))
                     <div class="rounded border border-gray-200 bg-white overflow-hidden">
                         <div class="px-4 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between">
                             <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red">
@@ -513,7 +601,7 @@
                             </a>
                         </div>
                         <div class="divide-y divide-gray-100">
-                            @forelse($sidebarDocs as $doc)
+                            @foreach($sidebarDocs as $doc)
                                 <a href="/documents/{{ $doc['slug'] }}" class="group flex items-center gap-0 hover:bg-gray-50 transition-colors">
                                     {{-- File type badge --}}
                                     <div class="w-16 h-14 shrink-0 flex flex-col items-center justify-center bg-titan-navy/[0.03] border-r border-gray-100 gap-0.5">
@@ -534,11 +622,10 @@
                                         <x-lucide-download class="w-3.5 h-3.5 text-titan-navy/20 group-hover:text-titan-red transition-colors" />
                                     </div>
                                 </a>
-                            @empty
-                                <div class="px-4 py-5 text-sm text-titan-navy/40 font-normal">{{ __('No documents found.') }}</div>
-                            @endforelse
+                            @endforeach
                         </div>
                     </div>
+                    @endif
 
                     <div class="rounded border border-gray-200 bg-titan-navy overflow-hidden">
                         <div class="px-4 pt-4 pb-3 border-b border-white/10 flex items-center justify-between">

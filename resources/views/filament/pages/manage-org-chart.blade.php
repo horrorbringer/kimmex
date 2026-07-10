@@ -189,8 +189,74 @@
                 background: #eef2f7;
             }
 
+            .sortable-handle {
+                cursor: grab;
+            }
+
+            .sortable-handle:active {
+                cursor: grabbing;
+            }
+
             .node-toggle-placeholder {
                 background: transparent;
+            }
+
+            .node-avatar {
+                width: 2.75rem;
+                height: 2.75rem;
+                border-radius: 50%;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: color-mix(in srgb, var(--org-accent) 14%, #f8fafc);
+                overflow: hidden;
+                border: 2px solid #fff;
+                box-shadow: 0 0 0 1px var(--org-border);
+            }
+
+            .node-avatar img,
+            .node-avatar svg {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .node-role-list {
+                color: var(--org-muted);
+                font-size: 0.6875rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                white-space: nowrap;
+                flex: none;
+            }
+
+            .children-container {
+                position: relative;
+                display: grid;
+                gap: 0.625rem;
+                margin-left: 3.25rem;
+                padding-left: 1.25rem;
+                padding-top: 0.625rem;
+            }
+
+            .children-container::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 2.25rem;
+                border-left: 1px solid var(--org-border);
+            }
+
+            .children-container .node-card::before {
+                content: '';
+                position: absolute;
+                left: -1.25rem;
+                top: 50%;
+                width: 1.25rem;
+                border-top: 1px solid var(--org-border);
+                transform: translateY(-50%);
             }
 
             .node-name {
@@ -276,35 +342,7 @@
                 flex: none;
             }
 
-            .node-children {
-                position: relative;
-                display: grid;
-                gap: 0.625rem;
-                margin-left: 3.25rem;
-                padding-left: 1.25rem;
-                padding-top: 0.625rem;
-            }
-
-            .node-children::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 0;
-                bottom: 2.25rem;
-                border-left: 1px solid var(--org-border);
-            }
-
-            .node-children .node-card::before {
-                content: '';
-                position: absolute;
-                left: -1.25rem;
-                top: 50%;
-                width: 1.25rem;
-                border-top: 1px solid var(--org-border);
-                transform: translateY(-50%);
-            }
-            
-            .node-action-btn {
+            .node-content {
                 width: 2rem;
                 height: 2rem;
                 display: grid;
@@ -487,9 +525,18 @@
                     </div>
                 @else
                     <div class="org-tree">
-                        <div class="org-tree-root" x-ref="treeRoot">
+                        <div class="org-tree-root"
+                             id="org-tree-root"
+                             x-data="{
+                                expanded: {},
+                                init() {
+                                    @foreach($chartData as $node)
+                                        this.expanded['{{ $node['id'] }}'] = true;
+                                    @endforeach
+                                }
+                             }">
                             @foreach($chartData as $node)
-                                <x-org.chart-node :node="$node" />
+                                @include('filament.pages.org-chart-node', ['node' => $node, 'level' => 0])
                             @endforeach
                         </div>
                     </div>
@@ -500,51 +547,47 @@
                 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
                 <script>
                     document.addEventListener('livewire:init', function () {
-                        const initAll = () => {
-                            initSortable(document.querySelector('[x-ref="treeRoot"]'));
-                            document.querySelectorAll('.children-container').forEach(initSortable);
-                        };
 
                         const initSortable = (el) => {
-                            if (!el || el.sortable) return;
-                            el.sortable = new Sortable(el, {
-                                group: 'nested',
-                                animation: 150,
+                            if (!el || el._sortable) return;
+                            el._sortable = new Sortable(el, {
+                                group:          'org-nested',
+                                animation:      150,
                                 fallbackOnBody: true,
-                                swapThreshold: 0.65,
-                                handle: '.cursor-grab',
-                                ghostClass: 'sortable-ghost',
+                                swapThreshold:  0.65,
+                                handle:         '.sortable-handle',
+                                draggable:      '.draggable-item',
+                                ghostClass:     'sortable-ghost',
+                                onEnd() { /* live reorder, save on button click */ }
                             });
                         };
 
-                        const serializeTree = (root) => {
-                            if (!root) return [];
-                            return Array.from(root.children)
-                                .filter(el => el.hasAttribute('data-id'))
-                                .map(el => {
-                                    const id = el.getAttribute('data-id');
-                                    const childContainer = el.querySelector('.children-container');
-                                    return {
-                                        id: id,
-                                        children: childContainer ? serializeTree(childContainer) : []
-                                    };
-                                });
+                        const initAll = () => {
+                            const root = document.getElementById('org-tree-root');
+                            if (root) initSortable(root);
+                            document.querySelectorAll('.children-container').forEach(initSortable);
                         };
 
-                        window.triggerSave = function() {
-                            const btn = document.getElementById('save-btn');
-                            const text = document.getElementById('save-btn-text');
-                            const spinner = document.getElementById('save-spinner');
+                        const serializeTree = (container) => {
+                            if (!container) return [];
+                            return Array.from(container.children)
+                                .filter(el => el.hasAttribute('data-id'))
+                                .map(el => ({
+                                    id:       el.getAttribute('data-id'),
+                                    children: serializeTree(el.querySelector('.children-container'))
+                                }));
+                        };
 
-                            if (!btn || !text || !spinner) {
-                                return;
-                            }
+                        window.triggerSave = function () {
+                            const btn     = document.getElementById('save-btn');
+                            const text    = document.getElementById('save-btn-text');
+                            const spinner = document.getElementById('save-spinner');
 
                             btn.disabled = true;
                             text.innerText = "{{ __('Saving...') }}";
                             spinner.classList.remove('hidden');
 
-                            let data = serializeTree(document.querySelector('[x-ref="treeRoot"]'));
+                            const data = serializeTree(document.getElementById('org-tree-root'));
                             @this.call('saveOrder', data).then(() => {
                                 btn.disabled = false;
                                 text.innerText = "{{ __('Save Display Order') }}";
@@ -554,10 +597,7 @@
 
                         initAll();
 
-                        // Re-init after Livewire updates
-                        Livewire.on('chartUpdated', () => {
-                            setTimeout(initAll, 100);
-                        });
+                        Livewire.on('chartUpdated', () => setTimeout(initAll, 150));
                     });
                 </script>
             @endpush
