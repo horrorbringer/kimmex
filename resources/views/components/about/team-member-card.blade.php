@@ -12,14 +12,14 @@
 
     // Sizes based on small mode
     if ($small) {
-        $imageSize = $isCEO ? 'w-20 h-20 mb-2' : 'w-14 h-14 mb-2';
-        $titleSize = 'text-[9px] md:text-[10px]';
+        $imageSize = $isCEO ? 'w-28 h-28 mb-3' : 'w-20 h-20 mb-2';
+        $titleSize = 'text-[8px] md:text-[9px]';
         $rolePadding = 'px-3 py-0.5';
         $roleTextSize = 'text-[7px]';
         $containerPadding = 'px-2';
     } else {
-        $imageSize = $isCEO ? 'w-32 h-32 mb-4 group-hover:shadow-titan-red/20' : 'w-24 h-24 mb-4 group-hover:shadow-current';
-        $titleSize = 'text-xs md:text-sm';
+        $imageSize = $isCEO ? 'w-44 h-44 mb-4 group-hover:shadow-titan-red/20' : 'w-32 h-32 mb-4 group-hover:shadow-current';
+        $titleSize = 'text-xs';
         $rolePadding = 'px-4 py-1';
         $roleTextSize = 'text-[9px]';
         $containerPadding = 'px-4';

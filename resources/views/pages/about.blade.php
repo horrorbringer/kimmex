@@ -682,7 +682,8 @@
 
                 @else
                     {{-- DYNAMIC INTERACTIVE MODE (default) --}}
-                    <div class="min-w-[800px] flex justify-center overflow-x-auto">
+                    {{-- Mobile: full-width vertical accordion; Desktop: horizontal tree --}}
+                    <div class="w-full md:min-w-[800px] md:flex md:justify-center md:overflow-x-auto px-2 md:px-0">
                         <x-about.org-node :node="$orgChart" :level="0" :small="true" />
                     </div>
                 @endif
