@@ -499,7 +499,7 @@
                                 {!! $brand['ceo_message'] ?? __('Construction is not just about concrete and steel. It is about building trust, fostering communities, and leaving a legacy that stands the test of time.') !!}
                             </div>
                             <div class="border-t border-gray-100 pt-6">
-                                <h4 class="text-xl font-heading font-black text-titan-navy uppercase tracking-tighter mb-1">{{ $ceoName }}</h4>
+                                <h4 class="text-sm font-heading font-black text-titan-navy uppercase tracking-tighter mb-1">{{ $ceoName }}</h4>
                                 <div class="text-xs font-bold text-titan-navy/50 uppercase tracking-widest">{{ __('Founder & Chief Executive Officer') }}</div>
                             </div>
                         </div>

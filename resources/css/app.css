@@ -819,3 +819,8 @@ a.link:hover,
 [x-cloak] {
     display: none !important;
 }
+
+/* ─── Org Chart — prevent global h3 size from overriding Tailwind text utilities ─── */
+.org-chart-name {
+  font-size: inherit !important;
+}

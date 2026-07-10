@@ -13,15 +13,15 @@
     // Sizes based on small mode
     if ($small) {
         $imageSize = $isCEO ? 'w-28 h-28 mb-3' : 'w-20 h-20 mb-2';
-        $titleSize = 'text-[8px] md:text-[9px]';
+        $titleSize = 'text-[6px] md:text-[7px]';
         $rolePadding = 'px-3 py-0.5';
-        $roleTextSize = 'text-[7px]';
+        $roleTextSize = 'text-[6px]';
         $containerPadding = 'px-2';
     } else {
         $imageSize = $isCEO ? 'w-44 h-44 mb-4 group-hover:shadow-titan-red/20' : 'w-32 h-32 mb-4 group-hover:shadow-current';
-        $titleSize = 'text-xs';
+        $titleSize = 'text-[8px] md:text-[9px]';
         $rolePadding = 'px-4 py-1';
-        $roleTextSize = 'text-[9px]';
+        $roleTextSize = 'text-[8px]';
         $containerPadding = 'px-4';
     }
 @endphp
@@ -30,7 +30,7 @@
     <div class="flex flex-col items-center group relative z-10 w-full">
         <div class="{{ $styles['light'] }} border {{ $small ? 'px-4 py-2' : 'px-6 py-3' }} rounded backdrop-blur-sm shadow-sm transition-all duration-500 group-hover:shadow-md group-hover:scale-105">
             <span class="{{ $small ? 'text-[8px]' : 'text-[10px]' }} font-black uppercase tracking-[0.2em] {{ $styles['text'] }} opacity-50 mb-0.5 block text-center italic">{{ __('DEPARTMENT') }}</span>
-            <h3 class="{{ $small ? 'text-[10px]' : 'text-sm' }} font-black {{ $styles['text'] }} uppercase tracking-tight text-center whitespace-nowrap">
+            <h3 class="org-chart-name {{ $small ? 'text-[10px]' : 'text-sm' }} font-black {{ $styles['text'] }} uppercase tracking-tight text-center whitespace-nowrap">
                 {{ $member['name'] }}
             </h3>
         </div>
@@ -54,7 +54,7 @@
             <div class="{{ $roleColor }} {{ $rolePadding }} rounded-full {{ $roleTextSize }} font-black uppercase tracking-widest mb-1.5 shadow-lg scale-90 group-hover:scale-100 transition-transform duration-500 whitespace-nowrap">
                 {{ Str::limit($member['role'] ?? '', 25) }}
             </div>
-            <h3 class="{{ $titleSize }} font-black text-titan-navy uppercase tracking-tight leading-tight group-hover:{{ $styles['text'] }} transition-colors duration-500 max-w-[120px]">
+            <h3 class="org-chart-name {{ $titleSize }} font-black text-titan-navy uppercase tracking-tight leading-tight group-hover:{{ $styles['text'] }} transition-colors duration-500 max-w-[100px] text-center break-words">
                 {{ $member['name'] }}
             </h3>
 

@@ -39,7 +39,7 @@
                     {{ $node['role'] ?? $node['type'] ?? '' }}
                 </div>
                 <div class="font-black uppercase leading-tight truncate
-                            {{ $isCEO ? 'text-white text-sm' : 'text-titan-navy text-[13px]' }}">
+                            {{ $isCEO ? 'text-white text-[11px]' : 'text-titan-navy text-[10px]' }}">
                     {{ $node['name'] }}
                 </div>
                 @if(!empty($node['title']) && $node['title'] !== $node['name'])
