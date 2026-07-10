@@ -98,6 +98,7 @@ class CareerController extends Controller
 
         return view('pages.careers.show', compact(
             'job',
+            'slug',
             'heroSummary',
             'pageTitle',
             'pageDesc',

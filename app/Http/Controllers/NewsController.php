@@ -116,6 +116,6 @@ class NewsController extends Controller
             return compact('related', 'next', 'prev');
         });
 
-        return view('pages.news.show', compact('article', 'relatedData', 'locale', 'fallbackImage'));
+        return view('pages.news.show', compact('article', 'relatedData', 'locale', 'fallbackImage', 'slug'));
     }
 }

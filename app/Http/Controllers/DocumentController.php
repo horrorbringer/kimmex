@@ -72,6 +72,6 @@ class DocumentController extends Controller
         $categoryName = $doc['categoryName'];
         $thumbnailUrl = PublicStorage::urlIfExists($doc['thumbnailUrl']);
 
-        return view('pages.documents.show', compact('doc', 'relatedDocs', 'categoryName', 'thumbnailUrl', 'locale'));
+        return view('pages.documents.show', compact('doc', 'relatedDocs', 'categoryName', 'thumbnailUrl', 'locale', 'slug'));
     }
 }

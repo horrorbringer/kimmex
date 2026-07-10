@@ -54,6 +54,6 @@ class ServiceController extends Controller
                 ->with('flash_warning', __('The service you were looking for could not be found.'));
         }
 
-        return view('pages.services.show', compact('service', 'lang'));
+        return view('pages.services.show', compact('service', 'lang', 'slug'));
     }
 }
