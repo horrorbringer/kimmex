@@ -116,7 +116,7 @@
                         class="{{ $heroCtaSecondary }}">
                         <span class="{{ $heroCtaText }}">{{ __('Direct Apply') }}</span>
                         <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                            <x-lucide-send class="w-4 h-4" />
+                            <x-social-icon network="telegram" class="w-4 h-4" />
                         </div>
                     </button>
                 </div>
@@ -518,7 +518,7 @@
                                 </div>
                                 <div class="flex items-start gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
                                     <div class="mt-0.5 w-8 h-8 rounded-full bg-titan-red/5 flex items-center justify-center shrink-0">
-                                        <x-lucide-send class="w-4 h-4 text-titan-red" />
+                                        <x-social-icon network="telegram" class="w-4 h-4 text-titan-red" />
                                     </div>
                                     <div>
                                         <div class="font-bold">{{ __('Direct route') }}</div>

@@ -312,28 +312,28 @@
                         <div class="flex flex-wrap gap-3">
                             <a href="{{ $facebook }}" target="_blank" rel="noopener"
                                 class="group w-10 h-10 rounded bg-social-facebook flex items-center justify-center text-white shadow-lg shadow-social-facebook/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                <x-lucide-facebook class="w-4 h-4 text-white transition-colors" />
+                                <x-social-icon network="facebook" class="w-4 h-4 text-white transition-colors" />
                             </a>
                             <a href="{{ $linkedin }}" target="_blank" rel="noopener"
                                 class="group w-10 h-10 rounded bg-social-linkedin flex items-center justify-center text-white shadow-lg shadow-social-linkedin/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                <x-lucide-linkedin class="w-4 h-4 text-white transition-colors" />
+                                <x-social-icon network="linkedin" class="w-4 h-4 text-white transition-colors" />
                             </a>
                             @if ($youtube && $youtube !== '#')
                                 <a href="{{ $youtube }}" target="_blank" rel="noopener noreferrer"
                                     class="group w-10 h-10 rounded bg-social-youtube flex items-center justify-center text-white shadow-lg shadow-social-youtube/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                    <x-lucide-youtube class="w-4 h-4 text-white transition-colors" />
+                                    <x-social-icon network="youtube" class="w-4 h-4 text-white transition-colors" />
                                 </a>
                             @endif
                             @if ($instagram && $instagram !== '#')
                                 <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer"
                                     class="group w-10 h-10 rounded bg-social-instagram flex items-center justify-center text-white shadow-lg shadow-social-instagram/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                    <x-lucide-instagram class="w-4 h-4 text-white transition-colors" />
+                                    <x-social-icon network="instagram" class="w-4 h-4 text-white transition-colors" />
                                 </a>
                             @endif
                             @if ($telegram && $telegram !== '#')
                                 <a href="{{ $telegram }}" target="_blank" rel="noopener"
                                     class="group w-10 h-10 rounded bg-social-telegram flex items-center justify-center text-white shadow-lg shadow-social-telegram/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110">
-                                    <x-lucide-send class="w-4 h-4 text-white transition-colors" />
+                                    <x-social-icon network="telegram" class="w-4 h-4 text-white transition-colors" />
                                 </a>
                             @endif
                         </div>

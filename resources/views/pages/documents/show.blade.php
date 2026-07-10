@@ -173,15 +173,15 @@
                         <div class="flex items-center gap-2">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                 class="w-10 h-10 rounded bg-social-facebook text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-lucide-facebook class="w-4 h-4" />
+                                <x-social-icon network="facebook" class="w-4 h-4" />
                             </a>
                             <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                 class="w-10 h-10 rounded bg-social-linkedin text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-lucide-linkedin class="w-4 h-4" />
+                                <x-social-icon network="linkedin" class="w-4 h-4" />
                             </a>
                             <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($doc['title']) }}" target="_blank" rel="noopener"
                                 class="w-10 h-10 rounded bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-lucide-send class="w-4 h-4" />
+                                <x-social-icon network="telegram" class="w-4 h-4" />
                             </a>
                             <button x-data="{ 
                                     copied: false,

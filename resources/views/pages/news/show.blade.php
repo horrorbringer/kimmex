@@ -248,13 +248,13 @@
 
                 <div class="hidden md:flex items-center gap-2">
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-7 h-7 rounded bg-social-facebook text-white flex items-center justify-center hover:brightness-110 transition-all">
-                        <x-lucide-facebook class="w-3.5 h-3.5" />
+                        <x-social-icon network="facebook" class="w-3.5 h-3.5" />
                     </a>
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-7 h-7 rounded bg-social-linkedin text-white flex items-center justify-center hover:brightness-110 transition-all">
-                        <x-lucide-linkedin class="w-3.5 h-3.5" />
+                        <x-social-icon network="linkedin" class="w-3.5 h-3.5" />
                     </a>
                     <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener" class="w-7 h-7 rounded bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all">
-                        <x-lucide-send class="w-3.5 h-3.5" />
+                        <x-social-icon network="telegram" class="w-3.5 h-3.5" />
                     </a>
                 </div>
             </div>
@@ -521,13 +521,13 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-facebook text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-lucide-facebook class="w-4 h-4" />
+                                <x-social-icon network="facebook" class="w-4 h-4" />
                             </a>
                             <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-linkedin text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-lucide-linkedin class="w-4 h-4" />
+                                <x-social-icon network="linkedin" class="w-4 h-4" />
                             </a>
                             <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-lucide-send class="w-4 h-4" />
+                                <x-social-icon network="telegram" class="w-4 h-4" />
                             </a>
                             <button x-data="{ 
                                     copied: false,
@@ -660,7 +660,7 @@
                             @endforelse
                             <div class="px-4 py-3">
                                 <a href="/careers/gen" class="flex items-center justify-center gap-2 w-full h-9 rounded bg-titan-red/90 hover:bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.18em] transition-colors">
-                                    <x-lucide-send class="w-3 h-3" />
+                                    <x-social-icon network="telegram" class="w-3 h-3" />
                                     {{ __('General Application') }}
                                 </a>
                             </div>

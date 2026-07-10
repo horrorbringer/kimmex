@@ -434,11 +434,11 @@
                              </div>
                              <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                  class="w-10 h-10 rounded bg-social-facebook flex items-center justify-center text-white hover:brightness-110 transition-all shadow-lg shadow-social-facebook/20">
-                                 <x-lucide-facebook class="w-4 h-4" />
+                                 <x-social-icon network="facebook" class="w-4 h-4" />
                              </a>
                               <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                  class="w-10 h-10 rounded bg-social-linkedin flex items-center justify-center text-white hover:brightness-110 transition-all shadow-lg shadow-social-linkedin/20">
-                                 <x-lucide-linkedin class="w-4 h-4" />
+                                 <x-social-icon network="linkedin" class="w-4 h-4" />
                              </a>
                           </div>
                     </div>

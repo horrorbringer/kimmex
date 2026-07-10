@@ -270,15 +270,15 @@
                             <div class="flex items-center gap-3 md:gap-4">
                                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                     class="w-10 h-10 md:w-12 md:h-12 bg-social-facebook rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
-                                    <x-lucide-facebook class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/fb:scale-110" />
+                                    <x-social-icon network="facebook" class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/fb:scale-110" />
                                 </a>
                                 <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
                                     class="w-10 h-10 md:w-12 md:h-12 bg-social-linkedin rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
-                                    <x-lucide-linkedin class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/li:scale-110" />
+                                    <x-social-icon network="linkedin" class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/li:scale-110" />
                                 </a>
                                 <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}" target="_blank" rel="noopener"
                                     class="w-10 h-10 md:w-12 md:h-12 bg-social-telegram rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
-                                    <x-lucide-send class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/tg:scale-110" />
+                                    <x-social-icon network="telegram" class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/tg:scale-110" />
                                 </a>
                                 <div x-data="{ 
                                     copied: false, 
