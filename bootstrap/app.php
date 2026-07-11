@@ -16,7 +16,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->renderable(function (\Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('Too many attempts. Please wait a moment and try again.')], 429);
+            }
+            return redirect()->back()->with('error', __('Too many attempts. Please wait a moment and try again.'));
+        });
     })->create();
 
     if (($_SERVER['SERVER_NAME'] ?? '') === 'www.kimmex.com.kh' || ($_SERVER['SERVER_NAME'] ?? '') === 'kimmex.com.kh') {

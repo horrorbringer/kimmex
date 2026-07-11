@@ -15,6 +15,14 @@ class SubscribeForm extends Component
     {
         $this->error = '';
 
+        // Rate limit: max 3 subscribe attempts per minute per IP
+        $key = 'subscribe_' . request()->ip();
+        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 3)) {
+            $this->error = __('Too many attempts. Please try again later.');
+            return;
+        }
+        \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
+
         $this->validate([
             'email' => 'required|email|max:255',
         ]);

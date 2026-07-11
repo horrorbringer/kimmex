@@ -261,13 +261,19 @@
                                     </div>
 
                                     <!-- Submit -->
-                                    <div class="flex items-center justify-between pt-2">
+                                    <div class="flex items-center justify-between pt-2" x-data="{ submitting: false }">
                                         <p class="text-xs text-gray-400">* {{ __('required') }}</p>
                                         <button type="submit"
-                                            class="inline-flex items-center gap-2 h-11 px-7 rounded-xl text-sm font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group"
+                                            x-on:click="submitting = true"
+                                            x-bind:disabled="submitting"
+                                            class="inline-flex items-center gap-2 h-11 px-7 rounded-xl text-sm font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-md"
                                             style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
-                                            {{ __('Submit Application') }}
-                                            <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                            <span x-show="!submitting">{{ __('Submit Application') }}</span>
+                                            <span x-show="submitting" class="inline-flex items-center gap-2">
+                                                <svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                                {{ __('Submitting...') }}
+                                            </span>
+                                            <x-lucide-arrow-right x-show="!submitting" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                                         </button>
                                     </div>
                                 </form>
