@@ -66,6 +66,35 @@
                 ],
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
+        <script type="application/ld+json">
+            {!! json_encode([
+                '@context' => 'https://schema.org',
+                '@type' => 'JobPosting',
+                'title' => $job['title'],
+                'description' => strip_tags($job['description'] ?? ''),
+                'datePosted' => $job['postedDate'],
+                'employmentType' => str_contains(strtolower($job['type']), 'full') ? 'FULL_TIME' : 'PART_TIME',
+                'hiringOrganization' => [
+                    '@type' => 'Organization',
+                    'name' => 'Kimmex Construction & Investment Co., Ltd',
+                    'sameAs' => url('/'),
+                    'logo' => url('/logo.png'),
+                ],
+                'jobLocation' => [
+                    '@type' => 'Place',
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'addressLocality' => $job['loc'],
+                        'addressCountry' => 'KH',
+                    ],
+                ],
+                'baseSalary' => [
+                    '@type' => 'MonetaryAmount',
+                    'currency' => 'USD',
+                    'value' => ['@type' => 'QuantitativeValue', 'value' => $job['salary'], 'unitText' => 'MONTH'],
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        </script>
     @endpush
 
     <div class="bg-gray-50 min-h-screen">

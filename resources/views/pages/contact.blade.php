@@ -7,6 +7,26 @@
         ['@type' => 'ListItem', 'position' => 2, 'name' => __('Contact'), 'item' => url('/contact')],
     ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'LocalBusiness',
+        'name' => 'Kimmex Construction & Investment Co., Ltd',
+        'image' => url('/logo.png'),
+        'url' => url('/'),
+        'telephone' => $phone ?? '+855 23 884 604',
+        'email' => $email ?? 'info@kimmex.com.kh',
+        'address' => [
+            '@type' => 'PostalAddress',
+            'streetAddress' => $address ?? 'Phnom Penh',
+            'addressLocality' => 'Phnom Penh',
+            'addressCountry' => 'KH',
+        ],
+        'openingHours' => ['Mo-Fr 08:00-17:30', 'Sa 08:00-12:00'],
+        'priceRange' => '$$$',
+        'areaServed' => ['Cambodia', 'Phnom Penh', 'Siem Reap', 'Battambang'],
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
     @endpush
 
     @php

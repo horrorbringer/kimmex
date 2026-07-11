@@ -8,6 +8,14 @@
         ['@type' => 'ListItem', 'position' => 2, 'name' => __('About Us'), 'item' => url('/about')],
     ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
+    <script type="application/ld+json">
+    {!! json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => [
+        ['@type' => 'Question', 'name' => 'What is Kimmex Construction?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex Construction & Investment Co., Ltd is Cambodia\'s premier construction company with over 25 years of experience. Founded in 1999, Kimmex has completed 150+ projects including government buildings, commercial complexes, and infrastructure across Cambodia.']],
+        ['@type' => 'Question', 'name' => 'Where is Kimmex located?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex is headquartered in Phnom Penh, Cambodia. The company operates nationwide across all provinces of Cambodia.']],
+        ['@type' => 'Question', 'name' => 'How many employees does Kimmex have?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex has over 500 team members including engineers, architects, project managers, and skilled construction workers.']],
+        ['@type' => 'Question', 'name' => 'What are Kimmex\'s core values?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex\'s core values are Safety First (zero-incident policy), Quality Excellence (ISO 9001:2015 certified), Integrity (transparent communication), and Innovation (modern 3D modeling and MEP systems).']],
+    ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
     @endpush
 
     @php
