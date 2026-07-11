@@ -14,6 +14,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);
+        // Global rate limit: 120 requests/minute per IP (prevents DDoS)
+        $middleware->web(prepend: [
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':global',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (\Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException $e, $request) {

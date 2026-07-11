@@ -31,6 +31,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // ─── Rate Limiters for DDoS protection ───
+        \Illuminate\Support\Facades\RateLimiter::for('global', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(120)->by($request->ip());
+        });
+
+        \Illuminate\Support\Facades\RateLimiter::for('forms', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+        });
+
+        \Illuminate\Support\Facades\RateLimiter::for('auth', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+        });
+
+        \Illuminate\Support\Facades\RateLimiter::for('api', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)->by($request->ip());
+        });
         // Register cache-busting observer on all public content models
         $cacheBuster = \App\Observers\CacheBusterObserver::class;
         \App\Models\Project::observe($cacheBuster);

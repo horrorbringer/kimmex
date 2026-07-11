@@ -25,8 +25,8 @@ Route::get('/lang/{locale}', function (string $locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::post('/contact', [FormController::class, 'submitContact'])->name('contact.submit')->middleware('throttle:5,1');
-Route::post('/careers/apply', [FormController::class, 'submitApplication'])->name('careers.apply')->middleware('throttle:5,1');
+Route::post('/contact', [FormController::class, 'submitContact'])->name('contact.submit')->middleware('throttle:forms');
+Route::post('/careers/apply', [FormController::class, 'submitApplication'])->name('careers.apply')->middleware('throttle:forms');
 Route::get('/media/{path}', [MediaController::class, 'show'])
     ->where('path', '.*')
     ->name('media.show');
