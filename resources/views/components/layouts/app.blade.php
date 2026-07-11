@@ -136,6 +136,23 @@
         $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
     @endphp
 
+    {{-- Critical CSS: prevent FOUC on header/navbar while full CSS downloads --}}
+    <style>
+        /* Navbar critical styles — renders correctly before app.css arrives */
+        /* Target only the nav-header (direct child of body), not the hero carousel header */
+        body > header:first-child { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
+        body > header:first-child nav { background: #fff; border-bottom: 1px solid #f3f4f6; width: 100%; }
+        body > header:first-child nav > div { max-width: 1600px; margin: 0 auto; padding: 0 1.5rem; }
+        body > header:first-child nav > div > div { display: flex; justify-content: space-between; align-items: center; height: 5rem; }
+        .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .flex-col { display: flex; flex-direction: column; }
+        .min-h-screen { min-height: 100vh; }
+        body { margin: 0; background: #fff; }
+    </style>
+
+    {{-- Load compiled CSS early so the browser starts downloading immediately --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="{{ $fontUrl }}">
@@ -178,8 +195,10 @@
         .border-titan-red { border-color: var(--primary-color) !important; }
         a.border-titan-red:hover, button.border-titan-red:hover { border-color: var(--primary-color-hover) !important; }
         
-        .text-titan-navy { color: var(--secondary-color) !important; }
-        a.text-titan-navy:hover, button.text-titan-navy:hover { color: var(--secondary-color-hover) !important; }
+        /* text-titan-navy: only color the element itself, do NOT force inheritance
+           onto children (which would break text-white inside navy sections) */
+        .text-titan-navy { color: var(--secondary-color); }
+        a.text-titan-navy:hover, button.text-titan-navy:hover { color: var(--secondary-color-hover); }
         
         .bg-titan-navy { background-color: var(--secondary-color) !important; }
         a.bg-titan-navy:hover, button.bg-titan-navy:hover { background-color: var(--secondary-color-hover) !important; }
@@ -204,6 +223,12 @@
             contain-intrinsic-size: auto 900px;
         }
 
+        /* Hero is always above the fold — never skip its rendering */
+        main > section:first-child {
+            content-visibility: visible;
+            contain-intrinsic-size: auto;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -216,7 +241,6 @@
         }
     </style>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body

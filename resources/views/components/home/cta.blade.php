@@ -1,16 +1,35 @@
-<section class="py-24 bg-white border-t border-gray-100">
-    <div class="max-w-[1200px] mx-auto px-6">
-        <div x-data="{ shown: false }" x-intersect.once="shown = true" :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="flex flex-col lg:flex-row items-center justify-between gap-8 transition-all duration-1000">
-            <div class="text-center lg:text-left">
-                <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-4">{{ __('Ready to Start Your Project?') }}</h2>
-                <p class="text-titan-navy-subtle text-lg max-w-xl">{{ __('Contact us today for a free consultation and quote on your next big project.') }}</p>
+<section class="relative py-20 md:py-24 overflow-hidden" style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
+    {{-- Background pattern --}}
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-6">
+        <div x-data="{ shown: false }" x-intersect.once="shown = true"
+            :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+            class="flex flex-col lg:flex-row items-center justify-between gap-10 transition-all duration-1000">
+
+            {{-- Left: Text --}}
+            <div class="text-center lg:text-left max-w-xl">
+                <h2 class="text-3xl md:text-4xl font-heading font-black leading-tight tracking-tight mb-4" style="color: #FFFFFF;">
+                    {{ __('Ready to Start Your Project?') }}
+                </h2>
+                <p class="text-base md:text-lg leading-relaxed" style="color: rgba(255,255,255,0.6);">
+                    {{ __('Contact us today for a free consultation and quote on your next construction project.') }}
+                </p>
             </div>
-            <div class="flex flex-wrap gap-4">
-                <a href="/contact" class="bg-titan-red text-white px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-red-hover transition-all rounded-lg flex items-center gap-2">
-                    {{ __('Get Free Quote') }} <x-lucide-arrow-right class="w-4 h-4" />
+
+            {{-- Right: Buttons --}}
+            <div class="flex flex-col sm:flex-row gap-4 shrink-0">
+                <a href="/contact"
+                    class="group flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                    style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
+                    {{ __('Get Free Quote') }}
+                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a href="tel:+85523999888" class="border-2 border-titan-navy text-titan-navy px-8 py-4 font-bold uppercase tracking-widest text-sm hover:bg-titan-navy hover:text-white transition-all rounded-lg flex items-center gap-2">
-                    <x-lucide-phone class="w-4 h-4" /> {{ __('Call Now') }}
+                <a href="tel:+85523999888"
+                    class="group flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300"
+                    style="border: 2px solid rgba(255,255,255,0.2); color: #FFFFFF;">
+                    <x-lucide-phone class="w-4 h-4" />
+                    {{ __('Call Now') }}
                 </a>
             </div>
         </div>

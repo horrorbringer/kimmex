@@ -46,7 +46,7 @@
     }
 @endphp
 
-<header x-data="{
+<section x-data="{
         current: 0,
         prev: null,
         slides: {{ Js::from($slides) }},
@@ -232,4 +232,4 @@
         </div>
     </div>
 
-</header>
+</section>

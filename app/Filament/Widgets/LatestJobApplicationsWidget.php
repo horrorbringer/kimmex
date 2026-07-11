@@ -42,7 +42,7 @@ class LatestJobApplicationsWidget extends BaseWidget
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn ($state): string => match ($state instanceof \App\Enums\ApplicationStatus ? $state->value : (string) $state) {
                         'PENDING' => 'warning',
                         'REVIEWING' => 'info',
                         'ACCEPTED' => 'success',

@@ -1,99 +1,72 @@
-<div class="min-h-screen bg-[#F7F8FA] text-titan-navy">
+<div class="min-h-screen bg-gray-50">
 
-    <!-- === DOCUMENT HUB HERO === -->
-    <section class="relative min-h-[340px] md:min-h-[440px] pt-28 flex items-center overflow-hidden bg-titan-navy">
+    <!-- ═══ HERO ═══ -->
+    <section class="relative h-[400px] md:h-[460px] flex items-end overflow-hidden" style="background: #0B2B5C;">
         <div class="absolute inset-0">
-            <img src="{{ asset('images/heroes/documents-bg.png') }}" alt="Knowledge Hub"
-                class="w-full h-full object-cover animate-slow-zoom" decoding="async" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/88 via-titan-navy/66 to-titan-navy/28"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-transparent to-titan-navy/30"></div>
+            <img src="{{ asset('images/heroes/documents-bg.png') }}" alt="{{ __('Documents') }}"
+                class="w-full h-full object-cover opacity-35" decoding="async" loading="eager" />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/95 via-[#0B2B5C]/50 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#071A33]/60 via-transparent to-transparent"></div>
         </div>
-
-        <div class="max-w-[1240px] mx-auto w-full px-4 md:px-6 relative z-20 py-10 md:py-20" x-data="{ shown: false }"
-            x-init="setTimeout(() => shown = true, 100)">
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-7 md:gap-12 items-end">
-                <div>
-                    <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'"
-                        class="transition-all duration-700 inline-flex items-center gap-2 md:gap-3 border border-white/15 bg-white/10 px-3 md:px-4 py-2 rounded">
-                        <x-lucide-library class="w-4 h-4 text-titan-red" />
-                        <span class="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.26em] text-white/85">
-                            {{ __('Kimmex Knowledge Hub') }}
-                        </span>
-                    </div>
-
-                    <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="transition-all duration-700 delay-150 mt-6 md:mt-8 mb-4 md:mb-6 font-black uppercase leading-[1] md:leading-[0.95] tracking-normal !text-white"
-                        style="font-size: clamp(1.8rem, 9vw, 4rem) !important;">
-                        {{ __('Technical Documents') }}
-                    </h1>
-
-                    <p :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="transition-all duration-700 delay-300 text-white/78 text-sm md:text-lg leading-relaxed max-w-2xl font-medium">
-                        {{ __('Find engineering standards, company resources, case studies, and reference materials in one organized library.') }}
-                    </p>
+        <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-14 md:pb-18">
+            <nav class="flex items-center gap-2 text-xs mb-6" style="color: rgba(255,255,255,0.5);">
+                <a href="/" class="hover:text-white transition-colors">{{ __('Home') }}</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                <span style="color: rgba(255,255,255,0.9);">{{ __('Documents') }}</span>
+            </nav>
+            <h1 class="font-heading font-[900] uppercase leading-[1] tracking-tight mb-4"
+                style="font-size: clamp(2rem, 5vw, 3.2rem); color: #FFFFFF;">
+                {{ __('Document') }} <span style="color: var(--primary-color, #E31E24);">{{ __('Library') }}</span>
+            </h1>
+            <p class="max-w-lg leading-relaxed mb-6" style="color: rgba(255,255,255,0.6); font-size: 1rem;">
+                {{ __('Engineering standards, research papers, case studies, and technical resources.') }}
+            </p>
+            <div class="flex items-center gap-5">
+                <div class="text-center">
+                    <div class="text-xl font-black" style="color: #FFFFFF;">{{ $totalDocuments }}</div>
+                    <div class="text-[9px] font-bold uppercase tracking-wider" style="color: rgba(255,255,255,0.35);">{{ __('Documents') }}</div>
                 </div>
-
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-700 delay-500 grid grid-cols-2 gap-3">
-                    <div class="border border-white/12 bg-white/10 rounded p-4 md:p-5">
-                        <div class="text-2xl md:text-3xl font-black text-white leading-none">{{ $totalDocuments }}</div>
-                        <div class="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/50">
-                            {{ __('Documents') }}
-                        </div>
-                    </div>
-                    <div class="border border-white/12 bg-white/10 rounded p-4 md:p-5">
-                        <div class="text-2xl md:text-3xl font-black text-titan-red leading-none">{{ $totalCategories }}</div>
-                        <div class="mt-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/50">
-                            {{ __('Categories') }}
-                        </div>
-                    </div>
+                <div class="w-px h-8" style="background: rgba(255,255,255,0.15);"></div>
+                <div class="text-center">
+                    <div class="text-xl font-black" style="color: var(--primary-color, #E31E24);">{{ $totalCategories }}</div>
+                    <div class="text-[9px] font-bold uppercase tracking-wider" style="color: rgba(255,255,255,0.35);">{{ __('Categories') }}</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- === SEARCH + FILTERS === -->
-    <section class="border-b border-gray-200 bg-white/95 backdrop-blur-xl sticky top-20 z-30">
-        <div class="max-w-[1240px] mx-auto px-4 md:px-6 py-3 md:py-4">
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-4 items-center">
-                <div class="relative">
-                    <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/35" />
+    <!-- ═══ SEARCH + FILTERS ═══ -->
+    <section class="sticky top-20 z-30 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
+        <div class="max-w-[1280px] mx-auto px-6 py-4">
+            <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+                <!-- Search -->
+                <div class="relative flex-grow">
+                    <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
                     <input type="text" wire:model.live.debounce.300ms="search"
-                        placeholder="{{ __('Search by title, description, or keyword') }}"
-                        class="w-full h-11 md:h-12 rounded border border-gray-200 bg-gray-50 pl-11 pr-12 text-sm font-semibold text-titan-navy placeholder:text-titan-navy/35 focus:bg-white focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all" />
+                        placeholder="{{ __('Search documents...') }}"
+                        class="w-full h-11 rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-12 text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-gray-300 focus:outline-none focus:ring-0 transition" />
                     @if($search)
                         <button type="button" wire:click="$set('search', '')"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded bg-white border border-gray-200 flex items-center justify-center text-titan-navy/40 hover:text-titan-red hover:border-titan-red/30 transition-colors">
+                            class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors">
                             <x-lucide-x class="w-3.5 h-3.5" />
                         </button>
                     @endif
                 </div>
 
-                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0" wire:ignore.self>
+                <!-- Category Tabs -->
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" wire:ignore.self>
                     <button wire:click="setTab('all')"
-                        class="h-10 md:h-11 px-3 md:px-4 rounded border text-[9px] md:text-[10px] font-black uppercase tracking-[0.14em] md:tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shrink-0 {{ $activeTabId === 'all' ? 'bg-titan-navy text-white border-titan-navy' : 'bg-white text-titan-navy/55 border-gray-200 hover:text-titan-navy hover:border-titan-navy/30' }}">
-                        <x-lucide-layers class="w-3.5 h-3.5" />
+                        @class(['h-9 px-4 rounded-full border text-xs font-bold transition-all shrink-0',
+                            'bg-gray-900 text-white border-gray-900 shadow-sm' => $activeTabId === 'all',
+                            'bg-white text-gray-500 border-gray-200 hover:border-gray-300' => $activeTabId !== 'all'])>
                         {{ __('All') }}
                     </button>
-
                     @foreach($categories as $cat)
-                        @php
-                            $iconMap = [
-                                'heroicon-o-academic-cap' => 'lucide-graduation-cap',
-                                'heroicon-o-cog-6-tooth' => 'lucide-settings-2',
-                                'heroicon-o-shield-check' => 'lucide-shield-check',
-                                'heroicon-o-scale' => 'lucide-scale',
-                                'heroicon-o-wrench-screwdriver' => 'lucide-wrench',
-                                'heroicon-o-document-text' => 'lucide-file-text',
-                                'heroicon-o-clipboard-document-list' => 'lucide-clipboard-list',
-                                'heroicon-o-book-open' => 'lucide-book-open',
-                            ];
-                            $iconName = $iconMap[$cat->icon] ?? 'lucide-folder';
-                        @endphp
-                        <button wire:click="setTab('{{ $cat->id }}')"
-                            class="h-10 md:h-11 px-3 md:px-4 rounded border text-[9px] md:text-[10px] font-black uppercase tracking-[0.14em] md:tracking-[0.16em] transition-all duration-200 flex items-center gap-2 shrink-0 {{ $activeTabId === $cat->id ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy/55 border-gray-200 hover:text-titan-navy hover:border-titan-navy/30' }}">
-                            <x-dynamic-component :component="$iconName" class="w-3.5 h-3.5" />
-                            {{ $cat->getTranslation('name', app()->getLocale()) }}
+                        <button wire:click="setTab('{{ $cat['id'] }}')"
+                            @class(['h-9 px-4 rounded-full border text-xs font-bold transition-all shrink-0',
+                                'bg-gray-900 text-white border-gray-900 shadow-sm' => $activeTabId === $cat['id'],
+                                'bg-white text-gray-500 border-gray-200 hover:border-gray-300' => $activeTabId !== $cat['id']])>
+                            {{ $cat['name'] }}
                         </button>
                     @endforeach
                 </div>
@@ -101,35 +74,36 @@
         </div>
     </section>
 
-    <!-- === DOCUMENTS === -->
-    <section class="max-w-[1240px] mx-auto px-4 md:px-6 py-9 md:py-14 min-h-[620px]">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+
+    <!-- ═══ DOCUMENTS GRID ═══ -->
+    <section class="max-w-[1280px] mx-auto px-6 py-12 md:py-16 min-h-[500px]">
+
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-8">
             <div>
-                <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-2">
-                    {{ __('Resource Library') }}
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-8 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                    <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Library') }}</span>
                 </div>
-                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-normal text-titan-navy">
-                    {{ __('Browse Documents') }}
-                </h2>
+                <h2 class="text-2xl md:text-3xl font-heading font-black text-gray-900 tracking-tight">{{ __('Browse Documents') }}</h2>
             </div>
-            <div class="text-xs font-bold text-titan-navy/45">
-                {{ $documents->total() }} {{ __('items found') }}
-            </div>
+            <p class="text-sm text-gray-400">{{ $documents->total() }} {{ __('documents found') }}</p>
         </div>
 
-        <div wire:loading.grid class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
+        <!-- Loading skeleton -->
+        <div wire:loading.grid class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             @for($i = 0; $i < 6; $i++)
-                <div class="animate-pulse rounded border border-gray-200 bg-white p-5">
-                    <div class="h-10 w-10 rounded bg-gray-100 mb-6"></div>
-                    <div class="h-3 w-24 bg-gray-100 rounded mb-4"></div>
-                    <div class="h-6 w-10/12 bg-gray-100 rounded mb-3"></div>
-                    <div class="h-3 w-full bg-gray-100 rounded mb-2"></div>
-                    <div class="h-3 w-8/12 bg-gray-100 rounded"></div>
+                <div class="animate-pulse bg-white rounded-2xl border border-gray-100 p-6">
+                    <div class="h-32 bg-gray-100 rounded-xl mb-5"></div>
+                    <div class="h-3 w-20 bg-gray-100 rounded mb-3"></div>
+                    <div class="h-5 w-3/4 bg-gray-100 rounded mb-3"></div>
+                    <div class="h-3 w-full bg-gray-100 rounded"></div>
                 </div>
             @endfor
         </div>
 
-        <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
+        <!-- Document Cards -->
+        <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             @forelse($documents as $doc)
                 @php
                     $isFirstFeatured = $doc->is_featured && ($loop->first && $documents->currentPage() === 1);
@@ -137,135 +111,127 @@
                         ? $doc->documentCategory->getTranslation('name', app()->getLocale())
                         : ($doc->category ?: __('Resource'));
                     $fileType = strtoupper($doc->fileType ?: 'PDF');
-                    $description = str(strip_tags($doc->description))->limit($isFirstFeatured ? 180 : 115);
+                    $description = str(strip_tags($doc->description))->limit($isFirstFeatured ? 200 : 120);
                     $thumbnailUrl = \App\Support\PublicStorage::urlIfExists($doc->thumbnailUrl);
                     $fileUrl = \App\Support\PublicStorage::urlIfExists($doc->fileUrl);
                 @endphp
 
                 <article @class([
-                    'group bg-white border border-gray-200 rounded overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-titan-red/25 hover:shadow-elevated',
-                    'md:col-span-2 xl:col-span-3 grid grid-cols-1 lg:grid-cols-[360px_1fr] min-h-[300px]' => $isFirstFeatured,
-                    'flex flex-col min-h-[280px] md:min-h-[320px]' => !$isFirstFeatured,
+                    'group bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:border-gray-200 hover:shadow-lg',
+                    'md:col-span-2 xl:col-span-3' => $isFirstFeatured,
+                    'flex flex-col' => !$isFirstFeatured,
                 ])>
-                    <a href="/documents/{{ $doc->slug }}" @class([
-                        'relative bg-titan-navy overflow-hidden flex items-center justify-center',
-                        'min-h-[200px] md:min-h-[240px] lg:min-h-full' => $isFirstFeatured,
-                        'h-32 md:h-36' => !$isFirstFeatured,
-                    ])>
-                        @if($thumbnailUrl)
-                            <img src="{{ $thumbnailUrl }}" alt="{{ $doc->title }}"
-                                class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
-                                loading="lazy" decoding="async" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/65 to-transparent"></div>
-                        @else
-                            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.18)_0%,transparent_46%)]"></div>
-                            <x-lucide-file-text class="w-14 h-14 text-white/25 group-hover:text-titan-red transition-colors duration-300" />
-                        @endif
-
-                        <div class="absolute left-4 top-4 flex items-center gap-2">
-                            <span class="rounded bg-white text-titan-navy px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em]">
-                                {{ $fileType }}
-                            </span>
-                            @if($doc->is_featured)
-                                <span class="rounded bg-titan-red text-white px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.16em]">
-                                    {{ __('Featured') }}
-                                </span>
-                            @endif
-                        </div>
-                    </a>
-
-                    <div class="flex flex-col flex-1 p-4 md:p-5 {{ $isFirstFeatured ? 'lg:p-8' : '' }}">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-[10px] font-black uppercase tracking-[0.16em] text-titan-red">
-                                {{ $categoryName }}
-                            </span>
-                            <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                            <span class="text-[10px] font-bold uppercase tracking-[0.12em] text-titan-navy/35">
-                                {{ $doc->fileSize ?: __('Document') }}
-                            </span>
-                        </div>
-
-                        <a href="/documents/{{ $doc->slug }}" class="block">
-                            <h3 @class([
-                                'font-black text-titan-navy group-hover:text-titan-red transition-colors duration-200 leading-tight tracking-normal',
-                                'text-xl md:text-3xl max-w-3xl' => $isFirstFeatured,
-                                'text-lg line-clamp-2' => !$isFirstFeatured,
-                            ])>
-                                {{ $doc->title }}
-                            </h3>
-                        </a>
-
-                        <p @class([
-                            'mt-4 text-titan-navy/60 leading-relaxed font-medium',
-                            'text-sm max-w-3xl' => $isFirstFeatured,
-                            'text-xs line-clamp-3' => !$isFirstFeatured,
-                        ])>
-                            {{ $description }}
-                        </p>
-
-                        <div class="mt-auto pt-5 md:pt-6 flex items-center justify-between gap-3 md:gap-4">
-                            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-titan-navy/35">
-                                <x-lucide-calendar class="w-3.5 h-3.5" />
-                                {{ $doc->created_at->format('M Y') }}
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                @if($fileUrl)
-                                    <a href="{{ $fileUrl }}" download
-                                        class="w-9 h-9 rounded border border-gray-200 bg-white text-titan-navy/55 hover:bg-titan-red hover:text-white hover:border-titan-red flex items-center justify-center transition-all"
-                                        aria-label="{{ __('Download document') }}">
-                                        <x-lucide-download class="w-4 h-4" />
-                                    </a>
+                    @if($isFirstFeatured)
+                        {{-- Featured: horizontal layout --}}
+                        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[280px]">
+                            <a href="/documents/{{ $doc->slug }}" class="relative overflow-hidden flex items-center justify-center" style="background: #0B2B5C;">
+                                @if($thumbnailUrl)
+                                    <img src="{{ $thumbnailUrl }}" alt="{{ $doc->title }}"
+                                        class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                    <div class="absolute inset-0 bg-gradient-to-r from-transparent to-black/20"></div>
+                                @else
+                                    <x-lucide-file-text class="w-16 h-16" style="color: rgba(255,255,255,0.15);" />
                                 @endif
-                                <a href="/documents/{{ $doc->slug }}"
-                                    class="h-9 px-3 md:px-4 rounded bg-titan-navy text-white hover:bg-titan-red inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] transition-all">
-                                    {{ __('View') }}
-                                    <x-lucide-arrow-right class="w-3.5 h-3.5" />
+                                <div class="absolute top-4 left-4 flex items-center gap-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md" style="background: var(--primary-color, #E31E24); color: #FFFFFF;">{{ __('Featured') }}</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-white text-gray-700">{{ $fileType }}</span>
+                                </div>
+                            </a>
+                            <div class="p-7 md:p-9 flex flex-col justify-center">
+                                <span class="text-[11px] font-bold uppercase tracking-wider mb-3" style="color: var(--primary-color, #E31E24);">{{ $categoryName }}</span>
+                                <a href="/documents/{{ $doc->slug }}">
+                                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-titan-red transition-colors leading-snug mb-4">{{ $doc->title }}</h3>
                                 </a>
+                                <p class="text-sm text-gray-500 leading-relaxed mb-6">{{ $description }}</p>
+                                <div class="flex items-center gap-3">
+                                    <a href="/documents/{{ $doc->slug }}" class="inline-flex items-center gap-2 h-10 px-5 rounded-xl text-xs font-bold transition-all" style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent); color: var(--primary-color, #E31E24);">
+                                        {{ __('View Details') }} <x-lucide-arrow-right class="w-3.5 h-3.5" />
+                                    </a>
+                                    @if($fileUrl)
+                                        <a href="{{ $fileUrl }}" download class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-gray-200 text-gray-400 hover:text-titan-red hover:border-red-200 transition-colors">
+                                            <x-lucide-download class="w-4 h-4" />
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @else
+                        {{-- Standard: vertical card --}}
+                        <a href="/documents/{{ $doc->slug }}" class="relative h-36 md:h-40 overflow-hidden flex items-center justify-center" style="background: #0B2B5C;">
+                            @if($thumbnailUrl)
+                                <img src="{{ $thumbnailUrl }}" alt="{{ $doc->title }}"
+                                    class="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            @else
+                                <x-lucide-file-text class="w-12 h-12" style="color: rgba(255,255,255,0.15);" />
+                            @endif
+                            <div class="absolute top-3 left-3 flex items-center gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-white text-gray-700">{{ $fileType }}</span>
+                                @if($doc->is_featured)
+                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md" style="background: var(--primary-color, #E31E24); color: #FFFFFF;">{{ __('Featured') }}</span>
+                                @endif
+                            </div>
+                        </a>
+                        <div class="p-5 flex flex-col flex-1">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--primary-color, #E31E24);">{{ $categoryName }}</span>
+                                <span class="text-[11px] text-gray-300">·</span>
+                                <span class="text-[11px] text-gray-400">{{ $doc->fileSize ?: $doc->created_at->format('M Y') }}</span>
+                            </div>
+                            <a href="/documents/{{ $doc->slug }}">
+                                <h3 class="text-base font-bold text-gray-900 group-hover:text-titan-red transition-colors leading-snug mb-3 line-clamp-2">{{ $doc->title }}</h3>
+                            </a>
+                            <p class="text-xs text-gray-400 leading-relaxed line-clamp-2 mb-4 flex-grow">{{ $description }}</p>
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                <span class="text-xs text-gray-400">{{ $doc->created_at->format('M d, Y') }}</span>
+                                <div class="flex items-center gap-2">
+                                    @if($fileUrl)
+                                        <a href="{{ $fileUrl }}" download class="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-titan-red hover:border-red-200 transition-colors" onclick="event.stopPropagation()">
+                                            <x-lucide-download class="w-3.5 h-3.5" />
+                                        </a>
+                                    @endif
+                                    <a href="/documents/{{ $doc->slug }}" class="inline-flex items-center gap-1.5 text-xs font-bold transition-all group-hover:gap-2" style="color: var(--primary-color, #E31E24);">
+                                        {{ __('View') }} <x-lucide-arrow-right class="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </article>
             @empty
-                <div class="col-span-full py-24 text-center bg-white rounded border border-dashed border-gray-300">
-                    <x-lucide-file-x class="w-12 h-12 text-titan-navy/15 mx-auto mb-4" />
-                    <h3 class="font-black uppercase tracking-normal text-titan-navy mb-2">{{ __('No documents found') }}</h3>
-                    <p class="text-sm text-titan-navy/45 font-medium">
-                        {{ __('Try another keyword or choose a different category.') }}
-                    </p>
+                <div class="col-span-full py-20 text-center bg-white rounded-2xl border border-dashed border-gray-200">
+                    <x-lucide-file-x class="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                    <p class="text-base text-gray-400 mb-2">{{ __('No documents found.') }}</p>
+                    <p class="text-sm text-gray-300">{{ __('Try a different search term or category.') }}</p>
                 </div>
             @endforelse
         </div>
 
+        <!-- Pagination -->
         @if($documents->hasPages())
-            <div class="mt-14">
-                {{ $documents->links() }}
-            </div>
+            <div class="mt-12">{{ $documents->links() }}</div>
         @endif
     </section>
 
-    <!-- === CTA SECTION === -->
-    <section class="bg-white border-t border-gray-200 py-12 md:py-16 px-4 md:px-6">
-        <div class="max-w-[1240px] mx-auto grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-center">
+    <!-- ═══ CTA ═══ -->
+    <section class="py-16 md:py-20" style="background: linear-gradient(135deg, #071A33, #0B2B5C);">
+        <div class="max-w-[1280px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-                <div class="text-[10px] font-black text-titan-red uppercase tracking-[0.28em] mb-3">
-                    {{ __('Need Specific Files?') }}
-                </div>
-                <h2 class="text-2xl md:text-3xl font-black text-titan-navy uppercase tracking-normal mb-3">
-                    {{ __("Request technical support") }}
+                <h2 class="text-2xl md:text-3xl font-heading font-black leading-tight tracking-tight mb-3" style="color: #FFFFFF;">
+                    {{ __('Need Specific Documents?') }}
                 </h2>
-                <p class="text-titan-navy/55 text-sm md:text-base max-w-2xl leading-relaxed font-medium">
-                    {{ __('Our team can help locate project references, technical documents, and case studies for your request.') }}
+                <p class="leading-relaxed max-w-lg" style="color: rgba(255,255,255,0.55); font-size: 0.95rem;">
+                    {{ __('Our team can help locate project references, technical documents, and case studies.') }}
                 </p>
             </div>
             <a href="/contact"
-                class="h-12 px-6 rounded bg-titan-red hover:bg-titan-navy text-white inline-flex items-center justify-center gap-3 font-black text-xs uppercase tracking-[0.16em] transition-all shadow-lg shadow-titan-red/15 w-full md:w-auto">
+                class="shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
                 <x-lucide-mail class="w-4 h-4" />
                 {{ __('Contact Us') }}
             </a>
         </div>
     </section>
-
 </div>
 
 <style>

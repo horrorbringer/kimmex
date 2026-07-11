@@ -28,9 +28,16 @@ class DocumentLibrary extends Component
 
     public function render()
     {
-        $categories = Cache::remember('document_library_categories', now()->addMinutes(10), fn () => DocumentCategory::where('isActive', true)
-            ->orderBy('name->en')
-            ->get());
+        $categories = Cache::remember('document_library_categories_v2_' . app()->getLocale(), now()->addMinutes(10), function () {
+            return DocumentCategory::where('isActive', true)
+                ->orderBy('name->en')
+                ->get()
+                ->map(fn ($cat) => [
+                    'id' => (string) $cat->id,
+                    'name' => $cat->getTranslation('name', app()->getLocale()),
+                ])
+                ->all();
+        });
 
         $query = Document::with('documentCategory')->publiclyVisible();
 

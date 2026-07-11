@@ -54,7 +54,6 @@ jobs:
           server-dir: /public_html/
           exclude: |
             **/index.php
-            **/.htaccess
 
       - name: Trigger post-deploy
         run: curl -s "https://kimmex.com.kh/deploy-hook.php?token=${{ secrets.PROD_DEPLOY_TOKEN }}"
