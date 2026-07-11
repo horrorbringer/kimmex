@@ -54,3 +54,21 @@ if (function_exists('opcache_reset')) {
 }
 
 echo "deployed ok\n\n" . implode("\n", $output);
+
+// Debug: verify Subscribers resource file exists
+echo "\n\n--- FILE CHECK ---\n";
+$subscriberPath = __DIR__ . '/../kimmex_app/app/Filament/Resources/Subscribers/SubscriberResource.php';
+echo "SubscriberResource.php: " . (file_exists($subscriberPath) ? 'EXISTS (' . filesize($subscriberPath) . ' bytes)' : 'MISSING') . "\n";
+$subscriberModel = __DIR__ . '/../kimmex_app/app/Models/Subscriber.php';
+echo "Subscriber.php model: " . (file_exists($subscriberModel) ? 'EXISTS' : 'MISSING') . "\n";
+
+// Check if Filament discovers it
+try {
+    $panel = \Filament\Facades\Filament::getPanel('admin');
+    $resources = $panel->getResources();
+    $found = array_filter($resources, fn($r) => str_contains($r, 'Subscriber'));
+    echo "Filament discovers it: " . (!empty($found) ? 'YES → ' . implode(', ', $found) : 'NO') . "\n";
+    echo "Total resources: " . count($resources) . "\n";
+} catch (\Throwable $e) {
+    echo "Filament check error: " . $e->getMessage() . "\n";
+}
