@@ -13,8 +13,7 @@ class SetLocale
     {
         $locale = $request->query('lang')
             ?? session('locale')
-            ?? $this->getBrowserLocale($request)
-            ?? config('app.locale', 'en');
+            ?? config('app.locale', 'km');
 
         $normalizedLocale = $this->normalizeLocale($locale);
 
