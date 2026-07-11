@@ -62,7 +62,22 @@ echo "SubscriberResource.php: " . (file_exists($subscriberPath) ? 'EXISTS (' . f
 $subscriberModel = __DIR__ . '/../kimmex_app/app/Models/Subscriber.php';
 echo "Subscriber.php model: " . (file_exists($subscriberModel) ? 'EXISTS' : 'MISSING') . "\n";
 
+// Try to load the class and catch the actual error
+echo "\n--- CLASS LOAD TEST ---\n";
+try {
+    $class = \App\Filament\Resources\Subscribers\SubscriberResource::class;
+    echo "Class loadable: YES\n";
+    echo "Extends Resource: " . (is_subclass_of($class, \Filament\Resources\Resource::class) ? 'YES' : 'NO') . "\n";
+    echo "Model: " . ($class::getModel() ?? 'null') . "\n";
+    echo "Nav group: " . ($class::getNavigationGroup() ?? 'null') . "\n";
+    echo "Nav label: " . ($class::getNavigationLabel() ?? 'null') . "\n";
+} catch (\Throwable $e) {
+    echo "Class load ERROR: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n";
+}
+
 // Check if Filament discovers it
+echo "\n--- FILAMENT DISCOVERY ---\n";
 try {
     $panel = \Filament\Facades\Filament::getPanel('admin');
     $resources = $panel->getResources();
