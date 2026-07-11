@@ -1,6 +1,15 @@
 <x-layouts.app title="About Us"
     description="Learn about Kimmex's history, mission, vision, and core values in construction.">
 
+    @push('head')
+    <script type="application/ld+json">
+    {!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => __('About Us'), 'item' => url('/about')],
+    ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    @endpush
+
     @php
         $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
         $locale = app()->getLocale();

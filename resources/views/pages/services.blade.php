@@ -1,5 +1,14 @@
 <x-layouts.app title="Services" description="Explore our comprehensive construction and engineering services provided by Kimmex.">
 
+@push('head')
+<script type="application/ld+json">
+{!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+    ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
+    ['@type' => 'ListItem', 'position' => 2, 'name' => __('Services'), 'item' => url('/services')],
+]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
+
 @php
 $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
 

@@ -1,5 +1,14 @@
 <x-layouts.app title="{{ __('Careers') }}" description="{{ __('Join the Kimmex team and build your future in the construction industry.') }}">
 
+    @push('head')
+    <script type="application/ld+json">
+    {!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => __('Careers'), 'item' => url('/careers')],
+    ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    @endpush
+
     @php
         $jobs = \Illuminate\Support\Facades\Cache::remember('careers_jobs_data_'.app()->getLocale(), now()->addHours(12), function() {
             $jobsDb = \App\Models\JobPosting::where('isActive', true)

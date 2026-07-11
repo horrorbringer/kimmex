@@ -1,0 +1,13 @@
+# Kimmex Construction & Investment
+# https://kimmex.com.kh
+
+User-agent: *
+Allow: /
+
+# Disallow admin and internal paths
+Disallow: /admin
+Disallow: /livewire-*/
+Disallow: /deploy-hook.php
+
+# Sitemap
+Sitemap: https://kimmex.com.kh/sitemap.xml

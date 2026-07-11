@@ -1,5 +1,14 @@
 <x-layouts.app title="Contact Us" description="Get in touch with Kimmex for your construction and engineering needs.">
 
+    @push('head')
+    <script type="application/ld+json">
+    {!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => __('Contact'), 'item' => url('/contact')],
+    ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    @endpush
+
     @php
         $profile = \App\Models\SystemSetting::get('organization_profile', []);
         $lang = app()->getLocale();
