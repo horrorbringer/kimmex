@@ -1,21 +1,24 @@
 @php
     $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
     $contentLocale = app()->getLocale() === 'kh' ? 'km' : app()->getLocale();
-    $featuredProjects = \App\Models\Project::where('isFeatured', true)
-        ->where('isActive', true)
-        ->take(5)
-        ->get();
-    if ($featuredProjects->count() > 0) {
-        $slides = $featuredProjects->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {
-            return [
-                'id' => $index + 1,
-                'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
-                'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', $contentLocale) : ($p->category ?: __('Featured Project')),
-                'title' => $p->getTranslation('title', $contentLocale) ?: $p->getTranslation('title', 'en'),
-                'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', $contentLocale) ?: $p->getTranslation('description', 'en')), 120),
-                'link' => '/projects/' . $p->slug
-            ];
-        })->toArray();
+    $featuredProjects = \Illuminate\Support\Facades\Cache::remember('hero_featured_projects_'.$contentLocale, now()->addHours(6), function() use ($fallbackImage, $contentLocale) {
+        return \App\Models\Project::where('isFeatured', true)
+            ->where('isActive', true)
+            ->take(5)
+            ->get()
+            ->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {
+                return [
+                    'id' => $index + 1,
+                    'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
+                    'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', $contentLocale) : ($p->category ?: __('Featured Project')),
+                    'title' => $p->getTranslation('title', $contentLocale) ?: $p->getTranslation('title', 'en'),
+                    'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', $contentLocale) ?: $p->getTranslation('description', 'en')), 120),
+                    'link' => '/projects/' . $p->slug
+                ];
+            })->toArray();
+    });
+    if (count($featuredProjects) > 0) {
+        $slides = $featuredProjects;
     } else {
         $slides = [
             [

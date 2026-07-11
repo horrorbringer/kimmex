@@ -1,4 +1,2 @@
-import axios from 'axios';
-window.axios = axios;
-
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// Axios removed — not needed for public frontend (Livewire handles all server communication)
+// If you need fetch for custom AJAX calls, use native fetch() API instead.

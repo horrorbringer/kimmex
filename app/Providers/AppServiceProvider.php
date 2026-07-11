@@ -31,6 +31,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register cache-busting observer on all public content models
+        $cacheBuster = \App\Observers\CacheBusterObserver::class;
+        \App\Models\Project::observe($cacheBuster);
+        \App\Models\Service::observe($cacheBuster);
+        \App\Models\NewsArticle::observe($cacheBuster);
+        \App\Models\Partner::observe($cacheBuster);
+        \App\Models\Testimonial::observe($cacheBuster);
+        \App\Models\Milestone::observe($cacheBuster);
+        \App\Models\OrgUnit::observe($cacheBuster);
+        \App\Models\Employee::observe($cacheBuster);
+        \App\Models\MethodologyStep::observe($cacheBuster);
+        \App\Models\JobPosting::observe($cacheBuster);
+        \App\Models\Document::observe($cacheBuster);
+        \App\Models\DocumentCategory::observe($cacheBuster);
+        \App\Models\ProjectCategory::observe($cacheBuster);
+        \App\Models\SystemSetting::observe($cacheBuster);
+
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
             // Only run on web HTTP requests — skip CLI, queue workers, and Filament internals
             if (! app()->runningInConsole() && request()->hasSession()) {
@@ -49,7 +66,7 @@ class AppServiceProvider extends ServiceProvider
                     ];
                 });
 
-                $hasPublicDocuments ??= \App\Models\Document::publicDocumentsExist();
+                $hasPublicDocuments ??= \Illuminate\Support\Facades\Cache::remember('has_public_documents', now()->addHours(1), fn () => \App\Models\Document::publicDocumentsExist());
 
                 $view->with('globalSettings', $settings);
                 $view->with('siteLocale', $lang);

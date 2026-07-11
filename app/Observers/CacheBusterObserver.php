@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Observers;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+
+/**
+ * Clears relevant frontend caches when content models are created/updated/deleted.
+ * This ensures the public website always shows fresh data after admin edits.
+ */
+class CacheBusterObserver
+{
+    public function saved(Model $model): void
+    {
+        $this->bustCache($model);
+    }
+
+    public function deleted(Model $model): void
+    {
+        $this->bustCache($model);
+    }
+
+    protected function bustCache(Model $model): void
+    {
+        $class = get_class($model);
+
+        // Map model classes to their related cache keys
+        $cacheMap = [
+            \App\Models\Project::class => [
+                'hero_featured_projects_en', 'hero_featured_projects_km',
+                'home_projects_array_en', 'home_projects_array_km',
+                'nav_categories_en', 'nav_categories_km',
+            ],
+            \App\Models\Service::class => [
+                'home_services_array_en', 'home_services_array_km',
+                'nav_services_en', 'nav_services_km',
+            ],
+            \App\Models\NewsArticle::class => [
+                'home_news_array_en', 'home_news_array_km',
+                'news_index_data_en', 'news_index_data_km',
+                'news_sidebar_documents_en', 'news_sidebar_documents_km',
+                'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
+            ],
+            \App\Models\Partner::class => [
+                'home_partners_array_en', 'home_partners_array_km',
+            ],
+            \App\Models\Testimonial::class => [
+                'home_testimonials_array_en', 'home_testimonials_array_km',
+            ],
+            \App\Models\Milestone::class => [
+                'about_milestones_data_en', 'about_milestones_data_km',
+            ],
+            \App\Models\OrgUnit::class => [
+                'about_orgchart_en', 'about_orgchart_km',
+            ],
+            \App\Models\Employee::class => [
+                'about_orgchart_en', 'about_orgchart_km',
+            ],
+            \App\Models\MethodologyStep::class => [
+                'process_index_array_en', 'process_index_array_km',
+                'services_process_array_en', 'services_process_array_km',
+            ],
+            \App\Models\JobPosting::class => [
+                'careers_jobs_data_en', 'careers_jobs_data_km',
+                'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
+            ],
+            \App\Models\Document::class => [
+                'has_public_documents',
+                'document_library_total_documents',
+                'document_library_total_categories',
+                'document_library_categories_v2_en', 'document_library_categories_v2_km',
+                'news_sidebar_documents_en', 'news_sidebar_documents_km',
+            ],
+            \App\Models\DocumentCategory::class => [
+                'document_library_categories_v2_en', 'document_library_categories_v2_km',
+                'document_library_total_categories',
+            ],
+            \App\Models\ProjectCategory::class => [
+                'nav_categories_en', 'nav_categories_km',
+            ],
+            \App\Models\SystemSetting::class => [
+                'global_settings_en', 'global_settings_km',
+            ],
+        ];
+
+        $keys = $cacheMap[$class] ?? [];
+
+        foreach ($keys as $key) {
+            Cache::forget($key);
+        }
+    }
+}
