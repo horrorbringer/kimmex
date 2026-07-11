@@ -26,7 +26,7 @@ class SendNewsletter extends Page implements HasForms
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return __('Marketing');
+        return __('Communications');
     }
 
     public static function getNavigationLabel(): string
@@ -90,7 +90,7 @@ class SendNewsletter extends Page implements HasForms
         foreach ($subscribers as $subscriber) {
             try {
                 Mail::to($subscriber->email)
-                    ->queue(new NewsAnnouncementMail($article, $subscriber, $this->customIntro));
+                    ->send(new NewsAnnouncementMail($article, $subscriber, $this->customIntro));
                 $count++;
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::error('Newsletter send failed', [
@@ -102,8 +102,8 @@ class SendNewsletter extends Page implements HasForms
 
         Notification::make()
             ->success()
-            ->title(__('Newsletter queued!'))
-            ->body(__(':count emails queued for delivery.', ['count' => $count]))
+            ->title(__('Newsletter sent!'))
+            ->body(__(':count emails sent successfully.', ['count' => $count]))
             ->send();
 
         $this->articleId = null;
