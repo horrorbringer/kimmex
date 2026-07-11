@@ -40,11 +40,14 @@ try {
 $run('migrate', ['--force' => true]);
 
 // 4. Rebuild caches
-$run('filament:cache-components');
-$run('filament:assets');
 $run('config:cache');
-$run('route:cache');
+$run('filament:assets');
 $run('view:cache');
+// NOTE: route:cache and filament:cache-components intentionally skipped.
+// route:cache can cause Filament resource registration issues.
+// filament:cache-components was excluding SubscriberResource.
+// Without these caches, Filament discovers resources on each request (minimal perf impact).
+$output[] = "SKIPPED: route:cache, filament:cache-components (discovery mode)";
 
 // 5. OPcache
 if (function_exists('opcache_reset')) {
