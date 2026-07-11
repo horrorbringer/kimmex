@@ -26,7 +26,7 @@ class PartnerResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Communication');
+        return __('Communications');
     }
 
     public static function getLabel(): ?string
@@ -40,7 +40,7 @@ class PartnerResource extends Resource
     }
 
     protected static ?int $navigationSort = 7;
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-heart';
 
     public static function canCreate(): bool
     {

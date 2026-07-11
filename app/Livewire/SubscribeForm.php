@@ -30,9 +30,14 @@ class SubscribeForm extends Component
             // Reactivate
             $existing->update(['is_active' => true, 'unsubscribed_at' => null, 'subscribed_at' => now()]);
         } else {
-            Subscriber::create([
-                'email' => $this->email,
-            ]);
+            try {
+                Subscriber::create([
+                    'email' => $this->email,
+                ]);
+            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                $this->error = __('This email is already subscribed.');
+                return;
+            }
         }
 
         $this->subscribed = true;

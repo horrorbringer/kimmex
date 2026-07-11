@@ -24,7 +24,7 @@ class SubscriberResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Marketing');
+        return __('Communications');
     }
 
     public static function getLabel(): ?string
@@ -38,7 +38,7 @@ class SubscriberResource extends Resource
     }
 
     protected static ?int $navigationSort = 1;
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-envelope';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-megaphone';
 
     public static function table(Table $table): Table
     {

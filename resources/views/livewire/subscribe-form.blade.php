@@ -11,8 +11,8 @@
                     placeholder="{{ __('Enter your email') }}"
                     class="w-full h-10 px-4 rounded bg-white/10 border border-white/15 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-titan-red/50 focus:ring-1 focus:ring-titan-red/20 transition-all" />
             </div>
-            <button type="submit"
-                class="h-10 px-5 rounded bg-titan-red text-white text-[10px] font-black uppercase tracking-[0.18em] hover:bg-white hover:text-titan-navy transition-all shrink-0 flex items-center justify-center gap-2">
+            <button type="submit" wire:loading.attr="disabled"
+                class="h-10 px-5 rounded bg-titan-red text-white text-[10px] font-black uppercase tracking-[0.18em] hover:bg-white hover:text-titan-navy transition-all shrink-0 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span wire:loading.remove>{{ __('Subscribe') }}</span>
                 <span wire:loading class="inline-flex items-center gap-1">
                     <svg class="animate-spin w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

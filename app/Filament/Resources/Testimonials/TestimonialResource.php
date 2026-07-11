@@ -26,7 +26,7 @@ class TestimonialResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Communication');
+        return __('Communications');
     }
 
     public static function getLabel(): ?string
