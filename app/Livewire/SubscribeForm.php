@@ -29,15 +29,24 @@ class SubscribeForm extends Component
             }
             // Reactivate
             $existing->update(['is_active' => true, 'unsubscribed_at' => null, 'subscribed_at' => now()]);
+            $subscriber = $existing;
         } else {
             try {
-                Subscriber::create([
+                $subscriber = Subscriber::create([
                     'email' => $this->email,
                 ]);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $this->error = __('This email is already subscribed.');
                 return;
             }
+        }
+
+        // Send welcome email
+        try {
+            \Illuminate\Support\Facades\Mail::to($subscriber->email)
+                ->send(new \App\Mail\WelcomeSubscriberMail($subscriber));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Welcome email failed', ['email' => $subscriber->email, 'error' => $e->getMessage()]);
         }
 
         $this->subscribed = true;
