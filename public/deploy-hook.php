@@ -11,19 +11,46 @@ $app = require_once __DIR__.'/../kimmex_app/bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
-Illuminate\Support\Facades\Artisan::call('config:clear');
-Illuminate\Support\Facades\Artisan::call('view:clear');
-Illuminate\Support\Facades\Artisan::call('cache:clear');
-Illuminate\Support\Facades\Artisan::call('filament:clear-cached-components');
-Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-Illuminate\Support\Facades\Artisan::call('filament:cache-components');
-Illuminate\Support\Facades\Artisan::call('filament:assets');
-Illuminate\Support\Facades\Artisan::call('config:cache');
-Illuminate\Support\Facades\Artisan::call('route:cache');
-Illuminate\Support\Facades\Artisan::call('view:cache');
+$output = [];
+$run = function (string $command, array $params = []) use (&$output) {
+    Illuminate\Support\Facades\Artisan::call($command, $params);
+    $result = trim(Illuminate\Support\Facades\Artisan::output());
+    $output[] = "{$command}: {$result}";
+};
 
-if (function_exists('opcache_reset')) {
-    opcache_reset();
+// 1. Clear ALL caches first
+$run('config:clear');
+$run('route:clear');
+$run('view:clear');
+$run('cache:clear');
+$run('event:clear');
+
+// 2. Clear Filament component cache (delete cached manifest file directly as fallback)
+try {
+    $run('filament:optimize-clear');
+} catch (\Throwable $e) {
+    // Fallback: manually delete the cached components file
+    $cachePath = base_path('bootstrap/cache/filament');
+    if (is_dir($cachePath)) {
+        array_map('unlink', glob("{$cachePath}/*.php"));
+        $output[] = "filament:optimize-clear: manual cleanup done";
+    }
 }
 
-echo "deployed ok";
+// 3. Run migrations
+$run('migrate', ['--force' => true]);
+
+// 4. Rebuild caches
+$run('filament:cache-components');
+$run('filament:assets');
+$run('config:cache');
+$run('route:cache');
+$run('view:cache');
+
+// 5. Reset OPcache
+if (function_exists('opcache_reset')) {
+    opcache_reset();
+    $output[] = "opcache: reset";
+}
+
+echo "deployed ok\n\n" . implode("\n", $output);
