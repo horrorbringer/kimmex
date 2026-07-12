@@ -10,4 +10,11 @@ class CreateJobPosting extends CreateRecord
     use \LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
     protected static string $resource = JobPostingResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            \App\Filament\Support\AIHelper::getAutoFillAction('job'),
+        ];
+    }
 }

@@ -10,4 +10,11 @@ class CreateNewsArticle extends CreateRecord
     use \LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
     protected static string $resource = NewsArticleResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            \App\Filament\Support\AIHelper::getAutoFillAction('news'),
+        ];
+    }
 }

@@ -10,4 +10,11 @@ class CreateProject extends CreateRecord
     use \LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
     protected static string $resource = ProjectResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            \App\Filament\Support\AIHelper::getAutoFillAction('project'),
+        ];
+    }
 }

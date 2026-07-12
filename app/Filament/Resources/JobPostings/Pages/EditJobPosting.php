@@ -15,6 +15,7 @@ class EditJobPosting extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            \App\Filament\Support\AIHelper::getAutoFillAction('job'),
             DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
         ];
     }

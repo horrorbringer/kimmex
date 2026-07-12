@@ -15,6 +15,7 @@ class EditNewsArticle extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            \App\Filament\Support\AIHelper::getAutoFillAction('news'),
             DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
         ];
     }

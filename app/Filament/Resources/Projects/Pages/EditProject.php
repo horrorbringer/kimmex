@@ -20,6 +20,7 @@ class EditProject extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            \App\Filament\Support\AIHelper::getAutoFillAction('project'),
             Action::make('requestTestimonial')
                 ->label('Request Testimonial')
                 ->icon('heroicon-o-star')
