@@ -30,9 +30,21 @@ class DepartmentForm
                             TextInput::make('slug')
                                 ->label(__('URL Slug'))
                                 ->placeholder(__('civil-engineering'))
+                                ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
                                 ->prefix('kimmex.com/dept/')
                                 ->unique(ignoreRecord: true)
-                                ->required(),
+                                ->required()
+                                ->disabled(fn ($get) => !$get('_slug_manual'))
+                                ->dehydrated()
+                                ->suffixAction(
+                                    \Filament\Actions\Action::make('toggleSlugManual')
+                                        ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
+                                        ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
+                                        ->action(function (\Filament\Schemas\Components\Utilities\Set $set, $get) {
+                                            $set('_slug_manual', !$get('_slug_manual'));
+                                        })
+                                ),
+                            \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
                             Toggle::make('isActive')
                                 ->label(__('Is Active'))
                                 ->default(true)

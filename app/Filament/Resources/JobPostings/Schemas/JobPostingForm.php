@@ -29,10 +29,21 @@ class JobPostingForm
 
                 TextInput::make('slug')
                     ->label(__('Slug'))
-                    ->helperText(__('Auto-generated from title. Used for the job posting URL.'))
+                    ->helperText(__('Auto-generated from title. Click ✏️ to edit manually.'))
                     ->required()
                     ->unique(ignoreRecord: true)
-                    ->prefix('kimmex.com/careers/'),
+                    ->prefix('kimmex.com/careers/')
+                    ->disabled(fn ($get) => !$get('_slug_manual'))
+                    ->dehydrated()
+                    ->suffixAction(
+                        \Filament\Actions\Action::make('toggleSlugManual')
+                            ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
+                            ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
+                            ->action(function (Set $set, $get) {
+                                $set('_slug_manual', !$get('_slug_manual'));
+                            })
+                    ),
+                \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
 
                 Section::make(__('Job Details'))
                     ->icon('heroicon-o-briefcase')

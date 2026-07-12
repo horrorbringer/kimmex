@@ -33,8 +33,20 @@ class ServiceForm
                                 ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
+                                ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
                                 ->required()
-                                ->unique(ignoreRecord: true),
+                                ->unique(ignoreRecord: true)
+                                ->disabled(fn ($get) => !$get('_slug_manual'))
+                                ->dehydrated()
+                                ->suffixAction(
+                                    \Filament\Actions\Action::make('toggleSlugManual')
+                                        ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
+                                        ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
+                                        ->action(function (\Filament\Schemas\Components\Utilities\Set $set, $get) {
+                                            $set('_slug_manual', !$get('_slug_manual'));
+                                        })
+                                ),
+                            \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
                             \Filament\Forms\Components\Select::make('icon')
                                 ->label(__('Icon'))
                                 ->options([
