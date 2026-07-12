@@ -432,6 +432,67 @@
             .org-icon-md { width: 1.5rem !important; height: 1.5rem !important; }
             .org-icon-lg { width: 2rem !important; height: 2rem !important; }
 
+            .org-chevron {
+                transition: transform 0.2s ease;
+                color: var(--org-muted);
+            }
+            .org-chevron-open { transform: rotate(0deg); }
+            .org-chevron-closed { transform: rotate(-90deg); }
+
+            .node-action-btn {
+                width: 2rem;
+                height: 2rem;
+                display: grid;
+                place-items: center;
+                border-radius: 0.5rem;
+                transition: all 0.15s ease;
+                background: #f8fafc;
+                color: var(--org-muted);
+                border: 1px solid transparent;
+                cursor: pointer;
+            }
+
+            .node-action-btn:hover {
+                background: color-mix(in srgb, var(--org-navy) 8%, white);
+                color: var(--org-navy);
+                border-color: color-mix(in srgb, var(--org-navy) 18%, var(--org-border));
+            }
+
+            .node-action-btn.btn-danger:hover {
+                background: #fef2f2;
+                color: #dc2626;
+                border-color: #fecaca;
+            }
+
+            .node-child-count {
+                background: color-mix(in srgb, var(--org-accent) 12%, white);
+                color: var(--org-navy);
+                font-size: 0.6875rem;
+                font-weight: 800;
+                min-width: 1.5rem;
+                height: 1.5rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 999px;
+                padding: 0 0.375rem;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+            .node-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.25rem;
+                flex-shrink: 0;
+                opacity: 0;
+                transition: opacity 0.15s ease;
+            }
+
+            .node-card:hover .node-actions {
+                opacity: 1;
+            }
+
             .sortable-ghost .node-card {
                 border-color: var(--org-accent);
                 background: color-mix(in srgb, var(--org-accent) 10%, white);
