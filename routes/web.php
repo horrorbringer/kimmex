@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\MediaController;
@@ -13,6 +14,9 @@ use App\Models\JobPosting;
 use App\Models\NewsArticle;
 use App\Models\Project;
 use App\Models\Service;
+
+// Health Check Endpoint
+Route::get('/health', HealthCheckController::class)->name('health');
 
 // Language Switcher
 Route::get('/lang/{locale}', function (string $locale) {

@@ -107,6 +107,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Health Check Token
+    |--------------------------------------------------------------------------
+    |
+    | If set, the /health endpoint will require this token as a query parameter.
+    | Leave null or unset in .env to allow open access.
+    |
+    */
+
+    'health_check_token' => env('HEALTH_CHECK_TOKEN'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Maintenance Mode Driver
     |--------------------------------------------------------------------------
     |
