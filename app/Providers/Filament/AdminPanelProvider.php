@@ -29,6 +29,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login(\App\Filament\Pages\Auth\Login::class)
             ->passwordReset()
+            ->profile()
+            ->multifactorAuthentication([
+                \Filament\Auth\MultiFactor\App\AppAuthentication::make(),
+            ])
             ->brandName(function () {
                 $profile = \App\Models\SystemSetting::get('organization_profile', []);
 
