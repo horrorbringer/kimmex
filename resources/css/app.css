@@ -885,3 +885,197 @@ a.link:hover,
 .project-rich-content li { margin: 0.3rem 0; display: list-item !important; }
 .project-rich-content h4 { margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.95rem !important; font-weight: 800; color: rgb(17 24 39); }
 .project-rich-content p  { margin-bottom: 0.75rem; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES
+   Activated when <html> has the `dark` class via Alpine.js toggle.
+   ═══════════════════════════════════════════════════════════════════════════ */
+html.dark {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+}
+
+html.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* ─── Header / Navigation ─── */
+html.dark header nav {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+html.dark header .bg-white {
+  background: #1e293b !important;
+}
+
+html.dark header .text-titan-navy {
+  color: #e2e8f0 !important;
+}
+
+html.dark header .text-titan-navy\/60,
+html.dark header .text-titan-navy\/50,
+html.dark header .text-titan-navy\/40 {
+  color: rgba(226, 232, 240, 0.6) !important;
+}
+
+html.dark header .bg-gray-100 {
+  background: #334155 !important;
+}
+
+html.dark header .border-gray-100 {
+  border-color: #334155 !important;
+}
+
+/* ─── Top bar ─── */
+html.dark header > div:first-child {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* ─── Dropdown menus ─── */
+html.dark .bg-white\/95 {
+  background: rgba(30, 41, 59, 0.97) !important;
+}
+
+html.dark header .hover\:bg-gray-50:hover {
+  background: #334155 !important;
+}
+
+/* ─── Mobile menu ─── */
+html.dark .lg\:hidden.bg-white {
+  background: #1e293b !important;
+}
+
+html.dark .bg-gray-50 {
+  background: #1e293b !important;
+}
+
+/* ─── Main content areas ─── */
+html.dark .bg-white {
+  background: #1e293b !important;
+}
+
+html.dark .bg-kmd-bg,
+html.dark .bg-titan-bg {
+  background: #0f172a !important;
+}
+
+html.dark .bg-kmd-bg-alt,
+html.dark .bg-titan-bg-alt {
+  background: #1e293b !important;
+}
+
+html.dark .bg-kmd-bg-section,
+html.dark .bg-titan-bg-section {
+  background: #334155 !important;
+}
+
+/* ─── Text colors ─── */
+html.dark .text-titan-navy {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-gray-600,
+html.dark .text-gray-700,
+html.dark .text-gray-800,
+html.dark .text-gray-900 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
+
+html.dark h1, html.dark h2, html.dark h3,
+html.dark h4, html.dark h5, html.dark h6 {
+  color: #f1f5f9 !important;
+}
+
+/* ─── Cards ─── */
+html.dark .card,
+html.dark [class*="shadow-card"] {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* ─── Borders ─── */
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-gray-300 {
+  border-color: #334155 !important;
+}
+
+/* ─── Form inputs ─── */
+html.dark .form-input,
+html.dark .form-field,
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="tel"],
+html.dark textarea,
+html.dark select {
+  background: #0f172a !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .form-input::placeholder,
+html.dark .form-field::placeholder,
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* ─── Search modal ─── */
+html.dark .bg-titan-navy\/80 {
+  background: rgba(15, 23, 42, 0.9) !important;
+}
+
+/* ─── Preserve brand colors in dark mode ─── */
+html.dark .text-titan-red,
+html.dark .text-kmd-red {
+  color: var(--color-kmd-red) !important;
+}
+
+html.dark .bg-titan-red,
+html.dark .bg-kmd-red {
+  background-color: var(--color-kmd-red) !important;
+}
+
+html.dark .bg-titan-navy,
+html.dark .bg-kmd-navy {
+  background-color: var(--color-kmd-navy) !important;
+}
+
+/* ─── Footer keeps its own colors ─── */
+html.dark footer {
+  background: var(--footer-bg) !important;
+  color: var(--footer-text) !important;
+}
+
+/* ─── Scroll to top button ─── */
+html.dark .bg-titan-red.hover\:bg-red-700 {
+  background-color: var(--color-kmd-red) !important;
+}
+
+/* ─── Dark mode toggle button ─── */
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.dark-mode-toggle:focus-visible {
+  outline: 2px solid var(--color-kmd-blue);
+  outline-offset: 2px;
+}

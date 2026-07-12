@@ -101,9 +101,18 @@ class ArtisanConsole extends Page implements HasForms
             'down' => '🚧 Put app in maintenance mode',
             'up' => '✅ Bring app out of maintenance mode',
 
+            // Weekly Digest
+            'digest:send' => '📬 Send weekly digest email',
+
             // Info
             'about' => 'ℹ️ Show application info',
             'route:list --columns=method,uri,name' => '📋 List all routes',
+
+            // Backup
+            'backup:database' => '💾 Backup database to SQL file',
+
+            // Uptime
+            'uptime:check' => '🏓 Run uptime health check',
         ];
     }
 
@@ -270,6 +279,26 @@ class ArtisanConsole extends Page implements HasForms
                 'user_id' => $user->id,
             ]);
         }
+    }
+
+    #[Computed]
+    public function latestBackupFile(): ?string
+    {
+        $backupDir = storage_path('app/backups');
+
+        if (!is_dir($backupDir)) {
+            return null;
+        }
+
+        $files = glob("{$backupDir}/kimmex_backup_*");
+        if (empty($files)) {
+            return null;
+        }
+
+        // Sort by modification time descending
+        usort($files, fn($a, $b) => filemtime($b) - filemtime($a));
+
+        return basename($files[0]);
     }
 
     #[Computed]

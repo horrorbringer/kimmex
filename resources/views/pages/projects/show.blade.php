@@ -147,6 +147,15 @@
 
         </header>
 
+        {{-- Social Share Buttons --}}
+        <div style="max-width: 1400px; margin: 0 auto; padding: 1.5rem 1.5rem 0;">
+            <x-social-share
+                :url="route('projects.show', ['slug' => $project['slug']])"
+                :title="$project['title']"
+                :description="'Kimmex project: ' . $project['title']"
+            />
+        </div>
+
         <!-- --- MAIN CONTENT SPLIT --- -->
         <section class="py-10 md:py-16 px-4 md:px-6 bg-gradient-to-b from-white via-slate-50/60 to-white">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 max-w-[1400px] mx-auto">
@@ -446,6 +455,46 @@
                             <h3 class="projects-title text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors uppercase tracking-tight leading-tight">
                                 {{ $p['title'] }}
                             </h3>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        {{-- In the News --}}
+        @if($project['newsArticles'] ?? false)
+            <section class="py-10 md:py-14 px-4 md:px-6 max-w-[1400px] mx-auto border-t border-gray-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-6 md:mb-8">
+                    <h2 class="text-xl md:text-2xl font-black text-titan-navy">{{ __('In the News') }}</h2>
+                    <a href="/news"
+                        class="font-bold text-titan-red hover:underline flex items-center gap-2 text-xs md:text-sm uppercase tracking-widest">
+                        {{ __('All News') }} <x-lucide-arrow-right class="w-4 h-4" />
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    @foreach($project['newsArticles'] as $newsItem)
+                        <a href="/news/{{ $newsItem['slug'] }}" class="group rounded border border-gray-200 bg-white overflow-hidden hover:border-titan-red/25 hover:shadow-md transition-all">
+                            <div class="aspect-[16/10] overflow-hidden bg-titan-navy/5">
+                                @if($newsItem['coverImage'])
+                                    <img src="{{ $newsItem['coverImage'] }}" alt="{{ $newsItem['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <x-lucide-newspaper class="w-10 h-10 text-titan-navy/10" />
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="p-4">
+                                @if($newsItem['category'])
+                                    <div class="text-[9px] font-black uppercase tracking-[0.18em] text-titan-red mb-1">{{ $newsItem['category'] }}</div>
+                                @endif
+                                <div class="text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors leading-tight line-clamp-2">
+                                    {{ $newsItem['title'] }}
+                                </div>
+                                @if($newsItem['publishedAt'])
+                                    <div class="mt-2 text-[10px] text-titan-navy/40 font-medium">{{ $newsItem['publishedAt'] }}</div>
+                                @endif
+                            </div>
                         </a>
                     @endforeach
                 </div>

@@ -128,6 +128,24 @@
                         </x-slot>
 
                         <pre style="background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; font-size: 0.8rem; font-family: 'JetBrains Mono', 'Fira Code', monospace; overflow-x: auto; white-space: pre-wrap; word-break: break-word; max-height: 400px; overflow-y: auto; line-height: 1.6;">{{ $output ?: __('(no output)') }}</pre>
+
+                        {{-- Download Backup Button (shown after backup:database command) --}}
+                        @if($executedCommand === 'backup:database' && $this->latestBackupFile)
+                            <div style="margin-top: 12px;">
+                                <a
+                                    href="{{ url('/admin/backup/download/' . $this->latestBackupFile) }}"
+                                    target="_blank"
+                                    style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #16a34a; color: #ffffff; border-radius: 6px; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: background 0.15s;"
+                                    onmouseover="this.style.background='#15803d'"
+                                    onmouseout="this.style.background='#16a34a'"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 18px; height: 18px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                    </svg>
+                                    {{ __('Download Backup') }} ({{ $this->latestBackupFile }})
+                                </a>
+                            </div>
+                        @endif
                     </x-filament::section>
                 </div>
             @endif

@@ -23,6 +23,16 @@ Schedule::command('analytics:prune --days=90')
     ->weekly()
     ->withoutOverlapping();
 
+// Send weekly digest email every Monday at 8:00 AM
+Schedule::command('digest:send')
+    ->weeklyOn(1, '8:00')
+    ->withoutOverlapping();
+
+// Uptime ping — check /health every 5 minutes and alert on failure
+Schedule::command('uptime:check')
+    ->everyFiveMinutes()
+    ->withoutOverlapping();
+
 // Rotate Laravel log — keep it under control
 Schedule::call(function () {
     $logFile = storage_path('logs/laravel.log');

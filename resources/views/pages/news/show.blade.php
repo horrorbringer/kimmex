@@ -78,6 +78,41 @@
         <meta property="article:author" content="{{ $article['author'] }}">
     @endpush
 
+    {{-- Reading Progress Bar --}}
+    <div id="reading-progress-bar" style="position:fixed;top:0;left:0;width:0%;height:3px;background:#E31E24;z-index:9999;transition:width 0.15s cubic-bezier(0.4,0,0.2,1);pointer-events:none;"></div>
+    <script>
+        (function() {
+            const bar = document.getElementById('reading-progress-bar');
+            const article = document.getElementById('article-body');
+            if (!bar || !article) return;
+
+            function updateProgress() {
+                const articleRect = article.getBoundingClientRect();
+                const articleTop = article.offsetTop;
+                const articleHeight = article.offsetHeight;
+                const windowHeight = window.innerHeight;
+                const scrolled = window.scrollY || window.pageYOffset;
+
+                // Calculate how far through the article content area we've scrolled
+                const start = articleTop;
+                const end = articleTop + articleHeight - windowHeight;
+                let progress = 0;
+
+                if (scrolled >= end) {
+                    progress = 100;
+                } else if (scrolled > start) {
+                    progress = ((scrolled - start) / (end - start)) * 100;
+                }
+
+                bar.style.width = Math.min(100, Math.max(0, progress)) + '%';
+            }
+
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            window.addEventListener('resize', updateProgress, { passive: true });
+            updateProgress();
+        })();
+    </script>
+
     <script type="application/ld+json">
         {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
@@ -159,6 +194,15 @@
                                 <x-lucide-book-open class="w-4 h-4" />
                                 {{ __('Read Article') }}
                             </a>
+                        </div>
+
+                        {{-- Social Share Buttons --}}
+                        <div style="margin-top: 1.5rem;">
+                            <x-social-share
+                                :url="$canonicalUrl"
+                                :title="$article['title']"
+                                :description="$article['excerpt'] ?? ''"
+                            />
                         </div>
                     </div>
 
@@ -551,6 +595,39 @@
                 @endif
             </div>
         </section>
+
+        {{-- Related Projects --}}
+        @if($article['relatedProjects'] ?? false)
+            <section class="max-w-[1240px] mx-auto px-6 pb-16">
+                <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-4">{{ __('Related Projects') }}</div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    @foreach($article['relatedProjects'] as $relProject)
+                        <a href="/projects/{{ $relProject['slug'] }}" class="group rounded border border-gray-200 bg-white overflow-hidden hover:border-titan-red/25 hover:shadow-md transition-all">
+                            <div class="aspect-[16/10] overflow-hidden bg-titan-navy/5">
+                                @if($relProject['heroImage'])
+                                    <img src="{{ $relProject['heroImage'] }}" alt="{{ $relProject['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <x-lucide-building-2 class="w-10 h-10 text-titan-navy/10" />
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="p-4">
+                                <div class="text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors uppercase tracking-tight leading-tight">
+                                    {{ $relProject['title'] }}
+                                </div>
+                                @if($relProject['location'])
+                                    <div class="mt-1 text-[10px] text-titan-navy/40 font-medium flex items-center gap-1">
+                                        <x-lucide-map-pin class="w-3 h-3" />
+                                        {{ $relProject['location'] }}
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
     </div>
 
     <style>

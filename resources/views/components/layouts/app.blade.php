@@ -1,7 +1,12 @@
 @props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null])
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark')</script>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+    x-init="$watch('darkMode', val => { localStorage.setItem('darkMode', val); val ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark') }); if (darkMode) document.documentElement.classList.add('dark')"
+    @toggle-dark-mode.window="darkMode = !darkMode"
+    :class="{ 'dark': darkMode }">
 
 <head>
     <meta charset="utf-8">

@@ -88,4 +88,9 @@ class NewsArticle extends Model
     {
         return $this->belongsTo(Employee::class, 'authorId');
     }
+
+    public function projects(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'news_article_project');
+    }
 }

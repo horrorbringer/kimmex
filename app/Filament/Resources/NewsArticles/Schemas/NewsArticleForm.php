@@ -223,6 +223,18 @@ class NewsArticleForm
                                             ->rows(2)
                                             ->hintAction(TranslationHelper::getAutoTranslateAction('metaDescription')),
                                     ]),
+
+                                Section::make(__('Related Projects'))
+                                    ->collapsed()
+                                    ->description(__('Link this article to related projects'))
+                                    ->components([
+                                        Select::make('projects')
+                                            ->label(__('Projects'))
+                                            ->relationship('projects', 'title')
+                                            ->multiple()
+                                            ->searchable()
+                                            ->preload(),
+                                    ]),
                             ]),
                     ])
                     ->columnSpanFull(),

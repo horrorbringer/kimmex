@@ -9,6 +9,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TestimonialController;
 use App\Models\Document;
 use App\Models\JobPosting;
 use App\Models\NewsArticle;
@@ -170,6 +171,32 @@ Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('docu
 Route::get('/privacy-policy', function () {
     return view('pages.privacy');
 })->name('privacy');
+
+// Admin: Download Database Backup
+Route::get('/admin/backup/download/{filename}', function (string $filename) {
+    // Validate filename format to prevent directory traversal
+    if (!preg_match('/^kimmex_backup_\d{4}-\d{2}-\d{2}_\d{6}\.sql(\.gz)?$/', $filename)) {
+        abort(404);
+    }
+
+    $filepath = storage_path('app/backups/' . $filename);
+
+    if (!file_exists($filepath)) {
+        abort(404);
+    }
+
+    $contentType = str_ends_with($filename, '.gz')
+        ? 'application/gzip'
+        : 'application/sql';
+
+    return response()->download($filepath, $filename, [
+        'Content-Type' => $contentType,
+    ]);
+})->middleware(['web', \Filament\Http\Middleware\Authenticate::class])->name('admin.backup.download');
+
+// Testimonial Submission (signed URL protected)
+Route::get('/testimonials/submit', [TestimonialController::class, 'showSubmitForm'])->name('testimonials.submit');
+Route::post('/testimonials/submit', [TestimonialController::class, 'store'])->name('testimonials.store');
 
 // Newsletter Unsubscribe
 Route::get('/unsubscribe/{token}', function (string $token) {

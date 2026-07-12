@@ -221,6 +221,20 @@ class ProjectController extends Controller
                             : ($p->category ?: __('Infrastructure')),
                         'image' => PublicStorage::urlIfExists($p->heroImage, '/images/webp/projects/Thumbnail-5.webp'),
                     ])->toArray(),
+
+                'newsArticles' => $projectDb->newsArticles()
+                    ->where('isActive', true)
+                    ->where('publishedAt', '<=', now())
+                    ->orderByDesc('publishedAt')
+                    ->get()
+                    ->map(fn (\App\Models\NewsArticle $a) => [
+                        'slug'        => $a->slug,
+                        'title'       => $a->getTranslation('title', $contentLocale),
+                        'category'    => $a->getTranslation('category', $contentLocale) ?: __('Updates'),
+                        'coverImage'  => PublicStorage::urlIfExists($a->coverImage, ''),
+                        'publishedAt' => $a->publishedAt?->format('M d, Y'),
+                    ])
+                    ->toArray(),
             ];
         });
 

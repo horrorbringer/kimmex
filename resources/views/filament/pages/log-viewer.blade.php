@@ -13,37 +13,36 @@
             <x-slot name="description">
                 {{ __('View and manage the application error log. Showing the most recent entries from storage/logs/laravel.log.') }}
             </x-slot>
-            <x-slot name="headerEnd">
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <x-filament::button
-                        wire:click="refresh"
-                        color="gray"
-                        size="sm"
-                        icon="heroicon-o-arrow-path"
-                    >
-                        {{ __('Refresh') }}
-                    </x-filament::button>
 
-                    <x-filament::button
-                        wire:click="downloadLog"
-                        color="info"
-                        size="sm"
-                        icon="heroicon-o-arrow-down-tray"
-                    >
-                        {{ __('Download') }}
-                    </x-filament::button>
+            {{-- Action Buttons --}}
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+                <x-filament::button
+                    wire:click="refresh"
+                    color="gray"
+                    size="sm"
+                    icon="heroicon-o-arrow-path"
+                >
+                    {{ __('Refresh') }}
+                </x-filament::button>
 
-                    <x-filament::button
-                        wire:click="clearLog"
-                        wire:confirm="{{ __('Are you sure you want to clear the log file? This action cannot be undone.') }}"
-                        color="danger"
-                        size="sm"
-                        icon="heroicon-o-trash"
-                    >
-                        {{ __('Clear Log') }}
-                    </x-filament::button>
-                </div>
-            </x-slot>
+                <x-filament::button
+                    wire:click="downloadLog"
+                    color="info"
+                    size="sm"
+                    icon="heroicon-o-arrow-down-tray"
+                >
+                    {{ __('Download') }}
+                </x-filament::button>
+
+                <x-filament::button
+                    wire:click="clearLog"
+                    color="danger"
+                    size="sm"
+                    icon="heroicon-o-trash"
+                >
+                    {{ __('Clear Log') }}
+                </x-filament::button>
+            </div>
 
             {{-- Search & Filters --}}
             <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">

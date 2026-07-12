@@ -37,6 +37,17 @@ class NewsController extends Controller
             $excerpt = $articleDb->getTranslation('excerpt', $locale)
                 ?: \Illuminate\Support\Str::limit(strip_tags($articleDb->getTranslation('content', $locale)), 180);
 
+            $relatedProjects = $articleDb->projects()
+                ->where('isActive', true)
+                ->get()
+                ->map(fn ($project) => [
+                    'slug'      => $project->slug,
+                    'title'     => $project->getTranslation('title', $locale),
+                    'heroImage' => PublicStorage::urlIfExists($project->heroImage, ''),
+                    'location'  => $project->getTranslation('location', $locale),
+                ])
+                ->toArray();
+
             return [
                 'slug'            => $articleDb->slug,
                 'category'        => $articleDb->getTranslation('category', $locale) ?: __('Updates'),
@@ -63,6 +74,7 @@ class NewsController extends Controller
                     ->values()
                     ->toArray(),
                 'videoUrl'        => $articleDb->videoUrl,
+                'relatedProjects' => $relatedProjects,
             ];
         });
 

@@ -70,6 +70,11 @@ class Project extends Model
         return LogOptions::defaults()->logAll()->logOnlyDirty();
     }
 
+    public function newsArticles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(NewsArticle::class, 'news_article_project');
+    }
+
     protected static function booted()
     {
         static::saved(function ($project) {

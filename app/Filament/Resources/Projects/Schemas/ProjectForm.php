@@ -181,6 +181,18 @@ class ProjectForm
                                             ->default(true)
                                             ->required(),
                                     ]),
+
+                                Section::make(__('Related News'))
+                                    ->collapsed()
+                                    ->description(__('Link this project to related news articles'))
+                                    ->components([
+                                        Select::make('newsArticles')
+                                            ->label(__('News Articles'))
+                                            ->relationship('newsArticles', 'title')
+                                            ->multiple()
+                                            ->searchable()
+                                            ->preload(),
+                                    ]),
                             ]),
                     ])
                     ->columnSpanFull(),
