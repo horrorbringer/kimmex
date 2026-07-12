@@ -15,7 +15,7 @@ class TrafficByHourChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return false; // Only shown on Analytics page
     }
 
     protected function getData(): array

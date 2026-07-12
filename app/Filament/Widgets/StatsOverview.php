@@ -5,11 +5,13 @@ namespace App\Filament\Widgets;
 use App\Models\Inquiry;
 use App\Models\JobApplication;
 use App\Models\NewsArticle;
+use App\Models\PageView;
 use App\Models\Project;
 use App\Models\JobPosting;
-use App\Models\Testimonial;
+use App\Models\Subscriber;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Carbon;
 
 class StatsOverview extends BaseWidget
 {
@@ -17,102 +19,75 @@ class StatsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        // Projects
-        $totalProjects      = Project::count();
-        $ongoingProjects    = Project::where('status', 'ONGOING')->count();
-        $completedProjects  = Project::where('status', 'COMPLETED')->count();
+        // Sparkline data: last 7 days
+        $inquirySparkline = $this->last7Days(Inquiry::class);
+        $appSparkline = $this->last7Days(JobApplication::class);
+        $viewSparkline = $this->last7DaysViews();
 
-        // Inquiries — this month vs last month
+        // Key numbers
+        $unreadInquiries = Inquiry::where('is_read', false)->count();
         $inquiriesThisMonth = Inquiry::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)->count();
-        $inquiriesLastMonth = Inquiry::whereMonth('created_at', now()->subMonth()->month)
-            ->whereYear('created_at', now()->subMonth()->year)->count();
-        $unreadInquiries    = Inquiry::where('is_read', false)->count();
 
-        // Job Applications — this month vs last month
         $appsThisMonth = JobApplication::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)->count();
-        $appsLastMonth = JobApplication::whereMonth('created_at', now()->subMonth()->month)
-            ->whereYear('created_at', now()->subMonth()->year)->count();
 
-        // News
-        $publishedNews      = NewsArticle::where('isActive', true)->count();
-        $newsThisMonth      = NewsArticle::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)->count();
-
-        // Active job postings
-        $activeJobPostings  = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->count();
-
-        // Trend helpers
-        $inquiryTrend   = $this->trendDescription($inquiriesThisMonth, $inquiriesLastMonth);
-        $appTrend       = $this->trendDescription($appsThisMonth, $appsLastMonth);
+        $activeProjects = Project::where('status', 'ONGOING')->count();
+        $openJobs = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->count();
+        $subscribers = Subscriber::active()->count();
+        $viewsToday = PageView::where('visited_at', '>=', Carbon::today())->count();
 
         return [
-            Stat::make(__('Total Projects'), $totalProjects)
-                ->description("{$ongoingProjects} ongoing · {$completedProjects} completed")
+            Stat::make(__('Inquiries'), $inquiriesThisMonth)
+                ->description($unreadInquiries > 0 ? $unreadInquiries . ' ' . __('unread') : __('All read ✓'))
+                ->descriptionIcon($unreadInquiries > 0 ? 'heroicon-m-envelope' : 'heroicon-m-check-circle')
+                ->color($unreadInquiries > 0 ? 'warning' : 'success')
+                ->chart($inquirySparkline),
+
+            Stat::make(__('Applications'), $appsThisMonth)
+                ->description(__('This month'))
+                ->descriptionIcon('heroicon-m-user-group')
+                ->color('primary')
+                ->chart($appSparkline),
+
+            Stat::make(__('Page Views'), $viewsToday)
+                ->description(__('Today'))
+                ->descriptionIcon('heroicon-m-eye')
+                ->color('info')
+                ->chart($viewSparkline),
+
+            Stat::make(__('Active Projects'), $activeProjects)
+                ->description(Project::where('status', 'COMPLETED')->count() . ' ' . __('completed'))
                 ->descriptionIcon('heroicon-m-building-office-2')
-                ->color('primary'),
-
-            Stat::make(__('Inquiries This Month'), $inquiriesThisMonth)
-                ->description($inquiryTrend['text'] . ' · ' . $unreadInquiries . ' unread')
-                ->descriptionIcon($inquiryTrend['icon'])
-                ->color($inquiryTrend['color']),
-
-            Stat::make(__('Job Applications This Month'), $appsThisMonth)
-                ->description($appTrend['text'])
-                ->descriptionIcon($appTrend['icon'])
-                ->color($appTrend['color']),
-
-            Stat::make(__('Published News'), $publishedNews)
-                ->description($newsThisMonth . ' published this month')
-                ->descriptionIcon('heroicon-m-newspaper')
-                ->color('info'),
-
-            Stat::make(__('Open Job Postings'), $activeJobPostings)
-                ->description(__('Currently accepting applications'))
-                ->descriptionIcon('heroicon-m-briefcase')
                 ->color('success'),
 
-            Stat::make(__('Unread Inquiries'), $unreadInquiries)
-                ->description($unreadInquiries > 0 ? __('Pending your attention') : __('All caught up!'))
-                ->descriptionIcon($unreadInquiries > 0 ? 'heroicon-m-envelope' : 'heroicon-m-check-circle')
-                ->color($unreadInquiries > 0 ? 'warning' : 'success'),
+            Stat::make(__('Open Jobs'), $openJobs)
+                ->description(__('Accepting applications'))
+                ->descriptionIcon('heroicon-m-briefcase')
+                ->color('gray'),
+
+            Stat::make(__('Subscribers'), $subscribers)
+                ->description(__('Newsletter'))
+                ->descriptionIcon('heroicon-m-users')
+                ->color('gray'),
         ];
     }
 
-    private function trendDescription(int $current, int $previous): array
+    private function last7Days(string $model): array
     {
-        if ($previous === 0) {
-            return [
-                'text'  => $current > 0 ? "+{$current} vs last month" : 'No data last month',
-                'icon'  => $current > 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-minus',
-                'color' => $current > 0 ? 'success' : 'gray',
-            ];
+        $data = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $data[] = $model::whereDate('created_at', Carbon::now()->subDays($i)->toDateString())->count();
         }
+        return $data;
+    }
 
-        $diff    = $current - $previous;
-        $percent = round(abs($diff) / $previous * 100);
-
-        if ($diff > 0) {
-            return [
-                'text'  => "+{$percent}% vs last month",
-                'icon'  => 'heroicon-m-arrow-trending-up',
-                'color' => 'success',
-            ];
+    private function last7DaysViews(): array
+    {
+        $data = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $data[] = PageView::whereDate('visited_at', Carbon::now()->subDays($i)->toDateString())->count();
         }
-
-        if ($diff < 0) {
-            return [
-                'text'  => "-{$percent}% vs last month",
-                'icon'  => 'heroicon-m-arrow-trending-down',
-                'color' => 'danger',
-            ];
-        }
-
-        return [
-            'text'  => 'Same as last month',
-            'icon'  => 'heroicon-m-minus',
-            'color' => 'gray',
-        ];
+        return $data;
     }
 }

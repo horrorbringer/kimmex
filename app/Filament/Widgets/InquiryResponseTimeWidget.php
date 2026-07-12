@@ -11,6 +11,11 @@ class InquiryResponseTimeWidget extends BaseWidget
 {
     protected static ?int $sort = 2;
 
+    public static function canView(): bool
+    {
+        return false; // Only shown on dedicated pages
+    }
+
     protected function getStats(): array
     {
         // Average response time for responded inquiries

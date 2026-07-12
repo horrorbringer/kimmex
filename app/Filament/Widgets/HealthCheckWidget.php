@@ -13,6 +13,11 @@ class HealthCheckWidget extends Widget
 
     protected int | string | array $columnSpan = 'full';
 
+    public static function canView(): bool
+    {
+        return false; // Only shown on Analytics/Health pages, not dashboard
+    }
+
     public function getHealthData(): array
     {
         $checks = HealthCheckController::runChecks();

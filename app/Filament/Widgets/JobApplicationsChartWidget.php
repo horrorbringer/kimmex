@@ -9,18 +9,19 @@ use Illuminate\Support\Carbon;
 class JobApplicationsChartWidget extends ChartWidget
 {
     protected static ?int $sort = 5;
-    protected ?string $heading = 'Job Applications (Last 6 Months)';
+    protected ?string $heading = 'Applications';
     protected int | string | array $columnSpan = 'half';
+    protected ?string $maxHeight = '200px';
 
     protected function getData(): array
     {
         $labels = [];
-        $data   = [];
+        $data = [];
 
         for ($i = 5; $i >= 0; $i--) {
-            $month    = Carbon::now()->subMonths($i);
-            $labels[] = $month->format('M Y');
-            $data[]   = JobApplication::whereYear('created_at', $month->year)
+            $month = Carbon::now()->subMonths($i);
+            $labels[] = $month->format('M');
+            $data[] = JobApplication::whereYear('created_at', $month->year)
                 ->whereMonth('created_at', $month->month)
                 ->count();
         }
@@ -28,12 +29,13 @@ class JobApplicationsChartWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label'           => 'Applications',
-                    'data'            => $data,
-                    'backgroundColor' => 'rgba(26, 26, 46, 0.75)',
-                    'borderColor'     => 'rgba(26, 26, 46, 1)',
-                    'borderWidth'     => 2,
-                    'borderRadius'    => 6,
+                    'label' => 'Applications',
+                    'data' => $data,
+                    'backgroundColor' => 'rgba(16, 185, 129, 0.8)',
+                    'borderColor' => 'rgba(16, 185, 129, 1)',
+                    'borderWidth' => 0,
+                    'borderRadius' => 6,
+                    'borderSkipped' => false,
                 ],
             ],
             'labels' => $labels,
@@ -52,9 +54,15 @@ class JobApplicationsChartWidget extends ChartWidget
                 'legend' => ['display' => false],
             ],
             'scales' => [
+                'x' => [
+                    'grid' => ['display' => false],
+                    'border' => ['display' => false],
+                ],
                 'y' => [
                     'beginAtZero' => true,
-                    'ticks'       => ['stepSize' => 1],
+                    'ticks' => ['stepSize' => 1],
+                    'grid' => ['color' => 'rgba(148, 163, 184, 0.1)'],
+                    'border' => ['display' => false],
                 ],
             ],
         ];

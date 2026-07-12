@@ -11,7 +11,7 @@ use Filament\Tables\Columns\IconColumn;
 class LatestJobApplicationsWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = 'half';
 
     public static function canView(): bool
     {

@@ -13,7 +13,7 @@ class PageAnalyticsStatsWidget extends StatsOverviewWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return false; // Only shown on Analytics page via getHeaderWidgets()
     }
 
     protected function getStats(): array
