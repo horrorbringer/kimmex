@@ -36,17 +36,13 @@ class Analytics extends Page
         return auth()->user()?->isAdmin() ?? false;
     }
 
-    public function getStats(): array
+    protected function getHeaderWidgets(): array
     {
-        $today = Carbon::today();
-        $startOfWeek = Carbon::now()->startOfWeek();
-        $startOfMonth = Carbon::now()->startOfMonth();
-
         return [
-            'today' => PageView::where('visited_at', '>=', $today)->count(),
-            'this_week' => PageView::where('visited_at', '>=', $startOfWeek)->count(),
-            'this_month' => PageView::where('visited_at', '>=', $startOfMonth)->count(),
-            'total' => PageView::count(),
+            \App\Filament\Widgets\PageAnalyticsStatsWidget::class,
+            \App\Filament\Widgets\PageViewsChartWidget::class,
+            \App\Filament\Widgets\TopPagesChartWidget::class,
+            \App\Filament\Widgets\TrafficByHourChartWidget::class,
         ];
     }
 
@@ -73,16 +69,6 @@ class Analytics extends Page
             ->groupBy('referer')
             ->orderByDesc('visits')
             ->limit(10)
-            ->get();
-    }
-
-    public function getDailyViews(): Collection
-    {
-        return PageView::selectRaw('DATE(visited_at) as date')
-            ->selectRaw('COUNT(*) as views')
-            ->where('visited_at', '>=', Carbon::now()->subDays(30))
-            ->groupByRaw('DATE(visited_at)')
-            ->orderBy('date')
             ->get();
     }
 }

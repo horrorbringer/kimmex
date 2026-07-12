@@ -87,6 +87,10 @@ class ArtisanConsole extends Page implements HasForms
             // Sitemap
             'sitemap:generate' => '🗺️ Regenerate sitemap',
 
+            // Cleanup
+            'analytics:prune --days=90' => '🧹 Prune page views older than 90 days',
+            'log:clear' => '🧹 Clear Laravel log file',
+
             // Queue
             'queue:work --once' => '📨 Process next queue job',
             'queue:retry all' => '🔄 Retry all failed jobs',

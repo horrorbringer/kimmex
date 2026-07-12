@@ -18,3 +18,25 @@ Schedule::command('sitemap:generate')
     ->daily()
     ->withoutOverlapping();
 
+// Prune old page view analytics (keep 90 days)
+Schedule::command('analytics:prune --days=90')
+    ->weekly()
+    ->withoutOverlapping();
+
+// Rotate Laravel log — keep it under control
+Schedule::call(function () {
+    $logFile = storage_path('logs/laravel.log');
+    if (file_exists($logFile) && filesize($logFile) > 5 * 1024 * 1024) { // > 5 MB
+        $archive = storage_path('logs/laravel-' . now()->format('Y-m-d') . '.log');
+        rename($logFile, $archive);
+        file_put_contents($logFile, '');
+
+        // Keep only last 5 archived logs
+        $archives = glob(storage_path('logs/laravel-*.log'));
+        rsort($archives);
+        foreach (array_slice($archives, 5) as $old) {
+            unlink($old);
+        }
+    }
+})->daily()->name('log-rotation');
+
