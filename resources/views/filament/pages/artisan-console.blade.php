@@ -29,6 +29,27 @@
                             required
                         />
                     </div>
+                    <div style="max-width: 400px; margin-top: 12px;">
+                        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: var(--gray-700); margin-bottom: 6px;">
+                            {{ __('2FA Code') }}
+                            @if(!auth()->user()->getAppAuthenticationSecret())
+                                <span style="font-size: 0.75rem; color: var(--gray-400); font-weight: normal;">
+                                    ({{ __('Set up 2FA in Profile first') }})
+                                </span>
+                            @endif
+                        </label>
+                        <input
+                            type="text"
+                            wire:model="totpCode"
+                            placeholder="{{ __('6-digit code from authenticator app') }}"
+                            class="fi-input"
+                            style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; letter-spacing: 4px; font-size: 1.1rem;"
+                            maxlength="6"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            {{ auth()->user()->getAppAuthenticationSecret() ? 'required' : '' }}
+                        />
+                    </div>
                     <div style="margin-top: 16px;">
                         <x-filament::button type="submit" color="danger" icon="heroicon-o-lock-open">
                             {{ __('Unlock Console') }}

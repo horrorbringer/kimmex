@@ -51,6 +51,7 @@ class ArtisanConsole extends Page implements HasForms
     // Form state
     public ?string $command = null;
     public string $password = '';
+    public string $totpCode = '';
     public bool $unlocked = false;
     public ?string $output = null;
     public ?string $executedCommand = null;
@@ -112,7 +113,7 @@ class ArtisanConsole extends Page implements HasForms
     }
 
     /**
-     * Verify admin password to unlock the console.
+     * Verify admin password + 2FA code to unlock the console.
      */
     public function unlock(): void
     {
@@ -123,25 +124,53 @@ class ArtisanConsole extends Page implements HasForms
 
         $user = auth()->user();
 
+        // Step 1: Verify password
         if (!Hash::check($this->password, $user->password)) {
             Notification::make()->danger()->title(__('Incorrect password.'))->send();
 
-            Log::warning('Artisan Console: failed unlock attempt', [
+            Log::warning('Artisan Console: failed unlock attempt (wrong password)', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'ip' => request()->ip(),
             ]);
 
             $this->password = '';
+            $this->totpCode = '';
             return;
+        }
+
+        // Step 2: Verify 2FA TOTP code (if MFA is set up)
+        $secret = $user->getAppAuthenticationSecret();
+
+        if ($secret) {
+            if (empty($this->totpCode)) {
+                Notification::make()->danger()->title(__('2FA code is required.'))->send();
+                $this->totpCode = '';
+                return;
+            }
+
+            $appAuth = \Filament\Auth\MultiFactor\App\AppAuthentication::make();
+            if (!$appAuth->verifyCode($this->totpCode, $secret)) {
+                Notification::make()->danger()->title(__('Invalid 2FA code.'))->send();
+
+                Log::warning('Artisan Console: failed unlock attempt (wrong 2FA)', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                    'ip' => request()->ip(),
+                ]);
+
+                $this->totpCode = '';
+                return;
+            }
         }
 
         $this->unlocked = true;
         $this->password = '';
+        $this->totpCode = '';
 
         Notification::make()->success()->title(__('Console unlocked.'))->send();
 
-        Log::info('Artisan Console: unlocked', [
+        Log::info('Artisan Console: unlocked (password + 2FA verified)', [
             'user_id' => $user->id,
             'user_email' => $user->email,
             'ip' => request()->ip(),
