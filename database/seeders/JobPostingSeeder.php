@@ -54,7 +54,7 @@ class JobPostingSeeder extends Seeder
                     'responsibilities' => $jobData['responsibilities'],
                     'requirements' => $jobData['requirements'],
                     'benefits' => $jobData['benefits'],
-                    'isActive' => true,
+                    'status' => 'OPEN',
                 ]
             );
         }
