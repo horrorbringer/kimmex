@@ -88,6 +88,14 @@ class ServiceForm
                                 ->maxLength(1000),
                             RichEditor::make('description')->resizableImages()
                                 ->label(__('Description'))
+                                ->toolbarButtons([
+                                    ['bold', 'italic', 'underline', 'strike', 'link'],
+                                    [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
+                                    [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
+                                    ['blockquote', 'bulletList', 'orderedList', 'table'],
+                                    ['attachFiles'],
+                                    ['undo', 'redo'],
+                                ])
                                 ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                 ->fileAttachmentsVisibility('public')
                                 ->hintActions([

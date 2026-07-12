@@ -107,21 +107,42 @@ class JobPostingForm
                     ->components([
                         RichEditor::make('summary')->resizableImages()
                             ->label(__('Summary'))
+                            ->toolbarButtons([
+                                ['bold', 'italic', 'underline', 'link'],
+                                [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Heading', ['h3', 'h4'])->textualButtons()],
+                                ['bulletList', 'orderedList'],
+                                ['undo', 'redo'],
+                            ])
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('responsibilities')->resizableImages()
                             ->label(__('Responsibilities'))
+                            ->toolbarButtons([
+                                ['bold', 'italic', 'underline', 'link'],
+                                ['bulletList', 'orderedList'],
+                                ['undo', 'redo'],
+                            ])
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('requirements')->resizableImages()
                             ->label(__('Requirements'))
+                            ->toolbarButtons([
+                                ['bold', 'italic', 'underline', 'link'],
+                                ['bulletList', 'orderedList'],
+                                ['undo', 'redo'],
+                            ])
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
                         RichEditor::make('benefits')->resizableImages()
                             ->label(__('Benefits'))
+                            ->toolbarButtons([
+                                ['bold', 'italic', 'underline', 'link'],
+                                ['bulletList', 'orderedList'],
+                                ['undo', 'redo'],
+                            ])
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
