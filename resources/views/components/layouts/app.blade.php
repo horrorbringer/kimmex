@@ -1,7 +1,6 @@
 @props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null])
 
 <!DOCTYPE html>
-<script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark')</script>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
     x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
     x-init="$watch('darkMode', val => { localStorage.setItem('darkMode', val); val ? document.documentElement.classList.add('dark') : document.documentElement.classList.remove('dark') }); if (darkMode) document.documentElement.classList.add('dark')"
@@ -9,6 +8,7 @@
     :class="{ 'dark': darkMode }">
 
 <head>
+    <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark')</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -171,6 +171,7 @@
 
     {{-- Load compiled CSS early so the browser starts downloading immediately --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -337,8 +338,8 @@
         </button>
     </div>
     {{-- Prefetch pages on hover for instant navigation --}}
-    <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
-
+    <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z" data-no-instant></script>
+    @livewireScripts
 </body>
 
 </html>

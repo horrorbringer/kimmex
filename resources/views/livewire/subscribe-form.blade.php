@@ -5,7 +5,7 @@
             <span>{{ __('Thank you! You\'re subscribed.') }}</span>
         </div>
     @else
-        <form wire:submit="subscribe" class="flex flex-col gap-3">
+        <form wire:submit.prevent="subscribe" class="flex flex-col gap-3">
             <div class="flex flex-col sm:flex-row gap-2">
                 <div class="flex-grow relative">
                     <input type="email" wire:model="email" required
