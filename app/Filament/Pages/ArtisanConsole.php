@@ -120,8 +120,10 @@ class ArtisanConsole extends Page implements HasForms
 
             // Queue
             'queue:work --once' => '📨 Process next queue job',
+            'queue:work --stop-when-empty' => '📨 Process all pending jobs',
             'queue:retry all' => '🔄 Retry all failed jobs',
             'queue:flush' => '🗑️ Delete all failed jobs',
+            'queue:clear' => '🗑️ Clear all pending jobs',
 
             // Maintenance
             'down' => '🚧 Put app in maintenance mode',
