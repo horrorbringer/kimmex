@@ -108,6 +108,37 @@
                 </form>
             </x-filament::section>
 
+            {{-- Bulk Presets --}}
+            <div class="mt-6">
+                <x-filament::section>
+                    <x-slot name="heading">
+                        <div class="flex items-center gap-2">
+                            <x-heroicon-o-bolt style="width: 18px; height: 18px; color: #8b5cf6;" />
+                            {{ __('Bulk Presets') }}
+                        </div>
+                    </x-slot>
+                    <x-slot name="description">
+                        {{ __('Run multiple commands in sequence with one click.') }}
+                    </x-slot>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+                        @foreach(\App\Filament\Pages\ArtisanConsole::bulkPresets() as $key => $preset)
+                            <div
+                                wire:click="executeBulk('{{ $key }}')"
+                                style="padding: 14px 16px; border: 1px solid var(--gray-200); border-radius: 8px; cursor: pointer; transition: all 0.15s;"
+                                onmouseover="this.style.borderColor='#6366f1'; this.style.background='rgba(99,102,241,0.04)'"
+                                onmouseout="this.style.borderColor='var(--gray-200)'; this.style.background='transparent'"
+                            >
+                                <p style="font-size: 0.875rem; font-weight: 600; margin: 0;">{{ $preset['label'] }}</p>
+                                <p style="font-size: 0.7rem; color: var(--gray-400); margin: 4px 0 0;">
+                                    {{ implode(' → ', $preset['commands']) }}
+                                </p>
+                            </div>
+                        @endforeach
+                    </div>
+                </x-filament::section>
+            </div>
+
             {{-- Output --}}
             @if($output !== null)
                 <div class="mt-6">
@@ -163,7 +194,7 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 0.875rem;">
                         <div>
                             <span style="color: var(--gray-500);">{{ __('User') }}:</span>
-                            <span style="font-weight: 600;">{{ auth()->user()->email }}</span>
+                            <span style="font-weight: 600;">{{ auth()->user()?->email ?? 'N/A' }}</span>
                         </div>
                         <div>
                             <span style="color: var(--gray-500);">{{ __('Role') }}:</span>

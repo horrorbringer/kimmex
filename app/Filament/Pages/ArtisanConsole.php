@@ -50,12 +50,38 @@ class ArtisanConsole extends Page implements HasForms
 
     // Form state
     public ?string $command = null;
+    public array $selectedBulk = [];
     public string $password = '';
     public string $totpCode = '';
     public bool $unlocked = false;
     public ?string $output = null;
     public ?string $executedCommand = null;
     public ?string $executedAt = null;
+
+    /**
+     * Bulk command presets — run multiple commands in sequence.
+     */
+    public static function bulkPresets(): array
+    {
+        return [
+            'deploy' => [
+                'label' => '🚀 Deploy (clear + migrate + cache)',
+                'commands' => ['config:clear', 'route:clear', 'view:clear', 'migrate', 'config:cache', 'view:cache', 'filament:assets'],
+            ],
+            'clear_all' => [
+                'label' => '🧹 Clear Everything',
+                'commands' => ['config:clear', 'route:clear', 'view:clear', 'event:clear', 'filament:clear-cached-components'],
+            ],
+            'optimize' => [
+                'label' => '⚡ Optimize (cache all)',
+                'commands' => ['config:cache', 'route:cache', 'view:cache', 'filament:cache-components'],
+            ],
+            'maintenance' => [
+                'label' => '🔧 Maintenance (backup + prune + sitemap)',
+                'commands' => ['backup:database', 'analytics:prune --days=90', 'sitemap:generate'],
+            ],
+        ];
+    }
 
     /**
      * Whitelisted commands that can be executed.
@@ -75,7 +101,7 @@ class ArtisanConsole extends Page implements HasForms
             // Filament
             'filament:assets' => '🎨 Publish Filament assets',
             'filament:cache-components' => '⚡ Cache Filament components',
-            'filament:optimize-clear' => '🧹 Clear Filament cache',
+            'filament:clear-cached-components' => '🧹 Clear Filament cache',
 
             // Database
             'migrate' => '🗃️ Run database migrations',
@@ -279,6 +305,95 @@ class ArtisanConsole extends Page implements HasForms
                 'user_id' => $user->id,
             ]);
         }
+    }
+
+    /**
+     * Execute a bulk preset (multiple commands in sequence).
+     */
+    public function executeBulk(string $presetKey): void
+    {
+        if (!$this->unlocked) {
+            Notification::make()->danger()->title(__('Console is locked.'))->send();
+            return;
+        }
+
+        $presets = static::bulkPresets();
+        if (!isset($presets[$presetKey])) {
+            Notification::make()->danger()->title(__('Invalid preset.'))->send();
+            return;
+        }
+
+        $preset = $presets[$presetKey];
+        $user = auth()->user();
+        $results = [];
+        $failed = 0;
+
+        Log::info('Artisan Console: executing bulk preset', [
+            'preset' => $presetKey,
+            'commands' => $preset['commands'],
+            'user_id' => $user->id,
+            'ip' => request()->ip(),
+        ]);
+
+        foreach ($preset['commands'] as $cmd) {
+            try {
+                $parts = str_getcsv($cmd, ' ');
+                $artisanCommand = $parts[0];
+                $params = [];
+
+                foreach (array_slice($parts, 1) as $part) {
+                    if (str_starts_with($part, '--')) {
+                        $param = ltrim($part, '-');
+                        if (str_contains($param, '=')) {
+                            [$key, $value] = explode('=', $param, 2);
+                            $params["--{$key}"] = $value;
+                        } else {
+                            $params["--{$param}"] = true;
+                        }
+                    } else {
+                        $params[] = $part;
+                    }
+                }
+
+                if (in_array($artisanCommand, ['migrate', 'db:seed'])) {
+                    $params['--force'] = true;
+                }
+
+                $exitCode = Artisan::call($artisanCommand, $params);
+                $output = trim(Artisan::output());
+                $status = $exitCode === 0 ? '✅' : '⚠️';
+                $results[] = "{$status} {$cmd}" . ($output ? "\n   {$output}" : '');
+
+                if ($exitCode !== 0) {
+                    $failed++;
+                }
+            } catch (\Throwable $e) {
+                $results[] = "❌ {$cmd}\n   ERROR: {$e->getMessage()}";
+                $failed++;
+            }
+        }
+
+        $this->output = implode("\n\n", $results);
+        $this->executedCommand = $preset['label'];
+        $this->executedAt = now()->format('H:i:s');
+
+        if ($failed === 0) {
+            Notification::make()->success()
+                ->title(__('Bulk preset completed'))
+                ->body(__(':count commands executed successfully.', ['count' => count($preset['commands'])]))
+                ->send();
+        } else {
+            Notification::make()->warning()
+                ->title(__('Bulk preset completed with errors'))
+                ->body(__(':failed of :total commands failed.', ['failed' => $failed, 'total' => count($preset['commands'])]))
+                ->send();
+        }
+
+        Log::info('Artisan Console: bulk preset completed', [
+            'preset' => $presetKey,
+            'failed' => $failed,
+            'user_id' => $user->id,
+        ]);
     }
 
     #[Computed]
