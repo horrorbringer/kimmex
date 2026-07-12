@@ -44,6 +44,7 @@ class SendNewsletter extends Page implements HasForms
 
     public ?string $articleId = null;
     public string $customIntro = '';
+    public array $segments = [];
 
     // A/B testing fields
     public bool $enableAbTest = false;
@@ -81,6 +82,11 @@ class SendNewsletter extends Page implements HasForms
                     ->label(__('Custom Intro (optional)'))
                     ->placeholder(__('e.g. Check out our latest project update!'))
                     ->helperText(__('This appears above the article in the email. Leave blank for default.')),
+
+                \Filament\Forms\Components\CheckboxList::make('segments')
+                    ->label(__('Target Segments (optional)'))
+                    ->options(\App\Models\Subscriber::AVAILABLE_TAGS)
+                    ->helperText(__('Leave empty to send to all subscribers.')),
 
                 Toggle::make('enableAbTest')
                     ->label(__('Enable A/B Test'))
