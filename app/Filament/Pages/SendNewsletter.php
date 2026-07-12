@@ -12,6 +12,8 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
+use Livewire\Attributes\Computed;
 
 class SendNewsletter extends Page implements HasForms
 {
@@ -48,30 +50,31 @@ class SendNewsletter extends Page implements HasForms
     public bool $alreadySent = false;
     public ?string $lastSentInfo = null;
 
-    public function getFormSchema(): array
+    public function form(Schema $form): Schema
     {
-        return [
-            Select::make('articleId')
-                ->label(__('Select Article'))
-                ->options(
-                    NewsArticle::query()
-                        ->whereNotNull('publishedAt')
-                        ->orderByDesc('publishedAt')
-                        ->limit(20)
-                        ->get()
-                        ->mapWithKeys(fn ($a) => [$a->id => $a->getTranslation('title', 'en') . ' (' . ($a->publishedAt?->format('M d') ?? '') . ')'])
-                )
-                ->searchable()
-                ->required()
-                ->reactive()
-                ->afterStateUpdated(fn () => $this->loadPreview())
-                ->helperText(__('Choose which article to send to all active subscribers.')),
+        return $form
+            ->schema([
+                Select::make('articleId')
+                    ->label(__('Select Article'))
+                    ->options(
+                        NewsArticle::query()
+                            ->whereNotNull('publishedAt')
+                            ->orderByDesc('publishedAt')
+                            ->limit(20)
+                            ->get()
+                            ->mapWithKeys(fn ($a) => [$a->id => $a->getTranslation('title', 'en') . ' (' . ($a->publishedAt?->format('M d') ?? '') . ')'])
+                    )
+                    ->searchable()
+                    ->required()
+                    ->live()
+                    ->afterStateUpdated(fn () => $this->loadPreview())
+                    ->helperText(__('Choose which article to send to all active subscribers.')),
 
-            TextInput::make('customIntro')
-                ->label(__('Custom Intro (optional)'))
-                ->placeholder(__('e.g. Check out our latest project update!'))
-                ->helperText(__('This appears above the article in the email. Leave blank for default.')),
-        ];
+                TextInput::make('customIntro')
+                    ->label(__('Custom Intro (optional)'))
+                    ->placeholder(__('e.g. Check out our latest project update!'))
+                    ->helperText(__('This appears above the article in the email. Leave blank for default.')),
+            ]);
     }
 
     public function loadPreview(): void
@@ -171,7 +174,8 @@ class SendNewsletter extends Page implements HasForms
         $this->send();
     }
 
-    public function getRecentSendsProperty(): \Illuminate\Database\Eloquent\Collection
+    #[Computed]
+    public function recentSends(): \Illuminate\Database\Eloquent\Collection
     {
         return NewsletterSend::with('article', 'sender')
             ->latest('created_at')
@@ -179,7 +183,8 @@ class SendNewsletter extends Page implements HasForms
             ->get();
     }
 
-    public function getActiveSubscriberCountProperty(): int
+    #[Computed]
+    public function activeSubscriberCount(): int
     {
         return Subscriber::active()->count();
     }

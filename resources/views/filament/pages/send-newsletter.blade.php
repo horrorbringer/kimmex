@@ -1,74 +1,75 @@
 <x-filament-panels::page>
-    <div class="space-y-6">
+    <div class="fi-page-content-ctn">
         {{-- Send Form --}}
-        <form wire:submit="send" class="space-y-6">
+        <form wire:submit="send">
             {{ $this->form }}
 
             {{-- Article Preview --}}
             @if($showPreview && $previewData)
-                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-                    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                        <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
-                            <x-heroicon-o-eye class="w-4 h-4" />
+                <x-filament::section class="mt-6">
+                    <x-slot name="heading">
+                        <div class="flex items-center gap-2">
+                            <x-heroicon-o-eye class="fi-icon fi-size-md" />
                             {{ __('Email Preview') }}
-                        </h3>
-                    </div>
-                    <div class="p-4 sm:p-6">
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            @if($previewData['coverImage'])
-                                <div class="sm:w-32 flex-shrink-0">
-                                    <img src="{{ url($previewData['coverImage']) }}"
-                                         alt="{{ $previewData['title'] }}"
-                                         class="w-full sm:w-32 h-24 object-cover rounded-lg" />
-                                </div>
+                        </div>
+                    </x-slot>
+
+                    <div class="flex flex-col gap-4 sm:flex-row">
+                        @if($previewData['coverImage'])
+                            <div class="flex-shrink-0">
+                                <img src="{{ url($previewData['coverImage']) }}"
+                                     alt="{{ $previewData['title'] }}"
+                                     style="width: 128px; height: 96px; object-fit: cover; border-radius: 8px;" />
+                            </div>
+                        @endif
+                        <div style="min-width: 0; flex: 1;">
+                            <p class="fi-section-header-heading" style="font-size: 1rem;">
+                                {{ $previewData['title'] }}
+                            </p>
+                            @if($previewData['excerpt'])
+                                <p style="margin-top: 4px; font-size: 0.875rem; color: var(--gray-500); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    {{ $previewData['excerpt'] }}
+                                </p>
                             @endif
-                            <div class="flex-1 min-w-0">
-                                <h4 class="text-base font-bold text-gray-900 dark:text-white truncate">
-                                    {{ $previewData['title'] }}
-                                </h4>
-                                @if($previewData['excerpt'])
-                                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                                        {{ $previewData['excerpt'] }}
-                                    </p>
+                            <div style="margin-top: 8px; display: flex; align-items: center; gap: 12px; font-size: 0.75rem; color: var(--gray-400);">
+                                @if($previewData['category'])
+                                    <x-filament::badge color="primary" size="sm">
+                                        {{ $previewData['category'] }}
+                                    </x-filament::badge>
                                 @endif
-                                <div class="mt-2 flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-                                    @if($previewData['category'])
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
-                                            {{ $previewData['category'] }}
-                                        </span>
-                                    @endif
-                                    @if($previewData['publishedAt'])
-                                        <span>{{ $previewData['publishedAt'] }}</span>
-                                    @endif
-                                </div>
+                                @if($previewData['publishedAt'])
+                                    <span>{{ $previewData['publishedAt'] }}</span>
+                                @endif
                             </div>
                         </div>
                     </div>
-                </div>
+                </x-filament::section>
             @endif
 
             {{-- Duplicate Warning --}}
             @if($alreadySent)
-                <div class="rounded-lg border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20 p-4">
-                    <div class="flex gap-3">
-                        <x-heroicon-o-exclamation-triangle class="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <p class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                                {{ __('Already Sent') }}
-                            </p>
-                            <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                                {{ $lastSentInfo }}
-                            </p>
-                            <p class="text-xs text-yellow-600 dark:text-yellow-400 mt-2">
-                                {{ __('You can still re-send by clicking "Send Anyway" below.') }}
-                            </p>
+                <div class="mt-6">
+                    <x-filament::section>
+                        <div class="flex gap-3">
+                            <x-heroicon-o-exclamation-triangle style="width: 20px; height: 20px; color: #d97706; flex-shrink: 0;" />
+                            <div>
+                                <p style="font-size: 0.875rem; font-weight: 600; color: #92400e;">
+                                    {{ __('Already Sent') }}
+                                </p>
+                                <p style="font-size: 0.875rem; color: #a16207; margin-top: 4px;">
+                                    {{ $lastSentInfo }}
+                                </p>
+                                <p style="font-size: 0.75rem; color: #b45309; margin-top: 8px;">
+                                    {{ __('You can still re-send by clicking "Send Anyway" below.') }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    </x-filament::section>
                 </div>
             @endif
 
             {{-- Action Buttons --}}
-            <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="mt-6 flex flex-wrap items-center gap-4" style="padding-top: 1rem; border-top: 1px solid var(--gray-200);">
                 @if($alreadySent)
                     <x-filament::button
                         type="button"
@@ -88,8 +89,8 @@
                     </x-filament::button>
                 @endif
 
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                    <span class="font-semibold text-gray-700 dark:text-gray-200">{{ $this->activeSubscriberCount }}</span>
+                <p style="font-size: 0.875rem; color: var(--gray-500);">
+                    <span style="font-weight: 600; color: var(--gray-700);">{{ $this->activeSubscriberCount }}</span>
                     {{ __('active subscribers') }}
                 </p>
             </div>
@@ -97,46 +98,49 @@
 
         {{-- Recent Sends History --}}
         @if($this->recentSends->isNotEmpty())
-            <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-                <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
-                        <x-heroicon-o-clock class="w-4 h-4" />
-                        {{ __('Recent Sends') }}
-                    </h3>
-                </div>
-                <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                    @foreach($this->recentSends as $send)
-                        <div class="px-4 py-3 flex items-center justify-between gap-4">
-                            <div class="min-w-0 flex-1">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                                    {{ $send->article?->getTranslation('title', 'en') ?? __('Deleted Article') }}
-                                </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                    {{ $send->sent_at?->format('M d, Y H:i') ?? $send->created_at->format('M d, Y H:i') }}
-                                    @if($send->sender)
-                                        · {{ __('by') }} {{ $send->sender->name }}
-                                    @endif
-                                </p>
-                            </div>
-                            <div class="flex items-center gap-3 flex-shrink-0">
-                                <span class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $send->sent_count }}/{{ $send->subscriber_count }}
-                                </span>
-                                @php
-                                    $statusColor = match($send->status) {
-                                        'completed' => 'success',
-                                        'sending' => 'warning',
-                                        'failed' => 'danger',
-                                        default => 'gray',
-                                    };
-                                @endphp
-                                <x-filament::badge :color="$statusColor" size="sm">
-                                    {{ ucfirst($send->status) }}
-                                </x-filament::badge>
-                            </div>
+            <div class="mt-8">
+                <x-filament::section>
+                    <x-slot name="heading">
+                        <div class="flex items-center gap-2">
+                            <x-heroicon-o-clock class="fi-icon fi-size-md" />
+                            {{ __('Recent Sends') }}
                         </div>
-                    @endforeach
-                </div>
+                    </x-slot>
+
+                    <div style="display: flex; flex-direction: column;">
+                        @foreach($this->recentSends as $send)
+                            <div style="padding: 12px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; {{ !$loop->last ? 'border-bottom: 1px solid var(--gray-100);' : '' }}">
+                                <div style="min-width: 0; flex: 1;">
+                                    <p style="font-size: 0.875rem; font-weight: 500; color: var(--gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        {{ $send->article?->getTranslation('title', 'en') ?? __('Deleted Article') }}
+                                    </p>
+                                    <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 2px;">
+                                        {{ $send->sent_at?->format('M d, Y H:i') ?? $send->created_at->format('M d, Y H:i') }}
+                                        @if($send->sender)
+                                            · {{ __('by') }} {{ $send->sender->name }}
+                                        @endif
+                                    </p>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500);">
+                                        {{ $send->sent_count }}/{{ $send->subscriber_count }}
+                                    </span>
+                                    @php
+                                        $statusColor = match($send->status) {
+                                            'completed' => 'success',
+                                            'sending' => 'warning',
+                                            'failed' => 'danger',
+                                            default => 'gray',
+                                        };
+                                    @endphp
+                                    <x-filament::badge :color="$statusColor" size="sm">
+                                        {{ ucfirst($send->status) }}
+                                    </x-filament::badge>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </x-filament::section>
             </div>
         @endif
     </div>
