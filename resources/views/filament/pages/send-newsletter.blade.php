@@ -17,7 +17,7 @@
                     <div class="flex flex-col gap-4 sm:flex-row">
                         @if($previewData['coverImage'])
                             <div class="flex-shrink-0">
-                                <img src="{{ url($previewData['coverImage']) }}"
+                                <img src="{{ $previewData['coverImage'] }}"
                                      alt="{{ $previewData['title'] }}"
                                      style="width: 128px; height: 96px; object-fit: cover; border-radius: 8px;" />
                             </div>

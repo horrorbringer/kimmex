@@ -153,7 +153,7 @@ class SendNewsletter extends Page implements HasForms
         $this->previewData = [
             'title' => $article->getTranslation('title', 'en'),
             'excerpt' => $article->getTranslation('excerpt', 'en'),
-            'coverImage' => $article->coverImage,
+            'coverImage' => $article->coverImage ? \App\Support\PublicStorage::url($article->coverImage) : null,
             'publishedAt' => $article->publishedAt?->format('M d, Y'),
             'category' => $article->getTranslation('category', 'en'),
         ];
