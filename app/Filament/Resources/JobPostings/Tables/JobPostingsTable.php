@@ -27,10 +27,10 @@ class JobPostingsTable
                 TextColumn::make('type')
                     ->label(__('Type'))
                     ->searchable(),
-                \Filament\Tables\Columns\ToggleColumn::make('isActive')
-                    ->label(__('Is Active'))
-                    ->onColor('success')
-                    ->offColor('danger'),
+                TextColumn::make('status')
+                    ->label(__('Status'))
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('closingDate')
                     ->label(__('Closing Date'))
                     ->dateTime()

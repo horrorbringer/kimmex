@@ -4,7 +4,6 @@ namespace App\Filament\Resources\JobPostings\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
@@ -12,6 +11,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use App\Enums\JobPostingStatus;
 use App\Filament\Support\TranslationHelper;
 
 class JobPostingForm
@@ -83,11 +83,11 @@ class JobPostingForm
                             ->helperText(__('Leave blank for no closing date'))
                             ->native(false),
 
-                        Toggle::make('isActive')
-                            ->label(__('Is Active'))
-                            ->inline(false)
+                        Select::make('status')
+                            ->label(__('Status'))
+                            ->options(JobPostingStatus::class)
                             ->required()
-                            ->default(true),
+                            ->default(JobPostingStatus::DRAFT),
                     ]),
 
                 Section::make(__('Job Description'))

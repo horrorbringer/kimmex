@@ -79,7 +79,7 @@ Route::get('/sitemap.xml', function () {
     $serviceLastModified = Service::where('isActive', true)->max('updated_at');
     $projectLastModified = Project::where('isActive', true)->max('updated_at');
     $newsLastModified = NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at');
-    $jobLastModified = JobPosting::where('isActive', true)->max('updated_at');
+    $jobLastModified = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->max('updated_at');
     $documentLastModified = Document::publiclyVisible()->max('updated_at');
 
     $add('/services', $serviceLastModified ? \Carbon\Carbon::parse($serviceLastModified) : null, 'weekly', '0.9');

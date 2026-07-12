@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JobPostingStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
@@ -26,12 +27,15 @@ class JobPosting extends Model
         'experience',
         'salary',
         'responsibilities',
-        'isActive',
+        'status',
     ];
 
-    protected $casts = [
-        'isActive' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'status' => JobPostingStatus::class,
+        ];
+    }
 
     public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

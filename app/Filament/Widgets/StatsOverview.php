@@ -41,7 +41,7 @@ class StatsOverview extends BaseWidget
             ->whereYear('created_at', now()->year)->count();
 
         // Active job postings
-        $activeJobPostings  = JobPosting::where('isActive', true)->count();
+        $activeJobPostings  = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->count();
 
         // Trend helpers
         $inquiryTrend   = $this->trendDescription($inquiriesThisMonth, $inquiriesLastMonth);

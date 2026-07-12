@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JobPostingStatus;
 use App\Models\JobPosting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class CareerController extends Controller
     public function show(Request $request, string $slug): View|RedirectResponse
     {
         $job = Cache::remember("career_job_show_data_{$slug}_" . app()->getLocale(), now()->addHours(12), function () use ($slug): ?array {
-            $jobDb = JobPosting::where('isActive', true)->where('slug', $slug)->first();
+            $jobDb = JobPosting::where('status', JobPostingStatus::OPEN)->where('slug', $slug)->first();
 
             if (! $jobDb) {
                 return null;

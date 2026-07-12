@@ -1,6 +1,6 @@
 @php
     $job = \Illuminate\Support\Facades\Cache::remember("career_job_show_data_{$slug}_".app()->getLocale(), now()->addHours(12), function() use ($slug) {
-        $jobDb = \App\Models\JobPosting::where('isActive', true)->where('slug', $slug)->first();
+        $jobDb = \App\Models\JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->where('slug', $slug)->first();
         if ($jobDb) {
             $pickTranslation = function ($model, string $field, array $fallbackLocales = []) {
                 $translations = $model->getTranslations($field);

@@ -9,6 +9,7 @@ enum ApplicationStatus: string implements HasLabel, HasColor
 {
     case PENDING = 'PENDING';
     case REVIEWING = 'REVIEWING';
+    case SHORTLISTED = 'SHORTLISTED';
     case INTERVIEW = 'INTERVIEW';
     case ACCEPTED = 'ACCEPTED';
     case REJECTED = 'REJECTED';
@@ -18,6 +19,7 @@ enum ApplicationStatus: string implements HasLabel, HasColor
         return match ($this) {
             self::PENDING => __('Pending'),
             self::REVIEWING => __('Reviewing'),
+            self::SHORTLISTED => __('Shortlisted'),
             self::INTERVIEW => __('Interview'),
             self::ACCEPTED => __('Accepted'),
             self::REJECTED => __('Rejected'),
@@ -29,6 +31,7 @@ enum ApplicationStatus: string implements HasLabel, HasColor
         return match ($this) {
             self::PENDING => 'gray',
             self::REVIEWING => 'info',
+            self::SHORTLISTED => 'primary',
             self::INTERVIEW => 'warning',
             self::ACCEPTED => 'success',
             self::REJECTED => 'danger',
@@ -40,6 +43,7 @@ enum ApplicationStatus: string implements HasLabel, HasColor
         return match ($this) {
             self::PENDING => __('Application Received'),
             self::REVIEWING => __('Application Under Review'),
+            self::SHORTLISTED => __('You\'ve Been Shortlisted!'),
             self::INTERVIEW => __('Interview Invitation'),
             self::ACCEPTED => __('Congratulations! Application Accepted'),
             self::REJECTED => __('Application Update'),

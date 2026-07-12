@@ -17,6 +17,7 @@
         .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .status-PENDING { background: #f3f4f6; color: #6b7280; }
         .status-REVIEWING { background: #dbeafe; color: #1d4ed8; }
+        .status-SHORTLISTED { background: #e0e7ff; color: #4338ca; }
         .status-INTERVIEW { background: #fef3c7; color: #d97706; }
         .status-ACCEPTED { background: #dcfce7; color: #16a34a; }
         .status-REJECTED { background: #fee2e2; color: #dc2626; }
@@ -46,6 +47,9 @@
                         @break
                     @case(App\Enums\ApplicationStatus::REVIEWING)
                         <p class="text">Your application is now being reviewed by our recruitment team. We will be in touch soon with an update.</p>
+                        @break
+                    @case(App\Enums\ApplicationStatus::SHORTLISTED)
+                        <p class="text">Great news! You have been shortlisted for this position. Our team was impressed with your qualifications and will be in touch shortly regarding next steps.</p>
                         @break
                     @case(App\Enums\ApplicationStatus::INTERVIEW)
                         <p class="text">We are pleased to inform you that you have been selected for an interview. Our HR team will contact you shortly with scheduling details.</p>

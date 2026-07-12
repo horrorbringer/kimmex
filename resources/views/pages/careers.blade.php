@@ -11,7 +11,7 @@
 
     @php
         $jobs = \Illuminate\Support\Facades\Cache::remember('careers_jobs_data_'.app()->getLocale(), now()->addHours(12), function() {
-            $jobsDb = \App\Models\JobPosting::where('isActive', true)
+            $jobsDb = \App\Models\JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)
                 ->with('department')
                 ->orderBy('created_at', 'desc')
                 ->get();
