@@ -8,6 +8,7 @@ use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -56,6 +57,11 @@ class SubscriberResource extends Resource
                     ->label(__('Active'))
                     ->boolean()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('tags')
+                    ->label(__('Interests'))
+                    ->badge()
+                    ->getStateUsing(fn (Subscriber $record) => $record->tags ?? [])
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('subscribed_at')
                     ->label(__('Subscribed'))
                     ->dateTime('M d, Y')
@@ -87,7 +93,12 @@ class SubscriberResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            CheckboxList::make('tags')
+                ->label(__('Interests'))
+                ->options(Subscriber::AVAILABLE_TAGS)
+                ->columns(3),
+        ]);
     }
 
     public static function canCreate(): bool

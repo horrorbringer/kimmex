@@ -13,3 +13,8 @@ Schedule::command('queue:work --stop-when-empty --tries=3 --timeout=60')
     ->withoutOverlapping()
     ->runInBackground();
 
+// Regenerate sitemap daily (also triggered on model save via CacheBusterObserver)
+Schedule::command('sitemap:generate')
+    ->daily()
+    ->withoutOverlapping();
+

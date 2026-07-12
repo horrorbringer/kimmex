@@ -15,7 +15,7 @@ class Service extends Model
 {
     use HasUuids, LogsActivity, HasTranslations, DeletesPublicUploads;
 
-    public $translatable = ['title', 'summary', 'description'];
+    public $translatable = ['title', 'summary', 'description', 'metaTitle', 'metaDescription'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -32,6 +32,8 @@ class Service extends Model
         'features',
         'orderIndex',
         'isActive',
+        'metaTitle',
+        'metaDescription',
     ];
 
     protected array $publicUploadAttributes = ['image'];

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-#[Fillable(['name', 'email', 'phone', 'subject', 'message', 'attachment_url', 'status', 'is_read'])]
+#[Fillable(['name', 'email', 'phone', 'subject', 'message', 'attachment_url', 'status', 'is_read', 'responded_at'])]
 class Inquiry extends Model
 {
     use HasUuids, LogsActivity, DeletesPublicUploads;
@@ -25,6 +25,7 @@ class Inquiry extends Model
     {
         return [
             'is_read' => 'boolean',
+            'responded_at' => 'datetime',
         ];
     }
 }

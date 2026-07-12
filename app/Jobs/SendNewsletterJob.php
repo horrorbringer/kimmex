@@ -25,13 +25,32 @@ class SendNewsletterJob implements ShouldQueue
         public readonly Subscriber $subscriber,
         public readonly NewsArticle $article,
         public readonly string $customIntro = '',
+        public readonly ?string $subjectOverride = null,
+        public readonly array $segments = [],
     ) {}
 
     public function handle(): void
     {
+        // If segments were specified, verify subscriber still matches before sending
+        if (!empty($this->segments)) {
+            $subscriberTags = $this->subscriber->tags ?? [];
+            $hasMatchingTag = !empty(array_intersect($this->segments, $subscriberTags));
+            if (!$hasMatchingTag) {
+                // Subscriber no longer matches the target segments, skip sending but count as sent
+                $this->newsletterSend->incrementSent();
+                $this->checkCompletion();
+                return;
+            }
+        }
+
         try {
             Mail::to($this->subscriber->email)
-                ->send(new NewsAnnouncementMail($this->article, $this->subscriber, $this->customIntro));
+                ->send(new NewsAnnouncementMail(
+                    $this->article,
+                    $this->subscriber,
+                    $this->customIntro,
+                    $this->subjectOverride,
+                ));
 
             $this->newsletterSend->incrementSent();
         } catch (\Throwable $e) {

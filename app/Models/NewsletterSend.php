@@ -14,6 +14,12 @@ class NewsletterSend extends Model
         'article_id',
         'sent_by',
         'custom_intro',
+        'subject_a',
+        'subject_b',
+        'is_ab_test',
+        'ab_test_percentage',
+        'winning_subject',
+        'ab_completed_at',
         'subscriber_count',
         'sent_count',
         'failed_count',
@@ -27,10 +33,13 @@ class NewsletterSend extends Model
         return [
             'sent_at' => 'datetime',
             'completed_at' => 'datetime',
+            'ab_completed_at' => 'datetime',
             'subscriber_count' => 'integer',
             'sent_count' => 'integer',
             'failed_count' => 'integer',
             'sent_by' => 'integer',
+            'is_ab_test' => 'boolean',
+            'ab_test_percentage' => 'integer',
         ];
     }
 
@@ -73,5 +82,27 @@ class NewsletterSend extends Model
     public function incrementFailed(): void
     {
         $this->increment('failed_count');
+    }
+
+    /**
+     * Check if this A/B test is awaiting a winner selection.
+     */
+    public function isAwaitingWinner(): bool
+    {
+        return $this->is_ab_test
+            && $this->status === 'completed'
+            && is_null($this->winning_subject)
+            && is_null($this->ab_completed_at);
+    }
+
+    /**
+     * Mark the A/B test as completed with a winning subject.
+     */
+    public function markAbCompleted(string $winner): void
+    {
+        $this->update([
+            'winning_subject' => $winner,
+            'ab_completed_at' => now(),
+        ]);
     }
 }

@@ -12,6 +12,7 @@ class Subscriber extends Model
     protected $fillable = [
         'email',
         'name',
+        'tags',
         'is_active',
         'subscribed_at',
         'unsubscribed_at',
@@ -22,10 +23,19 @@ class Subscriber extends Model
     {
         return [
             'is_active' => 'boolean',
+            'tags' => 'array',
             'subscribed_at' => 'datetime',
             'unsubscribed_at' => 'datetime',
         ];
     }
+
+    public const AVAILABLE_TAGS = [
+        'news' => 'News',
+        'projects' => 'Projects',
+        'careers' => 'Careers',
+        'services' => 'Services',
+        'general' => 'General',
+    ];
 
     public function scopeActive($query)
     {

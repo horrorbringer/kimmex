@@ -137,9 +137,7 @@ Route::get('/services', function () {
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 // Projects Archive & Single
-Route::get('/projects', function () {
-    return view('pages.projects.index');
-})->name('projects.index');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 

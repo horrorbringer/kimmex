@@ -85,13 +85,18 @@
                         color="primary"
                         icon="heroicon-o-paper-airplane"
                     >
-                        {{ __('Send to All Subscribers') }}
+                        {{ $enableAbTest ? __('Send A/B Test') : __('Send to All Subscribers') }}
                     </x-filament::button>
                 @endif
 
                 <p style="font-size: 0.875rem; color: var(--gray-500);">
                     <span style="font-weight: 600; color: var(--gray-700);">{{ $this->activeSubscriberCount }}</span>
                     {{ __('active subscribers') }}
+                    @if($enableAbTest)
+                        <span style="color: var(--primary-500); font-weight: 500;">
+                            · {{ __(':pct% will be tested', ['pct' => $abTestPercentage]) }}
+                        </span>
+                    @endif
                 </p>
             </div>
         </form>
@@ -113,6 +118,11 @@
                                 <div style="min-width: 0; flex: 1;">
                                     <p style="font-size: 0.875rem; font-weight: 500; color: var(--gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                         {{ $send->article?->getTranslation('title', 'en') ?? __('Deleted Article') }}
+                                        @if($send->is_ab_test)
+                                            <x-filament::badge color="info" size="sm" style="margin-left: 8px;">
+                                                {{ __('A/B Test') }}
+                                            </x-filament::badge>
+                                        @endif
                                     </p>
                                     <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 2px;">
                                         {{ $send->sent_at?->format('M d, Y H:i') ?? $send->created_at->format('M d, Y H:i') }}
@@ -120,6 +130,15 @@
                                             · {{ __('by') }} {{ $send->sender->name }}
                                         @endif
                                     </p>
+                                    @if($send->is_ab_test)
+                                        <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">
+                                            <span style="font-weight: 500;">A:</span> {{ $send->subject_a }}
+                                            · <span style="font-weight: 500;">B:</span> {{ $send->subject_b }}
+                                            @if($send->winning_subject)
+                                                · <span style="color: var(--success-500); font-weight: 600;">{{ __('Winner: :w', ['w' => strtoupper($send->winning_subject)]) }}</span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
                                     <span style="font-size: 0.75rem; color: var(--gray-500);">
@@ -136,6 +155,28 @@
                                     <x-filament::badge :color="$statusColor" size="sm">
                                         {{ ucfirst($send->status) }}
                                     </x-filament::badge>
+
+                                    {{-- Send Winner Action for A/B tests awaiting winner --}}
+                                    @if($send->isAwaitingWinner())
+                                        <div style="display: flex; gap: 4px;">
+                                            <x-filament::button
+                                                size="xs"
+                                                color="success"
+                                                wire:click="sendWinner('{{ $send->id }}', 'a')"
+                                                wire:confirm="{{ __('Send Subject A to all remaining subscribers?') }}"
+                                            >
+                                                {{ __('Pick A') }}
+                                            </x-filament::button>
+                                            <x-filament::button
+                                                size="xs"
+                                                color="success"
+                                                wire:click="sendWinner('{{ $send->id }}', 'b')"
+                                                wire:confirm="{{ __('Send Subject B to all remaining subscribers?') }}"
+                                            >
+                                                {{ __('Pick B') }}
+                                            </x-filament::button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

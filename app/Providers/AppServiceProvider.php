@@ -201,5 +201,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Register model observers
         \App\Models\JobApplication::observe(\App\Observers\JobApplicationObserver::class);
+
+        // Register SEO meta auto-generation observer
+        $seoMetaObserver = \App\Observers\SeoMetaObserver::class;
+        \App\Models\NewsArticle::observe($seoMetaObserver);
+        \App\Models\Service::observe($seoMetaObserver);
+        \App\Models\Project::observe($seoMetaObserver);
+        \App\Models\Inquiry::observe(\App\Observers\InquiryObserver::class);
     }
 }

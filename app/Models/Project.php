@@ -18,7 +18,8 @@ class Project extends Model
     public $translatable = [
         'title', 'location', 'description',
         'background', 'objectives', 'designConcept',
-        'scopeContributions', 'engineeringNarrative'
+        'scopeContributions', 'engineeringNarrative',
+        'metaTitle', 'metaDescription',
     ];
 
     protected $fillable = [
@@ -41,6 +42,8 @@ class Project extends Model
         'status',
         'isFeatured',
         'isActive',
+        'metaTitle',
+        'metaDescription',
     ];
 
     protected array $publicUploadAttributes = ['heroImage'];
@@ -70,20 +73,24 @@ class Project extends Model
     protected static function booted()
     {
         static::saved(function ($project) {
+            \Illuminate\Support\Facades\Cache::forget("projects_all_active");
             foreach (['en', 'km', 'kh'] as $locale) {
                 \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
                 \Illuminate\Support\Facades\Cache::forget("home_projects_array_{$locale}");
                 \Illuminate\Support\Facades\Cache::forget("home_featured_projects_{$locale}");
                 \Illuminate\Support\Facades\Cache::forget("project_show_data_{$project->slug}_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("project_categories_active_{$locale}");
             }
         });
 
         static::deleted(function ($project) {
+            \Illuminate\Support\Facades\Cache::forget("projects_all_active");
             foreach (['en', 'km', 'kh'] as $locale) {
                 \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
                 \Illuminate\Support\Facades\Cache::forget("home_projects_array_{$locale}");
                 \Illuminate\Support\Facades\Cache::forget("home_featured_projects_{$locale}");
                 \Illuminate\Support\Facades\Cache::forget("project_show_data_{$project->slug}_{$locale}");
+                \Illuminate\Support\Facades\Cache::forget("project_categories_active_{$locale}");
             }
         });
     }

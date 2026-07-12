@@ -4,130 +4,119 @@
     @php
         $locale = app()->getLocale();
         $isKhmer = $locale === 'km';
-        $allTypesLabel = $isKhmer ? __('All Types') : __('All Types');
-        $allLocationsLabel = $isKhmer ? __('All Locations') : __('All Locations');
-        $allStatusLabel = $isKhmer ? __('All Status') : __('All Status');
+        $allTypesLabel = __('All Types');
+        $allLocationsLabel = __('All Locations');
+        $allStatusLabel = __('All Status');
+        $allYearsLabel = __('All Years');
         $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
-        $cachedData = \Illuminate\Support\Facades\Cache::remember("projects_index_data_{$locale}", now()->addHours(12), function() use ($fallbackImage, $locale) {
-            $projectsDb = \App\Models\Project::where('isActive', true)->with('projectCategory')
-                ->orderBy('created_at', 'desc')
-                ->get();
-            $projectCategories = \App\Models\ProjectCategory::where('isActive', true)->get();
-            $categoryLookup = $projectCategories->flatMap(function ($category) {
-                return [
-                    strtolower($category->slug) => $category,
-                    strtolower(\Illuminate\Support\Str::slug($category->getTranslation('name', 'en', false))) => $category,
-                ];
-            });
-            $localizedCategoryName = function ($project) use ($locale, $categoryLookup) {
-                if ($project->projectCategory) {
-                    return $project->projectCategory->localizedName($locale);
-                }
-
-                $legacyCategory = trim((string) $project->category);
-                $legacyKey = strtolower(\Illuminate\Support\Str::slug($legacyCategory));
-                $matchedCategory = $categoryLookup->get(strtolower($legacyCategory)) ?: $categoryLookup->get($legacyKey);
-
-                return $matchedCategory
-                    ? $matchedCategory->localizedName($locale)
-                    : ($legacyCategory ? __(\Illuminate\Support\Str::headline($legacyCategory)) : __('General'));
-            };
-
-            // Dynamically build filter lists
-            $categories = $projectsDb->map($localizedCategoryName)->unique()->values()->prepend(__('All'))->toArray();
-
-            $locations = $projectsDb->map(fn($p) => $p->getTranslation('location', $locale))
-                ->unique()->values()->prepend(__('All'))->toArray();
-
-            $statusOptions = collect(\App\Enums\ProjectStatus::cases())->map(fn($s) => $s->getLabel())->prepend(__('All'))->toArray();
-
-            $projects = $projectsDb->map(function ($p) use ($fallbackImage, $locale, $localizedCategoryName) {
-                /** @var \App\Models\Project $p */
-                return [
-                    'id' => $p->slug,
-                    'title' => $p->getTranslation('title', $locale),
-                    'featured' => (bool) $p->isFeatured,
-                    'location' => $p->getTranslation('location', $locale),
-                    'type' => $localizedCategoryName($p),
-                    'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
-                    'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
-                    'summary' => strip_tags($p->getTranslation('description', $locale)),
-                ];
-            })->toArray();
-
-            return compact('categories', 'locations', 'statusOptions', 'projects');
-        });
-
-        $categories = $cachedData['categories'];
-        $locations = $cachedData['locations'];
-        $statusOptions = $cachedData['statusOptions'];
-        $projects = $cachedData['projects'];
-
-        // Fallback for empty DB
-        if (count($projects) === 0) {
-            $projects = [
-                ['id' => 'mef', 'title' => __('Ministry of Economy Building'), 'featured' => true, 'location' => __('Phnom Penh'), 'type' => __('Government'), 'status' => __('Completed'), 'image' => '/images/webp/projects/Thumbnail-1.webp', 'summary' => __('Kimmex built legacy facility.')]
-            ];
-        }
     @endphp
 
     <div x-data="{
-        filterType: 'All',
-        filterStatus: 'All',
+        filterType: '{{ old('category_id', $categoryId ?? '') }}' ? '' : 'All',
+        filterStatus: {{ Js::from($status ?? '') }},
+        filterYear: {{ Js::from($year ?? '') }},
+        filterCategoryId: {{ Js::from($categoryId ?? '') }},
         filterLoc: 'All',
         allTypesLabel: {{ Js::from($allTypesLabel) }},
         allLocationsLabel: {{ Js::from($allLocationsLabel) }},
         allStatusLabel: {{ Js::from($allStatusLabel) }},
+        allYearsLabel: {{ Js::from($allYearsLabel) }},
         search: '',
         sortBy: 'featured',
         projects: {{ Js::from($projects) }},
-        categories: {{ Js::from($categories) }},
-        locations: {{ Js::from($locations) }},
+        categories: {{ Js::from(array_merge(['All'], $categories)) }},
+        locations: {{ Js::from(array_merge([__('All')], $locations)) }},
         statusOptions: {{ Js::from($statusOptions) }},
-        
+        categoryOptions: {{ Js::from($categoryOptions) }},
+        years: {{ Js::from($years) }},
+
         init() {
             const params = new URLSearchParams(window.location.search);
-            const status = params.get('status');
-            
-            if (status === 'completed') {
-                this.filterStatus = this.statusOptions.find(opt => opt.toLowerCase() === 'completed') || this.statusOptions[0];
-            } else if (status === 'in-progress' || status === 'ongoing') {
-                this.filterStatus = this.statusOptions.find(opt => opt.toLowerCase() === 'ongoing' || opt.toLowerCase() === 'in progress') || this.statusOptions[0];
-            } else {
-                this.filterStatus = this.statusOptions[0]; // All
+
+            // Sync status from URL
+            const statusParam = params.get('status');
+            if (statusParam) {
+                this.filterStatus = statusParam;
             }
+
+            // Sync year from URL
+            const yearParam = params.get('year');
+            if (yearParam) {
+                this.filterYear = yearParam;
+            }
+
+            // Sync category from URL
+            const categoryParam = params.get('category_id');
+            if (categoryParam) {
+                this.filterCategoryId = categoryParam;
+                // Find matching category name for tab highlight
+                const match = this.categoryOptions.find(c => c.id === categoryParam);
+                if (match) {
+                    this.filterType = match.name;
+                }
+            }
+        },
+
+        applyServerFilters() {
+            const params = new URLSearchParams();
+            if (this.filterYear) params.set('year', this.filterYear);
+            if (this.filterStatus) params.set('status', this.filterStatus);
+            if (this.filterCategoryId) params.set('category_id', this.filterCategoryId);
+
+            const qs = params.toString();
+            window.location.href = '/projects' + (qs ? '?' + qs : '');
+        },
+
+        setCategory(type) {
+            if (type === 'All') {
+                this.filterType = 'All';
+                this.filterCategoryId = '';
+            } else {
+                this.filterType = type;
+                const match = this.categoryOptions.find(c => c.name === type);
+                this.filterCategoryId = match ? match.id : '';
+            }
+            this.applyServerFilters();
+        },
+
+        setStatus(value) {
+            this.filterStatus = value;
+            this.applyServerFilters();
+        },
+
+        setYear(value) {
+            this.filterYear = value;
+            this.applyServerFilters();
         },
 
         clearFilters() {
             this.filterType = 'All';
-            this.filterStatus = this.statusOptions[0];
-            this.filterLoc = this.locations[0];
+            this.filterStatus = '';
+            this.filterYear = '';
+            this.filterCategoryId = '';
+            this.filterLoc = 'All';
             this.search = '';
             this.sortBy = 'featured';
+            window.location.href = '/projects';
+        },
+
+        get hasActiveFilters() {
+            return this.filterStatus !== '' || this.filterYear !== '' || this.filterCategoryId !== '' || this.filterLoc !== 'All' || this.search !== '';
         },
 
         get filteredProjects() {
-            // Ensure data labels match current translations/values
-            const allTypeLabel = this.categories[0];
             const allLocLabel = this.locations[0];
-            
+
             return this.projects.filter(p => {
-                const isAllType = (this.filterType === 'All' || this.filterType === allTypeLabel);
-                const isAllLoc = (this.filterLoc === 'All' || this.filterLoc === 'Everywhere' || this.filterLoc === allLocLabel);
-                
-                const matchType = isAllType || p.type === this.filterType;
+                const isAllLoc = (this.filterLoc === 'All' || this.filterLoc === allLocLabel);
                 const matchLoc = isAllLoc || p.location === this.filterLoc;
-                
-                // Flexible status matching to handle 'All Status', 'Project Status' or 'All' literal
-                const isAllStatus = (this.filterStatus === 'All' || this.filterStatus === 'All Status' || this.filterStatus === 'Project Status' || this.filterStatus === this.statusOptions[0]);
-                const matchStatus = isAllStatus || p.status === this.filterStatus;
-                
+
                 const query = this.search.toLowerCase();
-                const matchSearch = query === '' || 
-                                   p.title.toLowerCase().includes(query) || 
+                const matchSearch = query === '' ||
+                                   p.title.toLowerCase().includes(query) ||
                                    p.summary.toLowerCase().includes(query);
-                                   
-                return matchType && matchLoc && matchStatus && matchSearch;
+
+                return matchLoc && matchSearch;
             }).sort((a, b) => {
                 if (this.sortBy === 'featured') {
                     if ((a.featured ? 1 : 0) !== (b.featured ? 1 : 0)) {
@@ -183,7 +172,19 @@
                             <input type="text" x-model="search" placeholder="{{ __('Search projects by name…') }}"
                                 class="w-full h-11 pl-11 pr-4 rounded-lg border border-gray-200 bg-white text-sm font-semibold text-titan-navy placeholder:text-titan-navy/30 focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm" />
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 flex-wrap">
+                            {{-- Year Filter --}}
+                            <div class="relative">
+                                <select @change="setYear($event.target.value)"
+                                    class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
+                                    <option value="" :selected="!filterYear">{{ __('All Years') }}</option>
+                                    <template x-for="y in years" :key="y">
+                                        <option :value="y" x-text="y" :selected="filterYear == y"></option>
+                                    </template>
+                                </select>
+                                <x-lucide-calendar class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
+                            </div>
+                            {{-- Location Filter --}}
                             <div class="relative">
                                 <select x-model="filterLoc"
                                     class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
@@ -193,11 +194,13 @@
                                 </select>
                                 <x-lucide-map-pin class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
                             </div>
+                            {{-- Status Filter --}}
                             <div class="relative">
-                                <select x-model="filterStatus"
+                                <select @change="setStatus($event.target.value)"
                                     class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
-                                    <template x-for="stat in statusOptions" :key="stat">
-                                        <option :value="stat" x-text="stat === 'All' ? allStatusLabel : stat"></option>
+                                    <option value="" :selected="!filterStatus">{{ __('All Status') }}</option>
+                                    <template x-for="stat in statusOptions" :key="stat.value">
+                                        <option :value="stat.value" x-text="stat.label" :selected="filterStatus === stat.value"></option>
                                     </template>
                                 </select>
                                 <x-lucide-activity class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
@@ -209,7 +212,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div class="flex flex-wrap gap-2 overflow-x-auto">
                             <template x-for="type in categories" :key="type">
-                                <button @click="filterType = type"
+                                <button @click="setCategory(type)"
                                     class="h-8 px-4 rounded-full text-xs font-bold border transition-all duration-200 whitespace-nowrap"
                                     :class="filterType === type
                                         ? 'bg-titan-red text-white border-titan-red shadow-sm'
@@ -223,7 +226,7 @@
                                 <span x-text="activeCount"></span> {{ __('projects') }}
                             </span>
                             <button @click="clearFilters()"
-                                x-show="filterType !== 'All' || filterStatus !== statusOptions[0] || filterLoc !== locations[0] || search !== ''"
+                                x-show="hasActiveFilters"
                                 style="display:none"
                                 class="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-gray-200 text-xs font-bold text-titan-navy/50 hover:text-titan-red hover:border-titan-red/30 transition-colors">
                                 <x-lucide-x class="w-3 h-3" />{{ __('Reset') }}
@@ -244,6 +247,11 @@
                                 <div class="absolute top-3 left-3">
                                     <span class="inline-flex h-5 px-2 rounded bg-white/90 backdrop-blur-sm border border-gray-200/50 text-[8px] font-black uppercase tracking-[0.15em] text-titan-navy/70 items-center" x-text="project.status"></span>
                                 </div>
+                                <template x-if="project.year">
+                                    <div class="absolute top-3 right-3">
+                                        <span class="inline-flex h-5 px-2 rounded bg-white/90 backdrop-blur-sm border border-gray-200/50 text-[8px] font-black uppercase tracking-[0.15em] text-titan-navy/70 items-center" x-text="project.year"></span>
+                                    </div>
+                                </template>
                             </div>
 
                             <div class="p-4 md:p-5">

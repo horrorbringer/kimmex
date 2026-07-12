@@ -18,12 +18,17 @@ class NewsAnnouncementMail extends Mailable
         public NewsArticle $article,
         public Subscriber $subscriber,
         public string $customIntro = '',
+        public ?string $subjectOverride = null,
     ) {}
 
     public function envelope(): Envelope
     {
+        $subject = $this->subjectOverride
+            ? $this->subjectOverride . ' — Kimmex News'
+            : $this->article->getTranslation('title', 'en') . ' — Kimmex News';
+
         return new Envelope(
-            subject: $this->article->getTranslation('title', 'en') . ' — Kimmex News',
+            subject: $subject,
         );
     }
 

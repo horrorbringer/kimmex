@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProjectStatus;
 use App\Models\Project;
+use App\Models\ProjectCategory;
 use App\Support\PublicStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +13,133 @@ use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
+    public function index(Request $request): View
+    {
+        $locale = app()->getLocale();
+        $contentLocale = $locale === 'kh' ? 'km' : $locale;
+        $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
+
+        // Validate filter inputs
+        $year = $request->query('year');
+        $status = $request->query('status');
+        $categoryId = $request->query('category_id');
+
+        // Build the query with server-side filters
+        $query = Project::where('isActive', true)->with('projectCategory');
+
+        if ($year && is_numeric($year)) {
+            $query->whereYear('completionDate', (int) $year);
+        }
+
+        if ($status && in_array(strtoupper($status), array_column(ProjectStatus::cases(), 'value'))) {
+            $query->where('status', strtoupper($status));
+        }
+
+        if ($categoryId) {
+            $query->where('project_category_id', $categoryId);
+        }
+
+        $projectsDb = $query->orderBy('created_at', 'desc')->get();
+
+        // Get all categories for filter options
+        $projectCategories = Cache::remember("project_categories_active_{$contentLocale}", now()->addHours(12), function () {
+            return ProjectCategory::where('isActive', true)->get();
+        });
+
+        $categoryLookup = $projectCategories->flatMap(function ($category) {
+            return [
+                strtolower($category->slug) => $category,
+                strtolower(\Illuminate\Support\Str::slug($category->getTranslation('name', 'en', false))) => $category,
+            ];
+        });
+
+        $localizedCategoryName = function ($project) use ($contentLocale, $categoryLookup) {
+            if ($project->projectCategory) {
+                return $project->projectCategory->localizedName($contentLocale);
+            }
+
+            $legacyCategory = trim((string) $project->category);
+            $legacyKey = strtolower(\Illuminate\Support\Str::slug($legacyCategory));
+            $matchedCategory = $categoryLookup->get(strtolower($legacyCategory)) ?: $categoryLookup->get($legacyKey);
+
+            return $matchedCategory
+                ? $matchedCategory->localizedName($contentLocale)
+                : ($legacyCategory ? __(\Illuminate\Support\Str::headline($legacyCategory)) : __('General'));
+        };
+
+        // Build filter option lists (always from full dataset for consistent UI)
+        $allProjects = Cache::remember("projects_all_active", now()->addHours(12), function () {
+            return Project::where('isActive', true)->with('projectCategory')->orderBy('created_at', 'desc')->get();
+        });
+
+        $categories = $allProjects->map($localizedCategoryName)->unique()->sort()->values()->toArray();
+        $locations = $allProjects->map(fn ($p) => $p->getTranslation('location', $contentLocale))->filter()->unique()->sort()->values()->toArray();
+        $statusOptions = collect(ProjectStatus::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->getLabel()])->toArray();
+
+        // Extract available years from completionDate
+        $years = $allProjects
+            ->filter(fn ($p) => $p->completionDate !== null)
+            ->map(fn ($p) => $p->completionDate->year)
+            ->unique()
+            ->sortDesc()
+            ->values()
+            ->toArray();
+
+        // Build category options with id and name
+        $categoryOptions = $projectCategories->map(fn ($cat) => [
+            'id' => $cat->id,
+            'name' => $cat->localizedName($contentLocale),
+        ])->sortBy('name')->values()->toArray();
+
+        // Map projects to view data
+        $projects = $projectsDb->map(function ($p) use ($fallbackImage, $contentLocale, $localizedCategoryName) {
+            return [
+                'id' => $p->slug,
+                'title' => $p->getTranslation('title', $contentLocale),
+                'featured' => (bool) $p->isFeatured,
+                'location' => $p->getTranslation('location', $contentLocale),
+                'type' => $localizedCategoryName($p),
+                'category_id' => $p->project_category_id,
+                'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
+                'status_value' => $p->status?->value,
+                'year' => $p->completionDate?->year,
+                'image' => PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
+                'summary' => strip_tags($p->getTranslation('description', $contentLocale)),
+            ];
+        })->toArray();
+
+        // Fallback for empty DB
+        if (count($projects) === 0 && ! $year && ! $status && ! $categoryId) {
+            $projects = [
+                [
+                    'id' => 'mef',
+                    'title' => __('Ministry of Economy Building'),
+                    'featured' => true,
+                    'location' => __('Phnom Penh'),
+                    'type' => __('Government'),
+                    'category_id' => null,
+                    'status' => __('Completed'),
+                    'status_value' => 'COMPLETED',
+                    'year' => 2024,
+                    'image' => '/images/webp/projects/Thumbnail-1.webp',
+                    'summary' => __('Kimmex built legacy facility.'),
+                ],
+            ];
+        }
+
+        return view('pages.projects.index', compact(
+            'projects',
+            'categories',
+            'locations',
+            'statusOptions',
+            'categoryOptions',
+            'years',
+            'year',
+            'status',
+            'categoryId',
+        ));
+    }
+
     public function show(Request $request, string $slug): View|RedirectResponse
     {
         $locale = app()->getLocale();

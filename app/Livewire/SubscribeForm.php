@@ -8,8 +8,14 @@ use Livewire\Component;
 class SubscribeForm extends Component
 {
     public string $email = '';
+    public array $interests = [];
     public bool $subscribed = false;
     public string $error = '';
+
+    public function getAvailableInterests(): array
+    {
+        return Subscriber::AVAILABLE_TAGS;
+    }
 
     public function subscribe(): void
     {
@@ -25,7 +31,12 @@ class SubscribeForm extends Component
 
         $this->validate([
             'email' => 'required|email|max:255',
+            'interests' => 'array',
+            'interests.*' => 'string|in:' . implode(',', array_keys(Subscriber::AVAILABLE_TAGS)),
         ]);
+
+        // Default to 'general' if no interests selected
+        $tags = !empty($this->interests) ? $this->interests : ['general'];
 
         // Check if already subscribed
         $existing = Subscriber::where('email', $this->email)->first();
@@ -36,12 +47,13 @@ class SubscribeForm extends Component
                 return;
             }
             // Reactivate
-            $existing->update(['is_active' => true, 'unsubscribed_at' => null, 'subscribed_at' => now()]);
+            $existing->update(['is_active' => true, 'unsubscribed_at' => null, 'subscribed_at' => now(), 'tags' => $tags]);
             $subscriber = $existing;
         } else {
             try {
                 $subscriber = Subscriber::create([
                     'email' => $this->email,
+                    'tags' => $tags,
                 ]);
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 $this->error = __('This email is already subscribed.');

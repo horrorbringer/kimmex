@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -11,14 +12,32 @@ use Illuminate\Support\Facades\Cache;
  */
 class CacheBusterObserver
 {
+    /** Models that affect the sitemap and should trigger regeneration. */
+    protected static array $sitemapModels = [
+        \App\Models\Project::class,
+        \App\Models\Service::class,
+        \App\Models\NewsArticle::class,
+        \App\Models\JobPosting::class,
+        \App\Models\Document::class,
+    ];
+
     public function saved(Model $model): void
     {
         $this->bustCache($model);
+        $this->regenerateSitemap($model);
     }
 
     public function deleted(Model $model): void
     {
         $this->bustCache($model);
+        $this->regenerateSitemap($model);
+    }
+
+    protected function regenerateSitemap(Model $model): void
+    {
+        if (in_array(get_class($model), static::$sitemapModels)) {
+            Artisan::call('sitemap:generate');
+        }
     }
 
     protected function bustCache(Model $model): void
