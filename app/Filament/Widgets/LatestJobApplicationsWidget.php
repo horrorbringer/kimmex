@@ -11,12 +11,13 @@ use Filament\Tables\Columns\IconColumn;
 class LatestJobApplicationsWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 'half';
 
     public static function canView(): bool
     {
-        return JobApplication::query()->exists();
+        return false; // Replaced by RecentActivityFeedWidget
     }
+
+    protected int | string | array $columnSpan = 'half';
 
     public function table(Table $table): Table
     {

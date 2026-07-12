@@ -13,6 +13,11 @@ class InquiriesChartWidget extends ChartWidget
     protected int | string | array $columnSpan = 'half';
     protected ?string $maxHeight = '200px';
 
+    public static function canView(): bool
+    {
+        return false; // Replaced by CombinedTrendChartWidget
+    }
+
     protected function getData(): array
     {
         $labels = [];
