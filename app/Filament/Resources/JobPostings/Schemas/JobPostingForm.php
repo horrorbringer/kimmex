@@ -105,22 +105,22 @@ class JobPostingForm
                     ->icon('heroicon-o-document-text')
                     ->description(__('Detailed description shown on the careers page'))
                     ->components([
-                        RichEditor::make('summary')
+                        RichEditor::make('summary')->resizableImages()
                             ->label(__('Summary'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
-                        RichEditor::make('responsibilities')
+                        RichEditor::make('responsibilities')->resizableImages()
                             ->label(__('Responsibilities'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
-                        RichEditor::make('requirements')
+                        RichEditor::make('requirements')->resizableImages()
                             ->label(__('Requirements'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),
-                        RichEditor::make('benefits')
+                        RichEditor::make('benefits')->resizableImages()
                             ->label(__('Benefits'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')

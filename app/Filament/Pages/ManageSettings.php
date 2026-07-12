@@ -209,7 +209,7 @@ class ManageSettings extends Page implements HasForms
                                 Section::make(__('Executive Message & Bio'))
                                     ->schema([
                                         TextInput::make('ceo_name')->label(__('CEO Name')),
-                                        RichEditor::make('ceo_message')->label(__('CEO Official Message'))->columnSpanFull()->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))->fileAttachmentsVisibility('public'),
+                                        RichEditor::make('ceo_message')->resizableImages()->label(__('CEO Official Message'))->columnSpanFull()->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))->fileAttachmentsVisibility('public'),
                                         Textarea::make('company_story')
                                             ->label(__('Our Story'))
                                             ->rows(4)

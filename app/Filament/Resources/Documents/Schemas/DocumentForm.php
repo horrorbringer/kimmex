@@ -58,7 +58,7 @@ class DocumentForm
 
                 Section::make(__('Content'))
                     ->components([
-                        RichEditor::make('description')
+                        RichEditor::make('description')->resizableImages()
                             ->label(__('Description'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')

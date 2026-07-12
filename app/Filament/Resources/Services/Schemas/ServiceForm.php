@@ -86,7 +86,7 @@ class ServiceForm
                                     TranslationHelper::getAutoTranslateAction('summary'),
                                 ])
                                 ->maxLength(1000),
-                            RichEditor::make('description')
+                            RichEditor::make('description')->resizableImages()
                                 ->label(__('Description'))
                                 ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                 ->fileAttachmentsVisibility('public')

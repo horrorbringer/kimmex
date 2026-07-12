@@ -62,7 +62,7 @@ class ProjectForm
                                 Section::make(__('Brief Description'))
                                     ->description(__('Short public summary used near the top of the project details page.'))
                                     ->components([
-                                        RichEditor::make('description')
+                                        RichEditor::make('description')->resizableImages()
                                             ->label(__('Description'))
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
@@ -83,7 +83,7 @@ class ProjectForm
                                         TextInput::make('scale')
                                             ->label(__('Scale'))
                                             ->placeholder('e.g., 50,000 sqm or 5-story building'),
-                                        RichEditor::make('background')
+                                        RichEditor::make('background')->resizableImages()
                                             ->label(__('Project Background'))
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
@@ -92,7 +92,7 @@ class ProjectForm
                                                 TranslationHelper::getAutoTranslateAction('background'),
                                             ])
                                             ->columnSpanFull(),
-                                        RichEditor::make('objectives')
+                                        RichEditor::make('objectives')->resizableImages()
                                             ->label(__('Project Objectives'))
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
@@ -107,15 +107,15 @@ class ProjectForm
                                 Section::make(__('Engineering & Design'))
                                     ->description(__('Optional technical details. Empty fields are hidden on the frontend.'))
                                     ->components([
-                                        RichEditor::make('designConcept')
+                                        RichEditor::make('designConcept')->resizableImages()
                                             ->label(__('Design Concept & Functions'))
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public'),
-                                        RichEditor::make('scopeContributions')
+                                        RichEditor::make('scopeContributions')->resizableImages()
                                             ->label(__('Specific Kimmex Contributions'))
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public'),
-                                        RichEditor::make('engineeringNarrative')
+                                        RichEditor::make('engineeringNarrative')->resizableImages()
                                             ->label(__('Challenges & Solutions (Engineering Narrative)'))
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public'),

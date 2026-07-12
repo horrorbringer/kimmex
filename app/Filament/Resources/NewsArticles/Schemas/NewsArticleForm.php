@@ -75,7 +75,7 @@ class NewsArticleForm
                                             ->live(onBlur: true)
                                             ->afterStateUpdated(fn(Set $set, ?string $state) => $set('metaDescription', $state)),
 
-                                        RichEditor::make('content')
+                                        RichEditor::make('content')->resizableImages()
                                             ->label(__('Content'))
                                             ->required()
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))

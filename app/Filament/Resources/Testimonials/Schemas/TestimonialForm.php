@@ -54,7 +54,7 @@ class TestimonialForm
                             ])
                             ->required()
                             ->default(5),
-                        RichEditor::make('content')
+                        RichEditor::make('content')->resizableImages()
                             ->label(__('Content'))
                             ->required()
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))

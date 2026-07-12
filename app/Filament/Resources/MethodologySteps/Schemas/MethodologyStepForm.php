@@ -24,7 +24,7 @@ class MethodologyStepForm
                             ->required()
                             ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
                             ->hintAction(AIHelper::getImproveAction('title', 'Improve this methodology step title so it is concise and action-oriented.')),
-                        RichEditor::make('description')
+                        RichEditor::make('description')->resizableImages()
                             ->label(__('Description'))
                             ->required()
                             ->hintActions([

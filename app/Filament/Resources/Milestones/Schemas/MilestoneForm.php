@@ -33,7 +33,7 @@ class MilestoneForm
 
                 Section::make(__('Content'))
                     ->components([
-                        RichEditor::make('description')
+                        RichEditor::make('description')->resizableImages()
                             ->label(__('Description'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
@@ -42,7 +42,7 @@ class MilestoneForm
                             ])
                             ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->columnSpanFull(),
-                        RichEditor::make('detailed_description')
+                        RichEditor::make('detailed_description')->resizableImages()
                             ->label(__('Detailed Description (Shown on Click)'))
                             ->hintAction(TranslationHelper::getAutoTranslateAction('detailed_description'))
                             ->placeholder(__('Expanded narrative about this milestone...'))
