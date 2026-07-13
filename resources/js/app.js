@@ -1,12 +1,13 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
 import intersect from '@alpinejs/intersect';
 import collapse from '@alpinejs/collapse';
 
-window.Alpine = Alpine;
-Alpine.plugin(intersect);
-Alpine.plugin(collapse);
-Alpine.start();
+// Register Alpine plugins via Livewire's Alpine hook.
+// Livewire 3+ bundles Alpine — do NOT import/start it manually.
+document.addEventListener('livewire:init', () => {
+    window.Alpine.plugin(intersect);
+    window.Alpine.plugin(collapse);
+});
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
