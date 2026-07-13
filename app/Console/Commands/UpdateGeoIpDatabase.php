@@ -35,7 +35,12 @@ class UpdateGeoIpDatabase extends Command
         }
 
         try {
-            $tempFile = storage_path('app/geoip/GeoLite2-Country.mmdb.tmp');
+            $dir = storage_path('app/geoip');
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            $tempFile = $dir . '/GeoLite2-Country.mmdb.tmp';
 
             // Download with progress
             $ch = curl_init($url);
