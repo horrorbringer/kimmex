@@ -119,7 +119,7 @@ class TrackPageView
     }
 
     /**
-     * Resolve country from IP address using free ip-api.com (non-blocking, cached).
+     * Resolve country from IP address using free ip-api.com (cached per IP for 24h).
      */
     protected function resolveCountry(?string $ip): ?string
     {
@@ -136,13 +136,39 @@ class TrackPageView
 
         return cache()->remember($cacheKey, now()->addDay(), function () use ($ip) {
             try {
-                $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=country", false, stream_context_create([
-                    'http' => ['timeout' => 2],
-                ]));
+                $url = "http://ip-api.com/json/{$ip}?fields=status,country";
+                $response = null;
+
+                // Try curl first (more reliable on shared hosting)
+                if (function_exists('curl_init')) {
+                    $ch = curl_init($url);
+                    curl_setopt_array($ch, [
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_TIMEOUT => 3,
+                        CURLOPT_CONNECTTIMEOUT => 2,
+                        CURLOPT_FOLLOWLOCATION => true,
+                    ]);
+                    $response = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
+
+                    if ($httpCode !== 200) {
+                        $response = null;
+                    }
+                }
+
+                // Fallback to file_get_contents
+                if (! $response) {
+                    $response = @file_get_contents($url, false, stream_context_create([
+                        'http' => ['timeout' => 2],
+                    ]));
+                }
 
                 if ($response) {
                     $data = json_decode($response, true);
-                    return $data['country'] ?? null;
+                    if (($data['status'] ?? '') === 'success') {
+                        return $data['country'] ?? null;
+                    }
                 }
             } catch (\Throwable) {
                 // Silently fail

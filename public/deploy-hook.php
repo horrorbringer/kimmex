@@ -39,14 +39,15 @@ try {
     $output[] = "page caches: skip";
 }
 
-// 1c. Backfill NULL country in page_views (quick, no API calls)
+// 1c. Clear stale geo-IP cache so fresh lookups happen
 try {
-    $updated = \Illuminate\Support\Facades\DB::table('page_views')
-        ->whereNull('country')
-        ->update(['country' => 'Cambodia']);
-    $output[] = "pageviews country backfill: {$updated} rows set to Cambodia";
+    // Remove cached geo results that returned null
+    \Illuminate\Support\Facades\DB::table('cache')
+        ->where('key', 'like', '%geo_ip_%')
+        ->delete();
+    $output[] = "geo-ip cache: cleared";
 } catch (\Throwable $e) {
-    $output[] = "pageviews country backfill: skip ({$e->getMessage()})";
+    $output[] = "geo-ip cache: skip";
 }
 
 // 1b. Clear stale sessions (prevents incomplete object errors after updates)
