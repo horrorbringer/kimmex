@@ -47,6 +47,9 @@ try {
 // 3. Migrations
 $run('migrate', ['--force' => true]);
 
+// 3b. Backfill country data for page views
+$run('pageviews:backfill-country', ['--limit' => 100]);
+
 // 4. Rebuild caches
 $run('config:cache');
 $run('filament:assets');

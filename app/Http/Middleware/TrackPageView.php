@@ -75,13 +75,14 @@ class TrackPageView
 
         // Record the page view directly (shared hosting - no queue)
         try {
-            $country = $this->resolveCountry($request->ip());
+            $realIp = $this->getRealIp($request);
+            $country = $this->resolveCountry($realIp);
 
             PageView::create([
                 'url' => $request->fullUrl(),
                 'path' => '/' . ltrim($path, '/'),
                 'title' => $title,
-                'ip' => $request->ip(),
+                'ip' => $realIp,
                 'user_agent' => mb_substr($userAgent, 0, 255),
                 'referer' => mb_substr($request->header('referer', ''), 0, 255) ?: null,
                 'visited_at' => now(),
@@ -93,6 +94,28 @@ class TrackPageView
         }
 
         return $response;
+    }
+
+    /**
+     * Get the real client IP, accounting for proxies (Cloudflare, cPanel, etc.)
+     */
+    protected function getRealIp(Request $request): string
+    {
+        // Cloudflare
+        if ($cf = $request->header('CF-Connecting-IP')) {
+            return $cf;
+        }
+
+        // Standard proxy headers
+        if ($forwarded = $request->header('X-Forwarded-For')) {
+            return trim(explode(',', $forwarded)[0]);
+        }
+
+        if ($realIp = $request->header('X-Real-IP')) {
+            return $realIp;
+        }
+
+        return $request->ip();
     }
 
     /**
