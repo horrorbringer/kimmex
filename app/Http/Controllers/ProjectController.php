@@ -42,9 +42,7 @@ class ProjectController extends Controller
         $projectsDb = $query->orderBy('created_at', 'desc')->get();
 
         // Get all categories for filter options
-        $projectCategories = Cache::remember("project_categories_active_{$contentLocale}", now()->addHours(12), function () {
-            return ProjectCategory::where('isActive', true)->get();
-        });
+        $projectCategories = ProjectCategory::where('isActive', true)->get();
 
         $categoryLookup = $projectCategories->flatMap(function ($category) {
             return [
@@ -68,9 +66,7 @@ class ProjectController extends Controller
         };
 
         // Build filter option lists (always from full dataset for consistent UI)
-        $allProjects = Cache::remember("projects_all_active", now()->addHours(12), function () {
-            return Project::where('isActive', true)->with('projectCategory')->orderBy('created_at', 'desc')->get();
-        });
+        $allProjects = Project::where('isActive', true)->with('projectCategory')->orderBy('created_at', 'desc')->get();
 
         $categories = $allProjects->map($localizedCategoryName)->unique()->sort()->values()->toArray();
         $locations = $allProjects->map(fn ($p) => $p->getTranslation('location', $contentLocale))->filter()->unique()->sort()->values()->toArray();

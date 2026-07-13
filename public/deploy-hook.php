@@ -31,6 +31,9 @@ try {
     \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
     \Illuminate\Support\Facades\Cache::forget('about_milestones_data_en');
     \Illuminate\Support\Facades\Cache::forget('about_milestones_data_km');
+    \Illuminate\Support\Facades\Cache::forget('project_categories_active_en');
+    \Illuminate\Support\Facades\Cache::forget('project_categories_active_km');
+    \Illuminate\Support\Facades\Cache::forget('projects_all_active');
     $output[] = "page caches: cleared";
 } catch (\Throwable $e) {
     $output[] = "page caches: skip";
