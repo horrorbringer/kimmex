@@ -9,9 +9,18 @@ use Illuminate\Support\Carbon;
 class TopPagesChartWidget extends ChartWidget
 {
     protected static ?int $sort = 6;
-    protected ?string $heading = 'Top Pages Distribution';
     protected int | string | array $columnSpan = 1;
-    protected ?string $maxHeight = '260px';
+    protected ?string $maxHeight = '280px';
+
+    public function getHeading(): ?string
+    {
+        return __('Top Pages');
+    }
+
+    public function getDescription(): ?string
+    {
+        return __('Distribution (30 days)');
+    }
 
     public static function canView(): bool
     {

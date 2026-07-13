@@ -42,6 +42,8 @@ class Analytics extends Page
             \App\Filament\Widgets\PageAnalyticsStatsWidget::class,
             \App\Filament\Widgets\PageViewsChartWidget::class,
             \App\Filament\Widgets\TopPagesChartWidget::class,
+            \App\Filament\Widgets\TrafficSourcesChartWidget::class,
+            \App\Filament\Widgets\DeviceDistributionChartWidget::class,
             \App\Filament\Widgets\TrafficByHourChartWidget::class,
         ];
     }

@@ -9,9 +9,18 @@ use Illuminate\Support\Carbon;
 class TrafficByHourChartWidget extends ChartWidget
 {
     protected static ?int $sort = 7;
-    protected ?string $heading = 'Traffic by Hour (Last 7 Days)';
     protected int | string | array $columnSpan = 1;
-    protected ?string $maxHeight = '260px';
+    protected ?string $maxHeight = '280px';
+
+    public function getHeading(): ?string
+    {
+        return __('Traffic by Hour');
+    }
+
+    public function getDescription(): ?string
+    {
+        return __('Last 7 days');
+    }
 
     public static function canView(): bool
     {

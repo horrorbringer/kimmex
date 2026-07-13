@@ -9,9 +9,18 @@ use Illuminate\Support\Carbon;
 class PageViewsChartWidget extends ChartWidget
 {
     protected static ?int $sort = 5;
-    protected ?string $heading = 'Page Views (Last 30 Days)';
     protected int | string | array $columnSpan = 'full';
     protected ?string $maxHeight = '300px';
+
+    public function getHeading(): ?string
+    {
+        return __('Page Views');
+    }
+
+    public function getDescription(): ?string
+    {
+        return __('Last 30 days trend');
+    }
 
     public static function canView(): bool
     {
