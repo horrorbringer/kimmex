@@ -8,8 +8,9 @@ use Exception;
 
 class AIGeneratorService
 {
-    public function generateContent(string $topic, string $type = 'article', ?string $customInstructions = null, ?array $overrideSettings = null): ?string
+    public function generateContent(string $topic, ?string $type = 'article', ?string $customInstructions = null, ?array $overrideSettings = null): ?string
     {
+        $type = $type ?? 'article';
         $settings = $overrideSettings ?: SystemSetting::get('ai_settings', []);
         $provider = $settings['provider'] ?? 'gemini';
         $providerConfig = $this->providerConfig($settings, $provider);

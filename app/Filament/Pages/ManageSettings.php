@@ -428,7 +428,7 @@ class ManageSettings extends Page implements HasForms
                                                             'temperature' => $get('ai_temperature'),
                                                             'tone' => $get('ai_tone'),
                                                         ];
-                                                        $set('test_result', $ai->generateContent($topic, $get('test_type'), null, $settings));
+                                                        $set('test_result', $ai->generateContent($topic, $get('test_type') ?? 'article', null, $settings));
                                                         Notification::make()->title(__('Success'))->success()->send();
                                                     } catch (\Exception $e) {
                                                         Notification::make()->title(__('Error'))->body($e->getMessage())->danger()->send();
