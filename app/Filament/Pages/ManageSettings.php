@@ -545,16 +545,16 @@ class ManageSettings extends Page implements HasForms
                                 Section::make(__('Brand Colors'))
                                     ->columns(2)
                                     ->schema([
-                                        ColorPicker::make('primary_color')->label(__('Primary Accent')),
-                                        ColorPicker::make('primary_color_hover')->label(__('Primary Accent Hover')),
-                                        ColorPicker::make('secondary_color')->label(__('Secondary Color')),
-                                        ColorPicker::make('secondary_color_hover')->label(__('Secondary Color Hover')),
+                                        ColorPicker::make('primary_color')->label(__('Primary Accent'))->live(),
+                                        ColorPicker::make('primary_color_hover')->label(__('Primary Accent Hover'))->live(),
+                                        ColorPicker::make('secondary_color')->label(__('Secondary Color'))->live(),
+                                        ColorPicker::make('secondary_color_hover')->label(__('Secondary Color Hover'))->live(),
                                     ]),
                                 Section::make(__('Footer Appearance'))
                                     ->columns(2)
                                     ->schema([
-                                        ColorPicker::make('footer_bg_color')->label(__('Footer Background Color')),
-                                        ColorPicker::make('footer_accent_color')->label(__('Footer Accent/Link Color')),
+                                        ColorPicker::make('footer_bg_color')->label(__('Footer Background Color'))->live(),
+                                        ColorPicker::make('footer_accent_color')->label(__('Footer Accent/Link Color'))->live(),
                                     ]),
                                 Section::make(__('Page Backgrounds'))
                                     ->columns(2)
@@ -777,10 +777,21 @@ class ManageSettings extends Page implements HasForms
         // 6. Global Cache Purge (Force Frontend Sync)
         \Illuminate\Support\Facades\Cache::forget('global_settings_en');
         \Illuminate\Support\Facades\Cache::forget('global_settings_km');
+        \Illuminate\Support\Facades\Cache::forget('global_settings_kh');
         \Illuminate\Support\Facades\Cache::forget('system_setting_theme_settings');
         \Illuminate\Support\Facades\Cache::forget('system_setting_organization_profile');
         \Illuminate\Support\Facades\Cache::forget('system_setting_brand_identity');
         \Illuminate\Support\Facades\Cache::forget('system_setting_integration_settings');
+
+        // Clear compiled views so Blade re-renders with new theme values
+        try {
+            \Illuminate\Support\Facades\Artisan::call('view:clear');
+        } catch (\Throwable) {}
+
+        // Reset OPcache if available
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
 
         Notification::make()
             ->title(__('Global Configuration Saved'))

@@ -153,7 +153,7 @@
         ══════════════════════════════════════════════════════════════ */
 
         #site-footer {
-            background: #071A33;
+            background: var(--footer-bg, #071A33);
             position: relative;
             overflow: hidden;
         }
