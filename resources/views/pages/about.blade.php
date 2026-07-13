@@ -210,28 +210,27 @@
 
 
         <!-- === HERO SECTION === -->
-        <section class="relative h-[420px] md:h-[500px] flex items-end overflow-hidden bg-titan-navy">
+        <section class="relative h-[380px] sm:h-[420px] md:h-[500px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
                 <img src="{{ $aboutHeroImageUrl }}" alt="{{ __('About Kimmex') }}" class="w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-titan-navy/20"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
 
-            <div class="relative z-20 w-full max-w-[1200px] mx-auto px-6 pb-14 md:pb-20">
+            <div class="relative z-20 w-full max-w-[1200px] mx-auto px-5 sm:px-6 pb-10 sm:pb-14 md:pb-20">
                 {{-- Breadcrumb --}}
-                <nav class="flex items-center gap-2 text-xs text-white/60 mb-6" aria-label="Breadcrumb">
+                <nav class="flex items-center gap-2 text-[11px] sm:text-xs text-white/60 mb-4 sm:mb-6" aria-label="Breadcrumb">
                     <a href="/" class="hover:text-white transition-colors">{{ __('Home') }}</a>
                     <x-lucide-chevron-right class="w-3 h-3 text-white/30" />
                     <span class="text-white font-semibold">{{ __('About Us') }}</span>
                 </nav>
 
-                <h1 class="font-heading font-[900] text-white leading-[1] tracking-tight uppercase mb-5"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem);">
+                <h1 class="font-heading font-[900] text-white leading-[1.05] tracking-tight uppercase mb-4 sm:mb-5 text-[1.5rem] sm:text-[clamp(2rem,5vw,3.5rem)]">
                     {{ __('BUILDING') }}
                     <span class="text-titan-red">{{ __('CAMBODIA\'S FUTURE') }}</span>
                 </h1>
 
-                <p class="text-white/70 text-base md:text-lg max-w-xl leading-relaxed">
+                <p class="text-white/70 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed">
                     {{ __('Over 25 years of precision engineering, trusted partnerships, and landmark projects across the Kingdom.') }}
                 </p>
             </div>
@@ -253,22 +252,22 @@
                     @foreach($stats as $stat)
                         <div x-data="{ count: 0, target: {{ $stat['value'] }}, shown: false }"
                             x-intersect.once="shown = true; let steps = 50; let step = target / steps; let c = 0; let timer = setInterval(() => { c += step; if (c >= target) { count = target; clearInterval(timer); } else { count = Math.floor(c); } }, 1500 / steps);"
-                            class="flex flex-col items-center justify-center py-8 md:py-10 px-4 text-center group hover:bg-gray-50/50 transition-colors first:rounded-l-xl last:rounded-r-xl">
-                            <div class="w-10 h-10 rounded-lg bg-titan-red/10 flex items-center justify-center mb-3 group-hover:bg-titan-red/20 transition-colors">
+                            class="flex flex-col items-center justify-center py-5 sm:py-8 md:py-10 px-2 sm:px-4 text-center group hover:bg-gray-50/50 transition-colors first:rounded-l-xl last:rounded-r-xl">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-titan-red/10 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-titan-red/20 transition-colors">
                                 @if($stat['icon'] === 'calendar')
-                                    <x-lucide-calendar class="w-5 h-5 text-titan-red" />
+                                    <x-lucide-calendar class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
                                 @elseif($stat['icon'] === 'building-2')
-                                    <x-lucide-building-2 class="w-5 h-5 text-titan-red" />
+                                    <x-lucide-building-2 class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
                                 @elseif($stat['icon'] === 'users')
-                                    <x-lucide-users class="w-5 h-5 text-titan-red" />
+                                    <x-lucide-users class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
                                 @elseif($stat['icon'] === 'heart')
-                                    <x-lucide-heart class="w-5 h-5 text-titan-red" />
+                                    <x-lucide-heart class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
                                 @endif
                             </div>
-                            <div class="text-3xl md:text-4xl font-black text-titan-navy mb-1 tabular-nums">
+                            <div class="text-2xl sm:text-3xl md:text-4xl font-black text-titan-navy mb-1 tabular-nums">
                                 <span x-text="count">0</span><span class="text-titan-red">{{ $stat['suffix'] }}</span>
                             </div>
-                            <div class="text-xs uppercase tracking-wider text-titan-navy/50 font-bold">{{ $stat['label'] }}</div>
+                            <div class="text-[9px] sm:text-xs uppercase tracking-wider text-titan-navy/50 font-bold leading-tight">{{ $stat['label'] }}</div>
                         </div>
                     @endforeach
                 </div>
@@ -277,7 +276,7 @@
 
 
         <!-- === WHO WE ARE === -->
-        <section id="profile" class="py-20 md:py-28 px-6 bg-white overflow-hidden">
+        <section id="profile" class="py-14 sm:py-20 md:py-28 px-5 sm:px-6 bg-white overflow-hidden">
             <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
                 <!-- Left: Image Grid -->
@@ -369,7 +368,7 @@
                                 </div>
                             </div>
                             <div x-show="active === '{{ $item['id'] }}'" x-collapse>
-                                <div class="px-5 pb-5 pl-[4.5rem]">
+                                <div class="px-5 pb-5 pl-5 sm:pl-[4.5rem]">
                                     <p class="text-gray-500 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ $item['desc'] }}</p>
                                 </div>
                             </div>
@@ -382,8 +381,8 @@
 
 
         <!-- === CEO MESSAGE === -->
-        <section class="relative py-20 md:py-28 overflow-hidden" style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
-            <div class="max-w-[1200px] mx-auto px-6 relative z-10">
+        <section class="relative py-14 sm:py-20 md:py-28 overflow-hidden" style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
+            <div class="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
@@ -392,16 +391,16 @@
 
                         <!-- Left: Photo & Name -->
                         <div class="lg:col-span-4 flex flex-col items-center lg:items-start">
-                            <div class="relative w-[240px] md:w-[280px]">
+                            <div class="relative w-[180px] sm:w-[240px] md:w-[280px]">
                                 {{-- Photo --}}
                                 <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] ring-1 ring-white/10">
                                     <img src="/images/team-leadership-professional/touch_kim.jpg" alt="{{ $ceoName }}"
                                         class="object-cover object-top w-full h-full" loading="lazy" decoding="async" />
                                 </div>
                                 {{-- Decorative quote badge --}}
-                                <div class="absolute -bottom-3 -right-3 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                                <div class="absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg"
                                      style="background: var(--primary-color, #E31E24); color: #fff;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
                                 </div>
                             </div>
 
@@ -421,13 +420,13 @@
                             </div>
 
                             {{-- Large opening quote --}}
-                            <div class="mb-6" style="color: rgba(255,255,255,0.1);">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                            <div class="mb-4 sm:mb-6" style="color: rgba(255,255,255,0.1);">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 sm:w-12 sm:h-12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
                             </div>
 
                             {{-- Message body --}}
-                            <div class="ceo-message-content space-y-5 mb-10"
-                                 style="color: rgba(255,255,255,0.75); font-size: 1.05rem; line-height: 1.9;">
+                            <div class="ceo-message-content space-y-4 sm:space-y-5 mb-8 sm:mb-10"
+                                 style="color: rgba(255,255,255,0.75); font-size: 0.9rem; line-height: 1.8;">
                                 {!! $brand['ceo_message'] ?? '<p>' . __('Construction is not just about concrete and steel. It is about building trust, fostering communities, and leaving a legacy that stands the test of time. At KIMMEX, we are committed to delivering projects that elevate the nation while maintaining the highest standards of safety and quality.') . '</p>' !!}
                             </div>
 
@@ -453,10 +452,19 @@
 
         <style>
             .ceo-message-content p:first-child {
-                font-size: 1.2rem;
+                font-size: 1rem;
                 font-weight: 500;
                 color: rgba(255,255,255,0.9);
                 line-height: 1.75;
+            }
+            @media (min-width: 640px) {
+                .ceo-message-content p:first-child {
+                    font-size: 1.2rem;
+                }
+                .ceo-message-content {
+                    font-size: 1.05rem !important;
+                    line-height: 1.9 !important;
+                }
             }
         </style>
 
@@ -750,47 +758,47 @@
             {{-- Decorative elements --}}
             <div class="absolute top-0 left-0 w-full h-px" style="background: linear-gradient(90deg, transparent, var(--footer-accent, #ED1C24) 50%, transparent);"></div>
 
-            <div class="relative z-10 max-w-[1200px] mx-auto px-6">
+            <div class="relative z-10 max-w-[1200px] mx-auto px-5 sm:px-6">
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-center">
                     {{-- Left content --}}
                     <div class="lg:col-span-3">
-                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-heading font-black leading-[1.1] tracking-tight mb-6" style="color: #FFFFFF !important;">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-black leading-[1.1] tracking-tight mb-4 sm:mb-6" style="color: #FFFFFF !important;">
                             {{ __('Let\'s Build Something') }}<br>
                             <span style="color: var(--primary-color, #E31E24) !important;">{{ __('Extraordinary Together') }}</span>
                         </h2>
-                        <p class="text-base md:text-lg leading-relaxed max-w-lg" style="color: rgba(255,255,255,0.65);">
+                        <p class="text-sm sm:text-base md:text-lg leading-relaxed max-w-lg" style="color: rgba(255,255,255,0.65);">
                             {{ __('Whether it\'s a government infrastructure project or a commercial development, our team is ready to deliver excellence.') }}
                         </p>
                     </div>
 
                     {{-- Right actions --}}
-                    <div class="lg:col-span-2 flex flex-col gap-4">
+                    <div class="lg:col-span-2 flex flex-col gap-3 sm:gap-4">
                         <a href="/contact"
-                            class="group flex items-center justify-between px-8 py-5 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300 shadow-lg hover:shadow-xl"
+                            class="group flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 rounded-xl font-bold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300 shadow-lg hover:shadow-xl"
                             style="background-color: var(--primary-color, #E31E24); color: #FFFFFF;">
                             <div class="flex items-center gap-3">
-                                <x-lucide-phone class="w-5 h-5" />
+                                <x-lucide-phone class="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span>{{ __('Contact Us') }}</span>
                             </div>
-                            <x-lucide-arrow-right class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            <x-lucide-arrow-right class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                         </a>
                         <a href="/projects"
-                            class="group flex items-center justify-between px-8 py-5 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300"
+                            class="group flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 rounded-xl font-bold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300"
                             style="border: 2px solid rgba(255,255,255,0.2); color: #FFFFFF;">
                             <div class="flex items-center gap-3">
-                                <x-lucide-folder-open class="w-5 h-5" />
+                                <x-lucide-folder-open class="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span>{{ __('View Our Projects') }}</span>
                             </div>
-                            <x-lucide-arrow-right class="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                            <x-lucide-arrow-right class="w-4 h-4 sm:w-5 sm:h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </a>
                         <a href="/services"
-                            class="group flex items-center justify-between px-8 py-5 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300"
+                            class="group flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 rounded-xl font-bold uppercase tracking-wider text-xs sm:text-sm transition-all duration-300"
                             style="border: 2px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);">
                             <div class="flex items-center gap-3">
-                                <x-lucide-settings class="w-5 h-5" />
+                                <x-lucide-settings class="w-4 h-4 sm:w-5 sm:h-5" />
                                 <span>{{ __('Explore Services') }}</span>
                             </div>
-                            <x-lucide-arrow-right class="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                            <x-lucide-arrow-right class="w-4 h-4 sm:w-5 sm:h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </a>
                     </div>
                 </div>
