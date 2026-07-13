@@ -89,6 +89,7 @@ class NewsArticleForm
                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                             ->fileAttachmentsVisibility('public')
                                             ->fileAttachmentsDirectory('news/content')
+                                            ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                                             ->hintActions([
                                                 AIHelper::getGenerateAction('content', 'News Article'),
                                                 AIHelper::getImproveAction('content', 'Rewrite this news article to be more professional.'),
