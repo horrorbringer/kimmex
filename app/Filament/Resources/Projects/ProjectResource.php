@@ -44,6 +44,11 @@ class ProjectResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug', 'category', 'client'];
+    }
+
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return auth()->user()?->isAdmin();

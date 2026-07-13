@@ -40,6 +40,13 @@ class EmployeeResource extends Resource
     protected static ?int $navigationSort = 3;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'role', 'email', 'phone'];
+    }
+
     public static function canCreate(): bool
     {
         return auth()->user()?->isAdmin();

@@ -61,6 +61,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->font('Suwannaphum')
             ->sidebarCollapsibleOnDesktop()
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
                 'primary' => Color::hex(self::getThemeColor('primary_color', '#E31E24')),
                 'secondary' => Color::hex(self::getThemeColor('secondary_color', '#1a1a2e')),

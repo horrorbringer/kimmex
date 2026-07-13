@@ -42,6 +42,13 @@ class JobPostingResource extends Resource
     protected static ?int $navigationSort = 4;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-briefcase';
 
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug', 'location'];
+    }
+
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return auth()->user()?->isAdmin();

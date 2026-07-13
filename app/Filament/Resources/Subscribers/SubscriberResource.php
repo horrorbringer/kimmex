@@ -41,6 +41,13 @@ class SubscriberResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-megaphone';
 
+    protected static ?string $recordTitleAttribute = 'email';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['email'];
+    }
+
     public static function table(Table $table): Table
     {
         return $table

@@ -42,6 +42,13 @@ class NewsArticleResource extends Resource
     protected static ?int $navigationSort = 4;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-newspaper';
 
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'slug', 'category', 'authorName'];
+    }
+
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return auth()->user()?->isAdmin();

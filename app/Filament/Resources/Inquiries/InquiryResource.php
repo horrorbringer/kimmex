@@ -40,6 +40,13 @@ class InquiryResource extends Resource
     protected static ?int $navigationSort = 1;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-oval-left-ellipsis';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'subject'];
+    }
+
     public static function form(Schema $schema): Schema
     {
         return InquiryForm::configure($schema);
