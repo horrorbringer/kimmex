@@ -118,7 +118,7 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative h-[480px] md:h-[560px] overflow-hidden bg-titan-navy text-white"
+    class="relative h-[560px] md:h-[640px] overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (crossfade stack) === -->
@@ -143,7 +143,7 @@
     </template>
 
     <!-- === CONTENT OVERLAY === -->
-    <div class="absolute inset-0 flex flex-col justify-center z-20 pt-32 lg:pt-10">
+    <div class="absolute inset-0 flex flex-col justify-center z-20 pt-32 lg:pt-32">
         <div class="max-w-[1200px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
             <div>
                 <template x-for="(slide, index) in slides" :key="`content-${index}`">
