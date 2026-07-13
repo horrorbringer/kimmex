@@ -22,6 +22,11 @@ class SendNewsletter extends Page implements HasForms
 
     protected string $view = 'filament.pages.send-newsletter';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function getNavigationIcon(): string|\BackedEnum|null
     {
         return 'heroicon-o-paper-airplane';

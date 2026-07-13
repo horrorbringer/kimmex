@@ -36,6 +36,10 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
     protected static ?int $navigationSort = 1;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
 
     public $chartData = [];
     public ?array $data = [];

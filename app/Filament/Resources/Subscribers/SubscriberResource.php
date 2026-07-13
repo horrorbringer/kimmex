@@ -113,6 +113,11 @@ class SubscriberResource extends Resource
         return false;
     }
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
+
     public static function getPages(): array
     {
         return [
