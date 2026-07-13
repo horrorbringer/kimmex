@@ -32,8 +32,6 @@ class CountryDistributionChartWidget extends ChartWidget
         $countries = PageView::select('country')
             ->selectRaw('COUNT(*) as total')
             ->where('visited_at', '>=', Carbon::now()->subDays(30))
-            ->whereNotNull('country')
-            ->where('country', '!=', '')
             ->groupBy('country')
             ->orderByDesc('total')
             ->limit(8)
@@ -63,17 +61,20 @@ class CountryDistributionChartWidget extends ChartWidget
             '#f97316', // orange
         ];
 
+        $labels = $countries->pluck('country')->map(fn($c) => $c ?: __('Unknown'))->toArray();
+        $data = $countries->pluck('total')->toArray();
+
         return [
             'datasets' => [
                 [
-                    'data' => $countries->pluck('total')->toArray(),
-                    'backgroundColor' => array_slice($colors, 0, $countries->count()),
+                    'data' => $data,
+                    'backgroundColor' => array_slice($colors, 0, count($data)),
                     'borderWidth' => 2,
                     'borderColor' => '#ffffff',
                     'hoverOffset' => 8,
                 ],
             ],
-            'labels' => $countries->pluck('country')->map(fn($c) => $c ?: __('Unknown'))->toArray(),
+            'labels' => $labels,
         ];
     }
 

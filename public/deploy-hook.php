@@ -36,6 +36,16 @@ try {
     $output[] = "page caches: skip";
 }
 
+// 1c. Backfill NULL country in page_views (quick, no API calls)
+try {
+    $updated = \Illuminate\Support\Facades\DB::table('page_views')
+        ->whereNull('country')
+        ->update(['country' => 'Cambodia']);
+    $output[] = "pageviews country backfill: {$updated} rows set to Cambodia";
+} catch (\Throwable $e) {
+    $output[] = "pageviews country backfill: skip ({$e->getMessage()})";
+}
+
 // 1b. Clear stale sessions (prevents incomplete object errors after updates)
 try {
     \Illuminate\Support\Facades\DB::table('sessions')->truncate();
