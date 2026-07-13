@@ -118,7 +118,7 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative h-[560px] md:h-[640px] overflow-hidden bg-titan-navy text-white"
+    class="relative h-[100svh] min-h-[520px] max-h-[700px] sm:h-[560px] md:h-[640px] md:max-h-none overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (crossfade stack) === -->
@@ -137,41 +137,41 @@
                 decoding="async"
                 :fetchpriority="index === 0 ? 'high' : 'auto'" />
             {{-- Gradient overlays --}}
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/75 via-titan-navy/35 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/10 via-transparent to-titan-navy/50"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/80 via-titan-navy/50 to-titan-navy/20 sm:from-titan-navy/75 sm:via-titan-navy/35 sm:to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/20 via-transparent to-titan-navy/60"></div>
         </div>
     </template>
 
     <!-- === CONTENT OVERLAY === -->
-    <div class="absolute inset-0 flex flex-col justify-center z-20 pt-32 lg:pt-32">
-        <div class="max-w-[1200px] w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2">
+    <div class="absolute inset-0 flex flex-col justify-center z-20 pt-28 pb-24 sm:pt-32 sm:pb-20 lg:pt-32 lg:pb-12">
+        <div class="max-w-[1200px] w-full mx-auto px-5 sm:px-6 grid grid-cols-1 lg:grid-cols-2">
             <div>
                 <template x-for="(slide, index) in slides" :key="`content-${index}`">
                     <div x-show="index === current"
                         :class="prefersReducedMotion ? '' : 'hero-content-enter'"
                         class="w-full">
-                        <p class="text-titan-red font-black text-[10px] md:text-xs uppercase tracking-[0.35em] mb-4 flex items-center gap-3">
-                            <span class="inline-block w-8 h-px bg-titan-red"></span>
+                        <p class="text-titan-red font-black text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.35em] mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+                            <span class="inline-block w-6 sm:w-8 h-px bg-titan-red"></span>
                             <span x-text="slide.subtitle"></span>
                         </p>
-                        <h1 class="hero-copy-shadow font-heading font-[900] mb-7 !text-white uppercase leading-[1.02] tracking-normal"
+                        <h1 class="hero-copy-shadow font-heading font-[900] mb-4 sm:mb-7 !text-white uppercase leading-[1.05] sm:leading-[1.02] tracking-normal"
                             :class="slide.title.length > 48
-                                ? 'max-w-[820px] text-[1.5rem] md:text-[2rem] xl:text-[2.3rem]'
-                                : 'max-w-[900px] text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]'"
+                                ? 'max-w-[820px] text-[1.25rem] sm:text-[1.5rem] md:text-[2rem] xl:text-[2.3rem]'
+                                : 'max-w-[900px] text-[1.5rem] sm:text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]'"
                             x-text="slide.title"></h1>
 
-                        <p class="hero-copy-shadow text-[#F8FAFC] max-w-[600px] mb-10 font-medium text-base lg:text-lg leading-relaxed"
+                        <p class="hero-copy-shadow text-[#F8FAFC] max-w-[600px] mb-6 sm:mb-10 font-medium text-sm sm:text-base lg:text-lg leading-relaxed line-clamp-3 sm:line-clamp-none"
                             x-text="slide.desc"></p>
 
-                        <div class="flex flex-wrap gap-4 md:gap-8">
+                        <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 md:gap-8">
                             <a :href="slide.link"
-                                class="group relative overflow-hidden bg-titan-red text-white px-12 py-5 font-black transition-all duration-500 flex items-center gap-4 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-lg tracking-normal' : 'text-[13px] tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy' }}">
+                                class="group relative overflow-hidden bg-titan-red text-white px-6 sm:px-10 md:px-12 py-3.5 sm:py-4 md:py-5 font-black transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-base sm:text-lg tracking-normal' : 'text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.2em] sm:tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy' }}">
                                 <span class="relative z-10">{{ __('VIEW PROJECT') }}</span>
-                                <x-lucide-arrow-right class="group-hover:translate-x-2 transition-transform w-5 h-5 relative z-10" />
+                                <x-lucide-arrow-right class="group-hover:translate-x-2 transition-transform w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
                             </a>
                             <a href="/contact"
-                                class="group border-2 border-white/25 backdrop-blur-sm text-white px-12 py-5 font-black transition-all duration-500 flex items-center gap-4 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-lg tracking-normal' : 'text-[13px] tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
-                                <x-lucide-phone class="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                                class="group border-2 border-white/25 backdrop-blur-sm text-white px-6 sm:px-10 md:px-12 py-3.5 sm:py-4 md:py-5 font-black transition-all duration-500 flex items-center justify-center gap-3 sm:gap-4 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-base sm:text-lg tracking-normal' : 'text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.2em] sm:tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
+                                <x-lucide-phone class="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform" />
                                 <span>{{ __('CONTACT US') }}</span>
                             </a>
                         </div>
@@ -183,30 +183,30 @@
     </div>
 
     <!-- Navigation Controls -->
-    <div class="absolute bottom-12 left-0 right-0 z-30">
-        <div class="max-w-[1200px] mx-auto px-6 flex items-end justify-between">
+    <div class="absolute bottom-5 sm:bottom-8 md:bottom-12 left-0 right-0 z-30">
+        <div class="max-w-[1200px] mx-auto px-5 sm:px-6 flex items-end justify-between">
             <!-- Pagination -->
-            <div class="flex items-center gap-5">
-                <div class="text-sm font-black tracking-[0.28em] text-white/90 tabular-nums">
+            <div class="flex items-center gap-3 sm:gap-5">
+                <div class="text-xs sm:text-sm font-black tracking-[0.28em] text-white/90 tabular-nums">
                     <span x-text="String(current + 1).padStart(2, '0')"></span>
-                    <span class="mx-2 text-white/35">/</span>
+                    <span class="mx-1.5 sm:mx-2 text-white/35">/</span>
                     <span class="text-white/55" x-text="String(slides.length).padStart(2, '0')"></span>
                 </div>
-                <div class="flex gap-3" role="tablist" aria-label="{{ __('Featured projects') }}">
+                <div class="flex gap-2 sm:gap-3" role="tablist" aria-label="{{ __('Featured projects') }}">
                     <template x-for="(slide, index) in slides" :key="'dot-'+index">
                         <button @click="goToSlide(index)"
                             type="button"
                             :aria-label="`{{ __('Show slide') }} ${index + 1}: ${slide.title}`"
                             :aria-selected="index === current"
-                            :class="index === current ? 'w-14 bg-titan-red' : 'w-7 bg-white/30 hover:bg-white/70'"
-                            class="h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-white/80">
+                            :class="index === current ? 'w-10 sm:w-14 bg-titan-red' : 'w-5 sm:w-7 bg-white/30 hover:bg-white/70'"
+                            class="h-1 sm:h-1.5 rounded-full transition-all duration-500 focus:outline-none focus:ring-2 focus:ring-white/80">
                         </button>
                     </template>
                 </div>
             </div>
 
             <!-- Arrows + Stats -->
-            <div class="flex items-center gap-8">
+            <div class="flex items-center gap-4 sm:gap-8">
                 <div class="hidden xl:flex gap-8 border-r border-white/10 pr-8 mr-2">
                     <div>
                         <div class="text-2xl font-black text-white">25+</div>
@@ -221,14 +221,14 @@
                     <button @click="prevSlide()"
                         type="button"
                         aria-label="{{ __('Previous slide') }}"
-                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white focus:outline-none focus:ring-2 focus:ring-white/80">
-                        <x-lucide-chevron-left class="w-6 h-6" />
+                        class="w-9 h-9 sm:w-12 sm:h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white focus:outline-none focus:ring-2 focus:ring-white/80">
+                        <x-lucide-chevron-left class="w-4 h-4 sm:w-6 sm:h-6" />
                     </button>
                     <button @click="nextSlide()"
                         type="button"
                         aria-label="{{ __('Next slide') }}"
-                        class="w-12 h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white focus:outline-none focus:ring-2 focus:ring-white/80">
-                        <x-lucide-chevron-right class="w-6 h-6" />
+                        class="w-9 h-9 sm:w-12 sm:h-12 border border-white/20 rounded-full flex items-center justify-center hover:bg-titan-red hover:border-titan-red transition-all duration-300 text-white focus:outline-none focus:ring-2 focus:ring-white/80">
+                        <x-lucide-chevron-right class="w-4 h-4 sm:w-6 sm:h-6" />
                     </button>
                 </div>
             </div>
