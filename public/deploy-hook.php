@@ -25,6 +25,14 @@ $run('view:clear');
 $run('cache:clear');
 $run('event:clear');
 
+// 1b. Clear stale sessions (prevents incomplete object errors after updates)
+try {
+    \Illuminate\Support\Facades\DB::table('sessions')->truncate();
+    $output[] = "sessions: cleared";
+} catch (\Throwable $e) {
+    $output[] = "sessions: skip ({$e->getMessage()})";
+}
+
 // 2. Clear Filament cache
 try {
     $run('filament:optimize-clear');
