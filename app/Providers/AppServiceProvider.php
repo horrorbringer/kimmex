@@ -31,8 +31,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // ─── Remember Me cookie expires after 2 hours ───
-        \Illuminate\Auth\SessionGuard::rememberFor(now()->addHours(2));
+        // ─── Remember Me cookie expires after 2 hours (120 minutes) ───
+        \Illuminate\Support\Facades\Auth::setRememberDuration(120);
 
         // ─── Rate Limiters for DDoS protection ───
         \Illuminate\Support\Facades\RateLimiter::for('global', function (\Illuminate\Http\Request $request) {
