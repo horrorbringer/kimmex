@@ -109,7 +109,7 @@ Route::get('/sitemap.xml', function () {
     Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (Document $document) => $add(route('documents.show', ['slug' => $document->slug], false), $document->updated_at, 'monthly', '0.6'));
 
-    JobPosting::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->lazy()
+    JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (JobPosting $job) => $add(route('careers.show', ['slug' => $job->slug], false), $job->updated_at, 'weekly', '0.6'));
 
     return response()

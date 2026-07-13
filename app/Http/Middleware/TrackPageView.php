@@ -75,6 +75,8 @@ class TrackPageView
 
         // Record the page view directly (shared hosting - no queue)
         try {
+            $country = $this->resolveCountry($request->ip());
+
             PageView::create([
                 'url' => $request->fullUrl(),
                 'path' => '/' . ltrim($path, '/'),
@@ -83,7 +85,7 @@ class TrackPageView
                 'user_agent' => mb_substr($userAgent, 0, 255),
                 'referer' => mb_substr($request->header('referer', ''), 0, 255) ?: null,
                 'visited_at' => now(),
-                'country' => null,
+                'country' => $country,
             ]);
         } catch (\Throwable $e) {
             // Silently fail - don't break the page for analytics
@@ -91,5 +93,39 @@ class TrackPageView
         }
 
         return $response;
+    }
+
+    /**
+     * Resolve country from IP address using free ip-api.com (non-blocking, cached).
+     */
+    protected function resolveCountry(?string $ip): ?string
+    {
+        if (! $ip || in_array($ip, ['127.0.0.1', '::1', 'localhost'])) {
+            return 'Local';
+        }
+
+        // Check if it's a private IP
+        if (! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return 'Local';
+        }
+
+        $cacheKey = 'geo_ip_' . md5($ip);
+
+        return cache()->remember($cacheKey, now()->addDay(), function () use ($ip) {
+            try {
+                $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=country", false, stream_context_create([
+                    'http' => ['timeout' => 2],
+                ]));
+
+                if ($response) {
+                    $data = json_decode($response, true);
+                    return $data['country'] ?? null;
+                }
+            } catch (\Throwable) {
+                // Silently fail
+            }
+
+            return null;
+        });
     }
 }

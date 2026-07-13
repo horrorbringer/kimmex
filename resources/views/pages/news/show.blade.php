@@ -60,7 +60,7 @@
     });
 
     $sidebarJobs = \Illuminate\Support\Facades\Cache::remember("news_sidebar_jobs_{$locale}", now()->addHours(12), function () use ($locale) {
-        return \App\Models\JobPosting::where('isActive', true)->with('department')->orderByDesc('created_at')->take(3)->get()
+        return \App\Models\JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->with('department')->orderByDesc('created_at')->take(3)->get()
             ->map(fn($j) => [
                 'slug'     => $j->slug,
                 'title'    => $j->getTranslation('title', $locale),
