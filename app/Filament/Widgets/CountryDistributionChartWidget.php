@@ -61,7 +61,11 @@ class CountryDistributionChartWidget extends ChartWidget
             '#f97316', // orange
         ];
 
-        $labels = $countries->pluck('country')->map(fn($c) => $c ?: __('Unknown'))->toArray();
+        $labels = $countries->pluck('country')->map(function ($c) {
+            if (!$c) return '🏳️ ' . __('Unknown');
+            $flag = self::countryFlag($c);
+            return $flag . ' ' . $c;
+        })->toArray();
         $data = $countries->pluck('total')->toArray();
 
         return [
@@ -98,5 +102,39 @@ class CountryDistributionChartWidget extends ChartWidget
                 ],
             ],
         ];
+    }
+
+    protected static function countryFlag(string $country): string
+    {
+        $map = [
+            'Cambodia' => '🇰🇭',
+            'Thailand' => '🇹🇭',
+            'Vietnam' => '🇻🇳',
+            'China' => '🇨🇳',
+            'Japan' => '🇯🇵',
+            'South Korea' => '🇰🇷',
+            'United States' => '🇺🇸',
+            'United Kingdom' => '🇬🇧',
+            'France' => '🇫🇷',
+            'Germany' => '🇩🇪',
+            'Australia' => '🇦🇺',
+            'Singapore' => '🇸🇬',
+            'Malaysia' => '🇲🇾',
+            'Indonesia' => '🇮🇩',
+            'India' => '🇮🇳',
+            'Canada' => '🇨🇦',
+            'Philippines' => '🇵🇭',
+            'Myanmar' => '🇲🇲',
+            'Laos' => '🇱🇦',
+            'Taiwan' => '🇹🇼',
+            'Hong Kong' => '🇭🇰',
+            'Russia' => '🇷🇺',
+            'Brazil' => '🇧🇷',
+            'Netherlands' => '🇳🇱',
+            'Sweden' => '🇸🇪',
+            'Local' => '🏠',
+        ];
+
+        return $map[$country] ?? '🌍';
     }
 }

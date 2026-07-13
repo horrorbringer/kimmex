@@ -23,6 +23,11 @@ Schedule::command('analytics:prune --days=90')
     ->weekly()
     ->withoutOverlapping();
 
+// Backfill country data for page views (resolve IPs → country)
+Schedule::command('pageviews:backfill-country --limit=50')
+    ->hourly()
+    ->withoutOverlapping();
+
 // Send weekly digest email every Monday at 8:00 AM
 Schedule::command('digest:send')
     ->weeklyOn(1, '8:00')

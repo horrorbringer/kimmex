@@ -141,6 +141,9 @@ class ArtisanConsole extends Page implements HasForms
 
             // Uptime
             'uptime:check' => '🏓 Run uptime health check',
+
+            // Analytics
+            'pageviews:backfill-country --limit=100' => '🌍 Backfill visitor country data (100 records)',
         ];
     }
 
