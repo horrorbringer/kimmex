@@ -28,6 +28,11 @@ Schedule::command('pageviews:backfill-country --limit=50')
     ->hourly()
     ->withoutOverlapping();
 
+// Update GeoLite2 database monthly (first of each month at 3am)
+Schedule::command('geoip:update')
+    ->monthlyOn(1, '03:00')
+    ->withoutOverlapping();
+
 // Send weekly digest email every Monday at 8:00 AM
 Schedule::command('digest:send')
     ->weeklyOn(1, '8:00')

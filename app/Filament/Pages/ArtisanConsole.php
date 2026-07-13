@@ -144,6 +144,7 @@ class ArtisanConsole extends Page implements HasForms
 
             // Analytics
             'pageviews:backfill-country --limit=100' => '🌍 Backfill visitor country data (100 records)',
+            'geoip:update' => '🌐 Update GeoLite2 country database',
         ];
     }
 

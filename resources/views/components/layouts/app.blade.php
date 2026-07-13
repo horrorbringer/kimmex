@@ -318,23 +318,62 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Intersection Observer for true lazy loading (better than native loading="lazy")
+            const ioSupported = 'IntersectionObserver' in window;
+            const lazyObserver = ioSupported ? new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        // Load the image
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        if (img.dataset.srcset) {
+                            img.srcset = img.dataset.srcset;
+                            img.removeAttribute('data-srcset');
+                        }
+                        img.classList.add('io-loaded');
+                        lazyObserver.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '200px 0px', // Start loading 200px before entering viewport
+                threshold: 0.01
+            }) : null;
+
             document.querySelectorAll('img').forEach((image, index) => {
                 if (!image.hasAttribute('decoding')) {
                     image.setAttribute('decoding', 'async');
                 }
 
+                const isHero = index === 0 || image.closest('header') || image.closest('[data-priority-image]');
+
                 if (!image.hasAttribute('loading')) {
-                    const isLikelyHero = index === 0 || image.closest('header') || image.closest('[data-priority-image]');
-                    image.setAttribute('loading', isLikelyHero ? 'eager' : 'lazy');
+                    image.setAttribute('loading', isHero ? 'eager' : 'lazy');
+                }
+
+                // For non-hero images: use Intersection Observer for fade-in effect
+                if (!isHero && ioSupported && lazyObserver) {
+                    image.style.opacity = '0';
+                    image.style.transition = 'opacity 0.4s ease';
                 }
 
                 image.addEventListener('load', () => {
                     image.dataset.imageLoaded = 'true';
+                    image.style.opacity = '1';
                 }, { once: true });
 
                 image.addEventListener('error', () => {
                     image.dataset.imageError = 'true';
+                    image.style.opacity = '1';
                 }, { once: true });
+
+                // If already loaded (cached), show immediately
+                if (image.complete && image.naturalHeight > 0) {
+                    image.dataset.imageLoaded = 'true';
+                    image.style.opacity = '1';
+                }
             });
         });
     </script>

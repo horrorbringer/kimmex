@@ -13,15 +13,16 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
             .then((reg) => {
+                // Check for updates every 60 minutes
+                setInterval(() => reg.update(), 60 * 60 * 1000);
+
                 reg.addEventListener('updatefound', () => {
                     const newWorker = reg.installing;
                     if (newWorker) {
                         newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                if (confirm('New content available. Reload to update?')) {
-                                    newWorker.postMessage({ type: 'SKIP_WAITING' });
-                                    window.location.reload();
-                                }
+                            if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                                // New SW activated — reload to get fresh assets
+                                window.location.reload();
                             }
                         });
                     }
@@ -30,5 +31,10 @@ if ('serviceWorker' in navigator) {
             .catch(() => {
                 // SW unavailable — site works without PWA
             });
+
+        // Handle controller change (when skipWaiting activates new SW)
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            window.location.reload();
+        });
     });
 }

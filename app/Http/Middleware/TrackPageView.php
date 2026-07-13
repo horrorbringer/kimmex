@@ -76,7 +76,7 @@ class TrackPageView
         // Record the page view directly (shared hosting - no queue)
         try {
             $realIp = $this->getRealIp($request);
-            $country = $this->resolveCountry($realIp);
+            $country = $this->resolveCountry($realIp) ?? 'Unknown';
 
             PageView::create([
                 'url' => $request->fullUrl(),
@@ -119,7 +119,8 @@ class TrackPageView
     }
 
     /**
-     * Resolve country from IP address using free ip-api.com (cached per IP for 24h).
+     * Resolve country from IP using local GeoLite2 database (instant, offline).
+     * Falls back to ip-api.com if database is not available.
      */
     protected function resolveCountry(?string $ip): ?string
     {
@@ -134,47 +135,84 @@ class TrackPageView
 
         $cacheKey = 'geo_ip_' . md5($ip);
 
-        return cache()->remember($cacheKey, now()->addDay(), function () use ($ip) {
-            try {
-                $url = "http://ip-api.com/json/{$ip}?fields=status,country";
-                $response = null;
-
-                // Try curl first (more reliable on shared hosting)
-                if (function_exists('curl_init')) {
-                    $ch = curl_init($url);
-                    curl_setopt_array($ch, [
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_TIMEOUT => 3,
-                        CURLOPT_CONNECTTIMEOUT => 2,
-                        CURLOPT_FOLLOWLOCATION => true,
-                    ]);
-                    $response = curl_exec($ch);
-                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    curl_close($ch);
-
-                    if ($httpCode !== 200) {
-                        $response = null;
-                    }
-                }
-
-                // Fallback to file_get_contents
-                if (! $response) {
-                    $response = @file_get_contents($url, false, stream_context_create([
-                        'http' => ['timeout' => 2],
-                    ]));
-                }
-
-                if ($response) {
-                    $data = json_decode($response, true);
-                    if (($data['status'] ?? '') === 'success') {
-                        return $data['country'] ?? null;
-                    }
-                }
-            } catch (\Throwable) {
-                // Silently fail
+        return cache()->remember($cacheKey, now()->addWeek(), function () use ($ip) {
+            // Strategy 1: Local GeoLite2 database (instant, no network)
+            $country = $this->lookupGeoLite2($ip);
+            if ($country) {
+                return $country;
             }
 
-            return null;
+            // Strategy 2: API fallback (if DB not available)
+            return $this->lookupApi($ip);
         });
+    }
+
+    /**
+     * Look up country using local MaxMind GeoLite2 database.
+     */
+    protected function lookupGeoLite2(string $ip): ?string
+    {
+        $dbPath = storage_path('app/geoip/GeoLite2-Country.mmdb');
+
+        if (! file_exists($dbPath)) {
+            return null;
+        }
+
+        try {
+            $reader = new \GeoIp2\Database\Reader($dbPath);
+            $record = $reader->country($ip);
+            return $record->country->name;
+        } catch (\GeoIp2\Exception\AddressNotFoundException) {
+            return 'Unknown';
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Fall back to ip-api.com for country lookup.
+     */
+    protected function lookupApi(string $ip): ?string
+    {
+        try {
+            $url = "http://ip-api.com/json/{$ip}?fields=status,country";
+            $response = null;
+
+            // Try curl first (more reliable on shared hosting)
+            if (function_exists('curl_init')) {
+                $ch = curl_init($url);
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_TIMEOUT => 3,
+                    CURLOPT_CONNECTTIMEOUT => 2,
+                    CURLOPT_FOLLOWLOCATION => true,
+                ]);
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                if ($httpCode !== 200) {
+                    $response = null;
+                }
+            }
+
+            // Fallback to file_get_contents
+            if (! $response) {
+                $response = @file_get_contents($url, false, stream_context_create([
+                    'http' => ['timeout' => 2],
+                ]));
+            }
+
+            if ($response) {
+                $data = json_decode($response, true);
+                if (($data['status'] ?? '') === 'success') {
+                    return $data['country'] ?? null;
+                }
+            }
+        } catch (\Throwable) {
+            // Silently fail
+        }
+
+        return null;
     }
 }
