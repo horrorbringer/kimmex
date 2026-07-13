@@ -11,7 +11,7 @@ class DeviceDistributionChartWidget extends ChartWidget
 {
     protected static ?int $sort = 8;
     protected int | string | array $columnSpan = 1;
-    protected ?string $maxHeight = '280px';
+    protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
     {
@@ -25,7 +25,7 @@ class DeviceDistributionChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return false; // Only shown on Analytics page
+        return true;
     }
 
     protected function getData(): array

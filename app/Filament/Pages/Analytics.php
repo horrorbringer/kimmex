@@ -33,7 +33,7 @@ class Analytics extends Page
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->isAdmin() ?? false;
+        return auth()->user()?->isAdmin() || auth()->user()?->isEditor();
     }
 
     protected function getHeaderWidgets(): array
@@ -44,7 +44,17 @@ class Analytics extends Page
             \App\Filament\Widgets\TopPagesChartWidget::class,
             \App\Filament\Widgets\TrafficSourcesChartWidget::class,
             \App\Filament\Widgets\DeviceDistributionChartWidget::class,
+            \App\Filament\Widgets\CountryDistributionChartWidget::class,
             \App\Filament\Widgets\TrafficByHourChartWidget::class,
+        ];
+    }
+
+    public function getHeaderWidgetsColumns(): int|array
+    {
+        return [
+            'default' => 1,
+            'md' => 2,
+            'xl' => 2,
         ];
     }
 

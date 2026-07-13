@@ -13,7 +13,7 @@ class PageAnalyticsStatsWidget extends StatsOverviewWidget
 
     public static function canView(): bool
     {
-        return false; // Only shown on Analytics page via getHeaderWidgets()
+        return true;
     }
 
     protected function getStats(): array

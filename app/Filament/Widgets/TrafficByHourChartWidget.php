@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 class TrafficByHourChartWidget extends ChartWidget
 {
     protected static ?int $sort = 7;
-    protected int | string | array $columnSpan = 1;
+    protected int | string | array $columnSpan = 'full';
     protected ?string $maxHeight = '280px';
 
     public function getHeading(): ?string
@@ -24,7 +24,7 @@ class TrafficByHourChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return false; // Only shown on Analytics page
+        return true;
     }
 
     protected function getData(): array

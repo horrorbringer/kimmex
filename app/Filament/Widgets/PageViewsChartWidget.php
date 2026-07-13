@@ -24,7 +24,7 @@ class PageViewsChartWidget extends ChartWidget
 
     public static function canView(): bool
     {
-        return false; // Only shown on Analytics page
+        return true;
     }
 
     protected function getData(): array
