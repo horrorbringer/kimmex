@@ -3,61 +3,66 @@
 @php
     $hasChildren = isset($node['children']) && count($node['children']) > 0;
     $isCEO       = $level === 0;
+    $isDirector  = $level === 1;
     $childCount  = $hasChildren ? count($node['children']) : 0;
-    $nodeId      = 'org-' . ($node['id'] ?? $level . '-' . rand(100, 999));
+    $isDepartment = ($node['type'] ?? '') === 'department';
 @endphp
 
 {{-- ─── MOBILE: vertical accordion tree ─── --}}
 <div class="block md:hidden w-full">
     <div class="relative"
-         x-data="{ open: {{ $level < 2 ? 'true' : 'false' }} }">
+         x-data="{ open: {{ $level < 1 ? 'true' : 'false' }} }">
 
         {{-- Card --}}
-        <div class="flex items-center gap-3 px-3 py-3 rounded-xl border
-                    {{ $isCEO ? 'bg-titan-navy border-titan-navy/20 shadow-lg' : 'bg-white border-gray-200 shadow-sm' }}
-                    {{ $hasChildren ? 'cursor-pointer select-none' : '' }}"
-             @if($hasChildren) @click="open = !open" @endif>
+        <div class="flex items-center gap-3 px-3 sm:px-4 py-3 rounded-xl border transition-all duration-300
+                    {{ $isCEO ? 'bg-titan-navy border-titan-navy/20 shadow-lg' : ($isDirector ? 'bg-gray-50 border-gray-200 shadow-sm' : 'bg-white border-gray-100 shadow-sm') }}
+                    {{ $hasChildren ? 'cursor-pointer select-none active:scale-[0.98]' : (!$isDepartment ? 'cursor-pointer active:scale-[0.98]' : '') }}"
+             @if($hasChildren) @click="open = !open" @endif
+             @if(!$hasChildren && !$isDepartment) @click="$dispatch('select-member', {{ Js::from($node) }})" @endif>
 
             {{-- Avatar --}}
-            <div class="shrink-0 {{ $isCEO ? 'w-14 h-14' : 'w-11 h-11' }} rounded-full overflow-hidden border-2
-                        {{ $isCEO ? 'border-titan-red/60' : 'border-gray-200' }} bg-gray-100">
+            @if(!$isDepartment)
+            <div class="shrink-0 {{ $isCEO ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-11 sm:h-11' }} rounded-full overflow-hidden border-2
+                        {{ $isCEO ? 'border-titan-red/60' : ($isDirector ? 'border-titan-red/30' : 'border-gray-200') }} bg-gray-100">
                 @if(!empty($node['image']))
                     <img src="{{ $node['image'] }}" alt="{{ $node['name'] }}"
                          class="w-full h-full object-cover object-top" decoding="async" loading="lazy" />
                 @else
                     <div class="w-full h-full flex items-center justify-center
                                 {{ $isCEO ? 'bg-titan-navy/40' : 'bg-gray-50' }}">
-                        <x-lucide-user class="w-5 h-5 {{ $isCEO ? 'text-white/60' : 'text-gray-300' }}" />
+                        <x-lucide-user class="w-4 h-4 sm:w-5 sm:h-5 {{ $isCEO ? 'text-white/60' : 'text-gray-300' }}" />
                     </div>
                 @endif
             </div>
+            @else
+            <div class="shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-titan-navy/10 flex items-center justify-center">
+                <x-lucide-building-2 class="w-4 h-4 sm:w-5 sm:h-5 text-titan-navy/60" />
+            </div>
+            @endif
 
             {{-- Info --}}
             <div class="flex-1 min-w-0">
-                <div class="text-[9px] font-black uppercase tracking-[0.18em] mb-0.5
-                            {{ $isCEO ? 'text-titan-red' : 'text-titan-red/80' }}">
-                    {{ $node['role'] ?? $node['type'] ?? '' }}
+                <div class="text-[8px] sm:text-[9px] font-black uppercase tracking-[0.15em] sm:tracking-[0.18em] mb-0.5
+                            {{ $isCEO ? 'text-titan-red' : ($isDepartment ? 'text-titan-navy/40' : 'text-titan-red/70') }}">
+                    {{ $isDepartment ? __('DEPARTMENT') : ($node['role'] ?? $node['type'] ?? '') }}
                 </div>
-                <div class="font-black uppercase leading-tight truncate
-                            {{ $isCEO ? 'text-white text-[11px]' : 'text-titan-navy text-[10px]' }}">
+                <div class="font-bold leading-tight truncate
+                            {{ $isCEO ? 'text-white text-xs sm:text-sm' : 'text-titan-navy text-[11px] sm:text-xs' }}">
                     {{ $node['name'] }}
                 </div>
-                @if(!empty($node['title']) && $node['title'] !== $node['name'])
-                    <div class="text-[10px] mt-0.5 truncate
-                                {{ $isCEO ? 'text-white/55' : 'text-titan-navy/45' }}">
-                        {{ $node['title'] }}
-                    </div>
-                @endif
             </div>
 
-            {{-- Expand toggle --}}
+            {{-- Expand toggle / children count --}}
             @if($hasChildren)
-                <div class="shrink-0 w-7 h-7 rounded-full flex items-center justify-center
-                            {{ $isCEO ? 'bg-white/10' : 'bg-gray-100' }}">
-                    <x-lucide-chevron-down
-                        class="w-4 h-4 transition-transform duration-300
-                               {{ $isCEO ? 'text-white/70' : 'text-titan-navy/50' }}"
-                        ::class="open ? 'rotate-180' : ''" />
+                <div class="shrink-0 flex items-center gap-1.5">
+                    <span class="text-[9px] font-bold {{ $isCEO ? 'text-white/40' : 'text-titan-navy/30' }}">{{ $childCount }}</span>
+                    <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center
+                                {{ $isCEO ? 'bg-white/10' : 'bg-gray-100' }}">
+                        <x-lucide-chevron-down
+                            class="w-3.5 h-3.5 transition-transform duration-300
+                                   {{ $isCEO ? 'text-white/70' : 'text-titan-navy/50' }}"
+                            ::class="open ? 'rotate-180' : ''" />
+                    </div>
                 </div>
             @endif
         </div>
@@ -66,7 +71,7 @@
         @if($hasChildren)
             <div x-show="open"
                  x-collapse
-                 class="ml-5 mt-1 pl-4 border-l-2 border-titan-red/20 space-y-1.5 pb-1">
+                 class="ml-4 sm:ml-5 mt-1.5 pl-3 sm:pl-4 border-l-2 {{ $isCEO ? 'border-titan-red/30' : 'border-gray-200' }} space-y-1.5 pb-1">
                 @foreach($node['children'] as $child)
                     <x-about.org-node :node="$child" :level="$level + 1" :small="true" />
                 @endforeach
@@ -75,7 +80,8 @@
     </div>
 </div>
 
-{{-- ─── DESKTOP: horizontal tree (original layout, improved sizing) ─── --}}
+{{-- ─── TABLET: scrollable card layout (md to lg) ─── --}}
+{{-- ─── DESKTOP: horizontal tree ─── --}}
 <div class="hidden md:flex flex-col items-center w-full">
     <div class="relative">
         {{-- Team member card --}}
@@ -89,7 +95,7 @@
 
     @if($hasChildren)
         <div class="mt-8 w-full relative">
-            <div class="flex flex-row flex-nowrap justify-center gap-6 lg:gap-8 pt-0 min-w-max mx-auto">
+            <div class="flex flex-row flex-nowrap justify-center gap-4 lg:gap-6 xl:gap-8 pt-0 min-w-max mx-auto">
                 @foreach($node['children'] as $index => $child)
                     <div class="relative pt-8 flex flex-col items-center flex-none">
                         {{-- Horizontal shoulder line --}}

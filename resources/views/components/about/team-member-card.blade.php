@@ -37,7 +37,7 @@
     </div>
 @else
     <div class="flex flex-col items-center group relative z-10 w-full cursor-pointer" 
-         @click="selectedMember = {{ Js::from($member) }}">
+         @click="$dispatch('select-member', {{ Js::from($member) }})">
         
         <div class="relative rounded-full overflow-hidden border-[3px] border-white shadow-xl transition-all duration-700 group-hover:scale-110 group-hover:shadow-lg {{ $imageSize }}">
             @if(isset($member['image']) && $member['image'])

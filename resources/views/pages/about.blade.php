@@ -164,7 +164,7 @@
     @endphp
 
 
-    <div x-data="{ selectedMember: null }" class="bg-white text-titan-navy">
+    <div x-data="{ selectedMember: null }" @select-member.window="selectedMember = $event.detail" @keydown.escape.window="selectedMember = null" class="bg-white text-titan-navy">
 
         <!-- Team Member Modal -->
         <div x-show="selectedMember" style="display: none"
@@ -622,16 +622,16 @@
             }
         @endphp
 
-        <section id="leadership" class="py-20 md:py-28 px-6 bg-white overflow-hidden">
+        <section id="leadership" class="py-14 sm:py-20 md:py-28 px-4 sm:px-6 bg-white overflow-hidden">
             <div class="max-w-[1700px] mx-auto">
                 @if($orgChartType === 'dynamic')
-                <div class="text-center mb-16 md:mb-24">
-                    <div class="flex items-center justify-center gap-3 mb-5">
-                        <div class="w-8 h-[2px] bg-titan-red"></div>
-                        <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('GOVERNANCE') }}</span>
-                        <div class="w-8 h-[2px] bg-titan-red"></div>
+                <div class="text-center mb-10 sm:mb-16 md:mb-24">
+                    <div class="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-5">
+                        <div class="w-6 sm:w-8 h-[2px] bg-titan-red"></div>
+                        <span class="text-titan-red font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] sm:text-xs">{{ __('GOVERNANCE') }}</span>
+                        <div class="w-6 sm:w-8 h-[2px] bg-titan-red"></div>
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">
                         {{ __('Organization Structure') }}
                     </h2>
                 </div>
@@ -642,19 +642,19 @@
                         <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                              class="transition-all duration-1000 w-full max-w-6xl mx-auto">
                             <img src="{{ $orgChartImage }}" alt="{{ __('Organization Structure') }}"
-                                 class="w-full h-auto rounded-xl shadow-xl border border-gray-200" loading="lazy" decoding="async" />
+                                 class="w-full h-auto rounded-lg sm:rounded-xl shadow-lg sm:shadow-xl border border-gray-200" loading="lazy" decoding="async" />
                         </div>
                     </div>
                 @elseif($orgChartType === 'pdf' && $orgChartPdf)
-                    <div class="flex flex-col items-center gap-6" x-data="{ shown: false }" x-intersect.once="shown = true">
+                    <div class="flex flex-col items-center gap-4 sm:gap-6" x-data="{ shown: false }" x-intersect.once="shown = true">
                         <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                              class="transition-all duration-1000 w-full max-w-5xl mx-auto">
-                            <div class="rounded-xl shadow-xl border border-gray-200 overflow-hidden bg-white">
-                                <iframe src="{{ $orgChartPdf }}" class="w-full border-0" style="height: 80vh; min-height: 600px;" title="{{ __('Organization Structure') }}"></iframe>
+                            <div class="rounded-lg sm:rounded-xl shadow-lg sm:shadow-xl border border-gray-200 overflow-hidden bg-white">
+                                <iframe src="{{ $orgChartPdf }}" class="w-full border-0 h-[60vh] sm:h-[70vh] md:h-[80vh] min-h-[400px] sm:min-h-[600px]" title="{{ __('Organization Structure') }}"></iframe>
                             </div>
-                            <div class="text-center mt-6">
+                            <div class="text-center mt-4 sm:mt-6">
                                 <a href="{{ $orgChartPdf }}" target="_blank" download
-                                   class="inline-flex items-center gap-2 bg-titan-navy text-white px-6 py-3 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-titan-red transition-colors duration-300 shadow-md">
+                                   class="inline-flex items-center gap-2 bg-titan-navy text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-titan-red transition-colors duration-300 shadow-md">
                                     <x-lucide-download class="w-4 h-4" />
                                     {{ __('Download Organization Chart') }}
                                 </a>
@@ -662,7 +662,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="w-full md:min-w-[800px] md:flex md:justify-center md:overflow-x-auto px-2 md:px-0">
+                    <div class="w-full md:min-w-[800px] md:flex md:justify-center md:overflow-x-auto">
                         <x-about.org-node :node="$orgChart" :level="0" :small="true" />
                     </div>
                 @endif
