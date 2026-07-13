@@ -46,6 +46,9 @@ class Analytics extends Page
             \App\Filament\Widgets\DeviceDistributionChartWidget::class,
             \App\Filament\Widgets\CountryDistributionChartWidget::class,
             \App\Filament\Widgets\TrafficByHourChartWidget::class,
+            \App\Filament\Widgets\BrowserDistributionChartWidget::class,
+            \App\Filament\Widgets\ContentSectionsChartWidget::class,
+            \App\Filament\Widgets\WeeklyComparisonChartWidget::class,
         ];
     }
 
