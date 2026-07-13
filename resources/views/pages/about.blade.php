@@ -663,7 +663,7 @@
                     </div>
                 @else
                     <div class="w-full md:min-w-[800px] md:flex md:justify-center md:overflow-x-auto">
-                        <x-about.org-node :node="$orgChart" :level="0" :small="true" />
+                        @include('components.about.org-node', ['node' => $orgChart, 'level' => 0, 'small' => true])
                     </div>
                 @endif
             </div>

@@ -25,6 +25,17 @@ $run('view:clear');
 $run('cache:clear');
 $run('event:clear');
 
+// 1a. Clear specific caches that may hold stale data
+try {
+    \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
+    \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
+    \Illuminate\Support\Facades\Cache::forget('about_milestones_data_en');
+    \Illuminate\Support\Facades\Cache::forget('about_milestones_data_km');
+    $output[] = "page caches: cleared";
+} catch (\Throwable $e) {
+    $output[] = "page caches: skip";
+}
+
 // 1b. Clear stale sessions (prevents incomplete object errors after updates)
 try {
     \Illuminate\Support\Facades\DB::table('sessions')->truncate();
@@ -47,20 +58,12 @@ try {
 // 3. Migrations
 $run('migrate', ['--force' => true]);
 
-// 3b. Backfill country data for page views
-$run('pageviews:backfill-country', ['--limit' => 100]);
-
 // 4. Rebuild caches
 $run('config:cache');
 $run('filament:assets');
 $run('view:cache');
-// NOTE: route:cache and filament:cache-components intentionally skipped.
-// route:cache can cause Filament resource registration issues.
-// filament:cache-components was excluding SubscriberResource.
-// Without these caches, Filament discovers resources on each request (minimal perf impact).
-$output[] = "SKIPPED: route:cache, filament:cache-components (discovery mode)";
 
-// 5. OPcache
+// 4b. Clear OPcache to ensure fresh PHP code
 if (function_exists('opcache_reset')) {
     opcache_reset();
     $output[] = "opcache: reset";

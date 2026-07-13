@@ -291,6 +291,11 @@ class ArtisanConsole extends Page implements HasForms
                 Notification::make()->warning()->title(__('Command finished with exit code: :code', ['code' => $exitCode]))->send();
             }
 
+            // Auto-reload page after cache-clearing commands to avoid stale Livewire state
+            if (in_array($artisanCommand, ['view:clear', 'optimize:clear', 'config:clear', 'cache:clear', 'filament:clear-cached-components'])) {
+                $this->js('setTimeout(() => window.location.reload(), 800)');
+            }
+
             Log::info('Artisan Console: command completed', [
                 'command' => $this->command,
                 'exit_code' => $exitCode,
@@ -390,6 +395,9 @@ class ArtisanConsole extends Page implements HasForms
                 ->body(__(':failed of :total commands failed.', ['failed' => $failed, 'total' => count($preset['commands'])]))
                 ->send();
         }
+
+        // Auto-reload page after bulk presets (they typically clear caches)
+        $this->js('setTimeout(() => window.location.reload(), 800)');
 
         Log::info('Artisan Console: bulk preset completed', [
             'preset' => $presetKey,

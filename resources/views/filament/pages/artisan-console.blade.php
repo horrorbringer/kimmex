@@ -1,4 +1,35 @@
 <x-filament-panels::page>
+    <style>
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .artisan-loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(2px);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .artisan-loading-overlay.active {
+            display: flex;
+        }
+    </style>
+
+    {{-- Full-page blocking overlay during command execution --}}
+    <div class="artisan-loading-overlay"
+         wire:loading.class="active"
+         wire:target="execute, executeBulk">
+        <svg style="width: 32px; height: 32px; animation: spin 1s linear infinite; color: #4f46e5;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <span style="font-size: 0.875rem; font-weight: 600; color: #1e293b;">{{ __('Executing commands, please wait...') }}</span>
+        <span style="font-size: 0.75rem; color: #64748b;">{{ __('Page will reload when done') }}</span>
+    </div>
+
     <div class="fi-page-content-ctn">
 
         {{-- Lock Screen --}}
@@ -90,6 +121,7 @@
                             </label>
                             <select
                                 wire:model="command"
+                                wire:loading.attr="disabled"
                                 class="fi-input"
                                 style="width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; background: white;"
                             >
@@ -100,7 +132,7 @@
                             </select>
                         </div>
                         <div>
-                            <x-filament::button type="submit" color="primary" icon="heroicon-o-play">
+                            <x-filament::button type="submit" color="primary" icon="heroicon-o-play" wire:loading.attr="disabled" wire:target="execute, executeBulk">
                                 {{ __('Execute') }}
                             </x-filament::button>
                         </div>
@@ -125,7 +157,9 @@
                         @foreach(\App\Filament\Pages\ArtisanConsole::bulkPresets() as $key => $preset)
                             <div
                                 wire:click="executeBulk('{{ $key }}')"
-                                style="padding: 14px 16px; border: 1px solid var(--gray-200); border-radius: 8px; cursor: pointer; transition: all 0.15s;"
+                                wire:loading.class="opacity-50 pointer-events-none"
+                                wire:target="executeBulk"
+                                style="padding: 14px 16px; border: 1px solid var(--gray-200); border-radius: 8px; cursor: pointer; transition: all 0.15s; position: relative;"
                                 onmouseover="this.style.borderColor='#6366f1'; this.style.background='rgba(99,102,241,0.04)'"
                                 onmouseout="this.style.borderColor='var(--gray-200)'; this.style.background='transparent'"
                             >

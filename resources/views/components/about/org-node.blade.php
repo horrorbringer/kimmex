@@ -1,7 +1,7 @@
 @props(['node', 'level' => 0, 'small' => false])
 
 @php
-    $hasChildren = isset($node['children']) && count($node['children']) > 0;
+    $hasChildren = !empty($node['children']);
     $isCEO       = $level === 0;
     $isDirector  = $level === 1;
     $childCount  = $hasChildren ? count($node['children']) : 0;
@@ -72,8 +72,8 @@
             <div x-show="open"
                  x-collapse
                  class="ml-4 sm:ml-5 mt-1.5 pl-3 sm:pl-4 border-l-2 {{ $isCEO ? 'border-titan-red/30' : 'border-gray-200' }} space-y-1.5 pb-1">
-                @foreach($node['children'] as $child)
-                    <x-about.org-node :node="$child" :level="$level + 1" :small="true" />
+                @foreach(($node['children'] ?? []) as $child)
+                    @include('components.about.org-node', ['node' => $child, 'level' => $level + 1, 'small' => true])
                 @endforeach
             </div>
         @endif
@@ -96,7 +96,7 @@
     @if($hasChildren)
         <div class="mt-8 w-full relative">
             <div class="flex flex-row flex-nowrap justify-center gap-4 lg:gap-6 xl:gap-8 pt-0 min-w-max mx-auto">
-                @foreach($node['children'] as $index => $child)
+                @foreach(($node['children'] ?? []) as $index => $child)
                     <div class="relative pt-8 flex flex-col items-center flex-none">
                         {{-- Horizontal shoulder line --}}
                         @if($childCount > 1)
@@ -107,7 +107,7 @@
                         {{-- Vertical connector --}}
                         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] h-8 bg-titan-red/20"></div>
 
-                        <x-about.org-node :node="$child" :level="$level + 1" :small="$small" />
+                        @include('components.about.org-node', ['node' => $child, 'level' => $level + 1, 'small' => $small])
                     </div>
                 @endforeach
             </div>
