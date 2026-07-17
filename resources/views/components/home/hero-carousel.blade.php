@@ -106,8 +106,9 @@
         },
         initCarousel() {
             this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            this.preloadImage(this.slides[0]?.image);
-            this.preloadNext();
+            // The first slide is already preloaded from the document head. Delay
+            // the next request so it does not compete with the first render.
+            window.setTimeout(() => this.preloadNext(), 3500);
             this.startTimer();
         }
     }"
@@ -122,25 +123,34 @@
     data-priority-image>
 
     <!-- === SLIDES (crossfade stack) === -->
-    <template x-for="(slide, index) in slides" :key="`slide-${index}`">
+    @foreach($slides as $index => $slide)
         <div class="absolute inset-0"
             :class="{
-                'z-10 hero-slide-enter': index === current,
-                'z-[9] hero-slide-leave': index === prev,
-                'z-0 opacity-0': index !== current && index !== prev
+                'z-10 hero-slide-enter': {{ $index }} === current,
+                'z-[9] hero-slide-leave': {{ $index }} === prev,
+                'z-0 opacity-0': {{ $index }} !== current && {{ $index }} !== prev
             }">
-            <img :src="slide.image"
-                :alt="slide.title"
-                :class="index === current && !prefersReducedMotion ? 'animate-hero-kenburns' : ''"
+            <img
+                @if($index === 0)
+                    src="{{ $slide['image'] }}"
+                    loading="eager"
+                    fetchpriority="high"
+                @else
+                    :src="(current === {{ $index }} || prev === {{ $index }}) ? slides[{{ $index }}].image : null"
+                    loading="lazy"
+                @endif
+                alt="{{ $slide['title'] }}"
+                width="1920"
+                height="1080"
+                sizes="100vw"
+                :class="{{ $index }} === current && !prefersReducedMotion ? 'animate-hero-kenburns' : ''"
                 class="hero-slide-image object-cover w-full h-full"
-                :loading="index === 0 ? 'eager' : 'lazy'"
-                decoding="async"
-                :fetchpriority="index === 0 ? 'high' : 'auto'" />
+                decoding="async" />
             {{-- Gradient overlays --}}
             <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/80 via-titan-navy/50 to-titan-navy/20 sm:from-titan-navy/75 sm:via-titan-navy/35 sm:to-transparent"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/10 via-transparent to-titan-navy/50"></div>
         </div>
-    </template>
+    @endforeach
 
     <!-- === CONTENT OVERLAY === -->
     <div class="absolute inset-0 flex flex-col justify-center z-20 pt-28 pb-24 sm:pt-32 sm:pb-20 lg:pt-28 lg:pb-24">

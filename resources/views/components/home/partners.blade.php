@@ -58,12 +58,12 @@
                 @if($p['website'])
                     <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
                         class="w-40 h-16 mx-3 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center p-3 hover:border-gray-200 hover:shadow-sm transition-all duration-300 shrink-0">
-                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}" width="160" height="64"
                             class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
                     </a>
                 @else
                     <div class="w-40 h-16 mx-3 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center p-3 hover:border-gray-200 hover:shadow-sm transition-all duration-300 shrink-0">
-                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}" width="160" height="64"
                             class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
                     </div>
                 @endif
@@ -73,12 +73,12 @@
                 @if($p['website'])
                     <a href="{{ $p['website'] }}" target="_blank" rel="noopener noreferrer"
                         class="w-40 h-16 mx-3 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center p-3 hover:border-gray-200 hover:shadow-sm transition-all duration-300 shrink-0">
-                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}" width="160" height="64"
                             class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
                     </a>
                 @else
                     <div class="w-40 h-16 mx-3 bg-gray-50 border border-gray-100 rounded-lg flex items-center justify-center p-3 hover:border-gray-200 hover:shadow-sm transition-all duration-300 shrink-0">
-                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}"
+                        <img src="{{ $p['logo'] }}" alt="{{ $p['name'] }}" title="{{ $p['name'] }}" width="160" height="64"
                             class="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity" loading="lazy" decoding="async" />
                     </div>
                 @endif

@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null])
+@props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null, 'priorityImage' => null])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
@@ -79,6 +79,14 @@
     <meta name="apple-mobile-web-app-title" content="{{ $siteName }}">
     <link rel="manifest" href="{{ url('manifest.json') }}">
     <meta name="robots" content="{{ $robots ?? 'index, follow' }}">
+
+    {{-- Let the browser fetch the above-the-fold image before JavaScript starts. --}}
+    @if(filled($priorityImage))
+        <link rel="preload" as="image" href="{{ $priorityImage }}" fetchpriority="high">
+        @if(\Illuminate\Support\Str::startsWith($priorityImage, ['http://', 'https://']))
+            <link rel="preconnect" href="{{ parse_url($priorityImage, PHP_URL_SCHEME) . '://' . parse_url($priorityImage, PHP_URL_HOST) }}" crossorigin>
+        @endif
+    @endif
 
     <!-- Hreflang -->
     <link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
