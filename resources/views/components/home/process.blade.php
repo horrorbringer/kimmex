@@ -22,7 +22,7 @@
     }
 @endphp
 
-<section class="py-20 md:py-28 bg-white overflow-hidden">
+<section class="py-12 md:py-16 bg-white overflow-hidden">
     <div class="max-w-[1280px] mx-auto px-6">
 
         {{-- Header --}}

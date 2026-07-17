@@ -17,7 +17,7 @@
 @endphp
 
 @if(!empty($testimonials))
-<section class="py-24 bg-white">
+<section class="py-12 md:py-16 bg-white">
     <div class="max-w-[1200px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"

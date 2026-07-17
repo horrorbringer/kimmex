@@ -23,7 +23,7 @@
     }
 @endphp
 
-<section class="py-16 md:py-20 bg-white border-t border-gray-100 overflow-hidden">
+<section class="py-10 md:py-14 bg-white border-t border-gray-100 overflow-hidden">
     <div class="max-w-[1280px] mx-auto px-6 mb-10">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"

@@ -30,27 +30,27 @@
     }
 @endphp
 
-<section class="py-20 md:py-28 bg-gray-50">
+<section class="py-12 md:py-16 bg-gray-50">
     <div class="max-w-[1280px] mx-auto px-6">
 
         {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 transition-all duration-1000">
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                    <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
+            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-12 transition-all duration-1000">
+            <div class="flex flex-nowrap items-center gap-3 md:gap-5 min-w-0">
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:block w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                    <span class="font-bold uppercase tracking-[0.12em] sm:tracking-[0.2em] text-[10px] sm:text-xs whitespace-nowrap" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
                 </div>
-                <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">
+                <h2 class="text-xl sm:text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight whitespace-nowrap">
                     {{ __('Featured Projects') }}
                 </h2>
             </div>
             <a href="/projects"
-                class="inline-flex items-center gap-2 font-bold uppercase tracking-wider text-xs group transition-colors"
+                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider text-[10px] sm:text-xs whitespace-nowrap group transition-colors"
                 style="color: var(--primary-color, #E31E24);">
                 {{ __('View All Projects') }}
-                <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
             </a>
         </div>
 
