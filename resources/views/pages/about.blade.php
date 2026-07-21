@@ -489,25 +489,15 @@
 
                 @if($hasValueImages)
                     {{-- Image-based values display --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
                         @foreach($aboutData['values'] as $i => $value)
                             @continue(empty($value['image']))
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="transition-all duration-700 rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 group"
+                                class="transition-all duration-700 w-full overflow-hidden rounded-xl"
                                 style="transition-delay: {{ $i * 100 }}ms">
-                                <div class="aspect-[16/9] overflow-hidden">
-                                    <img src="{{ $value['image'] }}" alt="{{ $value['title'] }}"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" decoding="async" loading="lazy" />
-                                </div>
-                                @if(!empty($value['title']))
-                                <div class="p-5 md:p-6">
-                                    <h3 class="font-bold text-titan-navy text-lg mb-2">{{ $value['title'] }}</h3>
-                                    @if(!empty($value['content']))
-                                        <p class="text-gray-500 text-sm leading-relaxed">{{ $value['content'] }}</p>
-                                    @endif
-                                </div>
-                                @endif
+                                <img src="{{ $value['image'] }}" alt="{{ $value['title'] }}"
+                                    class="w-full object-cover" decoding="async" loading="lazy" />
                             </div>
                         @endforeach
                     </div>
