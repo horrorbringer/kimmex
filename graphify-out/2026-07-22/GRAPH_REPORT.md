@@ -5,7 +5,7 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7939 nodes · 21590 edges · 668 communities (632 shown, 36 thin omitted)
+- 7939 nodes · 21590 edges · 674 communities (637 shown, 37 thin omitted)
 - Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 3010 edges (avg confidence: 0.74)
 - Token cost: 0 input · 0 output
 
@@ -127,15 +127,18 @@
 - [[_COMMUNITY_Filament|Filament]]
 - [[_COMMUNITY_Filament|Filament]]
 - [[_COMMUNITY_Filament Widget Assets|Filament Widget Assets]]
+- [[_COMMUNITY_Filament Widget Assets|Filament Widget Assets]]
 - [[_COMMUNITY_Filament|Filament]]
 - [[_COMMUNITY_Domain Models|Domain Models]]
 - [[_COMMUNITY_Migrations|Migrations]]
 - [[_COMMUNITY_Filament Public Assets|Filament Public Assets]]
 - [[_COMMUNITY_Filament Form Assets|Filament Form Assets]]
+- [[_COMMUNITY_Filament Form Assets|Filament Form Assets]]
 - [[_COMMUNITY_Filament Table Assets|Filament Table Assets]]
 - [[_COMMUNITY_Composer|Composer]]
 - [[_COMMUNITY_Filament Public Assets|Filament Public Assets]]
 - [[_COMMUNITY_Filament Form Assets|Filament Form Assets]]
+- [[_COMMUNITY_Filament Widgets|Filament Widgets]]
 - [[_COMMUNITY_Application Services|Application Services]]
 - [[_COMMUNITY_Filament Public Assets|Filament Public Assets]]
 - [[_COMMUNITY_Composer|Composer]]
@@ -145,6 +148,7 @@
 - [[_COMMUNITY_Filament Public Assets|Filament Public Assets]]
 - [[_COMMUNITY_Domain Models|Domain Models]]
 - [[_COMMUNITY_Filament Public Assets|Filament Public Assets]]
+- [[_COMMUNITY_Console Commands|Console Commands]]
 - [[_COMMUNITY_HTTP Middleware|HTTP Middleware]]
 - [[_COMMUNITY_Livewire DocumentLibrary|Livewire DocumentLibrary]]
 - [[_COMMUNITY_Domain Models|Domain Models]]
@@ -195,6 +199,7 @@
 - [[_COMMUNITY_Storage Framework|Storage Framework]]
 - [[_COMMUNITY_Storage Framework|Storage Framework]]
 - [[_COMMUNITY_Storage Framework|Storage Framework]]
+- [[_COMMUNITY_Storage Framework|Storage Framework]]
 - [[_COMMUNITY_Events & Notifications Best Practices|Events & Notifications Best Practices]]
 - [[_COMMUNITY_Advanced Query Patterns|Advanced Query Patterns]]
 - [[_COMMUNITY_Database Performance Best Practices|Database Performance Best Practices]]
@@ -206,6 +211,7 @@
 - [[_COMMUNITY_Caching Best Practices|Caching Best Practices]]
 - [[_COMMUNITY_Eloquent Best Practices|Eloquent Best Practices]]
 - [[_COMMUNITY_Migration Best Practices|Migration Best Practices]]
+- [[_COMMUNITY_addInner|addInner]]
 - [[_COMMUNITY_Filament|Filament]]
 - [[_COMMUNITY_.document|.document]]
 - [[_COMMUNITY_cPanel Manual Deployment|cPanel Manual Deployment]]
@@ -275,23 +281,23 @@
 ## Import Cycles
 - None detected.
 
-## Communities (668 total, 36 thin omitted)
+## Communities (674 total, 37 thin omitted)
 
 ### Community 0 - "Filament Form Assets"
 Cohesion: 0.01
-Nodes (251): $0(), ac(), addAttributes(), addExtensions(), addHackNode(), addNode(), addOptions(), addTextblockHacks() (+243 more)
+Nodes (180): $0(), Ab(), ac(), addExtensions(), addHackNode(), addOptions(), addTextblockHacks(), af() (+172 more)
 
 ### Community 1 - "Filament Form Assets"
 Cohesion: 0.01
-Nodes (117): a$(), Ac(), after(), Ag(), b0(), before(), blank(), Blockquote() (+109 more)
+Nodes (113): a$(), Ac(), after(), Ag(), before(), bi(), Blockquote(), blockTiles() (+105 more)
 
 ### Community 2 - "Filament Widget Assets"
 Cohesion: 0.01
-Nodes (107): abutsStart(), addControllers(), addPlugins(), addScales(), ah(), bd(), Be(), beforeDraw() (+99 more)
+Nodes (110): abutsStart(), addControllers(), addPlugins(), addScales(), ah(), bd(), Be(), beforeDraw() (+102 more)
 
 ### Community 3 - "Filament Widget Assets"
 Cohesion: 0.02
-Nodes (115): acquireContext(), active(), addControllers(), addPlugins(), addScales(), afterDraw(), _animateOptions(), as() (+107 more)
+Nodes (110): Eo(), acquireContext(), addEventListener(), afterDraw(), al(), as(), bc(), beforeLayout() (+102 more)
 
 ### Community 4 - "Filament Form Assets"
 Cohesion: 0.06
@@ -299,11 +305,11 @@ Nodes (118): _a(), ad(), addKeyboardShortcuts(), after(), as(), Ay(), before(), 
 
 ### Community 5 - "Filament Form Assets"
 Cohesion: 0.03
-Nodes (131): acceptToken(), addCompletion(), addCompletions(), addNamespace(), addNamespaceObject(), allows(), AQ(), atLastNode() (+123 more)
+Nodes (125): acceptToken(), addCompletion(), addCompletions(), addNamespace(), addNamespaceObject(), allows(), AQ(), atLastNode() (+117 more)
 
 ### Community 6 - "Filament Form Assets"
 Cohesion: 0.03
-Nodes (129): add(), addChunk(), addEventListener(), addInfoPane(), addInner(), addWindowListeners(), adjust(), annotation() (+121 more)
+Nodes (119): add(), addChunk(), addEventListener(), addInfoPane(), addInner(), addWindowListeners(), adjust(), annotation() (+111 more)
 
 ### Community 7 - "Filament Widget Assets"
 Cohesion: 0.04
@@ -311,35 +317,35 @@ Nodes (97): ac(), ae(), after(), ag(), Al(), Am(), before(), bl() (+89 more)
 
 ### Community 8 - "Filament Widget Assets"
 Cohesion: 0.04
-Nodes (91): addEventListener(), Ao(), applyStack(), aspectRatio(), au(), Ba(), bindEvents(), bindResponsiveEvents() (+83 more)
+Nodes (73): addEventListener(), Ao(), applyStack(), aspectRatio(), au(), bindResponsiveEvents(), bindUserEvents(), _calculateBarIndexPixels() (+65 more)
 
 ### Community 9 - "Filament Form Assets"
 Cohesion: 0.05
-Nodes (56): addChild(), addElement(), addGaps(), addLeafElement(), addNode(), ATXHeading(), _c(), char() (+48 more)
+Nodes (61): addChild(), addGaps(), addLeafElement(), addNode(), ATXHeading(), blank(), BulletList(), _c() (+53 more)
 
 ### Community 10 - "Filament Form Assets"
-Cohesion: 0.04
-Nodes (89): accept(), active(), apply(), b1(), baseTheme(), between(), blur(), bu() (+81 more)
+Cohesion: 0.05
+Nodes (63): accept(), active(), b1(), baseTheme(), blur(), bu(), build(), ch() (+55 more)
 
 ### Community 11 - "Filament Form Assets"
-Cohesion: 0.05
-Nodes (53): activeForPoint(), addActive(), addBlock(), addLineDeco(), Ar(), as(), be(), blankContent() (+45 more)
+Cohesion: 0.06
+Nodes (49): activeForPoint(), addActive(), addBlock(), addLineDeco(), Ar(), as(), be(), blankContent() (+41 more)
 
 ### Community 12 - "Filament Form Assets"
 Cohesion: 0.05
 Nodes (101): accepts(), add(), addCommands(), addInputRules(), addNodeView(), ak(), Ap(), apply() (+93 more)
 
 ### Community 13 - "Filament Form Assets"
-Cohesion: 0.09
-Nodes (54): append(), au(), close(), closeFrontierNode(), computeWrapping(), connectSelection(), contentMatchAt(), copy() (+46 more)
+Cohesion: 0.07
+Nodes (64): addNodeMark(), allowedMarks(), append(), au(), clearIncompatible(), close(), closeFrontierNode(), computeWrapping() (+56 more)
 
 ### Community 14 - "Filament Form Assets"
-Cohesion: 0.06
-Nodes (58): addActions(), advance(), advanceFully(), advanceStack(), allActions(), break(), canShift(), close() (+50 more)
+Cohesion: 0.05
+Nodes (75): addActions(), advance(), advanceFully(), advanceStack(), allActions(), apply(), b0(), break() (+67 more)
 
 ### Community 15 - "Filament Widget Assets"
-Cohesion: 0.06
-Nodes (53): aa(), add(), bo(), bs(), ca(), _cachedScopes(), cd(), Ch() (+45 more)
+Cohesion: 0.09
+Nodes (34): add(), bo(), bs(), ca(), _cachedScopes(), Ch(), Ci(), createResolver() (+26 more)
 
 ### Community 16 - "Filament Public Assets"
 Cohesion: 0.05
@@ -347,7 +353,7 @@ Nodes (40): apply(), as(), bo(), bs(), close(), closeQuietly(), co(), Dr() (+32 
 
 ### Community 17 - "Filament Widget Assets"
 Cohesion: 0.04
-Nodes (79): $a(), addBox(), addElements(), afterBuildTicks(), afterCalculateLabelRotation(), afterDataLimits(), afterFit(), afterSetDimensions() (+71 more)
+Nodes (86): $a(), addBox(), addElements(), afterBuildTicks(), afterCalculateLabelRotation(), afterDataLimits(), afterFit(), afterSetDimensions() (+78 more)
 
 ### Community 18 - "Filament Table Assets"
 Cohesion: 0.13
@@ -355,91 +361,91 @@ Nodes (46): A(), ae(), B(), be(), C(), ce(), E(), ee() (+38 more)
 
 ### Community 19 - "Filament Form Assets"
 Cohesion: 0.04
-Nodes (98): aa(), activateHover(), applyChanges(), balanced(), baseIndent(), baseIndentFor(), Bg(), bidiSpans() (+90 more)
+Nodes (95): aa(), applyChanges(), attrs(), balanced(), baseIndent(), baseIndentFor(), between(), Bg() (+87 more)
 
 ### Community 20 - "Filament Form Assets"
 Cohesion: 0.04
-Nodes (89): d(), g(), p(), Ab(), addGlobalAttributes(), addInner(), addMark(), addProseMirrorPlugins() (+81 more)
+Nodes (84): d(), g(), p(), addGlobalAttributes(), addMark(), addProseMirrorPlugins(), atEnd(), atStart() (+76 more)
 
 ### Community 22 - "Filament Widget Assets"
 Cohesion: 0.05
 Nodes (97): acquireContext(), adjustHitBoxes(), afterDraw(), B(), bh(), buildTicks(), calculateLabelRotation(), _calculatePadding() (+89 more)
 
 ### Community 23 - "Filament Form Assets"
-Cohesion: 0.19
-Nodes (61): le(), Se(), pe(), at(), b(), Be(), $c(), ca() (+53 more)
+Cohesion: 0.18
+Nodes (64): le(), Se(), pe(), at(), b(), Be(), $c(), ca() (+56 more)
 
 ### Community 24 - "Filament Widget Assets"
 Cohesion: 0.05
-Nodes (74): ae(), afterBuildTicks(), afterCalculateLabelRotation(), afterDataLimits(), afterFit(), afterSetDimensions(), afterTickToLabelConversion(), afterUpdate() (+66 more)
+Nodes (75): ae(), afterBuildTicks(), afterCalculateLabelRotation(), afterDataLimits(), afterFit(), afterSetDimensions(), afterTickToLabelConversion(), afterUpdate() (+67 more)
 
 ### Community 25 - "Filament Form Assets"
 Cohesion: 0.04
-Nodes (128): xe(), Ac(), ad(), af(), ai(), al(), An(), ao() (+120 more)
+Nodes (129): Ci(), readMeasure(), Y(), Ac(), ad(), Ae(), af(), ai() (+121 more)
 
 ### Community 26 - "Domain Models"
 Cohesion: 0.03
-Nodes (59): ExportSqliteData, GenerateSitemap, Collection, ImportMysqlData, SendWeeklyDigest, UpdateGeoIpDatabase, RedirectResponse, Request (+51 more)
+Nodes (59): GenerateSitemap, Collection, CombinedTrendChartWidget, Collection, RecentActivityFeedWidget, Request, TestimonialController, DocumentLibrary (+51 more)
 
 ### Community 27 - "Filament Form Assets"
-Cohesion: 0.03
-Nodes (101): addBlockWidget(), addBreak(), addComposition(), addDelimiter(), addInlineWidget(), addLine(), addLineStart(), addLineStartIfNotCovered() (+93 more)
+Cohesion: 0.04
+Nodes (97): addBlockWidget(), addBreak(), addComposition(), addDelimiter(), addInlineWidget(), addLine(), addLineStart(), addLineStartIfNotCovered() (+89 more)
 
 ### Community 28 - "Filament"
 Cohesion: 0.05
-Nodes (26): addToCart($event.detail.productId), JobPostingForm, Schema, Schema, MethodologyStepForm, Schema, MilestoneForm, Schema (+18 more)
+Nodes (27): addToCart($event.detail.productId), JobPostingForm, Schema, MethodologyStepForm, Schema, MilestoneForm, Schema, NewsArticleForm (+19 more)
 
 ### Community 29 - "Filament Widget Assets"
-Cohesion: 0.06
-Nodes (68): adjustHitBoxes(), At(), bi(), bo(), _calculatePadding(), clear(), _computeGridLineItems(), _computeLabelArea() (+60 more)
+Cohesion: 0.05
+Nodes (88): adjustHitBoxes(), At(), bi(), bo(), _calculatePadding(), clear(), _computeAngle(), _computeGridLineItems() (+80 more)
 
 ### Community 30 - "Filament Form Assets"
 Cohesion: 0.12
-Nodes (23): aO(), charCategorizer(), Fc(), getCursor(), getDeco(), gT(), highlight(), Hr() (+15 more)
+Nodes (24): aO(), charCategorizer(), cS(), Fc(), getCursor(), getDeco(), gT(), highlight() (+16 more)
 
 ### Community 31 - "Filament Form Assets"
-Cohesion: 0.07
-Nodes (52): addStoredMark(), c0(), chain(), cy(), deleteSelection(), dispatchEvent(), E0(), ensureMarks() (+44 more)
+Cohesion: 0.06
+Nodes (67): addStoredMark(), br(), c0(), chain(), cm(), cy(), deleteSelection(), dispatchEvent() (+59 more)
 
 ### Community 32 - "Filament Form Assets"
-Cohesion: 0.05
-Nodes (12): Ud(), Bi(), Bn(), br(), Id(), ji(), on(), qd() (+4 more)
+Cohesion: 0.04
+Nodes (13): Ud(), Aa(), Bi(), Bn(), br(), Id(), ji(), on() (+5 more)
 
 ### Community 33 - "Filament Form Assets"
-Cohesion: 0.12
-Nodes (32): Ax(), bx(), ct(), dx(), ex(), Fh(), Gh(), $h() (+24 more)
+Cohesion: 0.06
+Nodes (57): Ah(), at(), Ax(), Ba(), bx(), Ch(), Cr(), ct() (+49 more)
 
 ### Community 34 - "Filament Widget Assets"
 Cohesion: 0.05
 Nodes (64): Cl(), clone(), create(), Ct(), dc(), Dl(), dtFormatter(), Ea() (+56 more)
 
 ### Community 35 - "Filament Widget Assets"
-Cohesion: 0.11
-Nodes (32): applyStack(), _calculateBarIndexPixels(), _calculateBarValuePixels(), countVisibleElements(), _createItems(), Ea(), format(), _getAxis() (+24 more)
+Cohesion: 0.08
+Nodes (41): applyStack(), _calculateBarIndexPixels(), _calculateBarValuePixels(), calculateCircumference(), _circumference(), countVisibleElements(), _createItems(), Ea() (+33 more)
 
 ### Community 36 - "Filament"
-Cohesion: 0.08
-Nodes (32): Ah(), at(), Ba(), Ch(), Cr(), cx(), Eh(), Fi() (+24 more)
+Cohesion: 0.04
+Nodes (86): addAttributes(), addNode(), ag(), applyInitialSize(), Cc(), cg(), closest(), constructor() (+78 more)
 
 ### Community 37 - "Filament Public Assets"
 Cohesion: 0.06
 Nodes (31): actions(), button(), c(), close(), configureAnimations(), configureTransitions(), constructor(), danger() (+23 more)
 
 ### Community 38 - "Filament Widget Assets"
-Cohesion: 0.12
-Nodes (23): addElements(), buildOrUpdateControllers(), buildOrUpdateElements(), Ce(), _dataCheck(), _destroy(), _destroyDatasetMeta(), ds() (+15 more)
+Cohesion: 0.07
+Nodes (36): addControllers(), addElements(), addPlugins(), addScales(), buildOrUpdateControllers(), buildOrUpdateElements(), Ce(), _dataCheck() (+28 more)
 
 ### Community 39 - "Filament Widget Assets"
 Cohesion: 0.07
 Nodes (39): alpha(), Cm(), co(), darken(), desaturate(), Gc(), greyscale(), gs() (+31 more)
 
 ### Community 40 - "Filament Widget Assets"
-Cohesion: 0.17
-Nodes (16): add(), ci(), getPadding(), is(), Ja(), qa(), qs(), Ro() (+8 more)
+Cohesion: 0.10
+Nodes (27): ba(), _e(), ga(), getPadding(), getRange(), gh(), jr(), ka() (+19 more)
 
 ### Community 41 - "Filament Widget Assets"
 Cohesion: 0.06
-Nodes (58): afterAutoSkip(), Ar(), buildLookupTable(), buildOrUpdateScales(), ch(), D(), dc(), determineDataLimits() (+50 more)
+Nodes (49): afterAutoSkip(), Ar(), buildLookupTable(), buildTicks(), dc(), determineDataLimits(), dh(), diff() (+41 more)
 
 ### Community 42 - "Filament Form Assets"
 Cohesion: 0.09
@@ -451,7 +457,7 @@ Nodes (35): afterDatasetsUpdate(), Ao(), beforeDatasetDraw(), beforeDatasetsDraw
 
 ### Community 44 - "Filament Pages"
 Cohesion: 0.09
-Nodes (12): BrandIdentitySeeder, JobPostingSeeder, MethodologySeeder, MilestoneSeeder, NewsArticleSeeder, OrganizationSeeder, OrgStructureSeeder, PartnerSeeder (+4 more)
+Nodes (34): activateHover(), baseDirAt(), bidiIn(), bidiSpans(), bidiSpansAt(), cd(), checkHover(), coordsAtPos() (+26 more)
 
 ### Community 45 - "Filament Form Assets"
 Cohesion: 0.06
@@ -471,7 +477,7 @@ Nodes (4): AutoTranslateService, ProjectSeeder, GoogleTranslate, ZipArchive
 
 ### Community 49 - "Filament Form Assets"
 Cohesion: 0.04
-Nodes (67): addChanges(), addSelection(), c0(), compose(), composeDesc(), d0(), dd(), De() (+59 more)
+Nodes (66): addChanges(), addSelection(), c0(), compose(), composeDesc(), continue(), d0(), De() (+58 more)
 
 ### Community 51 - "Filament Form Assets"
 Cohesion: 0.13
@@ -486,28 +492,28 @@ Cohesion: 0.05
 Nodes (61): ad(), average(), beforeDatasetsDraw(), beforeLayout(), bi(), bu(), cf(), dataset() (+53 more)
 
 ### Community 54 - "Filament Widget Assets"
-Cohesion: 0.04
-Nodes (38): BackedEnum, Collection, Schema, UnitEnum, SendNewsletter, AutoTranslateModel, GenerateSeoMeta, Model (+30 more)
+Cohesion: 0.03
+Nodes (52): SendWeeklyDigest, BackedEnum, Collection, Schema, UnitEnum, SendNewsletter, AutoTranslateModel, GenerateSeoMeta (+44 more)
 
 ### Community 55 - "Filament"
-Cohesion: 0.62
-Nodes (6): closeModal(), generateModalId(), getActionNestingIndexFromModalId(), init(), openModal(), syncActionModals()
+Cohesion: 0.20
+Nodes (8): EditProjectCategory, ListProjectCategories, closeModal(), generateModalId(), getActionNestingIndexFromModalId(), init(), openModal(), syncActionModals()
 
 ### Community 56 - "Filament Public Assets"
 Cohesion: 0.18
 Nodes (33): _a(), aa(), ba(), br(), Bt(), Cn(), ct(), Da() (+25 more)
 
 ### Community 57 - "Filament Widget Assets"
-Cohesion: 0.06
-Nodes (48): _a(), aa(), alpha(), ba(), br(), ca(), da(), _e() (+40 more)
+Cohesion: 0.08
+Nodes (38): _a(), aa(), add(), alpha(), br(), ca(), ci(), da() (+30 more)
 
 ### Community 58 - "Filament Form Assets"
-Cohesion: 0.13
-Nodes (31): Ae(), cd(), Cr(), Ct(), dr(), dt(), Fr(), Gt() (+23 more)
+Cohesion: 0.09
+Nodes (49): An(), cd(), Cr(), Ct(), dd(), df(), dr(), dt() (+41 more)
 
 ### Community 59 - "Filament Widget Assets"
-Cohesion: 0.04
-Nodes (64): af(), afterAutoSkip(), at(), Bf(), br(), buildLookupTable(), determineDataLimits(), Di() (+56 more)
+Cohesion: 0.07
+Nodes (38): af(), afterAutoSkip(), buildLookupTable(), Fa(), fc(), getAllParsedValues(), getDataTimestamps(), getDecimalForPixel() (+30 more)
 
 ### Community 60 - "Filament"
 Cohesion: 0.11
@@ -518,12 +524,12 @@ Cohesion: 0.06
 Nodes (12): CheckUptime, ManageSettings, Action, BackedEnum, FileUpload, Schema, Throwable, UnitEnum (+4 more)
 
 ### Community 62 - "Filament Form Assets"
-Cohesion: 0.09
-Nodes (31): buildTicks(), calculateCircumference(), _circumference(), _computeAngle(), _computeLabelItems(), _computeLabelSizes(), computeTickLimit(), dh() (+23 more)
+Cohesion: 0.06
+Nodes (53): aa(), at(), Ba(), Bf(), br(), cd(), determineDataLimits(), Di() (+45 more)
 
 ### Community 63 - "Domain Models"
-Cohesion: 0.07
-Nodes (3): ProjectCategory, RichContent, static
+Cohesion: 0.04
+Nodes (11): ArtisanConsole, BackedEnum, Schema, UnitEnum, CareerController, RedirectResponse, Request, View (+3 more)
 
 ### Community 64 - "Filament Form Assets"
 Cohesion: 0.15
@@ -543,15 +549,15 @@ Nodes (46): APIs & Eloquent Resources, Application Structure & Architecture, Arc
 
 ### Community 68 - "Filament"
 Cohesion: 0.04
-Nodes (23): InquiryResource, BackedEnum, Model, Schema, Table, ListInquiries, InquiryForm, Schema (+15 more)
+Nodes (21): InquiryResource, BackedEnum, Model, Schema, Table, EditInquiry, ListInquiries, InquiryForm (+13 more)
 
 ### Community 69 - "Filament"
-Cohesion: 0.04
-Nodes (30): JobApplicationResource, BackedEnum, Model, Schema, Table, ListJobApplications, JobApplicationForm, Schema (+22 more)
+Cohesion: 0.10
+Nodes (9): JobApplicationResource, BackedEnum, Model, Schema, Table, EditJobApplication, ListJobApplications, JobApplicationForm (+1 more)
 
 ### Community 70 - "Filament"
-Cohesion: 0.18
-Nodes (14): ac(), cs(), Es(), ic(), interpolate(), lo(), ls(), nc() (+6 more)
+Cohesion: 0.09
+Nodes (30): ac(), bh(), calculateLabelRotation(), cn(), cs(), En(), Es(), getIndexAngle() (+22 more)
 
 ### Community 71 - "Filament"
 Cohesion: 0.13
@@ -562,20 +568,20 @@ Cohesion: 0.10
 Nodes (12): a(), ar(), at(), cr(), d(), f(), H(), ji() (+4 more)
 
 ### Community 73 - "Filament"
-Cohesion: 0.02
-Nodes (63): CreateDepartment, EditDepartment, ListDepartments, DocumentCategoryResource, BackedEnum, Model, Schema, Table (+55 more)
+Cohesion: 0.03
+Nodes (49): CreateDepartment, EditDepartment, ListDepartments, DocumentCategoryResource, BackedEnum, Model, Schema, Table (+41 more)
 
 ### Community 74 - "Filament"
-Cohesion: 0.10
-Nodes (12): CreateUser, Model, ListUsers, Schema, UserForm, Table, UsersTable, BackedEnum (+4 more)
+Cohesion: 0.08
+Nodes (14): CreateUser, Model, EditUser, Model, ListUsers, Schema, UserForm, Table (+6 more)
 
 ### Community 75 - "Tests Feature"
 Cohesion: 0.16
 Nodes (3): HealthCheckController, Request, JsonResponse
 
 ### Community 76 - "Filament Form Assets"
-Cohesion: 0.05
-Nodes (73): addAll(), addDOM(), addElement(), addElementByRule(), addNodeMark(), addTextNode(), addToSet(), allowedMarks() (+65 more)
+Cohesion: 0.08
+Nodes (44): addAll(), addDOM(), addElement(), addElementByRule(), addTextNode(), addToSet(), allowsMarks(), allowsMarkType() (+36 more)
 
 ### Community 77 - "Filament Form Assets"
 Cohesion: 0.15
@@ -591,7 +597,7 @@ Nodes (9): PartnerResource, BackedEnum, Model, Schema, Table, PartnerForm, Schem
 
 ### Community 80 - "HTTP Controllers"
 Cohesion: 0.04
-Nodes (33): CareerController, Controller, DocumentController, RedirectResponse, Request, View, FormController, Request (+25 more)
+Nodes (38): Controller, DocumentController, RedirectResponse, Request, View, FormController, Request, MediaController (+30 more)
 
 ### Community 81 - "Filament Form Assets"
 Cohesion: 0.13
@@ -602,8 +608,8 @@ Cohesion: 0.06
 Nodes (44): afterDatasetsUpdate(), An(), ar(), beforeDatasetDraw(), generateLabels(), getDatasetMeta(), getDataVisibility(), getMaxBorderWidth() (+36 more)
 
 ### Community 83 - "Filament"
-Cohesion: 0.09
-Nodes (11): EmployeeResource, BackedEnum, Model, Schema, Table, CreateEmployee, ListEmployees, EmployeeForm (+3 more)
+Cohesion: 0.10
+Nodes (9): EmployeeResource, BackedEnum, Model, Schema, Table, CreateEmployee, ListEmployees, EmployeeForm (+1 more)
 
 ### Community 84 - "Filament Form Assets"
 Cohesion: 0.08
@@ -626,12 +632,12 @@ Cohesion: 0.10
 Nodes (20): Admin Panel, Database, Deployment With Terminal Access, Developer Commands, Environment Files, Frontend Build, Important Folders, Important Vite Rule (+12 more)
 
 ### Community 89 - "Filament"
-Cohesion: 0.06
-Nodes (18): ActivityLogsTable, Table, MilestonesTable, Table, NewsArticleResource, BackedEnum, Model, Schema (+10 more)
+Cohesion: 0.14
+Nodes (7): NewsArticleResource, BackedEnum, Model, Schema, Table, NewsArticlesTable, Table
 
 ### Community 90 - "Filament"
-Cohesion: 0.13
-Nodes (8): BackedEnum, Model, Schema, Table, ProjectResource, ProjectForm, Table, ProjectsTable
+Cohesion: 0.14
+Nodes (7): BackedEnum, Model, Schema, Table, ProjectResource, Table, ProjectsTable
 
 ### Community 91 - "Filament"
 Cohesion: 0.08
@@ -639,7 +645,7 @@ Nodes (10): BackedEnum, UnitEnum, TranslationTracker, BackedEnum, Model, Schema,
 
 ### Community 92 - "Filament"
 Cohesion: 0.10
-Nodes (9): CreateSystemSetting, ListSystemSettings, Schema, SystemSettingForm, Schema, Table, SystemSettingResource, Table (+1 more)
+Nodes (8): CreateSystemSetting, EditSystemSetting, ListSystemSettings, Schema, SystemSettingForm, Schema, Table, SystemSettingResource
 
 ### Community 93 - "Filament Public Assets"
 Cohesion: 0.14
@@ -650,28 +656,28 @@ Cohesion: 0.16
 Nodes (28): c(), ca(), Dn(), f(), fn(), fo(), Ha(), Jr() (+20 more)
 
 ### Community 95 - "Filament Form Assets"
-Cohesion: 0.10
-Nodes (27): Eo(), addEventListener(), al(), bindEvents(), bindResponsiveEvents(), bindUserEvents(), bs(), _checkEventBindings() (+19 more)
+Cohesion: 0.18
+Nodes (20): bo(), co(), Dn(), En(), Eo(), es(), gd(), hd() (+12 more)
 
 ### Community 96 - "Filament Form Assets"
 Cohesion: 0.21
 Nodes (24): closeDropdown(), constructor(), createOptionElement(), deferPositionDropdown(), filterOptions(), focusNextOption(), focusPreviousOption(), getVisibleOptions() (+16 more)
 
 ### Community 97 - "Filament Table Assets"
-Cohesion: 0.17
-Nodes (19): readMeasure(), Y(), da(), fa(), Gr(), Kr(), Ln(), ma() (+11 more)
+Cohesion: 0.13
+Nodes (19): addElement(), ga(), initialSpacer(), iterLines(), iterRange(), IX(), line(), lineInner() (+11 more)
 
 ### Community 98 - "Filament Widget Assets"
 Cohesion: 0.12
 Nodes (16): 1. Technology Stack, 2. Design Vision, 3.10 Student Research & Knowledge Hub (Academic Resources), 3.1 Home `/`, 3.2 About `/about`, 3.3 Our Services `/services`, 3.4 Projects (Done & Implement) `/projects`, 3.5 Sustainability & CSR `/sustainability` (+8 more)
 
 ### Community 99 - "Filament Widget Assets"
-Cohesion: 0.06
-Nodes (51): average(), bh(), calculateLabelRotation(), cc(), cn(), dataset(), En(), first() (+43 more)
+Cohesion: 0.09
+Nodes (31): average(), cc(), dataset(), ec(), first(), Ge(), getCenterPoint(), getProps() (+23 more)
 
 ### Community 100 - "Filament Form Assets"
-Cohesion: 0.07
-Nodes (84): Af(), al(), AX(), B(), balance(), combine(), flatten(), from() (+76 more)
+Cohesion: 0.08
+Nodes (65): Af(), al(), AX(), B(), balance(), combine(), flatten(), from() (+57 more)
 
 ### Community 101 - "Domain Models"
 Cohesion: 0.21
@@ -686,8 +692,8 @@ Cohesion: 0.13
 Nodes (9): close(), G(), init(), P(), Q(), setUpResizeObserver(), X(), Y() (+1 more)
 
 ### Community 104 - "Filament Widget Assets"
-Cohesion: 0.15
-Nodes (16): attrs(), bi(), cc(), cO(), EY(), GY(), JQ(), m$() (+8 more)
+Cohesion: 0.20
+Nodes (18): buildOrUpdateScales(), ch(), D(), ensureScalesHaveIDs(), Fn(), getLabels(), getMaxOverflow(), getScale() (+10 more)
 
 ### Community 105 - "Package"
 Cohesion: 0.11
@@ -702,12 +708,12 @@ Cohesion: 0.33
 Nodes (12): Ae(), fn(), ht(), ii(), Le(), Qe(), sn(), ti() (+4 more)
 
 ### Community 108 - "Filament Table Assets"
-Cohesion: 0.29
-Nodes (8): atEnd(), atStart(), el(), init(), nt(), protectLocalComposition(), reconfigure(), vn()
+Cohesion: 0.15
+Nodes (7): MethodologyStepResource, BackedEnum, Model, Schema, Table, MethodologyStepsTable, Table
 
 ### Community 109 - "Filament"
-Cohesion: 0.14
-Nodes (19): addToSet(), bd(), Bh(), childString(), clearDelayedAndroidKey(), delayAndroidKey(), flushIOSKey(), join() (+11 more)
+Cohesion: 0.16
+Nodes (17): addToSet(), bd(), Bh(), childString(), clearDelayedAndroidKey(), delayAndroidKey(), flushIOSKey(), join() (+9 more)
 
 ### Community 110 - "Filament"
 Cohesion: 0.12
@@ -717,9 +723,13 @@ Nodes (40): addBadgesForSelectedOptions(), addSingleBadge(), addSingleSelectionD
 Cohesion: 0.15
 Nodes (17): active(), _animateOptions(), cancel(), _createAnimations(), _createDescriptors(), _d(), _descriptors(), _notify() (+9 more)
 
+### Community 112 - "Filament Widget Assets"
+Cohesion: 0.20
+Nodes (14): active(), _animateOptions(), cancel(), _createAnimations(), _createDescriptors(), _descriptors(), _notify(), _notifyStateChanges() (+6 more)
+
 ### Community 113 - "Filament"
 Cohesion: 0.04
-Nodes (30): ArtisanConsole, BackedEnum, Schema, UnitEnum, ManageOrgChart, Action, BackedEnum, OrgUnitsRelationManager (+22 more)
+Nodes (39): ManageOrgChart, Action, BackedEnum, ActivityLogsTable, Table, OrgUnitsRelationManager, Schema, Table (+31 more)
 
 ### Community 114 - "Domain Models"
 Cohesion: 0.21
@@ -732,6 +742,10 @@ Nodes (4): CreateActivityLogTable, AddEventColumnToActivityLogTable, AddBatchUui
 ### Community 116 - "Filament Public Assets"
 Cohesion: 0.20
 Nodes (11): Ce(), De(), Ht(), Ie(), Me(), Re(), rr(), t() (+3 more)
+
+### Community 117 - "Filament Form Assets"
+Cohesion: 0.26
+Nodes (12): al(), cl(), fl(), go(), je(), Mf(), ne(), Sc() (+4 more)
 
 ### Community 118 - "Filament Form Assets"
 Cohesion: 0.28
@@ -752,6 +766,10 @@ Nodes (12): Be(), ei(), ii(), le(), ni(), oi(), r(), ri() (+4 more)
 ### Community 122 - "Filament Form Assets"
 Cohesion: 0.20
 Nodes (4): BackfillPageViewCountry, PruneAnalytics, Collection, PageView
+
+### Community 123 - "Filament Widgets"
+Cohesion: 0.09
+Nodes (10): InquiryResponseTimeWidget, LatestInquiriesWidget, Table, LatestJobApplicationsWidget, Table, StatsOverview, AdminPanelProvider, Panel (+2 more)
 
 ### Community 124 - "Application Services"
 Cohesion: 0.12
@@ -784,6 +802,10 @@ Nodes (3): Analytics, BackedEnum, UnitEnum
 ### Community 132 - "Filament Public Assets"
 Cohesion: 0.33
 Nodes (8): E(), di(), e(), g(), i(), P(), xr(), _()
+
+### Community 133 - "Console Commands"
+Cohesion: 0.31
+Nodes (4): ExportSqliteData, ImportMysqlData, UpdateGeoIpDatabase, Command
 
 ### Community 134 - "HTTP Middleware"
 Cohesion: 0.38
@@ -886,8 +908,8 @@ Cohesion: 0.29
 Nodes (6): Implement `ShouldQueue` on the Mailable Class, Mail Best Practices, Separate Content Tests from Sending Tests, Use `afterCommit()` on Mailables Inside Transactions, Use `assertQueued()` Not `assertSent()` for Queued Mailables, Use Markdown Mailables for Transactional Emails
 
 ### Community 276 - "Storage Framework"
-Cohesion: 0.11
-Nodes (24): Ci(), ef(), EP(), fP(), Gf(), Nt(), Qn(), Vt() (+16 more)
+Cohesion: 0.48
+Nodes (7): ef(), EP(), fP(), Gf(), Nt(), Qn(), Vt()
 
 ### Community 277 - "Storage Framework"
 Cohesion: 0.38
@@ -940,6 +962,10 @@ Nodes (8): Apply Global Scopes Sparingly, Avoid Hardcoded Table Names in Queries
 ### Community 447 - "Migration Best Practices"
 Cohesion: 0.22
 Nodes (8): Add Indexes in the Migration, Generate Migrations with Artisan, Keep Migrations Focused, Migration Best Practices, Mirror Defaults in Model `$attributes`, Never Modify Deployed Migrations, Use `constrained()` for Foreign Keys, Write Reversible `down()` Methods by Default
+
+### Community 448 - "addInner"
+Cohesion: 0.39
+Nodes (9): addInner(), bu(), dy(), mapInner(), Mo(), uy(), wu(), yu() (+1 more)
 
 ### Community 449 - "Filament"
 Cohesion: 0.25
@@ -1064,17 +1090,17 @@ Nodes (7): Dt(), Fe(), He(), ir(), Mt(), nr(), rt()
 ## Knowledge Gaps
 - **594 isolated node(s):** `php`, `php`, `$schema`, `plugin`, `@opencode-ai/plugin` (+589 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **36 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **37 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `o()` connect `Filament Form Assets` to `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `nr`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament`, `Filament`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Public Assets`?**
-  _High betweenness centrality (0.090) - this node is a cross-community bridge._
-- **Why does `k()` connect `Filament Form Assets` to `Filament Form Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Storage Framework`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Public Assets`, `Filament Public Assets`, `Filament Form Assets`?**
-  _High betweenness centrality (0.087) - this node is a cross-community bridge._
-- **Why does `l()` connect `Filament Form Assets` to `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Widget Assets`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
+- **Why does `o()` connect `Filament Form Assets` to `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Pages`, `Filament Form Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `addInner`, `Filament Form Assets`, `Filament Form Assets`, `Filament`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `nr`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Public Assets`?**
+  _High betweenness centrality (0.142) - this node is a cross-community bridge._
+- **Why does `l()` connect `Filament Form Assets` to `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Widget Assets`?**
+  _High betweenness centrality (0.098) - this node is a cross-community bridge._
+- **Why does `u()` connect `Filament Public Assets` to `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Widget Assets`, `Filament`, `Filament Widget Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Pages`, `Filament Form Assets`, `Filament Table Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament Table Assets`, `Filament Widget Assets`, `Filament Public Assets`, `Filament Form Assets`, `Filament Form Assets`, `Filament`, `Filament Form Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Form Assets`, `Filament Public Assets`, `Filament Public Assets`, `Filament Widget Assets`, `Filament Form Assets`?**
+  _High betweenness centrality (0.075) - this node is a cross-community bridge._
 - **Are the 232 inferred relationships involving `o()` (e.g. with `G()` and `Be()`) actually correct?**
   _`o()` has 232 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 204 inferred relationships involving `l()` (e.g. with `L()` and `advance()`) actually correct?**
