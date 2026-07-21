@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\JobPostingStatus;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
@@ -131,9 +132,7 @@ Route::get('/', function () {
 })->name('home');
 
 // About Page
-Route::get('/about', function () {
-    return view('pages.about');
-})->name('about');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 
 // Careers Page
 Route::get('/careers', function () {

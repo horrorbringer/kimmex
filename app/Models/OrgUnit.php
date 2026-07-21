@@ -40,6 +40,9 @@ class OrgUnit extends Model
         Cache::forget('about_orgchart_en');
         Cache::forget('about_orgchart_kh');
         Cache::forget('about_orgchart_km');
+        Cache::forget('about_page_en');
+        Cache::forget('about_page_kh');
+        Cache::forget('about_page_km');
     }
 
     public function parent(): BelongsTo

@@ -19,148 +19,8 @@
     @endpush
 
     @php
-        $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
         $locale = app()->getLocale();
         $localeKey = $locale === 'kh' ? 'km' : $locale;
-        $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
-        $ceoName = $brandProfile['ceo_name'] ?? 'Okhna. TOUCH KIM';
-        $aboutHeroImage = $brandProfile['about_hero_image'] ?? null;
-        $aboutHeroImageUrl = '/images/webp/hero/hero-1.webp';
-
-        if (filled($aboutHeroImage)) {
-            $aboutHeroImageUrl = \App\Support\PublicStorage::urlIfExists($aboutHeroImage, $aboutHeroImageUrl);
-        }
-
-        $resolveAboutImage = function (?string $image, string $fallback): string {
-            if (! filled($image)) {
-                return $fallback;
-            }
-            return \App\Support\PublicStorage::urlIfExists($image, $fallback);
-        };
-
-        $aboutSectionImageDefaults = [
-            '/images/webp/projects/Thumbnail-1.webp',
-            '/images/webp/projects/Thumbnail-3.webp',
-            '/images/webp/projects/Thumbnail-2.webp',
-            '/images/webp/projects/Thumbnail-4.webp',
-        ];
-
-        $aboutSectionImages = array_map(
-            fn (string $fallback, int $index): string => $resolveAboutImage($brandProfile['about_section_images'][$index] ?? null, $fallback),
-            $aboutSectionImageDefaults,
-            array_keys($aboutSectionImageDefaults)
-        );
-
-
-        $aboutData = [
-            'story' => $brand['company_story'] ?? __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner...'),
-            'values' => array_map(function ($v) {
-                $icon = $v['icon'] ?? 'lucide-shield';
-                if (!preg_match('/^[a-zA-Z0-9\-]+$/', $icon)) {
-                    $icon = 'lucide-shield';
-                }
-                $image = $v['image'] ?? null;
-                $image = \App\Support\PublicStorage::urlIfExists($image);
-                return [
-                    'title' => $v['title'] ?? '',
-                    'content' => $v['description'] ?? '',
-                    'icon' => $icon,
-                    'image' => $image,
-                ];
-            }, $brand['values_list'] ?? [])
-        ];
-
-        if (empty($aboutData['values'])) {
-            $aboutData['values'] = [
-                ['title' => __('Safety First'), 'content' => __('We maintain a strict zero-incident policy on all construction sites.'), 'icon' => 'lucide-heart', 'image' => null],
-                ['title' => __('Quality Excellence'), 'content' => __('Utilizing premium materials and rigorous QA workflows.'), 'icon' => 'lucide-award', 'image' => null],
-                ['title' => __('Integrity'), 'content' => __('Honest and transparent communication with all our clients.'), 'icon' => 'lucide-shield', 'image' => null],
-                ['title' => __('Innovation'), 'content' => __('Leveraging the latest in 3D modeling and MEP system architecture.'), 'icon' => 'lucide-lightbulb', 'image' => null]
-            ];
-        }
-
-
-        $milestones = \Illuminate\Support\Facades\Cache::remember('about_milestones_data_'.app()->getLocale(), now()->addHours(12), function() {
-            $milestonesDb = \App\Models\Milestone::where('isActive', true)->orderBy('sortOrder')->get();
-            return $milestonesDb->values()->map(function (\App\Models\Milestone $m, int $index) {
-                $detail = $m->getTranslation('detailed_description', app()->getLocale());
-                $hasDetail = filled(trim(strip_tags((string) $detail)));
-                $fallbackImage = '/images/webp/projects/Thumbnail-'.(($index % 6) + 1).'.webp';
-                return [
-                    'year' => $m->year,
-                    'title' => $m->getTranslation('title', app()->getLocale()),
-                    'desc' => $m->getTranslation('description', app()->getLocale()),
-                    'detail' => $hasDetail ? $detail : '',
-                    'has_detail' => $hasDetail,
-                    'image' => \App\Support\PublicStorage::urlIfExists($m->image, $fallbackImage),
-                ];
-            })->toArray();
-        });
-
-        if (empty($milestones)) {
-            $milestones = [
-                ['year' => '1999', 'title' => __('Company Founded'), 'desc' => __('Started as a small dedicated engineering firm.'), 'detail' => '', 'has_detail' => false, 'image' => '/images/webp/projects/Thumbnail-1.webp'],
-                ['year' => '2010', 'title' => __('First Mega Project'), 'desc' => __('Secured our first major government infrastructure contract.'), 'detail' => '', 'has_detail' => false, 'image' => '/images/webp/projects/Thumbnail-2.webp'],
-                ['year' => '2026', 'title' => __('Industry Leaders'), 'desc' => __('Recognized as the top infrastructure firm in the Kingdom of Cambodia.'), 'detail' => '', 'has_detail' => false, 'image' => '/images/webp/projects/Thumbnail-3.webp']
-            ];
-        }
-
-
-        $orgChart = \Illuminate\Support\Facades\Cache::remember('about_orgchart_'.app()->getLocale(), now()->addHours(12), function() {
-            $unitsByParent = \App\Models\OrgUnit::where('isActive', true)
-                ->with(['employee', 'department'])
-                ->orderBy('orderIndex')
-                ->get()
-                ->groupBy(fn (\App\Models\OrgUnit $unit): string => (string) ($unit->parentId ?? '__root__'));
-
-            $buildNode = function ($unit) use (&$buildNode, $unitsByParent) {
-                $name = $unit->employee?->name ?? $unit->getTranslation('title', app()->getLocale());
-                $role = $unit->employee?->role ?? $unit->getTranslation('title', app()->getLocale());
-                $rawType = strtoupper($unit->type);
-                $type = match ($rawType) {
-                    'STAFF' => 'staff',
-                    'DEPARTMENT' => 'department',
-                    'OFFICE' => 'office',
-                    default => 'staff',
-                };
-                $lowRole = strtolower($role);
-                if (str_contains($lowRole, 'ceo') || str_contains($lowRole, 'chief')) {
-                    $type = 'ceo';
-                } elseif (str_contains($lowRole, 'director') || str_contains($lowRole, 'manager')) {
-                    $type = 'director';
-                }
-                $employeeImage = $unit->employee?->image;
-                $employeeImage = \App\Support\PublicStorage::urlIfExists($employeeImage);
-                return [
-                    'name' => $name,
-                    'role' => $role,
-                    'type' => $type,
-                    'image' => $employeeImage,
-                    'phone' => $unit->employee?->phone,
-                    'bio' => $unit->employee?->bio,
-                    'children' => $unitsByParent->get((string) $unit->id, collect())
-                        ->map(fn($child) => $buildNode($child))
-                        ->toArray()
-                ];
-            };
-
-            $roots = $unitsByParent->get('__root__', collect());
-            if ($roots->isEmpty()) {
-                return [
-                    'name' => 'Sok Visal', 'role' => __('CEO (Not Configured)'), 'type' => 'ceo',
-                    'image' => null, 'bio' => __('To show your team here, please add Employee and Org Unit records in the admin panel.'), 'children' => []
-                ];
-            }
-            if ($roots->count() === 1) {
-                return $buildNode($roots->first());
-            }
-            $profile = \App\Models\SystemSetting::get('organization_profile', []);
-            $companyName = $profile[$localeKey]['company_name'] ?? 'Kimmex Group';
-            return [
-                'name' => $companyName, 'role' => __('Organization Structure'), 'type' => 'office',
-                'children' => $roots->map(fn($root) => $buildNode($root))->toArray()
-            ];
-        });
     @endphp
 
 
@@ -317,10 +177,6 @@
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('WHO WE ARE') }}</span>
                     </div>
 
-                    @php
-                        $profile = \App\Models\SystemSetting::get('organization_profile', []);
-                        $tagline = $profile[$localeKey]['tagline'] ?? "Cambodia's Premier Construction Partner";
-                    @endphp
                     <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy leading-tight mb-6 tracking-tight">
                         {{ $tagline }}
                     </h2>
@@ -395,7 +251,7 @@
                                 {{-- Photo --}}
                                 <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] ring-1 ring-white/10">
                                     <img src="/images/team-leadership-professional/touch_kim.jpg" alt="{{ $ceoName }}"
-                                        class="object-cover object-top w-full h-full" loading="lazy" decoding="async" />
+                                        class="object-cover object-top w-full h-full transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" loading="lazy" decoding="async" />
                                 </div>
                                 {{-- Decorative quote badge --}}
                                 <div class="absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shadow-lg"
@@ -497,7 +353,7 @@
                                 class="transition-all duration-700 w-full overflow-hidden rounded-xl"
                                 style="transition-delay: {{ $i * 100 }}ms">
                                 <img src="{{ $value['image'] }}" alt="{{ $value['title'] }}"
-                                    class="w-full object-cover" decoding="async" loading="lazy" />
+                                    class="w-full object-cover transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" decoding="async" loading="lazy" />
                             </div>
                         @endforeach
                     </div>
@@ -531,13 +387,23 @@
             }
             .milestone-list ol li {
                 counter-increment: milestone-counter;
+                position: relative;
+                padding-left: 2rem;
             }
             .milestone-list ol li::before {
                 content: counter(milestone-counter) ".";
-                font-weight: 700;
+                position: absolute;
+                left: 0;
                 color: #E31E24;
-                margin-right: 0.5rem;
-                flex-shrink: 0;
+                font-weight: 700;
+            }
+            .md\:text-right .milestone-list ol li {
+                padding-left: 0;
+                padding-right: 2rem;
+            }
+            .md\:text-right .milestone-list ol li::before {
+                left: auto;
+                right: 0;
             }
         </style>
 
@@ -583,7 +449,7 @@
                                 </h3>
                                 <div class="text-gray-500 leading-relaxed text-sm md:text-base
                                     [&>p]:mb-3 [&>ul]:space-y-1.5 [&>ol]:space-y-1.5
-                                    [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_li]:text-sm milestone-list">
+                                    [&_li]:text-sm milestone-list">
                                     {!! $milestone['desc'] !!}
                                 </div>
 
@@ -616,20 +482,6 @@
 
 
         <!-- === ORG CHART === -->
-        @php
-            $orgProfile = \App\Models\SystemSetting::get('organization_profile', []);
-            $orgChartType = $orgProfile['org_chart_type'] ?? 'dynamic';
-            $orgChartImage = $orgProfile['org_chart_image'] ?? null;
-            $orgChartPdf = $orgProfile['org_chart_pdf'] ?? null;
-
-            if ($orgChartImage && !\Illuminate\Support\Str::startsWith($orgChartImage, ['http://', 'https://', '/'])) {
-                $orgChartImage = \App\Support\PublicStorage::urlIfExists($orgChartImage);
-            }
-            if ($orgChartPdf && !\Illuminate\Support\Str::startsWith($orgChartPdf, ['http://', 'https://', '/'])) {
-                $orgChartPdf = \App\Support\PublicStorage::urlIfExists($orgChartPdf);
-            }
-        @endphp
-
         <section id="leadership" class="py-14 sm:py-20 md:py-28 px-4 sm:px-6 bg-white overflow-hidden">
             <div class="max-w-[1700px] mx-auto">
                 @if($orgChartType === 'dynamic')
@@ -650,7 +502,7 @@
                         <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                              class="transition-all duration-1000 w-full max-w-6xl mx-auto">
                             <img src="{{ $orgChartImage }}" alt="{{ __('Organization Structure') }}"
-                                 class="w-full h-auto rounded-lg sm:rounded-xl shadow-lg sm:shadow-xl border border-gray-200" loading="lazy" decoding="async" />
+                                 class="w-full h-auto rounded-lg sm:rounded-xl shadow-lg sm:shadow-xl border border-gray-200 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl" loading="lazy" decoding="async" />
                         </div>
                     </div>
                 @elseif($orgChartType === 'pdf' && $orgChartPdf)
@@ -737,7 +589,7 @@
                         class="transition-all duration-1000 delay-200 relative">
                         <div class="rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)]">
                             <img src="/images/webp/projects/Thumbnail-6.webp" alt="{{ __('Safety Inspection') }}"
-                                class="w-full aspect-[4/3] object-cover" loading="lazy" decoding="async" />
+                                class="w-full aspect-[4/3] object-cover transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" loading="lazy" decoding="async" />
                         </div>
                         <!-- Floating ISO badge -->
                         <div class="absolute -bottom-5 -left-5 bg-white p-5 rounded-xl shadow-xl border border-gray-100 hidden md:flex items-center gap-4">

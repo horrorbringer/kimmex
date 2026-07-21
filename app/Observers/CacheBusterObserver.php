@@ -83,12 +83,15 @@ class CacheBusterObserver
             ],
             Milestone::class => [
                 'about_milestones_data_en', 'about_milestones_data_km',
+                'about_page_en', 'about_page_km',
             ],
             OrgUnit::class => [
                 'about_orgchart_en', 'about_orgchart_km',
+                'about_page_en', 'about_page_km',
             ],
             Employee::class => [
                 'about_orgchart_en', 'about_orgchart_km',
+                'about_page_en', 'about_page_km',
             ],
             MethodologyStep::class => [
                 'process_index_array_en', 'process_index_array_km',
@@ -114,6 +117,7 @@ class CacheBusterObserver
             ],
             SystemSetting::class => [
                 'global_settings_en', 'global_settings_km',
+                'about_page_en', 'about_page_km',
             ],
         ];
 
