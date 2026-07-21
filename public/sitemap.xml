@@ -17,212 +17,34 @@
     </url>
     <url>
         <loc>http://kimmex.test/services</loc>
-        <lastmod>2026-07-12T16:55:06+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>http://kimmex.test/projects</loc>
-        <lastmod>2026-07-12T16:56:26+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>http://kimmex.test/news</loc>
-        <lastmod>2026-07-13T02:49:21+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>http://kimmex.test/careers</loc>
-        <lastmod>2026-07-17T11:52:41+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://kimmex.test/services/design-build</loc>
-        <lastmod>2026-07-12T16:55:06+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/services/construction</loc>
-        <lastmod>2026-07-12T16:55:06+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/services/project-management</loc>
-        <lastmod>2026-07-12T16:55:06+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/services/infrastructure</loc>
-        <lastmod>2026-07-12T16:55:06+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-23-ntti-tvet-park</loc>
-        <lastmod>2026-07-12T16:56:26+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-22</loc>
-        <lastmod>2026-07-12T16:56:24+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-21</loc>
-        <lastmod>2026-07-12T16:56:21+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-20</loc>
-        <lastmod>2026-07-12T16:56:18+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-19</loc>
-        <lastmod>2026-07-12T16:56:12+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-18</loc>
-        <lastmod>2026-07-12T16:56:08+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-17</loc>
-        <lastmod>2026-07-12T16:56:06+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-16</loc>
-        <lastmod>2026-07-12T16:56:03+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-15</loc>
-        <lastmod>2026-07-12T16:56:01+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-14</loc>
-        <lastmod>2026-07-12T16:55:57+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-13</loc>
-        <lastmod>2026-07-12T16:55:54+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-12</loc>
-        <lastmod>2026-07-12T16:55:50+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-11</loc>
-        <lastmod>2026-07-12T16:55:47+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-10</loc>
-        <lastmod>2026-07-12T16:55:42+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-09</loc>
-        <lastmod>2026-07-12T16:55:36+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-08</loc>
-        <lastmod>2026-07-12T16:55:31+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-07</loc>
-        <lastmod>2026-07-12T16:55:28+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-06-def-pp</loc>
-        <lastmod>2026-07-12T16:55:25+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-05-gdce-shv</loc>
-        <lastmod>2026-07-12T16:55:22+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-04-smart-building</loc>
-        <lastmod>2026-07-12T16:55:19+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-03-nspc</loc>
-        <lastmod>2026-07-12T16:55:16+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-02-nbfsa-i</loc>
-        <lastmod>2026-07-12T16:55:13+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/projects/project-01-mef-09</loc>
-        <lastmod>2026-07-12T16:55:09+07:00</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/news/big-stars-and-old-rivals-what-to-expect-in-semi-finals</loc>
-        <lastmod>2026-07-13T02:49:21+07:00</lastmod>
+        <loc>http://kimmex.test/documents</loc>
+        <lastmod>2026-07-21T22:16:46+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://kimmex.test/careers/senior-c-developer</loc>
-        <lastmod>2026-07-17T11:52:41+07:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/careers/senior-project-manager</loc>
-        <lastmod>2026-07-12T16:59:50+07:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/careers/site-engineer</loc>
-        <lastmod>2026-07-12T16:59:50+07:00</lastmod>
-        <changefreq>weekly</changefreq>
+        <loc>http://kimmex.test/documents/annual-report</loc>
+        <lastmod>2026-07-21T22:16:46+07:00</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 </urlset>

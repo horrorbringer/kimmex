@@ -3,12 +3,12 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateGeoIpDatabase extends Command
 {
     protected $signature = 'geoip:update';
+
     protected $description = 'Download/update the MaxMind GeoLite2-Country database';
 
     /**
@@ -36,11 +36,11 @@ class UpdateGeoIpDatabase extends Command
 
         try {
             $dir = storage_path('app/geoip');
-            if (!is_dir($dir)) {
+            if (! is_dir($dir)) {
                 mkdir($dir, 0755, true);
             }
 
-            $tempFile = $dir . '/GeoLite2-Country.mmdb.tmp';
+            $tempFile = $dir.'/GeoLite2-Country.mmdb.tmp';
 
             // Download with progress
             $ch = curl_init($url);
@@ -60,9 +60,10 @@ class UpdateGeoIpDatabase extends Command
             curl_close($ch);
             fclose($fp);
 
-            if (!$success || $httpCode !== 200 || $fileSize < 1000000) {
+            if (! $success || $httpCode !== 200 || $fileSize < 1000000) {
                 @unlink($tempFile);
                 $this->error("Download failed (HTTP {$httpCode}, size: {$fileSize} bytes)");
+
                 return self::FAILURE;
             }
 
@@ -71,6 +72,7 @@ class UpdateGeoIpDatabase extends Command
             if (strlen($header) < 4) {
                 @unlink($tempFile);
                 $this->error('Downloaded file is invalid.');
+
                 return self::FAILURE;
             }
 
@@ -85,13 +87,14 @@ class UpdateGeoIpDatabase extends Command
             $this->info("   Location: {$targetPath}");
 
             // Clear geo-IP cache so new lookups use the fresh database
-            \Illuminate\Support\Facades\Cache::flush();
+            Cache::flush();
             $this->info('   Cache cleared.');
 
             return self::SUCCESS;
         } catch (\Throwable $e) {
             @unlink($tempFile ?? '');
             $this->error("Failed: {$e->getMessage()}");
+
             return self::FAILURE;
         }
     }

@@ -5,10 +5,11 @@ namespace App\Filament\Resources\Documents\Pages;
 use App\Filament\Resources\Documents\DocumentResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
 
 class ListDocuments extends ListRecords
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = DocumentResource::class;
 

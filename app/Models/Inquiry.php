@@ -3,16 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 #[Fillable(['name', 'email', 'phone', 'subject', 'message', 'attachment_url', 'status', 'is_read', 'responded_at'])]
 class Inquiry extends Model
 {
-    use HasUuids, LogsActivity, DeletesPublicUploads;
+    use DeletesPublicUploads, HasUuids, LogsActivity;
 
     protected array $publicUploadAttributes = ['attachment_url'];
 

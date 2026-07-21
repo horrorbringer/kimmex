@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Enums\JobPostingStatus;
 use App\Http\Controllers\CareerController;
-use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\HealthCheckController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectController;
@@ -15,6 +15,11 @@ use App\Models\JobPosting;
 use App\Models\NewsArticle;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\Subscriber;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Filament\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Route;
 
 // Health Check Endpoint
 Route::get('/health', HealthCheckController::class)->name('health');
@@ -27,6 +32,7 @@ Route::get('/lang/{locale}', function (string $locale) {
         session(['locale' => $normalizedLocale]);
         app()->setLocale($normalizedLocale);
     }
+
     return redirect()->back();
 })->name('lang.switch');
 
@@ -41,6 +47,7 @@ Route::get('/sw.js', function () {
     if (! file_exists($path)) {
         return response('', 404);
     }
+
     return response()->file($path, [
         'Content-Type' => 'application/javascript',
         'Service-Worker-Allowed' => '/',
@@ -53,6 +60,7 @@ Route::get('/manifest.json', function () {
     if (! file_exists($path)) {
         return response('', 404);
     }
+
     return response()->file($path, [
         'Content-Type' => 'application/manifest+json',
         'Cache-Control' => 'public, max-age=3600',
@@ -63,14 +71,14 @@ Route::get('/robots.txt', function () {
     return response(implode("\n", [
         'User-agent: *',
         'Disallow:',
-        'Sitemap: ' . url('/sitemap.xml'),
+        'Sitemap: '.url('/sitemap.xml'),
         '',
     ]), 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
 })->name('robots');
 
 Route::get('/sitemap.xml', function () {
     $urls = collect();
-    $add = function (string $loc, ?\Carbon\CarbonInterface $lastmod = null, string $changefreq = 'monthly', string $priority = '0.7') use ($urls) {
+    $add = function (string $loc, ?CarbonInterface $lastmod = null, string $changefreq = 'monthly', string $priority = '0.7') use ($urls) {
         $urls->push([
             'loc' => url($loc),
             'lastmod' => $lastmod?->toAtomString(),
@@ -84,17 +92,17 @@ Route::get('/sitemap.xml', function () {
     $serviceLastModified = Service::where('isActive', true)->max('updated_at');
     $projectLastModified = Project::where('isActive', true)->max('updated_at');
     $newsLastModified = NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at');
-    $jobLastModified = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->max('updated_at');
+    $jobLastModified = JobPosting::where('status', JobPostingStatus::OPEN)->max('updated_at');
     $documentLastModified = Document::publiclyVisible()->max('updated_at');
 
-    $add('/services', $serviceLastModified ? \Carbon\Carbon::parse($serviceLastModified) : null, 'weekly', '0.9');
-    $add('/projects', $projectLastModified ? \Carbon\Carbon::parse($projectLastModified) : null, 'weekly', '0.9');
-    $add('/news', $newsLastModified ? \Carbon\Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
-    $add('/careers', $jobLastModified ? \Carbon\Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
+    $add('/services', $serviceLastModified ? Carbon::parse($serviceLastModified) : null, 'weekly', '0.9');
+    $add('/projects', $projectLastModified ? Carbon::parse($projectLastModified) : null, 'weekly', '0.9');
+    $add('/news', $newsLastModified ? Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
+    $add('/careers', $jobLastModified ? Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
     $add('/contact', null, 'monthly', '0.7');
 
     if ($documentLastModified) {
-        $add('/documents', $documentLastModified ? \Carbon\Carbon::parse($documentLastModified) : null, 'weekly', '0.7');
+        $add('/documents', $documentLastModified ? Carbon::parse($documentLastModified) : null, 'weekly', '0.7');
     }
 
     Service::where('isActive', true)->select('slug', 'updated_at')->orderBy('orderIndex')->lazy()
@@ -109,7 +117,7 @@ Route::get('/sitemap.xml', function () {
     Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (Document $document) => $add(route('documents.show', ['slug' => $document->slug], false), $document->updated_at, 'monthly', '0.6'));
 
-    JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->select('slug', 'updated_at')->latest('updated_at')->lazy()
+    JobPosting::where('status', JobPostingStatus::OPEN)->select('slug', 'updated_at')->latest('updated_at')->lazy()
         ->each(fn (JobPosting $job) => $add(route('careers.show', ['slug' => $job->slug], false), $job->updated_at, 'weekly', '0.6'));
 
     return response()
@@ -175,13 +183,13 @@ Route::get('/privacy-policy', function () {
 // Admin: Download Database Backup
 Route::get('/admin/backup/download/{filename}', function (string $filename) {
     // Validate filename format to prevent directory traversal
-    if (!preg_match('/^kimmex_backup_\d{4}-\d{2}-\d{2}_\d{6}\.sql(\.gz)?$/', $filename)) {
+    if (! preg_match('/^kimmex_backup_\d{4}-\d{2}-\d{2}_\d{6}\.sql(\.gz)?$/', $filename)) {
         abort(404);
     }
 
-    $filepath = storage_path('app/backups/' . $filename);
+    $filepath = storage_path('app/backups/'.$filename);
 
-    if (!file_exists($filepath)) {
+    if (! file_exists($filepath)) {
         abort(404);
     }
 
@@ -192,7 +200,7 @@ Route::get('/admin/backup/download/{filename}', function (string $filename) {
     return response()->download($filepath, $filename, [
         'Content-Type' => $contentType,
     ]);
-})->middleware(['web', \Filament\Http\Middleware\Authenticate::class])->name('admin.backup.download');
+})->middleware(['web', Authenticate::class])->name('admin.backup.download');
 
 // Testimonial Submission (signed URL protected)
 Route::get('/testimonials/submit', [TestimonialController::class, 'showSubmitForm'])->name('testimonials.submit');
@@ -200,9 +208,9 @@ Route::post('/testimonials/submit', [TestimonialController::class, 'store'])->na
 
 // Newsletter Unsubscribe
 Route::get('/unsubscribe/{token}', function (string $token) {
-    $subscriber = \App\Models\Subscriber::where('unsubscribe_token', $token)->first();
+    $subscriber = Subscriber::where('unsubscribe_token', $token)->first();
 
-    if (!$subscriber) {
+    if (! $subscriber) {
         abort(404);
     }
 

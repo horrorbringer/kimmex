@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\OrgUnits\Schemas;
 
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Model;
 
 class OrgUnitForm
 {
@@ -55,8 +56,7 @@ class OrgUnitForm
                     Grid::make(2)->components([
                         Select::make('parentId')
                             ->label(__('Reports To (Parent Unit)'))
-                            ->relationship('parent', 'title', fn($query, ?\Illuminate\Database\Eloquent\Model $record) => 
-                                $query->orderBy('title->en')->when($record, fn($q) => $q->where('id', '!=', $record->id))
+                            ->relationship('parent', 'title', fn ($query, ?Model $record) => $query->orderBy('title->en')->when($record, fn ($q) => $q->where('id', '!=', $record->id))
                             )
                             ->searchable()
                             ->preload()
@@ -67,15 +67,15 @@ class OrgUnitForm
                             ->label(__('Assigned Employee'))
                             ->helperText(__('Link an individual employee to this unit.'))
                             ->relationship('employee', 'name')
-                            ->visible(fn($get) => in_array($get('type'), ['EXECUTIVE', 'MANAGEMENT', 'DIRECTOR', 'MANAGER', 'STAFF']))
+                            ->visible(fn ($get) => in_array($get('type'), ['EXECUTIVE', 'MANAGEMENT', 'DIRECTOR', 'MANAGER', 'STAFF']))
                             ->searchable()
                             ->preload(),
 
                         Select::make('departmentId')
                             ->label(__('Related Department'))
                             ->helperText(__('Link a formal department structure to this unit.'))
-                            ->relationship('department', 'name', fn($query) => $query->orderBy('name->en'))
-                            ->visible(fn($get) => in_array($get('type'), ['DEPARTMENT', 'DIRECTOR', 'MANAGER']))
+                            ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en'))
+                            ->visible(fn ($get) => in_array($get('type'), ['DEPARTMENT', 'DIRECTOR', 'MANAGER']))
                             ->searchable()
                             ->preload(),
                     ]),

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Support\AIHelper;
 use App\Mail\TestimonialRequestMail;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -10,17 +11,18 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Mail;
+use LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
 
 class EditProject extends EditRecord
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = ProjectResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            \App\Filament\Support\AIHelper::getAutoFillAction('project'),
+            AIHelper::getAutoFillAction('project'),
             Action::make('requestTestimonial')
                 ->label('Request Testimonial')
                 ->icon('heroicon-o-star')

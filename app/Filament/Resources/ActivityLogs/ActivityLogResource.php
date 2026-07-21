@@ -10,12 +10,14 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ActivityLogResource extends Resource
 {
     protected static ?string $model = ActivityLog::class;
 
     protected static ?string $slug = 'audit-logs';
+
     public static function getNavigationLabel(): string
     {
         return __('Admin History');
@@ -37,6 +39,7 @@ class ActivityLogResource extends Resource
     }
 
     protected static ?int $navigationSort = 4;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     public static function canViewAny(): bool
@@ -49,12 +52,12 @@ class ActivityLogResource extends Resource
         return false;
     }
 
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canEdit(Model $record): bool
     {
         return false;
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return false;
     }

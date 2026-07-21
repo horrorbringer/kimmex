@@ -23,7 +23,7 @@ class WeeklyDigestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Kimmex Weekly Digest — ' . now()->format('M d, Y'),
+            subject: 'Kimmex Weekly Digest — '.now()->format('M d, Y'),
         );
     }
 
@@ -35,7 +35,7 @@ class WeeklyDigestMail extends Mailable
                 'articles' => $this->articles,
                 'projects' => $this->projects,
                 'subscriberName' => $this->subscriber->name,
-                'unsubscribeUrl' => url('/unsubscribe/' . $this->subscriber->unsubscribe_token),
+                'unsubscribeUrl' => url('/unsubscribe/'.$this->subscriber->unsubscribe_token),
             ],
         );
     }

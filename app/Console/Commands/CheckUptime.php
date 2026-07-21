@@ -26,7 +26,7 @@ class CheckUptime extends Command
     public function handle(): int
     {
         $siteUrl = config('app.url');
-        $healthUrl = rtrim($siteUrl, '/') . '/health';
+        $healthUrl = rtrim($siteUrl, '/').'/health';
 
         try {
             $response = Http::timeout(15)->get($healthUrl);
@@ -55,21 +55,21 @@ class CheckUptime extends Command
         // Transition: healthy → unhealthy (send DOWN alert)
         if ($currentStatus === 'unhealthy' && $previousStatus === 'healthy') {
             $this->sendDownAlert($siteUrl, $statusCode, $reportedStatus, $checks);
-            $this->warn("Site is DOWN — alert sent.");
+            $this->warn('Site is DOWN — alert sent.');
         }
 
         // Transition: unhealthy → healthy (send RECOVERED alert)
         if ($currentStatus === 'healthy' && $previousStatus === 'unhealthy') {
             $this->sendRecoveredAlert($siteUrl);
-            $this->info("Site has RECOVERED — notification sent.");
+            $this->info('Site has RECOVERED — notification sent.');
         }
 
         if ($currentStatus === 'healthy' && $previousStatus === 'healthy') {
-            $this->info("Site is healthy.");
+            $this->info('Site is healthy.');
         }
 
         if ($currentStatus === 'unhealthy' && $previousStatus === 'unhealthy') {
-            $this->warn("Site is still down — no duplicate alert sent.");
+            $this->warn('Site is still down — no duplicate alert sent.');
         }
 
         // Store current status for next run
@@ -89,12 +89,12 @@ class CheckUptime extends Command
             ->implode(', ');
 
         $message = "🚨 *SITE DOWN ALERT*\n\n"
-            . "🌐 *Site:* {$siteUrl}\n"
-            . "📊 *HTTP Status:* {$statusCode}\n"
-            . "🔴 *Health Status:* {$reportedStatus}\n"
-            . "❌ *Failing Checks:* " . ($failingChecks ?: 'N/A') . "\n"
-            . "🕐 *Timestamp:* " . now()->toDateTimeString() . "\n\n"
-            . "_Alerts are suppressed until the site recovers._";
+            ."🌐 *Site:* {$siteUrl}\n"
+            ."📊 *HTTP Status:* {$statusCode}\n"
+            ."🔴 *Health Status:* {$reportedStatus}\n"
+            .'❌ *Failing Checks:* '.($failingChecks ?: 'N/A')."\n"
+            .'🕐 *Timestamp:* '.now()->toDateTimeString()."\n\n"
+            .'_Alerts are suppressed until the site recovers._';
 
         $this->sendTelegramAlert($message);
 
@@ -112,10 +112,10 @@ class CheckUptime extends Command
     private function sendRecoveredAlert(string $siteUrl): void
     {
         $message = "✅ *SITE RECOVERED*\n\n"
-            . "🌐 *Site:* {$siteUrl}\n"
-            . "🟢 *Health Status:* healthy\n"
-            . "🕐 *Recovered At:* " . now()->toDateTimeString() . "\n\n"
-            . "_All checks are passing again._";
+            ."🌐 *Site:* {$siteUrl}\n"
+            ."🟢 *Health Status:* healthy\n"
+            .'🕐 *Recovered At:* '.now()->toDateTimeString()."\n\n"
+            .'_All checks are passing again._';
 
         $this->sendTelegramAlert($message);
 
@@ -134,16 +134,17 @@ class CheckUptime extends Command
             ?? $settings['telegram_inquiries_chat_id']
             ?? null;
 
-        if (!$chatId) {
+        if (! $chatId) {
             $this->error('No Telegram chat ID configured for uptime alerts.');
             Log::warning('Uptime check: no Telegram chat ID configured for alerts.');
+
             return;
         }
 
         $telegram = app(TelegramService::class);
         $sent = $telegram->sendMessage($chatId, $message);
 
-        if (!$sent) {
+        if (! $sent) {
             $this->error('Failed to send Telegram alert.');
         }
     }

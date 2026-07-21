@@ -2,22 +2,25 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm;
 use App\Models\OrgUnit;
-use Filament\Pages\Page;
-use Filament\Notifications\Notification;
+use App\Models\SystemSetting;
 use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-
-use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Form;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Illuminate\Support\Facades\Cache;
 
-class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActions, HasForms
+class ManageOrgChart extends Page implements HasActions, HasForms
 {
-    use \Filament\Actions\Concerns\InteractsWithActions;
+    use InteractsWithActions;
     use InteractsWithForms;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-presentation-chart-line';
@@ -42,11 +45,12 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
     }
 
     public $chartData = [];
+
     public ?array $data = [];
 
     public function mount()
     {
-        $org = \App\Models\SystemSetting::get('organization_profile', []);
+        $org = SystemSetting::get('organization_profile', []);
         $this->form->fill([
             'org_chart_type' => $org['org_chart_type'] ?? 'dynamic',
             'org_chart_image' => $org['org_chart_image'] ?? null,
@@ -59,7 +63,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
     {
         return $form
             ->schema([
-                \Filament\Schemas\Components\Section::make(__('Display Mode'))
+                Section::make(__('Display Mode'))
                     ->description(__('Choose whether to build an interactive chart below, or upload a static file.'))
                     ->schema([
                         Select::make('org_chart_type')
@@ -72,7 +76,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
                             ->default('dynamic')
                             ->required()
                             ->live(),
-                        \Filament\Forms\Components\FileUpload::make('org_chart_image')
+                        FileUpload::make('org_chart_image')
                             ->label(__('Organization Chart Image'))
                             ->image()
                             ->disk(config('filesystems.public_uploads_disk'))
@@ -80,7 +84,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
                             ->visibility('public')
                             ->maxSize(102400) // 100MB
                             ->visible(fn ($get) => $get('org_chart_type') === 'image'),
-                        \Filament\Forms\Components\FileUpload::make('org_chart_pdf')
+                        FileUpload::make('org_chart_pdf')
                             ->label(__('Organization Chart PDF'))
                             ->disk(config('filesystems.public_uploads_disk'))
                             ->directory('organization')
@@ -95,14 +99,14 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
 
     public function saveDisplaySettings()
     {
-        $org = \App\Models\SystemSetting::get('organization_profile', []);
+        $org = SystemSetting::get('organization_profile', []);
         $org = array_merge($org, $this->form->getState());
-        \App\Models\SystemSetting::set('organization_profile', $org);
+        SystemSetting::set('organization_profile', $org);
 
         // Clear cache
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_kh');
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
+        Cache::forget('about_orgchart_en');
+        Cache::forget('about_orgchart_kh');
+        Cache::forget('about_orgchart_km');
 
         Notification::make()
             ->title(__('Display Settings Saved'))
@@ -116,7 +120,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
             CreateAction::make('addRoot')
                 ->label(__('Add Root Unit'))
                 ->model(OrgUnit::class)
-                ->form(\App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm::getSchema()),
+                ->form(OrgUnitForm::getSchema()),
         ];
     }
 
@@ -124,8 +128,8 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
     {
         return Action::make('edit')
             ->model(OrgUnit::class)
-            ->form(\App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm::getSchema())
-            ->fillForm(fn(array $arguments): array => OrgUnit::find($arguments['id'])->toArray())
+            ->form(OrgUnitForm::getSchema())
+            ->fillForm(fn (array $arguments): array => OrgUnit::find($arguments['id'])->toArray())
             ->action(function (array $data, array $arguments): void {
                 OrgUnit::find($arguments['id'])->update($data);
                 $this->loadChartData();
@@ -136,7 +140,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
     {
         return Action::make('addChild')
             ->model(OrgUnit::class)
-            ->form(\App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm::getSchema())
+            ->form(OrgUnitForm::getSchema())
             ->action(function (array $data, array $arguments): void {
                 $data['parentId'] = $arguments['id'];
                 OrgUnit::create($data);
@@ -191,9 +195,9 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
         $this->updateHierarchy($data);
 
         // Clear cache for both English and Khmer
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_kh');
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
+        Cache::forget('about_orgchart_en');
+        Cache::forget('about_orgchart_kh');
+        Cache::forget('about_orgchart_km');
 
         Notification::make()
             ->title(__('Saved successfully'))
@@ -211,7 +215,7 @@ class ManageOrgChart extends Page implements \Filament\Actions\Contracts\HasActi
                 'orderIndex' => $index,
             ]);
 
-            if (!empty($item['children'])) {
+            if (! empty($item['children'])) {
                 $this->updateHierarchy($item['children'], $item['id']);
             }
         }

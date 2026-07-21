@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('scopeContributionsKm')->nullable();
             $table->text('engineeringNarrative')->nullable();
             $table->text('engineeringNarrativeKm')->nullable();
-            
+
             // Key Facts
             $table->string('timeline')->nullable(); // e.g., "Jan 2024 - Dec 2025"
             $table->string('scale')->nullable();    // e.g., "50,000 sqm"
@@ -36,7 +36,7 @@ return new class extends Migration
                 'designConcept', 'designConceptKm',
                 'scopeContributions', 'scopeContributionsKm',
                 'engineeringNarrative', 'engineeringNarrativeKm',
-                'timeline', 'scale'
+                'timeline', 'scale',
             ]);
         });
     }

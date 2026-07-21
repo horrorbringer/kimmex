@@ -23,7 +23,7 @@ class ApplicationStatusMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->status->emailSubject() . ' — Kimmex',
+            subject: $this->status->emailSubject().' — Kimmex',
         );
     }
 

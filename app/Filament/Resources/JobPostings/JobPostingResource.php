@@ -12,10 +12,12 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class JobPostingResource extends Resource
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use Translatable;
 
     protected static ?string $model = JobPosting::class;
 
@@ -40,6 +42,7 @@ class JobPostingResource extends Resource
     }
 
     protected static ?int $navigationSort = 4;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-briefcase';
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -49,7 +52,7 @@ class JobPostingResource extends Resource
         return ['title', 'slug', 'location'];
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }

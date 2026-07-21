@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 class ProjectCategory extends Model
@@ -63,15 +64,15 @@ class ProjectCategory extends Model
     {
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("nav_categories_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
+                Cache::forget("nav_categories_{$locale}");
+                Cache::forget("projects_index_data_{$locale}");
             }
         });
 
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("nav_categories_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
+                Cache::forget("nav_categories_{$locale}");
+                Cache::forget("projects_index_data_{$locale}");
             }
         });
     }

@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\SystemSetting;
+use App\Services\AutoTranslateService;
 use Illuminate\Database\Seeder;
 
 class BrandIdentitySeeder extends Seeder
@@ -12,14 +13,14 @@ class BrandIdentitySeeder extends Seeder
      */
     public function run(): void
     {
-        $translator = new \App\Services\AutoTranslateService();
+        $translator = new AutoTranslateService;
 
         $enContent = [
-            'company_story' => "Established in 1999, Kim Mex Construction & Investment Co., Ltd. is a deeply respected and duly registered enterprise in the Kingdom of Cambodia. Over more than 25 years, we have evolved from a specialized engineering firm into a premier multi-disciplinary construction partner, delivering iconic infrastructure that stands the test of time while elevating the communities we serve.",
-            'ceo_message' => "Construction is not just about concrete and steel. It is about building trust, fostering communities, and leaving a legacy that stands the test of time.",
-            'mission' => "To bridge the gap between concept and reality through exceptional precision, military-grade safety, and sustainable building practices.",
-            'vision' => "To be the most trusted and innovative construction partner in Cambodia, setting the benchmark for excellence in architecture and engineering.",
-            'goal' => "To maintain long-term leadership in the Cambodian market through talent development, CMS investment, and a zero-accident safety records.",
+            'company_story' => 'Established in 1999, Kim Mex Construction & Investment Co., Ltd. is a deeply respected and duly registered enterprise in the Kingdom of Cambodia. Over more than 25 years, we have evolved from a specialized engineering firm into a premier multi-disciplinary construction partner, delivering iconic infrastructure that stands the test of time while elevating the communities we serve.',
+            'ceo_message' => 'Construction is not just about concrete and steel. It is about building trust, fostering communities, and leaving a legacy that stands the test of time.',
+            'mission' => 'To bridge the gap between concept and reality through exceptional precision, military-grade safety, and sustainable building practices.',
+            'vision' => 'To be the most trusted and innovative construction partner in Cambodia, setting the benchmark for excellence in architecture and engineering.',
+            'goal' => 'To maintain long-term leadership in the Cambodian market through talent development, CMS investment, and a zero-accident safety records.',
             'values_list' => [
                 ['title' => 'HONESTY', 'description' => 'Unwavering transparency and ethics in every contract and communication.', 'icon' => 'lucide-shield'],
                 ['title' => 'DISCIPLINE', 'description' => 'Military-grade precision and adherence to strict project timelines.', 'icon' => 'lucide-award'],
@@ -40,6 +41,6 @@ class BrandIdentitySeeder extends Seeder
             'km' => $kmContent,
         ];
 
-        \App\Models\SystemSetting::set('brand_identity', $brandData);
+        SystemSetting::set('brand_identity', $brandData);
     }
 }

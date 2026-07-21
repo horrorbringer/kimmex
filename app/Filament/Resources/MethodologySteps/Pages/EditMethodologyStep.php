@@ -5,6 +5,7 @@ namespace App\Filament\Resources\MethodologySteps\Pages;
 use App\Filament\Resources\MethodologySteps\MethodologyStepResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher;
 use LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
 
 class EditMethodologyStep extends EditRecord
@@ -16,7 +17,7 @@ class EditMethodologyStep extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            \LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher::make(),
+            LocaleSwitcher::make(),
             DeleteAction::make(),
         ];
     }

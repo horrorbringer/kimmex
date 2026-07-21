@@ -8,9 +8,9 @@ use App\Models\ProjectCategory;
 use App\Models\ProjectImage;
 use App\Services\AutoTranslateService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use RuntimeException;
 use ZipArchive;
@@ -148,7 +148,7 @@ class ProjectSeeder extends Seeder
      */
     private function readWorksheetRows(string $path): array
     {
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
 
         if ($zip->open($path) !== true) {
             throw new RuntimeException("Unable to open project spreadsheet: {$path}");
@@ -218,7 +218,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function slugFor(array $project): string
     {
@@ -230,7 +230,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function categorySlugFor(array $project): string
     {
@@ -305,8 +305,8 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $sourceProject
-     * @param array<string, mixed> $englishProject
+     * @param  array<string, mixed>  $sourceProject
+     * @param  array<string, mixed>  $englishProject
      */
     private function syncGalleryImages(Project $project, array $sourceProject, array $englishProject, string $categorySlug): void
     {
@@ -356,7 +356,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function galleryCaptionFor(array $project, int $index): string
     {
@@ -368,7 +368,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function scaleFor(array $project): string
     {
@@ -398,7 +398,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function timelineFor(array $project): string
     {
@@ -507,7 +507,7 @@ class ProjectSeeder extends Seeder
      * The application-level saving hook auto-translates non-empty English
      * translations into Khmer, so the seeder intentionally stores only `en`.
      *
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      * @return array<string, mixed>
      */
     private function englishProjectData(array $project): array
@@ -598,7 +598,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function descriptionFor(array $project): string
     {
@@ -611,7 +611,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function khmerDescriptionFor(array $project): string
     {
@@ -624,7 +624,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function backgroundFor(array $project): string
     {
@@ -639,7 +639,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function khmerBackgroundFor(array $project): string
     {
@@ -654,7 +654,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function objectivesFor(array $project): string
     {
@@ -668,7 +668,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function khmerObjectivesFor(array $project): string
     {
@@ -682,7 +682,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function designConceptFor(array $project, string $categorySlug): string
     {
@@ -699,7 +699,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function khmerDesignConceptFor(array $project): string
     {
@@ -707,7 +707,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function scopeFor(array $project): string
     {
@@ -724,7 +724,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function engineeringNarrativeFor(array $project): string
     {
@@ -733,7 +733,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function khmerEngineeringNarrativeFor(array $project): string
     {
@@ -742,7 +742,7 @@ class ProjectSeeder extends Seeder
     }
 
     /**
-     * @param array<string, mixed> $project
+     * @param  array<string, mixed>  $project
      */
     private function khmerScopeFor(array $project): string
     {

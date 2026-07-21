@@ -5,10 +5,11 @@ namespace App\Filament\Resources\Departments\Pages;
 use App\Filament\Resources\Departments\DepartmentResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
 
 class EditDepartment extends EditRecord
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = DepartmentResource::class;
 

@@ -6,7 +6,6 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\OrgUnit;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class OrgStructureSeeder extends Seeder
 {
@@ -42,7 +41,7 @@ class OrgStructureSeeder extends Seeder
         }
 
         // 2. Create Employees & Org Units Hierarchy
-        
+
         // Level 0: CEO
         $ceoEmp = Employee::updateOrCreate(
             ['name' => 'TOUCH KIM'],
@@ -54,7 +53,7 @@ class OrgStructureSeeder extends Seeder
                 'title' => ['en' => 'CEO', 'km' => 'នាយកប្រតិបត្តិ (CEO)'],
                 'type' => 'EXECUTIVE',
                 'departmentId' => $departments['executive']->id,
-                'orderIndex' => 1
+                'orderIndex' => 1,
             ]
         );
 
@@ -70,7 +69,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'EXECUTIVE',
                 'parentId' => $ceoUnit->id,
                 'departmentId' => $departments['executive']->id,
-                'orderIndex' => 1
+                'orderIndex' => 1,
             ]
         );
 
@@ -86,7 +85,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGEMENT',
                 'parentId' => $dceoUnit->id,
                 'departmentId' => $departments['management']->id,
-                'orderIndex' => 1
+                'orderIndex' => 1,
             ]
         );
 
@@ -102,7 +101,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'DIRECTOR',
                 'parentId' => $dgmUnit->id,
                 'departmentId' => $departments['finance']->id,
-                'orderIndex' => 1
+                'orderIndex' => 1,
             ]
         );
 
@@ -117,7 +116,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'DIRECTOR',
                 'parentId' => $dgmUnit->id,
                 'departmentId' => $departments['procurement']->id,
-                'orderIndex' => 2
+                'orderIndex' => 2,
             ]
         );
 
@@ -134,7 +133,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGER',
                 'parentId' => $dgmUnit->id,
                 'departmentId' => $departments['hr-admin']->id,
-                'orderIndex' => 3
+                'orderIndex' => 3,
             ]
         );
 
@@ -150,7 +149,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGER',
                 'parentId' => $dgmUnit->id,
                 'departmentId' => $departments['hr-admin']->id,
-                'orderIndex' => 4
+                'orderIndex' => 4,
             ]
         );
 
@@ -166,7 +165,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGER',
                 'parentId' => $dgmUnit->id,
                 'departmentId' => $departments['management']->id,
-                'orderIndex' => 5
+                'orderIndex' => 5,
             ]
         );
 
@@ -183,7 +182,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGER',
                 'parentId' => $dceoUnit->id,
                 'departmentId' => $departments['technical']->id,
-                'orderIndex' => 10
+                'orderIndex' => 10,
             ]
         );
 
@@ -200,7 +199,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGER',
                 'parentId' => $finDirUnit->id,
                 'departmentId' => $departments['finance']->id,
-                'orderIndex' => 1
+                'orderIndex' => 1,
             ]
         );
 
@@ -216,7 +215,7 @@ class OrgStructureSeeder extends Seeder
                 'type' => 'MANAGER',
                 'parentId' => $finDirUnit->id,
                 'departmentId' => $departments['finance']->id,
-                'orderIndex' => 2
+                'orderIndex' => 2,
             ]
         );
     }

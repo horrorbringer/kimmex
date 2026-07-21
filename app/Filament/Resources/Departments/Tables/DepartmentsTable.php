@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\Departments\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
+use App\Models\Department;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use App\Models\Department;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class DepartmentsTable
 {
@@ -21,14 +24,14 @@ class DepartmentsTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Department Name'))
-                    ->description(fn(Department $record) => \Illuminate\Support\Str::limit(strip_tags($record->description['en'] ?? ''), 50))
+                    ->description(fn (Department $record) => Str::limit(strip_tags($record->description['en'] ?? ''), 50))
                     ->searchable()
                     ->weight('bold')
                     ->toggleable(),
 
                 TextColumn::make('headUnit.employee.name')
                     ->label(__('Department Head'))
-                    ->description(fn(Department $record) => $record->headUnit?->employee?->role ?? '-')
+                    ->description(fn (Department $record) => $record->headUnit?->employee?->role ?? '-')
                     ->placeholder('-')
                     ->toggleable(),
 
@@ -50,12 +53,12 @@ class DepartmentsTable
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
-                EditAction::make()->visible(fn() => auth()->user()?->isAdmin()),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
+                EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->visible(fn() => auth()->user()?->isAdmin()),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

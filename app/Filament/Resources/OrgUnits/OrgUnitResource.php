@@ -12,10 +12,11 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class OrgUnitResource extends Resource
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use Translatable;
 
     protected static ?string $model = OrgUnit::class;
 
@@ -42,12 +43,14 @@ class OrgUnitResource extends Resource
     }
 
     protected static ?int $navigationSort = 5;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
 
     public static function canViewAny(): bool
     {
         return auth()->user()?->isAdmin();
     }
+
     public static function form(Schema $schema): Schema
     {
         return OrgUnitForm::configure($schema);

@@ -9,7 +9,9 @@ use Illuminate\Support\Carbon;
 class TrafficByHourChartWidget extends ChartWidget
 {
     protected static ?int $sort = 7;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
+
     protected ?string $maxHeight = '280px';
 
     public function getHeading(): ?string
@@ -53,6 +55,7 @@ class TrafficByHourChartWidget extends ChartWidget
                     'backgroundColor' => array_map(function ($value) use ($data) {
                         $max = max($data) ?: 1;
                         $opacity = 0.3 + (0.7 * ($value / $max));
+
                         return "rgba(99, 102, 241, {$opacity})";
                     }, $data),
                     'borderRadius' => 4,

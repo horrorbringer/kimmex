@@ -9,7 +9,9 @@ use Illuminate\Support\Carbon;
 class ContentSectionsChartWidget extends ChartWidget
 {
     protected static ?int $sort = 12;
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
@@ -48,7 +50,7 @@ class ContentSectionsChartWidget extends ChartWidget
                     ->where('visited_at', '>=', $since)
                     ->count();
             } else {
-                $data[] = PageView::where('path', 'like', $prefix . '%')
+                $data[] = PageView::where('path', 'like', $prefix.'%')
                     ->where('visited_at', '>=', $since)
                     ->count();
             }

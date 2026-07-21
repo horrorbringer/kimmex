@@ -2,11 +2,13 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Support\FlatRecordDetails;
 use App\Models\Inquiry;
+use App\Support\PublicStorage;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
 
 class LatestInquiriesWidget extends BaseWidget
 {
@@ -17,7 +19,7 @@ class LatestInquiriesWidget extends BaseWidget
         return false; // Replaced by RecentActivityFeedWidget
     }
 
-    protected int | string | array $columnSpan = 'half';
+    protected int|string|array $columnSpan = 'half';
 
     public function table(Table $table): Table
     {
@@ -40,7 +42,7 @@ class LatestInquiriesWidget extends BaseWidget
                     ->formatStateUsing(fn ($state) => $state ? __('View File') : __('No File'))
                     ->icon(fn ($state) => $state ? 'heroicon-o-paper-clip' : null)
                     ->color(fn ($state) => $state ? 'primary' : 'gray')
-                    ->url(fn ($record) => $record->attachment_url ? \App\Support\PublicStorage::url($record->attachment_url) : null)
+                    ->url(fn ($record) => $record->attachment_url ? PublicStorage::url($record->attachment_url) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
@@ -58,8 +60,8 @@ class LatestInquiriesWidget extends BaseWidget
                     ->sortable(),
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make()
-                    ->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()
+                    ->schema(fn ($record): array => FlatRecordDetails::schema($record)),
             ]);
     }
 }

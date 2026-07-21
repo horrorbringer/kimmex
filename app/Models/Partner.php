@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 class Partner extends Model
 {
-    use HasTranslations, HasUuids, DeletesPublicUploads;
+    use DeletesPublicUploads, HasTranslations, HasUuids;
 
     public $translatable = ['name'];
 
@@ -33,18 +33,18 @@ class Partner extends Model
     {
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("home_partners_array_{$locale}");
+                Cache::forget("home_partners_array_{$locale}");
             }
-            \Illuminate\Support\Facades\Cache::forget('home_partners_array');
-            \Illuminate\Support\Facades\Cache::forget('home_partners_array_v2');
+            Cache::forget('home_partners_array');
+            Cache::forget('home_partners_array_v2');
         });
 
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("home_partners_array_{$locale}");
+                Cache::forget("home_partners_array_{$locale}");
             }
-            \Illuminate\Support\Facades\Cache::forget('home_partners_array');
-            \Illuminate\Support\Facades\Cache::forget('home_partners_array_v2');
+            Cache::forget('home_partners_array');
+            Cache::forget('home_partners_array_v2');
         });
     }
 }

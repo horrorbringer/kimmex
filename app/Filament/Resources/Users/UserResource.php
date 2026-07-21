@@ -12,6 +12,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class UserResource extends Resource
 {
@@ -23,6 +24,7 @@ class UserResource extends Resource
     }
 
     protected static ?int $navigationSort = 3;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
     public static function canViewAny(): bool
@@ -30,7 +32,7 @@ class UserResource extends Resource
         return auth()->user()?->isAdmin();
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin() && $record->id !== auth()->id();
     }

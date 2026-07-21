@@ -11,10 +11,12 @@ use App\Models\Milestone;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class MilestoneResource extends Resource
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use Translatable;
 
     protected static ?string $model = Milestone::class;
 
@@ -39,9 +41,10 @@ class MilestoneResource extends Resource
     }
 
     protected static ?int $navigationSort = 5;
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-flag';
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }

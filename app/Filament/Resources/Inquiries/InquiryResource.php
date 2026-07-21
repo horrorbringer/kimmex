@@ -10,8 +10,8 @@ use App\Models\Inquiry;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class InquiryResource extends Resource
 {
@@ -38,6 +38,7 @@ class InquiryResource extends Resource
     }
 
     protected static ?int $navigationSort = 1;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-oval-left-ellipsis';
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -69,12 +70,12 @@ class InquiryResource extends Resource
         return false;
     }
 
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canEdit(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }

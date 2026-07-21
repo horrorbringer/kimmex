@@ -5,11 +5,14 @@ namespace App\Filament\Widgets;
 use App\Models\PageView;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class TopPagesChartWidget extends ChartWidget
 {
     protected static ?int $sort = 6;
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
@@ -39,7 +42,8 @@ class TopPagesChartWidget extends ChartWidget
 
         $labels = $pages->map(function ($page) {
             $path = $page->path === '/' ? 'Homepage' : ltrim($page->path, '/');
-            return \Illuminate\Support\Str::limit($path, 20);
+
+            return Str::limit($path, 20);
         })->toArray();
 
         $data = $pages->pluck('views')->toArray();

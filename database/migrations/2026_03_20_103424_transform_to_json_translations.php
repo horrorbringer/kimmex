@@ -2,10 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -24,8 +25,9 @@ return new class extends Migration {
         ];
 
         foreach ($tables as $table => $columns) {
-            if (!Schema::hasTable($table))
+            if (! Schema::hasTable($table)) {
                 continue;
+            }
 
             // Migrate data to temporary array before making structural changes
             $rows = DB::table($table)->get();
@@ -40,7 +42,7 @@ return new class extends Migration {
                     // Normalize: if the value is numerically indexed, it means base name == field pair key
                     if (is_numeric($baseField)) {
                         $actualBaseField = $kmField;
-                        $actualKmField = $kmField . 'Km';
+                        $actualKmField = $kmField.'Km';
                     } else {
                         $actualBaseField = $baseField;
                         $actualKmField = $kmField;
@@ -51,7 +53,7 @@ return new class extends Migration {
 
                     $translations[$actualBaseField] = json_encode([
                         'en' => $enValue,
-                        'km' => $kmValue ?: $enValue // Fallback KM to EN if empty
+                        'km' => $kmValue ?: $enValue, // Fallback KM to EN if empty
                     ]);
                 }
                 $tableData[$rowId] = $translations;
@@ -68,7 +70,7 @@ return new class extends Migration {
             Schema::table($table, function (Blueprint $tableAlter) use ($columns, $table) {
                 foreach ($columns as $baseField => $kmField) {
                     $actualBaseField = is_numeric($baseField) ? $kmField : $baseField;
-                    $actualKmField = is_numeric($baseField) ? $kmField . 'Km' : $kmField;
+                    $actualKmField = is_numeric($baseField) ? $kmField.'Km' : $kmField;
 
                     // Drop Km column if it exists
                     if (Schema::hasColumn($table, $actualKmField)) {

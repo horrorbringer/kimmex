@@ -10,7 +10,9 @@ use Illuminate\Support\Str;
 class DeviceDistributionChartWidget extends ChartWidget
 {
     protected static ?int $sort = 8;
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
@@ -50,7 +52,7 @@ class DeviceDistributionChartWidget extends ChartWidget
         }
 
         // Remove zero entries
-        $devices = array_filter($devices, fn($v) => $v > 0);
+        $devices = array_filter($devices, fn ($v) => $v > 0);
 
         $colorMap = [
             'Desktop' => '#6366f1',
@@ -63,13 +65,13 @@ class DeviceDistributionChartWidget extends ChartWidget
             'datasets' => [
                 [
                     'data' => array_values($devices),
-                    'backgroundColor' => array_map(fn($k) => $colorMap[$k] ?? '#6366f1', array_keys($devices)),
+                    'backgroundColor' => array_map(fn ($k) => $colorMap[$k] ?? '#6366f1', array_keys($devices)),
                     'borderWidth' => 2,
                     'borderColor' => '#ffffff',
                     'hoverOffset' => 8,
                 ],
             ],
-            'labels' => array_map(fn($k) => __($k), array_keys($devices)),
+            'labels' => array_map(fn ($k) => __($k), array_keys($devices)),
         ];
     }
 

@@ -5,14 +5,16 @@ namespace App\Filament\Resources\Subscribers;
 use App\Filament\Resources\Subscribers\Pages\ListSubscribers;
 use App\Models\Subscriber;
 use BackedEnum;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\BulkActionGroup;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SubscriberResource extends Resource
 {
@@ -39,6 +41,7 @@ class SubscriberResource extends Resource
     }
 
     protected static ?int $navigationSort = 1;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-megaphone';
 
     protected static ?string $recordTitleAttribute = 'email';
@@ -80,7 +83,7 @@ class SubscriberResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('is_active')
+                SelectFilter::make('is_active')
                     ->label(__('Status'))
                     ->options([
                         '1' => __('Active'),
@@ -113,7 +116,7 @@ class SubscriberResource extends Resource
         return false;
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin() ?? false;
     }

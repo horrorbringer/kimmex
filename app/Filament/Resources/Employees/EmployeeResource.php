@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Employees;
 use App\Filament\Resources\Employees\Pages\CreateEmployee;
 use App\Filament\Resources\Employees\Pages\EditEmployee;
 use App\Filament\Resources\Employees\Pages\ListEmployees;
+use App\Filament\Resources\Employees\RelationManagers\OrgUnitRelationManager;
 use App\Filament\Resources\Employees\Schemas\EmployeeForm;
 use App\Filament\Resources\Employees\Tables\EmployeesTable;
 use App\Models\Employee;
@@ -12,6 +13,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class EmployeeResource extends Resource
 {
@@ -38,6 +40,7 @@ class EmployeeResource extends Resource
     }
 
     protected static ?int $navigationSort = 3;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $recordTitleAttribute = 'name';
@@ -52,7 +55,7 @@ class EmployeeResource extends Resource
         return auth()->user()?->isAdmin();
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }
@@ -70,7 +73,7 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            \App\Filament\Resources\Employees\RelationManagers\OrgUnitRelationManager::class,
+            OrgUnitRelationManager::class,
         ];
     }
 

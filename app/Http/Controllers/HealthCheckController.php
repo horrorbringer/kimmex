@@ -76,7 +76,7 @@ class HealthCheckController extends Controller
             return [
                 'name' => 'Database',
                 'status' => 'fail',
-                'message' => 'Database connection failed: ' . $e->getMessage(),
+                'message' => 'Database connection failed: '.$e->getMessage(),
             ];
         }
     }
@@ -104,7 +104,7 @@ class HealthCheckController extends Controller
     private static function checkStorageWritable(): array
     {
         try {
-            $testFile = 'health_check_' . uniqid() . '.tmp';
+            $testFile = 'health_check_'.uniqid().'.tmp';
             Storage::disk('local')->put($testFile, 'health_check_test');
             $content = Storage::disk('local')->get($testFile);
             Storage::disk('local')->delete($testFile);
@@ -126,7 +126,7 @@ class HealthCheckController extends Controller
             return [
                 'name' => 'Storage Writable',
                 'status' => 'fail',
-                'message' => 'Storage test failed: ' . $e->getMessage(),
+                'message' => 'Storage test failed: '.$e->getMessage(),
             ];
         }
     }
@@ -134,7 +134,7 @@ class HealthCheckController extends Controller
     private static function checkCache(): array
     {
         try {
-            $key = 'health_check_' . uniqid();
+            $key = 'health_check_'.uniqid();
             Cache::put($key, 'ok', 10);
             $value = Cache::get($key);
             Cache::forget($key);
@@ -143,7 +143,7 @@ class HealthCheckController extends Controller
                 return [
                     'name' => 'Cache',
                     'status' => 'pass',
-                    'message' => 'Cache put/get is working (driver: ' . config('cache.default') . ').',
+                    'message' => 'Cache put/get is working (driver: '.config('cache.default').').',
                 ];
             }
 
@@ -156,7 +156,7 @@ class HealthCheckController extends Controller
             return [
                 'name' => 'Cache',
                 'status' => 'fail',
-                'message' => 'Cache test failed: ' . $e->getMessage(),
+                'message' => 'Cache test failed: '.$e->getMessage(),
             ];
         }
     }
@@ -210,7 +210,7 @@ class HealthCheckController extends Controller
         return [
             'name' => 'Environment',
             'status' => 'pass',
-            'message' => "Environment: {$env}, Debug: " . ($debug ? 'ON' : 'OFF') . '.',
+            'message' => "Environment: {$env}, Debug: ".($debug ? 'ON' : 'OFF').'.',
         ];
     }
 

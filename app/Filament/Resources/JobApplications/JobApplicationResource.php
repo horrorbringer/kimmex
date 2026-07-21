@@ -10,8 +10,8 @@ use App\Models\JobApplication;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class JobApplicationResource extends Resource
 {
@@ -38,6 +38,7 @@ class JobApplicationResource extends Resource
     }
 
     protected static ?int $navigationSort = 5;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-check';
 
     public static function form(Schema $schema): Schema
@@ -62,12 +63,12 @@ class JobApplicationResource extends Resource
         return false;
     }
 
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canEdit(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }

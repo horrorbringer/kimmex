@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 class Milestone extends Model
 {
-    use HasUuids, HasTranslations, DeletesPublicUploads;
+    use DeletesPublicUploads, HasTranslations, HasUuids;
 
     public $translatable = ['title', 'description', 'detailed_description'];
 
@@ -37,8 +38,8 @@ class Milestone extends Model
 
     protected static function clearMilestoneCache()
     {
-        \Illuminate\Support\Facades\Cache::forget('about_milestones_data_en');
-        \Illuminate\Support\Facades\Cache::forget('about_milestones_data_kh');
-        \Illuminate\Support\Facades\Cache::forget('about_milestones_data_km');
+        Cache::forget('about_milestones_data_en');
+        Cache::forget('about_milestones_data_kh');
+        Cache::forget('about_milestones_data_km');
     }
 }

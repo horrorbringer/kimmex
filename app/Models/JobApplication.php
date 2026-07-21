@@ -4,12 +4,13 @@ namespace App\Models;
 
 use App\Enums\ApplicationStatus;
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JobApplication extends Model
 {
-    use HasUuids, DeletesPublicUploads;
+    use DeletesPublicUploads, HasUuids;
 
     protected array $publicUploadAttributes = ['resumeUrl'];
 
@@ -32,7 +33,7 @@ class JobApplication extends Model
         ];
     }
 
-    public function job(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function job(): BelongsTo
     {
         return $this->belongsTo(JobPosting::class, 'jobId');
     }

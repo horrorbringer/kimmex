@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 class BackupDatabase extends Command
 {
     protected $signature = 'backup:database {--no-compress : Skip gzip compression}';
+
     protected $description = 'Export the database to a SQL backup file with optional gzip compression';
 
     /**
@@ -35,19 +36,20 @@ class BackupDatabase extends Command
         // Attempt mysqldump first, fall back to PHP-based export
         $success = $this->tryMysqldump($filepath);
 
-        if (!$success) {
+        if (! $success) {
             $this->warn('mysqldump not available. Using PHP-based export...');
             $success = $this->phpBasedExport($filepath);
         }
 
-        if (!$success) {
+        if (! $success) {
             $this->error('Backup failed.');
+
             return self::FAILURE;
         }
 
         // Compress with gzip if available and not disabled
         $finalPath = $filepath;
-        if (!$this->option('no-compress') && $this->canGzip()) {
+        if (! $this->option('no-compress') && $this->canGzip()) {
             $this->info('Compressing backup with gzip...');
             $finalPath = $this->compressFile($filepath);
         }
@@ -79,10 +81,11 @@ class BackupDatabase extends Command
      */
     protected function tryMysqldump(string $filepath): bool
     {
-        $config = config('database.connections.' . config('database.default'));
+        $config = config('database.connections.'.config('database.default'));
 
-        if (!in_array($config['driver'] ?? '', ['mysql', 'mariadb'])) {
+        if (! in_array($config['driver'] ?? '', ['mysql', 'mariadb'])) {
             $this->warn("Driver '{$config['driver']}' is not MySQL/MariaDB. Skipping mysqldump.");
+
             return false;
         }
 
@@ -105,7 +108,7 @@ class BackupDatabase extends Command
             escapeshellarg($host),
             escapeshellarg($port),
             escapeshellarg($username),
-            $password ? ' --password=' . escapeshellarg($password) : '',
+            $password ? ' --password='.escapeshellarg($password) : '',
             escapeshellarg($database),
             escapeshellarg($filepath)
         );
@@ -113,15 +116,17 @@ class BackupDatabase extends Command
         exec($cmd, $dumpOutput, $exitCode);
 
         if ($exitCode !== 0) {
-            $this->warn('mysqldump returned exit code ' . $exitCode);
+            $this->warn('mysqldump returned exit code '.$exitCode);
             // Clean up partial file
             if (File::exists($filepath)) {
                 File::delete($filepath);
             }
+
             return false;
         }
 
         $this->info('Database exported via mysqldump.');
+
         return true;
     }
 
@@ -132,18 +137,19 @@ class BackupDatabase extends Command
     {
         try {
             $pdo = DB::connection()->getPdo();
-            $driver = config('database.connections.' . config('database.default') . '.driver');
+            $driver = config('database.connections.'.config('database.default').'.driver');
 
             $handle = fopen($filepath, 'w');
-            if (!$handle) {
+            if (! $handle) {
                 $this->error("Cannot open file for writing: {$filepath}");
+
                 return false;
             }
 
             // Write header
-            $database = config('database.connections.' . config('database.default') . '.database');
+            $database = config('database.connections.'.config('database.default').'.database');
             fwrite($handle, "-- Kimmex Database Backup\n");
-            fwrite($handle, "-- Generated: " . now()->format('Y-m-d H:i:s') . "\n");
+            fwrite($handle, '-- Generated: '.now()->format('Y-m-d H:i:s')."\n");
             fwrite($handle, "-- Database: {$database}\n");
             fwrite($handle, "-- Method: PHP PDO Export\n");
             fwrite($handle, "-- -----------------------------------------------\n\n");
@@ -156,7 +162,7 @@ class BackupDatabase extends Command
 
             // Get all tables
             $tables = $this->getTables($pdo, $driver);
-            $this->info("Found " . count($tables) . " tables to export.");
+            $this->info('Found '.count($tables).' tables to export.');
 
             $bar = $this->output->createProgressBar(count($tables));
             $bar->start();
@@ -186,6 +192,7 @@ class BackupDatabase extends Command
             fclose($handle);
 
             $this->info('Database exported via PHP-based method.');
+
             return true;
         } catch (\Throwable $e) {
             $this->error("PHP export failed: {$e->getMessage()}");
@@ -195,6 +202,7 @@ class BackupDatabase extends Command
             if (File::exists($filepath)) {
                 File::delete($filepath);
             }
+
             return false;
         }
     }
@@ -206,16 +214,19 @@ class BackupDatabase extends Command
     {
         if (in_array($driver, ['mysql', 'mariadb'])) {
             $stmt = $pdo->query('SHOW TABLES');
+
             return $stmt->fetchAll(\PDO::FETCH_COLUMN);
         }
 
         if ($driver === 'sqlite') {
             $stmt = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name");
+
             return $stmt->fetchAll(\PDO::FETCH_COLUMN);
         }
 
         if ($driver === 'pgsql') {
             $stmt = $pdo->query("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename");
+
             return $stmt->fetchAll(\PDO::FETCH_COLUMN);
         }
 
@@ -232,17 +243,19 @@ class BackupDatabase extends Command
             $stmt = $pdo->query("SHOW CREATE TABLE `{$table}`");
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
             $createSql = $row['Create Table'] ?? $row['Create View'] ?? '';
-            fwrite($handle, $createSql . ";\n\n");
+            fwrite($handle, $createSql.";\n\n");
+
             return;
         }
 
         if ($driver === 'sqlite') {
             fwrite($handle, "DROP TABLE IF EXISTS \"{$table}\";\n");
-            $stmt = $pdo->query("SELECT sql FROM sqlite_master WHERE type='table' AND name=" . $pdo->quote($table));
+            $stmt = $pdo->query("SELECT sql FROM sqlite_master WHERE type='table' AND name=".$pdo->quote($table));
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
             if ($row && $row['sql']) {
-                fwrite($handle, $row['sql'] . ";\n\n");
+                fwrite($handle, $row['sql'].";\n\n");
             }
+
             return;
         }
 
@@ -251,16 +264,16 @@ class BackupDatabase extends Command
             fwrite($handle, "-- Structure for table {$table} (PostgreSQL)\n");
             fwrite($handle, "DROP TABLE IF EXISTS \"{$table}\" CASCADE;\n");
 
-            $stmt = $pdo->query("
+            $stmt = $pdo->query('
                 SELECT column_name, data_type, character_maximum_length, is_nullable, column_default
                 FROM information_schema.columns
-                WHERE table_name = " . $pdo->quote($table) . "
+                WHERE table_name = '.$pdo->quote($table)."
                 AND table_schema = 'public'
                 ORDER BY ordinal_position
             ");
             $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            if (!empty($columns)) {
+            if (! empty($columns)) {
                 $colDefs = [];
                 foreach ($columns as $col) {
                     $def = "\"{$col['column_name']}\" {$col['data_type']}";
@@ -275,7 +288,7 @@ class BackupDatabase extends Command
                     }
                     $colDefs[] = $def;
                 }
-                fwrite($handle, "CREATE TABLE \"{$table}\" (\n    " . implode(",\n    ", $colDefs) . "\n);\n\n");
+                fwrite($handle, "CREATE TABLE \"{$table}\" (\n    ".implode(",\n    ", $colDefs)."\n);\n\n");
             }
         }
     }
@@ -291,6 +304,7 @@ class BackupDatabase extends Command
 
         if ($totalRows === 0) {
             fwrite($handle, "-- No data in table {$table}\n\n");
+
             return;
         }
 
@@ -308,7 +322,7 @@ class BackupDatabase extends Command
             }
 
             $columns = array_keys($rows[0]);
-            $quotedColumns = array_map(fn($col) => "{$quote}{$col}{$quote}", $columns);
+            $quotedColumns = array_map(fn ($col) => "{$quote}{$col}{$quote}", $columns);
             $columnList = implode(', ', $quotedColumns);
 
             $valueSets = [];
@@ -321,11 +335,11 @@ class BackupDatabase extends Command
                         $values[] = $pdo->quote($value);
                     }
                 }
-                $valueSets[] = '(' . implode(', ', $values) . ')';
+                $valueSets[] = '('.implode(', ', $values).')';
             }
 
             fwrite($handle, "INSERT INTO {$quote}{$table}{$quote} ({$columnList}) VALUES\n");
-            fwrite($handle, implode(",\n", $valueSets) . ";\n");
+            fwrite($handle, implode(",\n", $valueSets).";\n");
 
             $offset += $this->chunkSize;
         }
@@ -350,11 +364,11 @@ class BackupDatabase extends Command
      */
     protected function compressFile(string $filepath): string
     {
-        $gzPath = $filepath . '.gz';
+        $gzPath = $filepath.'.gz';
         $fp = fopen($filepath, 'rb');
         $gz = gzopen($gzPath, 'wb9');
 
-        while (!feof($fp)) {
+        while (! feof($fp)) {
             gzwrite($gz, fread($fp, 524288)); // 512KB chunks
         }
 
@@ -373,7 +387,7 @@ class BackupDatabase extends Command
     protected function cleanupOldBackups(string $backupDir): void
     {
         $files = collect(File::glob("{$backupDir}/kimmex_backup_*"))
-            ->sortByDesc(fn($file) => File::lastModified($file))
+            ->sortByDesc(fn ($file) => File::lastModified($file))
             ->values();
 
         if ($files->count() <= $this->maxBackups) {
@@ -383,10 +397,10 @@ class BackupDatabase extends Command
         $toDelete = $files->slice($this->maxBackups);
         foreach ($toDelete as $file) {
             File::delete($file);
-            $this->line("  Removed old backup: " . basename($file));
+            $this->line('  Removed old backup: '.basename($file));
         }
 
-        $this->info("Cleaned up " . $toDelete->count() . " old backup(s).");
+        $this->info('Cleaned up '.$toDelete->count().' old backup(s).');
     }
 
     /**
@@ -403,6 +417,6 @@ class BackupDatabase extends Command
             $i++;
         }
 
-        return round($size, 2) . ' ' . $units[$i];
+        return round($size, 2).' '.$units[$i];
     }
 }

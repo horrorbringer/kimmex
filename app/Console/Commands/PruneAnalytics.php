@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 class PruneAnalytics extends Command
 {
     protected $signature = 'analytics:prune {--days=90 : Keep data for this many days}';
+
     protected $description = 'Delete page view records older than N days to prevent disk bloat';
 
     public function handle(): void

@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources\Projects\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -23,8 +27,8 @@ class ProjectsTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
-                    ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction))
-                    ->description(fn($record) => $record->slug),
+                    ->sortable(query: fn ($query, $direction) => $query->orderBy('title->en', $direction))
+                    ->description(fn ($record) => $record->slug),
                 TextColumn::make('projectCategory.name')
                     ->label(__('Category'))
                     ->badge()
@@ -43,22 +47,22 @@ class ProjectsTable
                 //
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make(),
-                \Filament\Actions\Action::make('view_on_website')
+                Action::make('view_on_website')
                     ->label(__('View on Website'))
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('info')
-                    ->url(fn($record) => url("/projects/{$record->slug}"))
+                    ->url(fn ($record) => url("/projects/{$record->slug}"))
                     ->openUrlInNewTab(),
-                \Filament\Actions\Action::make('copy_link')
+                Action::make('copy_link')
                     ->label(__('Copy Link'))
                     ->icon('heroicon-o-link')
                     ->color('gray')
-                    ->extraAttributes(fn($record) => [
-                        'x-on:click' => "window.navigator.clipboard.writeText('" . url("/projects/{$record->slug}") . "')",
+                    ->extraAttributes(fn ($record) => [
+                        'x-on:click' => "window.navigator.clipboard.writeText('".url("/projects/{$record->slug}")."')",
                     ])
-                    ->action(fn() => \Filament\Notifications\Notification::make()->title(__('Link Copied'))->success()->send()),
+                    ->action(fn () => Notification::make()->title(__('Link Copied'))->success()->send()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

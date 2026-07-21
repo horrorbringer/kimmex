@@ -2,17 +2,20 @@
 
 namespace App\Filament\Resources\JobPostings\Schemas;
 
+use App\Enums\JobPostingStatus;
+use App\Filament\Support\TranslationHelper;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
-use App\Enums\JobPostingStatus;
-use App\Filament\Support\TranslationHelper;
 
 class JobPostingForm
 {
@@ -25,7 +28,7 @@ class JobPostingForm
                     ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
                     ->required()
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
                 TextInput::make('slug')
                     ->label(__('Slug'))
@@ -33,17 +36,17 @@ class JobPostingForm
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->prefix('kimmex.com/careers/')
-                    ->disabled(fn ($get) => !$get('_slug_manual'))
+                    ->disabled(fn ($get) => ! $get('_slug_manual'))
                     ->dehydrated()
                     ->suffixAction(
-                        \Filament\Actions\Action::make('toggleSlugManual')
+                        Action::make('toggleSlugManual')
                             ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
                             ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
                             ->action(function (Set $set, $get) {
-                                $set('_slug_manual', !$get('_slug_manual'));
+                                $set('_slug_manual', ! $get('_slug_manual'));
                             })
                     ),
-                \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
+                Hidden::make('_slug_manual')->default(false)->dehydrated(false),
 
                 Section::make(__('Job Details'))
                     ->icon('heroicon-o-briefcase')
@@ -51,7 +54,7 @@ class JobPostingForm
                     ->components([
                         Select::make('departmentId')
                             ->label(__('Department'))
-                            ->relationship('department', 'name', fn($query) => $query->orderBy('name->en'))
+                            ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en'))
                             ->searchable()
                             ->preload()
                             ->required(),
@@ -109,7 +112,7 @@ class JobPostingForm
                             ->label(__('Summary'))
                             ->toolbarButtons([
                                 ['bold', 'italic', 'underline', 'link'],
-                                [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Heading', ['h3', 'h4'])->textualButtons()],
+                                [ToolbarButtonGroup::make('Heading', ['h3', 'h4'])->textualButtons()],
                                 ['bulletList', 'orderedList'],
                                 ['undo', 'redo'],
                             ])

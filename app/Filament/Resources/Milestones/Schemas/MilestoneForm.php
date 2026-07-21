@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\Milestones\Schemas;
 
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\RichEditor;
+use App\Filament\Support\TranslationHelper;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use App\Filament\Support\TranslationHelper;
 use Filament\Schemas\Schema;
 
 class MilestoneForm
@@ -38,7 +38,7 @@ class MilestoneForm
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->toolbarButtons([
-                                'bold', 'italic', 'bulletList', 'orderedList', 'link', 'redo', 'undo'
+                                'bold', 'italic', 'bulletList', 'orderedList', 'link', 'redo', 'undo',
                             ])
                             ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->columnSpanFull(),

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 class Department extends Model
@@ -24,12 +26,12 @@ class Department extends Model
         'isActive' => 'boolean',
     ];
 
-    public function orgUnits(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function orgUnits(): HasMany
     {
         return $this->hasMany(OrgUnit::class, 'departmentId');
     }
 
-    public function headUnit(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function headUnit(): HasOne
     {
         return $this->hasOne(OrgUnit::class, 'departmentId')
             ->whereIn('type', ['DIRECTOR', 'MANAGER', 'MANAGEMENT'])
@@ -37,7 +39,7 @@ class Department extends Model
             ->with('employee');
     }
 
-    public function jobPostings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function jobPostings(): HasMany
     {
         return $this->hasMany(JobPosting::class, 'departmentId');
     }
@@ -46,13 +48,13 @@ class Department extends Model
     {
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("careers_jobs_data_{$locale}");
+                Cache::forget("careers_jobs_data_{$locale}");
             }
         });
 
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("careers_jobs_data_{$locale}");
+                Cache::forget("careers_jobs_data_{$locale}");
             }
         });
     }

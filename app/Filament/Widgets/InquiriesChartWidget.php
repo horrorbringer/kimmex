@@ -9,8 +9,11 @@ use Illuminate\Support\Carbon;
 class InquiriesChartWidget extends ChartWidget
 {
     protected static ?int $sort = 4;
+
     protected ?string $heading = 'Inquiries';
-    protected int | string | array $columnSpan = 'half';
+
+    protected int|string|array $columnSpan = 'half';
+
     protected ?string $maxHeight = '200px';
 
     public static function canView(): bool

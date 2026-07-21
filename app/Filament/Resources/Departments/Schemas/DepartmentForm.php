@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\Departments\Schemas;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
-use Illuminate\Support\Str;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class DepartmentForm
 {
@@ -26,7 +29,7 @@ class DepartmentForm
                                 ->placeholder(__('E.g., Civil Engineering'))
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('URL Slug'))
                                 ->placeholder(__('civil-engineering'))
@@ -34,17 +37,17 @@ class DepartmentForm
                                 ->prefix('kimmex.com/dept/')
                                 ->unique(ignoreRecord: true)
                                 ->required()
-                                ->disabled(fn ($get) => !$get('_slug_manual'))
+                                ->disabled(fn ($get) => ! $get('_slug_manual'))
                                 ->dehydrated()
                                 ->suffixAction(
-                                    \Filament\Actions\Action::make('toggleSlugManual')
+                                    Action::make('toggleSlugManual')
                                         ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
                                         ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
-                                        ->action(function (\Filament\Schemas\Components\Utilities\Set $set, $get) {
-                                            $set('_slug_manual', !$get('_slug_manual'));
+                                        ->action(function (Set $set, $get) {
+                                            $set('_slug_manual', ! $get('_slug_manual'));
                                         })
                                 ),
-                            \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
+                            Hidden::make('_slug_manual')->default(false)->dehydrated(false),
                             Toggle::make('isActive')
                                 ->label(__('Is Active'))
                                 ->default(true)
@@ -56,7 +59,7 @@ class DepartmentForm
                     ->icon('heroicon-o-information-circle')
                     ->description(__('Provide a detailed overview of the department\'s scope and responsibilities.'))
                     ->components([
-                        \Filament\Forms\Components\RichEditor::make('description')->resizableImages()->resizableImages()
+                        RichEditor::make('description')->resizableImages()->resizableImages()
                             ->label(__('Detailed Description'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')

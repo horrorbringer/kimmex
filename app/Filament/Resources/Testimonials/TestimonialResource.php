@@ -12,10 +12,12 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class TestimonialResource extends Resource
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use Translatable;
 
     protected static ?string $model = Testimonial::class;
 
@@ -40,9 +42,10 @@ class TestimonialResource extends Resource
     }
 
     protected static ?int $navigationSort = 6;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }

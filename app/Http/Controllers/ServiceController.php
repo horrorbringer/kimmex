@@ -16,10 +16,10 @@ class ServiceController extends Controller
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
 
         $fallbackImages = [
-            'design-and-build'   => '/images/webp/projects/Thumbnail-1.webp',
-            'construction'       => '/images/webp/projects/Thumbnail-1.webp',
+            'design-and-build' => '/images/webp/projects/Thumbnail-1.webp',
+            'construction' => '/images/webp/projects/Thumbnail-1.webp',
             'project-management' => '/images/webp/projects/Thumbnail-3.webp',
-            'consultants'        => '/images/webp/projects/Thumbnail-4.webp',
+            'consultants' => '/images/webp/projects/Thumbnail-4.webp',
         ];
 
         $service = Cache::remember("service_show_data_{$slug}_{$lang}", now()->addHours(12), function () use ($slug, $fallbackImages): ?array {
@@ -30,16 +30,16 @@ class ServiceController extends Controller
             }
 
             return [
-                'id'         => $serviceDb->slug,
-                'title'      => [
+                'id' => $serviceDb->slug,
+                'title' => [
                     'en' => $serviceDb->getTranslation('title', 'en'),
                     'kh' => $serviceDb->getTranslation('title', 'km'),
                 ],
-                'desc'       => [
+                'desc' => [
                     'en' => strip_tags($serviceDb->getTranslation('description', 'en')),
                     'kh' => strip_tags($serviceDb->getTranslation('description', 'km')),
                 ],
-                'image'      => PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
+                'image' => PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
                 'scopeItems' => is_array($serviceDb->features)
                     ? array_map(
                         fn ($f) => ['en' => $f['name'] ?? '', 'kh' => $f['name'] ?? ''],

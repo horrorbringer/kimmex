@@ -5,10 +5,11 @@ namespace App\Filament\Resources\Milestones\Pages;
 use App\Filament\Resources\Milestones\MilestoneResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
 
 class EditMilestone extends EditRecord
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\EditRecord\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = MilestoneResource::class;
 

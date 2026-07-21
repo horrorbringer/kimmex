@@ -54,7 +54,7 @@ class GenerateSeoMeta implements ShouldQueue
             $generatedTitle = $aiService->generateContent(
                 $title,
                 'seo meta title',
-                'Generate a concise SEO meta title (max 60 chars) for: ' . $title . '. Return ONLY the meta title text, nothing else. No quotes, no labels, no explanation.',
+                'Generate a concise SEO meta title (max 60 chars) for: '.$title.'. Return ONLY the meta title text, nothing else. No quotes, no labels, no explanation.',
             );
 
             if ($generatedTitle) {
@@ -70,7 +70,7 @@ class GenerateSeoMeta implements ShouldQueue
             $generatedDescription = $aiService->generateContent(
                 $title,
                 'seo meta description',
-                'Generate a concise SEO meta description (max 160 chars) for: ' . $contentSnippet . '. Return ONLY the meta description text, nothing else. No quotes, no labels, no explanation.',
+                'Generate a concise SEO meta description (max 160 chars) for: '.$contentSnippet.'. Return ONLY the meta description text, nothing else. No quotes, no labels, no explanation.',
             );
 
             if ($generatedDescription) {

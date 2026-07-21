@@ -24,8 +24,8 @@ class NewsAnnouncementMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = $this->subjectOverride
-            ? $this->subjectOverride . ' — Kimmex News'
-            : $this->article->getTranslation('title', 'en') . ' — Kimmex News';
+            ? $this->subjectOverride.' — Kimmex News'
+            : $this->article->getTranslation('title', 'en').' — Kimmex News';
 
         return new Envelope(
             subject: $subject,
@@ -40,9 +40,9 @@ class NewsAnnouncementMail extends Mailable
                 'title' => $this->article->getTranslation('title', 'en'),
                 'excerpt' => $this->article->getTranslation('excerpt', 'en'),
                 'coverImage' => $this->article->coverImage ? url($this->article->coverImage) : null,
-                'articleUrl' => url('/news/' . $this->article->slug),
+                'articleUrl' => url('/news/'.$this->article->slug),
                 'subscriberName' => $this->subscriber->name,
-                'unsubscribeUrl' => url('/unsubscribe/' . $this->subscriber->unsubscribe_token),
+                'unsubscribeUrl' => url('/unsubscribe/'.$this->subscriber->unsubscribe_token),
                 'customIntro' => $this->customIntro,
             ],
         );

@@ -5,10 +5,11 @@ namespace App\Filament\Resources\Milestones\Pages;
 use App\Filament\Resources\Milestones\MilestoneResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
 
 class ListMilestones extends ListRecords
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = MilestoneResource::class;
 

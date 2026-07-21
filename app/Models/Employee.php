@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Cache;
 
 class Employee extends Model
 {
-    use HasUuids, DeletesPublicUploads;
+    use DeletesPublicUploads, HasUuids;
+
     protected $fillable = [
         'name',
         'email',
@@ -37,17 +41,17 @@ class Employee extends Model
 
     protected static function clearOrgCache()
     {
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_en');
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_kh');
-        \Illuminate\Support\Facades\Cache::forget('about_orgchart_km');
+        Cache::forget('about_orgchart_en');
+        Cache::forget('about_orgchart_kh');
+        Cache::forget('about_orgchart_km');
     }
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function orgUnit(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function orgUnit(): HasOne
     {
         return $this->hasOne(OrgUnit::class, 'employeeId');
     }

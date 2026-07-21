@@ -10,7 +10,9 @@ use Illuminate\Support\Str;
 class TrafficSourcesChartWidget extends ChartWidget
 {
     protected static ?int $sort = 9;
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
@@ -57,7 +59,7 @@ class TrafficSourcesChartWidget extends ChartWidget
         }
 
         // Remove zero entries
-        $sources = array_filter($sources, fn($v) => $v > 0);
+        $sources = array_filter($sources, fn ($v) => $v > 0);
 
         if (empty($sources)) {
             $sources = ['No data' => 1];
@@ -75,13 +77,13 @@ class TrafficSourcesChartWidget extends ChartWidget
             'datasets' => [
                 [
                     'data' => array_values($sources),
-                    'backgroundColor' => array_map(fn($k) => $colorMap[$k] ?? '#94a3b8', array_keys($sources)),
+                    'backgroundColor' => array_map(fn ($k) => $colorMap[$k] ?? '#94a3b8', array_keys($sources)),
                     'borderWidth' => 2,
                     'borderColor' => '#ffffff',
                     'hoverOffset' => 8,
                 ],
             ],
-            'labels' => array_map(fn($k) => __($k), array_keys($sources)),
+            'labels' => array_map(fn ($k) => __($k), array_keys($sources)),
         ];
     }
 

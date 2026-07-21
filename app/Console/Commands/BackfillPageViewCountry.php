@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class BackfillPageViewCountry extends Command
 {
     protected $signature = 'pageviews:backfill-country {--limit=500}';
+
     protected $description = 'Backfill country data for page views that have null country';
 
     public function handle(): int
@@ -22,6 +23,7 @@ class BackfillPageViewCountry extends Command
 
         if ($views->isEmpty()) {
             $this->info('No page views to backfill.');
+
             return self::SUCCESS;
         }
 
@@ -39,6 +41,7 @@ class BackfillPageViewCountry extends Command
                 $view->update(['country' => 'Local']);
                 $bar->advance();
                 $resolved++;
+
                 continue;
             }
 
@@ -46,6 +49,7 @@ class BackfillPageViewCountry extends Command
                 $view->update(['country' => 'Local']);
                 $bar->advance();
                 $resolved++;
+
                 continue;
             }
 
@@ -54,6 +58,7 @@ class BackfillPageViewCountry extends Command
                 $view->update(['country' => $ipCache[$ip]]);
                 $bar->advance();
                 $resolved++;
+
                 continue;
             }
 

@@ -9,8 +9,11 @@ use Illuminate\Support\Carbon;
 class JobApplicationsChartWidget extends ChartWidget
 {
     protected static ?int $sort = 5;
+
     protected ?string $heading = 'Applications';
-    protected int | string | array $columnSpan = 'half';
+
+    protected int|string|array $columnSpan = 'half';
+
     protected ?string $maxHeight = '200px';
 
     public static function canView(): bool

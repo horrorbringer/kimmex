@@ -3,17 +3,18 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-
-use Spatie\Translatable\HasTranslations;
-
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Translatable\HasTranslations;
 
 class NewsArticle extends Model
 {
-    use LogsActivity, HasTranslations, HasUuids, DeletesPublicUploads;
+    use DeletesPublicUploads, HasTranslations, HasUuids, LogsActivity;
 
     public $translatable = ['title', 'excerpt', 'content', 'authorName', 'readTime', 'metaTitle', 'metaDescription', 'category'];
 
@@ -69,12 +70,12 @@ class NewsArticle extends Model
         ]));
 
         foreach (['en', 'km'] as $locale) {
-            \Illuminate\Support\Facades\Cache::forget("home_news_array_{$locale}");
-            \Illuminate\Support\Facades\Cache::forget("news_index_data_{$locale}");
+            Cache::forget("home_news_array_{$locale}");
+            Cache::forget("news_index_data_{$locale}");
 
             foreach ($slugs as $slug) {
-                \Illuminate\Support\Facades\Cache::forget("news_article_data_{$slug}_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("news_related_array_{$slug}_{$locale}");
+                Cache::forget("news_article_data_{$slug}_{$locale}");
+                Cache::forget("news_related_array_{$slug}_{$locale}");
             }
         }
     }
@@ -84,12 +85,12 @@ class NewsArticle extends Model
         return LogOptions::defaults()->logAll()->logOnlyDirty();
     }
 
-    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function author(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'authorId');
     }
 
-    public function projects(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'news_article_project');
     }

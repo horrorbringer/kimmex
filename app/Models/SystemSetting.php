@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class SystemSetting extends Model
 {
@@ -18,12 +19,12 @@ class SystemSetting extends Model
     protected static function booted()
     {
         static::saved(function ($setting) {
-            \Illuminate\Support\Facades\Cache::forget("system_setting_{$setting->key}");
+            Cache::forget("system_setting_{$setting->key}");
             static::clearGlobalSettingsCache();
         });
 
         static::deleted(function ($setting) {
-            \Illuminate\Support\Facades\Cache::forget("system_setting_{$setting->key}");
+            Cache::forget("system_setting_{$setting->key}");
             static::clearGlobalSettingsCache();
         });
     }
@@ -31,11 +32,12 @@ class SystemSetting extends Model
     public static function get(string $key, $default = null)
     {
         try {
-            $value = \Illuminate\Support\Facades\Cache::rememberForever("system_setting_{$key}", function () use ($key) {
+            $value = Cache::rememberForever("system_setting_{$key}", function () use ($key) {
                 $setting = static::where('key', $key)->first();
+
                 return $setting ? $setting->value : null;
             });
-            
+
             return $value !== null ? $value : $default;
         } catch (\Exception $e) {
             return $default;
@@ -45,15 +47,16 @@ class SystemSetting extends Model
     public static function set(string $key, $value)
     {
         $setting = static::updateOrCreate(['key' => $key], ['value' => $value]);
-        \Illuminate\Support\Facades\Cache::forget("system_setting_{$key}");
+        Cache::forget("system_setting_{$key}");
         static::clearGlobalSettingsCache();
+
         return $setting;
     }
 
     protected static function clearGlobalSettingsCache(): void
     {
         foreach (['en', 'km', 'kh'] as $locale) {
-            \Illuminate\Support\Facades\Cache::forget("global_settings_{$locale}");
+            Cache::forget("global_settings_{$locale}");
         }
     }
 }

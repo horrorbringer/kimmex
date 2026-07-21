@@ -2,14 +2,17 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\SystemSetting;
+use App\Services\AIGeneratorService;
 use Filament\Notifications\Notification;
+use Livewire\Component;
 
 class AiSwitcher extends Component
 {
     public string $provider = 'gemini';
+
     public string $model = '';
+
     public array $availableModels = [];
 
     public function mount()
@@ -23,13 +26,14 @@ class AiSwitcher extends Component
     public function loadModels()
     {
         try {
-            $service = new \App\Services\AIGeneratorService();
+            $service = new AIGeneratorService;
             $settings = SystemSetting::get('ai_settings', []);
             $apiKey = $this->apiKeyForProvider($settings, $this->provider);
             $baseUrl = $settings['ollama']['base_url'] ?? $settings['base_url'] ?? 'http://localhost:11434';
 
             if ($this->provider === 'gemini' && empty($apiKey)) {
                 $this->availableModels = ['gemini-3.1-flash-lite' => 'Gemini 3.1 Flash-Lite (Free, recommended)'];
+
                 return;
             }
 
@@ -40,7 +44,7 @@ class AiSwitcher extends Component
             );
 
             // If current model is not in available list, reset to first one
-            if (!empty($this->availableModels) && !isset($this->availableModels[$this->model])) {
+            if (! empty($this->availableModels) && ! isset($this->availableModels[$this->model])) {
                 $this->model = array_key_first($this->availableModels);
             }
         } catch (\Exception $e) {
@@ -62,7 +66,7 @@ class AiSwitcher extends Component
 
         Notification::make()
             ->title(__('AI Provider Switched'))
-            ->body(__('Now using ' . $this->providerLabel($newProvider)))
+            ->body(__('Now using '.$this->providerLabel($newProvider)))
             ->success()
             ->send();
     }
@@ -77,7 +81,7 @@ class AiSwitcher extends Component
 
         Notification::make()
             ->title(__('AI Model Updated'))
-            ->body(__('Now using ' . $value))
+            ->body(__('Now using '.$value))
             ->success()
             ->send();
     }

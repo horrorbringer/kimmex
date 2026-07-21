@@ -2,13 +2,16 @@
 
 namespace App\Filament\Resources\Testimonials\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Cache;
 
 class TestimonialsTable
 {
@@ -39,7 +42,7 @@ class TestimonialsTable
                     ->offColor('danger')
                     ->afterStateUpdated(function () {
                         foreach (['en', 'km', 'kh'] as $locale) {
-                            \Illuminate\Support\Facades\Cache::forget("home_testimonials_array_{$locale}");
+                            Cache::forget("home_testimonials_array_{$locale}");
                         }
                     }),
             ])
@@ -47,7 +50,7 @@ class TestimonialsTable
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

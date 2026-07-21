@@ -2,18 +2,23 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use App\Enums\ProjectStatus;
+use App\Filament\Support\AIHelper;
 use App\Filament\Support\OptimizedFileUpload;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Support\TranslationHelper;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Set;
-use App\Filament\Support\TranslationHelper;
-use App\Filament\Support\AIHelper;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -36,23 +41,23 @@ class ProjectForm
                                             ->required()
                                             ->live(onBlur: true)
                                             ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                                            ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                                         TextInput::make('slug')
                                             ->label(__('Slug'))
                                             ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
                                             ->unique(ignoreRecord: true)
                                             ->required()
-                                            ->disabled(fn ($get) => !$get('_slug_manual'))
+                                            ->disabled(fn ($get) => ! $get('_slug_manual'))
                                             ->dehydrated()
                                             ->suffixAction(
-                                                \Filament\Actions\Action::make('toggleSlugManual')
+                                                Action::make('toggleSlugManual')
                                                     ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
                                                     ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
-                                                    ->action(function (\Filament\Schemas\Components\Utilities\Set $set, $get) {
-                                                        $set('_slug_manual', !$get('_slug_manual'));
+                                                    ->action(function (Set $set, $get) {
+                                                        $set('_slug_manual', ! $get('_slug_manual'));
                                                     })
                                             ),
-                                        \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
+                                        Hidden::make('_slug_manual')->default(false)->dehydrated(false),
                                         TextInput::make('location')
                                             ->label(__('Location'))
                                             ->suffixAction(TranslationHelper::getAutoTranslateAction('location')),
@@ -67,8 +72,8 @@ class ProjectForm
                                             ->label(__('Description'))
                                             ->toolbarButtons([
                                                 ['bold', 'italic', 'underline', 'strike', 'link'],
-                                                [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
-                                                [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
+                                                [ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
+                                                [ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
                                                 ['blockquote', 'bulletList', 'orderedList', 'table'],
                                                 ['attachFiles'],
                                                 ['undo', 'redo'],
@@ -147,9 +152,9 @@ class ProjectForm
                                 Section::make(__('Project Gallery'))
                                     ->description(__('Additional project photographs and captions'))
                                     ->components([
-                                        \Filament\Forms\Components\Repeater::make('images')
+                                        Repeater::make('images')
                                             ->relationship('images')
-                                            ->reorderable('sort_order')
+                                            ->reorderable()
                                             ->orderColumn('sort_order')
                                             ->maxItems(15)
                                             ->schema([
@@ -163,7 +168,7 @@ class ProjectForm
                                                     ->placeholder(__('Enter a short caption...')),
                                             ])
                                             ->columns(['default' => 2])
-                                            ->itemLabel(fn(array $state): ?string => $state['caption'] ?? null)
+                                            ->itemLabel(fn (array $state): ?string => $state['caption'] ?? null)
                                             ->collapsible()
                                             ->grid(['default' => 2])
                                             ->columnSpanFull(),
@@ -178,15 +183,15 @@ class ProjectForm
                                     ->components([
                                         Select::make('project_category_id')
                                             ->label(__('Category'))
-                                            ->relationship('projectCategory', 'name', fn($query) => $query->orderBy('name->en'))
+                                            ->relationship('projectCategory', 'name', fn ($query) => $query->orderBy('name->en'))
                                             ->searchable()
                                             ->preload()
                                             ->required(),
                                         Select::make('status')
                                             ->label(__('Status'))
-                                            ->options(\App\Enums\ProjectStatus::class)
+                                            ->options(ProjectStatus::class)
                                             ->required()
-                                            ->default(\App\Enums\ProjectStatus::ONGOING),
+                                            ->default(ProjectStatus::ONGOING),
                                         DateTimePicker::make('completionDate')
                                             ->label(__('Completion Date')),
                                     ]),

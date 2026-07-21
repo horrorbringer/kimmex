@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class AutoTranslateService
@@ -10,7 +11,7 @@ class AutoTranslateService
 
     public function __construct()
     {
-        $this->translator = new GoogleTranslate();
+        $this->translator = new GoogleTranslate;
         $this->translator->setSource('en');
         $this->translator->setTarget('km');
     }
@@ -41,10 +42,11 @@ class AutoTranslateService
 
             return $this->translator->translate($text);
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning("AutoTranslateService skipped translation: " . $e->getMessage(), [
+            Log::warning('AutoTranslateService skipped translation: '.$e->getMessage(), [
                 'text' => $text,
-                'target' => $targetLocale
+                'target' => $targetLocale,
             ]);
+
             return null;
         }
     }
@@ -72,16 +74,19 @@ class AutoTranslateService
         foreach ($data as $key => $value) {
             if (in_array($key, $skipKeys)) {
                 $translated[$key] = $value;
+
                 continue;
             }
 
             if (is_array($value)) {
                 $translated[$key] = $this->translateArray($value, $skipKeys, $targetLocale);
+
                 continue;
             }
 
-            if (!is_string($value) || empty(trim($value))) {
+            if (! is_string($value) || empty(trim($value))) {
                 $translated[$key] = $value;
+
                 continue;
             }
 

@@ -15,9 +15,10 @@ use Illuminate\Support\Facades\Mail;
 
 class SendNewsletterJob implements ShouldQueue
 {
-    use Queueable, InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
+
     public int $timeout = 30;
 
     public function __construct(
@@ -32,13 +33,14 @@ class SendNewsletterJob implements ShouldQueue
     public function handle(): void
     {
         // If segments were specified, verify subscriber still matches before sending
-        if (!empty($this->segments)) {
+        if (! empty($this->segments)) {
             $subscriberTags = $this->subscriber->tags ?? [];
-            $hasMatchingTag = !empty(array_intersect($this->segments, $subscriberTags));
-            if (!$hasMatchingTag) {
+            $hasMatchingTag = ! empty(array_intersect($this->segments, $subscriberTags));
+            if (! $hasMatchingTag) {
                 // Subscriber no longer matches the target segments, skip sending but count as sent
                 $this->newsletterSend->incrementSent();
                 $this->checkCompletion();
+
                 return;
             }
         }

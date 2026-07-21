@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Departments;
 use App\Filament\Resources\Departments\Pages\CreateDepartment;
 use App\Filament\Resources\Departments\Pages\EditDepartment;
 use App\Filament\Resources\Departments\Pages\ListDepartments;
+use App\Filament\Resources\Departments\RelationManagers\OrgUnitsRelationManager;
 use App\Filament\Resources\Departments\Schemas\DepartmentForm;
 use App\Filament\Resources\Departments\Tables\DepartmentsTable;
 use App\Models\Department;
@@ -12,10 +13,12 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class DepartmentResource extends Resource
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use Translatable;
 
     protected static ?string $model = Department::class;
 
@@ -40,6 +43,7 @@ class DepartmentResource extends Resource
     }
 
     protected static ?int $navigationSort = 1;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
     public static function canCreate(): bool
@@ -47,15 +51,16 @@ class DepartmentResource extends Resource
         return auth()->user()?->isAdmin();
     }
 
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canEdit(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }
+
     public static function form(Schema $schema): Schema
     {
         return DepartmentForm::configure($schema);
@@ -69,7 +74,7 @@ class DepartmentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            \App\Filament\Resources\Departments\RelationManagers\OrgUnitsRelationManager::class,
+            OrgUnitsRelationManager::class,
         ];
     }
 

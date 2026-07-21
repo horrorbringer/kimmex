@@ -109,16 +109,15 @@ $sectors = [
     <section class="py-20 md:py-28">
         <div class="max-w-[1280px] mx-auto px-6">
 
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14" x-data="{ shown: false }" x-intersect.once="shown = true"
-                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="transition-all duration-1000">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                        <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('What We Do') }}</span>
-                    </div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Our Expertise') }}</h2>
+            <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                class="transition-all duration-1000 mb-14">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                    <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('What We Do') }}</span>
                 </div>
-                <p class="text-gray-500 text-sm md:text-base max-w-md leading-relaxed">
+                <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight mb-4">{{ __('Our Expertise') }}</h2>
+                <p class="text-gray-500 text-sm md:text-base max-w-2xl leading-relaxed">
                     {{ __('From concept to completion, we bring design, construction, and project management under one accountable team.') }}
                 </p>
             </div>
@@ -231,15 +230,14 @@ $sectors = [
     <!-- ═══ SECTORS ═══ -->
     <section class="py-20 md:py-28">
         <div class="max-w-[1280px] mx-auto px-6">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12" x-data="{ shown: false }" x-intersect.once="shown = true"
-                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="transition-all duration-1000">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                        <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Industries') }}</span>
-                    </div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Sectors We Serve') }}</h2>
+            <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                class="transition-all duration-1000 mb-12">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                    <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Industries') }}</span>
                 </div>
+                <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Sectors We Serve') }}</h2>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">

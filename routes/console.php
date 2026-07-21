@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
-    $this->comment(\Illuminate\Foundation\Inspiring::quote());
+    $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
 // Process queued jobs every minute (for cPanel servers without a persistent queue worker)
@@ -47,7 +48,7 @@ Schedule::command('uptime:check')
 Schedule::call(function () {
     $logFile = storage_path('logs/laravel.log');
     if (file_exists($logFile) && filesize($logFile) > 5 * 1024 * 1024) { // > 5 MB
-        $archive = storage_path('logs/laravel-' . now()->format('Y-m-d') . '.log');
+        $archive = storage_path('logs/laravel-'.now()->format('Y-m-d').'.log');
         rename($logFile, $archive);
         file_put_contents($logFile, '');
 
@@ -59,4 +60,3 @@ Schedule::call(function () {
         }
     }
 })->daily()->name('log-rotation');
-

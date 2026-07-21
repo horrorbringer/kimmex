@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 class ExportSqliteData extends Command
 {
     protected $signature = 'db:export-sqlite';
+
     protected $description = 'Export all SQLite tables to JSON files';
 
     public function handle(): void
@@ -23,13 +24,13 @@ class ExportSqliteData extends Command
             AND name != 'migrations'
         ");
 
-        $this->info('Found ' . count($tables) . ' tables');
+        $this->info('Found '.count($tables).' tables');
         $bar = $this->output->createProgressBar(count($tables));
 
         foreach ($tables as $table) {
             $name = $table->name;
             $data = DB::table($name)->get()->toArray();
-            $data = array_map(fn($row) => (array) $row, $data);
+            $data = array_map(fn ($row) => (array) $row, $data);
 
             File::put(
                 "{$exportPath}/{$name}.json",
@@ -37,7 +38,7 @@ class ExportSqliteData extends Command
             );
 
             $bar->advance();
-            $this->line("  ✔ {$name} (" . count($data) . " rows)");
+            $this->line("  ✔ {$name} (".count($data).' rows)');
         }
 
         $bar->finish();

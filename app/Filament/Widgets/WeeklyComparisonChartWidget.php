@@ -9,7 +9,9 @@ use Illuminate\Support\Carbon;
 class WeeklyComparisonChartWidget extends ChartWidget
 {
     protected static ?int $sort = 11;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
+
     protected ?string $maxHeight = '280px';
 
     public function getHeading(): ?string

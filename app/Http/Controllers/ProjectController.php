@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProjectStatus;
+use App\Models\NewsArticle;
 use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Support\PublicStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProjectController extends Controller
@@ -47,7 +49,7 @@ class ProjectController extends Controller
         $categoryLookup = $projectCategories->flatMap(function ($category) {
             return [
                 strtolower($category->slug) => $category,
-                strtolower(\Illuminate\Support\Str::slug($category->getTranslation('name', 'en', false))) => $category,
+                strtolower(Str::slug($category->getTranslation('name', 'en', false))) => $category,
             ];
         });
 
@@ -57,12 +59,12 @@ class ProjectController extends Controller
             }
 
             $legacyCategory = trim((string) $project->category);
-            $legacyKey = strtolower(\Illuminate\Support\Str::slug($legacyCategory));
+            $legacyKey = strtolower(Str::slug($legacyCategory));
             $matchedCategory = $categoryLookup->get(strtolower($legacyCategory)) ?: $categoryLookup->get($legacyKey);
 
             return $matchedCategory
                 ? $matchedCategory->localizedName($contentLocale)
-                : ($legacyCategory ? __(\Illuminate\Support\Str::headline($legacyCategory)) : __('General'));
+                : ($legacyCategory ? __(Str::headline($legacyCategory)) : __('General'));
         };
 
         // Build filter option lists (always from full dataset for consistent UI)
@@ -172,27 +174,27 @@ class ProjectController extends Controller
             }
 
             return [
-                'id'             => $projectDb->slug,
-                'slug'           => $projectDb->slug,
-                'title'          => $resolveContent($projectDb, 'title'),
-                'type'           => $projectDb->projectCategory
+                'id' => $projectDb->slug,
+                'slug' => $projectDb->slug,
+                'title' => $resolveContent($projectDb, 'title'),
+                'type' => $projectDb->projectCategory
                     ? $projectDb->projectCategory->localizedName($contentLocale)
                     : ($projectDb->category ?: __('Infrastructure')),
-                'location'       => $resolveContent($projectDb, 'location'),
-                'status'         => $projectDb->status?->getLabel() ?: __('Completed'),
-                'date'           => $projectDb->completionDate?->format('F Y') ?: __('Oct 2026'),
-                'client'         => $projectDb->client ?: __('Ministry of Economy and Finance'),
-                'built_area'     => $projectDb->scale ?: __('50,000 SQM'),
+                'location' => $resolveContent($projectDb, 'location'),
+                'status' => $projectDb->status?->getLabel() ?: __('Completed'),
+                'date' => $projectDb->completionDate?->format('F Y') ?: __('Oct 2026'),
+                'client' => $projectDb->client ?: __('Ministry of Economy and Finance'),
+                'built_area' => $projectDb->scale ?: __('50,000 SQM'),
                 'contract_value' => __('Contact for Details'),
-                'year'           => $projectDb->timeline ?: __('2023 - 2026'),
-                'heroImage'      => PublicStorage::urlIfExists($projectDb->heroImage, $defaultProjectImage),
+                'year' => $projectDb->timeline ?: __('2023 - 2026'),
+                'heroImage' => PublicStorage::urlIfExists($projectDb->heroImage, $defaultProjectImage),
 
                 'narrative' => [
-                    'description'            => $resolveContent($projectDb, 'description'),
-                    'background'             => $resolveContent($projectDb, 'background'),
-                    'objectives'             => $resolveContent($projectDb, 'objectives'),
-                    'design_concept'         => $resolveContent($projectDb, 'designConcept'),
-                    'engineering_narrative'  => $resolveContent($projectDb, 'engineeringNarrative'),
+                    'description' => $resolveContent($projectDb, 'description'),
+                    'background' => $resolveContent($projectDb, 'background'),
+                    'objectives' => $resolveContent($projectDb, 'objectives'),
+                    'design_concept' => $resolveContent($projectDb, 'designConcept'),
+                    'engineering_narrative' => $resolveContent($projectDb, 'engineeringNarrative'),
                 ],
 
                 'scope' => $resolveContent($projectDb, 'scopeContributions'),
@@ -210,9 +212,9 @@ class ProjectController extends Controller
                     ->take(3)
                     ->get()
                     ->map(fn (Project $p) => [
-                        'id'    => $p->slug,
+                        'id' => $p->slug,
                         'title' => $resolveContent($p, 'title'),
-                        'type'  => $p->projectCategory
+                        'type' => $p->projectCategory
                             ? $p->projectCategory->localizedName($contentLocale)
                             : ($p->category ?: __('Infrastructure')),
                         'image' => PublicStorage::urlIfExists($p->heroImage, '/images/webp/projects/Thumbnail-5.webp'),
@@ -223,11 +225,11 @@ class ProjectController extends Controller
                     ->where('publishedAt', '<=', now())
                     ->orderByDesc('publishedAt')
                     ->get()
-                    ->map(fn (\App\Models\NewsArticle $a) => [
-                        'slug'        => $a->slug,
-                        'title'       => $a->getTranslation('title', $contentLocale),
-                        'category'    => $a->getTranslation('category', $contentLocale) ?: __('Updates'),
-                        'coverImage'  => PublicStorage::urlIfExists($a->coverImage, ''),
+                    ->map(fn (NewsArticle $a) => [
+                        'slug' => $a->slug,
+                        'title' => $a->getTranslation('title', $contentLocale),
+                        'category' => $a->getTranslation('category', $contentLocale) ?: __('Updates'),
+                        'coverImage' => PublicStorage::urlIfExists($a->coverImage, ''),
                         'publishedAt' => $a->publishedAt?->format('M d, Y'),
                     ])
                     ->toArray(),

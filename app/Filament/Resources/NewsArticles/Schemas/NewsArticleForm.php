@@ -2,21 +2,26 @@
 
 namespace App\Filament\Resources\NewsArticles\Schemas;
 
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Support\AIHelper;
 use App\Filament\Support\OptimizedFileUpload;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
+use App\Filament\Support\TranslationHelper;
+use App\Models\Employee;
+use Filament\Actions\Action;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Set;
-use App\Filament\Support\TranslationHelper;
-use App\Filament\Support\AIHelper;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -50,17 +55,17 @@ class NewsArticleForm
                                             ->helperText(__('Auto-generated from title. Click ✏️ to edit manually.'))
                                             ->unique(ignoreRecord: true)
                                             ->required()
-                                            ->disabled(fn ($get) => !$get('_slug_manual'))
+                                            ->disabled(fn ($get) => ! $get('_slug_manual'))
                                             ->dehydrated()
                                             ->suffixAction(
-                                                \Filament\Actions\Action::make('toggleSlugManual')
+                                                Action::make('toggleSlugManual')
                                                     ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
                                                     ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
                                                     ->action(function (Set $set, $get) {
-                                                        $set('_slug_manual', !$get('_slug_manual'));
+                                                        $set('_slug_manual', ! $get('_slug_manual'));
                                                     })
                                             ),
-                                        \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
+                                        Hidden::make('_slug_manual')->default(false)->dehydrated(false),
                                     ]),
 
                                 Section::make(__('Article Body'))
@@ -73,15 +78,15 @@ class NewsArticleForm
                                             ])
                                             ->rows(2)
                                             ->live(onBlur: true)
-                                            ->afterStateUpdated(fn(Set $set, ?string $state) => $set('metaDescription', $state)),
+                                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('metaDescription', $state)),
 
                                         RichEditor::make('content')->resizableImages()
                                             ->label(__('Content'))
                                             ->required()
                                             ->toolbarButtons([
                                                 ['bold', 'italic', 'underline', 'strike', 'link'],
-                                                [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
-                                                [\Filament\Forms\Components\RichEditor\ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
+                                                [ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
+                                                [ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
                                                 ['blockquote', 'bulletList', 'orderedList', 'table'],
                                                 ['attachFiles', 'horizontalRule'],
                                                 ['undo', 'redo'],
@@ -96,7 +101,7 @@ class NewsArticleForm
                                             ])
                                             ->live(onBlur: true)
                                             ->afterStateUpdated(function (Set $set, $state, $get) {
-                                                if (!$get('excerpt')) {
+                                                if (! $get('excerpt')) {
                                                     $excerpt = Str::limit(strip_tags($state), 160);
                                                     $set('excerpt', $excerpt);
                                                     $set('metaDescription', $excerpt);
@@ -184,7 +189,7 @@ class NewsArticleForm
                                             ->live()
                                             ->afterStateUpdated(function ($state, Set $set) {
                                                 if ($state) {
-                                                    $employee = \App\Models\Employee::find($state);
+                                                    $employee = Employee::find($state);
                                                     if ($employee) {
                                                         $set('authorName', $employee->name);
                                                     }
@@ -192,8 +197,8 @@ class NewsArticleForm
                                             })
                                             ->default(auth()->user()?->employee?->id)
                                             ->afterStateHydrated(function ($state, Set $set, $get) {
-                                                if (!$get('authorName') && $state) {
-                                                    $employee = \App\Models\Employee::find($state);
+                                                if (! $get('authorName') && $state) {
+                                                    $employee = Employee::find($state);
                                                     if ($employee) {
                                                         $set('authorName', $employee->name);
                                                     }
@@ -209,7 +214,7 @@ class NewsArticleForm
                                 Section::make(__('Tags & Visibility'))
                                     ->columns(2)
                                     ->components([
-                                        \Filament\Forms\Components\TagsInput::make('tags')
+                                        TagsInput::make('tags')
                                             ->label(__('Tags'))
                                             ->placeholder('news, update, announcement')
                                             ->columnSpanFull(),

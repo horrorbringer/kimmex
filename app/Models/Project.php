@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectStatus;
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-
-use Spatie\Translatable\HasTranslations;
-
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Translatable\HasTranslations;
 
 class Project extends Model
 {
-    use LogsActivity, HasTranslations, HasUuids, DeletesPublicUploads;
+    use DeletesPublicUploads, HasTranslations, HasUuids, LogsActivity;
 
     public $translatable = [
         'title', 'location', 'description',
@@ -49,7 +50,7 @@ class Project extends Model
     protected array $publicUploadAttributes = ['heroImage'];
 
     protected $casts = [
-        'status' => \App\Enums\ProjectStatus::class,
+        'status' => ProjectStatus::class,
         'completionDate' => 'datetime',
         'isFeatured' => 'boolean',
         'isActive' => 'boolean',
@@ -70,7 +71,7 @@ class Project extends Model
         return LogOptions::defaults()->logAll()->logOnlyDirty();
     }
 
-    public function newsArticles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function newsArticles(): BelongsToMany
     {
         return $this->belongsToMany(NewsArticle::class, 'news_article_project');
     }
@@ -78,24 +79,24 @@ class Project extends Model
     protected static function booted()
     {
         static::saved(function ($project) {
-            \Illuminate\Support\Facades\Cache::forget("projects_all_active");
+            Cache::forget('projects_all_active');
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("home_projects_array_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("home_featured_projects_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("project_show_data_{$project->slug}_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("project_categories_active_{$locale}");
+                Cache::forget("projects_index_data_{$locale}");
+                Cache::forget("home_projects_array_{$locale}");
+                Cache::forget("home_featured_projects_{$locale}");
+                Cache::forget("project_show_data_{$project->slug}_{$locale}");
+                Cache::forget("project_categories_active_{$locale}");
             }
         });
 
         static::deleted(function ($project) {
-            \Illuminate\Support\Facades\Cache::forget("projects_all_active");
+            Cache::forget('projects_all_active');
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("projects_index_data_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("home_projects_array_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("home_featured_projects_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("project_show_data_{$project->slug}_{$locale}");
-                \Illuminate\Support\Facades\Cache::forget("project_categories_active_{$locale}");
+                Cache::forget("projects_index_data_{$locale}");
+                Cache::forget("home_projects_array_{$locale}");
+                Cache::forget("home_featured_projects_{$locale}");
+                Cache::forget("project_show_data_{$project->slug}_{$locale}");
+                Cache::forget("project_categories_active_{$locale}");
             }
         });
     }

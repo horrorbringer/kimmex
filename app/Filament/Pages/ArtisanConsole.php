@@ -2,8 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -50,12 +49,19 @@ class ArtisanConsole extends Page implements HasForms
 
     // Form state
     public ?string $command = null;
+
     public array $selectedBulk = [];
+
     public string $password = '';
+
     public string $totpCode = '';
+
     public bool $unlocked = false;
+
     public ?string $output = null;
+
     public ?string $executedCommand = null;
+
     public ?string $executedAt = null;
 
     /**
@@ -160,13 +166,14 @@ class ArtisanConsole extends Page implements HasForms
     {
         if (empty($this->password)) {
             Notification::make()->danger()->title(__('Password is required.'))->send();
+
             return;
         }
 
         $user = auth()->user();
 
         // Step 1: Verify password
-        if (!Hash::check($this->password, $user->password)) {
+        if (! Hash::check($this->password, $user->password)) {
             Notification::make()->danger()->title(__('Incorrect password.'))->send();
 
             Log::warning('Artisan Console: failed unlock attempt (wrong password)', [
@@ -177,6 +184,7 @@ class ArtisanConsole extends Page implements HasForms
 
             $this->password = '';
             $this->totpCode = '';
+
             return;
         }
 
@@ -187,11 +195,12 @@ class ArtisanConsole extends Page implements HasForms
             if (empty($this->totpCode)) {
                 Notification::make()->danger()->title(__('2FA code is required.'))->send();
                 $this->totpCode = '';
+
                 return;
             }
 
-            $appAuth = \Filament\Auth\MultiFactor\App\AppAuthentication::make();
-            if (!$appAuth->verifyCode($this->totpCode, $secret)) {
+            $appAuth = AppAuthentication::make();
+            if (! $appAuth->verifyCode($this->totpCode, $secret)) {
                 Notification::make()->danger()->title(__('Invalid 2FA code.'))->send();
 
                 Log::warning('Artisan Console: failed unlock attempt (wrong 2FA)', [
@@ -201,6 +210,7 @@ class ArtisanConsole extends Page implements HasForms
                 ]);
 
                 $this->totpCode = '';
+
                 return;
             }
         }
@@ -234,19 +244,22 @@ class ArtisanConsole extends Page implements HasForms
      */
     public function execute(): void
     {
-        if (!$this->unlocked) {
+        if (! $this->unlocked) {
             Notification::make()->danger()->title(__('Console is locked. Enter your password first.'))->send();
+
             return;
         }
 
-        if (!$this->command) {
+        if (! $this->command) {
             Notification::make()->warning()->title(__('Please select a command.'))->send();
+
             return;
         }
 
         // Verify command is in whitelist
-        if (!array_key_exists($this->command, static::allowedCommands())) {
+        if (! array_key_exists($this->command, static::allowedCommands())) {
             Notification::make()->danger()->title(__('Command not allowed.'))->send();
+
             return;
         }
 
@@ -323,14 +336,16 @@ class ArtisanConsole extends Page implements HasForms
      */
     public function executeBulk(string $presetKey): void
     {
-        if (!$this->unlocked) {
+        if (! $this->unlocked) {
             Notification::make()->danger()->title(__('Console is locked.'))->send();
+
             return;
         }
 
         $presets = static::bulkPresets();
-        if (!isset($presets[$presetKey])) {
+        if (! isset($presets[$presetKey])) {
             Notification::make()->danger()->title(__('Invalid preset.'))->send();
+
             return;
         }
 
@@ -373,7 +388,7 @@ class ArtisanConsole extends Page implements HasForms
                 $exitCode = Artisan::call($artisanCommand, $params);
                 $output = trim(Artisan::output());
                 $status = $exitCode === 0 ? '✅' : '⚠️';
-                $results[] = "{$status} {$cmd}" . ($output ? "\n   {$output}" : '');
+                $results[] = "{$status} {$cmd}".($output ? "\n   {$output}" : '');
 
                 if ($exitCode !== 0) {
                     $failed++;
@@ -415,7 +430,7 @@ class ArtisanConsole extends Page implements HasForms
     {
         $backupDir = storage_path('app/backups');
 
-        if (!is_dir($backupDir)) {
+        if (! is_dir($backupDir)) {
             return null;
         }
 
@@ -425,7 +440,7 @@ class ArtisanConsole extends Page implements HasForms
         }
 
         // Sort by modification time descending
-        usort($files, fn($a, $b) => filemtime($b) - filemtime($a));
+        usort($files, fn ($a, $b) => filemtime($b) - filemtime($a));
 
         return basename($files[0]);
     }
@@ -435,7 +450,7 @@ class ArtisanConsole extends Page implements HasForms
     {
         // Get recent artisan console activity from the log
         $logFile = storage_path('logs/laravel.log');
-        if (!file_exists($logFile)) {
+        if (! file_exists($logFile)) {
             return [];
         }
 

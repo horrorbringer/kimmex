@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\NewsArticle;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class NewsArticleSeeder extends Seeder
 {
@@ -14,12 +13,12 @@ class NewsArticleSeeder extends Seeder
             [
                 'title' => [
                     'en' => 'Green Urban Initiative 2026: A Sustainability Milestone',
-                    'km' => 'គំនិតផ្តួចផ្តើមទីក្រុងបៃតង ២០២៦៖ ដំណាក់កាលថ្មីនៃនិរន្តរភាព'
+                    'km' => 'គំនិតផ្តួចផ្តើមទីក្រុងបៃតង ២០២៦៖ ដំណាក់កាលថ្មីនៃនិរន្តរភាព',
                 ],
                 'slug' => 'green-initiative',
                 'excerpt' => [
                     'en' => 'Kimmex has been officially awarded the 2026 Urban Sustainability Contract, a $50M initiative to transform city transport.',
-                    'km' => 'ក្រុមហ៊ុន Kimmex ត្រូវបានផ្តល់កិច្ចសន្យានិរន្តរភាពទីក្រុងឆ្នាំ ២០២៦ ជាផ្លូវការ ដែលជាគម្រោង ៥០លានដុល្លារ ដើម្បីផ្លាស់ប្តូរការដឹកជញ្ជូនក្នុងទីក្រុង។'
+                    'km' => 'ក្រុមហ៊ុន Kimmex ត្រូវបានផ្តល់កិច្ចសន្យានិរន្តរភាពទីក្រុងឆ្នាំ ២០២៦ ជាផ្លូវការ ដែលជាគម្រោង ៥០លានដុល្លារ ដើម្បីផ្លាស់ប្តូរការដឹកជញ្ជូនក្នុងទីក្រុង។',
                 ],
                 'content' => [
                     'en' => '
@@ -40,7 +39,7 @@ class NewsArticleSeeder extends Seeder
                     ',
                     'km' => '
                         <p>ក្នុងដំណាក់កាលដ៏សំខាន់សម្រាប់ការអភិវឌ្ឍប្រកបដោយចីរភាពនៅអាស៊ីអាគ្នេយ៍ ក្រុមហ៊ុន Kimmex Construction & Investment Co., Ltd. បានប្រកាសពីភាពជាអ្នកដឹកនាំរបស់ខ្លួនក្នុង <strong>គំនិតផ្តួចផ្តើមទីក្រុងបៃតង ២០២៦</strong>។</p>
-                    '
+                    ',
                 ],
                 'category' => 'Infrastructure',
                 'isFeatured' => true,
@@ -48,48 +47,48 @@ class NewsArticleSeeder extends Seeder
                     '/images/projects/Thumbnail-1.jpg',
                     '/images/projects/Thumbnail-2.jpg',
                     '/images/projects/Thumbnail-3.jpg',
-                    '/images/projects/Thumbnail-4.jpg'
+                    '/images/projects/Thumbnail-4.jpg',
                 ],
                 'authorName' => [
                     'en' => 'Dr. Sok Chea',
-                    'km' => 'បណ្ឌិត សុខ ជា'
+                    'km' => 'បណ្ឌិត សុខ ជា',
                 ],
                 'readTime' => [
                     'en' => '5 min read',
-                    'km' => '៥ នាទី'
-                ]
+                    'km' => '៥ នាទី',
+                ],
             ],
             [
                 'title' => [
                     'en' => 'Kimmex Achieves 1 Million Safe Man-Hours on SkyTower Project',
-                    'km' => 'ក្រុមហ៊ុន Kimmex សម្រេចបាន ១ លានម៉ោងការងារប្រកបដោយសុវត្ថិភាពលើគម្រោង SkyTower'
+                    'km' => 'ក្រុមហ៊ុន Kimmex សម្រេចបាន ១ លានម៉ោងការងារប្រកបដោយសុវត្ថិភាពលើគម្រោង SkyTower',
                 ],
                 'slug' => 'safety-milestone-skytower',
                 'excerpt' => [
                     'en' => 'A testament to our unwavering commitment to employee well-being and rigorous safety protocols.',
-                    'km' => 'សក្ខីភាពមួយចំពោះការប្តេជ្ញាចិត្តមិនងាករេរបស់យើងចំពោះសុខុមាលភាពបុគ្គលិក និងពិធីសារសុវត្ថិភាពដ៏តឹងរឹង។'
+                    'km' => 'សក្ខីភាពមួយចំពោះការប្តេជ្ញាចិត្តមិនងាករេរបស់យើងចំពោះសុខុមាលភាពបុគ្គលិក និងពិធីសារសុវត្ថិភាពដ៏តឹងរឹង។',
                 ],
                 'content' => [
                     'en' => '
                         <p>Safety is the cornerstone of every Kimmex project. We are proud to announce that the SkyTower development team has surpassed <strong>one million man-hours</strong> without a single lost-time injury (LTI).</p>
                     ',
-                    'km' => '<p>សុវត្ថិភាពគឺជាមូលដ្ឋានគ្រឹះនៃរាល់គម្រោងរបស់ Kimmex។</p>'
+                    'km' => '<p>សុវត្ថិភាពគឺជាមូលដ្ឋានគ្រឹះនៃរាល់គម្រោងរបស់ Kimmex។</p>',
                 ],
                 'category' => 'Safety',
                 'isFeatured' => false,
                 'gallery' => [
                     '/images/projects/Thumbnail-5.jpg',
-                    '/images/projects/Thumbnail-7.jpg'
+                    '/images/projects/Thumbnail-7.jpg',
                 ],
                 'authorName' => [
                     'en' => 'HSE Dept',
-                    'km' => 'ផ្នែកសុវត្ថិភាព'
+                    'km' => 'ផ្នែកសុវត្ថិភាព',
                 ],
                 'readTime' => [
                     'en' => '3 min read',
-                    'km' => '៣ នាទី'
-                ]
-            ]
+                    'km' => '៣ នាទី',
+                ],
+            ],
         ];
 
         foreach ($articles as $articleData) {

@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Partners\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -34,7 +36,7 @@ class PartnersTable
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

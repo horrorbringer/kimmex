@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Partner;
 use Illuminate\Database\Seeder;
 
 class PartnerSeeder extends Seeder
@@ -17,15 +17,15 @@ class PartnerSeeder extends Seeder
         ];
 
         // Prevent constraint violations if logoUrl is required
-        \App\Models\Partner::truncate(); // Let's truncate to clean up existing before seeding fresh
+        Partner::truncate(); // Let's truncate to clean up existing before seeding fresh
 
         foreach ($partners as $index => $partner) {
-            \App\Models\Partner::create([
+            Partner::create([
                 'name' => [
                     'en' => $partner,
                     'km' => $partner,
                 ],
-                'logoUrl' => 'partners/placeholder.png', 
+                'logoUrl' => 'partners/placeholder.png',
                 'type' => 'Government',
                 'orderIndex' => $index + 1,
             ]);

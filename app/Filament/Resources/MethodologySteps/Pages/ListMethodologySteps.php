@@ -8,6 +8,7 @@ use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher;
 use LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
 
 class ListMethodologySteps extends ListRecords
@@ -19,7 +20,7 @@ class ListMethodologySteps extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher::make(),
+            LocaleSwitcher::make(),
             Action::make('generateFakeMethodology')
                 ->label(__('Generate Fake Steps'))
                 ->icon('heroicon-m-sparkles')

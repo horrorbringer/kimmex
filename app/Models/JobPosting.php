@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Enums\JobPostingStatus;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 class JobPosting extends Model
@@ -37,7 +38,7 @@ class JobPosting extends Model
         ];
     }
 
-    public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'departmentId');
     }
@@ -46,13 +47,13 @@ class JobPosting extends Model
     {
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("careers_jobs_data_{$locale}");
+                Cache::forget("careers_jobs_data_{$locale}");
             }
         });
 
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                \Illuminate\Support\Facades\Cache::forget("careers_jobs_data_{$locale}");
+                Cache::forget("careers_jobs_data_{$locale}");
             }
         });
     }

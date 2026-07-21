@@ -13,10 +13,10 @@ return new class extends Migration
 
         // Enhance the documents table for premium unified management
         Schema::table('documents', function (Blueprint $table) {
-            if (!Schema::hasColumn('documents', 'is_featured')) {
+            if (! Schema::hasColumn('documents', 'is_featured')) {
                 $table->boolean('is_featured')->default(false)->after('isPublic');
             }
-            
+
             // Ensure category can hold the new academic types
             // (Current category is string, which is fine for multi-purpose)
         });

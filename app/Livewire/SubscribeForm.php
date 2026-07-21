@@ -2,14 +2,22 @@
 
 namespace App\Livewire;
 
+use App\Mail\WelcomeSubscriberMail;
 use App\Models\Subscriber;
+use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class SubscribeForm extends Component
 {
     public string $email = '';
+
     public array $interests = [];
+
     public bool $subscribed = false;
+
     public string $error = '';
 
     public function getAvailableInterests(): array
@@ -22,21 +30,22 @@ class SubscribeForm extends Component
         $this->error = '';
 
         // Rate limit: max 3 subscribe attempts per minute per IP
-        $key = 'subscribe_' . request()->ip();
-        if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 3)) {
+        $key = 'subscribe_'.request()->ip();
+        if (RateLimiter::tooManyAttempts($key, 3)) {
             $this->error = __('Too many attempts. Please try again later.');
+
             return;
         }
-        \Illuminate\Support\Facades\RateLimiter::hit($key, 60);
+        RateLimiter::hit($key, 60);
 
         $this->validate([
             'email' => 'required|email|max:255',
             'interests' => 'array',
-            'interests.*' => 'string|in:' . implode(',', array_keys(Subscriber::AVAILABLE_TAGS)),
+            'interests.*' => 'string|in:'.implode(',', array_keys(Subscriber::AVAILABLE_TAGS)),
         ]);
 
         // Default to 'general' if no interests selected
-        $tags = !empty($this->interests) ? $this->interests : ['general'];
+        $tags = ! empty($this->interests) ? $this->interests : ['general'];
 
         // Check if already subscribed
         $existing = Subscriber::where('email', $this->email)->first();
@@ -44,6 +53,7 @@ class SubscribeForm extends Component
         if ($existing) {
             if ($existing->is_active) {
                 $this->error = __('This email is already subscribed.');
+
                 return;
             }
             // Reactivate
@@ -55,18 +65,19 @@ class SubscribeForm extends Component
                     'email' => $this->email,
                     'tags' => $tags,
                 ]);
-            } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+            } catch (UniqueConstraintViolationException $e) {
                 $this->error = __('This email is already subscribed.');
+
                 return;
             }
         }
 
         // Send welcome email
         try {
-            \Illuminate\Support\Facades\Mail::to($subscriber->email)
-                ->send(new \App\Mail\WelcomeSubscriberMail($subscriber));
+            Mail::to($subscriber->email)
+                ->send(new WelcomeSubscriberMail($subscriber));
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::warning('Welcome email failed', ['email' => $subscriber->email, 'error' => $e->getMessage()]);
+            Log::warning('Welcome email failed', ['email' => $subscriber->email, 'error' => $e->getMessage()]);
         }
 
         $this->subscribed = true;

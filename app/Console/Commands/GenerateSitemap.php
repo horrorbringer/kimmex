@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\JobPostingStatus;
 use App\Models\Document;
 use App\Models\JobPosting;
 use App\Models\NewsArticle;
@@ -14,6 +15,7 @@ use Illuminate\Support\Collection;
 class GenerateSitemap extends Command
 {
     protected $signature = 'sitemap:generate';
+
     protected $description = 'Generate a static sitemap.xml file in the public directory';
 
     public function handle(): int
@@ -62,7 +64,7 @@ class GenerateSitemap extends Command
         $add('/news', $newsLastModified ? Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
 
         // Careers index
-        $jobLastModified = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->max('updated_at');
+        $jobLastModified = JobPosting::where('status', JobPostingStatus::OPEN)->max('updated_at');
         $add('/careers', $jobLastModified ? Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
 
         // Documents index (only if public documents exist)
@@ -96,13 +98,13 @@ class GenerateSitemap extends Command
 
     protected function buildXml(Collection $urls): string
     {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
 
         foreach ($urls as $url) {
             $xml .= "    <url>\n";
-            $xml .= "        <loc>" . htmlspecialchars($url['loc'], ENT_XML1, 'UTF-8') . "</loc>\n";
-            if (!empty($url['lastmod'])) {
+            $xml .= '        <loc>'.htmlspecialchars($url['loc'], ENT_XML1, 'UTF-8')."</loc>\n";
+            if (! empty($url['lastmod'])) {
                 $xml .= "        <lastmod>{$url['lastmod']}</lastmod>\n";
             }
             $xml .= "        <changefreq>{$url['changefreq']}</changefreq>\n";
@@ -110,7 +112,7 @@ class GenerateSitemap extends Command
             $xml .= "    </url>\n";
         }
 
-        $xml .= '</urlset>' . "\n";
+        $xml .= '</urlset>'."\n";
 
         return $xml;
     }

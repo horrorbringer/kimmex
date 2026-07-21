@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\Testimonials\Schemas;
 
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -46,11 +46,11 @@ class TestimonialForm
                         Select::make('rating')
                             ->label(__('Rating'))
                             ->options([
-                                5 => '⭐⭐⭐⭐⭐ (' . __('Excellent') . ')',
-                                4 => '⭐⭐⭐⭐ (' . __('Good') . ')',
-                                3 => '⭐⭐⭐ (' . __('Average') . ')',
-                                2 => '⭐⭐ (' . __('Poor') . ')',
-                                1 => '⭐ (' . __('Terrible') . ')',
+                                5 => '⭐⭐⭐⭐⭐ ('.__('Excellent').')',
+                                4 => '⭐⭐⭐⭐ ('.__('Good').')',
+                                3 => '⭐⭐⭐ ('.__('Average').')',
+                                2 => '⭐⭐ ('.__('Poor').')',
+                                1 => '⭐ ('.__('Terrible').')',
                             ])
                             ->required()
                             ->default(5),

@@ -2,6 +2,9 @@
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+
 class RichContent
 {
     /**
@@ -30,7 +33,7 @@ class RichContent
                 }
 
                 $path = $idMatch[1];
-                $url  = static::resolveImageUrl($path);
+                $url = static::resolveImageUrl($path);
 
                 if (! $url) {
                     // File not found anywhere — remove the broken img tag
@@ -39,12 +42,12 @@ class RichContent
 
                 // Replace or insert src
                 if (preg_match('/src=["\'][^"\']*["\']/', $attrs)) {
-                    $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="' . e($url) . '"', $attrs);
+                    $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
                 } else {
-                    $attrs = 'src="' . e($url) . '" ' . $attrs;
+                    $attrs = 'src="'.e($url).'" '.$attrs;
                 }
 
-                return '<img' . $attrs . '>';
+                return '<img'.$attrs.'>';
             },
             $html
         ) ?? $html;
@@ -64,8 +67,8 @@ class RichContent
 
         // Fallback: local public disk (files uploaded before disk switch)
         if (PublicStorage::isRemoteDisk()) {
-            $localUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($path);
-            if ($localUrl && \Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+            $localUrl = Storage::disk('public')->url($path);
+            if ($localUrl && Storage::disk('public')->exists($path)) {
                 return $localUrl;
             }
         }
@@ -86,7 +89,8 @@ class RichContent
         }
 
         try {
-            $status = \Illuminate\Support\Facades\Http::timeout(5)->head($url)->status();
+            $status = Http::timeout(5)->head($url)->status();
+
             return static::$urlCache[$url] = ($status >= 200 && $status < 400);
         } catch (\Throwable) {
             return static::$urlCache[$url] = false;
@@ -109,7 +113,7 @@ class RichContent
             return static::resolveImages($content);
         }
 
-        return '<p>' . e($content) . '</p>';
+        return '<p>'.e($content).'</p>';
     }
 
     /**
@@ -148,14 +152,15 @@ class RichContent
         $lines = preg_split('/\R+/u', $content, -1, PREG_SPLIT_NO_EMPTY) ?: [];
 
         if (in_array($mode, ['list', 'auto'], true) && count($lines) > 1) {
-            $items = array_map(fn (string $line): string => '<li>' . e(trim($line)) . '</li>', $lines);
-            return '<ul>' . implode('', $items) . '</ul>';
+            $items = array_map(fn (string $line): string => '<li>'.e(trim($line)).'</li>', $lines);
+
+            return '<ul>'.implode('', $items).'</ul>';
         }
 
         if (count($lines) > 1) {
-            return implode('', array_map(fn (string $line): string => '<p>' . e(trim($line)) . '</p>', $lines));
+            return implode('', array_map(fn (string $line): string => '<p>'.e(trim($line)).'</p>', $lines));
         }
 
-        return '<p>' . e($content) . '</p>';
+        return '<p>'.e($content).'</p>';
     }
 }

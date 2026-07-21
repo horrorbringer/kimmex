@@ -2,11 +2,14 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\ApplicationStatus;
+use App\Filament\Support\FlatRecordDetails;
 use App\Models\JobApplication;
+use App\Support\PublicStorage;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\IconColumn;
 
 class LatestJobApplicationsWidget extends BaseWidget
 {
@@ -17,7 +20,7 @@ class LatestJobApplicationsWidget extends BaseWidget
         return false; // Replaced by RecentActivityFeedWidget
     }
 
-    protected int | string | array $columnSpan = 'half';
+    protected int|string|array $columnSpan = 'half';
 
     public function table(Table $table): Table
     {
@@ -38,12 +41,12 @@ class LatestJobApplicationsWidget extends BaseWidget
                     ->formatStateUsing(fn ($state) => $state ? __('View Resume') : __('No Resume'))
                     ->icon(fn ($state) => $state ? 'heroicon-o-document-text' : null)
                     ->color(fn ($state) => $state ? 'success' : 'gray')
-                    ->url(fn ($record) => $record->resumeUrl ? \App\Support\PublicStorage::url($record->resumeUrl) : null)
+                    ->url(fn ($record) => $record->resumeUrl ? PublicStorage::url($record->resumeUrl) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('status')
                     ->label(__('Status'))
                     ->badge()
-                    ->color(fn ($state): string => match ($state instanceof \App\Enums\ApplicationStatus ? $state->value : (string) $state) {
+                    ->color(fn ($state): string => match ($state instanceof ApplicationStatus ? $state->value : (string) $state) {
                         'PENDING' => 'warning',
                         'REVIEWING' => 'info',
                         'ACCEPTED' => 'success',
@@ -56,8 +59,8 @@ class LatestJobApplicationsWidget extends BaseWidget
                     ->sortable(),
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make()
-                    ->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()
+                    ->schema(fn ($record): array => FlatRecordDetails::schema($record)),
             ]);
     }
 }

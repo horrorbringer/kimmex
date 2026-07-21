@@ -13,16 +13,16 @@ class JobApplicationObserver
 {
     public function updated(JobApplication $application): void
     {
-        if (!$application->wasChanged('status')) {
+        if (! $application->wasChanged('status')) {
             return;
         }
 
         $status = $application->status;
 
         // Only send email if status is a valid enum (handle legacy string values)
-        if (!$status instanceof ApplicationStatus) {
+        if (! $status instanceof ApplicationStatus) {
             $status = ApplicationStatus::tryFrom($application->getRawOriginal('status'));
-            if (!$status) {
+            if (! $status) {
                 return;
             }
         }
@@ -32,7 +32,7 @@ class JobApplicationObserver
             $this->autoFillJobAndRejectOthers($application);
         }
 
-        if (!$application->email) {
+        if (! $application->email) {
             return;
         }
 
@@ -40,7 +40,7 @@ class JobApplicationObserver
             Mail::to($application->email)
                 ->queue(new ApplicationStatusMail($application, $status));
         } catch (\Throwable $e) {
-            Log::error('Failed to send application status email: ' . $e->getMessage(), [
+            Log::error('Failed to send application status email: '.$e->getMessage(), [
                 'application_id' => $application->id,
                 'status' => $status->value,
             ]);

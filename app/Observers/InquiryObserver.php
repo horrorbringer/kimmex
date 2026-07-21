@@ -21,7 +21,7 @@ class InquiryObserver
                 'file_path' => $inquiry->attachment_url,
             ]);
         } catch (\Throwable $e) {
-            Log::error('Failed to send Telegram inquiry notification: ' . $e->getMessage(), [
+            Log::error('Failed to send Telegram inquiry notification: '.$e->getMessage(), [
                 'inquiry_id' => $inquiry->id,
             ]);
         }

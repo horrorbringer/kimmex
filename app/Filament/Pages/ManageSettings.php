@@ -3,30 +3,37 @@
 namespace App\Filament\Pages;
 
 use App\Models\SystemSetting;
+use App\Services\AIGeneratorService;
 use App\Services\AutoTranslateService;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Slider;
-use Illuminate\Validation\ValidationException;
-use Filament\Pages\Page;
 use Filament\Actions\Action;
-use Filament\Notifications\Notification;
-use Filament\Schemas\Schema;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Slider;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Group;
-use Filament\Forms\Components\Placeholder;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class ManageSettings extends Page implements HasForms
 {
@@ -60,6 +67,7 @@ class ManageSettings extends Page implements HasForms
     protected string $view = 'filament.pages.manage-settings';
 
     public ?array $data = [];
+
     public array $availableModels = [];
 
     public function mount(): void
@@ -84,7 +92,7 @@ class ManageSettings extends Page implements HasForms
             'logo' => $org['logo'] ?? '',
             'favicon' => $org['favicon'] ?? '',
             'website_title' => $org['en']['website_title'] ?? '',
-            
+
             // Social
             'facebook' => $org['facebook'] ?? '',
             'linkedin' => $org['linkedin'] ?? '',
@@ -118,13 +126,13 @@ class ManageSettings extends Page implements HasForms
             'ai_temperature' => $ai['temperature'] ?? 0.7,
             'ai_tone' => $ai['tone'] ?? 'professional',
             'auto_translate' => $ai['auto_translate'] ?? false,
-            
+
             // Integration
             'telegram_enabled' => (bool) ($integration['telegram_enabled'] ?? false),
             'telegram_bot_token' => $integration['telegram_bot_token'] ?? '',
             'telegram_jobs_chat_id' => $integration['telegram_jobs_chat_id'] ?? '',
             'telegram_inquiries_chat_id' => $integration['telegram_inquiries_chat_id'] ?? '',
-            
+
             // Appearance
             'primary_color' => $theme['primary_color'] ?? '#E31E24',
             'primary_color_hover' => $theme['primary_color_hover'] ?? '#C8151D',
@@ -138,7 +146,7 @@ class ManageSettings extends Page implements HasForms
         ];
 
         $provider = $this->data['ai_provider'];
-        $this->availableModels = (new \App\Services\AIGeneratorService())->getAvailableModels(
+        $this->availableModels = (new AIGeneratorService)->getAvailableModels(
             match ($provider) {
                 'gemini' => $this->data['gemini_api_key'],
                 'openrouter' => $this->data['openrouter_api_key'],
@@ -153,7 +161,7 @@ class ManageSettings extends Page implements HasForms
             'openrouter' => $this->data['openrouter_model'],
             default => $this->data['gemini_model'],
         };
-        if (!empty($currentModel) && !isset($this->availableModels[$currentModel])) {
+        if (! empty($currentModel) && ! isset($this->availableModels[$currentModel])) {
             $this->availableModels[$currentModel] = $currentModel;
         }
 
@@ -229,7 +237,7 @@ class ManageSettings extends Page implements HasForms
                                         $this->makeImageUpload('about_section_image_4', __('Who We Are Image 4'), 'brand/about'),
                                     ])
                                     ->collapsible(),
-                                
+
                                 Section::make(__('Mission, Vision & Goals'))
                                     ->columns(3)
                                     ->schema([
@@ -237,7 +245,7 @@ class ManageSettings extends Page implements HasForms
                                         Textarea::make('vision')->rows(3)->hintAction($this->getAiImproveAction('vision')),
                                         Textarea::make('goal')->rows(3)->hintAction($this->getAiImproveAction('goal')),
                                     ])->collapsible()->collapsed(),
-                                
+
                                 Section::make(__('Core Values'))
                                     ->schema([
                                         Repeater::make('values')
@@ -279,7 +287,7 @@ class ManageSettings extends Page implements HasForms
                                                 ])
                                                 ->required()
                                                 ->live()
-                                                ->afterStateUpdated(function ($state, $get, $set, \App\Services\AIGeneratorService $ai) {
+                                                ->afterStateUpdated(function ($state, $get, $set, AIGeneratorService $ai) {
                                                     $this->availableModels = $ai->getAvailableModels(
                                                         match ($state) {
                                                             'gemini' => $get('gemini_api_key'),
@@ -300,7 +308,7 @@ class ManageSettings extends Page implements HasForms
                                                         $set($modelField, array_key_first($this->availableModels));
                                                     }
                                                 }),
-                                            
+
                                             // Gemini Fields
                                             Group::make()
                                                 ->visible(fn ($get) => $get('ai_provider') === 'gemini')
@@ -309,16 +317,16 @@ class ManageSettings extends Page implements HasForms
                                                         ->label(__('Gemini API Key'))
                                                         ->password()->revealable()
                                                         ->hintAction(
-                                                            \Filament\Actions\Action::make('fetchGeminiModels')
+                                                            Action::make('fetchGeminiModels')
                                                                 ->icon('heroicon-o-arrow-path')
-                                                                ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
+                                                                ->action(function ($state, $get, AIGeneratorService $ai) {
                                                                     $this->availableModels = $ai->getAvailableModels($state, 'gemini');
-                                                                    \Filament\Notifications\Notification::make()->title(__('Gemini Models Updated'))->success()->send();
+                                                                    Notification::make()->title(__('Gemini Models Updated'))->success()->send();
                                                                 })
                                                         ),
                                                     Select::make('gemini_model')
                                                         ->label(__('Active Model'))
-                                                        ->options(fn() => $this->availableModels)->searchable(),
+                                                        ->options(fn () => $this->availableModels)->searchable(),
                                                 ]),
 
                                             // OpenRouter Fields
@@ -330,16 +338,16 @@ class ManageSettings extends Page implements HasForms
                                                         ->password()->revealable()
                                                         ->helperText(__('Use an OpenRouter key. Free models usually end with :free.'))
                                                         ->hintAction(
-                                                            \Filament\Actions\Action::make('fetchOpenRouterModels')
+                                                            Action::make('fetchOpenRouterModels')
                                                                 ->icon('heroicon-o-arrow-path')
-                                                                ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
+                                                                ->action(function ($state, $get, AIGeneratorService $ai) {
                                                                     $this->availableModels = $ai->getAvailableModels($state, 'openrouter');
-                                                                    \Filament\Notifications\Notification::make()->title(__('OpenRouter Models Updated'))->success()->send();
+                                                                    Notification::make()->title(__('OpenRouter Models Updated'))->success()->send();
                                                                 })
                                                         ),
                                                     Select::make('openrouter_model')
                                                         ->label(__('Active Model'))
-                                                        ->options(fn() => $this->availableModels)->searchable(),
+                                                        ->options(fn () => $this->availableModels)->searchable(),
                                                 ]),
 
                                             // Ollama Fields
@@ -350,16 +358,16 @@ class ManageSettings extends Page implements HasForms
                                                         ->label(__('Ollama Base URL'))
                                                         ->placeholder('http://localhost:11434')
                                                         ->hintAction(
-                                                            \Filament\Actions\Action::make('fetchOllamaModels')
+                                                            Action::make('fetchOllamaModels')
                                                                 ->icon('heroicon-o-arrow-path')
-                                                                ->action(function ($state, $get, \App\Services\AIGeneratorService $ai) {
+                                                                ->action(function ($state, $get, AIGeneratorService $ai) {
                                                                     $this->availableModels = $ai->getAvailableModels(null, 'ollama', $state);
-                                                                    \Filament\Notifications\Notification::make()->title(__('Ollama Models Updated'))->success()->send();
+                                                                    Notification::make()->title(__('Ollama Models Updated'))->success()->send();
                                                                 })
                                                         ),
                                                     Select::make('ollama_model')
                                                         ->label(__('Active Model'))
-                                                        ->options(fn() => $this->availableModels)->searchable(),
+                                                        ->options(fn () => $this->availableModels)->searchable(),
                                                 ]),
 
                                             Toggle::make('auto_translate')
@@ -400,13 +408,15 @@ class ManageSettings extends Page implements HasForms
                                             ])->default('article'),
                                         ]),
                                         Textarea::make('test_result')->rows(5)->readOnly()->placeholder(__('Result will appear here...')),
-                                        \Filament\Schemas\Components\Actions::make([
-                                            \Filament\Actions\Action::make('runTest')
+                                        Actions::make([
+                                            Action::make('runTest')
                                                 ->label(__('Generate Test Content'))
                                                 ->icon('heroicon-m-play')
-                                                ->action(function ($get, $set, \App\Services\AIGeneratorService $ai) {
+                                                ->action(function ($get, $set, AIGeneratorService $ai) {
                                                     $topic = $get('test_topic');
-                                                    if (empty($topic)) return;
+                                                    if (empty($topic)) {
+                                                        return;
+                                                    }
                                                     try {
                                                         $provider = $get('ai_provider');
                                                         $settings = [
@@ -462,25 +472,25 @@ class ManageSettings extends Page implements HasForms
                                                     ->password()
                                                     ->revealable()
                                                     ->helperText('Get this from @BotFather'),
-                                                
+
                                                 Grid::make(2)->schema([
                                                     TextInput::make('telegram_jobs_chat_id')
                                                         ->label(__('HR Chat ID (Jobs)'))
                                                         ->placeholder('-100123456789')
-                                                        ->hint(fn($get) => $get('jobs_chat_title') ? '✅ ' . $get('jobs_chat_title') : null)
+                                                        ->hint(fn ($get) => $get('jobs_chat_title') ? '✅ '.$get('jobs_chat_title') : null)
                                                         ->hintColor('success')
                                                         ->helperText(__('For job application alerts')),
 
                                                     TextInput::make('telegram_inquiries_chat_id')
                                                         ->label(__('Sales Chat ID (Inquiries)'))
                                                         ->placeholder('-100987654321')
-                                                        ->hint(fn($get) => $get('inquiries_chat_title') ? '✅ ' . $get('inquiries_chat_title') : null)
+                                                        ->hint(fn ($get) => $get('inquiries_chat_title') ? '✅ '.$get('inquiries_chat_title') : null)
                                                         ->hintColor('success')
                                                         ->helperText(__('For general inquiry alerts')),
                                                 ]),
 
-                                                \Filament\Schemas\Components\Actions::make([
-                                                    \Filament\Actions\Action::make('testTelegram')
+                                                Actions::make([
+                                                    Action::make('testTelegram')
                                                         ->label(__('Verify & Test Connection'))
                                                         ->icon('heroicon-o-check-badge')
                                                         ->color('success')
@@ -490,47 +500,50 @@ class ManageSettings extends Page implements HasForms
                                                                 'jobs' => $get('telegram_jobs_chat_id'),
                                                                 'inquiries' => $get('telegram_inquiries_chat_id'),
                                                             ];
-                                                            
-                                                            if (!$token || (!array_filter($targets))) {
-                                                                \Filament\Notifications\Notification::make()
+
+                                                            if (! $token || (! array_filter($targets))) {
+                                                                Notification::make()
                                                                     ->warning()
                                                                     ->title(__('Missing Config'))
                                                                     ->body(__('Please enter bot token and at least one chat ID.'))
                                                                     ->send();
+
                                                                 return;
                                                             }
 
                                                             $successCount = 0;
                                                             foreach ($targets as $key => $chatId) {
-                                                                if (!$chatId) continue;
+                                                                if (! $chatId) {
+                                                                    continue;
+                                                                }
                                                                 try {
                                                                     // 1. Get Chat Info (Title)
-                                                                    $response = \Illuminate\Support\Facades\Http::get("https://api.telegram.org/bot{$token}/getChat", [
+                                                                    $response = Http::get("https://api.telegram.org/bot{$token}/getChat", [
                                                                         'chat_id' => $chatId,
                                                                     ]);
 
                                                                     if ($response->successful()) {
                                                                         $chatData = $response->json('result');
                                                                         $title = $chatData['title'] ?? ($chatData['first_name'] ?? 'Private Chat');
-                                                                        $set($key . '_chat_title', $title);
-                                                                        
+                                                                        $set($key.'_chat_title', $title);
+
                                                                         // 2. Send Test Message
-                                                                        \Illuminate\Support\Facades\Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+                                                                        Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
                                                                             'chat_id' => $chatId,
-                                                                            'text' => "🚀 *KIMMEX VERIFIED*\nThis chat is now connected for " . strtoupper($key) . " alerts!",
+                                                                            'text' => "🚀 *KIMMEX VERIFIED*\nThis chat is now connected for ".strtoupper($key).' alerts!',
                                                                             'parse_mode' => 'Markdown',
                                                                         ]);
                                                                         $successCount++;
                                                                     }
                                                                 } catch (\Exception $e) {
-                                                                    \Illuminate\Support\Facades\Log::error("Telegram {$key} Verify Failed: " . $e->getMessage());
+                                                                    Log::error("Telegram {$key} Verify Failed: ".$e->getMessage());
                                                                 }
                                                             }
 
-                                                            \Filament\Notifications\Notification::make()
+                                                            Notification::make()
                                                                 ->success()
                                                                 ->title(__('Verification Complete'))
-                                                                ->body(__("Verified and sent test messages to :count chat(s).", ['count' => $successCount]))
+                                                                ->body(__('Verified and sent test messages to :count chat(s).', ['count' => $successCount]))
                                                                 ->send();
                                                         }),
                                                 ]),
@@ -580,18 +593,20 @@ class ManageSettings extends Page implements HasForms
                                         ]),
                                     ]),
                             ]),
-                    ])
+                    ]),
             ])
             ->statePath('data');
     }
 
-    protected function getAiImproveAction(string $field, ?string $prompt = null): \Filament\Actions\Action
+    protected function getAiImproveAction(string $field, ?string $prompt = null): Action
     {
-        return \Filament\Actions\Action::make('aiImprove' . ucfirst($field))
+        return Action::make('aiImprove'.ucfirst($field))
             ->icon('heroicon-m-sparkles')
             ->tooltip(__('Improve with AI'))
-            ->action(function ($state, $get, \Filament\Schemas\Components\Utilities\Set $set, \App\Services\AIGeneratorService $ai) use ($field, $prompt) {
-                if (empty($state)) return;
+            ->action(function ($state, $get, Set $set, AIGeneratorService $ai) use ($field, $prompt) {
+                if (empty($state)) {
+                    return;
+                }
                 $settings = [
                     'provider' => $get('ai_provider'),
                     'gemini' => [
@@ -629,7 +644,7 @@ class ManageSettings extends Page implements HasForms
                 ->modalHeading(__('Clear all cached data?'))
                 ->modalDescription(__('This will force the website to re-fetch all data from the database. Use this if dashboard changes are not showing up on the frontend.'))
                 ->action(function () {
-                    \Illuminate\Support\Facades\Cache::flush();
+                    Cache::flush();
                     Notification::make()
                         ->title(__('Cache Purged'))
                         ->body(__('Entire system cache has been successfully cleared.'))
@@ -668,7 +683,7 @@ class ManageSettings extends Page implements HasForms
             return;
         }
 
-        $translator = new AutoTranslateService();
+        $translator = new AutoTranslateService;
         $autoTranslate = $state['auto_translate'] ?? true;
 
         // 1. Organization Profile
@@ -680,7 +695,7 @@ class ManageSettings extends Page implements HasForms
             'working_hours' => $state['working_hours'],
         ];
 
-        $orgKm = $autoTranslate 
+        $orgKm = $autoTranslate
             ? $translator->translateArray($orgEn, [], 'km')
             : (SystemSetting::get('organization_profile')['km'] ?? []);
 
@@ -775,18 +790,19 @@ class ManageSettings extends Page implements HasForms
         ]);
 
         // 6. Global Cache Purge (Force Frontend Sync)
-        \Illuminate\Support\Facades\Cache::forget('global_settings_en');
-        \Illuminate\Support\Facades\Cache::forget('global_settings_km');
-        \Illuminate\Support\Facades\Cache::forget('global_settings_kh');
-        \Illuminate\Support\Facades\Cache::forget('system_setting_theme_settings');
-        \Illuminate\Support\Facades\Cache::forget('system_setting_organization_profile');
-        \Illuminate\Support\Facades\Cache::forget('system_setting_brand_identity');
-        \Illuminate\Support\Facades\Cache::forget('system_setting_integration_settings');
+        Cache::forget('global_settings_en');
+        Cache::forget('global_settings_km');
+        Cache::forget('global_settings_kh');
+        Cache::forget('system_setting_theme_settings');
+        Cache::forget('system_setting_organization_profile');
+        Cache::forget('system_setting_brand_identity');
+        Cache::forget('system_setting_integration_settings');
 
         // Clear compiled views so Blade re-renders with new theme values
         try {
-            \Illuminate\Support\Facades\Artisan::call('view:clear');
-        } catch (\Throwable) {}
+            Artisan::call('view:clear');
+        } catch (\Throwable) {
+        }
 
         // Reset OPcache if available
         if (function_exists('opcache_reset')) {
@@ -843,7 +859,7 @@ class ManageSettings extends Page implements HasForms
                     ];
                 }
 
-                if (!is_array($value)) {
+                if (! is_array($value)) {
                     return null;
                 }
 
@@ -864,7 +880,7 @@ class ManageSettings extends Page implements HasForms
         $targetValues = $this->normalizeCoreValues($targetValues);
 
         foreach ($sourceValues as $index => $value) {
-            if (!isset($targetValues[$index]) || !is_array($targetValues[$index])) {
+            if (! isset($targetValues[$index]) || ! is_array($targetValues[$index])) {
                 $targetValues[$index] = [
                     'title' => $value['title'] ?? '',
                     'description' => $value['description'] ?? '',

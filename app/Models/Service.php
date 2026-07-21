@@ -3,17 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-
-use Spatie\Translatable\HasTranslations;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Translatable\HasTranslations;
 
 class Service extends Model
 {
-    use HasUuids, LogsActivity, HasTranslations, DeletesPublicUploads;
+    use DeletesPublicUploads, HasTranslations, HasUuids, LogsActivity;
 
     public $translatable = ['title', 'summary', 'description', 'metaTitle', 'metaDescription'];
 
@@ -51,9 +50,9 @@ class Service extends Model
                 $service->getOriginal('slug'),
             ]));
 
-            foreach(['en', 'km', 'kh'] as $locale) {
-                Cache::forget('nav_services_' . $locale);
-                Cache::forget('home_services_array_' . $locale);
+            foreach (['en', 'km', 'kh'] as $locale) {
+                Cache::forget('nav_services_'.$locale);
+                Cache::forget('home_services_array_'.$locale);
                 foreach ($slugs as $slug) {
                     Cache::forget("service_show_data_{$slug}_{$locale}");
                 }
@@ -67,9 +66,9 @@ class Service extends Model
                 $service->getOriginal('slug'),
             ]));
 
-            foreach(['en', 'km', 'kh'] as $locale) {
-                Cache::forget('nav_services_' . $locale);
-                Cache::forget('home_services_array_' . $locale);
+            foreach (['en', 'km', 'kh'] as $locale) {
+                Cache::forget('nav_services_'.$locale);
+                Cache::forget('home_services_array_'.$locale);
                 foreach ($slugs as $slug) {
                     Cache::forget("service_show_data_{$slug}_{$locale}");
                 }

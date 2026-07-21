@@ -2,9 +2,14 @@
 
 namespace App\Filament\Resources\NewsArticles\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
+use App\Models\NewsArticle;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -18,8 +23,8 @@ class NewsArticlesTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
-                    ->sortable(query: fn($query, $direction) => $query->orderBy('title->en', $direction))
-                    ->description(fn($record) => $record->slug)
+                    ->sortable(query: fn ($query, $direction) => $query->orderBy('title->en', $direction))
+                    ->description(fn ($record) => $record->slug)
                     ->wrap(),
                 TextColumn::make('category')
                     ->label(__('Category'))
@@ -41,21 +46,21 @@ class NewsArticlesTable
                 //
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
-                \Filament\Actions\Action::make('viewOnWebsite')
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
+                Action::make('viewOnWebsite')
                     ->label(__('View on Website'))
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->color('info')
-                    ->url(fn(\App\Models\NewsArticle $record): string => route('news.show', ['slug' => $record->slug]))
+                    ->url(fn (NewsArticle $record): string => route('news.show', ['slug' => $record->slug]))
                     ->openUrlInNewTab(),
-                \Filament\Actions\Action::make('copy_link')
+                Action::make('copy_link')
                     ->label(__('Copy Link'))
                     ->icon('heroicon-o-link')
                     ->color('gray')
-                    ->extraAttributes(fn($record) => [
-                        'x-on:click' => "window.navigator.clipboard.writeText('" . route('news.show', ['slug' => $record->slug]) . "')",
+                    ->extraAttributes(fn ($record) => [
+                        'x-on:click' => "window.navigator.clipboard.writeText('".route('news.show', ['slug' => $record->slug])."')",
                     ])
-                    ->action(fn() => \Filament\Notifications\Notification::make()->title(__('Link Copied'))->success()->send()),
+                    ->action(fn () => Notification::make()->title(__('Link Copied'))->success()->send()),
                 EditAction::make(),
             ])
             ->toolbarActions([

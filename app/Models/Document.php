@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Models\Concerns\DeletesPublicUploads;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Translatable\HasTranslations;
 
 class Document extends Model
 {
-    use HasUuids, HasTranslations, DeletesPublicUploads;
+    use DeletesPublicUploads, HasTranslations, HasUuids;
 
     public $translatable = ['title', 'description'];
 
@@ -85,12 +86,12 @@ class Document extends Model
         }
     }
 
-    public function documentCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function documentCategory(): BelongsTo
     {
         return $this->belongsTo(DocumentCategory::class, 'document_category_id');
     }
 
-    public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'departmentId');
     }

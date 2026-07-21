@@ -4,16 +4,16 @@ namespace App\Filament\Widgets;
 
 use App\Models\Inquiry;
 use App\Models\JobApplication;
-use App\Models\NewsArticle;
 use App\Models\Subscriber;
 use Filament\Widgets\Widget;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class RecentActivityFeedWidget extends Widget
 {
     protected static ?int $sort = 3;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
+
     protected string $view = 'filament.widgets.recent-activity-feed-widget';
 
     public function getActivities(): Collection
@@ -29,7 +29,7 @@ class RecentActivityFeedWidget extends Widget
                 'title' => $inquiry->name ?? __('Anonymous'),
                 'subtitle' => $inquiry->subject ?? $inquiry->email,
                 'time' => $inquiry->created_at,
-                'url' => '/admin/inquiries/' . $inquiry->id . '/edit',
+                'url' => '/admin/inquiries/'.$inquiry->id.'/edit',
                 'badge' => $inquiry->is_read ? null : __('New'),
                 'badge_color' => '#ef4444',
             ]);
@@ -44,7 +44,7 @@ class RecentActivityFeedWidget extends Widget
                 'title' => $app->name ?? __('Applicant'),
                 'subtitle' => $app->job?->getTranslation('title', 'en') ?? __('General Application'),
                 'time' => $app->created_at,
-                'url' => '/admin/job-applications/' . $app->id . '/edit',
+                'url' => '/admin/job-applications/'.$app->id.'/edit',
                 'badge' => $app->status?->value === 'PENDING' ? __('Pending') : null,
                 'badge_color' => '#f59e0b',
             ]);

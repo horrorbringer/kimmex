@@ -8,14 +8,15 @@ use App\Filament\Resources\Documents\Pages\ListDocuments;
 use App\Filament\Resources\Documents\Schemas\DocumentForm;
 use App\Filament\Resources\Documents\Tables\DocumentsTable;
 use App\Models\Document;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
 
 class DocumentResource extends Resource
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Concerns\Translatable;
+    use Translatable;
 
     protected static ?string $model = Document::class;
 
@@ -40,6 +41,7 @@ class DocumentResource extends Resource
     }
 
     protected static ?int $navigationSort = 1;
+
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-folder-open';
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -49,7 +51,7 @@ class DocumentResource extends Resource
         return ['title', 'slug'];
     }
 
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(Model $record): bool
     {
         return auth()->user()?->isAdmin();
     }

@@ -4,9 +4,10 @@ namespace App\Filament\Support;
 
 use App\Services\AutoTranslateService;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Notifications\Notification;
+use Livewire\Component;
 
 class TranslationHelper
 {
@@ -17,14 +18,13 @@ class TranslationHelper
         string $sourceField,
         ?string $targetField = null,
         string $targetLocale = 'km'
-    ): Action
-    {
+    ): Action {
         $targetField ??= $sourceField;
 
-        return Action::make('autoTranslate_' . $sourceField . '_' . $targetField)
+        return Action::make('autoTranslate_'.$sourceField.'_'.$targetField)
             ->icon('heroicon-m-language')
             ->tooltip(__('Translate between English and Khmer'))
-            ->action(function (Get $get, Set $set, $state, $record, \Livewire\Component $livewire) use ($sourceField, $targetField, $targetLocale) {
+            ->action(function (Get $get, Set $set, $state, $record, Component $livewire) use ($sourceField, $targetField, $targetLocale) {
                 $sourceText = $state;
 
                 $sourceHasKhmer = self::containsKhmer((string) $sourceText);
@@ -38,7 +38,7 @@ class TranslationHelper
                     $resolvedTargetLocale = $sourceHasKhmer ? 'en' : $targetLocale;
                     $sourceLocale = $sourceHasKhmer ? 'km' : 'en';
                 }
-                
+
                 // For new records, get the unsaved English text from the otherLocaleData array
                 if (empty($sourceText) && property_exists($livewire, 'otherLocaleData')) {
                     $sourceText = $livewire->otherLocaleData[$sourceLocale][$sourceField] ?? '';
@@ -53,6 +53,7 @@ class TranslationHelper
                         ->title(__('No source text found'))
                         ->body(__('Please enter English text first or save the record.'))
                         ->send();
+
                     return;
                 }
 
@@ -76,7 +77,7 @@ class TranslationHelper
                     } else {
                         $set($targetField, $translated);
                     }
-                    
+
                     Notification::make()
                         ->success()
                         ->title(__('Translated successfully'))
@@ -84,7 +85,7 @@ class TranslationHelper
                         ->send();
                 } else {
                     Notification::make()
-                        ->error()
+                        ->danger()
                         ->title(__('Translation failed'))
                         ->body(__('Check your internet connection or API limits.'))
                         ->send();

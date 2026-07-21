@@ -2,13 +2,15 @@
 
 namespace App\Filament\Resources\Milestones\Tables;
 
-use Filament\Tables\Table;
+use App\Filament\Support\FlatRecordDetails;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Table;
 
 class MilestonesTable
 {
@@ -36,7 +38,7 @@ class MilestonesTable
                 //
             ])
             ->actions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])

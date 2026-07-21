@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\JobApplications\Schemas;
 
+use App\Enums\ApplicationStatus;
 use App\Support\PublicStorage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -31,7 +32,7 @@ class JobApplicationForm
                                 }),
                             Select::make('status')
                                 ->label(__('Management Status'))
-                                ->options(\App\Enums\ApplicationStatus::class)
+                                ->options(ApplicationStatus::class)
                                 ->required()
                                 ->default('PENDING')
                                 ->selectablePlaceholder(false),
@@ -68,7 +69,7 @@ class JobApplicationForm
                                     Action::make('openResume')
                                         ->icon('heroicon-m-arrow-top-right-on-square')
                                         ->tooltip(__('Open Resume'))
-                                        ->url(fn(?string $state): ?string => $state ? PublicStorage::url($state) : null)
+                                        ->url(fn (?string $state): ?string => $state ? PublicStorage::url($state) : null)
                                         ->openUrlInNewTab()
                                 ),
                         ]),

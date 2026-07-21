@@ -2,12 +2,17 @@
 
 namespace App\Filament\Resources\OrgUnits\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
 use App\Models\OrgUnit;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class OrgUnitsTable
@@ -19,7 +24,7 @@ class OrgUnitsTable
             ->columns([
                 TextColumn::make('title')
                     ->label(__('Title'))
-                    ->description(fn(OrgUnit $record) => $record->getPath())
+                    ->description(fn (OrgUnit $record) => $record->getPath())
                     ->weight('bold')
                     ->searchable(),
 
@@ -35,7 +40,7 @@ class OrgUnitsTable
                         'secondary' => 'DEPARTMENT',
                         'gray' => 'OFFICE',
                     ])
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'EXECUTIVE' => __('Executive'),
                         'MANAGEMENT' => __('Management'),
                         'DIRECTOR' => __('Director'),
@@ -44,7 +49,7 @@ class OrgUnitsTable
                         'DEPARTMENT' => __('Department'),
                         'OFFICE' => __('Facility'),
                     })
-                    ->icon(fn(string $state): string => match ($state) {
+                    ->icon(fn (string $state): string => match ($state) {
                         'EXECUTIVE' => 'heroicon-o-sparkles',
                         'MANAGEMENT' => 'heroicon-o-shield-check',
                         'DIRECTOR' => 'heroicon-o-academic-cap',
@@ -67,7 +72,7 @@ class OrgUnitsTable
                     ->color('gray')
                     ->searchable(),
 
-                \Filament\Tables\Columns\TextInputColumn::make('orderIndex')
+                TextInputColumn::make('orderIndex')
                     ->label(__('Sort'))
                     ->sortable(),
                 ToggleColumn::make('isActive')
@@ -78,15 +83,15 @@ class OrgUnitsTable
             ])
             ->defaultSort('orderIndex')
             ->groups([
-                \Filament\Tables\Grouping\Group::make('type')
+                Group::make('type')
                     ->label(__('Organizational Tier'))
                     ->collapsible(),
-                \Filament\Tables\Grouping\Group::make('department.name')
+                Group::make('department.name')
                     ->label(__('Department'))
                     ->collapsible(),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('type')
+                SelectFilter::make('type')
                     ->label(__('Filter by Tier'))
                     ->options([
                         'EXECUTIVE' => __('C-Suite'),
@@ -96,12 +101,12 @@ class OrgUnitsTable
                         'STAFF' => __('Staff'),
                         'DEPARTMENT' => __('Departments'),
                     ]),
-                \Filament\Tables\Filters\SelectFilter::make('departmentId')
+                SelectFilter::make('departmentId')
                     ->label(__('Department'))
-                    ->relationship('department', 'name', fn($query) => $query->orderBy('name->en')),
+                    ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en')),
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

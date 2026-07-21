@@ -6,6 +6,8 @@ use App\Jobs\SendNewsletterJob;
 use App\Models\NewsArticle;
 use App\Models\NewsletterSend;
 use App\Models\Subscriber;
+use App\Support\PublicStorage;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -14,6 +16,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 
 class SendNewsletter extends Page implements HasForms
@@ -48,19 +51,27 @@ class SendNewsletter extends Page implements HasForms
     }
 
     public ?string $articleId = null;
+
     public string $customIntro = '';
+
     public array $segments = [];
 
     // A/B testing fields
     public bool $enableAbTest = false;
+
     public string $subjectA = '';
+
     public string $subjectB = '';
+
     public int $abTestPercentage = 20;
 
     // Preview state
     public ?array $previewData = null;
+
     public bool $showPreview = false;
+
     public bool $alreadySent = false;
+
     public ?string $lastSentInfo = null;
 
     public function form(Schema $form): Schema
@@ -75,7 +86,7 @@ class SendNewsletter extends Page implements HasForms
                             ->orderByDesc('publishedAt')
                             ->limit(20)
                             ->get()
-                            ->mapWithKeys(fn ($a) => [$a->id => $a->getTranslation('title', 'en') . ' (' . ($a->publishedAt?->format('M d') ?? '') . ')'])
+                            ->mapWithKeys(fn ($a) => [$a->id => $a->getTranslation('title', 'en').' ('.($a->publishedAt?->format('M d') ?? '').')'])
                     )
                     ->searchable()
                     ->required()
@@ -88,9 +99,9 @@ class SendNewsletter extends Page implements HasForms
                     ->placeholder(__('e.g. Check out our latest project update!'))
                     ->helperText(__('This appears above the article in the email. Leave blank for default.')),
 
-                \Filament\Forms\Components\CheckboxList::make('segments')
+                CheckboxList::make('segments')
                     ->label(__('Target Segments (optional)'))
-                    ->options(\App\Models\Subscriber::AVAILABLE_TAGS)
+                    ->options(Subscriber::AVAILABLE_TAGS)
                     ->helperText(__('Leave empty to send to all subscribers.')),
 
                 Toggle::make('enableAbTest')
@@ -132,12 +143,12 @@ class SendNewsletter extends Page implements HasForms
         $this->alreadySent = false;
         $this->lastSentInfo = null;
 
-        if (!$this->articleId) {
+        if (! $this->articleId) {
             return;
         }
 
         $article = NewsArticle::find($this->articleId);
-        if (!$article) {
+        if (! $article) {
             return;
         }
 
@@ -158,7 +169,7 @@ class SendNewsletter extends Page implements HasForms
         $this->previewData = [
             'title' => $article->getTranslation('title', 'en'),
             'excerpt' => $article->getTranslation('excerpt', 'en'),
-            'coverImage' => $article->coverImage ? \App\Support\PublicStorage::url($article->coverImage) : null,
+            'coverImage' => $article->coverImage ? PublicStorage::url($article->coverImage) : null,
             'publishedAt' => $article->publishedAt?->format('M d, Y'),
             'category' => $article->getTranslation('category', 'en'),
         ];
@@ -168,19 +179,21 @@ class SendNewsletter extends Page implements HasForms
 
     public function send(): void
     {
-        if (!$this->articleId) {
+        if (! $this->articleId) {
             Notification::make()->danger()->title(__('Please select an article.'))->send();
+
             return;
         }
 
         $article = NewsArticle::find($this->articleId);
-        if (!$article) {
+        if (! $article) {
             Notification::make()->danger()->title(__('Article not found.'))->send();
+
             return;
         }
 
         $subscribers = Subscriber::active()
-            ->when(!empty($this->segments), function ($query) {
+            ->when(! empty($this->segments), function ($query) {
                 $query->where(function ($q) {
                     foreach ($this->segments as $segment) {
                         $q->orWhereJsonContains('tags', $segment);
@@ -191,6 +204,7 @@ class SendNewsletter extends Page implements HasForms
 
         if ($subscribers->isEmpty()) {
             Notification::make()->warning()->title(__('No active subscribers found.'))->send();
+
             return;
         }
 
@@ -244,6 +258,7 @@ class SendNewsletter extends Page implements HasForms
     {
         if (empty($this->subjectA) || empty($this->subjectB)) {
             Notification::make()->danger()->title(__('Both Subject A and Subject B are required for A/B testing.'))->send();
+
             return;
         }
 
@@ -253,6 +268,7 @@ class SendNewsletter extends Page implements HasForms
         // Ensure at least 2 test subscribers (1 for each variant)
         if ($testCount < 2) {
             Notification::make()->danger()->title(__('Not enough subscribers for A/B testing.'))->send();
+
             return;
         }
 
@@ -307,19 +323,22 @@ class SendNewsletter extends Page implements HasForms
     {
         $newsletterSend = NewsletterSend::find($sendId);
 
-        if (!$newsletterSend || !$newsletterSend->isAwaitingWinner()) {
+        if (! $newsletterSend || ! $newsletterSend->isAwaitingWinner()) {
             Notification::make()->danger()->title(__('Invalid A/B test or already completed.'))->send();
+
             return;
         }
 
-        if (!in_array($winner, ['a', 'b'])) {
+        if (! in_array($winner, ['a', 'b'])) {
             Notification::make()->danger()->title(__('Invalid winner selection.'))->send();
+
             return;
         }
 
         $article = $newsletterSend->article;
-        if (!$article) {
+        if (! $article) {
             Notification::make()->danger()->title(__('Article not found.'))->send();
+
             return;
         }
 
@@ -335,6 +354,7 @@ class SendNewsletter extends Page implements HasForms
             // All subscribers were part of the test
             $newsletterSend->markAbCompleted($winner);
             Notification::make()->success()->title(__('A/B test marked complete. All subscribers were in the test group.'))->send();
+
             return;
         }
 
@@ -382,7 +402,7 @@ class SendNewsletter extends Page implements HasForms
     }
 
     #[Computed]
-    public function recentSends(): \Illuminate\Database\Eloquent\Collection
+    public function recentSends(): Collection
     {
         return NewsletterSend::with('article', 'sender')
             ->latest('created_at')

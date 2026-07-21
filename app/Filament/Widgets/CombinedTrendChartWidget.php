@@ -10,8 +10,11 @@ use Illuminate\Support\Carbon;
 class CombinedTrendChartWidget extends ChartWidget
 {
     protected static ?int $sort = 3;
+
     protected ?string $heading = 'Inquiries & Applications Trend';
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '220px';
 
     public static function canView(): bool

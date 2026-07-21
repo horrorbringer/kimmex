@@ -26,19 +26,19 @@ class DocumentController extends Controller
             }
 
             return [
-                'id'                    => $d->id,
-                'document_category_id'  => $d->document_category_id,
-                'title'                 => $d->getTranslation('title', $locale),
-                'description'           => $d->getTranslation('description', $locale),
-                'thumbnailUrl'          => $d->thumbnailUrl,
-                'is_featured'           => $d->is_featured,
-                'fileUrl'               => $d->fileUrl,
-                'fileType'              => $d->fileType,
-                'fileSize'              => $d->fileSize,
-                'downloadCount'         => $d->downloadCount,
-                'date'                  => $d->created_at->format('M Y'),
-                'created_at_formatted'  => $d->created_at->format('M Y'),
-                'categoryName'          => $d->documentCategory
+                'id' => $d->id,
+                'document_category_id' => $d->document_category_id,
+                'title' => $d->getTranslation('title', $locale),
+                'description' => $d->getTranslation('description', $locale),
+                'thumbnailUrl' => $d->thumbnailUrl,
+                'is_featured' => $d->is_featured,
+                'fileUrl' => $d->fileUrl,
+                'fileType' => $d->fileType,
+                'fileSize' => $d->fileSize,
+                'downloadCount' => $d->downloadCount,
+                'date' => $d->created_at->format('M Y'),
+                'created_at_formatted' => $d->created_at->format('M Y'),
+                'categoryName' => $d->documentCategory
                     ? $d->documentCategory->getTranslation('name', $locale)
                     : $d->category,
             ];
@@ -58,11 +58,11 @@ class DocumentController extends Controller
                 ->take(3)
                 ->get()
                 ->map(fn (Document $r) => [
-                    'slug'         => $r->slug,
-                    'title'        => $r->getTranslation('title', $locale),
+                    'slug' => $r->slug,
+                    'title' => $r->getTranslation('title', $locale),
                     'thumbnailUrl' => $r->thumbnailUrl,
-                    'fileType'     => $r->fileType,
-                    'fileSize'     => $r->fileSize,
+                    'fileType' => $r->fileType,
+                    'fileSize' => $r->fileSize,
                     'categoryName' => $r->documentCategory
                         ? $r->documentCategory->getTranslation('name', $locale)
                         : $r->category,

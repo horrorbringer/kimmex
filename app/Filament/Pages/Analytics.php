@@ -2,6 +2,16 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\BrowserDistributionChartWidget;
+use App\Filament\Widgets\ContentSectionsChartWidget;
+use App\Filament\Widgets\CountryDistributionChartWidget;
+use App\Filament\Widgets\DeviceDistributionChartWidget;
+use App\Filament\Widgets\PageAnalyticsStatsWidget;
+use App\Filament\Widgets\PageViewsChartWidget;
+use App\Filament\Widgets\TopPagesChartWidget;
+use App\Filament\Widgets\TrafficByHourChartWidget;
+use App\Filament\Widgets\TrafficSourcesChartWidget;
+use App\Filament\Widgets\WeeklyComparisonChartWidget;
 use App\Models\PageView;
 use Filament\Pages\Page;
 use Illuminate\Support\Carbon;
@@ -39,16 +49,16 @@ class Analytics extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\PageAnalyticsStatsWidget::class,
-            \App\Filament\Widgets\PageViewsChartWidget::class,
-            \App\Filament\Widgets\TopPagesChartWidget::class,
-            \App\Filament\Widgets\TrafficSourcesChartWidget::class,
-            \App\Filament\Widgets\DeviceDistributionChartWidget::class,
-            \App\Filament\Widgets\CountryDistributionChartWidget::class,
-            \App\Filament\Widgets\TrafficByHourChartWidget::class,
-            \App\Filament\Widgets\BrowserDistributionChartWidget::class,
-            \App\Filament\Widgets\ContentSectionsChartWidget::class,
-            \App\Filament\Widgets\WeeklyComparisonChartWidget::class,
+            PageAnalyticsStatsWidget::class,
+            PageViewsChartWidget::class,
+            TopPagesChartWidget::class,
+            TrafficSourcesChartWidget::class,
+            DeviceDistributionChartWidget::class,
+            CountryDistributionChartWidget::class,
+            TrafficByHourChartWidget::class,
+            BrowserDistributionChartWidget::class,
+            ContentSectionsChartWidget::class,
+            WeeklyComparisonChartWidget::class,
         ];
     }
 

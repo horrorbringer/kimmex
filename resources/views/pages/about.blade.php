@@ -533,6 +533,24 @@
         </section>
 
 
+        <style>
+            .milestone-list ol {
+                list-style: none;
+                padding: 0;
+                counter-reset: milestone-counter;
+            }
+            .milestone-list ol li {
+                counter-increment: milestone-counter;
+            }
+            .milestone-list ol li::before {
+                content: counter(milestone-counter) ".";
+                font-weight: 700;
+                color: #E31E24;
+                margin-right: 0.5rem;
+                flex-shrink: 0;
+            }
+        </style>
+
         <!-- === MILESTONES === -->
         <section class="py-20 md:py-28 px-6 bg-gray-50 border-y border-gray-100 overflow-hidden">
             <div class="max-w-[1200px] mx-auto">
@@ -575,7 +593,7 @@
                                 </h3>
                                 <div class="text-gray-500 leading-relaxed text-sm md:text-base
                                     [&>p]:mb-3 [&>ul]:space-y-1.5 [&>ol]:space-y-1.5
-                                    [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_li]:text-sm">
+                                    [&_li]:flex [&_li]:items-start [&_li]:gap-2 [&_li]:text-sm milestone-list">
                                     {!! $milestone['desc'] !!}
                                 </div>
 

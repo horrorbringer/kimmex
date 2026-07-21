@@ -2,12 +2,16 @@
 
 namespace App\Filament\Support;
 
+use App\Models\ProjectCategory;
 use App\Services\AIGeneratorService;
 use App\Services\AutoTranslateService;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use Illuminate\Support\Str;
 
 class AIHelper
 {
@@ -16,12 +20,12 @@ class AIHelper
      */
     public static function getImproveAction(string $fieldName, string $defaultPrompt = 'Improve this content to be more professional and engaging.'): Action
     {
-        return Action::make('aiImprove_' . $fieldName)
+        return Action::make('aiImprove_'.$fieldName)
             ->label(__('Improve'))
             ->icon('heroicon-m-sparkles')
             ->tooltip(__('Improve with AI'))
             ->form([
-                \Filament\Forms\Components\Textarea::make('suggestion')
+                Textarea::make('suggestion')
                     ->label(__('Specific Suggestion (Optional)'))
                     ->placeholder(__('e.g. Make it shorter, focus on our team, or sound more formal...'))
                     ->rows(2),
@@ -33,16 +37,17 @@ class AIHelper
                         ->title(__('Field is empty'))
                         ->body(__('Please enter some text first so the AI can improve it.'))
                         ->send();
+
                     return;
                 }
 
                 try {
-                    $customPrompt = !empty($data['suggestion']) 
-                        ? "Improve this content following this suggestion: " . $data['suggestion'] 
+                    $customPrompt = ! empty($data['suggestion'])
+                        ? 'Improve this content following this suggestion: '.$data['suggestion']
                         : $defaultPrompt;
 
                     $improved = $ai->improveContent($state, $customPrompt);
-                    
+
                     if ($improved) {
                         $set($fieldName, $improved);
                         Notification::make()
@@ -65,15 +70,15 @@ class AIHelper
      */
     public static function getGenerateAction(string $fieldName, string $type = 'article'): Action
     {
-        return Action::make('aiGenerate_' . $fieldName)
+        return Action::make('aiGenerate_'.$fieldName)
             ->label(__('Generate with AI'))
             ->icon('heroicon-o-sparkles')
             ->form([
-                \Filament\Forms\Components\TextInput::make('topic')
+                TextInput::make('topic')
                     ->label(__('What should this be about?'))
                     ->placeholder(__('e.g. Benefits of choosing Kimmex for your next project'))
                     ->required(),
-                \Filament\Forms\Components\Textarea::make('instructions')
+                Textarea::make('instructions')
                     ->label(__('Specific Instructions (Optional)'))
                     ->placeholder(__('e.g. Use a friendly tone, mention our 10 years experience'))
                     ->rows(2),
@@ -81,7 +86,7 @@ class AIHelper
             ->action(function (Set $set, array $data, AIGeneratorService $ai) use ($fieldName, $type) {
                 try {
                     $content = $ai->generateContent($data['topic'], $type, $data['instructions'] ?? null);
-                    
+
                     if ($content) {
                         $set($fieldName, $content);
                         Notification::make()
@@ -100,6 +105,7 @@ class AIHelper
                             ->title(__('AI quota unavailable'))
                             ->body(__('Used a local draft instead. You can edit it before saving.'))
                             ->send();
+
                         return;
                     }
 
@@ -121,7 +127,7 @@ class AIHelper
         }
 
         $instructionSentence = $instructions
-            ? ' ' . trim($instructions)
+            ? ' '.trim($instructions)
             : '';
 
         if (str_contains(strtolower($type), 'project category')) {
@@ -140,7 +146,7 @@ class AIHelper
     ): Action {
         $targetField ??= $sourceField;
 
-        return Action::make('aiTranslate_' . $sourceField . '_' . $targetField)
+        return Action::make('aiTranslate_'.$sourceField.'_'.$targetField)
             ->label(__('AI Translate'))
             ->icon('heroicon-m-language')
             ->tooltip(__('Translate with AI'))
@@ -157,6 +163,7 @@ class AIHelper
                         ->title(__('No source text found'))
                         ->body(__('Please enter source text first.'))
                         ->send();
+
                     return;
                 }
 
@@ -183,6 +190,7 @@ class AIHelper
                             ->title(__('AI quota unavailable'))
                             ->body(__('Used automatic translation fallback instead.'))
                             ->send();
+
                         return;
                     }
 
@@ -215,7 +223,7 @@ class AIHelper
         ];
 
         try {
-            foreach (\App\Models\ProjectCategory::query()->get() as $category) {
+            foreach (ProjectCategory::query()->get() as $category) {
                 $english = $category->getTranslation('name', 'en', false);
                 $khmer = $category->getTranslation('name', 'km', false)
                     ?: $category->getTranslation('name', 'kh', false);
@@ -270,9 +278,9 @@ class AIHelper
             ->color('warning')
             ->requiresConfirmation()
             ->modalHeading($prompts['label'])
-            ->modalDescription($prompts['description'] . ' ' . __('This will overwrite empty fields only.'))
+            ->modalDescription($prompts['description'].' '.__('This will overwrite empty fields only.'))
             ->modalSubmitActionLabel(__('Generate'))
-            ->action(function (Get $get, Set $set, AIGeneratorService $ai) use ($type, $prompts) {
+            ->action(function (Get $get, Set $set, AIGeneratorService $ai) use ($type) {
                 $title = $get('title') ?? '';
 
                 if (empty(trim(strip_tags($title)))) {
@@ -281,6 +289,7 @@ class AIHelper
                         ->title(__('Enter a title first'))
                         ->body(__('AI needs at least a title to generate content.'))
                         ->send();
+
                     return;
                 }
 
@@ -289,18 +298,24 @@ class AIHelper
                 try {
                     if ($type === 'news') {
                         $content = strip_tags($get('content') ?? '');
-                        $context = $title . ($content ? '. Content: ' . \Illuminate\Support\Str::limit($content, 500) : '');
+                        $context = $title.($content ? '. Content: '.Str::limit($content, 500) : '');
 
                         // Generate excerpt if empty
                         if (empty(trim($get('excerpt') ?? ''))) {
                             $excerpt = $ai->generateContent($context, 'text', 'Write a 1-2 sentence engaging excerpt/summary for this news article. Max 160 characters. No quotes.');
-                            if ($excerpt) { $set('excerpt', trim(strip_tags($excerpt))); $filled++; }
+                            if ($excerpt) {
+                                $set('excerpt', trim(strip_tags($excerpt)));
+                                $filled++;
+                            }
                         }
 
                         // Generate category if empty
                         if (empty(trim($get('category') ?? ''))) {
                             $category = $ai->generateContent($title, 'text', 'Suggest ONE short category word for this article (e.g. Construction, Project Update, Company News, CSR, Infrastructure). Just the category name, nothing else.');
-                            if ($category) { $set('category', trim(strip_tags($category))); $filled++; }
+                            if ($category) {
+                                $set('category', trim(strip_tags($category)));
+                                $filled++;
+                            }
                         }
 
                         // Generate tags if empty
@@ -316,46 +331,64 @@ class AIHelper
 
                         // Generate SEO
                         if (empty(trim($get('metaTitle') ?? ''))) {
-                            $set('metaTitle', \Illuminate\Support\Str::limit($title, 60));
+                            $set('metaTitle', Str::limit($title, 60));
                             $filled++;
                         }
                         if (empty(trim($get('metaDescription') ?? ''))) {
                             $meta = $ai->generateContent($context, 'text', 'Write a concise SEO meta description for this article. Max 155 characters. No quotes.');
-                            if ($meta) { $set('metaDescription', \Illuminate\Support\Str::limit(trim(strip_tags($meta)), 155)); $filled++; }
+                            if ($meta) {
+                                $set('metaDescription', Str::limit(trim(strip_tags($meta)), 155));
+                                $filled++;
+                            }
                         }
 
                     } elseif ($type === 'job') {
                         $summary = strip_tags($get('summary') ?? '');
-                        $context = "Job title: {$title}. " . ($summary ? "Summary: {$summary}" : "For a construction/engineering company in Cambodia.");
+                        $context = "Job title: {$title}. ".($summary ? "Summary: {$summary}" : 'For a construction/engineering company in Cambodia.');
 
                         if (empty(trim(strip_tags($get('responsibilities') ?? '')))) {
                             $resp = $ai->generateContent($context, 'text', 'Write 5-7 key responsibilities for this job position as an HTML unordered list (<ul><li>). Be specific to the construction industry.');
-                            if ($resp) { $set('responsibilities', $resp); $filled++; }
+                            if ($resp) {
+                                $set('responsibilities', $resp);
+                                $filled++;
+                            }
                         }
 
                         if (empty(trim(strip_tags($get('requirements') ?? '')))) {
                             $reqs = $ai->generateContent($context, 'text', 'Write 5-7 requirements/qualifications for this job as an HTML unordered list (<ul><li>). Include education, experience, and skills relevant to construction.');
-                            if ($reqs) { $set('requirements', $reqs); $filled++; }
+                            if ($reqs) {
+                                $set('requirements', $reqs);
+                                $filled++;
+                            }
                         }
 
                         if (empty(trim(strip_tags($get('benefits') ?? '')))) {
                             $bens = $ai->generateContent($context, 'text', 'Write 4-6 employee benefits for this position as an HTML unordered list (<ul><li>). Include standard benefits for a professional construction company.');
-                            if ($bens) { $set('benefits', $bens); $filled++; }
+                            if ($bens) {
+                                $set('benefits', $bens);
+                                $filled++;
+                            }
                         }
 
                     } elseif ($type === 'project') {
                         if (empty(trim(strip_tags($get('description') ?? '')))) {
                             $desc = $ai->generateContent($title, 'text', 'Write a 2-3 sentence professional project description for a construction/engineering project. Be concise.');
-                            if ($desc) { $set('description', $desc); $filled++; }
+                            if ($desc) {
+                                $set('description', $desc);
+                                $filled++;
+                            }
                         }
 
                         if (empty(trim($get('metaTitle') ?? ''))) {
-                            $set('metaTitle', \Illuminate\Support\Str::limit($title, 60));
+                            $set('metaTitle', Str::limit($title, 60));
                             $filled++;
                         }
                         if (empty(trim($get('metaDescription') ?? ''))) {
                             $meta = $ai->generateContent($title, 'text', 'Write a concise SEO meta description for this construction project. Max 155 characters.');
-                            if ($meta) { $set('metaDescription', \Illuminate\Support\Str::limit(trim(strip_tags($meta)), 155)); $filled++; }
+                            if ($meta) {
+                                $set('metaDescription', Str::limit(trim(strip_tags($meta)), 155));
+                                $filled++;
+                            }
                         }
                     }
 
@@ -404,7 +437,7 @@ class AIHelper
             $content = strip_tags($get('content') ?? '');
 
             if (empty(trim($get('excerpt') ?? '')) && $content) {
-                $set('excerpt', \Illuminate\Support\Str::limit($content, 160));
+                $set('excerpt', Str::limit($content, 160));
                 $filled++;
             }
 
@@ -415,25 +448,25 @@ class AIHelper
 
             $currentTags = $get('tags');
             if (empty($currentTags) && $title) {
-                $words = array_filter(explode(' ', strtolower($title)), fn($w) => strlen($w) > 3);
+                $words = array_filter(explode(' ', strtolower($title)), fn ($w) => strlen($w) > 3);
                 $set('tags', array_slice(array_values($words), 0, 4));
                 $filled++;
             }
 
             if (empty(trim($get('metaTitle') ?? ''))) {
-                $set('metaTitle', \Illuminate\Support\Str::limit($title, 60));
+                $set('metaTitle', Str::limit($title, 60));
                 $filled++;
             }
 
             if (empty(trim($get('metaDescription') ?? ''))) {
-                $desc = $content ? \Illuminate\Support\Str::limit($content, 155) : $title;
+                $desc = $content ? Str::limit($content, 155) : $title;
                 $set('metaDescription', $desc);
                 $filled++;
             }
 
         } elseif ($type === 'job') {
             if (empty(trim(strip_tags($get('responsibilities') ?? '')))) {
-                $set('responsibilities', '<ul><li>Manage daily operations and tasks related to ' . $title . '</li><li>Coordinate with team members and stakeholders</li><li>Ensure quality standards and safety compliance</li><li>Report progress and issues to management</li><li>Maintain documentation and records</li></ul>');
+                $set('responsibilities', '<ul><li>Manage daily operations and tasks related to '.$title.'</li><li>Coordinate with team members and stakeholders</li><li>Ensure quality standards and safety compliance</li><li>Report progress and issues to management</li><li>Maintain documentation and records</li></ul>');
                 $filled++;
             }
 
@@ -449,17 +482,17 @@ class AIHelper
 
         } elseif ($type === 'project') {
             if (empty(trim(strip_tags($get('description') ?? '')))) {
-                $set('description', $title . ' is a professional construction project delivered by Kimmex Construction & Investment Co., Ltd. with commitment to quality, safety, and timely completion.');
+                $set('description', $title.' is a professional construction project delivered by Kimmex Construction & Investment Co., Ltd. with commitment to quality, safety, and timely completion.');
                 $filled++;
             }
 
             if (empty(trim($get('metaTitle') ?? ''))) {
-                $set('metaTitle', \Illuminate\Support\Str::limit($title . ' | Kimmex', 60));
+                $set('metaTitle', Str::limit($title.' | Kimmex', 60));
                 $filled++;
             }
 
             if (empty(trim($get('metaDescription') ?? ''))) {
-                $set('metaDescription', \Illuminate\Support\Str::limit($title . ' - A construction project by Kimmex Construction & Investment.', 155));
+                $set('metaDescription', Str::limit($title.' - A construction project by Kimmex Construction & Investment.', 155));
                 $filled++;
             }
         }

@@ -177,21 +177,21 @@
             <div class="max-w-[1280px] mx-auto px-6">
 
                 <!-- Header -->
-                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
-                    <div>
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                            <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Open Positions') }}</span>
-                        </div>
-                        <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Join Our Team') }}</h2>
+                <div class="mb-10">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                        <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Open Positions') }}</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent);">
-                            <x-lucide-briefcase class="w-5 h-5" style="color: var(--primary-color, #E31E24);" />
-                        </div>
-                        <div>
-                            <div class="text-2xl font-black text-gray-900" x-text="filteredJobs.length"></div>
-                            <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400">{{ __('Open Roles') }}</div>
+                    <div class="flex items-end gap-6">
+                        <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Join Our Team') }}</h2>
+                        <div class="flex items-center gap-2 pb-1">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent);">
+                                <x-lucide-briefcase class="w-4 h-4" style="color: var(--primary-color, #E31E24);" />
+                            </div>
+                            <div>
+                                <span class="text-xl font-black text-gray-900" x-text="filteredJobs.length"></span>
+                                <span class="text-[9px] font-bold uppercase tracking-wider text-gray-400 ml-1">{{ __('Open Roles') }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

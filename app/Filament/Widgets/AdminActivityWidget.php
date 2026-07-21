@@ -16,7 +16,7 @@ class AdminActivityWidget extends Widget
 
     protected static ?int $sort = 10;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     public static function canView(): bool
     {
@@ -44,7 +44,7 @@ class AdminActivityWidget extends Widget
                                 'old' => $this->formatValue($old[$key]),
                                 'new' => $this->formatValue($value),
                             ];
-                        } elseif (!isset($old[$key])) {
+                        } elseif (! isset($old[$key])) {
                             $changes[] = [
                                 'field' => $key,
                                 'old' => null,
@@ -145,7 +145,7 @@ class AdminActivityWidget extends Widget
         $str = (string) $value;
 
         if (strlen($str) > 50) {
-            return substr($str, 0, 50) . '…';
+            return substr($str, 0, 50).'…';
         }
 
         return $str;

@@ -159,8 +159,22 @@
         </section>
 
         <!-- FILTER & GRID -->
-        <section id="portfolio-grid" class="py-10 md:py-14 px-6 bg-white">
+        <section id="portfolio-grid" class="py-14 md:py-20 px-6 bg-white">
             <div class="max-w-[1200px] mx-auto">
+
+                <!-- Section Header -->
+                <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                    class="transition-all duration-1000 mb-10">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                        <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight mb-4">{{ __('Projects Delivered') }}</h2>
+                    <p class="text-gray-500 text-sm md:text-base max-w-2xl leading-relaxed">
+                        {{ __('From government infrastructure to commercial developments, each project reflects our commitment to quality, safety, and timely delivery.') }}
+                    </p>
+                </div>
 
                 <!-- Filter Bar -->
                 <div class="sticky top-16 z-30 mb-8 bg-white border-b border-gray-100 pb-5">

@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\JobApplications\Tables;
 
+use App\Enums\ApplicationStatus;
+use App\Filament\Support\FlatRecordDetails;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -31,7 +34,7 @@ class JobApplicationsTable
                         'REJECTED' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn ($state) => $state instanceof \App\Enums\ApplicationStatus ? $state->getLabel() : $state)
+                    ->formatStateUsing(fn ($state) => $state instanceof ApplicationStatus ? $state->getLabel() : $state)
                     ->searchable(),
                 TextColumn::make('submittedAt')
                     ->label(__('Submitted At'))
@@ -42,7 +45,7 @@ class JobApplicationsTable
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make()->visible(fn () => auth()->user()?->isAdmin()),
             ])
             ->toolbarActions([

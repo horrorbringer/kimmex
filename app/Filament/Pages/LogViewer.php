@@ -13,8 +13,11 @@ class LogViewer extends Page
     protected string $view = 'filament.pages.log-viewer';
 
     public string $search = '';
+
     public string $levelFilter = 'all';
+
     public int $page = 1;
+
     public int $perPage = 25;
 
     public static function getNavigationIcon(): string|\BackedEnum|null
@@ -57,7 +60,7 @@ class LogViewer extends Page
      */
     protected function readLastLines(string $filePath, int $maxLines = 5000): array
     {
-        if (!file_exists($filePath) || filesize($filePath) === 0) {
+        if (! file_exists($filePath) || filesize($filePath) === 0) {
             return [];
         }
 
@@ -73,7 +76,7 @@ class LogViewer extends Page
         $lines = [];
 
         $file->seek($startLine);
-        while (!$file->eof()) {
+        while (! $file->eof()) {
             $line = $file->current();
             if ($line !== false && trim($line) !== '') {
                 $lines[] = rtrim($line, "\r\n");
@@ -108,7 +111,7 @@ class LogViewer extends Page
                 ];
             } elseif ($currentEntry !== null) {
                 // Append to stack trace
-                $currentEntry['stackTrace'] .= ($currentEntry['stackTrace'] ? "\n" : '') . $line;
+                $currentEntry['stackTrace'] .= ($currentEntry['stackTrace'] ? "\n" : '').$line;
             }
         }
 
@@ -125,7 +128,7 @@ class LogViewer extends Page
     {
         $logPath = $this->getLogPath();
 
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             return [];
         }
 
@@ -144,7 +147,7 @@ class LogViewer extends Page
         }
 
         // Filter by search term
-        if (!empty($this->search)) {
+        if (! empty($this->search)) {
             $searchLower = strtolower($this->search);
             $entries = array_filter($entries, function ($entry) use ($searchLower) {
                 return str_contains(strtolower($entry['message']), $searchLower)
@@ -182,19 +185,19 @@ class LogViewer extends Page
     {
         $logPath = $this->getLogPath();
 
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             return '0 B';
         }
 
         $bytes = filesize($logPath);
 
         if ($bytes >= 1048576) {
-            return round($bytes / 1048576, 2) . ' MB';
+            return round($bytes / 1048576, 2).' MB';
         } elseif ($bytes >= 1024) {
-            return round($bytes / 1024, 2) . ' KB';
+            return round($bytes / 1024, 2).' KB';
         }
 
-        return $bytes . ' B';
+        return $bytes.' B';
     }
 
     public function updatedSearch(): void
@@ -241,11 +244,12 @@ class LogViewer extends Page
     {
         $logPath = $this->getLogPath();
 
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             Notification::make()
                 ->warning()
                 ->title(__('Log file does not exist'))
                 ->send();
+
             return;
         }
 
@@ -275,14 +279,15 @@ class LogViewer extends Page
     {
         $logPath = $this->getLogPath();
 
-        if (!file_exists($logPath)) {
+        if (! file_exists($logPath)) {
             Notification::make()
                 ->warning()
                 ->title(__('Log file does not exist'))
                 ->send();
+
             return null;
         }
 
-        return response()->download($logPath, 'laravel-' . now()->format('Y-m-d_H-i-s') . '.log');
+        return response()->download($logPath, 'laravel-'.now()->format('Y-m-d_H-i-s').'.log');
     }
 }

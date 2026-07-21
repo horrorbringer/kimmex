@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\SystemSetting;
+use App\Services\AutoTranslateService;
 use Illuminate\Database\Seeder;
 
 class OrganizationSeeder extends Seeder
 {
     public function run(): void
     {
-        $translator = new \App\Services\AutoTranslateService();
+        $translator = new AutoTranslateService;
 
         $enContent = [
             'company_name' => 'KIMMEX',
@@ -37,6 +38,6 @@ class OrganizationSeeder extends Seeder
             'km' => $kmContent,
         ];
 
-        \App\Models\SystemSetting::set('organization_profile', $profileData);
+        SystemSetting::set('organization_profile', $profileData);
     }
 }

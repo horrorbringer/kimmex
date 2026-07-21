@@ -60,14 +60,16 @@ class InquiryResponseTimeWidget extends BaseWidget
     {
         if ($hours < 1) {
             $minutes = (int) round($hours * 60);
+
             return "{$minutes}m";
         }
 
         if ($hours < 24) {
-            return round($hours, 1) . 'h';
+            return round($hours, 1).'h';
         }
 
         $days = round($hours / 24, 1);
+
         return "{$days}d";
     }
 }

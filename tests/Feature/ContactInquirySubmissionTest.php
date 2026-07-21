@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Inquiry;
 use App\Support\PublicStorage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -29,7 +30,7 @@ class ContactInquirySubmissionTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHasNoErrors();
 
-        $inquiry = \App\Models\Inquiry::query()->firstOrFail();
+        $inquiry = Inquiry::query()->firstOrFail();
 
         $this->assertNotNull($inquiry->attachment_url);
         Storage::disk(PublicStorage::diskName())->assertExists($inquiry->attachment_url);

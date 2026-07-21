@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use App\Models\SystemSetting;
 use Exception;
+use Illuminate\Support\Facades\Http;
 
 class AIGeneratorService
 {
@@ -22,7 +22,7 @@ class AIGeneratorService
         $tone = $settings['tone'] ?? 'professional';
 
         if ($provider !== 'ollama' && empty($apiKey)) {
-            throw new Exception("AI API Key is not configured.");
+            throw new Exception('AI API Key is not configured.');
         }
 
         $systemPrompt .= " Tone: {$tone}.";
@@ -32,9 +32,10 @@ class AIGeneratorService
                 'gemini' => $this->generateWithGemini($topic, $type, $customInstructions, $apiKey, $model, $systemPrompt, $temperature),
                 'openrouter' => $this->generateWithOpenRouter($topic, $type, $customInstructions, $apiKey, $model, $systemPrompt, $temperature),
                 'ollama' => $this->generateWithOllama($topic, $type, $customInstructions, $baseUrl, $model, $systemPrompt, $temperature),
-                default => throw new Exception("Unsupported AI Provider: " . $provider),
+                default => throw new Exception('Unsupported AI Provider: '.$provider),
             };
             $this->trackUsage($provider, true);
+
             return $result;
         } catch (Exception $e) {
             $this->trackUsage($provider, false, $e->getMessage());
@@ -49,7 +50,7 @@ class AIGeneratorService
             'last_reset' => now()->toDateString(),
             'last_status' => 'unknown',
             'last_error' => null,
-            'total_count' => 0
+            'total_count' => 0,
         ]);
 
         if (($stats['last_reset'] ?? '') !== now()->toDateString()) {
@@ -83,7 +84,7 @@ class AIGeneratorService
         $tone = $settings['tone'] ?? 'professional';
 
         if ($provider !== 'ollama' && empty($apiKey)) {
-            throw new Exception("AI API Key is not configured.");
+            throw new Exception('AI API Key is not configured.');
         }
 
         $systemPrompt .= " Tone: {$tone}.";
@@ -93,9 +94,10 @@ class AIGeneratorService
                 'gemini' => $this->improveWithGemini($content, $instructions, $apiKey, $model, $systemPrompt, $temperature),
                 'openrouter' => $this->improveWithOpenRouter($content, $instructions, $apiKey, $model, $systemPrompt, $temperature),
                 'ollama' => $this->improveWithOllama($content, $instructions, $baseUrl, $model, $systemPrompt, $temperature),
-                default => throw new Exception("Unsupported AI Provider: " . $provider),
+                default => throw new Exception('Unsupported AI Provider: '.$provider),
             };
             $this->trackUsage($provider, true);
+
             return $result;
         } catch (Exception $e) {
             $this->trackUsage($provider, false, $e->getMessage());
@@ -114,7 +116,7 @@ class AIGeneratorService
         $temperature = 0.2;
 
         if ($provider !== 'ollama' && empty($apiKey)) {
-            throw new Exception("AI API Key is not configured.");
+            throw new Exception('AI API Key is not configured.');
         }
 
         try {
@@ -122,9 +124,10 @@ class AIGeneratorService
                 'gemini' => $this->translateWithGemini($content, $targetLanguage, $apiKey, $model, $temperature),
                 'openrouter' => $this->translateWithOpenRouter($content, $targetLanguage, $apiKey, $model, $temperature),
                 'ollama' => $this->translateWithOllama($content, $targetLanguage, $baseUrl, $model, $temperature),
-                default => throw new Exception("Unsupported AI Provider: " . $provider),
+                default => throw new Exception('Unsupported AI Provider: '.$provider),
             };
             $this->trackUsage($provider, true);
+
             return $result;
         } catch (Exception $e) {
             $this->trackUsage($provider, false, $e->getMessage());
@@ -136,7 +139,7 @@ class AIGeneratorService
     {
         $modelPath = str_starts_with($model, 'models/') ? $model : "models/{$model}";
         $url = "https://generativelanguage.googleapis.com/v1beta/{$modelPath}:generateContent?key={$apiKey}";
-        
+
         $prompt = "Task: Write a {$type} about '{$topic}'.\n\nSystem Guidelines: {$systemPrompt}\n";
         if ($customInstructions) {
             $prompt .= "\nSpecific User Instructions: {$customInstructions}\n";
@@ -169,7 +172,7 @@ class AIGeneratorService
 
         $prompt = "Task: Translate the following content into {$targetLanguage}.\n\n";
         $prompt .= "Content:\n{$content}\n\n";
-        $prompt .= "Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.";
+        $prompt .= 'Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.';
 
         return $this->callGemini($url, $prompt, $temperature);
     }
@@ -192,7 +195,7 @@ class AIGeneratorService
         if ($instructions) {
             $prompt .= "Specific User Instructions: {$instructions}\n\n";
         }
-        $prompt .= "Format: ONLY return the improved text. Do not explain what you changed. Keep the same HTML structure if present.";
+        $prompt .= 'Format: ONLY return the improved text. Do not explain what you changed. Keep the same HTML structure if present.';
 
         return $this->callOpenRouter($apiKey, $model, $systemPrompt, $prompt, $temperature);
     }
@@ -201,17 +204,19 @@ class AIGeneratorService
     {
         $prompt = "Task: Translate the following content into {$targetLanguage}.\n\n";
         $prompt .= "Content:\n{$content}\n\n";
-        $prompt .= "Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.";
+        $prompt .= 'Format: ONLY return the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags. Do not explain the translation.';
 
         return $this->callOpenRouter($apiKey, $model, 'You are a precise professional translator.', $prompt, $temperature);
     }
 
     protected function generateWithOllama(string $topic, string $type, ?string $customInstructions, string $baseUrl, string $model, string $systemPrompt, float $temperature): ?string
     {
-        $url = rtrim($baseUrl, '/') . '/api/generate';
-        
+        $url = rtrim($baseUrl, '/').'/api/generate';
+
         $prompt = "System: {$systemPrompt}\nTask: Write a {$type} about '{$topic}'.";
-        if ($customInstructions) $prompt .= "\nInstructions: {$customInstructions}";
+        if ($customInstructions) {
+            $prompt .= "\nInstructions: {$customInstructions}";
+        }
         $prompt .= "\n\nReturn ONLY the content. No preamble.";
 
         return $this->callOllama($url, $prompt, $model, $temperature);
@@ -219,10 +224,12 @@ class AIGeneratorService
 
     protected function improveWithOllama(string $content, ?string $instructions, string $baseUrl, string $model, string $systemPrompt, float $temperature): ?string
     {
-        $url = rtrim($baseUrl, '/') . '/api/generate';
+        $url = rtrim($baseUrl, '/').'/api/generate';
 
         $prompt = "System: {$systemPrompt}\nTask: Improve the content below.\nContent: {$content}";
-        if ($instructions) $prompt .= "\nInstructions: {$instructions}";
+        if ($instructions) {
+            $prompt .= "\nInstructions: {$instructions}";
+        }
         $prompt .= "\n\nReturn ONLY the improved text.";
 
         return $this->callOllama($url, $prompt, $model, $temperature);
@@ -230,7 +237,7 @@ class AIGeneratorService
 
     protected function translateWithOllama(string $content, string $targetLanguage, string $baseUrl, string $model, float $temperature): ?string
     {
-        $url = rtrim($baseUrl, '/') . '/api/generate';
+        $url = rtrim($baseUrl, '/').'/api/generate';
 
         $prompt = "Task: Translate the following content into {$targetLanguage}.\n\nContent: {$content}\n\nReturn ONLY the translated text. Preserve names, construction terms, numbers, punctuation, and any HTML tags.";
 
@@ -243,25 +250,25 @@ class AIGeneratorService
             'contents' => [
                 [
                     'parts' => [
-                        ['text' => $prompt]
-                    ]
-                ]
+                        ['text' => $prompt],
+                    ],
+                ],
             ],
             'generationConfig' => [
                 'temperature' => $temperature,
-            ]
+            ],
         ]);
 
         if ($response->successful()) {
             $text = $response->json('candidates.0.content.parts.0.text');
             $text = preg_replace('/^```(?:html)?\n/s', '', $text);
             $text = preg_replace('/\n```$/s', '', $text);
-            
+
             return trim($text);
         }
 
         $error = $response->json('error.message') ?? $response->body();
-        throw new Exception("Gemini Error: " . $error);
+        throw new Exception('Gemini Error: '.$error);
     }
 
     protected function callOllama(string $url, string $prompt, string $model, float $temperature): ?string
@@ -272,14 +279,14 @@ class AIGeneratorService
             'stream' => false,
             'options' => [
                 'temperature' => $temperature,
-            ]
+            ],
         ]);
 
         if ($response->successful()) {
             return trim($response->json('response'));
         }
 
-        throw new Exception("Ollama Error: " . $response->body());
+        throw new Exception('Ollama Error: '.$response->body());
     }
 
     protected function callOpenRouter(string $apiKey, string $model, string $systemPrompt, string $prompt, float $temperature): ?string
@@ -313,7 +320,7 @@ class AIGeneratorService
         }
 
         $error = $response->json('error.message') ?? $response->body();
-        throw new Exception("OpenRouter Error: " . $error);
+        throw new Exception('OpenRouter Error: '.$error);
     }
 
     public function getAvailableModels(?string $apiKey = null, ?string $provider = 'gemini', ?string $baseUrl = null): array
@@ -322,7 +329,7 @@ class AIGeneratorService
         $providerConfig = $this->providerConfig($settings, $provider ?? 'gemini');
         $apiKey = $apiKey ?: $providerConfig['api_key'];
         $baseUrl = $baseUrl ?: $providerConfig['base_url'];
-        
+
         try {
             if ($provider === 'gemini') {
                 if (empty($apiKey)) {
@@ -331,17 +338,17 @@ class AIGeneratorService
                 $response = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
                 if ($response->successful()) {
                     return collect($response->json()['models'] ?? [])
-                        ->filter(fn($m) => in_array('generateContent', $m['supportedGenerationMethods'] ?? []))
-                        ->mapWithKeys(fn($m) => [$m['name'] => $m['displayName']])
+                        ->filter(fn ($m) => in_array('generateContent', $m['supportedGenerationMethods'] ?? []))
+                        ->mapWithKeys(fn ($m) => [$m['name'] => $m['displayName']])
                         ->toArray();
                 }
             }
 
             if ($provider === 'ollama') {
-                $response = Http::get(rtrim($baseUrl, '/') . '/api/tags');
+                $response = Http::get(rtrim($baseUrl, '/').'/api/tags');
                 if ($response->successful()) {
                     return collect($response->json()['models'] ?? [])
-                        ->mapWithKeys(fn($m) => [$m['name'] => $m['name']])
+                        ->mapWithKeys(fn ($m) => [$m['name'] => $m['name']])
                         ->toArray();
                 }
             }
@@ -361,7 +368,7 @@ class AIGeneratorService
                             $pricing = $m['pricing'] ?? [];
                             $isFree = ($pricing['prompt'] ?? null) === '0' && ($pricing['completion'] ?? null) === '0';
 
-                            return $id ? [$id => $name . ($isFree ? ' (Free)' : '')] : [];
+                            return $id ? [$id => $name.($isFree ? ' (Free)' : '')] : [];
                         })
                         ->toArray();
 

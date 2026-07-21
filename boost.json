@@ -1,0 +1,25 @@
+{
+    "agents": [
+        "claude_code",
+        "antigravity",
+        "codex",
+        "opencode",
+        "copilot",
+        "kiro",
+        "zed"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "packages": [
+        "filament/filament",
+        "spatie/laravel-translatable"
+    ],
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "tailwindcss-development",
+        "translatable-development"
+    ]
+}

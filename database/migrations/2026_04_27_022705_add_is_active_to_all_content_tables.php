@@ -17,7 +17,7 @@ return new class extends Migration
             'testimonials',
             'documents',
             'departments',
-            'employees'
+            'employees',
         ];
 
         foreach ($tables as $table) {
@@ -38,7 +38,7 @@ return new class extends Migration
             'testimonials',
             'documents',
             'departments',
-            'employees'
+            'employees',
         ];
 
         foreach ($tables as $table) {

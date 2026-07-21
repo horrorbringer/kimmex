@@ -5,10 +5,11 @@ namespace App\Filament\Resources\Testimonials\Pages;
 use App\Filament\Resources\Testimonials\TestimonialResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
 
 class ListTestimonials extends ListRecords
 {
-    use \LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
+    use Translatable;
 
     protected static string $resource = TestimonialResource::class;
 

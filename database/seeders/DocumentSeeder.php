@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Document;
+use App\Models\DocumentCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use App\Models\DocumentCategory;
-use App\Models\Document;
 
 class DocumentSeeder extends Seeder
 {
@@ -33,13 +33,13 @@ class DocumentSeeder extends Seeder
                 [
                     'name' => [
                         'en' => $name,
-                        'km' => $name . ' (Khmer)'
+                        'km' => $name.' (Khmer)',
                     ],
                     'description' => [
                         'en' => $desc,
-                        'km' => $desc . ' (Khmer)'
+                        'km' => $desc.' (Khmer)',
                     ],
-                    'sort_order' => $order++
+                    'sort_order' => $order++,
                 ]
             );
         }
@@ -109,7 +109,7 @@ class DocumentSeeder extends Seeder
                 'type' => 'PDF',
                 'size' => '2.5 MB',
                 'featured' => false,
-            ]
+            ],
         ];
 
         foreach ($documents as $doc) {
@@ -121,17 +121,17 @@ class DocumentSeeder extends Seeder
                     [
                         'title' => [
                             'en' => $doc['title'],
-                            'km' => $doc['title'] . ' (Khmer)'
+                            'km' => $doc['title'].' (Khmer)',
                         ],
                         'description' => [
                             'en' => $doc['desc'],
-                            'km' => $doc['desc'] . ' (Khmer)'
+                            'km' => $doc['desc'].' (Khmer)',
                         ],
                         'category' => $doc['cat'],
                         'document_category_id' => $cat->id,
                         'fileType' => $doc['type'],
                         'fileSize' => $doc['size'],
-                        'fileUrl' => 'documents/dummy-' . Str::slug($doc['title']) . '.pdf',
+                        'fileUrl' => 'documents/dummy-'.Str::slug($doc['title']).'.pdf',
                         'thumbnailUrl' => null,
                         'isPublic' => true,
                         'is_featured' => $doc['featured'],

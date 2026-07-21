@@ -2,6 +2,20 @@
 
 namespace App\Observers;
 
+use App\Models\Document;
+use App\Models\DocumentCategory;
+use App\Models\Employee;
+use App\Models\JobPosting;
+use App\Models\MethodologyStep;
+use App\Models\Milestone;
+use App\Models\NewsArticle;
+use App\Models\OrgUnit;
+use App\Models\Partner;
+use App\Models\Project;
+use App\Models\ProjectCategory;
+use App\Models\Service;
+use App\Models\SystemSetting;
+use App\Models\Testimonial;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
@@ -14,11 +28,11 @@ class CacheBusterObserver
 {
     /** Models that affect the sitemap and should trigger regeneration. */
     protected static array $sitemapModels = [
-        \App\Models\Project::class,
-        \App\Models\Service::class,
-        \App\Models\NewsArticle::class,
-        \App\Models\JobPosting::class,
-        \App\Models\Document::class,
+        Project::class,
+        Service::class,
+        NewsArticle::class,
+        JobPosting::class,
+        Document::class,
     ];
 
     public function saved(Model $model): void
@@ -46,59 +60,59 @@ class CacheBusterObserver
 
         // Map model classes to their related cache keys
         $cacheMap = [
-            \App\Models\Project::class => [
+            Project::class => [
                 'hero_featured_projects_en', 'hero_featured_projects_km',
                 'home_projects_array_en', 'home_projects_array_km',
                 'nav_categories_en', 'nav_categories_km',
             ],
-            \App\Models\Service::class => [
+            Service::class => [
                 'home_services_array_en', 'home_services_array_km',
                 'nav_services_en', 'nav_services_km',
             ],
-            \App\Models\NewsArticle::class => [
+            NewsArticle::class => [
                 'home_news_array_en', 'home_news_array_km',
                 'news_index_data_en', 'news_index_data_km',
                 'news_sidebar_documents_en', 'news_sidebar_documents_km',
                 'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
             ],
-            \App\Models\Partner::class => [
+            Partner::class => [
                 'home_partners_array_en', 'home_partners_array_km',
             ],
-            \App\Models\Testimonial::class => [
+            Testimonial::class => [
                 'home_testimonials_array_en', 'home_testimonials_array_km',
             ],
-            \App\Models\Milestone::class => [
+            Milestone::class => [
                 'about_milestones_data_en', 'about_milestones_data_km',
             ],
-            \App\Models\OrgUnit::class => [
+            OrgUnit::class => [
                 'about_orgchart_en', 'about_orgchart_km',
             ],
-            \App\Models\Employee::class => [
+            Employee::class => [
                 'about_orgchart_en', 'about_orgchart_km',
             ],
-            \App\Models\MethodologyStep::class => [
+            MethodologyStep::class => [
                 'process_index_array_en', 'process_index_array_km',
                 'services_process_array_en', 'services_process_array_km',
             ],
-            \App\Models\JobPosting::class => [
+            JobPosting::class => [
                 'careers_jobs_data_en', 'careers_jobs_data_km',
                 'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
             ],
-            \App\Models\Document::class => [
+            Document::class => [
                 'has_public_documents',
                 'document_library_total_documents',
                 'document_library_total_categories',
                 'document_library_categories_v2_en', 'document_library_categories_v2_km',
                 'news_sidebar_documents_en', 'news_sidebar_documents_km',
             ],
-            \App\Models\DocumentCategory::class => [
+            DocumentCategory::class => [
                 'document_library_categories_v2_en', 'document_library_categories_v2_km',
                 'document_library_total_categories',
             ],
-            \App\Models\ProjectCategory::class => [
+            ProjectCategory::class => [
                 'nav_categories_en', 'nav_categories_km',
             ],
-            \App\Models\SystemSetting::class => [
+            SystemSetting::class => [
                 'global_settings_en', 'global_settings_km',
             ],
         ];

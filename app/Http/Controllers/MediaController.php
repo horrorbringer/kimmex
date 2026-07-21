@@ -6,8 +6,8 @@ use App\Support\PublicStorage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MediaController extends Controller
 {
@@ -39,7 +39,7 @@ class MediaController extends Controller
             //
         }
 
-        $etag = '"' . sha1($path . '|' . ($lastModified ?? '') . '|' . ($size ?? '')) . '"';
+        $etag = '"'.sha1($path.'|'.($lastModified ?? '').'|'.($size ?? '')).'"';
 
         if ($request->headers->get('if-none-match') === $etag) {
             return response('', 304, [
@@ -54,7 +54,7 @@ class MediaController extends Controller
             if ($ifModifiedSince && strtotime($ifModifiedSince) >= $lastModified) {
                 return response('', 304, [
                     'ETag' => $etag,
-                    'Last-Modified' => gmdate('D, d M Y H:i:s', $lastModified) . ' GMT',
+                    'Last-Modified' => gmdate('D, d M Y H:i:s', $lastModified).' GMT',
                     'Cache-Control' => 'public, max-age=31536000, immutable',
                 ]);
             }
@@ -84,7 +84,7 @@ class MediaController extends Controller
         ];
 
         if ($lastModified) {
-            $headers['Last-Modified'] = gmdate('D, d M Y H:i:s', $lastModified) . ' GMT';
+            $headers['Last-Modified'] = gmdate('D, d M Y H:i:s', $lastModified).' GMT';
         }
 
         if ($size) {

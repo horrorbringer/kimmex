@@ -2,10 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -17,17 +18,18 @@ return new class extends Migration {
                 'objectives',
                 'designConcept',
                 'scopeContributions',
-                'engineeringNarrative'
+                'engineeringNarrative',
             ],
             'milestones' => [
                 'title',
-                'description'
+                'description',
             ],
         ];
 
         foreach ($tables as $table => $columns) {
-            if (!Schema::hasTable($table))
+            if (! Schema::hasTable($table)) {
                 continue;
+            }
 
             // Migrate data to temporary array before making structural changes
             $rows = DB::table($table)->get();
@@ -38,7 +40,7 @@ return new class extends Migration {
                 $rowId = $row->id;
 
                 foreach ($columns as $baseField) {
-                    $actualKmField = $baseField . 'Km';
+                    $actualKmField = $baseField.'Km';
 
                     $enValue = $row->$baseField ?? '';
                     $kmValue = property_exists($row, $actualKmField) ? ($row->$actualKmField ?? '') : '';
@@ -52,14 +54,14 @@ return new class extends Migration {
                         }
                     }
 
-                    if (!$isJson) {
+                    if (! $isJson) {
                         $translations[$baseField] = json_encode([
                             'en' => $enValue,
-                            'km' => $kmValue ?: $enValue
+                            'km' => $kmValue ?: $enValue,
                         ]);
                     }
                 }
-                if (!empty($translations)) {
+                if (! empty($translations)) {
                     $tableData[$rowId] = $translations;
                 }
             }
@@ -67,7 +69,7 @@ return new class extends Migration {
             // Change columns to json and drop Km columns
             Schema::table($table, function (Blueprint $tableAlter) use ($columns, $table) {
                 foreach ($columns as $baseField) {
-                    $actualKmField = $baseField . 'Km';
+                    $actualKmField = $baseField.'Km';
 
                     // Drop Km column if it exists
                     if (Schema::hasColumn($table, $actualKmField)) {

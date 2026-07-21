@@ -9,7 +9,9 @@ use Illuminate\Support\Carbon;
 class BrowserDistributionChartWidget extends ChartWidget
 {
     protected static ?int $sort = 10;
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
@@ -73,7 +75,7 @@ class BrowserDistributionChartWidget extends ChartWidget
         }
 
         // Remove browsers with zero visits
-        $browsers = array_filter($browsers, fn($v) => $v > 0);
+        $browsers = array_filter($browsers, fn ($v) => $v > 0);
 
         $colors = [
             'Chrome' => '#4285f4',
@@ -92,7 +94,7 @@ class BrowserDistributionChartWidget extends ChartWidget
             'datasets' => [
                 [
                     'data' => array_values($browsers),
-                    'backgroundColor' => array_map(fn($k) => $colors[$k] ?? '#94a3b8', array_keys($browsers)),
+                    'backgroundColor' => array_map(fn ($k) => $colors[$k] ?? '#94a3b8', array_keys($browsers)),
                     'borderWidth' => 2,
                     'borderColor' => '#ffffff',
                 ],

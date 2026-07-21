@@ -2,12 +2,12 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\JobPostingStatus;
 use App\Models\Inquiry;
 use App\Models\JobApplication;
-use App\Models\NewsArticle;
+use App\Models\JobPosting;
 use App\Models\PageView;
 use App\Models\Project;
-use App\Models\JobPosting;
 use App\Models\Subscriber;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -33,13 +33,13 @@ class StatsOverview extends BaseWidget
             ->whereYear('created_at', now()->year)->count();
 
         $activeProjects = Project::where('status', 'ONGOING')->count();
-        $openJobs = JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->count();
+        $openJobs = JobPosting::where('status', JobPostingStatus::OPEN)->count();
         $subscribers = Subscriber::active()->count();
         $viewsToday = PageView::where('visited_at', '>=', Carbon::today())->count();
 
         return [
             Stat::make(__('Inquiries'), $inquiriesThisMonth)
-                ->description($unreadInquiries > 0 ? $unreadInquiries . ' ' . __('unread') : __('All read ✓'))
+                ->description($unreadInquiries > 0 ? $unreadInquiries.' '.__('unread') : __('All read ✓'))
                 ->descriptionIcon($unreadInquiries > 0 ? 'heroicon-m-envelope' : 'heroicon-m-check-circle')
                 ->color($unreadInquiries > 0 ? 'warning' : 'success')
                 ->chart($inquirySparkline),
@@ -57,7 +57,7 @@ class StatsOverview extends BaseWidget
                 ->chart($viewSparkline),
 
             Stat::make(__('Active Projects'), $activeProjects)
-                ->description(Project::where('status', 'COMPLETED')->count() . ' ' . __('completed'))
+                ->description(Project::where('status', 'COMPLETED')->count().' '.__('completed'))
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('success'),
 
@@ -79,6 +79,7 @@ class StatsOverview extends BaseWidget
         for ($i = 6; $i >= 0; $i--) {
             $data[] = $model::whereDate('created_at', Carbon::now()->subDays($i)->toDateString())->count();
         }
+
         return $data;
     }
 
@@ -88,6 +89,7 @@ class StatsOverview extends BaseWidget
         for ($i = 6; $i >= 0; $i--) {
             $data[] = PageView::whereDate('visited_at', Carbon::now()->subDays($i)->toDateString())->count();
         }
+
         return $data;
     }
 }

@@ -2,22 +2,40 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
+use App\Filament\Pages\ManageSettings;
+use App\Filament\Resources\Subscribers\SubscriberResource;
+use App\Filament\Widgets\InquiriesChartWidget;
+use App\Filament\Widgets\JobApplicationsChartWidget;
+use App\Filament\Widgets\LatestInquiriesWidget;
+use App\Filament\Widgets\LatestJobApplicationsWidget;
+use App\Filament\Widgets\StatsOverview;
+use App\Http\Middleware\SetLocale;
+use App\Models\SystemSetting;
+use App\Support\PublicStorage;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
-use Filament\Enums\ThemeMode;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -27,33 +45,35 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login(\App\Filament\Pages\Auth\Login::class)
+            ->login(Login::class)
             ->passwordReset()
             ->profile()
             ->multifactorAuthentication([
-                \Filament\Auth\MultiFactor\App\AppAuthentication::make(),
+                AppAuthentication::make(),
             ])
             ->brandName(function () {
-                $profile = \App\Models\SystemSetting::get('organization_profile', []);
+                $profile = SystemSetting::get('organization_profile', []);
 
                 return $profile['en']['website_title'] ?? $profile['en']['company_name'] ?? 'Kimmex Admin';
             })
-            ->brandLogo(function() {
-                $logo = \App\Models\SystemSetting::get('organization_profile', [])['logo'] ?? null;
-                $url = \App\Support\PublicStorage::urlIfExists($logo, asset('logo.png'));
-                return new \Illuminate\Support\HtmlString("<img src='{$url}' alt='Logo' style='height: 2.5rem; width: auto; object-fit: contain;'>");
+            ->brandLogo(function () {
+                $logo = SystemSetting::get('organization_profile', [])['logo'] ?? null;
+                $url = PublicStorage::urlIfExists($logo, asset('logo.png'));
+
+                return new HtmlString("<img src='{$url}' alt='Logo' style='height: 2.5rem; width: auto; object-fit: contain;'>");
             })
-            ->favicon(function() {
-                $profile = \App\Models\SystemSetting::get('organization_profile', []);
+            ->favicon(function () {
+                $profile = SystemSetting::get('organization_profile', []);
                 $favicon = $profile['favicon'] ?? $profile['logo'] ?? null;
-                return \App\Support\PublicStorage::urlIfExists($favicon, asset('favicon.ico'));
+
+                return PublicStorage::urlIfExists($favicon, asset('favicon.ico'));
             })
             ->brandLogoHeight('2.5rem')
             ->homeUrl('/')
             ->darkMode()
             ->defaultThemeMode(ThemeMode::Light)
             ->navigationItems([
-                \Filament\Navigation\NavigationItem::make('visit_website')
+                NavigationItem::make('visit_website')
                     ->label(fn () => __('Visit Website'))
                     ->url('/')
                     ->icon('heroicon-o-globe-alt')
@@ -69,26 +89,26 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->resources([
-                \App\Filament\Resources\Subscribers\SubscriberResource::class,
+                SubscriberResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
-                \App\Filament\Pages\ManageSettings::class,
+                ManageSettings::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                \App\Filament\Widgets\StatsOverview::class,
-                \App\Filament\Widgets\LatestInquiriesWidget::class,
-                \App\Filament\Widgets\LatestJobApplicationsWidget::class,
-                \App\Filament\Widgets\InquiriesChartWidget::class,
-                \App\Filament\Widgets\JobApplicationsChartWidget::class,
+                StatsOverview::class,
+                LatestInquiriesWidget::class,
+                LatestJobApplicationsWidget::class,
+                InquiriesChartWidget::class,
+                JobApplicationsChartWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                \App\Http\Middleware\SetLocale::class,
+                SetLocale::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 PreventRequestForgery::class,
@@ -97,19 +117,19 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
-                \LaraZeus\SpatieTranslatable\SpatieTranslatablePlugin::make()
+                SpatieTranslatablePlugin::make()
                     ->defaultLocales(['en', 'km']),
             ])
             ->renderHook(
-                \Filament\View\PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
-                fn (): string => \Illuminate\Support\Facades\Blade::render('@livewire(\'ai-switcher\')'),
+                PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+                fn (): string => Blade::render('@livewire(\'ai-switcher\')'),
             )
             ->renderHook(
-                \Filament\View\PanelsRenderHook::BODY_END,
-                fn (): string => '<script src="' . \Illuminate\Support\Facades\Vite::asset('resources/js/admin-enhancements.js') . '"></script>',
+                PanelsRenderHook::BODY_END,
+                fn (): string => '<script src="'.Vite::asset('resources/js/admin-enhancements.js').'"></script>',
             )
             ->renderHook(
-                \Filament\View\PanelsRenderHook::HEAD_END,
+                PanelsRenderHook::HEAD_END,
                 function (): string {
                     $primaryHover = self::getThemeColor('primary_color_hover', '#C8151D');
                     $primaryColor = self::getThemeColor('primary_color', '#E31E24');
@@ -117,14 +137,15 @@ class AdminPanelProvider extends PanelProvider
                     $hex2rgb = function ($hex) {
                         $hex = str_replace('#', '', $hex);
                         if (strlen($hex) == 3) {
-                            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-                            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-                            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+                            $r = hexdec(substr($hex, 0, 1).substr($hex, 0, 1));
+                            $g = hexdec(substr($hex, 1, 1).substr($hex, 1, 1));
+                            $b = hexdec(substr($hex, 2, 1).substr($hex, 2, 1));
                         } else {
                             $r = hexdec(substr($hex, 0, 2));
                             $g = hexdec(substr($hex, 2, 2));
                             $b = hexdec(substr($hex, 4, 2));
                         }
+
                         return "$r, $g, $b";
                     };
 
@@ -336,22 +357,22 @@ class AdminPanelProvider extends PanelProvider
                 }
             )
             ->navigationGroups([
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn() => __('Organization'))
+                NavigationGroup::make()
+                    ->label(fn () => __('Organization'))
                     ->icon('heroicon-o-identification'),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn() => __('Portfolio'))
+                NavigationGroup::make()
+                    ->label(fn () => __('Portfolio'))
                     ->icon('heroicon-o-briefcase'),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn() => __('Communication'))
+                NavigationGroup::make()
+                    ->label(fn () => __('Communication'))
                     ->icon('heroicon-o-chat-bubble-left-right')
                     ->collapsed(),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn() => __('Governance'))
+                NavigationGroup::make()
+                    ->label(fn () => __('Governance'))
                     ->icon('heroicon-o-shield-check')
                     ->collapsed(),
-                \Filament\Navigation\NavigationGroup::make()
-                    ->label(fn() => __('Administration'))
+                NavigationGroup::make()
+                    ->label(fn () => __('Administration'))
                     ->icon('heroicon-o-cog-6-tooth')
                     ->collapsed(),
             ])
@@ -363,7 +384,7 @@ class AdminPanelProvider extends PanelProvider
     protected static function getThemeColor(string $key, string $default): string
     {
         try {
-            return \App\Models\SystemSetting::get('theme_settings', [])[$key] ?? $default;
+            return SystemSetting::get('theme_settings', [])[$key] ?? $default;
         } catch (\Exception $e) {
             return $default;
         }

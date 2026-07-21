@@ -19,20 +19,18 @@ use League\Flysystem\Visibility;
 
 class CloudinaryAdapter implements FilesystemAdapter
 {
-    public function __construct(private readonly array $config)
-    {
-    }
+    public function __construct(private readonly array $config) {}
 
     public function fileExists(string $path): bool
     {
         try {
-            $publicId     = $this->publicId($path);
+            $publicId = $this->publicId($path);
             $resourceType = $this->resourceTypeForPath($path);
-            $type         = in_array($resourceType, ['image', 'video', 'raw'], true) ? $resourceType : 'image';
+            $type = in_array($resourceType, ['image', 'video', 'raw'], true) ? $resourceType : 'image';
 
             $response = Http::timeout($this->timeout())
                 ->withBasicAuth($this->apiKey(), $this->apiSecret())
-                ->get($this->apiEndpoint("resources/{$type}/upload/" . rawurlencode($publicId)));
+                ->get($this->apiEndpoint("resources/{$type}/upload/".rawurlencode($publicId)));
 
             return $response->successful();
         } catch (\Throwable) {
@@ -302,7 +300,7 @@ class CloudinaryAdapter implements FilesystemAdapter
         $folder = trim((string) ($this->config['folder'] ?? ''), '/');
         $path = $this->normalizePath($path);
 
-        return $folder === '' ? $path : $folder . '/' . $path;
+        return $folder === '' ? $path : $folder.'/'.$path;
     }
 
     private function deliveryPublicId(string $path): string
@@ -311,10 +309,10 @@ class CloudinaryAdapter implements FilesystemAdapter
         // Cloudinary delivery requires appending the extension again so the
         // URL becomes /upload/folder/file.jpg which resolves correctly.
         // PDFs need a double .pdf suffix for the same reason.
-        $publicId  = $this->publicId($path);
+        $publicId = $this->publicId($path);
         $extension = Str::lower(pathinfo($path, PATHINFO_EXTENSION));
 
-        return $extension !== '' ? $publicId . '.' . $extension : $publicId;
+        return $extension !== '' ? $publicId.'.'.$extension : $publicId;
     }
 
     private function normalizePath(string $path): string

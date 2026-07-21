@@ -31,7 +31,7 @@ class WelcomeSubscriberMail extends Mailable
             with: [
                 'subscriberName' => $this->subscriber->name,
                 'subscriberEmail' => $this->subscriber->email,
-                'unsubscribeUrl' => url('/unsubscribe/' . $this->subscriber->unsubscribe_token),
+                'unsubscribeUrl' => url('/unsubscribe/'.$this->subscriber->unsubscribe_token),
                 'websiteUrl' => url('/'),
                 'projectsUrl' => url('/projects'),
                 'newsUrl' => url('/news'),

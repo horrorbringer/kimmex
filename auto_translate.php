@@ -1,4 +1,5 @@
 <?php
+
 require 'vendor/autoload.php';
 
 use Stichoza\GoogleTranslate\GoogleTranslate;
@@ -18,16 +19,16 @@ foreach ($kmJson as $key => $value) {
             $kmJson[$key] = $translated;
             $updated++;
             echo "Translated: '$key' -> '$translated'\n";
-            
+
             // Save every 20 translations to avoid losing progress
             if ($updated % 20 === 0) {
                 file_put_contents($kmPath, json_encode($kmJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
             }
-            
+
             // Be nice to the API
-            usleep(200000); 
+            usleep(200000);
         } catch (Exception $e) {
-            echo "Failed to translate: $key. Error: " . $e->getMessage() . "\n";
+            echo "Failed to translate: $key. Error: ".$e->getMessage()."\n";
         }
     }
 }

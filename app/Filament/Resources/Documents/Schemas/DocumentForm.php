@@ -2,15 +2,17 @@
 
 namespace App\Filament\Resources\Documents\Schemas;
 
+use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\RichEditor;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class DocumentForm
 {
@@ -26,27 +28,27 @@ class DocumentForm
                             ->label(__('Title'))
                             ->required()
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', \Illuminate\Support\Str::slug($state)))
+                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                             ->columnSpanFull(),
                         TextInput::make('slug')
                             ->label(__('Slug'))
                             ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
                             ->unique(ignoreRecord: true)
                             ->required()
-                            ->disabled(fn ($get) => !$get('_slug_manual'))
+                            ->disabled(fn ($get) => ! $get('_slug_manual'))
                             ->dehydrated()
                             ->suffixAction(
-                                \Filament\Actions\Action::make('toggleSlugManual')
+                                Action::make('toggleSlugManual')
                                     ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
                                     ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
                                     ->action(function (Set $set, $get) {
-                                        $set('_slug_manual', !$get('_slug_manual'));
+                                        $set('_slug_manual', ! $get('_slug_manual'));
                                     })
                             ),
-                        \Filament\Forms\Components\Hidden::make('_slug_manual')->default(false)->dehydrated(false),
+                        Hidden::make('_slug_manual')->default(false)->dehydrated(false),
                         Select::make('document_category_id')
                             ->label(__('Category'))
-                            ->relationship('documentCategory', 'name', fn($query) => $query->where('isActive', true)->orderBy('name->en'))
+                            ->relationship('documentCategory', 'name', fn ($query) => $query->where('isActive', true)->orderBy('name->en'))
                             ->searchable()
                             ->preload()
                             ->createOptionForm([
@@ -88,7 +90,7 @@ class DocumentForm
                     ->components([
                         Select::make('departmentId')
                             ->label(__('Department'))
-                            ->relationship('department', 'name', fn($query) => $query->orderBy('name->en'))
+                            ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en'))
                             ->searchable()
                             ->preload(),
                         Toggle::make('isPublic')

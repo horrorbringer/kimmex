@@ -9,7 +9,9 @@ use Illuminate\Support\Carbon;
 class CountryDistributionChartWidget extends ChartWidget
 {
     protected static ?int $sort = 10;
-    protected int | string | array $columnSpan = 1;
+
+    protected int|string|array $columnSpan = 1;
+
     protected ?string $maxHeight = '320px';
 
     public function getHeading(): ?string
@@ -62,9 +64,12 @@ class CountryDistributionChartWidget extends ChartWidget
         ];
 
         $labels = $countries->pluck('country')->map(function ($c) {
-            if (!$c) return '🏳️ ' . __('Unknown');
+            if (! $c) {
+                return '🏳️ '.__('Unknown');
+            }
             $flag = self::countryFlag($c);
-            return $flag . ' ' . $c;
+
+            return $flag.' '.$c;
         })->toArray();
         $data = $countries->pluck('total')->toArray();
 

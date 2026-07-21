@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Mail\ContactAutoReplyMail;
 use App\Models\Inquiry;
 use App\Models\JobApplication;
+use App\Models\JobPosting;
+use App\Services\TelegramService;
 use App\Support\PublicStorage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class FormController extends Controller
 {
@@ -37,7 +42,7 @@ class FormController extends Controller
         }
 
         $inquiry = Inquiry::create([
-            'name' => $sanitized['first_name'] . ' ' . $sanitized['last_name'],
+            'name' => $sanitized['first_name'].' '.$sanitized['last_name'],
             'email' => $sanitized['email'],
             'phone' => $sanitized['phone'],
             'subject' => $sanitized['subject'] ?? 'Website Inquiry',
@@ -48,7 +53,7 @@ class FormController extends Controller
 
         // 3. Smart Telegram Notification (Departmental Routing)
         try {
-            $telegram = new \App\Services\TelegramService();
+            $telegram = new TelegramService;
             $telegram->notifyInquiry([
                 'name' => $inquiry->name,
                 'email' => $inquiry->email,
@@ -58,15 +63,15 @@ class FormController extends Controller
                 'file_path' => $attachmentPath,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
+            Log::error('Telegram notification error: '.$e->getMessage());
         }
 
         // 4. Auto-reply email to the user
         try {
-            \Illuminate\Support\Facades\Mail::to($inquiry->email)
-                ->queue(new \App\Mail\ContactAutoReplyMail($inquiry));
+            Mail::to($inquiry->email)
+                ->queue(new ContactAutoReplyMail($inquiry));
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Contact auto-reply email error: ' . $e->getMessage());
+            Log::error('Contact auto-reply email error: '.$e->getMessage());
         }
 
         return redirect()->back()->with('success', __('Thank you for your inquiry! We will get back to you shortly.'));
@@ -92,7 +97,7 @@ class FormController extends Controller
             'message' => 'nullable|string',
         ], [
             'phone.regex' => __('Please enter a valid phone number (e.g. +855 12 345 678).'),
-            'phone.max'   => __('Phone number is too long.'),
+            'phone.max' => __('Phone number is too long.'),
         ]);
 
         // 2. Sanitize Inputs
@@ -117,13 +122,13 @@ class FormController extends Controller
         try {
             $jobTitle = 'General Application';
             if ($application->jobId) {
-                $job = \App\Models\JobPosting::find($application->jobId);
+                $job = JobPosting::find($application->jobId);
                 if ($job) {
                     $jobTitle = $job->title; // Automatically handles current locale
                 }
             }
 
-            $telegram = new \App\Services\TelegramService();
+            $telegram = new TelegramService;
             $telegram->notifyJobApplication([
                 'name' => $application->applicantName,
                 'email' => $application->email,
@@ -133,7 +138,7 @@ class FormController extends Controller
                 'file_path' => $resumePath,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Telegram notification error: ' . $e->getMessage());
+            Log::error('Telegram notification error: '.$e->getMessage());
         }
 
         return redirect()->back()->with('success', __('Your application has been submitted successfully!'));

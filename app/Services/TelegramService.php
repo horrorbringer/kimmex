@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 class TelegramService
 {
     protected ?string $token;
+
     protected bool $enabled;
 
     public function __construct()
@@ -24,13 +25,13 @@ class TelegramService
      */
     public function sendMessage(string $chatId, string $message): bool
     {
-        if (!$this->enabled || !$this->token || !$chatId) {
+        if (! $this->enabled || ! $this->token || ! $chatId) {
             return false;
         }
 
         try {
             $url = "https://api.telegram.org/bot{$this->token}/sendMessage";
-            
+
             $response = Http::post($url, [
                 'chat_id' => $chatId,
                 'text' => $message,
@@ -40,7 +41,8 @@ class TelegramService
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error("Telegram Notification Error: " . $e->getMessage());
+            Log::error('Telegram Notification Error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -50,16 +52,16 @@ class TelegramService
      */
     public function sendDocument(string $chatId, string $filePath, string $caption = ''): bool
     {
-        if (!$this->enabled || !$this->token || !$chatId || !file_exists($filePath)) {
+        if (! $this->enabled || ! $this->token || ! $chatId || ! file_exists($filePath)) {
             return false;
         }
 
         try {
             $url = "https://api.telegram.org/bot{$this->token}/sendDocument";
-            
+
             $response = Http::attach(
-                'document', 
-                file_get_contents($filePath), 
+                'document',
+                file_get_contents($filePath),
                 basename($filePath)
             )->post($url, [
                 'chat_id' => $chatId,
@@ -69,7 +71,8 @@ class TelegramService
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error("Telegram Document Error: " . $e->getMessage());
+            Log::error('Telegram Document Error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -79,7 +82,7 @@ class TelegramService
      */
     public function sendStoredDocument(string $chatId, string $disk, string $path, string $caption = ''): bool
     {
-        if (!$this->enabled || !$this->token || !$chatId) {
+        if (! $this->enabled || ! $this->token || ! $chatId) {
             return false;
         }
 
@@ -106,7 +109,8 @@ class TelegramService
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error("Telegram Stored Document Error: " . $e->getMessage());
+            Log::error('Telegram Stored Document Error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -119,20 +123,22 @@ class TelegramService
         $settings = SystemSetting::get('integration_settings', []);
         $chatId = $settings['telegram_jobs_chat_id'] ?? null;
 
-        if (!$chatId) return false;
+        if (! $chatId) {
+            return false;
+        }
 
         $message = "💼 *NEW JOB APPLICATION*\n\n"
-                 . "👤 *Name:* {$data['name']}\n"
-                 . "📧 *Email:* {$data['email']}\n"
-                 . "📱 *Phone:* " . ($data['phone'] ?? 'N/A') . "\n"
-                 . "🎯 *Position:* {$data['position']}\n\n"
-                 . "🔗 _Please check the admin panel for details._";
+                 ."👤 *Name:* {$data['name']}\n"
+                 ."📧 *Email:* {$data['email']}\n"
+                 .'📱 *Phone:* '.($data['phone'] ?? 'N/A')."\n"
+                 ."🎯 *Position:* {$data['position']}\n\n"
+                 .'🔗 _Please check the admin panel for details._';
 
-        if (!empty($data['file_disk']) && !empty($data['file_path'])) {
+        if (! empty($data['file_disk']) && ! empty($data['file_path'])) {
             return $this->sendStoredDocument($chatId, $data['file_disk'], $data['file_path'], $message);
         }
 
-        if (!empty($data['file_path']) && file_exists($data['file_path'])) {
+        if (! empty($data['file_path']) && file_exists($data['file_path'])) {
             return $this->sendDocument($chatId, $data['file_path'], $message);
         }
 
@@ -147,19 +153,21 @@ class TelegramService
         $settings = SystemSetting::get('integration_settings', []);
         $chatId = $settings['telegram_inquiries_chat_id'] ?? null;
 
-        if (!$chatId) return false;
+        if (! $chatId) {
+            return false;
+        }
 
         $message = "📧 *NEW CONTACT INQUIRY*\n\n"
-                 . "👤 *From:* {$data['name']}\n"
-                 . "✉️ *Email:* {$data['email']}\n"
-                 . "📝 *Subject:* " . ($data['subject'] ?? 'No Subject') . "\n\n"
-                 . "💬 *Message:*\n_{$data['message']}_";
+                 ."👤 *From:* {$data['name']}\n"
+                 ."✉️ *Email:* {$data['email']}\n"
+                 .'📝 *Subject:* '.($data['subject'] ?? 'No Subject')."\n\n"
+                 ."💬 *Message:*\n_{$data['message']}_";
 
-        if (!empty($data['file_disk']) && !empty($data['file_path'])) {
+        if (! empty($data['file_disk']) && ! empty($data['file_path'])) {
             return $this->sendStoredDocument($chatId, $data['file_disk'], $data['file_path'], $message);
         }
 
-        if (!empty($data['file_path']) && file_exists($data['file_path'])) {
+        if (! empty($data['file_path']) && file_exists($data['file_path'])) {
             return $this->sendDocument($chatId, $data['file_path'], $message);
         }
 

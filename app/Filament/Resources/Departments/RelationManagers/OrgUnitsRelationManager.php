@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Departments\RelationManagers;
 
+use App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm;
+use App\Filament\Resources\OrgUnits\Tables\OrgUnitsTable;
+use App\Filament\Support\FlatRecordDetails;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -21,19 +24,19 @@ class OrgUnitsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return \App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm::configure($schema);
+        return OrgUnitForm::configure($schema);
     }
 
     public function table(Table $table): Table
     {
-        return \App\Filament\Resources\OrgUnits\Tables\OrgUnitsTable::configure($table)
+        return OrgUnitsTable::configure($table)
             ->recordTitleAttribute('title')
             ->headerActions([
                 CreateAction::make(),
                 AssociateAction::make(),
             ])
             ->recordActions([
-                ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
                 EditAction::make(),
                 DissociateAction::make(),
                 DeleteAction::make(),

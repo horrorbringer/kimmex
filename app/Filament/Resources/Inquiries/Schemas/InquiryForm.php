@@ -5,8 +5,8 @@ namespace App\Filament\Resources\Inquiries\Schemas;
 use App\Support\PublicStorage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -79,9 +79,9 @@ class InquiryForm
                                 Action::make('openAttachment')
                                     ->icon('heroicon-m-arrow-top-right-on-square')
                                     ->tooltip(__('Open Attachment'))
-                                    ->url(fn(?string $state): ?string => $state ? PublicStorage::url($state) : null)
+                                    ->url(fn (?string $state): ?string => $state ? PublicStorage::url($state) : null)
                                     ->openUrlInNewTab()
-                                    ->visible(fn(?string $state): bool => (bool) $state)
+                                    ->visible(fn (?string $state): bool => (bool) $state)
                             ),
                     ]),
             ]);

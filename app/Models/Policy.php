@@ -8,7 +8,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Policy extends Model
 {
-    use HasUuids, HasTranslations;
+    use HasTranslations, HasUuids;
 
     protected $fillable = [
         'title',

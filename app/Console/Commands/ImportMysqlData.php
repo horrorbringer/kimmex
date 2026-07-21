@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 class ImportMysqlData extends Command
 {
     protected $signature = 'db:import-mysql';
+
     protected $description = 'Import all JSON exports into MySQL';
 
     public function handle(): void
@@ -18,10 +19,11 @@ class ImportMysqlData extends Command
 
         if (empty($files)) {
             $this->error('No export files found in /exports/');
+
             return;
         }
 
-        $this->info('Found ' . count($files) . ' files to import');
+        $this->info('Found '.count($files).' files to import');
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
@@ -34,6 +36,7 @@ class ImportMysqlData extends Command
             if (empty($rows)) {
                 $this->line("  ⚠ {$tableName} (empty, skipped)");
                 $bar->advance();
+
                 continue;
             }
 
@@ -46,7 +49,7 @@ class ImportMysqlData extends Command
             }
 
             $bar->advance();
-            $this->line("  ✔ {$tableName} (" . count($rows) . " rows)");
+            $this->line("  ✔ {$tableName} (".count($rows).' rows)');
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

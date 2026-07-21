@@ -2,28 +2,31 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\DeletesPublicUploads;
 use Database\Factories\UserFactory;
-use Filament\Auth\MultiFactor\App\Contracts\HasAppAuthentication;
 use Filament\Auth\MultiFactor\App\Concerns\InteractsWithAppAuthentication;
+use Filament\Auth\MultiFactor\App\Contracts\HasAppAuthentication;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
-use App\Models\Concerns\DeletesPublicUploads;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 #[Fillable(['name', 'email', 'password', 'image', 'role', 'is_active', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token', 'app_authentication_secret'])]
-class User extends Authenticatable implements \Filament\Models\Contracts\FilamentUser, HasAppAuthentication
+class User extends Authenticatable implements FilamentUser, HasAppAuthentication
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, LogsActivity, DeletesPublicUploads, InteractsWithAppAuthentication;
+    use DeletesPublicUploads, HasFactory, InteractsWithAppAuthentication, LogsActivity, Notifiable;
 
     protected array $publicUploadAttributes = ['image'];
 
-    public function canAccessPanel(\Filament\Panel $panel): bool
+    public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_active && ($this->isAdmin() || $this->isEditor());
     }
@@ -58,7 +61,7 @@ class User extends Authenticatable implements \Filament\Models\Contracts\Filamen
         return $this->role === 'EDITOR';
     }
 
-    public function employee(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function employee(): HasOne
     {
         return $this->hasOne(Employee::class);
     }

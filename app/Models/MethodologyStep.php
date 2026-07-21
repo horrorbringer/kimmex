@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Spatie\Translatable\HasTranslations;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Translatable\HasTranslations;
 
 class MethodologyStep extends Model
 {
-    use HasUuids, HasTranslations;
+    use HasTranslations, HasUuids;
 
     public $translatable = ['title', 'description'];
 
@@ -30,15 +29,15 @@ class MethodologyStep extends Model
     {
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                Cache::forget('process_index_array_' . $locale);
-                Cache::forget('services_process_array_' . $locale);
+                Cache::forget('process_index_array_'.$locale);
+                Cache::forget('services_process_array_'.$locale);
             }
         });
 
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
-                Cache::forget('process_index_array_' . $locale);
-                Cache::forget('services_process_array_' . $locale);
+                Cache::forget('process_index_array_'.$locale);
+                Cache::forget('services_process_array_'.$locale);
             }
         });
     }

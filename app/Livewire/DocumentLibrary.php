@@ -2,17 +2,18 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\WithPagination;
 use App\Models\Document;
 use App\Models\DocumentCategory;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Component;
+use Livewire\WithPagination;
 
 class DocumentLibrary extends Component
 {
     use WithPagination;
 
     public $search = '';
+
     public $activeTabId = 'all';
 
     public function updatingSearch()
@@ -28,7 +29,7 @@ class DocumentLibrary extends Component
 
     public function render()
     {
-        $categories = Cache::remember('document_library_categories_v2_' . app()->getLocale(), now()->addMinutes(10), function () {
+        $categories = Cache::remember('document_library_categories_v2_'.app()->getLocale(), now()->addMinutes(10), function () {
             return DocumentCategory::where('isActive', true)
                 ->orderBy('name->en')
                 ->get()
@@ -47,10 +48,10 @@ class DocumentLibrary extends Component
 
         if ($this->search) {
             $query->where(function ($q) {
-                $q->where('title->en', 'like', '%' . $this->search . '%')
-                    ->orWhere('title->km', 'like', '%' . $this->search . '%')
-                    ->orWhere('description->en', 'like', '%' . $this->search . '%')
-                    ->orWhere('description->km', 'like', '%' . $this->search . '%');
+                $q->where('title->en', 'like', '%'.$this->search.'%')
+                    ->orWhere('title->km', 'like', '%'.$this->search.'%')
+                    ->orWhere('description->en', 'like', '%'.$this->search.'%')
+                    ->orWhere('description->km', 'like', '%'.$this->search.'%');
             });
         }
 

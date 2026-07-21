@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Models\PageView;
 use Closure;
+use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -41,7 +43,7 @@ class TrackPageView
 
         // Skip excluded paths
         foreach ($this->skipPaths as $skipPath) {
-            if (str_starts_with('/' . $path, $skipPath)) {
+            if (str_starts_with('/'.$path, $skipPath)) {
                 return $response;
             }
         }
@@ -80,7 +82,7 @@ class TrackPageView
 
             PageView::create([
                 'url' => $request->fullUrl(),
-                'path' => '/' . ltrim($path, '/'),
+                'path' => '/'.ltrim($path, '/'),
                 'title' => $title,
                 'ip' => $realIp,
                 'user_agent' => mb_substr($userAgent, 0, 255),
@@ -133,7 +135,7 @@ class TrackPageView
             return 'Local';
         }
 
-        $cacheKey = 'geo_ip_' . md5($ip);
+        $cacheKey = 'geo_ip_'.md5($ip);
 
         return cache()->remember($cacheKey, now()->addWeek(), function () use ($ip) {
             // Strategy 1: Local GeoLite2 database (instant, no network)
@@ -159,10 +161,11 @@ class TrackPageView
         }
 
         try {
-            $reader = new \GeoIp2\Database\Reader($dbPath);
+            $reader = new Reader($dbPath);
             $record = $reader->country($ip);
+
             return $record->country->name;
-        } catch (\GeoIp2\Exception\AddressNotFoundException) {
+        } catch (AddressNotFoundException) {
             return 'Unknown';
         } catch (\Throwable) {
             return null;

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\ActivityLogs\Tables;
 
+use App\Filament\Support\FlatRecordDetails;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -61,7 +63,7 @@ class ActivityLogsTable
                 //
             ])
             ->recordActions([
-                \Filament\Actions\ViewAction::make()->schema(fn ($record): array => \App\Filament\Support\FlatRecordDetails::schema($record)),
+                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
             ])
             ->toolbarActions([]);
     }
@@ -76,7 +78,7 @@ class ActivityLogsTable
 
         if (! $subject instanceof Model) {
             return $record->subject_id
-                ? "{$type}: " . __('Deleted record')
+                ? "{$type}: ".__('Deleted record')
                 : $type;
         }
 
