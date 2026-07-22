@@ -194,6 +194,8 @@
                                 {{ $service['title'][$lang] }}
                             </h1>
 
+                            <x-page-view-count class="mb-5" />
+
                             <p class="text-titan-navy/70 text-base md:text-lg leading-relaxed max-w-xl font-medium">
                                 {{ $service['desc'][$lang] }}
                             </p>

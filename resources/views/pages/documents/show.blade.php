@@ -82,6 +82,7 @@
                     <span class="flex items-center gap-1.5">
                         <x-lucide-calendar class="w-3.5 h-3.5" /> {{ $doc['date'] }}
                     </span>
+                    <x-page-view-count light />
                     @if(($doc['downloadCount'] ?? 0) > 0)
                         <span class="flex items-center gap-1.5">
                             <x-lucide-download class="w-3.5 h-3.5" /> {{ number_format($doc['downloadCount']) }} {{ __('downloads') }}

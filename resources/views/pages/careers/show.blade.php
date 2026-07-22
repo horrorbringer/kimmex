@@ -144,6 +144,7 @@
                             {{ $meta['value'] }}
                         </span>
                     @endforeach
+                    <x-page-view-count light />
                 </div>
 
                 <!-- CTA Buttons -->

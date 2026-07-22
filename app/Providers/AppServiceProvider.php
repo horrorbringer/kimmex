@@ -103,29 +103,30 @@ class AppServiceProvider extends ServiceProvider
         SystemSetting::observe($cacheBuster);
 
         View::composer('*', function ($view) {
-            // Only run on web HTTP requests — skip CLI, queue workers, and Filament internals
-            if (! app()->runningInConsole() && request()->hasSession()) {
-                $lang = app()->getLocale();
-                static $settingsByLocale = [];
-                static $hasPublicDocuments = null;
-
-                $settings = $settingsByLocale[$lang] ??= Cache::remember('global_settings_'.$lang, now()->addHours(12), function () use ($lang) {
-                    $brandIdentity = SystemSetting::get('brand_identity', []);
-
-                    return [
-                        'profile' => SystemSetting::get('organization_profile', []),
-                        'brand' => $brandIdentity[$lang] ?? $brandIdentity['en'] ?? [],
-                        'theme' => SystemSetting::get('theme_settings', []),
-                        'integrations' => SystemSetting::get('integration_settings', []),
-                    ];
-                });
-
-                $hasPublicDocuments ??= Cache::remember('has_public_documents', now()->addHours(1), fn () => Document::publicDocumentsExist());
-
-                $view->with('globalSettings', $settings);
-                $view->with('siteLocale', $lang);
-                $view->with('hasPublicDocuments', $hasPublicDocuments);
+            if (app()->runningInConsole() && ! app()->runningUnitTests()) {
+                return;
             }
+
+            $lang = app()->getLocale();
+            static $settingsByLocale = [];
+            static $hasPublicDocuments = null;
+
+            $settings = $settingsByLocale[$lang] ??= Cache::remember('global_settings_'.$lang, now()->addHours(12), function () use ($lang) {
+                $brandIdentity = SystemSetting::get('brand_identity', []);
+
+                return [
+                    'profile' => SystemSetting::get('organization_profile', []),
+                    'brand' => $brandIdentity[$lang] ?? $brandIdentity['en'] ?? [],
+                    'theme' => SystemSetting::get('theme_settings', []),
+                    'integrations' => SystemSetting::get('integration_settings', []),
+                ];
+            });
+
+            $hasPublicDocuments ??= Cache::remember('has_public_documents', now()->addHours(1), fn () => Document::publicDocumentsExist());
+
+            $view->with('globalSettings', $settings);
+            $view->with('siteLocale', $lang);
+            $view->with('hasPublicDocuments', $hasPublicDocuments);
         });
 
         FilamentView::registerRenderHook(

@@ -169,6 +169,7 @@
                             <span class="rounded bg-titan-red text-white px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em]">{{ $article['category'] }}</span>
                             <span class="rounded border border-gray-200 bg-gray-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy/55">{{ $article['date'] }}</span>
                             <span class="rounded border border-gray-200 bg-gray-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy/55">{{ $article['readTime'] }}</span>
+                            <x-page-view-count class="rounded border border-gray-200 bg-gray-50 px-3 py-1.5" />
                         </div>
 
                         <h1 class="font-bold uppercase leading-[1.04] tracking-normal text-titan-navy max-w-3xl"

@@ -141,6 +141,7 @@
                         <x-lucide-map-pin class="w-3.5 h-3.5 md:w-4 md:h-4 text-titan-red shrink-0" />
                         {{ $project['location'] }}
                     </div>
+                    <x-page-view-count light />
                     <div class="h-[1px] w-8 md:w-12 bg-titan-red hidden sm:block"></div>
                 </div>
             </div>
