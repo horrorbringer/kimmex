@@ -405,23 +405,37 @@
                 left: auto;
                 right: 0;
             }
+            .milestone-animate {
+                will-change: transform, opacity;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .milestone-animate,
+                .milestone-timeline-progress {
+                    transition: none !important;
+                    transform: none !important;
+                }
+            }
         </style>
 
         <!-- === MILESTONES === -->
-        <section class="py-20 md:py-28 px-6 bg-gray-50 border-y border-gray-100 overflow-hidden">
+        <section x-data="{ timelineVisible: false }" x-intersect.once="timelineVisible = true"
+            class="py-20 md:py-28 px-6 bg-gray-50 border-y border-gray-100 overflow-hidden">
             <div class="max-w-[1200px] mx-auto">
-                <div class="text-center mb-16 md:mb-24">
+                <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    class="text-center mb-16 md:mb-24 transition-all duration-700 ease-out">
                     <div class="flex items-center justify-center gap-3 mb-5">
-                        <div class="w-8 h-[2px] bg-titan-red"></div>
+                        <div class="w-8 h-px bg-titan-red"></div>
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('OUR JOURNEY') }}</span>
-                        <div class="w-8 h-[2px] bg-titan-red"></div>
+                        <div class="w-8 h-px bg-titan-red"></div>
                     </div>
                     <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">{{ __('Company Milestones') }}</h2>
                 </div>
 
-                <div class="space-y-16 md:space-y-0 relative">
-                    <!-- Timeline Line (desktop) -->
+                <div class="milestone-timeline space-y-12 md:space-y-0 relative">
                     <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-titan-red/20 to-transparent -translate-x-1/2"></div>
+                    <div class="milestone-timeline-progress hidden md:block absolute left-1/2 top-8 bottom-8 w-[2px] bg-gradient-to-b from-titan-red via-titan-red/70 to-titan-red/10 -translate-x-1/2 origin-top transition-transform duration-[1600ms] ease-out"
+                        :class="timelineVisible ? 'scale-y-100' : 'scale-y-0'"></div>
 
                     @foreach($milestones as $idx => $milestone)
                         @php
@@ -430,9 +444,9 @@
                         @endphp
                         <div x-data="{ shown: false, open: false, hasDetail: @js($hasMilestoneDetail) }" x-intersect.once="shown = true"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                            class="relative md:grid md:grid-cols-2 md:gap-16 md:py-12 transition-all duration-700 group/milestone">
+                            class="milestone-animate relative md:grid md:grid-cols-2 md:gap-16 md:py-12 transition-all duration-700 ease-out group/milestone"
+                            style="transition-delay: {{ min($idx * 90, 360) }}ms">
 
-                            <!-- Timeline Dot (desktop) -->
                             <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
                                 <div class="w-4 h-4 bg-white border-[3px] border-titan-red rounded-full shadow-sm transition-all duration-300"
                                     :class="open ? 'scale-150 bg-titan-red' : 'group-hover/milestone:scale-125'"></div>
