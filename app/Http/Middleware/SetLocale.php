@@ -19,7 +19,10 @@ class SetLocale
 
         if (in_array($normalizedLocale, ['en', 'km'])) {
             app()->setLocale($normalizedLocale);
-            session(['locale' => $normalizedLocale]);
+
+            if (session('locale') !== $normalizedLocale) {
+                session(['locale' => $normalizedLocale]);
+            }
         }
 
         return $next($request);

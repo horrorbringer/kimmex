@@ -392,12 +392,12 @@
                     <!-- Language Switcher -->
                     <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'"
                         class="hidden sm:flex items-center gap-0.5 rounded p-0.5 h-8 border border-white/5">
-                        <a href="{{ route('lang.switch', 'en') }}"
+                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
                             class="h-full flex items-center px-2.5 rounded text-[9px] font-black tracking-widest transition-all"
                             :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
                             EN
                         </a>
-                        <a href="{{ route('lang.switch', 'km') }}"
+                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'km']) }}"
                             class="h-full flex items-center px-2.5 rounded text-[9px] font-black tracking-widest transition-all"
                             :class="{{ app()->getLocale() === 'km' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
                             KH
@@ -565,11 +565,11 @@
                     </a>
                 </div>
                 <div class="mt-4 flex gap-2">
-                    <a href="{{ route('lang.switch', 'en') }}"
+                    <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
                         class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'en' ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border-gray-200' }}">
                         {{ __('English') }}
                     </a>
-                    <a href="{{ route('lang.switch', 'km') }}"
+                    <a href="{{ request()->fullUrlWithQuery(['lang' => 'km']) }}"
                         class="flex-1 py-2 rounded text-xs font-bold transition-all border text-center {{ app()->getLocale() === 'km' ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border-gray-200' }}">
                         ខ្មែរ
                     </a>
