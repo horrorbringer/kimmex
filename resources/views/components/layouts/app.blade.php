@@ -11,6 +11,7 @@
     <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark')</script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="FNWYdR92oYLYxH7Tc7wkW8v6nhkNPGmcNnz9gSPVcLw">
 
     @php
         $profile = $globalSettings['profile'] ?? [];
