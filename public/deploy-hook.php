@@ -81,6 +81,7 @@ $run('migrate', ['--force' => true]);
 
 // 4. Rebuild caches
 $run('config:cache');
+$run('route:cache');
 $run('filament:assets');
 $run('view:cache');
 
