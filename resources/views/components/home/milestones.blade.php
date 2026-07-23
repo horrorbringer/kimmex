@@ -30,7 +30,7 @@
         ['text' => 'text-[#F16F24]', 'hex' => '#F16F24', 'border' => 'border-[#F16F24]/20'],
         ['text' => 'text-[#D51B59]', 'hex' => '#D51B59', 'border' => 'border-[#D51B59]/20'],
     ];
-    $roadPinOffsets = [-230, -70, 90, -10, -110, 80, 145, -30, 210];
+    $roadPinOffsets = [-230, 166, -10, -61, 98, 63, -24, 120, 210];
 @endphp
 
 @if (! empty($milestones))
@@ -46,7 +46,21 @@
                 <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-titan-navy/60">{{ __('From our first foundation to the projects shaping Cambodia today.') }}</p>
             </div>
 
-            <div class="home-milestone-route relative mx-auto max-w-[1140px]">
+            <div x-data="{
+                    active: false,
+                    init() {
+                        const observer = new IntersectionObserver(([entry]) => {
+                            if (entry.isIntersecting) {
+                                this.active = true;
+                                observer.disconnect();
+                            }
+                        }, { threshold: 0.18 });
+                        observer.observe(this.$el);
+                    }
+                }"
+                x-init="init()"
+                :class="active ? 'home-milestone-route-active' : ''"
+                class="home-milestone-route relative mx-auto max-w-[1140px]">
                 <svg class="pointer-events-none absolute left-1/2 top-0 hidden h-[1512px] w-[620px] -translate-x-1/2 lg:block" viewBox="0 0 620 1512" fill="none" aria-hidden="true">
                     <defs>
                         <linearGradient id="milestone-road-gradient" x1="0" y1="0" x2="620" y2="1512" gradientUnits="userSpaceOnUse">
@@ -71,11 +85,21 @@
                             $pinOffset = $roadPinOffsets[$index] ?? 0;
                         @endphp
                         <article x-data="{
+                                shown: false,
+                                hydrated: false,
                                 reducedMotion: false,
                                 canTilt: false,
                                 init() {
                                     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                                     this.canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+                                    this.hydrated = true;
+                                    const observer = new IntersectionObserver(([entry]) => {
+                                        if (entry.isIntersecting) {
+                                            this.shown = true;
+                                            observer.disconnect();
+                                        }
+                                    }, { threshold: 0.42 });
+                                    observer.observe(this.$el);
                                 },
                                 tilt(event) {
                                     if (this.reducedMotion || !this.canTilt) return;
@@ -93,8 +117,10 @@
                             x-init="init()"
                             @mousemove="tilt($event)"
                             @mouseleave="resetTilt($event)"
+                            :class="hydrated && !shown ? 'milestone-route-waiting' : shown ? 'milestone-route-visible' : ''"
                             class="home-milestone-stop relative lg:grid lg:min-h-[168px] lg:grid-cols-[1fr_180px_1fr] lg:items-center">
                             <span class="home-milestone-pin-wrap absolute left-1/2 top-1/2 z-10 hidden h-16 w-16 lg:block" style="--road-pin-x: {{ $pinOffset }}px">
+                                <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
                                 <svg viewBox="0 0 48 60" class="home-milestone-pin h-full w-full drop-shadow-[0_8px_8px_rgba(11,43,92,0.25)]" aria-hidden="true">
                                     <path d="M24 2C11.85 2 2 11.85 2 24c0 16.5 18.02 31.96 21.1 34.44a1.45 1.45 0 0 0 1.8 0C27.98 55.96 46 40.5 46 24 46 11.85 36.15 2 24 2Z" fill="{{ $color['hex'] }}" />
                                     <circle cx="24" cy="24" r="8" fill="white" />

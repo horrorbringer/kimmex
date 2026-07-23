@@ -1170,19 +1170,58 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   animation: home-milestone-road-glow 3.6s ease-in-out infinite alternate;
 }
 
+.home-milestone-route-active .home-milestone-road-path {
+  stroke-dasharray: 2600;
+  animation: home-milestone-road-draw 2.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, home-milestone-road-glow 3.6s 2.8s ease-in-out infinite alternate;
+}
+
 .home-milestone-stop {
   transform-style: preserve-3d;
 }
 
 .home-milestone-pin-wrap {
-  transform: translate(calc(-50% + var(--road-pin-x)), -50%);
+  --pin-scale: 1;
+  opacity: 1;
+  transform: translate(calc(-50% + var(--road-pin-x)), -50%) scale(var(--pin-scale));
+  transition: opacity 360ms ease-out, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .home-milestone-card {
-  transform: translateZ(18px) rotateX(var(--milestone-rotate-x, 0deg)) rotateY(var(--milestone-rotate-y, 0deg));
+  --milestone-enter-x: 0px;
+  --milestone-enter-y: 0px;
+  opacity: 1;
+  transform: translate3d(var(--milestone-enter-x), var(--milestone-enter-y), 18px) rotateX(var(--milestone-rotate-x, 0deg)) rotateY(var(--milestone-rotate-y, 0deg));
   transform-style: preserve-3d;
-  transition: transform 180ms ease-out, box-shadow 250ms ease-out, border-color 250ms ease-out;
+  transition: opacity 360ms ease-out, transform 520ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease-out, border-color 250ms ease-out;
   will-change: transform;
+}
+
+.milestone-route-waiting .home-milestone-card {
+  opacity: 0;
+  filter: blur(3px);
+}
+
+.milestone-route-waiting:nth-child(odd) .home-milestone-card {
+  --milestone-enter-x: -36px;
+  --milestone-enter-y: 16px;
+}
+
+.milestone-route-waiting:nth-child(even) .home-milestone-card {
+  --milestone-enter-x: 36px;
+  --milestone-enter-y: 16px;
+}
+
+.milestone-route-visible .home-milestone-card {
+  filter: blur(0);
+}
+
+.milestone-route-waiting .home-milestone-pin-wrap {
+  --pin-scale: 0.45;
+  opacity: 0;
+}
+
+.milestone-route-visible .home-milestone-pin-ring {
+  animation: home-milestone-pin-ring 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .home-milestone-stop:hover .home-milestone-card {
@@ -1223,6 +1262,28 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   }
 }
 
+@keyframes home-milestone-road-draw {
+  from {
+    stroke-dashoffset: 2600;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes home-milestone-pin-ring {
+  from {
+    opacity: 0.9;
+    transform: scale(0.42);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
 @keyframes home-milestone-pin-float {
   0%, 100% {
     transform: translate3d(0, 0, 0) scale(1);
@@ -1245,7 +1306,16 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   }
 
   .home-milestone-road-flow,
-  .home-milestone-pin {
+  .home-milestone-pin,
+  .home-milestone-pin-ring {
     animation: none;
+  }
+
+  .home-milestone-pin-wrap,
+  .home-milestone-card {
+    opacity: 1;
+    filter: none;
+    transition: none;
+    transform: none;
   }
 }

@@ -16,13 +16,16 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('<x-home.milestones />', $homepage);
         $this->assertStringContainsString("Cache::remember('home_milestones_'.\$locale", $milestones);
         $this->assertStringContainsString('milestone-road-gradient', $milestones);
-        $this->assertStringContainsString('M80 84C215 35 410 50 470 160', $milestones);
+        $this->assertStringContainsString('M80 84C215 35 410 50 470 160C535 278 410 340 300 420', $milestones);
         $this->assertStringContainsString('viewBox="0 0 48 60"', $milestones);
         $this->assertStringContainsString('home-milestone-route', $milestones);
         $this->assertStringContainsString('h-[1512px] w-[620px]', $milestones);
         $this->assertStringContainsString('$roadPinOffsets', $milestones);
         $this->assertStringContainsString('home-milestone-road-flow', $milestones);
         $this->assertStringContainsString('home-milestone-pin', $milestones);
+        $this->assertStringContainsString('IntersectionObserver', $milestones);
+        $this->assertStringContainsString('milestone-route-visible', $milestones);
+        $this->assertStringContainsString('home-milestone-pin-ring', $milestones);
         $this->assertStringContainsString('A legacy built milestone by milestone', $milestones);
         $this->assertStringContainsString("'image' => \\App\\Support\\PublicStorage::urlIfExists", $milestones);
         $this->assertStringContainsString("fill=\"{{ \$color['hex'] }}\"", $milestones);
