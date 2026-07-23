@@ -121,7 +121,7 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative h-[100dvh] min-h-[580px] sm:min-h-[640px] overflow-hidden bg-titan-navy text-white"
+    class="relative mt-[112px] h-[calc(100dvh-112px)] min-h-[500px] sm:min-h-[560px] overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (directional transition stack) === -->
