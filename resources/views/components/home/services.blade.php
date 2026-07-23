@@ -59,7 +59,7 @@
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-700">
                     <a href="/services/{{ $s['slug'] }}"
-                        class="group block h-full bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-500">
+                        class="group block h-full bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow duration-500 ease-out">
                         <div class="p-7 md:p-9">
                             {{-- Icon + Number --}}
                             <div class="flex items-center justify-between mb-6">

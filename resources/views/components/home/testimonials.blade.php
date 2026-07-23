@@ -35,7 +35,7 @@
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
                     <div
-                        class="bg-gray-50 p-8 rounded relative h-full flex flex-col group hover:-translate-y-2 hover:shadow-xl transition-all duration-500">
+                        class="bg-gray-50 p-8 rounded relative h-full flex flex-col group hover:shadow-xl transition-shadow duration-500 ease-out">
                         <x-lucide-quote
                             class="text-titan-red/20 absolute top-6 right-6 w-12 h-12 group-hover:text-titan-red/40 transition-colors" />
                         <div class="flex gap-1 mb-4">

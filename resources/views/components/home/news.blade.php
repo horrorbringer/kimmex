@@ -52,14 +52,14 @@
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
                     <a href="/news/{{ $news['id'] }}"
-                        class="group cursor-pointer bg-white rounded overflow-hidden shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
+                        class="group cursor-pointer bg-white rounded overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 ease-out h-full flex flex-col">
                         <div class="aspect-[16/10] relative overflow-hidden bg-titan-navy">
                             <div
                                 class="absolute top-4 left-4 bg-titan-navy/90 backdrop-blur-sm text-white text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1.5 z-10 rounded-md">
                                 {{ $news['category'] }}
                             </div>
                             <img src="{{ $news['image'] }}" alt="{{ $news['title'] }}"
-                                class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                class="object-cover w-full h-full group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                         <div class="p-6 flex flex-col flex-grow">
                             <div
@@ -67,11 +67,11 @@
                                 <x-lucide-calendar class="w-3.5 h-3.5" /> {{ $news['date'] }}
                             </div>
                             <h3
-                                class="text-xl font-heading font-bold text-titan-navy group-hover:text-accent-orange transition-colors leading-tight mb-4">
+                                class="text-xl font-heading font-bold text-titan-navy group-hover:text-accent-orange transition-colors duration-300 ease-out leading-tight mb-4">
                                 {{ $news['title'] }}
                             </h3>
                             <span class="text-sm font-bold text-accent-orange flex items-center gap-2 mt-auto">
-                                {{ __('Read Story') }} <x-lucide-arrow-right class="w-3.5 h-3.5" />
+                                {{ __('Read Story') }} <x-lucide-arrow-right class="w-3.5 h-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transform-none" />
                             </span>
                         </div>
                     </a>

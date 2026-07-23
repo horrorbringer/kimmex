@@ -20,7 +20,7 @@
             {{-- Right: Buttons --}}
             <div class="flex flex-col sm:flex-row gap-4 shrink-0">
                 <a href="/contact"
-                    class="group flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold uppercase tracking-wider text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                    class="group flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold uppercase tracking-wider text-sm transition-shadow duration-300 ease-out shadow-lg hover:shadow-xl"
                     style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
                     {{ __('Get Free Quote') }}
                     <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />

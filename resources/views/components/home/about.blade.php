@@ -24,21 +24,21 @@
                     <div class="col-span-7 row-span-2">
                         <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
                             <img src="/images/webp/projects/Thumbnail-2.webp" alt="{{ __('Construction project') }}"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                     </div>
                     {{-- Top right --}}
                     <div class="col-span-5">
                         <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
                             <img src="/images/webp/projects/Thumbnail-3.webp" alt="{{ __('Construction project') }}"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                     </div>
                     {{-- Bottom right --}}
                     <div class="col-span-5">
                         <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg relative">
                             <img src="/images/webp/projects/Thumbnail-4.webp" alt="{{ __('Construction project') }}"
-                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                     </div>
                 </div>
@@ -96,10 +96,10 @@
                 </div>
 
                 <a href="/about"
-                    class="inline-flex items-center gap-3 font-bold uppercase tracking-wider text-sm group transition-all duration-300"
+                    class="inline-flex items-center gap-3 font-bold uppercase tracking-wider text-sm group transition-[gap] duration-300 ease-out"
                     style="color: var(--primary-color, #E31E24);">
                     {{ __('Learn More About Us') }}
-                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
+                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300 ease-out motion-reduce:transform-none" />
                 </a>
             </div>
         </div>

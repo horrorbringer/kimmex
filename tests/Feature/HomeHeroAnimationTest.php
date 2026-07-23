@@ -12,9 +12,12 @@ class HomeHeroAnimationTest extends TestCase
         $heroTemplate = File::get(resource_path('views/components/home/hero-carousel.blade.php'));
         $styles = File::get(resource_path('css/app.css'));
 
-        $this->assertStringContainsString('interval: 6000', $heroTemplate);
+        $this->assertStringContainsString('interval: 5500', $heroTemplate);
+        $this->assertStringNotContainsString('@mouseenter="pause()"', $heroTemplate);
+        $this->assertStringNotContainsString('@mouseleave="resume()"', $heroTemplate);
         $this->assertStringContainsString('const duration = this.prefersReducedMotion ? 0 : 700', $heroTemplate);
-        $this->assertStringContainsString('hero-kenburns 6s', $styles);
+        $this->assertStringContainsString("!prefersReducedMotion && index === current ? 'hero-content-enter' : ''", $heroTemplate);
+        $this->assertStringContainsString('hero-kenburns 5.5s', $styles);
         $this->assertStringContainsString("slideDirection: 'next'", $heroTemplate);
         $this->assertStringContainsString("this.goTo((this.current + 1) % this.slides.length, 'next')", $heroTemplate);
         $this->assertStringContainsString('hero-slide-enter-right', $heroTemplate);
@@ -24,8 +27,8 @@ class HomeHeroAnimationTest extends TestCase
         $this->assertSame(4, substr_count($styles, '700ms cubic-bezier(0.22, 1, 0.36, 1) both'));
         $this->assertStringContainsString('transform: translateX(100%)', $styles);
         $this->assertStringContainsString('transform: translateX(-100%)', $styles);
-        $this->assertStringContainsString('scale(1.075) translate3d(-0.4%, 0.3%, 0)', $styles);
-        $this->assertStringContainsString('scale(1.02) translate3d(0.4%, -0.3%, 0)', $styles);
+        $this->assertStringContainsString('scale(1.14) translate3d(-0.6%, 0.4%, 0)', $styles);
+        $this->assertStringContainsString('scale(1.01) translate3d(0.6%, -0.4%, 0)', $styles);
         $this->assertStringContainsString('hero-content-enter > :nth-child(4)', $styles);
         $this->assertStringContainsString('transform: translateY(18px)', $styles);
         $this->assertStringContainsString('.hero-content-enter > * {', $styles);

@@ -55,7 +55,7 @@
         slideDirection: 'next',
         slides: {{ Js::from($slides) }},
         timer: null,
-        interval: 6000,
+        interval: 5500,
         isAnimating: false,
         isPaused: false,
         prefersReducedMotion: false,
@@ -115,8 +115,6 @@
         }
     }"
     x-init="initCarousel()"
-    @mouseenter="pause()"
-    @mouseleave="resume()"
     @focusin="pause()"
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
@@ -164,7 +162,7 @@
             <div class="max-w-[640px] lg:max-w-[600px] xl:max-w-[680px]">
                 <template x-for="(slide, index) in slides" :key="`content-${index}`">
                     <div x-show="index === current"
-                        :class="prefersReducedMotion ? '' : 'hero-content-enter'"
+                        :class="!prefersReducedMotion && index === current ? 'hero-content-enter' : ''"
                         class="w-full">
                         <p class="text-titan-red font-black text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.35em] mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                             <span class="inline-block w-6 sm:w-8 h-px bg-titan-red"></span>

@@ -176,14 +176,14 @@
         #site-footer .ft-inner {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 3.5rem 1.5rem 2rem;
+            padding: 2.5rem 1.5rem 1.25rem;
         }
 
         /* ── Grid ── */
         #site-footer .ft-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2.5rem;
+            gap: 2rem;
         }
         @media (min-width: 640px) {
             #site-footer .ft-grid {
@@ -193,7 +193,7 @@
         @media (min-width: 1024px) {
             #site-footer .ft-grid {
                 grid-template-columns: 2fr 1fr 1fr 1.4fr;
-                gap: 3rem;
+                gap: 2rem;
             }
         }
 
@@ -240,8 +240,8 @@
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: rgba(255,255,255,0.9);
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.75rem;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
@@ -252,7 +252,7 @@
             margin: 0;
         }
         #site-footer .ft-links li {
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.5rem;
         }
         #site-footer .ft-links a {
             font-size: 0.8125rem;
@@ -269,7 +269,7 @@
         #site-footer .ft-contact {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 0.65rem;
         }
         #site-footer .ft-contact a {
             display: flex;
@@ -291,8 +291,8 @@
 
         /* ── Working hours ── */
         #site-footer .ft-hours {
-            margin-top: 1.25rem;
-            padding: 0.85rem 1rem;
+            margin-top: 0.85rem;
+            padding: 0.65rem 0.8rem;
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 8px;
@@ -319,8 +319,8 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            margin-top: 2.5rem;
-            padding: 1.75rem 0;
+            margin-top: 1.75rem;
+            padding: 1.25rem 0;
             border-top: 1px solid rgba(255,255,255,0.07);
             border-bottom: 1px solid rgba(255,255,255,0.07);
         }
@@ -352,7 +352,7 @@
             flex-direction: column;
             gap: 0.75rem;
             align-items: center;
-            padding-top: 1.5rem;
+            padding-top: 1.15rem;
             margin-top: 0;
             font-size: 0.75rem;
             color: rgba(255,255,255,0.3);

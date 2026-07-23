@@ -47,10 +47,10 @@
                 </h2>
             </div>
             <a href="/projects"
-                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider text-[10px] sm:text-xs whitespace-nowrap group transition-colors"
+                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider text-[10px] sm:text-xs whitespace-nowrap group transition-colors duration-300 ease-out"
                 style="color: var(--primary-color, #E31E24);">
                 {{ __('View All Projects') }}
-                <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+                <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out motion-reduce:transform-none" />
             </a>
         </div>
 
@@ -64,7 +64,7 @@
                     <a href="/projects/{{ $projects[0]['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded-2xl h-full min-h-[400px] lg:min-h-full" style="background: #0B2B5C;">
                             <img src="{{ $projects[0]['image'] }}" alt="{{ $projects[0]['title'] }}"
-                                class="object-cover w-full h-full absolute inset-0 group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                class="object-cover w-full h-full absolute inset-0 group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
                             <div class="absolute top-5 left-5 z-20">
                                 <span class="text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md" style="background: var(--primary-color, #E31E24);">
@@ -86,7 +86,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="absolute top-5 right-5 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0 z-20">
+                            <div class="absolute top-5 right-5 w-10 h-10 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-[opacity,transform] duration-500 ease-out transform translate-x-4 group-hover:translate-x-0 motion-reduce:transform-none z-20">
                                 <x-lucide-arrow-right class="w-4 h-4 text-gray-900" />
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded-2xl h-full min-h-[240px]" style="background: #0B2B5C;">
                             <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
-                                class="object-cover w-full h-full absolute inset-0 group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                class="object-cover w-full h-full absolute inset-0 group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent z-10"></div>
                             <div class="absolute top-4 left-4 z-20">
                                 <span class="text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md" style="background: var(--primary-color, #E31E24);">
@@ -125,7 +125,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="absolute top-4 right-4 w-9 h-9 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-3 group-hover:translate-x-0 z-20">
+                            <div class="absolute top-4 right-4 w-9 h-9 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-[opacity,transform] duration-500 ease-out transform translate-x-3 group-hover:translate-x-0 motion-reduce:transform-none z-20">
                                 <x-lucide-arrow-right class="w-3.5 h-3.5 text-gray-900" />
                             </div>
                         </div>
