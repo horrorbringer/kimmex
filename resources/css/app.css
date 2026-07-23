@@ -1228,6 +1228,10 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   box-shadow: 0 26px 42px -24px rgba(11, 43, 92, 0.5);
 }
 
+.home-milestone-stop:hover .home-milestone-pin {
+  filter: brightness(1.12) saturate(1.2) drop-shadow(0 11px 10px rgba(11, 43, 92, 0.3));
+}
+
 .home-milestone-road-flow {
   stroke-dasharray: 10 36;
   animation: home-milestone-road-flow 1.7s linear infinite;

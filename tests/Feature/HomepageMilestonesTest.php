@@ -31,6 +31,11 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString("fill=\"{{ \$color['hex'] }}\"", $milestones);
         $this->assertStringContainsString('tilt($event)', $milestones);
         $this->assertStringContainsString('home-milestone-card', $milestones);
+        $this->assertStringContainsString('lg:min-h-[112px]', $milestones);
+        $this->assertStringContainsString('line-clamp-2', $milestones);
+        $this->assertStringContainsString('background-color: {{ $color[\'hex\'] }}', $milestones);
+        $this->assertStringContainsString('home-milestone-pin-wrap absolute left-1/2 top-1/2 z-0', $milestones);
+        $this->assertStringContainsString('home-milestone-card relative z-10', $milestones);
         $this->assertStringNotContainsString("shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'", $milestones);
         $this->assertStringContainsString("url('/about#milestones')", $milestones);
         $this->assertStringContainsString('id="milestones"', $aboutPage);

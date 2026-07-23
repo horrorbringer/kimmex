@@ -11,7 +11,7 @@
                 return [
                     'year' => $milestone->year,
                     'title' => $milestone->getTranslation('title', $locale, false) ?: $milestone->getTranslation('title', 'en'),
-                    'description' => \Illuminate\Support\Str::limit(trim(strip_tags($milestone->getTranslation('description', $locale, false) ?: $milestone->getTranslation('description', 'en'))), 88),
+                    'description' => \Illuminate\Support\Str::limit(trim(strip_tags($milestone->getTranslation('description', $locale, false) ?: $milestone->getTranslation('description', 'en'))), 64),
                     'image' => \App\Support\PublicStorage::urlIfExists($milestone->image, $fallbackImage),
                 ];
             })
@@ -119,14 +119,15 @@
                             @mouseleave="resetTilt($event)"
                             :class="hydrated && !shown ? 'milestone-route-waiting' : shown ? 'milestone-route-visible' : ''"
                             class="home-milestone-stop relative lg:grid lg:min-h-[168px] lg:grid-cols-[1fr_180px_1fr] lg:items-center">
-                            <span class="home-milestone-pin-wrap absolute left-1/2 top-1/2 z-10 hidden h-16 w-16 lg:block" style="--road-pin-x: {{ $pinOffset }}px">
+                            <span class="home-milestone-pin-wrap absolute left-1/2 top-1/2 z-11 hidden h-16 w-16 lg:block" style="--road-pin-x: {{ $pinOffset }}px">
                                 <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
                                 <svg viewBox="0 0 48 60" class="home-milestone-pin h-full w-full drop-shadow-[0_8px_8px_rgba(11,43,92,0.25)]" aria-hidden="true">
                                     <path d="M24 2C11.85 2 2 11.85 2 24c0 16.5 18.02 31.96 21.1 34.44a1.45 1.45 0 0 0 1.8 0C27.98 55.96 46 40.5 46 24 46 11.85 36.15 2 24 2Z" fill="{{ $color['hex'] }}" />
                                     <circle cx="24" cy="24" r="8" fill="white" />
                                 </svg>
                             </span>
-                            <div class="home-milestone-card rounded-2xl border bg-white p-4 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:flex lg:items-center lg:gap-4 lg:bg-white/95 {{ $side }}">
+                            <div class="home-milestone-card relative z-1 overflow-hidden rounded-2xl border bg-white p-4 pl-5 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:min-h-[112px] lg:flex lg:items-center lg:gap-4 lg:bg-white/95 {{ $side }}">
+                                <span class="absolute inset-y-0 left-0 w-1" style="background-color: {{ $color['hex'] }}"></span>
                                 @if ($milestone['image'])
                                     <div class="mb-4 aspect-[16/7] overflow-hidden rounded-xl bg-titan-navy/5 lg:mb-0 lg:h-20 lg:w-28 lg:shrink-0 lg:aspect-auto">
                                         <img src="{{ $milestone['image'] }}" alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
@@ -135,7 +136,7 @@
                                 <div>
                                     <p class="font-heading text-xl font-black tracking-tight {{ $color['text'] }}">{{ $milestone['year'] }}</p>
                                     <h3 class="mt-1 font-heading text-lg font-black tracking-tight text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-xl' : '' }}">{{ $milestone['title'] }}</h3>
-                                    <p class="mt-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
+                                    <p class="mt-2 line-clamp-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
                                 </div>
                             </div>
                         </article>
