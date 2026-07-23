@@ -13,6 +13,8 @@ class ServiceDetailsDesignTest extends TestCase
 
         $this->assertStringContainsString('max-w-[1280px]', $template);
         $this->assertStringContainsString('rounded-2xl border border-slate-200 bg-white p-6', $template);
+        $this->assertStringContainsString('mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 text-center', $template);
+        $this->assertStringContainsString('mx-auto max-w-3xl text-center text-base', $template);
         $this->assertStringContainsString('grid gap-4 sm:grid-cols-2 lg:grid-cols-3', $template);
         $this->assertStringContainsString('focus-visible:ring-2 focus-visible:ring-titan-red', $template);
         $this->assertStringContainsString('bg-titan-navy p-8', $template);

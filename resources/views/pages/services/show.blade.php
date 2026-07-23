@@ -220,7 +220,7 @@
 
         <!-- === 2. SERVICE OVERVIEW === -->
         <section class="mx-auto max-w-[1280px] px-5 py-16 sm:px-6 md:py-24">
-            <div class="max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-45px_rgba(15,23,42,0.45)] md:p-10 lg:p-12">
+            <div class="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-[0_20px_60px_-45px_rgba(15,23,42,0.45)] md:p-10 lg:p-12">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
@@ -232,7 +232,7 @@
                         </h2>
                         @php($serviceDescription = $service['description'][$lang] ?? $service['description']['en'] ?? '')
                         <div
-                            class="service-rich-content prose prose-slate max-w-none text-base leading-8 text-slate-700 md:text-lg md:leading-9">
+                            class="service-rich-content prose prose-slate mx-auto max-w-3xl text-center text-base leading-8 text-slate-700 md:text-lg md:leading-9">
                             @if (str_contains($serviceDescription, '<'))
                                 {!! str($serviceDescription)->sanitizeHtml() !!}
                             @else
@@ -242,14 +242,14 @@
                     </div>
 
                     @if (!empty($service['idealFor'][$lang] ?? ''))
-                        <div class="bg-gray-50 p-5 md:p-6 rounded border-l-4 border-titan-red shadow-sm">
-                            <h3 class="text-xl font-bold text-titan-navy mb-3 flex items-center gap-3">
+                        <div class="mx-auto mt-10 max-w-2xl rounded border-t-4 border-titan-red bg-gray-50 p-5 shadow-sm md:p-6">
+                            <h3 class="mb-3 flex items-center justify-center gap-3 text-xl font-bold text-titan-navy">
                                 <div class="p-2 bg-titan-red/10 rounded-lg">
                                     <x-lucide-users class="w-5 h-5 text-titan-red" />
                                 </div>
                                 {{ $lang === 'kh' ? 'ស័ក្តិសមសម្រាប់' : 'Ideal For' }}
                             </h3>
-                            <div class="text-titan-navy/90 leading-relaxed prose prose-sm prose-slate max-w-none">
+                            <div class="prose prose-sm prose-slate mx-auto max-w-none text-center leading-relaxed text-titan-navy/90">
                                 {{ $service['idealFor'][$lang] }}
                             </div>
                         </div>
