@@ -83,6 +83,7 @@ class CacheBusterObserver
             ],
             Milestone::class => [
                 'about_milestones_data_en', 'about_milestones_data_km',
+                'home_milestones_en', 'home_milestones_km',
                 'about_page_en', 'about_page_km',
             ],
             OrgUnit::class => [

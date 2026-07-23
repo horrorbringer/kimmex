@@ -41,6 +41,9 @@ class Milestone extends Model
         Cache::forget('about_milestones_data_en');
         Cache::forget('about_milestones_data_kh');
         Cache::forget('about_milestones_data_km');
+        Cache::forget('home_milestones_en');
+        Cache::forget('home_milestones_kh');
+        Cache::forget('home_milestones_km');
         Cache::forget('about_page_en');
         Cache::forget('about_page_kh');
         Cache::forget('about_page_km');

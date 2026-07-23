@@ -27,73 +27,62 @@
     }
 @endphp
 
-<section class="py-12 md:py-16 bg-gray-50">
+<section class="bg-white py-16 md:py-24">
     <div class="max-w-[1280px] mx-auto px-6">
-
-        {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-14 transition-all duration-700 ease-out motion-reduce:transition-none">
-            <div class="flex flex-nowrap items-center gap-3 md:gap-5 min-w-0">
-                <div class="flex items-center gap-3">
-                    <div class="hidden sm:block w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                    <span class="font-bold uppercase tracking-[0.12em] sm:tracking-[0.2em] text-[10px] sm:text-xs whitespace-nowrap" style="color: var(--primary-color, #E31E24);">{{ __('Our Services') }}</span>
+            class="mb-12 grid gap-6 border-b border-titan-navy/10 pb-10 transition-all duration-700 ease-out motion-reduce:transition-none lg:mb-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
+            <div>
+                <div class="mb-5 flex items-center gap-3">
+                    <span class="h-px w-10 bg-titan-red"></span>
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">{{ __('Our Services') }}</span>
                 </div>
-                <h2 class="text-xl sm:text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight whitespace-nowrap">
-                    {{ __('What We Do Best') }}
-                </h2>
+                <h2 class="font-heading text-3xl font-black tracking-tight text-titan-navy md:text-5xl">{{ __('What We Do Best') }}</h2>
             </div>
-            <a href="/services"
-                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider text-[10px] sm:text-xs whitespace-nowrap group transition-colors"
-                style="color: var(--primary-color, #E31E24);">
-                {{ __('All Services') }}
-                <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
-            </a>
+            <div class="lg:pb-1">
+                <p class="mb-5 max-w-lg text-base leading-relaxed text-titan-navy/60">{{ __('Integrated expertise for every stage of your project, from first concept to final delivery.') }}</p>
+                <a href="/services" class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-titan-red">
+                    {{ __('Explore all services') }}
+                    <x-lucide-arrow-right class="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transform-none" />
+                </a>
+            </div>
         </div>
 
-        {{-- Services Grid --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-5">
             @foreach($services as $index => $s)
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                    style="transition-delay: {{ $index * 80 }}ms"
-                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-700">
+                    style="transition-delay: {{ $index * 100 }}ms"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    class="transition-all duration-700 ease-out motion-reduce:transition-none">
                     <a href="/services/{{ $s['slug'] }}"
-                        class="group block h-full bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow duration-500 ease-out">
-                        <div class="p-7 md:p-9">
-                            {{-- Icon + Number --}}
-                            <div class="flex items-center justify-between mb-6">
-                                <div class="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:shadow-md"
-                                     style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent);">
-                                    <x-dynamic-component :component="$s['icon']" class="w-5 h-5 transition-colors" style="color: var(--primary-color, #E31E24);" stroke-width="1.8" />
-                                </div>
-                                <span class="text-4xl font-black text-gray-100 group-hover:text-gray-200 transition-colors select-none">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                        class="group relative block h-full overflow-hidden rounded-2xl border border-titan-navy/10 bg-[#F7F9FC] p-6 transition-[border-color,box-shadow] duration-500 ease-out hover:border-titan-red/30 hover:shadow-[0_18px_45px_-22px_rgba(11,43,92,0.28)] md:p-8">
+                        <span class="absolute left-0 top-0 h-full w-1 bg-titan-red/0 transition-colors duration-300 group-hover:bg-titan-red"></span>
+                        <div class="flex items-start justify-between gap-5">
+                            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-titan-red shadow-sm ring-1 ring-titan-navy/5 transition-[background-color,color,box-shadow] duration-300 group-hover:bg-titan-red group-hover:text-white group-hover:shadow-[0_10px_22px_-12px_rgba(227,30,36,0.75)]">
+                                <x-dynamic-component :component="$s['icon']" class="h-6 w-6" stroke-width="1.8" />
                             </div>
+                            <span class="font-heading text-5xl font-black leading-none text-titan-navy/10">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                        </div>
 
-                            {{-- Title --}}
-                            <h3 class="text-xl font-heading font-black text-gray-900 group-hover:text-titan-red transition-colors mb-3 {{ app()->getLocale() === 'km' ? 'font-khmer' : 'tracking-tight' }}">
+                        <div class="mt-8">
+                            <h3 class="mb-3 font-heading text-2xl font-black tracking-tight text-titan-navy transition-colors duration-300 group-hover:text-titan-red {{ app()->getLocale() === 'km' ? 'font-khmer text-3xl' : '' }}">
                                 {{ $s['title'] }}
                             </h3>
-
-                            {{-- Description --}}
-                            <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                            <p class="mb-7 text-sm leading-relaxed text-titan-navy/60">
                                 {{ $s['desc'] }}
                             </p>
 
-                            {{-- Features --}}
-                            <div class="flex flex-wrap gap-2 mb-6">
+                            <div class="mb-7 flex flex-wrap gap-2 border-t border-titan-navy/8 pt-5">
                                 @foreach($s['features'] as $f)
                                     @if(!empty($f))
-                                    <span class="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-gray-50 text-gray-500 border border-gray-100 group-hover:border-gray-200 transition-colors">{{ $f }}</span>
+                                        <span class="rounded-full bg-white px-3 py-1 text-[11px] font-semibold text-titan-navy/55 ring-1 ring-titan-navy/8">{{ $f }}</span>
                                     @endif
                                 @endforeach
                             </div>
 
-                            {{-- Arrow link --}}
-                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 group-hover:gap-3"
-                                 style="color: var(--primary-color, #E31E24);">
+                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-titan-red">
                                 {{ __('Learn More') }}
-                                <x-lucide-arrow-right class="w-3.5 h-3.5" />
+                                <x-lucide-arrow-right class="h-3.5 w-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transform-none" />
                             </div>
                         </div>
                     </a>

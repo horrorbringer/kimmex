@@ -20,7 +20,7 @@ class HomepageHoverInteractionTest extends TestCase
         $this->assertSame(2, substr_count($projectsTemplate, 'group-hover:scale-[1.03] transition-transform duration-700 ease-out'));
         $this->assertStringContainsString('transition-shadow duration-500 ease-out', $newsTemplate);
         $this->assertStringContainsString('group-hover:translate-x-1 motion-reduce:transform-none', $newsTemplate);
-        $this->assertStringContainsString('transition-shadow duration-500 ease-out', $servicesTemplate);
+        $this->assertStringContainsString('transition-[border-color,box-shadow] duration-500 ease-out', $servicesTemplate);
         $this->assertStringNotContainsString('hover:-translate', $projectsTemplate.$newsTemplate.$servicesTemplate.$testimonialsTemplate.$ctaTemplate);
         $this->assertStringContainsString('transition-all duration-700 ease-out motion-reduce:transition-none', $projectsTemplate);
     }

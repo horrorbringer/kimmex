@@ -418,7 +418,7 @@
         </style>
 
         <!-- === MILESTONES === -->
-        <section x-data="{ timelineVisible: false }" x-intersect.once="timelineVisible = true"
+        <section id="milestones" x-data="{ timelineVisible: false }" x-intersect.once="timelineVisible = true"
             class="py-20 md:py-28 px-6 bg-gray-50 border-y border-gray-100 overflow-hidden">
             <div class="max-w-[1200px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
