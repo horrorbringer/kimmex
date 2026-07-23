@@ -157,7 +157,7 @@
                     <div class="relative group/nav">
                         <a href="/about" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('About Us') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('About Us') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
                                 class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
@@ -214,7 +214,7 @@
                     <div class="relative group/nav">
                         <a href="/services" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Services') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Services') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
                                 class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
@@ -240,7 +240,7 @@
                     <div class="relative group/nav">
                         <a href="/projects" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Projects') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Projects') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
                                 class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
@@ -323,7 +323,7 @@
                     <div class="relative group/nav">
                         <a href="/news" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('News') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('News') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
                                 class="w-3 h-3 transition-transform duration-300 group-hover/nav:-rotate-180 group-hover/nav:text-titan-red" />
                             <span
@@ -369,7 +369,7 @@
                     <div class="relative group/nav">
                         <a href="/careers" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Careers') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Careers') }}</span>
                             <span
                                 class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
@@ -379,7 +379,7 @@
                     <div class="relative group/nav">
                         <a href="/contact" class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
-                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-bold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Contact') }}</span>
+                                class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Contact') }}</span>
                             <span
                                 class="absolute bottom-0 left-5 right-5 h-[3px] bg-titan-red transition-all duration-300 opacity-0 group-hover/nav:opacity-100"></span>
                         </a>
@@ -436,7 +436,7 @@
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 0 ? null : 0">
                         <a href="/about"
-                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('About Us') }}</a>
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('About Us') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 0 ? 'rotate-180' : ''" />
                     </div>
@@ -464,7 +464,7 @@
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 1 ? null : 1">
                         <a href="/services"
-                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Services') }}</a>
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Services') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 1 ? 'rotate-180' : ''" />
                     </div>
@@ -484,7 +484,7 @@
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 2 ? null : 2">
                         <a href="/projects"
-                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Projects') }}</a>
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Projects') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 2 ? 'rotate-180' : ''" />
                     </div>
@@ -523,7 +523,7 @@
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 3 ? null : 3">
                         <a href="/news"
-                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('News') }}</a>
+                            class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('News') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 3 ? 'rotate-180' : ''" />
                     </div>
@@ -545,11 +545,11 @@
 
                 <!-- Careers -->
                 <a href="/careers"
-                    class="block px-4 py-3 rounded hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Careers') }}</a>
+                    class="block px-4 py-3 rounded hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Careers') }}</a>
 
                 <!-- Contact -->
                 <a href="/contact"
-                    class="block px-4 py-3 rounded hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-bold' }} text-titan-navy">{{ __('Contact') }}</a>
+                    class="block px-4 py-3 rounded hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Contact') }}</a>
             </div>
 
             <!-- Mobile Contact Info -->
