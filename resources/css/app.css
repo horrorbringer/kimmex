@@ -652,10 +652,10 @@ a.link:hover,
    ───────────────────────────────────────────────────────────────── */
 @keyframes hero-kenburns {
   0% {
-    transform: scale(1.02) translate3d(-0.4%, 0.3%, 0);
+    transform: scale(1.075) translate3d(-0.4%, 0.3%, 0);
   }
   100% {
-    transform: scale(1.075) translate3d(0.4%, -0.3%, 0);
+    transform: scale(1.02) translate3d(0.4%, -0.3%, 0);
   }
 }
 

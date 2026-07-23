@@ -24,7 +24,8 @@ class HomeHeroAnimationTest extends TestCase
         $this->assertSame(4, substr_count($styles, '700ms cubic-bezier(0.22, 1, 0.36, 1) both'));
         $this->assertStringContainsString('transform: translateX(100%)', $styles);
         $this->assertStringContainsString('transform: translateX(-100%)', $styles);
-        $this->assertStringContainsString('scale(1.075) translate3d(0.4%, -0.3%, 0)', $styles);
+        $this->assertStringContainsString('scale(1.075) translate3d(-0.4%, 0.3%, 0)', $styles);
+        $this->assertStringContainsString('scale(1.02) translate3d(0.4%, -0.3%, 0)', $styles);
         $this->assertStringContainsString('hero-content-enter > :nth-child(4)', $styles);
         $this->assertStringContainsString('transform: translateY(18px)', $styles);
         $this->assertStringContainsString('.hero-content-enter > * {', $styles);
