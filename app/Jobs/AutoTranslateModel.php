@@ -54,7 +54,9 @@ class AutoTranslateModel implements ShouldQueue
                 : ($khmerIsEmpty || $englishChanged);
 
             if ($shouldTranslate) {
-                $translated = $translator->translate($currentEn, 'km');
+                $translated = is_array($currentEn)
+                    ? $translator->translateArray($currentEn, [], 'km')
+                    : $translator->translate($currentEn, 'km');
                 if ($translated) {
                     $model->setTranslation($field, 'km', $translated);
                     $changed = true;

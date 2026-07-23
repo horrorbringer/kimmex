@@ -11,7 +11,7 @@
 
                 $feature = $f['name'] ?? $f[$lang] ?? $f['en'] ?? '';
 
-                return is_array($feature) ? ($feature[$lang] ?? $feature['en'] ?? '') : $feature;
+                return is_array($feature) ? ($feature[app()->getLocale()] ?? $feature['en'] ?? '') : $feature;
             }, $features);
             return [
                 'title' => $s->getTranslation('title', app()->getLocale()),

@@ -231,9 +231,14 @@
                         <h2 class="text-xl md:text-2xl font-bold text-titan-navy mb-5">
                             {{ $lang === 'kh' ? 'ការកំណត់ឡើងវិញនូវ' : 'Redefining' }} {{ $service['title'][$lang] }}
                         </h2>
+                        @php($serviceDescription = $service['description'][$lang] ?? $service['description']['en'] ?? '')
                         <div
-                            class="text-sm md:text-base text-titan-navy/90 leading-relaxed mb-8 prose prose-slate max-w-none">
-                            {!! $service['description'][$lang] ?? $service['description']['en'] !!}
+                            class="service-rich-content prose prose-slate max-w-none text-sm md:text-base text-titan-navy/90 leading-relaxed mb-8">
+                            @if (str_contains($serviceDescription, '<'))
+                                {!! str($serviceDescription)->sanitizeHtml() !!}
+                            @else
+                                {!! nl2br(e($serviceDescription)) !!}
+                            @endif
                         </div>
                     </div>
 

@@ -14,7 +14,7 @@ class Service extends Model
 {
     use DeletesPublicUploads, HasTranslations, HasUuids, LogsActivity;
 
-    public $translatable = ['title', 'summary', 'description', 'metaTitle', 'metaDescription'];
+    public $translatable = ['title', 'summary', 'description', 'features', 'metaTitle', 'metaDescription'];
 
     public function getActivitylogOptions(): LogOptions
     {

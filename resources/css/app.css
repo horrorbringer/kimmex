@@ -920,6 +920,38 @@ a.link:hover,
 .job-rich-content td   { border: 1px solid rgb(226 232 240); padding: 0.5rem 0.7rem; text-align: left; vertical-align: top; }
 .job-rich-content th   { background: rgb(248 250 252); color: rgb(11 43 92); font-weight: 700; }
 
+/* ─── Service detail rich content ─── */
+.service-rich-content > *:first-child { margin-top: 0 !important; }
+.service-rich-content > *:last-child { margin-bottom: 0 !important; }
+.service-rich-content :where(h1, h2, h3, h4) {
+  color: rgb(11 43 92);
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 1.5rem 0 0.6rem;
+}
+.service-rich-content h2 { font-size: 1.35rem !important; }
+.service-rich-content h3 { font-size: 1.15rem !important; }
+.service-rich-content p { margin-bottom: 1rem; }
+.service-rich-content :where(ul, ol) { margin: 1rem 0; padding-left: 1.4rem; }
+.service-rich-content ul { list-style: disc !important; }
+.service-rich-content ol { list-style: decimal !important; }
+.service-rich-content li { display: list-item !important; margin: 0.35rem 0; }
+.service-rich-content strong { color: rgb(11 43 92); font-weight: 700; }
+.service-rich-content a { color: rgb(220 38 38); text-decoration: underline; text-underline-offset: 0.15em; }
+.service-rich-content blockquote {
+  border-left: 3px solid rgb(220 38 38);
+  background: rgb(248 250 252);
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: rgb(51 65 85);
+  margin: 1.25rem 0;
+  padding: 0.85rem 1rem;
+}
+.service-rich-content img { border-radius: 0.75rem; height: auto; margin: 1.25rem 0; max-width: 100%; }
+.service-rich-content table { display: block; margin: 1.25rem 0; max-width: 100%; overflow-x: auto; width: 100%; }
+.service-rich-content th,
+.service-rich-content td { border: 1px solid rgb(226 232 240); padding: 0.65rem 0.8rem; text-align: left; vertical-align: top; }
+.service-rich-content th { background: rgb(248 250 252); color: rgb(11 43 92); font-weight: 700; }
+
 /* ─── Project detail rich content ─── */
 .project-rich-content :where(ul, ol) { margin: 0.75rem 0; padding-left: 1.4rem; }
 .project-rich-content ul { list-style: disc !important; }

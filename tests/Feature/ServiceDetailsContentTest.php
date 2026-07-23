@@ -21,7 +21,7 @@ class ServiceDetailsContentTest extends TestCase
             'title' => ['en' => 'Design and Build'],
             'slug' => 'design-and-build',
             'summary' => ['en' => 'A concise service summary.'],
-            'description' => ['en' => '<p>A detailed <strong>service description</strong>.</p>'],
+            'description' => ['en' => '<h2>Planning</h2><p>A detailed <strong>service description</strong>.</p><ul><li>Site assessment</li></ul><script>alert("unsafe")</script>'],
             'isActive' => true,
         ]);
 
@@ -29,6 +29,8 @@ class ServiceDetailsContentTest extends TestCase
 
         $response->assertOk()
             ->assertSeeText('A concise service summary.')
+            ->assertSee('<h2>Planning</h2>', false)
             ->assertSee('<strong>service description</strong>', false);
+        $response->assertDontSee('alert("unsafe")', false);
     }
 }
