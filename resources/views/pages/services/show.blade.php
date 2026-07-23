@@ -221,7 +221,7 @@
 
         <!-- === 2. SERVICE OVERVIEW === -->
         <section class="py-10 md:py-14 px-4 md:px-6 max-w-[1400px] mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 items-center">
+            <div class="max-w-4xl">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000">
@@ -250,21 +250,6 @@
                             </div>
                         </div>
                     @endif
-                </div>
-                <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 delay-200">
-                    <div class="relative group">
-
-                        <div class="aspect-[4/3] rounded overflow-hidden shadow-lg md:shadow-2xl relative z-10 bg-titan-navy">
-                            <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                loading="lazy" decoding="async" />
-                            <div
-                                class="absolute inset-0 bg-titan-navy/10 group-hover:bg-transparent transition-colors duration-500">
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
