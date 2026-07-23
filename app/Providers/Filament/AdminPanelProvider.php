@@ -5,10 +5,8 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\ManageSettings;
 use App\Filament\Resources\Subscribers\SubscriberResource;
-use App\Filament\Widgets\InquiriesChartWidget;
-use App\Filament\Widgets\JobApplicationsChartWidget;
-use App\Filament\Widgets\LatestInquiriesWidget;
-use App\Filament\Widgets\LatestJobApplicationsWidget;
+use App\Filament\Widgets\QuickActionsWidget;
+use App\Filament\Widgets\RecentActivityFeedWidget;
 use App\Filament\Widgets\StatsOverview;
 use App\Http\Middleware\SetLocale;
 use App\Models\SystemSetting;
@@ -96,13 +94,10 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
                 ManageSettings::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 StatsOverview::class,
-                LatestInquiriesWidget::class,
-                LatestJobApplicationsWidget::class,
-                InquiriesChartWidget::class,
-                JobApplicationsChartWidget::class,
+                QuickActionsWidget::class,
+                RecentActivityFeedWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

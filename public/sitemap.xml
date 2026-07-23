@@ -22,6 +22,7 @@
     </url>
     <url>
         <loc>http://kimmex.test/projects</loc>
+        <lastmod>2026-07-23T09:00:00+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -32,19 +33,20 @@
     </url>
     <url>
         <loc>http://kimmex.test/careers</loc>
+        <lastmod>2026-07-23T09:00:00+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://kimmex.test/documents</loc>
-        <lastmod>2026-07-22T15:12:54+07:00</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>http://kimmex.test/documents/annual-report</loc>
-        <lastmod>2026-07-22T15:12:54+07:00</lastmod>
+        <loc>http://kimmex.test/projects/project</loc>
+        <lastmod>2026-07-23T09:00:00+07:00</lastmod>
         <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>http://kimmex.test/careers/engineer</loc>
+        <lastmod>2026-07-23T09:00:00+07:00</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>
 </urlset>

@@ -12,84 +12,90 @@ use App\Models\Subscriber;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class StatsOverview extends BaseWidget
 {
     protected static ?int $sort = 1;
 
+    protected ?string $pollingInterval = '60s';
+
     protected function getStats(): array
     {
-        // Sparkline data: last 7 days
-        $inquirySparkline = $this->last7Days(Inquiry::class);
-        $appSparkline = $this->last7Days(JobApplication::class);
-        $viewSparkline = $this->last7DaysViews();
+        $stats = Cache::remember('admin_dashboard_stats', now()->addMinute(), function (): array {
+            $today = now()->startOfDay();
+            $monthStart = now()->startOfMonth();
 
-        // Key numbers
-        $unreadInquiries = Inquiry::where('is_read', false)->count();
-        $inquiriesThisMonth = Inquiry::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)->count();
+            $inquirySparkline = $this->dailyCounts(Inquiry::class, 'created_at', $today);
+            $appSparkline = $this->dailyCounts(JobApplication::class, 'created_at', $today);
+            $viewSparkline = $this->dailyCounts(PageView::class, 'visited_at', $today);
 
-        $appsThisMonth = JobApplication::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)->count();
+            $projectCounts = Project::query()
+                ->selectRaw("SUM(status = 'ONGOING') as active, SUM(status = 'COMPLETED') as completed")
+                ->first();
 
-        $activeProjects = Project::where('status', 'ONGOING')->count();
-        $openJobs = JobPosting::where('status', JobPostingStatus::OPEN)->count();
-        $subscribers = Subscriber::active()->count();
-        $viewsToday = PageView::where('visited_at', '>=', Carbon::today())->count();
+            return [
+                'inquiry_sparkline' => $inquirySparkline,
+                'application_sparkline' => $appSparkline,
+                'view_sparkline' => $viewSparkline,
+                'unread_inquiries' => Inquiry::where('is_read', false)->count(),
+                'inquiries_this_month' => Inquiry::whereBetween('created_at', [$monthStart, $today->copy()->addDay()])->count(),
+                'applications_this_month' => JobApplication::whereBetween('created_at', [$monthStart, $today->copy()->addDay()])->count(),
+                'active_projects' => (int) ($projectCounts->active ?? 0),
+                'completed_projects' => (int) ($projectCounts->completed ?? 0),
+                'open_jobs' => JobPosting::where('status', JobPostingStatus::OPEN)->count(),
+                'subscribers' => Subscriber::active()->count(),
+                'views_today' => $viewSparkline[array_key_last($viewSparkline)],
+            ];
+        });
 
         return [
-            Stat::make(__('Inquiries'), $inquiriesThisMonth)
-                ->description($unreadInquiries > 0 ? $unreadInquiries.' '.__('unread') : __('All read ✓'))
-                ->descriptionIcon($unreadInquiries > 0 ? 'heroicon-m-envelope' : 'heroicon-m-check-circle')
-                ->color($unreadInquiries > 0 ? 'warning' : 'success')
-                ->chart($inquirySparkline),
+            Stat::make(__('Inquiries'), $stats['inquiries_this_month'])
+                ->description($stats['unread_inquiries'] > 0 ? $stats['unread_inquiries'].' '.__('unread') : __('All read ✓'))
+                ->descriptionIcon($stats['unread_inquiries'] > 0 ? 'heroicon-m-envelope' : 'heroicon-m-check-circle')
+                ->color($stats['unread_inquiries'] > 0 ? 'warning' : 'success')
+                ->chart($stats['inquiry_sparkline']),
 
-            Stat::make(__('Applications'), $appsThisMonth)
+            Stat::make(__('Applications'), $stats['applications_this_month'])
                 ->description(__('This month'))
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('primary')
-                ->chart($appSparkline),
+                ->chart($stats['application_sparkline']),
 
-            Stat::make(__('Page Views'), $viewsToday)
+            Stat::make(__('Page Views'), $stats['views_today'])
                 ->description(__('Today'))
                 ->descriptionIcon('heroicon-m-eye')
                 ->color('info')
-                ->chart($viewSparkline),
+                ->chart($stats['view_sparkline']),
 
-            Stat::make(__('Active Projects'), $activeProjects)
-                ->description(Project::where('status', 'COMPLETED')->count().' '.__('completed'))
+            Stat::make(__('Active Projects'), $stats['active_projects'])
+                ->description($stats['completed_projects'].' '.__('completed'))
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('success'),
 
-            Stat::make(__('Open Jobs'), $openJobs)
+            Stat::make(__('Open Jobs'), $stats['open_jobs'])
                 ->description(__('Accepting applications'))
                 ->descriptionIcon('heroicon-m-briefcase')
                 ->color('gray'),
 
-            Stat::make(__('Subscribers'), $subscribers)
+            Stat::make(__('Subscribers'), $stats['subscribers'])
                 ->description(__('Newsletter'))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('gray'),
         ];
     }
 
-    private function last7Days(string $model): array
+    private function dailyCounts(string $model, string $column, Carbon $today): array
     {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = $model::whereDate('created_at', Carbon::now()->subDays($i)->toDateString())->count();
-        }
+        $start = $today->copy()->subDays(6);
+        $counts = $model::query()
+            ->whereBetween($column, [$start, $today->copy()->addDay()])
+            ->selectRaw("DATE({$column}) as date, COUNT(*) as aggregate")
+            ->groupBy('date')
+            ->pluck('aggregate', 'date');
 
-        return $data;
-    }
-
-    private function last7DaysViews(): array
-    {
-        $data = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $data[] = PageView::whereDate('visited_at', Carbon::now()->subDays($i)->toDateString())->count();
-        }
-
-        return $data;
+        return collect(range(6, 0))
+            ->map(fn (int $daysAgo): int => (int) ($counts[$today->copy()->subDays($daysAgo)->toDateString()] ?? 0))
+            ->all();
     }
 }
