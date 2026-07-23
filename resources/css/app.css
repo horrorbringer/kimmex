@@ -1153,3 +1153,99 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
     animation: none;
   }
 }
+
+/* ─── Homepage milestone roadmap depth ─── */
+.home-milestone-route {
+  perspective: 1400px;
+  perspective-origin: center top;
+}
+
+.home-milestone-route > svg {
+  filter: drop-shadow(0 14px 11px rgba(11, 43, 92, 0.16));
+  transform: rotateX(7deg) translateZ(-28px);
+  transform-origin: center;
+}
+
+.home-milestone-road-path {
+  animation: home-milestone-road-glow 3.6s ease-in-out infinite alternate;
+}
+
+.home-milestone-stop {
+  transform-style: preserve-3d;
+}
+
+.home-milestone-pin-wrap {
+  transform: translate(calc(-50% + var(--road-pin-x)), -50%);
+}
+
+.home-milestone-card {
+  transform: translateZ(18px) rotateX(var(--milestone-rotate-x, 0deg)) rotateY(var(--milestone-rotate-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease-out, box-shadow 250ms ease-out, border-color 250ms ease-out;
+  will-change: transform;
+}
+
+.home-milestone-stop:hover .home-milestone-card {
+  box-shadow: 0 26px 42px -24px rgba(11, 43, 92, 0.5);
+}
+
+.home-milestone-road-flow {
+  stroke-dasharray: 10 36;
+  animation: home-milestone-road-flow 1.7s linear infinite;
+}
+
+.home-milestone-pin {
+  transform-origin: 50% 100%;
+  animation: home-milestone-pin-float 2.4s ease-in-out infinite;
+}
+
+.home-milestone-stop:nth-child(3n + 2) .home-milestone-pin {
+  animation-delay: -0.8s;
+}
+
+.home-milestone-stop:nth-child(3n) .home-milestone-pin {
+  animation-delay: -1.6s;
+}
+
+@keyframes home-milestone-road-glow {
+  from {
+    filter: brightness(0.95) saturate(0.9);
+  }
+
+  to {
+    filter: brightness(1.12) saturate(1.12);
+  }
+}
+
+@keyframes home-milestone-road-flow {
+  to {
+    stroke-dashoffset: -46;
+  }
+}
+
+@keyframes home-milestone-pin-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -13px, 18px) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .home-milestone-route > svg,
+  .home-milestone-card {
+    transform: none;
+    transition: none;
+  }
+
+  .home-milestone-road-path {
+    animation: none;
+  }
+
+  .home-milestone-road-flow,
+  .home-milestone-pin {
+    animation: none;
+  }
+}
