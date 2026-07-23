@@ -1121,3 +1121,35 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   outline: 2px solid var(--color-kmd-blue);
   outline-offset: 2px;
 }
+
+/* ─── Homepage CTA atmosphere ─── */
+.home-cta-sheen::after {
+  content: '';
+  position: absolute;
+  width: 28rem;
+  height: 28rem;
+  right: -10rem;
+  top: -16rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(227, 30, 36, 0.2), transparent 68%);
+  pointer-events: none;
+  animation: home-cta-glow 8s ease-in-out infinite alternate;
+}
+
+@keyframes home-cta-glow {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.92);
+    opacity: 0.5;
+  }
+
+  to {
+    transform: translate3d(-3rem, 2rem, 0) scale(1.08);
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-cta-sheen::after {
+    animation: none;
+  }
+}

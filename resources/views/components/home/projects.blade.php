@@ -36,7 +36,7 @@
         {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-12 transition-all duration-1000">
+            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-12 transition-all duration-700 ease-out motion-reduce:transition-none">
             <div class="flex flex-nowrap items-center gap-3 md:gap-5 min-w-0">
                 <div class="flex items-center gap-3">
                     <div class="hidden sm:block w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
@@ -60,7 +60,7 @@
             @if(isset($projects[0]))
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 lg:row-span-2">
+                    class="transition-all duration-700 ease-out motion-reduce:transition-none lg:row-span-2">
                     <a href="/projects/{{ $projects[0]['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded-2xl h-full min-h-[400px] lg:min-h-full" style="background: #0B2B5C;">
                             <img src="{{ $projects[0]['image'] }}" alt="{{ $projects[0]['title'] }}"
@@ -99,7 +99,7 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     style="transition-delay: {{ ($index + 1) * 100 }}ms"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000">
+                    class="transition-all duration-700 ease-out motion-reduce:transition-none">
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded-2xl h-full min-h-[240px]" style="background: #0B2B5C;">
                             <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"

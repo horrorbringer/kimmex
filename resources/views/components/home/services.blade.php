@@ -33,7 +33,7 @@
         {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-14 transition-all duration-1000">
+            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-14 transition-all duration-700 ease-out motion-reduce:transition-none">
             <div class="flex flex-nowrap items-center gap-3 md:gap-5 min-w-0">
                 <div class="flex items-center gap-3">
                     <div class="hidden sm:block w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>

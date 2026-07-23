@@ -33,7 +33,7 @@
     <div class="max-w-[1200px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-row justify-center items-baseline gap-3 md:gap-6 mb-10 md:mb-16 text-center transition-all duration-1000">
+            class="flex flex-row justify-center items-baseline gap-3 md:gap-6 mb-10 md:mb-16 text-center transition-all duration-700 ease-out motion-reduce:transition-none">
             <div class="min-w-0 flex items-baseline gap-2">
                 <span
                     class="text-titan-red font-bold uppercase tracking-widest text-[8px] sm:text-[10px] md:text-sm block whitespace-nowrap">{{ __('News & Updates') }}</span>
@@ -50,7 +50,7 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     style="transition-delay: {{ $index * 100 }}ms"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000">
+                    class="transition-all duration-700 ease-out motion-reduce:transition-none">
                     <a href="/news/{{ $news['id'] }}"
                         class="group cursor-pointer bg-white rounded overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-500 ease-out h-full flex flex-col">
                         <div class="aspect-[16/10] relative overflow-hidden bg-titan-navy">

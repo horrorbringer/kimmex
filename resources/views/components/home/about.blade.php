@@ -17,7 +17,7 @@
             {{-- Left: Staggered Image Grid --}}
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'"
-                class="transition-all duration-1000 relative">
+                class="transition-all duration-700 ease-out motion-reduce:transition-none relative">
 
                 <div class="grid grid-cols-12 gap-3 md:gap-4">
                     {{-- Large left image --}}
@@ -60,7 +60,7 @@
             {{-- Right: Text Content --}}
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                class="transition-all duration-1000 delay-200">
+                class="transition-all duration-700 ease-out delay-150 motion-reduce:transition-none">
 
                 <div class="flex items-center gap-3 mb-5">
                     <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
