@@ -22,55 +22,44 @@
     }
 @endphp
 
-<section class="py-12 md:py-16 bg-white overflow-hidden">
+<section class="bg-white py-16 md:py-24">
     <div class="max-w-[1280px] mx-auto px-6">
-
-        {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="text-center max-w-2xl mx-auto mb-14 md:mb-20 transition-all duration-1000">
-            <div class="flex items-center justify-center gap-3 mb-5">
-                <div class="w-8 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Our Process') }}</span>
-                <div class="w-8 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+            class="grid gap-6 border-b border-titan-navy/10 pb-10 transition-all duration-700 ease-out motion-reduce:transition-none lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
+            <div>
+                <div class="mb-5 flex items-center gap-3">
+                    <span class="h-px w-10 bg-titan-red"></span>
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">{{ __('Our Process') }}</span>
+                </div>
+                <h2 class="font-heading text-3xl font-black tracking-tight text-titan-navy md:text-5xl">{{ __('How We Deliver') }}</h2>
             </div>
-            <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight mb-4">{{ __('How We Deliver') }}</h2>
-            <p class="text-gray-500 text-base md:text-lg">{{ __('A proven methodology that ensures quality, safety, and on-time delivery.') }}</p>
+            <p class="max-w-lg text-base leading-relaxed text-titan-navy/60 lg:pb-1 md:text-lg">{{ __('A proven methodology that ensures quality, safety, and on-time delivery.') }}</p>
         </div>
 
-        {{-- Process Steps --}}
-        <div class="relative">
-            {{-- Connecting line (desktop) --}}
-            <div class="hidden lg:block absolute top-[52px] left-[calc(12.5%+24px)] right-[calc(12.5%+24px)] h-px bg-gray-200"></div>
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
+            @foreach($processes as $index => $s)
+                <article x-data="{ shown: false }" x-intersect.once="shown = true"
+                    style="transition-delay: {{ $index * 100 }}ms"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
+                    class="group relative border-t border-titan-navy/10 py-8 transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none sm:px-7 sm:odd:border-l sm:odd:border-t-0 lg:border-l lg:border-t-0 lg:first:border-l-0 lg:py-2">
+                    <span class="absolute -top-2 left-0 h-1 w-10 bg-titan-red sm:odd:left-7 lg:left-7 lg:first:left-0"></span>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-                @foreach($processes as $index => $s)
-                    <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                        style="transition-delay: {{ $index * 120 }}ms"
-                        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                        class="transition-all duration-700 relative text-center group">
-
-                        {{-- Step circle --}}
-                        <div class="relative z-10 mx-auto mb-7">
-                            <div class="w-[104px] h-[104px] mx-auto rounded-full border-2 border-gray-100 bg-white flex flex-col items-center justify-center transition-all duration-500 group-hover:border-transparent group-hover:shadow-[0_12px_40px_-8px_rgba(227,30,36,0.2)]"
-                                 style="--hover-border: var(--primary-color, #E31E24);">
-                                <x-dynamic-component :component="$s['icon']" stroke-width="1.5"
-                                    class="w-8 h-8 mb-1 transition-all duration-300 text-gray-400 group-hover:scale-110"
-                                    style="color: var(--primary-color, #E31E24);" />
-                                <span class="text-[10px] font-bold tracking-[0.2em] text-gray-300 group-hover:text-gray-500 transition-colors">{{ $s['step'] }}</span>
-                            </div>
+                    <div class="mb-8 flex items-center justify-between">
+                        <span class="font-heading text-5xl font-black leading-none text-titan-navy/10">{{ $s['step'] }}</span>
+                        <div class="flex h-11 w-11 items-center justify-center rounded-full border border-titan-navy/10 text-titan-red transition-[background-color,color,border-color] duration-300 ease-out group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white">
+                            <x-dynamic-component :component="$s['icon']" class="h-5 w-5" stroke-width="1.8" />
                         </div>
-
-                        {{-- Content --}}
-                        <h3 class="text-base font-bold text-gray-900 mb-2 transition-colors group-hover:text-titan-red {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'tracking-tight' }}">
-                            {{ $s['title'] }}
-                        </h3>
-                        <p class="text-sm text-gray-400 leading-relaxed max-w-[200px] mx-auto">
-                            {{ $s['desc'] }}
-                        </p>
                     </div>
-                @endforeach
-            </div>
+
+                    <h3 class="mb-3 font-heading text-xl font-black tracking-tight text-titan-navy transition-colors duration-300 group-hover:text-titan-red {{ app()->getLocale() === 'km' ? 'font-khmer text-2xl' : '' }}">
+                        {{ $s['title'] }}
+                    </h3>
+                    <p class="max-w-[230px] text-sm leading-relaxed text-titan-navy/55">
+                        {{ $s['desc'] }}
+                    </p>
+                </article>
+            @endforeach
         </div>
     </div>
 </section>
