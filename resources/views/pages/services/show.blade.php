@@ -1,46 +1,10 @@
 @php
         /** @var string $slug */
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
-        $fallbackImages = [
-            'design-and-build' => '/images/webp/projects/Thumbnail-1.webp',
-            'construction' => '/images/webp/projects/Thumbnail-1.webp',
-            'project-management' => '/images/webp/projects/Thumbnail-3.webp',
-            'consultants' => '/images/webp/projects/Thumbnail-4.webp',
-        ];
-
-        // Try to load from DB first
-        $service = \Illuminate\Support\Facades\Cache::remember(
-            "service_show_data_{$slug}_{$lang}",
-            now()->addHours(12),
-            function () use ($slug, $fallbackImages) {
-                $serviceDb = \App\Models\Service::where('slug', $slug)->where('isActive', true)->first();
-                if ($serviceDb) {
-                    return [
-                        'id' => $serviceDb->slug,
-                        'title' => [
-                            'en' => $serviceDb->getTranslation('title', 'en'),
-                            'kh' => $serviceDb->getTranslation('title', 'km'),
-                        ],
-                        'desc' => [
-                            'en' => strip_tags($serviceDb->getTranslation('description', 'en')),
-                            'kh' => strip_tags($serviceDb->getTranslation('description', 'km')),
-                        ],
-                        'image' => \App\Support\PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
-                        'scopeItems' => is_array($serviceDb->features)
-                            ? array_map(
-                                fn($f) => ['en' => $f['name'] ?? '', 'kh' => $f['name'] ?? ''],
-                                $serviceDb->features,
-                            )
-                            : [],
-                    ];
-                }
-                return null;
-            },
-        );
-
-        if (!$service) {
-            abort(404);
-        }
+        $pageTitle = $service['title'][$lang] ?? $service['title']['en'] ?? __('Service Details');
+        $pageDesc = \Illuminate\Support\Str::limit(strip_tags($service['summary'][$lang] ?? $service['summary']['en'] ?? ''), 160)
+            ?: __('Detailed information about Kimmex construction services.');
+        $canonicalUrl = route('services.show', ['slug' => $service['id']]);
 
         $roadmap = [
             [
@@ -133,9 +97,6 @@
             ],
         ];
 
-        $pageTitle = $service['title'][$lang] ?? $service['title']['en'] ?? __('Service Details');
-        $pageDesc = \Illuminate\Support\Str::limit($service['desc'][$lang] ?? $service['desc']['en'] ?? __('Detailed information about Kimmex construction services.'), 160);
-        $canonicalUrl = route('services.show', ['slug' => $service['id']]);
     @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$service['image']" :canonical="$canonicalUrl">
@@ -197,7 +158,7 @@
                             <x-page-view-count class="mb-5" />
 
                             <p class="text-titan-navy/70 text-base md:text-lg leading-relaxed max-w-xl font-medium">
-                                {{ $service['desc'][$lang] }}
+                                {{ $service['summary'][$lang] ?? $service['summary']['en'] }}
                             </p>
 
                             <div class="mt-7 md:mt-8 flex flex-wrap gap-3">
@@ -272,7 +233,7 @@
                         </h2>
                         <div
                             class="text-sm md:text-base text-titan-navy/90 leading-relaxed mb-8 prose prose-slate max-w-none">
-                            {{ $service['desc'][$lang] }}
+                            {!! $service['description'][$lang] ?? $service['description']['en'] !!}
                         </div>
                     </div>
 

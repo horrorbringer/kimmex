@@ -35,10 +35,15 @@ class ServiceController extends Controller
                     'en' => $serviceDb->getTranslation('title', 'en'),
                     'kh' => $serviceDb->getTranslation('title', 'km'),
                 ],
-                'desc' => [
-                    'en' => strip_tags($serviceDb->getTranslation('description', 'en')),
-                    'kh' => strip_tags($serviceDb->getTranslation('description', 'km')),
+                'summary' => [
+                    'en' => strip_tags($serviceDb->getTranslation('summary', 'en') ?: $serviceDb->getTranslation('description', 'en')),
+                    'kh' => strip_tags($serviceDb->getTranslation('summary', 'km') ?: $serviceDb->getTranslation('description', 'km')),
                 ],
+                'description' => [
+                    'en' => $serviceDb->getTranslation('description', 'en'),
+                    'kh' => $serviceDb->getTranslation('description', 'km'),
+                ],
+                'icon' => $serviceDb->icon,
                 'image' => PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
                 'scopeItems' => is_array($serviceDb->features)
                     ? array_map(
