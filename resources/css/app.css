@@ -928,14 +928,15 @@ a.link:hover,
   font-weight: 800;
   line-height: 1.25;
   margin: 1.5rem 0 0.6rem;
+  text-align: center;
 }
 .service-rich-content h2 { font-size: 1.35rem !important; }
 .service-rich-content h3 { font-size: 1.15rem !important; }
-.service-rich-content p { margin-bottom: 1rem; }
+.service-rich-content p { margin-bottom: 1rem; text-align: justify; text-align-last: left; }
 .service-rich-content :where(ul, ol) { margin: 1rem 0; padding-left: 1.4rem; }
 .service-rich-content ul { list-style: disc !important; }
 .service-rich-content ol { list-style: decimal !important; }
-.service-rich-content li { display: list-item !important; margin: 0.35rem 0; }
+.service-rich-content li { display: list-item !important; margin: 0.35rem 0; text-align: left; }
 .service-rich-content strong { color: rgb(11 43 92); font-weight: 700; }
 .service-rich-content a { color: rgb(220 38 38); text-decoration: underline; text-underline-offset: 0.15em; }
 .service-rich-content blockquote {

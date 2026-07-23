@@ -232,7 +232,7 @@
                         </h2>
                         @php($serviceDescription = $service['description'][$lang] ?? $service['description']['en'] ?? '')
                         <div
-                            class="service-rich-content prose prose-slate mx-auto max-w-3xl text-center text-base leading-8 text-slate-700 md:text-lg md:leading-9">
+                            class="service-rich-content prose prose-slate mx-auto max-w-3xl text-justify text-base leading-8 text-slate-700 md:text-lg md:leading-9">
                             @if (str_contains($serviceDescription, '<'))
                                 {!! str($serviceDescription)->sanitizeHtml() !!}
                             @else
