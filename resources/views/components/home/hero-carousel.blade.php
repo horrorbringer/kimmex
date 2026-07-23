@@ -52,32 +52,34 @@
 <section x-data="{
         current: 0,
         prev: null,
+        slideDirection: 'next',
         slides: {{ Js::from($slides) }},
         timer: null,
-        interval: 6500,
+        interval: 6000,
         isAnimating: false,
         isPaused: false,
         prefersReducedMotion: false,
 
         nextSlide() {
             if (this.isAnimating || this.slides.length <= 1) return;
-            this.goTo((this.current + 1) % this.slides.length);
+            this.goTo((this.current + 1) % this.slides.length, 'next');
         },
         prevSlide() {
             if (this.isAnimating || this.slides.length <= 1) return;
-            this.goTo((this.current - 1 + this.slides.length) % this.slides.length);
+            this.goTo((this.current - 1 + this.slides.length) % this.slides.length, 'previous');
         },
         goToSlide(index) {
             if (this.isAnimating || index === this.current) return;
-            this.goTo(index);
+            this.goTo(index, index > this.current ? 'next' : 'previous');
         },
-        goTo(index) {
+        goTo(index, direction = 'next') {
             this.isAnimating = true;
             this.prev = this.current;
             this.current = index;
+            this.slideDirection = direction;
             this.preloadNext();
             this.resetTimer();
-            const duration = this.prefersReducedMotion ? 0 : 850;
+            const duration = this.prefersReducedMotion ? 0 : 700;
             window.setTimeout(() => {
                 this.prev = null;
                 this.isAnimating = false;
@@ -122,12 +124,16 @@
     class="relative h-[100dvh] min-h-[580px] sm:min-h-[640px] overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
-    <!-- === SLIDES (crossfade stack) === -->
+    <!-- === SLIDES (directional transition stack) === -->
     @foreach($slides as $index => $slide)
         <div class="absolute inset-0"
             :class="{
-                'z-10 hero-slide-enter': {{ $index }} === current,
-                'z-[9] hero-slide-leave': {{ $index }} === prev,
+                'z-10': {{ $index }} === current,
+                'z-[9]': {{ $index }} === prev,
+                'hero-slide-enter-right': {{ $index }} === current && slideDirection === 'next',
+                'hero-slide-enter-left': {{ $index }} === current && slideDirection === 'previous',
+                'hero-slide-leave-left': {{ $index }} === prev && slideDirection === 'next',
+                'hero-slide-leave-right': {{ $index }} === prev && slideDirection === 'previous',
                 'z-0 opacity-0': {{ $index }} !== current && {{ $index }} !== prev
             }">
             <img
