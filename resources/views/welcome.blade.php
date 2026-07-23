@@ -36,6 +36,7 @@
     @endpush
 
     <x-home.hero-carousel />
+    <x-home.trust-strip />
     <x-home.about />
     <x-home.services />
     <x-home.process />
