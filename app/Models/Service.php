@@ -52,7 +52,7 @@ class Service extends Model
 
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget('nav_services_'.$locale);
-                Cache::forget('home_services_array_'.$locale);
+                Cache::forget('home_services_array_v2_'.$locale);
                 foreach ($slugs as $slug) {
                     Cache::forget("service_show_data_{$slug}_{$locale}");
                 }
@@ -68,7 +68,7 @@ class Service extends Model
 
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget('nav_services_'.$locale);
-                Cache::forget('home_services_array_'.$locale);
+                Cache::forget('home_services_array_v2_'.$locale);
                 foreach ($slugs as $slug) {
                     Cache::forget("service_show_data_{$slug}_{$locale}");
                 }

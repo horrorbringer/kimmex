@@ -66,7 +66,7 @@ class CacheBusterObserver
                 'nav_categories_en', 'nav_categories_km',
             ],
             Service::class => [
-                'home_services_array_en', 'home_services_array_km',
+                'home_services_array_v2_en', 'home_services_array_v2_km',
                 'nav_services_en', 'nav_services_km',
             ],
             NewsArticle::class => [
