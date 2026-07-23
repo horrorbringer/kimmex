@@ -119,7 +119,7 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative h-[100svh] min-h-[520px] max-h-[700px] sm:h-[560px] md:h-[620px] lg:h-[680px] sm:max-h-none overflow-hidden bg-titan-navy text-white"
+    class="relative h-[100dvh] min-h-[580px] sm:min-h-[640px] overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (crossfade stack) === -->
@@ -173,15 +173,15 @@
                         <p class="hero-copy-shadow text-[#F8FAFC] max-w-[500px] lg:max-w-[540px] mb-6 sm:mb-10 font-medium text-sm sm:text-base lg:text-lg leading-relaxed line-clamp-3 sm:line-clamp-none"
                             x-text="slide.desc"></p>
 
-                        <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+                        <div class="mt-2 sm:mt-3 flex flex-row flex-wrap gap-2.5 sm:gap-3">
                             <a :href="slide.link"
-                                class="group relative overflow-hidden bg-titan-red text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 font-black transition-all duration-500 flex items-center justify-center gap-3 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-sm sm:text-base tracking-normal' : 'text-[10px] sm:text-[11px] lg:text-[12px] tracking-[0.2em] sm:tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy' }}">
+                                class="group self-start relative overflow-hidden bg-titan-red text-white px-5 sm:px-6 lg:px-7 py-2.5 sm:py-3 font-black transition-all duration-500 flex items-center justify-center gap-2.5 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-xs sm:text-sm tracking-normal' : 'text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy' }}">
                                 <span class="relative z-10">{{ __('VIEW PROJECT') }}</span>
-                                <x-lucide-arrow-right class="group-hover:translate-x-2 transition-transform w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-10" />
+                                <x-lucide-arrow-right class="group-hover:translate-x-1 transition-transform w-3 h-3 sm:w-3.5 sm:h-3.5 relative z-10" />
                             </a>
                             <a href="/contact"
-                                class="group border-2 border-white/25 backdrop-blur-sm text-white px-6 sm:px-8 lg:px-10 py-3 sm:py-3.5 lg:py-4 font-black transition-all duration-500 flex items-center justify-center gap-3 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-sm sm:text-base tracking-normal' : 'text-[10px] sm:text-[11px] lg:text-[12px] tracking-[0.2em] sm:tracking-[0.25em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
-                                <x-lucide-phone class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:rotate-12 transition-transform" />
+                                class="group self-start border-2 border-white/25 backdrop-blur-sm text-white px-5 sm:px-6 lg:px-7 py-2.5 sm:py-3 font-black transition-all duration-500 flex items-center justify-center gap-2.5 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-xs sm:text-sm tracking-normal' : 'text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
+                                <x-lucide-phone class="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:rotate-12 transition-transform" />
                                 <span>{{ __('CONTACT US') }}</span>
                             </a>
                         </div>
