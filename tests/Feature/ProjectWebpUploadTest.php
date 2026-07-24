@@ -17,6 +17,7 @@ class ProjectWebpUploadTest extends TestCase
         foreach ($projectUploads as $upload) {
             $this->assertContains('image/webp', $upload->getAcceptedFileTypes());
             $this->assertSame('image/webp', $upload->getMimeTypeMap()['webp']);
+            $this->assertNull($upload->getAutomaticallyResizeImagesMode());
         }
     }
 }
