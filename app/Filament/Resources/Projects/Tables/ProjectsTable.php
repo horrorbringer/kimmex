@@ -17,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class ProjectsTable
 {
@@ -41,6 +42,15 @@ class ProjectsTable
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->words(6)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $title = $column->getState();
+
+                        if (! is_string($title)) {
+                            return null;
+                        }
+
+                        return Str::words($title, 6) === $title ? null : $title;
+                    })
                     ->searchable()
                     ->sortable(query: fn ($query, $direction) => $query->orderBy('title->en', $direction))
                     ->description(fn ($record) => $record->slug),
