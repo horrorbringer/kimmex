@@ -160,25 +160,25 @@
     <div class="absolute inset-0 flex flex-col justify-center z-20 pt-28 pb-24 sm:pt-32 sm:pb-20 lg:pt-28 lg:pb-24">
         <div class="max-w-[1200px] w-full mx-auto px-5 sm:px-6 lg:px-8">
             <div class="max-w-[640px] lg:max-w-[600px] xl:max-w-[680px]">
-                <template x-for="(slide, index) in slides" :key="`content-${index}`">
-                    <div x-show="index === current"
-                        :class="!prefersReducedMotion && index === current ? 'hero-content-enter' : ''"
+                @foreach($slides as $index => $slide)
+                    <div x-show="{{ $index }} === current"
+                        @if($index !== 0) style="display: none;" @endif
+                        :class="!prefersReducedMotion && {{ $index }} === current ? 'hero-content-enter' : ''"
                         class="w-full">
                         <p class="text-titan-red font-black text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.35em] mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                             <span class="inline-block w-6 sm:w-8 h-px bg-titan-red"></span>
-                            <span x-text="slide.subtitle"></span>
+                            <span>{{ $slide['subtitle'] }}</span>
                         </p>
                         <h1 class="hero-copy-shadow font-heading font-[900] mb-4 sm:mb-7 !text-white uppercase leading-[1.05] sm:leading-[1.02] tracking-normal"
-                            :class="slide.title.length > 48
+                            :class="{{ \Illuminate\Support\Str::length($slide['title']) }} > 48
                                 ? 'text-[1.25rem] sm:text-[1.5rem] md:text-[2rem] xl:text-[2.3rem]'
-                                : 'text-[1.5rem] sm:text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]'"
-                            x-text="slide.title"></h1>
+                                : 'text-[1.5rem] sm:text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]'">{{ $slide['title'] }}</h1>
 
                         <p class="hero-copy-shadow text-[#F8FAFC] max-w-[500px] lg:max-w-[540px] mb-6 sm:mb-10 font-medium text-sm sm:text-base lg:text-lg leading-relaxed line-clamp-3 sm:line-clamp-none"
-                            x-text="slide.desc"></p>
+                            >{{ $slide['desc'] }}</p>
 
                         <div class="mt-2 sm:mt-3 flex flex-row flex-wrap gap-2.5 sm:gap-3">
-                            <a :href="slide.link"
+                            <a href="{{ $slide['link'] }}"
                                 class="group self-start relative overflow-hidden bg-titan-red text-white px-5 sm:px-6 lg:px-7 py-2.5 sm:py-3 font-black transition-all duration-500 flex items-center justify-center gap-2.5 shadow-2xl rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-xs sm:text-sm tracking-normal' : 'text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy' }}">
                                 <span class="relative z-10">{{ __('VIEW PROJECT') }}</span>
                                 <x-lucide-arrow-right class="group-hover:translate-x-1 transition-transform w-3 h-3 sm:w-3.5 sm:h-3.5 relative z-10" />
@@ -190,7 +190,7 @@
                             </a>
                         </div>
                     </div>
-                </template>
+                @endforeach
             </div>
         </div>
     </div>
