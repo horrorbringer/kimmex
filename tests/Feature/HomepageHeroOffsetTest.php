@@ -16,6 +16,7 @@ class HomepageHeroOffsetTest extends TestCase
         $this->assertStringContainsString('h-8 opacity-100 border-gray-100 bg-white', $headerTemplate);
         $this->assertStringContainsString('h-20', $headerTemplate);
         $this->assertSame(6, substr_count($headerTemplate, 'flex items-center gap-1 px-5 py-8'));
+        $this->assertStringContainsString('max-width: min(62vw, 32rem);', $headerTemplate);
         $this->assertStringContainsString('mt-[112px] h-[62svh]', $heroTemplate);
         $this->assertStringContainsString('height: 5rem', $layoutTemplate);
     }

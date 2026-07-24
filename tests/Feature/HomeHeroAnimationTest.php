@@ -16,7 +16,7 @@ class HomeHeroAnimationTest extends TestCase
         $this->assertStringNotContainsString('@mouseenter="pause()"', $heroTemplate);
         $this->assertStringNotContainsString('@mouseleave="resume()"', $heroTemplate);
         $this->assertStringContainsString('const duration = this.prefersReducedMotion ? 0 : 700', $heroTemplate);
-        $this->assertStringContainsString("!prefersReducedMotion && index === current ? 'hero-content-enter' : ''", $heroTemplate);
+        $this->assertStringContainsString("!prefersReducedMotion && prev !== null && {{ \$index }} === current ? 'hero-content-enter' : ''", $heroTemplate);
         $this->assertStringContainsString('hero-kenburns 5.5s', $styles);
         $this->assertStringContainsString("slideDirection: 'next'", $heroTemplate);
         $this->assertStringContainsString("this.goTo((this.current + 1) % this.slides.length, 'next')", $heroTemplate);

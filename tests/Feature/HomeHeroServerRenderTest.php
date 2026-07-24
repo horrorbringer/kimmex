@@ -16,6 +16,12 @@ class HomeHeroServerRenderTest extends TestCase
         $this->assertStringContainsString("{{ \$slide['title'] }}", $template);
         $this->assertStringNotContainsString('x-text="slide.title"', $template);
         $this->assertStringContainsString('prev !== null && {{ $index }} === current', $template);
+        $this->assertStringContainsString('x-show="{{ $index }} === current || {{ $index }} === prev"', $template);
+        $this->assertStringContainsString('@if($index !== 0) style="display: none;" @endif', $template);
+        $this->assertStringContainsString('.home-hero-viewport {', $template);
+        $this->assertStringContainsString('height: 62svh;', $template);
+        $this->assertStringContainsString('$heroTitleSize = \\Illuminate\\Support\\Str::length($slide[\'title\']) > 48', $template);
+        $this->assertStringNotContainsString(':class="{{ \\Illuminate\\Support\\Str::length($slide[\'title\'])', $template);
 
         Blade::compileString($template);
 

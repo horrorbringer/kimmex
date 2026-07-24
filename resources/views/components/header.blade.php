@@ -145,9 +145,10 @@
             <div class="flex justify-between items-center h-20">
 
                 <!-- Logo -->
-                <a href="/" class="flex items-center group cursor-pointer">
+                <a href="/" class="flex min-w-0 items-center group cursor-pointer">
                     <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
-                        class="h-14 w-auto object-contain transition-all duration-300" loading="eager" decoding="async" />
+                        class="h-14 w-auto max-w-full object-contain transition-all duration-300"
+                        style="max-width: min(62vw, 32rem);" loading="eager" decoding="async" />
                 </a>
 
                 <!-- Desktop Menu -->

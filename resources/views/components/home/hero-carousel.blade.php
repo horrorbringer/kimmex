@@ -49,6 +49,22 @@
     }
 @endphp
 
+<style>
+    .home-hero-viewport {
+        height: 62svh;
+        min-height: 420px;
+        max-height: 560px;
+    }
+
+    @media (min-width: 640px) {
+        .home-hero-viewport {
+            height: calc(100dvh - 112px);
+            min-height: 560px;
+            max-height: none;
+        }
+    }
+</style>
+
 <section x-data="{
         current: 0,
         prev: null,
@@ -119,12 +135,14 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative mt-[112px] h-[62svh] min-h-[420px] max-h-[560px] sm:h-[calc(100dvh-112px)] sm:min-h-[560px] sm:max-h-none overflow-hidden bg-titan-navy text-white"
+    class="home-hero-viewport relative mt-[112px] h-[62svh] min-h-[420px] max-h-[560px] sm:h-[calc(100dvh-112px)] sm:min-h-[560px] sm:max-h-none overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (directional transition stack) === -->
     @foreach($slides as $index => $slide)
-        <div class="absolute inset-0"
+        <div x-show="{{ $index }} === current || {{ $index }} === prev"
+            @if($index !== 0) style="display: none;" @endif
+            class="absolute inset-0"
             :class="{
                 'z-10': {{ $index }} === current,
                 'z-[9]': {{ $index }} === prev,
@@ -169,10 +187,13 @@
                             <span class="inline-block w-6 sm:w-8 h-px bg-titan-red"></span>
                             <span>{{ $slide['subtitle'] }}</span>
                         </p>
-                        <h1 class="hero-copy-shadow font-heading font-[900] mb-4 sm:mb-7 !text-white uppercase leading-[1.05] sm:leading-[1.02] tracking-normal"
-                            :class="{{ \Illuminate\Support\Str::length($slide['title']) }} > 48
+                        @php
+                            $heroTitleSize = \Illuminate\Support\Str::length($slide['title']) > 48
                                 ? 'text-[1.25rem] sm:text-[1.5rem] md:text-[2rem] xl:text-[2.3rem]'
-                                : 'text-[1.5rem] sm:text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]'">{{ $slide['title'] }}</h1>
+                                : 'text-[1.5rem] sm:text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]';
+                        @endphp
+                        <h1 class="{{ $heroTitleSize }} hero-copy-shadow font-heading font-[900] mb-4 sm:mb-7 !text-white uppercase leading-[1.05] sm:leading-[1.02] tracking-normal"
+                            style="overflow-wrap: anywhere;">{{ $slide['title'] }}</h1>
 
                         <p class="hero-copy-shadow text-[#F8FAFC] max-w-[500px] lg:max-w-[540px] mb-6 sm:mb-10 font-medium text-sm sm:text-base lg:text-lg leading-relaxed line-clamp-3 sm:line-clamp-none"
                             >{{ $slide['desc'] }}</p>
