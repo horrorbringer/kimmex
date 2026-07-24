@@ -24,7 +24,7 @@
     @endphp
 
 
-    <div x-data="{ selectedMember: null }" @select-member.window="selectedMember = $event.detail" @keydown.escape.window="selectedMember = null" class="bg-white text-titan-navy">
+    <div id="page-top" x-data="{ selectedMember: null }" @select-member.window="selectedMember = $event.detail" @keydown.escape.window="selectedMember = null" class="bg-white text-titan-navy">
 
         <!-- Team Member Modal -->
         <div x-show="selectedMember" style="display: none"
@@ -441,6 +441,7 @@
                         @php
                             $isEven = $idx % 2 === 0;
                             $hasMilestoneDetail = (bool) ($milestone['has_detail'] ?? false);
+                            $isFeaturedMilestone = (bool) ($milestone['is_featured'] ?? false);
                         @endphp
                         <div x-data="{ shown: false, open: false, hasDetail: @js($hasMilestoneDetail) }" x-intersect.once="shown = true"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
@@ -458,6 +459,12 @@
                                     <x-lucide-calendar class="w-3.5 h-3.5" />
                                     {{ $milestone['year'] }}
                                 </div>
+                                @if($isFeaturedMilestone)
+                                    <span class="ml-2 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-amber-800">
+                                        <x-lucide-star class="h-3 w-3 fill-current" />
+                                        {{ __('Key milestone') }}
+                                    </span>
+                                @endif
                                 <h3 class="text-xl md:text-2xl font-heading font-black text-titan-navy mb-3 tracking-tight">
                                     {{ $milestone['title'] }}
                                 </h3>
@@ -490,6 +497,13 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+
+                <div class="mt-14 text-center md:mt-20">
+                    <a href="#page-top" class="inline-flex items-center gap-2 rounded-full border border-titan-navy/10 bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-titan-navy shadow-sm transition-all hover:-translate-y-0.5 hover:border-titan-red/30 hover:text-titan-red focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/20">
+                        <x-lucide-arrow-up class="h-4 w-4" />
+                        {{ __('Back to top') }}
+                    </a>
                 </div>
             </div>
         </section>

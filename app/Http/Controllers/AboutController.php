@@ -71,9 +71,9 @@ class AboutController extends Controller
             }
 
             $milestoneFallback = [
-                ['year' => '1999', 'title' => __('Company Founded'), 'desc' => __('Started as a small dedicated engineering firm.'), 'detail' => '', 'has_detail' => false, 'image' => '/images/webp/projects/Thumbnail-1.webp'],
-                ['year' => '2010', 'title' => __('First Mega Project'), 'desc' => __('Secured our first major government infrastructure contract.'), 'detail' => '', 'has_detail' => false, 'image' => '/images/webp/projects/Thumbnail-2.webp'],
-                ['year' => '2026', 'title' => __('Industry Leaders'), 'desc' => __('Recognized as the top infrastructure firm in the Kingdom of Cambodia.'), 'detail' => '', 'has_detail' => false, 'image' => '/images/webp/projects/Thumbnail-3.webp'],
+                ['year' => '1999', 'title' => __('Company Founded'), 'desc' => __('Started as a small dedicated engineering firm.'), 'detail' => '', 'has_detail' => false, 'is_featured' => true, 'image' => '/images/webp/projects/Thumbnail-1.webp'],
+                ['year' => '2010', 'title' => __('First Mega Project'), 'desc' => __('Secured our first major government infrastructure contract.'), 'detail' => '', 'has_detail' => false, 'is_featured' => false, 'image' => '/images/webp/projects/Thumbnail-2.webp'],
+                ['year' => '2026', 'title' => __('Industry Leaders'), 'desc' => __('Recognized as the top infrastructure firm in the Kingdom of Cambodia.'), 'detail' => '', 'has_detail' => false, 'is_featured' => true, 'image' => '/images/webp/projects/Thumbnail-3.webp'],
             ];
 
             $milestones = Cache::remember('about_milestones_data_'.$localeKey, 43200, function () use ($localeKey, $milestoneFallback) {
@@ -93,6 +93,7 @@ class AboutController extends Controller
                         'desc' => $m->getTranslation('description', $localeKey),
                         'detail' => $hasDetail ? $detail : '',
                         'has_detail' => $hasDetail,
+                        'is_featured' => $m->isFeatured,
                         'image' => PublicStorage::urlIfExists($m->image, $fallbackImage),
                     ];
                 })->toArray();

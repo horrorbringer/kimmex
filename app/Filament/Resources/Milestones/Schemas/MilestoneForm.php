@@ -66,6 +66,10 @@ class MilestoneForm
                                 ->label(__('Is Active'))
                                 ->default(true)
                                 ->required(),
+                            Toggle::make('isFeatured')
+                                ->label(__('Key Milestone'))
+                                ->helperText(__('Highlights this milestone on the About page.'))
+                                ->default(false),
                         ]),
                     ]),
             ]);

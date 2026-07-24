@@ -32,6 +32,10 @@ class MilestonesTable
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
+                ToggleColumn::make('isFeatured')
+                    ->label(__('Key'))
+                    ->onColor('warning')
+                    ->offColor('gray'),
             ])
             ->defaultSort('year', 'desc')
             ->filters([

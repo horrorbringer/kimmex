@@ -22,12 +22,14 @@ class Milestone extends Model
         'image',
         'sortOrder',
         'isActive',
+        'isFeatured',
     ];
 
     protected array $publicUploadAttributes = ['image'];
 
     protected $casts = [
         'isActive' => 'boolean',
+        'isFeatured' => 'boolean',
     ];
 
     protected static function booted()

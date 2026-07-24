@@ -49,7 +49,13 @@ Route::get('/sw.js', function () {
         return response('', 404);
     }
 
-    return response()->file($path, [
+    $worker = str_replace(
+        ['./workbox-', 'url:"assets/', 'url:"manifest.webmanifest"'],
+        ['/build/workbox-', 'url:"/build/assets/', 'url:"/build/manifest.webmanifest"'],
+        file_get_contents($path),
+    );
+
+    return response($worker, 200, [
         'Content-Type' => 'application/javascript',
         'Service-Worker-Allowed' => '/',
         'Cache-Control' => 'no-cache',
