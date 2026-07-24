@@ -2,9 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Jobs\TranslateSystemSettings;
 use App\Models\SystemSetting;
 use App\Services\AIGeneratorService;
-use App\Services\AutoTranslateService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
@@ -29,7 +29,6 @@ use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -683,7 +682,6 @@ class ManageSettings extends Page implements HasForms
             return;
         }
 
-        $translator = new AutoTranslateService;
         $autoTranslate = $state['auto_translate'] ?? true;
 
         // 1. Organization Profile
@@ -695,9 +693,7 @@ class ManageSettings extends Page implements HasForms
             'working_hours' => $state['working_hours'],
         ];
 
-        $orgKm = $autoTranslate
-            ? $translator->translateArray($orgEn, [], 'km')
-            : (SystemSetting::get('organization_profile')['km'] ?? []);
+        $orgKm = SystemSetting::get('organization_profile')['km'] ?? [];
 
         SystemSetting::set('organization_profile', [
             'registration_number' => $state['registration_number'],
@@ -726,9 +722,7 @@ class ManageSettings extends Page implements HasForms
             'values_list' => $this->normalizeCoreValues($state['values'] ?? []),
         ];
 
-        $brandKm = $autoTranslate
-            ? $translator->translateArray($brandEn, ['icon', 'image'], 'km')
-            : (SystemSetting::get('brand_identity')['km'] ?? []);
+        $brandKm = SystemSetting::get('brand_identity')['km'] ?? [];
 
         $brandKm['values_list'] = $this->syncCoreValueAssets(
             $brandEn['values_list'],
@@ -789,6 +783,10 @@ class ManageSettings extends Page implements HasForms
             'news_page_bg_color' => $state['news_page_bg_color'] ?? '#F7F8FA',
         ]);
 
+        if ($autoTranslate) {
+            TranslateSystemSettings::dispatch($orgEn, $brandEn)->onQueue('default');
+        }
+
         // 6. Global Cache Purge (Force Frontend Sync)
         Cache::forget('global_settings_en');
         Cache::forget('global_settings_km');
@@ -797,17 +795,6 @@ class ManageSettings extends Page implements HasForms
         Cache::forget('system_setting_organization_profile');
         Cache::forget('system_setting_brand_identity');
         Cache::forget('system_setting_integration_settings');
-
-        // Clear compiled views so Blade re-renders with new theme values
-        try {
-            Artisan::call('view:clear');
-        } catch (\Throwable) {
-        }
-
-        // Reset OPcache if available
-        if (function_exists('opcache_reset')) {
-            opcache_reset();
-        }
 
         Notification::make()
             ->title(__('Global Configuration Saved'))

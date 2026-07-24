@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\GenerateSitemap;
 use App\Models\Document;
 use App\Models\DocumentCategory;
 use App\Models\Employee;
@@ -17,7 +18,6 @@ use App\Models\Service;
 use App\Models\SystemSetting;
 use App\Models\Testimonial;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -50,7 +50,7 @@ class CacheBusterObserver
     protected function regenerateSitemap(Model $model): void
     {
         if (in_array(get_class($model), static::$sitemapModels)) {
-            Artisan::call('sitemap:generate');
+            GenerateSitemap::dispatch()->onQueue('default');
         }
     }
 

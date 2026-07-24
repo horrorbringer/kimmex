@@ -143,8 +143,10 @@ class AppServiceProvider extends ServiceProvider
             $upload->getUploadedFileUsing(static function (BaseFileUpload $component, string $file, string|array|null $storedFileNames): ?array {
                 $storage = $component->getDisk();
                 $shouldFetchFileInformation = $component->shouldFetchFileInformation();
+                $isRemotePublicUpload = $component->getDiskName() === PublicStorage::diskName()
+                    && PublicStorage::isRemoteDisk();
 
-                if ($shouldFetchFileInformation) {
+                if ($shouldFetchFileInformation && ! $isRemotePublicUpload) {
                     try {
                         if (! $storage->exists($file)) {
                             return null;
@@ -174,13 +176,13 @@ class AppServiceProvider extends ServiceProvider
                 $url ??= $storage->url($file);
 
                 try {
-                    $size = $shouldFetchFileInformation ? $storage->size($file) : 0;
+                    $size = $shouldFetchFileInformation && ! $isRemotePublicUpload ? $storage->size($file) : 0;
                 } catch (\Throwable) {
                     $size = 0;
                 }
 
                 try {
-                    $type = $shouldFetchFileInformation ? $storage->mimeType($file) : null;
+                    $type = $shouldFetchFileInformation && ! $isRemotePublicUpload ? $storage->mimeType($file) : null;
                 } catch (\Throwable) {
                     $type = null;
                 }
