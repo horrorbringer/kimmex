@@ -163,7 +163,7 @@
                 @foreach($slides as $index => $slide)
                     <div x-show="{{ $index }} === current"
                         @if($index !== 0) style="display: none;" @endif
-                        :class="!prefersReducedMotion && {{ $index }} === current ? 'hero-content-enter' : ''"
+                        :class="!prefersReducedMotion && prev !== null && {{ $index }} === current ? 'hero-content-enter' : ''"
                         class="w-full">
                         <p class="text-titan-red font-black text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.35em] mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                             <span class="inline-block w-6 sm:w-8 h-px bg-titan-red"></span>

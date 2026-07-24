@@ -15,6 +15,7 @@ class HomeHeroServerRenderTest extends TestCase
         $this->assertStringContainsString('@foreach($slides as $index => $slide)', $template);
         $this->assertStringContainsString("{{ \$slide['title'] }}", $template);
         $this->assertStringNotContainsString('x-text="slide.title"', $template);
+        $this->assertStringContainsString('prev !== null && {{ $index }} === current', $template);
 
         Blade::compileString($template);
 
