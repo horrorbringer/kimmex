@@ -536,8 +536,53 @@
                         </div>
                     </div>
                 @else
-                    <div class="w-full md:min-w-[800px] md:flex md:justify-center md:overflow-x-auto">
-                        @include('components.about.org-node', ['node' => $orgChart, 'level' => 0, 'small' => true])
+                    <div x-data="{ query: '' }" class="max-w-4xl mx-auto">
+                        <div class="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between rounded-2xl border border-gray-100 bg-gray-50 p-3 sm:p-4">
+                            <label class="relative flex-1 block">
+                                <span class="sr-only">{{ __('Search organization') }}</span>
+                                <x-lucide-search class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/40" />
+                                <input type="search" x-model="query"
+                                    @input="window.dispatchEvent(new CustomEvent('org-search', { detail: query }))"
+                                    placeholder="{{ __('Search by name, role, or department') }}"
+                                    class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-titan-navy placeholder:text-titan-navy/35 focus:border-titan-red focus:outline-none focus:ring-2 focus:ring-titan-red/15" />
+                            </label>
+                            <div class="flex gap-2">
+                                <button type="button" @click="window.dispatchEvent(new CustomEvent('org-expand-all'))"
+                                    class="flex-1 sm:flex-none rounded-xl bg-white border border-gray-200 px-3 py-2.5 text-xs font-bold text-titan-navy hover:border-titan-navy/30 transition-colors">
+                                    {{ __('Expand all') }}
+                                </button>
+                                <button type="button" @click="query = ''; window.dispatchEvent(new CustomEvent('org-search', { detail: '' })); window.dispatchEvent(new CustomEvent('org-collapse-all'))"
+                                    class="flex-1 sm:flex-none rounded-xl border border-gray-200 px-3 py-2.5 text-xs font-bold text-titan-navy/60 hover:border-titan-navy/30 transition-colors">
+                                    {{ __('Collapse') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="mb-5 text-center text-xs sm:text-sm text-titan-navy/55">
+                            {{ __('Browse leadership teams or search for a team member. Select a person to view their profile.') }}
+                        </p>
+
+                        <div class="max-w-xl mx-auto mb-8 sm:mb-10">
+                            @include('components.about.org-node', ['node' => $orgChart, 'level' => 0, 'small' => true, 'showChildren' => false])
+                        </div>
+
+                        @if(! empty($orgChart['children']))
+                            <div class="mb-4 flex items-center gap-3">
+                                <div class="h-px flex-1 bg-gray-200"></div>
+                                <h3 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-titan-navy/45">
+                                    {{ __('Leadership & Departments') }}
+                                </h3>
+                                <div class="h-px flex-1 bg-gray-200"></div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 items-start">
+                                @foreach($orgChart['children'] as $child)
+                                    <div class="rounded-2xl bg-gray-50/60 p-2 sm:p-3 border border-gray-100">
+                                        @include('components.about.org-node', ['node' => $child, 'level' => 1, 'small' => true])
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 @endif
             </div>
