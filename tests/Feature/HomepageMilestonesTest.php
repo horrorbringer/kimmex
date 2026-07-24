@@ -12,6 +12,7 @@ class HomepageMilestonesTest extends TestCase
         $homepage = File::get(resource_path('views/welcome.blade.php'));
         $milestones = File::get(resource_path('views/components/home/milestones.blade.php'));
         $aboutPage = File::get(resource_path('views/pages/about.blade.php'));
+        $styles = File::get(resource_path('css/app.css'));
 
         $this->assertStringContainsString('<x-home.milestones />', $homepage);
         $this->assertStringContainsString("Cache::remember('home_milestones_'.\$locale", $milestones);
@@ -24,7 +25,9 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('home-milestone-road-flow', $milestones);
         $this->assertStringContainsString('home-milestone-pin', $milestones);
         $this->assertStringContainsString('IntersectionObserver', $milestones);
-        $this->assertStringContainsString('milestone-route-visible', $milestones);
+        $this->assertStringContainsString('milestone-pin-visible', $milestones);
+        $this->assertStringContainsString('milestone-card-visible', $milestones);
+        $this->assertStringContainsString('window.setTimeout(() => this.cardShown = true, this.reducedMotion ? 0 : 180)', $milestones);
         $this->assertStringContainsString('home-milestone-pin-ring', $milestones);
         $this->assertStringContainsString('A legacy built milestone by milestone', $milestones);
         $this->assertStringContainsString("'image' => \\App\\Support\\PublicStorage::urlIfExists", $milestones);
@@ -34,8 +37,12 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('lg:min-h-[112px]', $milestones);
         $this->assertStringContainsString('line-clamp-2', $milestones);
         $this->assertStringContainsString('background-color: {{ $color[\'hex\'] }}', $milestones);
-        $this->assertStringContainsString('home-milestone-pin-wrap absolute left-1/2 top-1/2 z-0', $milestones);
-        $this->assertStringContainsString('home-milestone-card relative z-10', $milestones);
+        $this->assertStringContainsString('home-milestone-mobile-pin', $milestones);
+        $this->assertStringContainsString('home-milestone-pin-wrap absolute left-1/2 top-1/2 z-11', $milestones);
+        $this->assertStringContainsString('home-milestone-card relative z-1', $milestones);
+        $this->assertStringContainsString('.milestone-pin-waiting .home-milestone-mobile-pin', $styles);
+        $this->assertStringContainsString('@media (prefers-reduced-motion: reduce)', $styles);
+        $this->assertStringNotContainsString('@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse)', $styles);
         $this->assertStringNotContainsString("shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'", $milestones);
         $this->assertStringContainsString("url('/about#milestones')", $milestones);
         $this->assertStringContainsString('id="milestones"', $aboutPage);

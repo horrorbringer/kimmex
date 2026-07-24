@@ -1229,32 +1229,44 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   will-change: transform;
 }
 
-.milestone-route-waiting .home-milestone-card {
+.milestone-card-waiting .home-milestone-card {
   opacity: 0;
   filter: blur(3px);
 }
 
-.milestone-route-waiting:nth-child(odd) .home-milestone-card {
+.milestone-card-waiting:nth-child(odd) .home-milestone-card {
   --milestone-enter-x: -36px;
   --milestone-enter-y: 16px;
 }
 
-.milestone-route-waiting:nth-child(even) .home-milestone-card {
+.milestone-card-waiting:nth-child(even) .home-milestone-card {
   --milestone-enter-x: 36px;
   --milestone-enter-y: 16px;
 }
 
-.milestone-route-visible .home-milestone-card {
+.milestone-card-visible .home-milestone-card {
   filter: blur(0);
 }
 
-.milestone-route-waiting .home-milestone-pin-wrap {
+.milestone-pin-waiting .home-milestone-pin-wrap,
+.milestone-pin-waiting .home-milestone-mobile-pin {
   --pin-scale: 0.45;
   opacity: 0;
 }
 
-.milestone-route-visible .home-milestone-pin-ring {
+.milestone-pin-waiting .home-milestone-mobile-pin {
+  transform: scale(0.45);
+}
+
+.milestone-pin-visible .home-milestone-pin-ring,
+.milestone-pin-visible .home-milestone-mobile-pin-ring {
   animation: home-milestone-pin-ring 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-milestone-mobile-pin {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 280ms ease-out, transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .home-milestone-stop:hover .home-milestone-card {
@@ -1331,7 +1343,7 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   }
 }
 
-@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+@media (prefers-reduced-motion: reduce) {
   .home-milestone-route > svg,
   .home-milestone-card {
     transform: none;
@@ -1349,6 +1361,7 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   }
 
   .home-milestone-pin-wrap,
+  .home-milestone-mobile-pin,
   .home-milestone-card {
     opacity: 1;
     filter: none;

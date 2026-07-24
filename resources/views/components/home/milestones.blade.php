@@ -85,7 +85,8 @@
                             $pinOffset = $roadPinOffsets[$index] ?? 0;
                         @endphp
                         <article x-data="{
-                                shown: false,
+                                pinShown: false,
+                                cardShown: false,
                                 hydrated: false,
                                 reducedMotion: false,
                                 canTilt: false,
@@ -95,10 +96,11 @@
                                     this.hydrated = true;
                                     const observer = new IntersectionObserver(([entry]) => {
                                         if (entry.isIntersecting) {
-                                            this.shown = true;
+                                            this.pinShown = true;
+                                            window.setTimeout(() => this.cardShown = true, this.reducedMotion ? 0 : 180);
                                             observer.disconnect();
                                         }
-                                    }, { threshold: 0.42 });
+                                    }, { threshold: 0.3, rootMargin: '0px 0px -10% 0px' });
                                     observer.observe(this.$el);
                                 },
                                 tilt(event) {
@@ -117,8 +119,14 @@
                             x-init="init()"
                             @mousemove="tilt($event)"
                             @mouseleave="resetTilt($event)"
-                            :class="hydrated && !shown ? 'milestone-route-waiting' : shown ? 'milestone-route-visible' : ''"
+                            :class="[
+                                hydrated && !pinShown ? 'milestone-pin-waiting' : pinShown ? 'milestone-pin-visible' : '',
+                                hydrated && !cardShown ? 'milestone-card-waiting' : cardShown ? 'milestone-card-visible' : ''
+                            ]"
                             class="home-milestone-stop relative lg:grid lg:min-h-[168px] lg:grid-cols-[1fr_180px_1fr] lg:items-center">
+                            <span class="home-milestone-mobile-pin absolute -left-[2.05rem] top-5 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white lg:hidden" style="background-color: {{ $color['hex'] }}">
+                                <span class="home-milestone-mobile-pin-ring absolute inset-0 rounded-full border-2" style="border-color: {{ $color['hex'] }}"></span>
+                            </span>
                             <span class="home-milestone-pin-wrap absolute left-1/2 top-1/2 z-11 hidden h-16 w-16 lg:block" style="--road-pin-x: {{ $pinOffset }}px">
                                 <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
                                 <svg viewBox="0 0 48 60" class="home-milestone-pin h-full w-full drop-shadow-[0_8px_8px_rgba(11,43,92,0.25)]" aria-hidden="true">
