@@ -53,6 +53,7 @@
         $youtube = $profile['youtube'] ?? '#';
         $instagram = $profile['instagram'] ?? '#';
         $telegram = $profile['telegram'] ?? '#';
+        $tiktok = $profile['tiktok'] ?? '#';
         $workingHours = $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
     @endphp
 
@@ -315,6 +316,11 @@
                                 @if($instagram && $instagram !== '#')
                                     <a href="{{ $instagram }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl bg-social-instagram flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-social-instagram/30 transition-all" aria-label="Instagram">
                                         <x-social-icon network="instagram" class="w-4 h-4" />
+                                    </a>
+                                @endif
+                                @if($tiktok && $tiktok !== '#')
+                                    <a href="{{ $tiktok }}" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-black flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-black/30 transition-all" aria-label="TikTok">
+                                        <x-social-icon network="tiktok" class="w-4 h-4" />
                                     </a>
                                 @endif
                             </div>

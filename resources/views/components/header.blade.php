@@ -38,6 +38,7 @@
         $youtube = $profile['youtube'] ?? null;
         $instagram = $profile['instagram'] ?? null;
         $telegram = $profile['telegram'] ?? null;
+        $tiktok = $profile['tiktok'] ?? null;
 
         $lang = $siteLocale;
         $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
@@ -117,6 +118,13 @@
                         <a href="{{ $instagram }}" target="_blank"
                             class="w-6 h-6 rounded bg-social-instagram flex items-center justify-center hover:brightness-110 transition-all duration-300">
                             <x-social-icon network="instagram" class="w-3 h-3 text-white" />
+                        </a>
+                    @endif
+                    @if($tiktok && $tiktok !== '#')
+                        <a href="{{ $tiktok }}" target="_blank" rel="noopener noreferrer"
+                            class="w-6 h-6 rounded bg-black flex items-center justify-center hover:brightness-125 transition-all duration-300"
+                            aria-label="TikTok">
+                            <x-social-icon network="tiktok" class="w-3 h-3 text-white" />
                         </a>
                     @endif
                     @if($telegram && $telegram !== '#')

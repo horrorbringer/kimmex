@@ -98,6 +98,7 @@ class ManageSettings extends Page implements HasForms
             'youtube' => $org['youtube'] ?? '',
             'instagram' => $org['instagram'] ?? '',
             'telegram' => $org['telegram'] ?? '',
+            'tiktok' => $org['tiktok'] ?? '',
 
             // Branding
             'ceo_name' => $brand['ceo_name'] ?? '',
@@ -459,6 +460,10 @@ class ManageSettings extends Page implements HasForms
                                         TextInput::make('youtube')->url()->prefix('https://'),
                                         TextInput::make('instagram')->url()->prefix('https://'),
                                         TextInput::make('telegram')->url()->prefix('https://t.me/'),
+                                        TextInput::make('tiktok')
+                                            ->label('TikTok')
+                                            ->url()
+                                            ->placeholder('https://www.tiktok.com/@your-account'),
                                     ]),
                                 Section::make(__('Telegram Bot Alerts'))
                                     ->schema([
@@ -708,6 +713,7 @@ class ManageSettings extends Page implements HasForms
             'youtube' => $state['youtube'],
             'instagram' => $state['instagram'],
             'telegram' => $state['telegram'],
+            'tiktok' => $state['tiktok'],
             'en' => $orgEn,
             'km' => $orgKm,
         ]);

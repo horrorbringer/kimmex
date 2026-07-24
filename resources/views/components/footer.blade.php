@@ -19,6 +19,7 @@
     $youtube = $profile['youtube'] ?? null;
     $instagram = $profile['instagram'] ?? null;
     $telegram = $profile['telegram'] ?? null;
+    $tiktok = $profile['tiktok'] ?? null;
 
     $googleMapsUrl = $profile['google_maps_url'] ?? '';
     $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=');
@@ -66,6 +67,9 @@
                     @endif
                     @if($instagram && $instagram !== '#')
                         <a href="{{ $instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><x-social-icon network="instagram" class="w-4 h-4" /></a>
+                    @endif
+                    @if($tiktok && $tiktok !== '#')
+                        <a href="{{ $tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><x-social-icon network="tiktok" class="w-4 h-4" /></a>
                     @endif
                 </div>
             </div>
