@@ -24,6 +24,10 @@ class ProjectsTable
                     ->label(__('Active'))
                     ->onColor('success')
                     ->offColor('danger'),
+                TextColumn::make('status')
+                    ->label(__('Status'))
+                    ->badge()
+                    ->searchable(),
                 TextColumn::make('title')
                     ->label(__('Title'))
                     ->searchable()
@@ -31,10 +35,6 @@ class ProjectsTable
                     ->description(fn ($record) => $record->slug),
                 TextColumn::make('projectCategory.name')
                     ->label(__('Category'))
-                    ->badge()
-                    ->searchable(),
-                TextColumn::make('status')
-                    ->label(__('Status'))
                     ->badge()
                     ->searchable(),
                 TextColumn::make('completionDate')
