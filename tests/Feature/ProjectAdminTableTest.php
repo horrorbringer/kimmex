@@ -17,6 +17,7 @@ class ProjectAdminTableTest extends TestCase
             strpos($table, "TextColumn::make('title')"),
             strpos($table, "ImageColumn::make('heroImage')"),
         );
+        $this->assertStringContainsString("TextColumn::make('title')\n                    ->label(__('Title'))\n                    ->words(6)", $table);
         $this->assertStringContainsString('PublicStorage::urlIfExists($record->heroImage)', $table);
         $this->assertStringContainsString('ActionGroup::make([', $table);
         $this->assertStringContainsString('Heroicon::EllipsisVertical', $table);

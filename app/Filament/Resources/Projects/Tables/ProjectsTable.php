@@ -40,6 +40,7 @@ class ProjectsTable
                     ->imageSize(48),
                 TextColumn::make('title')
                     ->label(__('Title'))
+                    ->words(6)
                     ->searchable()
                     ->sortable(query: fn ($query, $direction) => $query->orderBy('title->en', $direction))
                     ->description(fn ($record) => $record->slug),
