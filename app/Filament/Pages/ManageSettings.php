@@ -698,9 +698,11 @@ class ManageSettings extends Page implements HasForms
             'working_hours' => $state['working_hours'],
         ];
 
-        $orgKm = SystemSetting::get('organization_profile')['km'] ?? [];
+        $existingOrganizationProfile = SystemSetting::get('organization_profile', []);
+        $orgKm = $existingOrganizationProfile['km'] ?? [];
 
         SystemSetting::set('organization_profile', [
+            ...$existingOrganizationProfile,
             'registration_number' => $state['registration_number'],
             'founded_date' => $state['founded_date'],
             'phone' => $state['phone'],
