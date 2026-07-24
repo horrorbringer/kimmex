@@ -79,13 +79,17 @@ class CloudinaryStorageTest extends TestCase
         $this->assertIsInt($disk->lastModified('images/projects/mpt-office.jpg'));
     }
 
-    public function test_cloudinary_exists_returns_false_when_cdn_is_unreachable(): void
+    public function test_cloudinary_public_storage_urls_do_not_depend_on_an_availability_check(): void
     {
         Http::fake(function () {
             throw new ConnectionException('DNS unavailable');
         });
 
         $this->assertFalse(Storage::disk('cloudinary')->exists('images/projects/mpt-office.jpg'));
-        $this->assertFalse(PublicStorage::exists('images/projects/mpt-office.jpg'));
+        $this->assertTrue(PublicStorage::exists('images/projects/mpt-office.jpg'));
+        $this->assertSame(
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/images/projects/mpt-office.jpg',
+            PublicStorage::urlIfExists('images/projects/mpt-office.jpg'),
+        );
     }
 }

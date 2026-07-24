@@ -26,10 +26,6 @@ class PublicStorage
             return false;
         }
 
-        if (self::diskName() === 'cloudinary') {
-            return self::disk()->exists($path);
-        }
-
         if (self::isRemoteDisk()) {
             return true;
         }

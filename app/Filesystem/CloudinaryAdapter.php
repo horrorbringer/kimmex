@@ -305,14 +305,11 @@ class CloudinaryAdapter implements FilesystemAdapter
 
     private function deliveryPublicId(string $path): string
     {
-        // public_id already contains the extension (e.g. "folder/file.jpg").
-        // Cloudinary delivery requires appending the extension again so the
-        // URL becomes /upload/folder/file.jpg which resolves correctly.
-        // PDFs need a double .pdf suffix for the same reason.
         $publicId = $this->publicId($path);
-        $extension = Str::lower(pathinfo($path, PATHINFO_EXTENSION));
 
-        return $extension !== '' ? $publicId.'.'.$extension : $publicId;
+        return Str::lower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf'
+            ? $publicId.'.pdf'
+            : $publicId;
     }
 
     private function normalizePath(string $path): string
