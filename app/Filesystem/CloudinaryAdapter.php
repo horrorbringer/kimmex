@@ -306,10 +306,9 @@ class CloudinaryAdapter implements FilesystemAdapter
     private function deliveryPublicId(string $path): string
     {
         $publicId = $this->publicId($path);
+        $extension = Str::lower(pathinfo($path, PATHINFO_EXTENSION));
 
-        return Str::lower(pathinfo($path, PATHINFO_EXTENSION)) === 'pdf'
-            ? $publicId.'.pdf'
-            : $publicId;
+        return $extension !== '' ? $publicId.'.'.$extension : $publicId;
     }
 
     private function normalizePath(string $path): string

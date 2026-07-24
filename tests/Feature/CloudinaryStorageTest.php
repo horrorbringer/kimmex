@@ -31,9 +31,21 @@ class CloudinaryStorageTest extends TestCase
     public function test_public_storage_resolves_cloudinary_image_url(): void
     {
         $this->assertSame(
-            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/news/cover.jpg',
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/news/cover.jpg.jpg',
             PublicStorage::url('news/cover.jpg'),
         );
+    }
+
+    public function test_cloudinary_image_urls_preserve_common_image_extensions(): void
+    {
+        foreach (['jpg', 'jpeg', 'png', 'webp', 'gif'] as $extension) {
+            $path = "projects/hero-image.{$extension}";
+
+            $this->assertSame(
+                "https://res.cloudinary.com/demo-cloud/image/upload/kimmex/{$path}.{$extension}",
+                PublicStorage::urlIfExists($path),
+            );
+        }
     }
 
     public function test_cloudinary_disk_uploads_to_auto_resource_endpoint(): void
@@ -88,7 +100,7 @@ class CloudinaryStorageTest extends TestCase
         $this->assertFalse(Storage::disk('cloudinary')->exists('images/projects/mpt-office.jpg'));
         $this->assertTrue(PublicStorage::exists('images/projects/mpt-office.jpg'));
         $this->assertSame(
-            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/images/projects/mpt-office.jpg',
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/images/projects/mpt-office.jpg.jpg',
             PublicStorage::urlIfExists('images/projects/mpt-office.jpg'),
         );
     }
