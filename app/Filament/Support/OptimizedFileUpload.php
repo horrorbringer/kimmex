@@ -24,7 +24,8 @@ class OptimizedFileUpload
             ->imageResizeTargetWidth('1920')
             ->imageResizeTargetHeight('1080')
             ->maxSize(5120)
-            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+            ->mimeTypeMap(['webp' => 'image/webp']);
     }
 
     public static function hero(string $name): FileUpload
@@ -38,7 +39,8 @@ class OptimizedFileUpload
             ->imageResizeTargetWidth('2560')
             ->imageResizeTargetHeight('1440')
             ->maxSize(8192)
-            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp']);
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+            ->mimeTypeMap(['webp' => 'image/webp']);
     }
 
     public static function thumbnail(string $name): FileUpload
