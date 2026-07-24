@@ -1,12 +1,14 @@
 @php
     $fallbacks = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
 
-    $partners = \Illuminate\Support\Facades\Cache::remember('home_partners_array_' . app()->getLocale(), now()->addHours(12), function() use ($fallbacks) {
+    $partners = \Illuminate\Support\Facades\Cache::remember('home_partners_array_v2_' . app()->getLocale(), now()->addHours(12), function() use ($fallbacks) {
         $partnersDb = \App\Models\Partner::where('isActive', true)->orderBy('orderIndex')->get();
         return $partnersDb->map(function ($p, $index) use ($fallbacks) {
             $fallbackLogo = "/partners/" . $fallbacks[$index % count($fallbacks)] . ".png";
             $logo = $p->logoUrl;
-            $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, $fallbackLogo);
+            $logoUrl = $logo === 'partners/placeholder.png'
+                ? $fallbackLogo
+                : \App\Support\PublicStorage::urlIfExists($logo, $fallbackLogo);
             return [
                 'name' => $p->getTranslation('name', app()->getLocale()),
                 'logo' => $logoUrl,
