@@ -39,7 +39,7 @@
 @endphp
 
 
-<x-layouts.app :title="$doc['title']" :description="strip_tags($doc['description'] ?? '')">
+<x-layouts.app :title="$doc['title']" :description="strip_tags($doc['description'] ?? '')" :image="$thumbnailUrl ?: '/images/heroes/documents-bg.png'" :image-alt="$doc['title']" :canonical="route('documents.show', ['slug' => $slug])">
 
     <div class="min-h-screen bg-gray-50">
 

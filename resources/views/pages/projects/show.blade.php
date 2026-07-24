@@ -62,7 +62,7 @@
     $hasEngineeringNarrative = $hasProjectContent($engineeringNarrative);
 @endphp
 
-<x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']">
+<x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']" :image="$project['heroImage']" :image-alt="$project['title']" :canonical="route('projects.show', ['slug' => $project['slug']])">
     @push('head')
         <script type="application/ld+json">
             {!! json_encode([

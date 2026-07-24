@@ -53,7 +53,7 @@
 @endphp
 
 
-<x-layouts.app :title="$pageTitle" :description="$pageDesc" :canonical="$canonicalUrl">
+<x-layouts.app :title="$pageTitle" :description="$pageDesc" image="/images/career-detail.png" :image-alt="$pageTitle" :canonical="$canonicalUrl" og-type="article">
     @push('head')
         <script type="application/ld+json">
             {!! json_encode([

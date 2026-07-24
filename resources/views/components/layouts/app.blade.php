@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'image' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null, 'priorityImage' => null])
+@props(['title' => null, 'description' => null, 'image' => null, 'imageAlt' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null, 'priorityImage' => null])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
@@ -46,6 +46,7 @@
         $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, asset('logo.png'));
         $rawPageImage = $image ?? $logoUrl;
         $pageImage = $absoluteUrl($rawPageImage, asset('logo.png'));
+        $pageImageAlt = $imageAlt ?? $pageTitle;
         $canonicalUrl = $absoluteUrl($canonical, url()->current());
         $organizationLogo = $absoluteUrl($logoUrl, asset('logo.png'));
         $organizationSameAs = collect([
@@ -102,6 +103,8 @@
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
     <meta property="og:image" content="{{ $pageImage }}">
+    <meta property="og:image:secure_url" content="{{ $pageImage }}">
+    <meta property="og:image:alt" content="{{ $pageImageAlt }}">
     <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
     <meta property="og:site_name" content="{{ $siteName }}">
 
@@ -110,6 +113,7 @@
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDesc }}">
     <meta name="twitter:image" content="{{ $pageImage }}">
+    <meta name="twitter:image:alt" content="{{ $pageImageAlt }}">
     @if(\Illuminate\Support\Str::startsWith($pageImage, ['http://', 'https://']))
         <link rel="preconnect" href="{{ parse_url($pageImage, PHP_URL_SCHEME) . '://' . parse_url($pageImage, PHP_URL_HOST) }}" crossorigin>
     @endif
