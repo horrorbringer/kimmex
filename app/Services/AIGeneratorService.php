@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\SystemSetting;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class AIGeneratorService
@@ -330,12 +331,23 @@ class AIGeneratorService
         $apiKey = $apiKey ?: $providerConfig['api_key'];
         $baseUrl = $baseUrl ?: $providerConfig['base_url'];
 
+        $cacheKey = 'ai_available_models_'.hash('xxh3', ($provider ?? 'gemini')."|{$apiKey}|{$baseUrl}");
+
+        return Cache::remember($cacheKey, now()->addHour(), function () use ($apiKey, $provider, $baseUrl): array {
+            return $this->fetchAvailableModels($apiKey, $provider, $baseUrl);
+        });
+    }
+
+    protected function fetchAvailableModels(?string $apiKey, ?string $provider, ?string $baseUrl): array
+    {
+        $http = Http::connectTimeout(2)->timeout(5);
+
         try {
             if ($provider === 'gemini') {
                 if (empty($apiKey)) {
                     return $this->defaultModels('gemini');
                 }
-                $response = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
+                $response = $http->get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
                 if ($response->successful()) {
                     return collect($response->json()['models'] ?? [])
                         ->filter(fn ($m) => in_array('generateContent', $m['supportedGenerationMethods'] ?? []))
@@ -345,7 +357,7 @@ class AIGeneratorService
             }
 
             if ($provider === 'ollama') {
-                $response = Http::get(rtrim($baseUrl, '/').'/api/tags');
+                $response = $http->get(rtrim($baseUrl, '/').'/api/tags');
                 if ($response->successful()) {
                     return collect($response->json()['models'] ?? [])
                         ->mapWithKeys(fn ($m) => [$m['name'] => $m['name']])
@@ -358,7 +370,7 @@ class AIGeneratorService
                     return $this->defaultModels('openrouter');
                 }
 
-                $response = Http::withToken($apiKey)->get('https://openrouter.ai/api/v1/models');
+                $response = $http->withToken($apiKey)->get('https://openrouter.ai/api/v1/models');
                 if ($response->successful()) {
                     $models = collect($response->json('data') ?? [])
                         ->filter(fn ($m) => in_array('text', $m['architecture']['input_modalities'] ?? ['text'], true))

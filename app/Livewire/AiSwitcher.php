@@ -20,7 +20,10 @@ class AiSwitcher extends Component
         $settings = SystemSetting::get('ai_settings', []);
         $this->provider = $settings['provider'] ?? 'gemini';
         $this->model = $this->modelForProvider($settings, $this->provider);
-        $this->loadModels();
+
+        // Do not make an external provider request while every admin page is loading.
+        // The complete model list is fetched only after an administrator changes provider.
+        $this->availableModels = $this->model === '' ? [] : [$this->model => $this->model];
     }
 
     public function loadModels()

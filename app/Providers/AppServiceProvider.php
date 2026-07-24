@@ -107,6 +107,10 @@ class AppServiceProvider extends ServiceProvider
                 return;
             }
 
+            if (request()->is('admin') || request()->is('admin/*')) {
+                return;
+            }
+
             $lang = app()->getLocale();
             static $settingsByLocale = [];
             static $hasPublicDocuments = null;
