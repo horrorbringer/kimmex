@@ -20,8 +20,10 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('M80 84C215 35 410 50 470 160C535 278 410 340 300 420', $milestones);
         $this->assertStringContainsString('viewBox="0 0 48 60"', $milestones);
         $this->assertStringContainsString('home-milestone-route', $milestones);
-        $this->assertStringContainsString('h-[1512px] w-[620px]', $milestones);
-        $this->assertStringContainsString('$roadPinOffsets', $milestones);
+        $this->assertStringContainsString('$roadHeight = max(1512, (count($milestones) * 168) + 144);', $milestones);
+        $this->assertStringContainsString('style="height: {{ $roadHeight }}px"', $milestones);
+        $this->assertStringContainsString('preserveAspectRatio="none"', $milestones);
+        $this->assertStringNotContainsString('$roadPinOffsets', $milestones);
         $this->assertStringContainsString('home-milestone-road-flow', $milestones);
         $this->assertStringContainsString('home-milestone-pin', $milestones);
         $this->assertStringContainsString('IntersectionObserver', $milestones);
@@ -38,8 +40,9 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('line-clamp-2', $milestones);
         $this->assertStringContainsString('background-color: {{ $color[\'hex\'] }}', $milestones);
         $this->assertStringContainsString('home-milestone-mobile-pin', $milestones);
-        $this->assertStringContainsString('home-milestone-pin-wrap absolute left-1/2 top-1/2 z-11', $milestones);
-        $this->assertStringContainsString('home-milestone-card relative z-1', $milestones);
+        $this->assertStringContainsString('home-milestone-card-pin absolute -top-8 right-5', $milestones);
+        $this->assertStringContainsString('home-milestone-card-wrap relative z-1', $milestones);
+        $this->assertStringContainsString('home-milestone-card relative overflow-hidden', $milestones);
         $this->assertStringContainsString('.milestone-pin-waiting .home-milestone-mobile-pin', $styles);
         $this->assertStringContainsString('@media (prefers-reduced-motion: reduce)', $styles);
         $this->assertStringNotContainsString('@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse)', $styles);

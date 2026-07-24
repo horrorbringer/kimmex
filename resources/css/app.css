@@ -1212,10 +1212,10 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   transform-style: preserve-3d;
 }
 
-.home-milestone-pin-wrap {
+.home-milestone-card-pin {
   --pin-scale: 1;
   opacity: 1;
-  transform: translate(calc(-50% + var(--road-pin-x)), -50%) scale(var(--pin-scale));
+  transform: scale(var(--pin-scale));
   transition: opacity 360ms ease-out, transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1248,7 +1248,7 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
   filter: blur(0);
 }
 
-.milestone-pin-waiting .home-milestone-pin-wrap,
+.milestone-pin-waiting .home-milestone-card-pin,
 .milestone-pin-waiting .home-milestone-mobile-pin {
   --pin-scale: 0.45;
   opacity: 0;
@@ -1360,7 +1360,7 @@ html.dark .bg-titan-red.hover\:bg-red-700 {
     animation: none;
   }
 
-  .home-milestone-pin-wrap,
+  .home-milestone-card-pin,
   .home-milestone-mobile-pin,
   .home-milestone-card {
     opacity: 1;

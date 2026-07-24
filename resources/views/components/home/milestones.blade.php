@@ -30,7 +30,7 @@
         ['text' => 'text-[#F16F24]', 'hex' => '#F16F24', 'border' => 'border-[#F16F24]/20'],
         ['text' => 'text-[#D51B59]', 'hex' => '#D51B59', 'border' => 'border-[#D51B59]/20'],
     ];
-    $roadPinOffsets = [-230, 166, -10, -61, 98, 63, -24, 120, 210];
+    $roadHeight = max(1512, (count($milestones) * 168) + 144);
 @endphp
 
 @if (! empty($milestones))
@@ -60,8 +60,8 @@
                 }"
                 x-init="init()"
                 :class="active ? 'home-milestone-route-active' : ''"
-                class="home-milestone-route relative mx-auto max-w-[1140px]">
-                <svg class="pointer-events-none absolute left-1/2 top-0 hidden h-[1512px] w-[620px] -translate-x-1/2 lg:block" viewBox="0 0 620 1512" fill="none" aria-hidden="true">
+                class="home-milestone-route relative mx-auto max-w-[1140px] pb-32 lg:pb-40">
+                <svg class="pointer-events-none absolute left-1/2 top-0 hidden w-[620px] -translate-x-1/2 lg:block" style="height: {{ $roadHeight }}px" viewBox="0 0 620 1512" preserveAspectRatio="none" fill="none" aria-hidden="true">
                     <defs>
                         <linearGradient id="milestone-road-gradient" x1="0" y1="0" x2="620" y2="1512" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#8A35B5" />
@@ -82,7 +82,6 @@
                         @php
                             $color = $roadColors[$index % count($roadColors)];
                             $side = $index % 2 === 0 ? 'lg:col-start-1 lg:mr-10' : 'lg:col-start-3 lg:ml-10';
-                            $pinOffset = $roadPinOffsets[$index] ?? 0;
                         @endphp
                         <article x-data="{
                                 pinShown: false,
@@ -127,24 +126,26 @@
                             <span class="home-milestone-mobile-pin absolute -left-[2.05rem] top-5 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white lg:hidden" style="background-color: {{ $color['hex'] }}">
                                 <span class="home-milestone-mobile-pin-ring absolute inset-0 rounded-full border-2" style="border-color: {{ $color['hex'] }}"></span>
                             </span>
-                            <span class="home-milestone-pin-wrap absolute left-1/2 top-1/2 z-11 hidden h-16 w-16 lg:block" style="--road-pin-x: {{ $pinOffset }}px">
-                                <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
-                                <svg viewBox="0 0 48 60" class="home-milestone-pin h-full w-full drop-shadow-[0_8px_8px_rgba(11,43,92,0.25)]" aria-hidden="true">
-                                    <path d="M24 2C11.85 2 2 11.85 2 24c0 16.5 18.02 31.96 21.1 34.44a1.45 1.45 0 0 0 1.8 0C27.98 55.96 46 40.5 46 24 46 11.85 36.15 2 24 2Z" fill="{{ $color['hex'] }}" />
-                                    <circle cx="24" cy="24" r="8" fill="white" />
-                                </svg>
-                            </span>
-                            <div class="home-milestone-card relative z-1 overflow-hidden rounded-2xl border bg-white p-4 pl-5 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:min-h-[112px] lg:flex lg:items-center lg:gap-4 lg:bg-white/95 {{ $side }}">
-                                <span class="absolute inset-y-0 left-0 w-1" style="background-color: {{ $color['hex'] }}"></span>
-                                @if ($milestone['image'])
-                                    <div class="mb-4 aspect-[16/7] overflow-hidden rounded-xl bg-titan-navy/5 lg:mb-0 lg:h-20 lg:w-28 lg:shrink-0 lg:aspect-auto">
-                                        <img src="{{ $milestone['image'] }}" alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
+                            <div class="home-milestone-card-wrap relative z-1 {{ $side }}">
+                                <span class="home-milestone-card-pin absolute -top-8 right-5 z-10 hidden h-14 w-12 lg:block">
+                                    <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
+                                    <svg viewBox="0 0 48 60" class="home-milestone-pin h-full w-full drop-shadow-[0_8px_8px_rgba(11,43,92,0.25)]" aria-hidden="true">
+                                        <path d="M24 2C11.85 2 2 11.85 2 24c0 16.5 18.02 31.96 21.1 34.44a1.45 1.45 0 0 0 1.8 0C27.98 55.96 46 40.5 46 24 46 11.85 36.15 2 24 2Z" fill="{{ $color['hex'] }}" />
+                                        <circle cx="24" cy="24" r="8" fill="white" />
+                                    </svg>
+                                </span>
+                                <div class="home-milestone-card relative overflow-hidden rounded-2xl border bg-white p-4 pl-5 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:min-h-[112px] lg:flex lg:items-center lg:gap-4 lg:bg-white/95">
+                                    <span class="absolute inset-y-0 left-0 w-1" style="background-color: {{ $color['hex'] }}"></span>
+                                    @if ($milestone['image'])
+                                        <div class="mb-4 aspect-[16/7] overflow-hidden rounded-xl bg-titan-navy/5 lg:mb-0 lg:h-20 lg:w-28 lg:shrink-0 lg:aspect-auto">
+                                            <img src="{{ $milestone['image'] }}" alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
+                                        </div>
+                                    @endif
+                                    <div>
+                                        <p class="font-heading text-xl font-black tracking-tight {{ $color['text'] }}">{{ $milestone['year'] }}</p>
+                                        <h3 class="mt-1 font-heading text-lg font-black tracking-tight text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-xl' : '' }}">{{ $milestone['title'] }}</h3>
+                                        <p class="mt-2 line-clamp-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
                                     </div>
-                                @endif
-                                <div>
-                                    <p class="font-heading text-xl font-black tracking-tight {{ $color['text'] }}">{{ $milestone['year'] }}</p>
-                                    <h3 class="mt-1 font-heading text-lg font-black tracking-tight text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-xl' : '' }}">{{ $milestone['title'] }}</h3>
-                                    <p class="mt-2 line-clamp-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
                                 </div>
                             </div>
                         </article>
