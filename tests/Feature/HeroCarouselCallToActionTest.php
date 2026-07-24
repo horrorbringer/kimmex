@@ -17,7 +17,8 @@ class HeroCarouselCallToActionTest extends TestCase
         $this->assertStringContainsString('text-[9px] sm:text-[10px]', $heroTemplate);
         $this->assertStringContainsString('font-khmer text-xs sm:text-sm tracking-normal', $heroTemplate);
         $this->assertSame(2, substr_count($heroTemplate, 'self-start'));
-        $this->assertStringContainsString('h-[100dvh] min-h-[580px] sm:min-h-[640px]', $heroTemplate);
+        $this->assertStringContainsString('h-[62svh] min-h-[420px] max-h-[560px]', $heroTemplate);
+        $this->assertStringContainsString('hidden sm:flex items-center justify-center', $heroTemplate);
         $this->assertStringContainsString('mt-2 sm:mt-3 flex flex-row flex-wrap', $heroTemplate);
     }
 }

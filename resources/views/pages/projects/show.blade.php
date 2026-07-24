@@ -148,15 +148,6 @@
 
         </header>
 
-        {{-- Social Share Buttons --}}
-        <div style="max-width: 1400px; margin: 0 auto; padding: 1.5rem 1.5rem 0;">
-            <x-social-share
-                :url="route('projects.show', ['slug' => $project['slug']])"
-                :title="$project['title']"
-                :description="'Kimmex project: ' . $project['title']"
-            />
-        </div>
-
         <!-- --- MAIN CONTENT SPLIT --- -->
         <section class="py-10 md:py-16 px-4 md:px-6 bg-gradient-to-b from-white via-slate-50/60 to-white">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 max-w-[1400px] mx-auto">
@@ -277,58 +268,11 @@
                         <!-- CENTERED SOCIAL SHARING -->
                         <div class="reveal-up pt-8 md:pt-12 border-t border-gray-100 mt-8 md:mt-12 flex flex-col items-center gap-4 md:gap-6">
                             <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Project') }}</div>
-                            <div class="flex items-center gap-3 md:gap-4">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                                    class="w-10 h-10 md:w-12 md:h-12 bg-social-facebook rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/fb">
-                                    <x-social-icon network="facebook" class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/fb:scale-110" />
-                                </a>
-                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener"
-                                    class="w-10 h-10 md:w-12 md:h-12 bg-social-linkedin rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/li">
-                                    <x-social-icon network="linkedin" class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/li:scale-110" />
-                                </a>
-                                <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($project['title']) }}" target="_blank" rel="noopener"
-                                    class="w-10 h-10 md:w-12 md:h-12 bg-social-telegram rounded flex items-center justify-center text-white hover:brightness-110 transition-all transform hover:-translate-y-1 shadow-lg group/tg">
-                                    <x-social-icon network="telegram" class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover/tg:scale-110" />
-                                </a>
-                                <div x-data="{ 
-                                    copied: false, 
-                                    copyLink() {
-                                        const url = window.location.href;
-                                        if (navigator.clipboard && navigator.clipboard.writeText) {
-                                            navigator.clipboard.writeText(url).catch(() => {});
-                                        } else {
-                                            const el = document.createElement('textarea');
-                                            el.value = url;
-                                            document.body.appendChild(el);
-                                            el.select();
-                                            document.execCommand('copy');
-                                            document.body.removeChild(el);
-                                        }
-                                        this.copied = true;
-                                        setTimeout(() => this.copied = false, 2000);
-                                    }
-                                }" class="relative">
-                                    <button @click="copyLink()"
-                                        class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded transition-all duration-300 transform hover:-translate-y-1 active:scale-95 shadow-lg group/link"
-                                        :class="copied ? 'bg-titan-red text-white border-titan-red' : 'bg-white text-titan-navy border border-gray-100 hover:border-titan-red/30 hover:text-titan-red'">
-                                        <x-lucide-link class="w-4 h-4 md:w-5 md:h-5" x-show="!copied" />
-                                        <x-lucide-check class="w-4 h-4 md:w-5 md:h-5" x-show="copied" x-cloak />
-                                    </button>
-
-                                    <!-- Tooltip -->
-                                    <div x-show="copied" 
-                                         x-transition:enter="transition ease-out duration-300"
-                                         x-transition:enter-start="opacity-0 translate-y-2"
-                                         x-transition:enter-end="opacity-100 translate-y-0"
-                                         x-transition:leave="transition ease-in duration-200"
-                                         x-transition:leave-start="opacity-100 translate-y-0"
-                                         x-transition:leave-end="opacity-0 translate-y-2"
-                                         class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-titan-navy text-white text-[9px] font-black uppercase tracking-widest rounded whitespace-nowrap shadow-xl z-50"
-                                         style="display: none;">
-                                        {{ __('Copied!') }}
-                                    </div>
-                                </div>
-                            </div>
+                            <x-social-share
+                                :url="route('projects.show', ['slug' => $project['slug']])"
+                                :title="$project['title']"
+                                :description="'Kimmex project: ' . $project['title']"
+                            />
                         </div>
                     </div>
                 </div>

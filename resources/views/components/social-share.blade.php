@@ -9,7 +9,11 @@
     $twitterUrl = "https://twitter.com/intent/tweet?url={$encodedUrl}&text={$encodedTitle}";
 @endphp
 
-<div x-data="{ copied: false }" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+<div x-data="{
+    copied: false,
+    baseStyle: 'display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #0B2B5C; background-color: #0B2B5C; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; box-shadow: 0 4px 12px rgba(11, 43, 92, 0.22); transition: background-color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;',
+    copiedStyle: 'display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #16a34a; background-color: #16a34a; color: #ffffff; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.24); transition: background-color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;'
+}" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
     {{-- Facebook --}}
     <a href="{{ $facebookUrl }}"
        target="_blank"
@@ -83,10 +87,9 @@
             copied = true;
             setTimeout(() => copied = false, 2000);
         "
-        style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid #e5e7eb; background-color: #fff; color: #374151; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;"
-        onmouseover="this.style.borderColor='#dc2626'; this.style.color='#dc2626'; this.style.transform='translateY(-2px)';"
-        onmouseout="this.style.borderColor='#e5e7eb'; this.style.color='#374151'; this.style.transform='translateY(0)';"
-        :style="copied ? 'border-color: #16a34a; color: #16a34a; background-color: #f0fdf4;' : ''"
+        :style="copied ? copiedStyle : baseStyle"
+        onmouseover="if (!copied) { this.style.borderColor='#E31E24'; this.style.backgroundColor='#E31E24'; this.style.color='#ffffff'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 18px rgba(227, 30, 36, 0.26)'; }"
+        onmouseout="if (!copied) { this.style.borderColor='#0B2B5C'; this.style.backgroundColor='#0B2B5C'; this.style.color='#ffffff'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(11, 43, 92, 0.22)'; }"
         aria-label="Copy link to clipboard">
         {{-- Link icon --}}
         <svg x-show="!copied" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">

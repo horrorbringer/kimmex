@@ -119,7 +119,7 @@
     @focusout="resume()"
     @keydown.arrow-left.window="prevSlide()"
     @keydown.arrow-right.window="nextSlide()"
-    class="relative mt-[112px] h-[calc(100dvh-112px)] min-h-[500px] sm:min-h-[560px] overflow-hidden bg-titan-navy text-white"
+    class="relative mt-[112px] h-[62svh] min-h-[420px] max-h-[560px] sm:h-[calc(100dvh-112px)] sm:min-h-[560px] sm:max-h-none overflow-hidden bg-titan-navy text-white"
     data-priority-image>
 
     <!-- === SLIDES (directional transition stack) === -->
@@ -148,16 +148,16 @@
                 height="1080"
                 sizes="100vw"
                 :class="{{ $index }} === current && !prefersReducedMotion ? 'animate-hero-kenburns' : ''"
-                class="hero-slide-image object-cover w-full h-full"
+                class="hero-slide-image object-cover object-[62%_center] sm:object-center w-full h-full"
                 decoding="async" />
             {{-- Gradient overlays --}}
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/80 via-titan-navy/50 to-titan-navy/20 sm:from-titan-navy/75 sm:via-titan-navy/35 sm:to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/10 via-transparent to-titan-navy/50"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/75 to-titan-navy/45 sm:from-titan-navy/75 sm:via-titan-navy/35 sm:to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/30 via-transparent to-titan-navy/70 sm:from-titan-navy/10 sm:to-titan-navy/50"></div>
         </div>
     @endforeach
 
     <!-- === CONTENT OVERLAY === -->
-    <div class="absolute inset-0 flex flex-col justify-center z-20 pt-28 pb-24 sm:pt-32 sm:pb-20 lg:pt-28 lg:pb-24">
+    <div class="absolute inset-0 flex flex-col justify-center z-20 pt-16 pb-20 sm:pt-32 sm:pb-20 lg:pt-28 lg:pb-24">
         <div class="max-w-[1200px] w-full mx-auto px-5 sm:px-6 lg:px-8">
             <div class="max-w-[640px] lg:max-w-[600px] xl:max-w-[680px]">
                 @foreach($slides as $index => $slide)
@@ -184,7 +184,7 @@
                                 <x-lucide-arrow-right class="group-hover:translate-x-1 transition-transform w-3 h-3 sm:w-3.5 sm:h-3.5 relative z-10" />
                             </a>
                             <a href="/contact"
-                                class="group self-start border-2 border-white/25 backdrop-blur-sm text-white px-5 sm:px-6 lg:px-7 py-2.5 sm:py-3 font-black transition-all duration-500 flex items-center justify-center gap-2.5 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-xs sm:text-sm tracking-normal' : 'text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
+                                class="group self-start border-2 border-white/25 backdrop-blur-sm text-white px-5 sm:px-6 lg:px-7 py-2.5 sm:py-3 font-black transition-all duration-500 hidden sm:flex items-center justify-center gap-2.5 rounded {{ app()->getLocale() === 'km' ? 'font-khmer text-xs sm:text-sm tracking-normal' : 'text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] uppercase hover:bg-white hover:text-titan-navy hover:border-white' }}">
                                 <x-lucide-phone class="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:rotate-12 transition-transform" />
                                 <span>{{ __('CONTACT US') }}</span>
                             </a>
