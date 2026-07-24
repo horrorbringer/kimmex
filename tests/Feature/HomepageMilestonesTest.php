@@ -33,6 +33,8 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('home-milestone-pin-ring', $milestones);
         $this->assertStringContainsString('A legacy built milestone by milestone', $milestones);
         $this->assertStringContainsString("'image' => \\App\\Support\\PublicStorage::urlIfExists", $milestones);
+        $this->assertStringContainsString("'detail' => \$milestone->getTranslation('detailed_description'", $milestones);
+        $this->assertStringContainsString("\$detail = \$milestone['detail'] ?? '';", $milestones);
         $this->assertStringContainsString("fill=\"{{ \$color['hex'] }}\"", $milestones);
         $this->assertStringContainsString('tilt($event)', $milestones);
         $this->assertStringContainsString('home-milestone-card', $milestones);
@@ -43,6 +45,10 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('home-milestone-card-pin absolute -top-8 right-5', $milestones);
         $this->assertStringContainsString('home-milestone-card-wrap relative z-1', $milestones);
         $this->assertStringContainsString('home-milestone-card relative overflow-hidden', $milestones);
+        $this->assertStringContainsString('home-milestone-card-interactive cursor-pointer', $milestones);
+        $this->assertStringContainsString('role="dialog"', $milestones);
+        $this->assertStringContainsString('openDetail($event)', $milestones);
+        $this->assertStringContainsString('Read story', $milestones);
         $this->assertStringContainsString('.milestone-pin-waiting .home-milestone-mobile-pin', $styles);
         $this->assertStringContainsString('@media (prefers-reduced-motion: reduce)', $styles);
         $this->assertStringNotContainsString('@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse)', $styles);

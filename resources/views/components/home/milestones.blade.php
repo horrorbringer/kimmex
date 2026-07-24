@@ -12,6 +12,7 @@
                     'year' => $milestone->year,
                     'title' => $milestone->getTranslation('title', $locale, false) ?: $milestone->getTranslation('title', 'en'),
                     'description' => \Illuminate\Support\Str::limit(trim(strip_tags($milestone->getTranslation('description', $locale, false) ?: $milestone->getTranslation('description', 'en'))), 64),
+                    'detail' => $milestone->getTranslation('detailed_description', $locale, false) ?: $milestone->getTranslation('detailed_description', 'en'),
                     'image' => \App\Support\PublicStorage::urlIfExists($milestone->image, $fallbackImage),
                 ];
             })
@@ -82,10 +83,14 @@
                         @php
                             $color = $roadColors[$index % count($roadColors)];
                             $side = $index % 2 === 0 ? 'lg:col-start-1 lg:mr-10' : 'lg:col-start-3 lg:ml-10';
+                            $detail = $milestone['detail'] ?? '';
+                            $hasDetail = filled(trim(strip_tags((string) $detail)));
                         @endphp
                         <article x-data="{
                                 pinShown: false,
                                 cardShown: false,
+                                detailOpen: false,
+                                detailTrigger: null,
                                 hydrated: false,
                                 reducedMotion: false,
                                 canTilt: false,
@@ -113,6 +118,15 @@
                                 resetTilt(event) {
                                     event.currentTarget.style.setProperty('--milestone-rotate-x', '0deg');
                                     event.currentTarget.style.setProperty('--milestone-rotate-y', '0deg');
+                                },
+                                openDetail(event) {
+                                    this.detailTrigger = event.currentTarget;
+                                    this.detailOpen = true;
+                                    this.$nextTick(() => this.$refs.detailClose.focus());
+                                },
+                                closeDetail() {
+                                    this.detailOpen = false;
+                                    this.$nextTick(() => this.detailTrigger?.focus());
                                 }
                             }"
                             x-init="init()"
@@ -134,7 +148,15 @@
                                         <circle cx="24" cy="24" r="8" fill="white" />
                                     </svg>
                                 </span>
-                                <div class="home-milestone-card relative overflow-hidden rounded-2xl border bg-white p-4 pl-5 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:min-h-[112px] lg:flex lg:items-center lg:gap-4 lg:bg-white/95">
+                                <div class="home-milestone-card relative overflow-hidden rounded-2xl border bg-white p-4 pl-5 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:min-h-[112px] lg:flex lg:items-center lg:gap-4 lg:bg-white/95 {{ $hasDetail ? 'home-milestone-card-interactive cursor-pointer focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/30' : '' }}"
+                                    @if ($hasDetail)
+                                        role="button"
+                                        tabindex="0"
+                                        aria-haspopup="dialog"
+                                        @click="openDetail($event)"
+                                        @keydown.enter.prevent="openDetail($event)"
+                                        @keydown.space.prevent="openDetail($event)"
+                                    @endif>
                                     <span class="absolute inset-y-0 left-0 w-1" style="background-color: {{ $color['hex'] }}"></span>
                                     @if ($milestone['image'])
                                         <div class="mb-4 aspect-[16/7] overflow-hidden rounded-xl bg-titan-navy/5 lg:mb-0 lg:h-20 lg:w-28 lg:shrink-0 lg:aspect-auto">
@@ -145,9 +167,31 @@
                                         <p class="font-heading text-xl font-black tracking-tight {{ $color['text'] }}">{{ $milestone['year'] }}</p>
                                         <h3 class="mt-1 font-heading text-lg font-black tracking-tight text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-xl' : '' }}">{{ $milestone['title'] }}</h3>
                                         <p class="mt-2 line-clamp-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
+                                        @if ($hasDetail)
+                                            <span class="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] {{ $color['text'] }}">
+                                                {{ __('Read story') }}
+                                                <x-lucide-arrow-up-right class="h-3.5 w-3.5" />
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
+
+                            @if ($hasDetail)
+                                <div x-cloak x-show="detailOpen" @keydown.escape.window="closeDetail()" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="milestone-detail-{{ $index }}">
+                                    <div x-show="detailOpen" x-transition.opacity @click="closeDetail()" class="absolute inset-0 bg-titan-navy/80 backdrop-blur-sm"></div>
+                                    <div x-show="detailOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-5 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-5 scale-95" @click.stop class="relative z-10 max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl sm:p-8">
+                                        <button x-ref="detailClose" type="button" @click="closeDetail()" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-titan-navy/5 text-titan-navy transition-colors hover:bg-titan-red hover:text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/30" aria-label="{{ __('Close') }}">
+                                            <x-lucide-x class="h-5 w-5" />
+                                        </button>
+                                        <p class="pr-12 font-heading text-xl font-black {{ $color['text'] }}">{{ $milestone['year'] }}</p>
+                                        <h3 id="milestone-detail-{{ $index }}" class="mt-1 pr-10 font-heading text-2xl font-black tracking-tight text-titan-navy sm:text-3xl {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ $milestone['title'] }}</h3>
+                                        <div class="prose prose-sm mt-6 max-w-none leading-relaxed text-titan-navy/70 [&_a]:font-semibold [&_a]:text-titan-red [&_img]:rounded-xl [&_img]:shadow-sm">
+                                            {!! $detail !!}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </article>
                     @endforeach
                 </div>
