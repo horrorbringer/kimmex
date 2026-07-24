@@ -48,6 +48,14 @@ class CloudinaryStorageTest extends TestCase
         }
     }
 
+    public function test_cloudinary_uses_existing_public_assets_for_legacy_image_paths(): void
+    {
+        $this->assertSame(
+            '/images/projects/Thumbnail-1.jpg',
+            PublicStorage::urlIfExists('images/projects/Thumbnail-1.jpg'),
+        );
+    }
+
     public function test_cloudinary_disk_uploads_to_auto_resource_endpoint(): void
     {
         Http::fake([
@@ -97,11 +105,11 @@ class CloudinaryStorageTest extends TestCase
             throw new ConnectionException('DNS unavailable');
         });
 
-        $this->assertFalse(Storage::disk('cloudinary')->exists('images/projects/mpt-office.jpg'));
-        $this->assertTrue(PublicStorage::exists('images/projects/mpt-office.jpg'));
+        $this->assertFalse(Storage::disk('cloudinary')->exists('projects/cloud-only.jpg'));
+        $this->assertTrue(PublicStorage::exists('projects/cloud-only.jpg'));
         $this->assertSame(
-            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/images/projects/mpt-office.jpg.jpg',
-            PublicStorage::urlIfExists('images/projects/mpt-office.jpg'),
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/projects/cloud-only.jpg.jpg',
+            PublicStorage::urlIfExists('projects/cloud-only.jpg'),
         );
     }
 }

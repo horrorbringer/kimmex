@@ -64,6 +64,10 @@ class PublicStorage
             return file_exists(public_path(ltrim($path, '/'))) ? $path : $fallback;
         }
 
+        if (self::diskName() === 'cloudinary' && file_exists(public_path(ltrim($path, '/')))) {
+            return '/'.ltrim($path, '/');
+        }
+
         return self::exists($path) ? self::url($path) : $fallback;
     }
 
