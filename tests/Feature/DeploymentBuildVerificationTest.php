@@ -16,6 +16,9 @@ class DeploymentBuildVerificationTest extends TestCase
         $this->assertStringContainsString("['resources/css/app.css']['file']", $deployHook);
         $this->assertStringContainsString("public_path('build/'.\$cssAsset)", $deployHook);
         $this->assertStringContainsString('compiled Vite stylesheet is missing', $deployHook);
+        $this->assertStringContainsString("__DIR__.'/hot'", $deployHook);
+        $this->assertStringContainsString("public_path('hot')", $deployHook);
+        $this->assertStringContainsString('unable to remove stale Vite hot file', $deployHook);
         $this->assertStringContainsString('npm ci && npm run build', $workflow);
         $this->assertStringContainsString('curl -fsS', $workflow);
     }

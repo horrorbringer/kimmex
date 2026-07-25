@@ -19,6 +19,19 @@ $kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
 $output = [];
+
+// A stale Vite hot file makes @vite() point production visitors at a local
+// development server instead of the compiled /build assets.
+$viteHotFiles = array_unique([__DIR__.'/hot', public_path('hot')]);
+
+foreach ($viteHotFiles as $viteHotFile) {
+    if (is_file($viteHotFile) && ! unlink($viteHotFile)) {
+        http_response_code(500);
+        exit('deployment failed: unable to remove stale Vite hot file');
+    }
+}
+
+$output[] = 'Vite hot file: cleared';
 $manifestPath = public_path('build/manifest.json');
 
 if (! is_readable($manifestPath)) {
