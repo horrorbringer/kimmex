@@ -46,6 +46,14 @@
         $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, asset('logo.png'));
         $rawPageImage = $image ?? $logoUrl;
         $pageImage = $absoluteUrl($rawPageImage, asset('logo.png'));
+        $socialImage = \Illuminate\Support\Str::startsWith($pageImage, 'https://res.cloudinary.com/')
+            ? preg_replace(
+                '#/image/upload/#',
+                '/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/',
+                $pageImage,
+                1,
+            )
+            : $pageImage;
         $pageImageAlt = $imageAlt ?? $pageTitle;
         $canonicalUrl = $absoluteUrl($canonical, url()->current());
         $organizationLogo = $absoluteUrl($logoUrl, asset('logo.png'));
@@ -102,8 +110,11 @@
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
-    <meta property="og:image" content="{{ $pageImage }}">
-    <meta property="og:image:secure_url" content="{{ $pageImage }}">
+    <meta property="og:image" content="{{ $socialImage }}">
+    <meta property="og:image:secure_url" content="{{ $socialImage }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="{{ $pageImageAlt }}">
     <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
     <meta property="og:site_name" content="{{ $siteName }}">
@@ -112,7 +123,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDesc }}">
-    <meta name="twitter:image" content="{{ $pageImage }}">
+    <meta name="twitter:image" content="{{ $socialImage }}">
     <meta name="twitter:image:alt" content="{{ $pageImageAlt }}">
     @if(\Illuminate\Support\Str::startsWith($pageImage, ['http://', 'https://']))
         <link rel="preconnect" href="{{ parse_url($pageImage, PHP_URL_SCHEME) . '://' . parse_url($pageImage, PHP_URL_HOST) }}" crossorigin>

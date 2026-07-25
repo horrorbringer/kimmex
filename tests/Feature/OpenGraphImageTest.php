@@ -14,6 +14,7 @@ class OpenGraphImageTest extends TestCase
     public function test_content_pages_render_an_absolute_open_graph_image_with_accessibility_metadata(): void
     {
         $image = 'https://res.cloudinary.com/indytvtu/image/upload/kimmex_website/projects/hero/example.webp.webp';
+        $socialImage = 'https://res.cloudinary.com/indytvtu/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/kimmex_website/projects/hero/example.webp.webp';
         Cache::put('has_public_documents', false);
 
         $html = Blade::render(
@@ -26,10 +27,13 @@ class OpenGraphImageTest extends TestCase
             ],
         );
 
-        $this->assertStringContainsString('<meta property="og:image" content="'.$image.'">', $html);
-        $this->assertStringContainsString('<meta property="og:image:secure_url" content="'.$image.'">', $html);
+        $this->assertStringContainsString('<meta property="og:image" content="'.$socialImage.'">', $html);
+        $this->assertStringContainsString('<meta property="og:image:secure_url" content="'.$socialImage.'">', $html);
+        $this->assertStringContainsString('<meta property="og:image:type" content="image/jpeg">', $html);
+        $this->assertStringContainsString('<meta property="og:image:width" content="1200">', $html);
+        $this->assertStringContainsString('<meta property="og:image:height" content="630">', $html);
         $this->assertStringContainsString('<meta property="og:image:alt" content="Example Project hero image">', $html);
-        $this->assertStringContainsString('<meta name="twitter:image" content="'.$image.'">', $html);
+        $this->assertStringContainsString('<meta name="twitter:image" content="'.$socialImage.'">', $html);
         $this->assertStringContainsString('<meta name="twitter:image:alt" content="Example Project hero image">', $html);
     }
 }
