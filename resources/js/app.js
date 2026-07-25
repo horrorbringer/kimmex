@@ -2,6 +2,29 @@ import './bootstrap';
 import intersect from '@alpinejs/intersect';
 import collapse from '@alpinejs/collapse';
 
+const setPageLoading = (isLoading) => {
+    document.documentElement.dataset.pageLoading = isLoading ? 'true' : 'false';
+};
+
+document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+    }
+
+    const href = link.getAttribute('href');
+    const destination = new URL(link.href, window.location.href);
+
+    if (!href || href.startsWith('#') || link.target || link.hasAttribute('download') || destination.origin !== window.location.origin) {
+        return;
+    }
+
+    setPageLoading(true);
+}, { capture: true });
+
+window.addEventListener('pageshow', () => setPageLoading(false));
+
 // Register Alpine plugins via Livewire's Alpine hook.
 // Livewire 3+ bundles Alpine — do NOT import/start it manually.
 document.addEventListener('livewire:init', () => {
