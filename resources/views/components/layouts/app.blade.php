@@ -333,30 +333,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Intersection Observer for true lazy loading (better than native loading="lazy")
-            const ioSupported = 'IntersectionObserver' in window;
-            const lazyObserver = ioSupported ? new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        // Load the image
-                        if (img.dataset.src) {
-                            img.src = img.dataset.src;
-                            img.removeAttribute('data-src');
-                        }
-                        if (img.dataset.srcset) {
-                            img.srcset = img.dataset.srcset;
-                            img.removeAttribute('data-srcset');
-                        }
-                        img.classList.add('io-loaded');
-                        lazyObserver.unobserve(img);
-                    }
-                });
-            }, {
-                rootMargin: '200px 0px', // Start loading 200px before entering viewport
-                threshold: 0.01
-            }) : null;
-
             document.querySelectorAll('img').forEach((image, index) => {
                 if (!image.hasAttribute('decoding')) {
                     image.setAttribute('decoding', 'async');
@@ -368,8 +344,8 @@
                     image.setAttribute('loading', isHero ? 'eager' : 'lazy');
                 }
 
-                // For non-hero images: use Intersection Observer for fade-in effect
-                if (!isHero && ioSupported && lazyObserver) {
+                // Keep below-the-fold images visually quiet until their native lazy load finishes.
+                if (!isHero) {
                     image.style.opacity = '0';
                     image.style.transition = 'opacity 0.4s ease';
                 }

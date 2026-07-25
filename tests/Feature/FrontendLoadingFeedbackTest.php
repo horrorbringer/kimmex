@@ -18,6 +18,7 @@ class FrontendLoadingFeedbackTest extends TestCase
         $this->assertStringContainsString("event.target.closest('a[href]')", $scripts);
         $this->assertStringContainsString("window.addEventListener('pageshow'", $scripts);
         $this->assertStringContainsString("image.dataset.imageLoaded = 'true'", $layout);
+        $this->assertStringNotContainsString('new IntersectionObserver', $layout);
         $this->assertStringContainsString('#page-loading-bar', $styles);
         $this->assertStringContainsString("html[data-page-loading='true'] #page-loading-bar", $styles);
         $this->assertStringContainsString("img[data-image-loaded='true']", $styles);
