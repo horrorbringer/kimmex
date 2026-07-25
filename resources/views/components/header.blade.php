@@ -8,6 +8,8 @@
     isMobileMenuOpen: false,
     expandedMobileItem: null,
     searchQuery: '',
+    scrollHandler: null,
+    resizeHandler: null,
     init() {
         const self = this;
         let ticking = false;
@@ -16,16 +18,24 @@
             ticking = false;
         };
 
-        window.addEventListener('scroll', () => {
+        this.scrollHandler = () => {
             if (!ticking) {
                 window.requestAnimationFrame(syncScroll);
                 ticking = true;
             }
-        }, { passive: true });
+        };
 
-        window.addEventListener('resize', () => {
+        this.resizeHandler = () => {
             if (window.innerWidth >= 1024) self.isMobileMenuOpen = false;
-        }, { passive: true });
+        };
+
+        window.addEventListener('scroll', this.scrollHandler, { passive: true });
+        window.addEventListener('resize', this.resizeHandler, { passive: true });
+        syncScroll();
+    },
+    destroy() {
+        window.removeEventListener('scroll', this.scrollHandler);
+        window.removeEventListener('resize', this.resizeHandler);
     }
 }" class="fixed top-0 left-0 w-full z-[100]">
 
@@ -153,7 +163,7 @@
             <div class="flex justify-between items-center h-20">
 
                 <!-- Logo -->
-                <a href="/" wire:navigate class="flex min-w-0 items-center group cursor-pointer">
+                <a href="/" wire:navigate.hover class="flex min-w-0 items-center group cursor-pointer">
                     <img src="{{ $logoUrl }}" alt="{{ $companyName }}"
                         class="h-14 w-auto max-w-full object-contain transition-all duration-300"
                         style="max-width: min(62vw, 32rem);" loading="eager" decoding="async" />
@@ -164,7 +174,7 @@
 
                     <!-- About Us -->
                     <div class="relative group/nav">
-                        <a href="/about" wire:navigate class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
+                        <a href="/about" wire:navigate.hover class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                                 class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('About Us') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
@@ -221,7 +231,7 @@
 
                     <!-- Services -->
                     <div class="relative group/nav">
-                        <a href="/services" wire:navigate class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
+                        <a href="/services" wire:navigate.hover class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                                 class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Services') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
@@ -247,7 +257,7 @@
 
                     <!-- Projects -->
                     <div class="relative group/nav">
-                        <a href="/projects" wire:navigate class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
+                        <a href="/projects" wire:navigate.hover class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                                 class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Projects') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
@@ -330,7 +340,7 @@
 
                     <!-- News -->
                     <div class="relative group/nav">
-                        <a href="/news" wire:navigate class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
+                        <a href="/news" wire:navigate.hover class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                                 class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('News') }}</span>
                             <x-lucide-chevron-down stroke-width="2.5" :class="navDark ? 'text-titan-navy/50' : 'text-white/50'"
@@ -376,7 +386,7 @@
 
                     <!-- Careers (no dropdown) -->
                     <div class="relative group/nav">
-                        <a href="/careers" wire:navigate class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
+                        <a href="/careers" wire:navigate.hover class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                                 class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Careers') }}</span>
                             <span
@@ -386,7 +396,7 @@
 
                     <!-- Contact (no dropdown) -->
                     <div class="relative group/nav">
-                        <a href="/contact" wire:navigate class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
+                        <a href="/contact" wire:navigate.hover class="flex items-center gap-1 px-5 py-8 cursor-pointer relative">
                             <span :class="navDark ? 'text-titan-navy' : 'text-white'"
                                 class="{{ app()->getLocale() === 'km' ? 'font-khmer text-[14px] tracking-normal' : 'text-[13px] font-semibold uppercase tracking-wide' }} transition-all duration-200 group-hover/nav:text-titan-red">{{ __('Contact') }}</span>
                             <span
@@ -444,7 +454,7 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 0 ? null : 0">
-                        <a href="/about" wire:navigate
+                        <a href="/about" wire:navigate.hover
                             class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('About Us') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 0 ? 'rotate-180' : ''" />
@@ -472,7 +482,7 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 1 ? null : 1">
-                        <a href="/services" wire:navigate
+                        <a href="/services" wire:navigate.hover
                             class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Services') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 1 ? 'rotate-180' : ''" />
@@ -492,7 +502,7 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 2 ? null : 2">
-                        <a href="/projects" wire:navigate
+                        <a href="/projects" wire:navigate.hover
                             class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Projects') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 2 ? 'rotate-180' : ''" />
@@ -531,7 +541,7 @@
                 <div>
                     <div class="flex items-center justify-between px-4 py-3 rounded hover:bg-gray-50 cursor-pointer"
                         @click="expandedMobileItem = expandedMobileItem === 3 ? null : 3">
-                        <a href="/news" wire:navigate
+                        <a href="/news" wire:navigate.hover
                             class="{{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('News') }}</a>
                         <x-lucide-chevron-down class="w-4 h-4 text-titan-navy/50 transition-transform duration-300"
                             x-bind:class="expandedMobileItem === 3 ? 'rotate-180' : ''" />
@@ -553,11 +563,11 @@
                 </div>
 
                 <!-- Careers -->
-                <a href="/careers" wire:navigate
+                <a href="/careers" wire:navigate.hover
                     class="block px-4 py-3 rounded hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Careers') }}</a>
 
                 <!-- Contact -->
-                <a href="/contact" wire:navigate
+                <a href="/contact" wire:navigate.hover
                     class="block px-4 py-3 rounded hover:bg-gray-50 {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : 'font-semibold' }} text-titan-navy">{{ __('Contact') }}</a>
             </div>
 

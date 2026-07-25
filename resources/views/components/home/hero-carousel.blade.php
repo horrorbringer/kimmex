@@ -71,6 +71,8 @@
         slideDirection: 'next',
         slides: {{ Js::from($slides) }},
         timer: null,
+        preloadTimer: null,
+        transitionTimer: null,
         interval: 5500,
         isAnimating: false,
         isPaused: false,
@@ -96,7 +98,7 @@
             this.preloadNext();
             this.resetTimer();
             const duration = this.prefersReducedMotion ? 0 : 700;
-            window.setTimeout(() => {
+            this.transitionTimer = window.setTimeout(() => {
                 this.prev = null;
                 this.isAnimating = false;
             }, duration);
@@ -126,8 +128,13 @@
             this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             // The first slide is already preloaded from the document head. Delay
             // the next request so it does not compete with the first render.
-            window.setTimeout(() => this.preloadNext(), 3500);
+            this.preloadTimer = window.setTimeout(() => this.preloadNext(), 3500);
             this.startTimer();
+        },
+        destroy() {
+            clearInterval(this.timer);
+            clearTimeout(this.preloadTimer);
+            clearTimeout(this.transitionTimer);
         }
     }"
     x-init="initCarousel()"
