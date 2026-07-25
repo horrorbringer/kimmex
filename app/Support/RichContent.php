@@ -133,6 +133,14 @@ class RichContent
         // Unwrap <p> inside <li>
         $content = preg_replace('#<li>\s*<p>(.*?)</p>\s*</li>#is', '<li>$1</li>', $content) ?? $content;
 
+        // Repair a legacy editor typo before the browser parses it. Without this,
+        // a malformed <urli><li> sequence can leak a list item into the remaining
+        // page markup and collapse unrelated sections into a narrow column.
+        $content = preg_replace('#<urli\b[^>]*>\s*<li\b[^>]*>#iu', '</li><li>', $content) ?? $content;
+        $content = preg_replace('#</li>\s*</urli>#iu', '</li>', $content) ?? $content;
+        $content = preg_replace('#<urli\b[^>]*>#iu', '<ul>', $content) ?? $content;
+        $content = preg_replace('#</urli>#iu', '</ul>', $content) ?? $content;
+
         $hasListMarkup = str_contains($content, '<ul') || str_contains($content, '<ol');
         if ($hasListMarkup) {
             $content = preg_replace('#</p>\s*<p>#i', '</li><li>', $content) ?? $content;
