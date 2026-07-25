@@ -57,4 +57,4 @@ jobs:
             **/sitemap.xml
 
       - name: Trigger post-deploy
-        run: curl -s "https://kimmex.com.kh/deploy-hook.php?token=${{ secrets.PROD_DEPLOY_TOKEN }}"
+        run: curl -fsS "https://kimmex.com.kh/deploy-hook.php?token=${{ secrets.PROD_DEPLOY_TOKEN }}"

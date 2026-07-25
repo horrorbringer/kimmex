@@ -19,6 +19,22 @@ $kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
 $output = [];
+$manifestPath = public_path('build/manifest.json');
+
+if (! is_readable($manifestPath)) {
+    http_response_code(500);
+    exit('deployment failed: Vite manifest is missing at public/build/manifest.json');
+}
+
+$manifest = json_decode((string) file_get_contents($manifestPath), true);
+$cssAsset = $manifest['resources/css/app.css']['file'] ?? null;
+
+if (! is_string($cssAsset) || ! is_readable(public_path('build/'.$cssAsset))) {
+    http_response_code(500);
+    exit('deployment failed: compiled Vite stylesheet is missing');
+}
+
+$output[] = "frontend build: verified ({$cssAsset})";
 $run = function (string $command, array $params = []) use (&$output) {
     Artisan::call($command, $params);
     $result = trim(Artisan::output());
