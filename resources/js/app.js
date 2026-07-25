@@ -25,6 +25,9 @@ document.addEventListener('click', (event) => {
 
 window.addEventListener('pageshow', () => setPageLoading(false));
 
+document.addEventListener('livewire:navigate', () => setPageLoading(true));
+document.addEventListener('livewire:navigated', () => setPageLoading(false));
+
 // Register Alpine plugins via Livewire's Alpine hook.
 // Livewire 3+ bundles Alpine — do NOT import/start it manually.
 document.addEventListener('livewire:init', () => {
