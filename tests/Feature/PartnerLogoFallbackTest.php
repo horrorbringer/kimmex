@@ -21,10 +21,12 @@ class PartnerLogoFallbackTest extends TestCase
             'isActive' => true,
         ]);
 
-        Cache::forget('home_partners_array_v2_en');
+        Cache::forget('home_partners_array_v3_en');
 
         $this->blade('<x-home.partners />')
             ->assertSee('src="/partners/1.png"', false)
-            ->assertDontSee('partners/placeholder.png');
+            ->assertDontSee('partners/placeholder.png')
+            ->assertSee('onerror="this.classList.add(\'hidden\'); this.nextElementSibling.classList.remove(\'hidden\');"', false)
+            ->assertSee('grid-cols-2', false);
     }
 }
