@@ -31,58 +31,54 @@
             ->all();
     }
 
-    $partnerCount = count($partners);
+    $shouldUseMarquee = count($partners) > 12;
+    $displayPartners = $shouldUseMarquee ? array_merge($partners, $partners) : $partners;
 @endphp
 
-<section class="border-t border-gray-100 bg-slate-50 py-14 md:py-20">
-    <div class="mx-auto max-w-[1280px] px-5 md:px-6">
-        <div class="mb-9 flex flex-col gap-5 sm:mb-11 sm:flex-row sm:items-end sm:justify-between">
-            <div class="max-w-2xl">
-                <div class="mb-3 flex items-center gap-3">
-                    <span class="h-[2px] w-8" style="background: var(--primary-color, #E31E24);"></span>
-                    <span class="text-xs font-bold uppercase tracking-[0.2em]" style="color: var(--primary-color, #E31E24);">
-                        {{ __('Our Partners') }}
-                    </span>
-                </div>
-                <h2 class="font-heading text-2xl font-black tracking-tight text-titan-navy md:text-3xl">
-                    {{ __('Trusted By Leading Institutions') }}
-                </h2>
-                <p class="mt-2 text-sm leading-relaxed text-titan-navy/60 md:text-base">
-                    {{ __('Collaboration with organizations that help shape Cambodia’s future.') }}
-                </p>
-            </div>
-
-            <div class="flex w-fit items-center gap-3 rounded-full border border-titan-navy/10 bg-white px-4 py-2.5 shadow-sm">
-                <span class="flex h-8 w-8 items-center justify-center rounded-full text-xs font-black text-white" style="background: var(--primary-color, #E31E24);">
-                    {{ $partnerCount }}
+<section class="border-y border-titan-navy/10 py-16 md:py-24">
+    <div class="mx-auto max-w-[1240px] px-5 md:px-6">
+        <div class="mb-9 max-w-2xl md:mb-12">
+            <div class="mb-3 flex items-center gap-3">
+                <span class="text-[10px] font-black uppercase tracking-[0.22em]" style="color: var(--primary-color, #E31E24);">
+                    {{ __('Our Partners') }}
                 </span>
-                <span class="text-xs font-bold uppercase tracking-[0.14em] text-titan-navy/60">
-                    {{ __('Trusted Partners') }}
-                </span>
+                <span class="h-px w-8" style="background: var(--primary-color, #E31E24);"></span>
             </div>
+            <h2 class="font-heading text-2xl font-black tracking-tight text-titan-navy md:text-4xl">
+                {{ __('Trusted By Leading Institutions') }}
+            </h2>
+            <p class="mt-3 max-w-xl text-sm leading-relaxed text-titan-navy/60 md:text-base">
+                {{ __('Collaboration with organizations that help shape Cambodia’s future.') }}
+            </p>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-7">
-            @foreach($partners as $partner)
+        @if($shouldUseMarquee)
+            <div class="partner-marquee">
+        @endif
+
+        <div class="{{ $shouldUseMarquee ? 'partner-marquee-track' : 'grid grid-cols-2 border-l border-t border-titan-navy/10 sm:grid-cols-3 lg:grid-cols-6' }}">
+            @foreach($displayPartners as $partner)
+                @php
+                    $partnerCellClass = $shouldUseMarquee
+                        ? 'partner-marquee-item group'
+                        : 'group relative flex h-28 min-w-0 items-center justify-center border-b border-r border-titan-navy/10 px-5 py-4 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-titan-red sm:h-32';
+                @endphp
                 @if(filled($partner['website']))
                     <a href="{{ $partner['website'] }}" target="_blank" rel="noopener noreferrer"
-                    class="group relative flex aspect-[5/3] min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-titan-navy/10 bg-white p-4 shadow-[0_8px_22px_-20px_rgba(11,43,92,0.45)] transition duration-300 hover:-translate-y-1 hover:border-titan-red/30 hover:shadow-[0_14px_28px_-18px_rgba(11,43,92,0.28)]"
+                    class="{{ $partnerCellClass }}"
                     aria-label="{{ __('Visit') }} {{ $partner['name'] }}">
                 @else
-                    <div class="group relative flex aspect-[5/3] min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-titan-navy/10 bg-white p-4 shadow-[0_8px_22px_-20px_rgba(11,43,92,0.45)] transition duration-300 hover:-translate-y-1 hover:border-titan-red/30 hover:shadow-[0_14px_28px_-18px_rgba(11,43,92,0.28)]">
+                    <div class="{{ $partnerCellClass }}">
                 @endif
                     <img
                         src="{{ $partner['logo'] }}"
                         alt="{{ $partner['name'] }}"
                         title="{{ $partner['name'] }}"
-                        class="h-12 w-full object-contain opacity-80 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0 sm:h-14"
+                        class="h-11 w-full max-w-32 object-contain transition-transform duration-300 ease-out group-hover:scale-[1.04] sm:h-14"
                         loading="lazy"
                         decoding="async"
                         onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
                     <span class="hidden max-w-full text-center text-sm font-black leading-snug text-titan-navy" aria-label="{{ $partner['name'] }}">
-                        {{ $partner['name'] }}
-                    </span>
-                    <span class="pointer-events-none absolute inset-x-4 bottom-2 truncate text-center text-[9px] font-bold uppercase tracking-[0.12em] text-titan-navy/45 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         {{ $partner['name'] }}
                     </span>
                 @if(filled($partner['website']))
@@ -92,5 +88,58 @@
                 @endif
             @endforeach
         </div>
+
+        @if($shouldUseMarquee)
+            </div>
+        @endif
     </div>
 </section>
+
+@once
+    <style>
+        .partner-marquee {
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+        }
+
+        .partner-marquee-track {
+            display: flex;
+            width: max-content;
+            animation: partner-marquee-scroll 48s linear infinite;
+        }
+
+        .partner-marquee:hover .partner-marquee-track {
+            animation-play-state: paused;
+        }
+
+        .partner-marquee-item {
+            position: relative;
+            display: flex;
+            flex: 0 0 clamp(10rem, 16vw, 13rem);
+            height: 8rem;
+            min-width: 0;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgb(11 43 92 / 0.1);
+            border-right: 0;
+            padding: 1rem 1.25rem;
+        }
+
+        @keyframes partner-marquee-scroll {
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .partner-marquee {
+                overflow-x: auto;
+                mask-image: none;
+            }
+
+            .partner-marquee-track {
+                animation: none;
+            }
+        }
+    </style>
+@endonce

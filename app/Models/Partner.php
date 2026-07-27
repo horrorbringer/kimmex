@@ -35,6 +35,7 @@ class Partner extends Model
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget("home_partners_array_{$locale}");
                 Cache::forget("home_partners_array_v2_{$locale}");
+                Cache::forget("home_partners_array_v3_{$locale}");
             }
             Cache::forget('home_partners_array');
             Cache::forget('home_partners_array_v2');
@@ -44,6 +45,7 @@ class Partner extends Model
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget("home_partners_array_{$locale}");
                 Cache::forget("home_partners_array_v2_{$locale}");
+                Cache::forget("home_partners_array_v3_{$locale}");
             }
             Cache::forget('home_partners_array');
             Cache::forget('home_partners_array_v2');
