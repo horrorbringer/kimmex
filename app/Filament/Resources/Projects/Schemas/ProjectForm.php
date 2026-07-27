@@ -13,12 +13,13 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -28,199 +29,189 @@ class ProjectForm
     {
         return $schema
             ->components([
-                Tabs::make('ProjectEditor')
-                    ->tabs([
-                        Tab::make(__('Content'))
-                            ->schema([
-                                Section::make(__('Project Identity'))
-                                    ->description(__('Main identity and URL settings'))
-                                    ->columns(2)
-                                    ->components([
-                                        TextInput::make('title')
-                                            ->label(__('Title'))
-                                            ->required()
-                                            ->live(onBlur: true)
-                                            ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                                        TextInput::make('slug')
-                                            ->label(__('Slug'))
-                                            ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
-                                            ->unique(ignoreRecord: true)
-                                            ->required()
-                                            ->disabled(fn ($get) => ! $get('_slug_manual'))
-                                            ->dehydrated()
-                                            ->suffixAction(
-                                                Action::make('toggleSlugManual')
-                                                    ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
-                                                    ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock (auto-generate)') : __('Edit manually'))
-                                                    ->action(function (Set $set, $get) {
-                                                        $set('_slug_manual', ! $get('_slug_manual'));
-                                                    })
-                                            ),
-                                        Hidden::make('_slug_manual')->default(false)->dehydrated(false),
-                                        TextInput::make('location')
-                                            ->label(__('Location'))
-                                            ->suffixAction(TranslationHelper::getAutoTranslateAction('location')),
-                                        TextInput::make('client')
-                                            ->label(__('Client')),
-                                    ]),
+                Wizard::make([
+                    Step::make(__('1. Project Basics'))
+                        ->description(__('Start with the information visitors see first.'))
+                        ->icon('heroicon-o-information-circle')
+                        ->schema([
+                            Section::make(__('Project Identity'))
+                                ->description(__('Use the official project name and location.'))
+                                ->columns(2)
+                                ->schema([
+                                    TextInput::make('title')
+                                        ->label(__('Project Name'))
+                                        ->helperText(__('Example: Cambodia Gambling Management Commission Building'))
+                                        ->required()
+                                        ->live(onBlur: true)
+                                        ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
+                                        ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                                    TextInput::make('slug')
+                                        ->label(__('Website Address'))
+                                        ->helperText(__('Created automatically from the project name.'))
+                                        ->unique(ignoreRecord: true)
+                                        ->required()
+                                        ->disabled(fn ($get) => ! $get('_slug_manual'))
+                                        ->dehydrated()
+                                        ->suffixAction(
+                                            Action::make('toggleSlugManual')
+                                                ->icon(fn ($get) => $get('_slug_manual') ? 'heroicon-o-lock-open' : 'heroicon-o-pencil-square')
+                                                ->tooltip(fn ($get) => $get('_slug_manual') ? __('Lock automatic address') : __('Edit address manually'))
+                                                ->action(fn (Set $set, $get) => $set('_slug_manual', ! $get('_slug_manual'))),
+                                        ),
+                                    Hidden::make('_slug_manual')->default(false)->dehydrated(false),
+                                    TextInput::make('location')
+                                        ->label(__('Location'))
+                                        ->placeholder(__('Example: Phnom Penh, Cambodia'))
+                                        ->suffixAction(TranslationHelper::getAutoTranslateAction('location')),
+                                    TextInput::make('client')
+                                        ->label(__('Client / Owner'))
+                                        ->placeholder(__('Example: Ministry of Economy and Finance')),
+                                ]),
 
-                                Section::make(__('Brief Description'))
-                                    ->description(__('Short public summary used near the top of the project details page.'))
-                                    ->components([
-                                        RichEditor::make('description')->resizableImages()
-                                            ->label(__('Description'))
-                                            ->toolbarButtons([
-                                                ['bold', 'italic', 'underline', 'strike', 'link'],
-                                                [ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
-                                                [ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
-                                                ['blockquote', 'bulletList', 'orderedList', 'table'],
-                                                ['attachFiles'],
-                                                ['undo', 'redo'],
-                                            ])
-                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                            ->fileAttachmentsVisibility('public')
-                                            ->hintActions([
-                                                AIHelper::getGenerateAction('description', 'Project Description'),
-                                                AIHelper::getImproveAction('description'),
-                                            ])
-                                            ->columnSpanFull(),
-                                    ]),
+                            Section::make(__('Category & Timeline'))
+                                ->columns(2)
+                                ->schema([
+                                    Select::make('project_category_id')
+                                        ->label(__('Category'))
+                                        ->relationship('projectCategory', 'name', fn ($query) => $query->orderBy('name->en'))
+                                        ->searchable()
+                                        ->preload()
+                                        ->required(),
+                                    Select::make('status')
+                                        ->label(__('Project Status'))
+                                        ->options(ProjectStatus::class)
+                                        ->required()
+                                        ->default(ProjectStatus::ONGOING),
+                                    TextInput::make('timeline')
+                                        ->label(__('Project Timeline'))
+                                        ->helperText(__('Shown in the project facts row.'))
+                                        ->placeholder('Jan 2024 – Dec 2025'),
+                                    TextInput::make('scale')
+                                        ->label(__('Built Area / Scale'))
+                                        ->helperText(__('Shown in the project facts row.'))
+                                        ->placeholder('8,087 m² · 17 floors'),
+                                    DateTimePicker::make('completionDate')
+                                        ->label(__('Completion Date')),
+                                ]),
+                        ]),
 
-                                Section::make(__('Project Overview'))
-                                    ->description(__('Optional public narrative fields. Empty fields are hidden on the frontend.'))
-                                    ->columns(2)
-                                    ->components([
-                                        TextInput::make('timeline')
-                                            ->label(__('Timeline'))
-                                            ->placeholder('e.g., Jan 2024 - Dec 2025'),
-                                        TextInput::make('scale')
-                                            ->label(__('Scale'))
-                                            ->placeholder('e.g., 50,000 sqm or 5-story building'),
-                                        RichEditor::make('background')->resizableImages()
-                                            ->label(__('Project Background'))
-                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                            ->fileAttachmentsVisibility('public')
-                                            ->hintActions([
-                                                AIHelper::getImproveAction('background'),
-                                                TranslationHelper::getAutoTranslateAction('background'),
-                                            ])
-                                            ->columnSpanFull(),
-                                        RichEditor::make('objectives')->resizableImages()
-                                            ->label(__('Project Objectives'))
-                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                            ->fileAttachmentsVisibility('public')
-                                            ->hintActions([
-                                                AIHelper::getImproveAction('objectives'),
-                                                TranslationHelper::getAutoTranslateAction('objectives'),
-                                            ])
-                                            ->columnSpanFull(),
-                                    ])
-                                    ->collapsible(),
+                    Step::make(__('2. Project Story'))
+                        ->description(__('Keep it concise. Empty sections stay hidden on the website.'))
+                        ->icon('heroicon-o-document-text')
+                        ->schema([
+                            Section::make(__('Short Introduction'))
+                                ->description(__('Write 2–4 short paragraphs explaining the project.'))
+                                ->schema([
+                                    RichEditor::make('description')
+                                        ->label(__('Project Description'))
+                                        ->required(fn (string $operation): bool => $operation === 'create')
+                                        ->toolbarButtons([
+                                            ['bold', 'italic', 'link'],
+                                            [ToolbarButtonGroup::make('Heading', ['h2', 'h3'])->textualButtons()],
+                                            ['bulletList', 'orderedList'],
+                                            ['undo', 'redo'],
+                                        ])
+                                        ->hintActions([
+                                            AIHelper::getGenerateAction('description', 'Project Description'),
+                                            AIHelper::getImproveAction('description'),
+                                        ]),
+                                ]),
 
-                                Section::make(__('Engineering & Design'))
-                                    ->description(__('Optional technical details. Empty fields are hidden on the frontend.'))
-                                    ->components([
-                                        RichEditor::make('designConcept')->resizableImages()
-                                            ->label(__('Design Concept & Functions'))
-                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                            ->fileAttachmentsVisibility('public'),
-                                        RichEditor::make('scopeContributions')->resizableImages()
-                                            ->label(__('Specific Kimmex Contributions'))
-                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                            ->fileAttachmentsVisibility('public'),
-                                        RichEditor::make('engineeringNarrative')->resizableImages()
-                                            ->label(__('Challenges & Solutions (Engineering Narrative)'))
-                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                            ->fileAttachmentsVisibility('public'),
-                                    ])
-                                    ->collapsible()
-                                    ->collapsed(),
-                            ]),
+                            Section::make(__('Optional Detail Sections'))
+                                ->description(__('Add only the sections that help visitors understand this project.'))
+                                ->schema([
+                                    RichEditor::make('background')
+                                        ->label(__('Background'))
+                                        ->toolbarButtons([['bold', 'italic', 'link'], ['bulletList', 'orderedList'], ['undo', 'redo']])
+                                        ->hintActions([AIHelper::getImproveAction('background')]),
+                                    Textarea::make('objectives')
+                                        ->label(__('Objectives'))
+                                        ->helperText(__('Write one objective per line. Each line becomes a bullet on the website.'))
+                                        ->rows(5),
+                                    Textarea::make('scopeContributions')
+                                        ->label(__('Scope of Work'))
+                                        ->helperText(__('Write one contribution per line. Do not use lists or HTML.'))
+                                        ->rows(6),
+                                    Textarea::make('designConcept')
+                                        ->label(__('Design Concept'))
+                                        ->helperText(__('Use short paragraphs in plain text.'))
+                                        ->rows(5),
+                                    Textarea::make('engineeringNarrative')
+                                        ->label(__('Engineering Notes'))
+                                        ->helperText(__('Optional technical challenges and solutions.'))
+                                        ->rows(5),
+                                ]),
+                        ]),
 
-                        Tab::make(__('Media'))
-                            ->schema([
-                                Section::make(__('Visual Assets'))
-                                    ->columns(2)
-                                    ->components([
-                                        OptimizedFileUpload::hero('heroImage')
-                                            ->directory('projects/hero')
-                                            ->label(__('Hero Image'))
-                                            ->columnSpanFull(),
-                                    ]),
+                    Step::make(__('3. Photos'))
+                        ->description(__('A strong cover image and a small gallery make the project credible.'))
+                        ->icon('heroicon-o-photo')
+                        ->schema([
+                            Section::make(__('Hero Image'))
+                                ->description(__('Recommended: 1920 × 1080 WebP or JPG, under 1 MB.'))
+                                ->schema([
+                                    OptimizedFileUpload::hero('heroImage')
+                                        ->directory('projects/hero')
+                                        ->label(__('Main Project Image'))
+                                        ->required(fn (string $operation): bool => $operation === 'create'),
+                                ]),
 
-                                Section::make(__('Project Gallery'))
-                                    ->description(__('Additional project photographs and captions'))
-                                    ->components([
-                                        Repeater::make('images')
-                                            ->relationship('images')
-                                            ->reorderable()
-                                            ->orderColumn('sort_order')
-                                            ->maxItems(15)
-                                            ->schema([
-                                                OptimizedFileUpload::image('url')
-                                                    ->directory('projects/gallery')
-                                                    ->label(__('Photo'))
-                                                    ->required(),
-                                                TextInput::make('caption')
-                                                    ->label(__('Caption'))
-                                                    ->suffixAction(TranslationHelper::getAutoTranslateAction('caption'))
-                                                    ->placeholder(__('Enter a short caption...')),
-                                            ])
-                                            ->columns(['default' => 2])
-                                            ->itemLabel(fn (array $state): ?string => $state['caption'] ?? null)
-                                            ->collapsible()
-                                            ->grid(['default' => 2])
-                                            ->columnSpanFull(),
-                                    ])
-                                    ->collapsible(),
-                            ]),
+                            Section::make(__('Photo Gallery'))
+                                ->description(__('Add 4–8 strong images. Drag to choose the display order.'))
+                                ->schema([
+                                    Repeater::make('images')
+                                        ->relationship('images')
+                                        ->reorderable()
+                                        ->orderColumn('sort_order')
+                                        ->maxItems(15)
+                                        ->schema([
+                                            OptimizedFileUpload::image('url')
+                                                ->directory('projects/gallery')
+                                                ->label(__('Photo'))
+                                                ->required(),
+                                            TextInput::make('caption')
+                                                ->label(__('Short Caption'))
+                                                ->placeholder(__('Optional: describe this image')),
+                                        ])
+                                        ->columns(['default' => 2])
+                                        ->itemLabel(fn (array $state): ?string => $state['caption'] ?? __('Gallery photo'))
+                                        ->collapsible()
+                                        ->grid(['default' => 2]),
+                                ]),
+                        ]),
 
-                        Tab::make(__('Publishing'))
-                            ->schema([
-                                Section::make(__('Categorization & Status'))
-                                    ->columns(3)
-                                    ->components([
-                                        Select::make('project_category_id')
-                                            ->label(__('Category'))
-                                            ->relationship('projectCategory', 'name', fn ($query) => $query->orderBy('name->en'))
-                                            ->searchable()
-                                            ->preload()
-                                            ->required(),
-                                        Select::make('status')
-                                            ->label(__('Status'))
-                                            ->options(ProjectStatus::class)
-                                            ->required()
-                                            ->default(ProjectStatus::ONGOING),
-                                        DateTimePicker::make('completionDate')
-                                            ->label(__('Completion Date')),
-                                    ]),
+                    Step::make(__('4. Review & Publish'))
+                        ->description(__('Check the final settings before making this project visible.'))
+                        ->icon('heroicon-o-check-circle')
+                        ->schema([
+                            Section::make(__('Visibility'))
+                                ->columns(2)
+                                ->schema([
+                                    Toggle::make('isFeatured')
+                                        ->label(__('Show on Home Page'))
+                                        ->helperText(__('Use only for your most important projects.')),
+                                    Toggle::make('isActive')
+                                        ->label(__('Publish This Project'))
+                                        ->helperText(__('Visitors can see it only when this is on.'))
+                                        ->default(true)
+                                        ->required(),
+                                ]),
 
-                                Section::make(__('Settings'))
-                                    ->columns(2)
-                                    ->components([
-                                        Toggle::make('isFeatured')
-                                            ->label(__('Is Featured'))
-                                            ->required(),
-                                        Toggle::make('isActive')
-                                            ->label(__('Is Active'))
-                                            ->default(true)
-                                            ->required(),
-                                    ]),
-
-                                Section::make(__('Related News'))
-                                    ->collapsed()
-                                    ->description(__('Link this project to related news articles'))
-                                    ->components([
-                                        Select::make('newsArticles')
-                                            ->label(__('News Articles'))
-                                            ->relationship('newsArticles', 'title')
-                                            ->multiple()
-                                            ->searchable()
-                                            ->preload(),
-                                    ]),
-                            ]),
-                    ])
+                            Section::make(__('Related News'))
+                                ->description(__('Optional: connect news articles about this project.'))
+                                ->schema([
+                                    Select::make('newsArticles')
+                                        ->label(__('Related News Articles'))
+                                        ->relationship('newsArticles', 'title')
+                                        ->multiple()
+                                        ->searchable()
+                                        ->preload(),
+                                ])
+                                ->collapsible(),
+                        ]),
+                ])
+                    ->skippable()
+                    ->persistStepInQueryString('project-step')
                     ->columnSpanFull(),
             ]);
     }

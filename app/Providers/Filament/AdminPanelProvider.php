@@ -46,6 +46,8 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->passwordReset()
             ->profile()
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('60s')
             ->multifactorAuthentication([
                 AppAuthentication::make(),
             ])

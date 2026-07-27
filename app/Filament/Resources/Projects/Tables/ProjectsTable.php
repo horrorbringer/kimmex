@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Tables;
 
+use App\Filament\Imports\ProjectImporter;
 use App\Filament\Support\FlatRecordDetails;
 use App\Models\Project;
 use App\Support\PublicStorage;
@@ -10,6 +11,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
@@ -37,6 +39,7 @@ class ProjectsTable
                 ImageColumn::make('heroImage')
                     ->label(__('Image'))
                     ->getStateUsing(fn (Project $record): ?string => ($imageUrl = PublicStorage::urlIfExists($record->heroImage)) ? url($imageUrl) : null)
+                    ->defaultImageUrl(asset('images/project-placeholder.svg'))
                     ->square()
                     ->imageSize(48),
                 TextColumn::make('title')
@@ -66,6 +69,13 @@ class ProjectsTable
             ])
             ->filters([
                 //
+            ])
+            ->headerActions([
+                ImportAction::make('importProjects')
+                    ->label(__('Import CSV'))
+                    ->importer(ProjectImporter::class)
+                    ->fileRules(['max:5120'])
+                    ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
             ])
             ->actions([
                 ActionGroup::make([

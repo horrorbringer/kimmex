@@ -159,6 +159,7 @@
                                 <h3 class="mb-5 text-xl font-black text-titan-navy md:text-2xl">{{ $section['title'] }}</h3>
                                 @if($section['scope'] ?? false)
                                     <div class="project-scope-content prose max-w-none text-titan-navy/70 project-khmer-content">
+                                        <p class="project-scope-intro">{{ __('Key responsibilities delivered by Kimmex.') }}</p>
                                         {!! $renderProjectContent($section['content'], $section['mode']) !!}
                                     </div>
                                 @else
@@ -396,39 +397,74 @@
         }
 
         .project-scope-content :where(ul, ol) {
+            counter-reset: scope-item;
             display: grid;
             grid-template-columns: repeat(1, minmax(0, 1fr));
-            gap: 0.75rem;
-            margin: 0;
+            gap: 0;
+            margin: 1.75rem 0 0;
             padding: 0;
             list-style: none;
         }
 
+        .project-scope-intro {
+            max-width: 38rem;
+            margin: 0;
+            color: rgb(11 43 92 / 0.58);
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
         .project-scope-content li {
+            position: relative;
             display: flex;
-            gap: 0.75rem;
+            min-height: 5.75rem;
+            gap: 1rem;
             align-items: flex-start;
-            padding: 1rem;
-            border: 1px solid rgb(11 43 92 / 0.1);
-            border-radius: 0.75rem;
-            background: rgb(248 250 252);
+            padding: 1.15rem 1rem 1.15rem 3.75rem;
+            border-top: 1px solid rgb(11 43 92 / 0.1);
+            background: transparent;
             color: rgb(11 43 92);
             font-weight: 700;
+            line-height: 1.7;
+            transition: background-color 180ms ease, color 180ms ease;
         }
 
         .project-scope-content li::before {
-            flex: none;
-            width: 0.5rem;
-            height: 0.5rem;
-            margin-top: 0.55rem;
-            border-radius: 9999px;
-            background: var(--primary-color, #E31E24);
-            content: '';
+            position: absolute;
+            top: 1.25rem;
+            left: 0;
+            counter-increment: scope-item;
+            content: counter(scope-item, decimal-leading-zero);
+            color: var(--primary-color, #E31E24);
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+
+        .project-scope-content li:hover {
+            background: rgb(11 43 92 / 0.025);
         }
 
         @media (min-width: 768px) {
             .project-scope-content :where(ul, ol) {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .project-scope-content li:nth-child(-n + 2) {
+                border-top: 1px solid rgb(11 43 92 / 0.1);
+            }
+
+            .project-scope-content li:nth-child(odd) {
+                border-right: 1px solid rgb(11 43 92 / 0.1);
+                padding-right: 1.75rem;
+            }
+
+            .project-scope-content li:nth-child(even) {
+                padding-left: 4.5rem;
+            }
+
+            .project-scope-content li:nth-child(even)::before {
+                left: 1rem;
             }
         }
 
