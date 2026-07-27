@@ -60,6 +60,26 @@
     $overviewSections = array_values(array_filter($overviewSections, fn (array $section): bool => $hasProjectContent($section['content'] ?? '')));
     $engineeringNarrative = $project['narrative']['engineering_narrative'] ?? '';
     $hasEngineeringNarrative = $hasProjectContent($engineeringNarrative);
+
+    $storySections = $overviewSections;
+
+    if ($hasProjectContent($project['scope'] ?? '')) {
+        $storySections[] = [
+            'title' => __('Scope of Work'),
+            'content' => $project['scope'],
+            'mode' => 'list',
+            'scope' => true,
+        ];
+    }
+
+    if ($hasEngineeringNarrative) {
+        $storySections[] = [
+            'title' => __('Engineering Challenges & Solutions'),
+            'content' => $engineeringNarrative,
+            'mode' => 'auto',
+            'engineering' => true,
+        ];
+    }
 @endphp
 
 <x-layouts.app :title="$project['title'] . ' | Portfolio'" :description="'Kimmex project showcase: ' . $project['title']" :image="$project['heroImage']" :image-alt="$project['title']" :canonical="route('projects.show', ['slug' => $project['slug']])">
@@ -77,45 +97,10 @@
         </script>
     @endpush
 
-    <div class="bg-white min-h-screen text-titan-navy font-sans antialiased pt-28" x-data="{ 
-        scrolled: false, 
-        progress: 0,
-        scrollY: 0,
-        ticking: false
-    }" x-init="
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    scrollY = window.scrollY;
-                    scrolled = window.scrollY > 400;
-                    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
-                    progress = scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0;
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }, { passive: true });
-    ">
-
-        <!-- READING PROGRESS & STICKY NAV -->
-        <div class="sticky top-20 z-[80] bg-white/95 backdrop-blur border-b border-gray-200">
-            <div class="h-1 bg-gray-100 w-full relative">
-                <div class="h-full bg-titan-red absolute left-0 top-0 transition-all duration-150"
-                    :style="'width: ' + progress + '%'"></div>
-            </div>
-            <div class="max-w-[1400px] mx-auto px-6 h-10 md:h-11 flex items-center gap-3">
-                    <a href="/projects" class="w-7 h-7 rounded border border-gray-200 bg-white text-titan-navy flex items-center justify-center hover:border-titan-red/30 hover:text-titan-red transition-colors shrink-0">
-                        <x-lucide-arrow-left class="w-4 h-4" />
-                    </a>
-                    <div class="min-w-0">
-                        <div class="text-[8px] font-black uppercase tracking-[0.24em] text-titan-red leading-none">{{ __('Project:') }}</div>
-                        <div class="text-[10px] font-black uppercase tracking-tight text-titan-navy truncate max-w-[180px] md:max-w-[360px] leading-tight">{{ $project['title'] }}</div>
-                    </div>
-            </div>
-        </div>
+    <div class="min-h-screen bg-white pt-28 font-sans text-titan-navy antialiased">
 
         <!-- --- PREMIUM NARRATIVE HERO --- -->
-        <header class="relative w-full h-[50vh] md:h-[55vh] min-h-[360px] md:min-h-[420px] overflow-hidden bg-titan-navy flex items-center justify-center">
+        <header class="relative flex min-h-[340px] w-full items-end overflow-hidden bg-titan-navy md:min-h-[420px]">
             <img src="{{ $project['heroImage'] }}" alt="{{ $project['title'] }}"
                 class="absolute inset-0 w-full h-full object-cover opacity-100" loading="eager" decoding="async" fetchpriority="high"
                 onerror="this.onerror=null; this.dataset.imageError='false'; this.src='{{ $defaultProjectImage }}';" />
@@ -124,166 +109,83 @@
             <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/35 via-titan-navy/5 to-titan-navy/65"></div>
             <div class="absolute inset-0 bg-black/10"></div>
 
-            <div class="relative z-10 text-center max-w-6xl px-4 md:px-6" x-data="{ shown: false }"
-                x-init="setTimeout(() => shown = true, 100)">
-
-                
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                    class="transition-all duration-1000 delay-300 font-black text-white mb-6 md:mb-8 mx-auto max-w-5xl drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'uppercase tracking-tighter leading-[0.9]' }}"
+            <div class="relative z-10 mx-auto w-full max-w-[1180px] px-5 pb-10 md:px-6 md:pb-14">
+                <a href="/projects" class="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-white/75 transition hover:text-white">
+                    <x-lucide-arrow-left class="h-4 w-4" /> {{ __('All Projects') }}
+                </a>
+                <h1 class="max-w-4xl font-black text-white drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'uppercase tracking-tighter leading-[0.95]' }}"
                     style="font-size: {{ $contentLocale === 'km' ? 'clamp(1.75rem, 3.6vw, 3.25rem)' : 'clamp(1.75rem, 5vw, 3.5rem)' }} !important; color: white !important;">
                     {{ $project['title'] }}
                 </h1>
-                
-                <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                    class="transition-all duration-700 delay-500 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-white font-bold {{ $contentLocale === 'km' ? 'tracking-normal text-xs md:text-base' : 'uppercase tracking-[0.3em] md:tracking-[0.4em] text-[10px] md:text-sm' }}">
-                    <div class="h-[1px] w-8 md:w-12 bg-titan-red hidden sm:block"></div>
-                    <div class="flex items-center justify-center gap-2 md:gap-3 max-w-3xl leading-relaxed">
-                        <x-lucide-map-pin class="w-3.5 h-3.5 md:w-4 md:h-4 text-titan-red shrink-0" />
+                <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/85 {{ $contentLocale === 'km' ? 'tracking-normal' : 'uppercase tracking-[0.14em]' }}">
+                    <div class="flex items-center gap-2">
+                        <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
                         {{ $project['location'] }}
                     </div>
-                    <x-page-view-count light />
-                    <div class="h-[1px] w-8 md:w-12 bg-titan-red hidden sm:block"></div>
+                    <span class="h-1 w-1 rounded-full bg-titan-red"></span>
+                    <span>{{ $project['status'] }}</span>
                 </div>
             </div>
 
         </header>
 
-        <!-- --- MAIN CONTENT SPLIT --- -->
-        <section class="py-10 md:py-16 px-4 md:px-6 bg-gradient-to-b from-white via-slate-50/60 to-white">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 max-w-[1400px] mx-auto">
-
-                <!-- LEFT: CONTENT -->
-                <div class="lg:col-span-8">
-                    <!-- Description -->
-                    @if(!empty($overviewSections))
-                    <div class="mb-12 md:mb-16 reveal-up">
-                        <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
-                            <x-lucide-help-circle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" /> {{ __('Project Overview') }}
-                        </h2>
-                        <div class="space-y-6 md:space-y-8 text-base md:text-lg text-titan-navy/70 leading-relaxed project-khmer-content">
-                            @foreach($overviewSections as $section)
-                                <div class="{{ $section['class'] ?? '' }}">
-                                    <h3 class="text-titan-navy font-bold text-sm uppercase tracking-widest mb-2">
-                                        {{ $section['title'] }}
-                                    </h3>
-                                    <div class="{{ $section['rich_class'] ?? '' }} prose prose-base xl:prose-lg max-w-none text-titan-navy/70 project-khmer-content">
-                                        {!! $renderProjectContent($section['content'] ?? '', $section['mode'] ?? 'auto') !!}
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+        <!-- --- PROJECT AT A GLANCE & CASE STUDY --- -->
+        <section class="px-5 py-12 md:px-6 md:py-20">
+            <div class="mx-auto max-w-[1180px]">
+                <div class="border-y border-titan-navy/10 py-5">
+                    <div class="grid grid-cols-2 divide-x divide-y divide-titan-navy/10 md:grid-cols-4 md:divide-y-0">
+                        @foreach([
+                            ['label' => __('Client'), 'value' => $project['client'], 'icon' => 'lucide-user'],
+                            ['label' => __('Location'), 'value' => $project['location'], 'icon' => 'lucide-map-pin'],
+                            ['label' => __('Timeline'), 'value' => $project['year'], 'icon' => 'lucide-calendar'],
+                            ['label' => __('Built Area'), 'value' => $project['built_area'] ?: __('Contact for Details'), 'icon' => 'lucide-maximize'],
+                        ] as $fact)
+                            <div class="min-w-0 px-4 py-3 md:px-6">
+                                <p class="text-[10px] font-black uppercase tracking-[0.13em] text-titan-navy/40">{{ $fact['label'] }}</p>
+                                <p class="mt-1.5 text-sm font-bold leading-snug text-titan-navy md:text-base">{{ $fact['value'] }}</p>
+                            </div>
+                        @endforeach
                     </div>
-                    @endif
+                </div>
 
-                    <!-- Scope -->
-                    @if(!empty($project['scope']))
-                        <div class="mb-12 md:mb-16 bg-gray-50 p-6 md:p-10 rounded border border-titan-navy/10 reveal-up">
-                            <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
-                                <x-lucide-activity class="w-5 h-5 md:w-6 md:h-6 text-titan-red" /> {{ __('Scope of Work') }}
-                            </h2>
-                            <div class="prose prose-base xl:prose-lg max-w-none text-titan-navy/70 
-                                [&_ul]:grid [&_ul]:grid-cols-1 [&_ul]:md:grid-cols-2 [&_ul]:gap-4 [&_ul]:list-none [&_ul]:p-0
-                                [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:p-4 [&_li]:bg-white [&_li]:rounded-lg [&_li]:shadow-sm [&_li]:border [&_li]:border-transparent [&_li]:hover:border-titan-red/20 [&_li]:transition-all [&_li]:font-bold [&_li]:text-titan-navy
-                                [&_li:before]:content-[''] [&_li:before]:w-5 [&_li:before]:h-5 [&_li:before]:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRjZCMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjIgMTEuMDhWMTJBMTAgMTAgMCAxIDEgMTcgNC40NyIvPjxwYXRoIGQ9Ik0yMiA0IDEyIDE0LjAxIDkgMTEiLz48L3N2Zz4=')] [&_li:before]:bg-contain [&_li:before]:bg-no-repeat
-                            ">
-                                @if(is_array($project['scope']))
-                                    <ul>
-                                        @foreach($project['scope'] as $item)
-                                            <li>{{ $item }}</li>
-                                        @endforeach
-                                    </ul>
+                @if($storySections !== [])
+                    <div class="mx-auto mt-14 max-w-3xl md:mt-20">
+                        <div class="mb-12">
+                            <p class="text-xs font-black uppercase tracking-[0.2em] text-titan-red">{{ __('Project Story') }}</p>
+                            <h2 class="mt-3 text-3xl font-black tracking-tight text-titan-navy md:text-4xl">{{ __('From concept to delivery') }}</h2>
+                        </div>
+                        @foreach($storySections as $section)
+                            <article class="border-t border-titan-navy/10 py-9 first:border-t-0 first:pt-0 md:py-12">
+                                <h3 class="mb-5 text-xl font-black text-titan-navy md:text-2xl">{{ $section['title'] }}</h3>
+                                @if($section['scope'] ?? false)
+                                    <div class="project-scope-content prose max-w-none text-titan-navy/70 project-khmer-content">
+                                        {!! $renderProjectContent($section['content'], $section['mode']) !!}
+                                    </div>
                                 @else
-                                    <div class="project-rich-content">
-                                        {!! $renderProjectContent($project['scope'] ?? '', 'list') !!}
+                                    <div class="project-rich-content prose prose-base max-w-none text-titan-navy/70 md:prose-lg project-khmer-content">
+                                        {!! $renderProjectContent($section['content'], $section['mode']) !!}
                                     </div>
                                 @endif
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Narrative -->
-                    @if($hasEngineeringNarrative)
-                        <div class="reveal-up">
-                            <h2 class="text-xl md:text-2xl font-black text-titan-navy mb-6 md:mb-8 flex items-center gap-3">
-                                <x-lucide-alert-triangle class="w-5 h-5 md:w-6 md:h-6 text-titan-red" />
-                                {{ __('Engineering Challenges & Solutions') }}
-                            </h2>
-                            <div class="project-rich-content prose prose-base xl:prose-lg max-w-none text-titan-navy/70 project-khmer-content">
-                                {!! $renderProjectContent($engineeringNarrative) !!}
-                            </div>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- RIGHT: KEY FACTS SIDEBAR -->
-                <div class="lg:col-span-4">
-                    <div class="bg-white/95 p-6 md:p-8 rounded-lg shadow-[0_18px_50px_rgba(11,43,92,0.08)] border border-titan-navy/10 lg:sticky lg:top-24 overflow-hidden relative">
-                        <div class="absolute inset-x-0 top-0 h-1 bg-titan-red"></div>
-                        <h3 class="text-lg md:text-xl font-black text-titan-navy mb-6 md:mb-8 pb-4 border-b border-titan-navy/10">
-                            {{ __('Project Data') }}
-                        </h3>
-
-                        <div class="space-y-6">
-                            <div class="group">
-                                <span
-                                    class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Client') }}</span>
-                                <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
-                                    <x-lucide-user
-                                        class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
-                                    {{ $project['client'] }}
-                                </div>
-                            </div>
-
-                            <div class="group">
-                                <span
-                                    class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Location') }}</span>
-                                <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
-                                    <x-lucide-map-pin
-                                        class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
-                                    {{ $project['location'] }}
-                                </div>
-                            </div>
-
-                            @if($project['built_area'])
-                                <div class="group">
-                                    <span
-                                        class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Built Area') }}</span>
-                                    <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
-                                        <x-lucide-maximize
-                                            class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
-                                        {{ $project['built_area'] }}
-                                    </div>
-                                </div>
-                            @endif
-
-                            <div class="group">
-                                <span
-                                    class="block text-xs font-bold text-titan-navy/70 uppercase tracking-widest mb-1 group-hover:text-titan-red transition-colors">{{ __('Year & Status') }}</span>
-                                <div class="flex items-center gap-3 font-bold text-titan-navy text-base md:text-lg">
-                                    <x-lucide-calendar
-                                        class="w-5 h-5 text-gray-300 group-hover:text-titan-red transition-colors" />
-                                    {{ $project['year'] }} <span class="text-xs font-black text-titan-navy/40 ml-2 uppercase tracking-widest">{{ $project['status'] }}</span>                            </div>
-                        </div>
-
-                        <!-- CENTERED SOCIAL SHARING -->
-                        <div class="reveal-up pt-8 md:pt-12 border-t border-gray-100 mt-8 md:mt-12 flex flex-col items-center gap-4 md:gap-6">
-                            <div class="text-[10px] font-black text-titan-navy/20 uppercase tracking-[0.4em]">{{ __('Share this Project') }}</div>
-                            <x-social-share
-                                :url="route('projects.show', ['slug' => $project['slug']])"
-                                :title="$project['title']"
-                                :description="'Kimmex project: ' . $project['title']"
-                            />
-                        </div>
+                            </article>
+                        @endforeach
                     </div>
-                </div>
+                @endif
 
+                <div id="project-share" class="mx-auto mt-4 flex max-w-3xl items-center gap-5 border-t border-titan-navy/10 pt-7 md:mt-8">
+                    <p class="shrink-0 text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/40">{{ __('Share') }}</p>
+                    <x-social-share
+                        :url="route('projects.show', ['slug' => $project['slug']])"
+                        :title="$project['title']"
+                        :description="'Kimmex project: ' . $project['title']"
+                    />
+                </div>
             </div>
         </section>
 
         <!-- --- GALLERY SECTION --- -->
         @if(count($project['images']) > 0)
             <div x-data="{ lightboxOpen: false, lightboxIndex: 0, images: {{ Js::from($project['images']) }} }">
-            <section class="bg-slate-50 py-10 md:py-14 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10">
+            <section id="project-gallery" class="bg-slate-50 py-10 md:py-14 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10">
                 <div class="max-w-[1400px] mx-auto">
                     <h2 class="text-xl md:text-2xl font-black mb-6 md:mb-8 border-l-4 border-titan-red pl-4 md:pl-6">{{ __('Project Gallery') }}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
@@ -491,6 +393,43 @@
 
         .project-rich-content p {
             margin-bottom: 0.75rem;
+        }
+
+        .project-scope-content :where(ul, ol) {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .project-scope-content li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid rgb(11 43 92 / 0.1);
+            border-radius: 0.75rem;
+            background: rgb(248 250 252);
+            color: rgb(11 43 92);
+            font-weight: 700;
+        }
+
+        .project-scope-content li::before {
+            flex: none;
+            width: 0.5rem;
+            height: 0.5rem;
+            margin-top: 0.55rem;
+            border-radius: 9999px;
+            background: var(--primary-color, #E31E24);
+            content: '';
+        }
+
+        @media (min-width: 768px) {
+            .project-scope-content :where(ul, ol) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
 
         .project-khmer-content {
