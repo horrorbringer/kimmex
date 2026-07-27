@@ -17,5 +17,7 @@ class ProjectDetailExperienceTest extends TestCase
         $this->assertStringNotContainsString('activeStory', $view);
         $this->assertStringNotContainsString("__('Project actions')", $view);
         $this->assertStringContainsString('project-scope-content', $view);
+        $this->assertStringContainsString('project-gallery-card', $view);
+        $this->assertStringContainsString('prefers-reduced-motion: reduce', $view);
     }
 }

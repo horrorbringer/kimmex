@@ -207,31 +207,32 @@
                                     }
                                 @endphp
 
-                                <div @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
-                                    class="rounded-lg overflow-hidden group cursor-pointer relative w-full h-full bg-white shadow-[0_16px_44px_rgba(11,43,92,0.10)] {{ $gridClass }}">
+                                <button type="button" @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
+                                    aria-label="{{ __('Open gallery image :number', ['number' => $i + 1]) }}"
+                                    class="project-gallery-card rounded-lg overflow-hidden group cursor-pointer relative block w-full h-full bg-white text-left shadow-[0_16px_44px_rgba(11,43,92,0.10)] {{ $gridClass }}">
                                     <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
-                                        class="absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-110' : '' }} transition-transform duration-700"
+                                        class="project-gallery-image absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-[1.06]' : '' }}"
                                         loading="lazy" decoding="async" />
 
                                     @if($i === 2 && $count > 3)
                                         <div
-                                            class="absolute inset-0 bg-titan-navy/70 hover:bg-titan-navy/80 transition-colors duration-500 flex flex-col items-center justify-center z-10">
+                                            class="project-gallery-more absolute inset-0 flex flex-col items-center justify-center bg-titan-navy/70 z-10">
                                             <span class="text-4xl md:text-5xl font-black text-white mb-2">+{{ $count - 3 }}</span>
                                             <span
                                                 class="text-xs font-bold text-titan-red uppercase tracking-widest">{{ __('More Gallery') }}</span>
                                         </div>
                                     @else
                                         <div
-                                            class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500">
+                                            class="project-gallery-overlay absolute inset-0 bg-black/20">
                                         </div>
                                         <div
-                                            class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <div class="bg-white/20 backdrop-blur-md p-4 rounded-full">
+                                            class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100">
+                                            <div class="translate-y-2 scale-90 rounded-full bg-white/20 p-4 backdrop-blur-md transition-transform duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100">
                                                 <x-lucide-maximize class="w-6 h-6 text-white" />
                                             </div>
                                         </div>
                                     @endif
-                                </div>
+                                </button>
                             @endif
                         @endforeach
                     </div>
@@ -476,6 +477,56 @@
 
         .project-khmer-content :where(p, li) {
             line-height: 2.0;
+        }
+
+        .project-gallery-card {
+            transform: translateZ(0);
+            transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .project-gallery-card:hover {
+            transform: translateY(-4px) translateZ(0);
+            box-shadow: 0 24px 52px rgba(11, 43, 92, 0.18);
+        }
+
+        .project-gallery-card:focus-visible {
+            outline: 3px solid var(--primary-color, #E31E24);
+            outline-offset: 4px;
+        }
+
+        .project-gallery-image {
+            transform: translateZ(0);
+            transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+        }
+
+        .project-gallery-overlay {
+            transition: background-color 420ms ease;
+        }
+
+        .project-gallery-card:hover .project-gallery-overlay {
+            background-color: rgb(0 0 0 / 0.04);
+        }
+
+        .project-gallery-more {
+            transition: background-color 420ms ease;
+        }
+
+        .project-gallery-card:hover .project-gallery-more {
+            background-color: rgb(11 43 92 / 0.82);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .project-gallery-card,
+            .project-gallery-image,
+            .project-gallery-overlay,
+            .project-gallery-more {
+                transition: none;
+            }
+
+            .project-gallery-card:hover {
+                transform: translateZ(0);
+            }
         }
 
         @supports (view-timeline-name: --revealing) {

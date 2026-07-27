@@ -20,4 +20,21 @@ class ProjectEditorWorkflowTest extends TestCase
         $this->assertStringContainsString('one contribution per line', $form);
         $this->assertStringContainsString("persistStepInQueryString('project-step')", $form);
     }
+
+    public function test_project_editor_does_not_show_the_ai_auto_fill_action(): void
+    {
+        $createPage = File::get(app_path('Filament/Resources/Projects/Pages/CreateProject.php'));
+        $editPage = File::get(app_path('Filament/Resources/Projects/Pages/EditProject.php'));
+
+        $this->assertStringNotContainsString("AIHelper::getAutoFillAction('project')", $createPage);
+        $this->assertStringNotContainsString("AIHelper::getAutoFillAction('project')", $editPage);
+    }
+
+    public function test_project_editor_does_not_show_the_testimonial_request_action(): void
+    {
+        $editPage = File::get(app_path('Filament/Resources/Projects/Pages/EditProject.php'));
+
+        $this->assertStringNotContainsString("Action::make('requestTestimonial')", $editPage);
+        $this->assertStringNotContainsString('Request Testimonial', $editPage);
+    }
 }
