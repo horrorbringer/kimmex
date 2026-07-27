@@ -23,7 +23,11 @@ class ProjectImportConfigurationTest extends TestCase
             'completion_date',
             'hero_image_url',
             'description',
+            'background',
+            'objectives',
             'scope_of_work',
+            'design_concept',
+            'engineering_notes',
             'is_featured',
             'is_active',
         ], array_map(fn ($column): string => $column->getName(), $columns));
@@ -38,5 +42,15 @@ class ProjectImportConfigurationTest extends TestCase
         $this->assertStringContainsString("->where('role', 'ADMIN')->where('is_active', true)", $importer);
         $this->assertStringContainsString('->importer(ProjectImporter::class)', $table);
         $this->assertStringContainsString('->visible(fn (): bool => auth()->user()?->isAdmin() ?? false)', $table);
+    }
+
+    public function test_static_project_import_example_matches_the_importer_columns(): void
+    {
+        $example = file_get_contents(public_path('project-importer-example.csv'));
+
+        $this->assertStringStartsWith(
+            'title,slug,category,status,location,client,timeline,scale,completion_date,hero_image_url,description,background,objectives,scope_of_work,design_concept,engineering_notes,is_featured,is_active',
+            $example,
+        );
     }
 }

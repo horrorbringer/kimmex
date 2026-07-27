@@ -1,0 +1,6 @@
+title,slug,category,status,location,client,timeline,scale,completion_date,hero_image_url,description,background,objectives,scope_of_work,design_concept,engineering_notes,is_featured,is_active
+Example Government Building,example-government-building,government,COMPLETED,Phnom Penh Cambodia,Example Client,Jan 2024 - Dec 2025,8087 sqm - 17 floors,2025-12-31,https://res.cloudinary.com/example/image/upload/projects/hero/example.webp,A concise overview of the project and its public value.,The context need and public purpose behind the project.,"Improve public access
+Create a durable facility
+Support future growth","Architectural design
+Structural engineering
+MEP coordination",A concise description of the architectural and functional design approach.,Optional technical challenges constraints and solutions.,0,1

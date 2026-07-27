@@ -114,6 +114,23 @@ class ProjectImporter extends Importer
                 ->fillRecordUsing(function (Project $record, string $state): void {
                     $record->setTranslation('description', 'en', trim($state));
                 }),
+            ImportColumn::make('background')
+                ->label('Background')
+                ->rules(['nullable', 'string'])
+                ->example('The context, need, and public purpose behind the project.')
+                ->ignoreBlankState()
+                ->fillRecordUsing(function (Project $record, string $state): void {
+                    $record->setTranslation('background', 'en', trim($state));
+                }),
+            ImportColumn::make('objectives')
+                ->label('Objectives')
+                ->rules(['nullable', 'string'])
+                ->helperText('Use line breaks for separate objectives.')
+                ->example("Improve public access\nCreate a durable facility\nSupport future growth")
+                ->ignoreBlankState()
+                ->fillRecordUsing(function (Project $record, string $state): void {
+                    $record->setTranslation('objectives', 'en', trim($state));
+                }),
             ImportColumn::make('scope_of_work')
                 ->label('Scope of work')
                 ->rules(['nullable', 'string'])
@@ -122,6 +139,22 @@ class ProjectImporter extends Importer
                 ->ignoreBlankState()
                 ->fillRecordUsing(function (Project $record, string $state): void {
                     $record->setTranslation('scopeContributions', 'en', trim($state));
+                }),
+            ImportColumn::make('design_concept')
+                ->label('Design concept')
+                ->rules(['nullable', 'string'])
+                ->example('A concise description of the architectural and functional design approach.')
+                ->ignoreBlankState()
+                ->fillRecordUsing(function (Project $record, string $state): void {
+                    $record->setTranslation('designConcept', 'en', trim($state));
+                }),
+            ImportColumn::make('engineering_notes')
+                ->label('Engineering notes')
+                ->rules(['nullable', 'string'])
+                ->example('Optional technical challenges, constraints, and solutions.')
+                ->ignoreBlankState()
+                ->fillRecordUsing(function (Project $record, string $state): void {
+                    $record->setTranslation('engineeringNarrative', 'en', trim($state));
                 }),
             ImportColumn::make('is_featured')
                 ->label('Show on home page')
