@@ -32,7 +32,7 @@ class TelegramService
         try {
             $url = "https://api.telegram.org/bot{$this->token}/sendMessage";
 
-            $response = Http::post($url, [
+            $response = Http::connectTimeout(5)->timeout(15)->retry([100, 500])->post($url, [
                 'chat_id' => $chatId,
                 'text' => $message,
                 'parse_mode' => 'Markdown',
@@ -59,7 +59,7 @@ class TelegramService
         try {
             $url = "https://api.telegram.org/bot{$this->token}/sendDocument";
 
-            $response = Http::attach(
+            $response = Http::connectTimeout(5)->timeout(15)->retry([100, 500])->attach(
                 'document',
                 file_get_contents($filePath),
                 basename($filePath)
@@ -97,7 +97,7 @@ class TelegramService
         try {
             $url = "https://api.telegram.org/bot{$this->token}/sendDocument";
 
-            $response = Http::attach(
+            $response = Http::connectTimeout(5)->timeout(15)->retry([100, 500])->attach(
                 'document',
                 Storage::disk($disk)->get($path),
                 basename($path)
