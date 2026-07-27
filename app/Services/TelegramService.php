@@ -161,6 +161,7 @@ class TelegramService
                  ."👤 *From:* {$data['name']}\n"
                  ."✉️ *Email:* {$data['email']}\n"
                  .'📝 *Subject:* '.($data['subject'] ?? 'No Subject')."\n\n"
+                 .'🌐 *IP Address:* '.($data['ip_address'] ?? 'Unavailable')."\n\n"
                  ."💬 *Message:*\n_{$data['message']}_";
 
         if (! empty($data['file_disk']) && ! empty($data['file_path'])) {

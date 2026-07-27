@@ -48,25 +48,11 @@ class FormController extends Controller
             'subject' => $sanitized['subject'] ?? 'Website Inquiry',
             'message' => $sanitized['message'],
             'attachment_url' => $attachmentPath,
+            'ip_address' => $request->ip(),
             'status' => 'NEW',
         ]);
 
-        // 3. Smart Telegram Notification (Departmental Routing)
-        try {
-            $telegram = new TelegramService;
-            $telegram->notifyInquiry([
-                'name' => $inquiry->name,
-                'email' => $inquiry->email,
-                'subject' => $inquiry->subject,
-                'message' => $inquiry->message,
-                'file_disk' => PublicStorage::diskName(),
-                'file_path' => $attachmentPath,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Telegram notification error: '.$e->getMessage());
-        }
-
-        // 4. Auto-reply email to the user
+        // 3. Auto-reply email to the user. The inquiry observer sends the Telegram alert.
         try {
             Mail::to($inquiry->email)
                 ->queue(new ContactAutoReplyMail($inquiry));
