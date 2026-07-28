@@ -3,10 +3,12 @@
 namespace App\Http\Middleware;
 
 use App\Models\PageView;
+use App\Support\PageViewCounter;
 use Closure;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class TrackPageView
@@ -78,6 +80,11 @@ class TrackPageView
         // Record the page view directly (shared hosting - no queue)
         try {
             $realIp = $this->getRealIp($request);
+
+            if (! Cache::add($this->deduplicationKey($path, $realIp), true, now()->addMinutes(30))) {
+                return $response;
+            }
+
             $country = $this->resolveCountry($realIp) ?? 'Unknown';
 
             PageView::create([
@@ -90,12 +97,25 @@ class TrackPageView
                 'visited_at' => now(),
                 'country' => $country,
             ]);
+
+            PageViewCounter::forget('/'.ltrim($path, '/'));
         } catch (\Throwable $e) {
+            Cache::forget($this->deduplicationKey($path, $realIp ?? $request->ip()));
+
             // Silently fail - don't break the page for analytics
             report($e);
         }
 
         return $response;
+    }
+
+    /**
+     * Build a privacy-safe key that accepts only one view per page and visitor
+     * within a short period, without storing an additional raw IP address.
+     */
+    protected function deduplicationKey(string $path, ?string $ip): string
+    {
+        return 'page_view_recent_'.hash('sha256', $path.'|'.($ip ?? 'unknown'));
     }
 
     /**

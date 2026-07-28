@@ -11,9 +11,9 @@ class PageViewCount extends Component
 {
     public int $count;
 
-    public function __construct(?string $path = null, public bool $light = false)
+    public function __construct(?string $path = null, public bool $light = false, public bool $countOnly = false, public bool $total = false)
     {
-        $this->count = PageViewCounter::count($path ?? request()->path());
+        $this->count = PageViewCounter::count($total ? null : ($path ?? request()->path()));
     }
 
     /**

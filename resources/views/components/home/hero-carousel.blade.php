@@ -246,18 +246,8 @@
                 </div>
             </div>
 
-            <!-- Arrows + Stats -->
+            <!-- Carousel controls -->
             <div class="flex items-center gap-4 sm:gap-8">
-                <div class="hidden xl:flex gap-8 border-r border-white/10 pr-8 mr-2">
-                    <div>
-                        <div class="text-2xl font-black text-white">25+</div>
-                        <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Years Exp') }}</div>
-                    </div>
-                    <div>
-                        <div class="text-2xl font-black text-white">150+</div>
-                        <div class="text-[10px] text-titan-red uppercase tracking-widest font-bold">{{ __('Projects') }}</div>
-                    </div>
-                </div>
                 <div class="flex gap-2">
                     <button @click="prevSlide()"
                         type="button"

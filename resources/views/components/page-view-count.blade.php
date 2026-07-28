@@ -3,6 +3,8 @@
     'text-white/85' => $light,
     'text-titan-navy/55' => ! $light,
 ]) }}>
-    <x-lucide-eye class="w-3.5 h-3.5" />
-    <span>{{ number_format($count) }} {{ __('views') }}</span>
+    @unless ($countOnly)
+        <x-lucide-eye class="w-3.5 h-3.5" />
+    @endunless
+    <span>{{ number_format($count) }}@unless ($countOnly) {{ __('views') }}@endunless</span>
 </span>

@@ -27,5 +27,24 @@ class PageViewCountTest extends TestCase
 
         $this->blade('<x-page-view-count path="/news/performance-update" />')
             ->assertSee('2 views');
+
+        $this->blade('<x-page-view-count path="/news/performance-update" :count-only="true" />')
+            ->assertSee('2')
+            ->assertDontSee('views');
+    }
+
+    public function test_it_displays_the_total_count_when_requested(): void
+    {
+        foreach (['/', '/about', '/projects'] as $path) {
+            PageView::create([
+                'url' => 'https://example.test'.$path,
+                'path' => $path,
+                'visited_at' => now(),
+                'country' => 'Unknown',
+            ]);
+        }
+
+        $this->blade('<x-page-view-count :total="true" :count-only="true" />')
+            ->assertSee('3');
     }
 }

@@ -4,8 +4,8 @@
             @foreach([
                 ['value' => 25, 'suffix' => '+', 'label' => __('Years of Experience')],
                 ['value' => 150, 'suffix' => '+', 'label' => __('Projects Delivered')],
-                ['value' => 'QA/QC', 'suffix' => '', 'label' => __('Quality Assurance')],
                 ['value' => 500, 'suffix' => '+', 'label' => __('Technical Workforce')],
+                ['value' => null, 'suffix' => '', 'label' => __('Page Views'), 'page_views' => true],
             ] as $highlight)
                 <div
                     @if(is_int($highlight['value']))
@@ -38,7 +38,9 @@
                     @endif
                     class="group flex min-h-24 sm:min-h-28 flex-col justify-center border-l border-gray-100 px-4 odd:border-l-0 sm:px-6 lg:px-8 lg:odd:border-l lg:first:border-l-0">
                     <span class="font-heading text-2xl sm:text-3xl font-black tracking-tight text-titan-navy transition-colors duration-300 ease-out group-hover:text-titan-red">
-                        @if(is_int($highlight['value']))
+                        @if($highlight['page_views'] ?? false)
+                            <x-page-view-count :total="true" :count-only="true" class="!text-2xl sm:!text-3xl !tracking-tight" />
+                        @elseif(is_int($highlight['value']))
                             <span x-text="value + '{{ $highlight['suffix'] }}'">{{ $highlight['value'] }}{{ $highlight['suffix'] }}</span>
                         @else
                             {{ $highlight['value'] }}

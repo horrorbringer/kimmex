@@ -17,6 +17,7 @@ class AboutCertificationClaimsTest extends TestCase
 
         $this->assertStringContainsString("__('Quality Assurance')", $aboutPage);
         $this->assertStringContainsString(__('Rigorous QA/QC procedures'), $aboutPage);
+        $this->assertStringContainsString('<x-page-view-count :total="true" :count-only="true"', $aboutPage);
         $this->assertStringNotContainsString('ISO 9001', $aboutPage);
         $this->assertStringNotContainsString('9001:2015 Certified', $aboutPage);
         $this->assertStringNotContainsString('ISO', $homeAbout);

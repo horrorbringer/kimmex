@@ -106,12 +106,12 @@
                             ['value' => 25, 'suffix' => '+', 'label' => __('Years Experience'), 'icon' => 'calendar'],
                             ['value' => 150, 'suffix' => '+', 'label' => __('Projects Completed'), 'icon' => 'building-2'],
                             ['value' => 500, 'suffix' => '+', 'label' => __('Team Members'), 'icon' => 'users'],
-                            ['value' => 98, 'suffix' => '%', 'label' => __('Client Satisfaction'), 'icon' => 'heart'],
+                            ['value' => null, 'suffix' => '', 'label' => __('Page Views'), 'icon' => 'eye'],
                         ];
                     @endphp
                     @foreach($stats as $stat)
-                        <div x-data="{ count: 0, target: {{ $stat['value'] }}, shown: false }"
-                            x-intersect.once="shown = true; let steps = 50; let step = target / steps; let c = 0; let timer = setInterval(() => { c += step; if (c >= target) { count = target; clearInterval(timer); } else { count = Math.floor(c); } }, 1500 / steps);"
+                        <div @if($stat['icon'] !== 'eye') x-data="{ count: 0, target: {{ $stat['value'] }}, shown: false }"
+                            x-intersect.once="shown = true; let steps = 50; let step = target / steps; let c = 0; let timer = setInterval(() => { c += step; if (c >= target) { count = target; clearInterval(timer); } else { count = Math.floor(c); } }, 1500 / steps);" @endif
                             class="flex flex-col items-center justify-center py-5 sm:py-8 md:py-10 px-2 sm:px-4 text-center group hover:bg-gray-50/50 transition-colors first:rounded-l-xl last:rounded-r-xl">
                             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-titan-red/10 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-titan-red/20 transition-colors">
                                 @if($stat['icon'] === 'calendar')
@@ -120,12 +120,16 @@
                                     <x-lucide-building-2 class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
                                 @elseif($stat['icon'] === 'users')
                                     <x-lucide-users class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
-                                @elseif($stat['icon'] === 'heart')
-                                    <x-lucide-heart class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
+                                @elseif($stat['icon'] === 'eye')
+                                    <x-lucide-eye class="w-4 h-4 sm:w-5 sm:h-5 text-titan-red" />
                                 @endif
                             </div>
                             <div class="text-2xl sm:text-3xl md:text-4xl font-black text-titan-navy mb-1 tabular-nums">
-                                <span x-text="count">0</span><span class="text-titan-red">{{ $stat['suffix'] }}</span>
+                                @if($stat['icon'] === 'eye')
+                                    <x-page-view-count :total="true" :count-only="true" class="!text-2xl sm:!text-3xl md:!text-4xl !tracking-normal" />
+                                @else
+                                    <span x-text="count">0</span><span class="text-titan-red">{{ $stat['suffix'] }}</span>
+                                @endif
                             </div>
                             <div class="text-[9px] sm:text-xs uppercase tracking-wider text-titan-navy/50 font-bold leading-tight">{{ $stat['label'] }}</div>
                         </div>
