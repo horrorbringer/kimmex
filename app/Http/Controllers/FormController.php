@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendJobApplicationTelegramNotification;
 use App\Mail\ContactAutoReplyMail;
 use App\Models\Inquiry;
 use App\Models\JobApplication;
-use App\Models\JobPosting;
-use App\Services\TelegramService;
 use App\Support\PublicStorage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -55,7 +54,7 @@ class FormController extends Controller
         // 3. Auto-reply email to the user. The inquiry observer sends the Telegram alert.
         try {
             Mail::to($inquiry->email)
-                ->queue(new ContactAutoReplyMail($inquiry));
+                ->queue((new ContactAutoReplyMail($inquiry))->afterCommit());
         } catch (\Exception $e) {
             Log::error('Contact auto-reply email error: '.$e->getMessage());
         }
@@ -104,28 +103,9 @@ class FormController extends Controller
             'submittedAt' => now(),
         ]);
 
-        // 3. Smart Telegram Notification (Departmental Routing)
-        try {
-            $jobTitle = 'General Application';
-            if ($application->jobId) {
-                $job = JobPosting::find($application->jobId);
-                if ($job) {
-                    $jobTitle = $job->title; // Automatically handles current locale
-                }
-            }
-
-            $telegram = new TelegramService;
-            $telegram->notifyJobApplication([
-                'name' => $application->applicantName,
-                'email' => $application->email,
-                'phone' => $application->phone,
-                'position' => $jobTitle,
-                'file_disk' => PublicStorage::diskName(),
-                'file_path' => $resumePath,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Telegram notification error: '.$e->getMessage());
-        }
+        // Telegram fetches the resume from Cloudinary and sends it to Telegram. Do this
+        // in the queue so the visitor is not kept waiting for two remote file transfers.
+        SendJobApplicationTelegramNotification::dispatch($application)->afterCommit();
 
         return redirect()->back()->with('success', __('Your application has been submitted successfully!'));
     }

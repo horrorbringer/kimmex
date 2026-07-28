@@ -17,6 +17,7 @@ class ContactInquiryNotificationTest extends TestCase
 
         $this->assertStringContainsString("'ip_address' => \$request->ip()", $controller);
         $this->assertStringNotContainsString('notifyInquiry([', $controller);
+        $this->assertStringContainsString('queue((new ContactAutoReplyMail($inquiry))->afterCommit())', $controller);
         $this->assertStringContainsString('SendInquiryTelegramNotification::dispatch($inquiry)->afterCommit()', $observer);
         $this->assertStringContainsString("'🌐 *IP Address:* '", $telegram);
         $this->assertStringContainsString('Http::connectTimeout(5)->timeout(15)->retry([100, 500])', $telegram);
