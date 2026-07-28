@@ -87,7 +87,7 @@
                     </div>
                 @endif
 
-                <p class="text">If you have any questions, please don't hesitate to contact us at <a href="mailto:hr@kimmex.com.kh" style="color: #E31E24;">hr@kimmex.com.kh</a>.</p>
+                <p class="text">If you have any questions, please don't hesitate to contact us at <a href="mailto:recruitment@kimmex.com.kh" style="color: #E31E24;">recruitment@kimmex.com.kh</a>.</p>
             </div>
             <div class="footer">
                 <p>© {{ date('Y') }} Kimmex Construction & Investment Co., Ltd. All rights reserved.</p>
