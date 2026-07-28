@@ -168,9 +168,7 @@
                 </div>
 
                 <!-- Right: Text Content -->
-                <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 delay-200">
+                <div>
 
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-[2px] bg-titan-red"></div>
@@ -195,9 +193,14 @@
                         @endphp
 
                         @foreach($mvg_items as $item)
-                        <div class="border border-gray-100 rounded-xl overflow-hidden transition-all duration-300 hover:border-gray-200"
-                             :class="active === '{{ $item['id'] }}' ? 'shadow-sm bg-white' : 'bg-gray-50/50'"
-                             @click="active = (active === '{{ $item['id'] }}' ? null : '{{ $item['id'] }}')">
+                        <div class="border border-gray-200 rounded-xl overflow-hidden transition-colors duration-200 hover:border-gray-300"
+                             :class="active === '{{ $item['id'] }}' ? 'shadow-sm bg-white' : 'bg-gray-50'"
+                             @mouseenter="active = '{{ $item['id'] }}'"
+                             @focusin="active = '{{ $item['id'] }}'"
+                             @click="active = '{{ $item['id'] }}'"
+                             role="button"
+                             tabindex="0"
+                             :aria-expanded="active === '{{ $item['id'] }}'">
                             <div class="flex items-center gap-4 p-4 md:p-5 cursor-pointer">
                                 <div class="w-11 h-11 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300"
                                      :class="active === '{{ $item['id'] }}' ? 'bg-titan-red text-white shadow-md shadow-titan-red/20' : 'bg-titan-red/10 text-titan-red'">
@@ -223,7 +226,10 @@
                                     <x-lucide-chevron-down class="w-4 h-4" />
                                 </div>
                             </div>
-                            <div x-show="active === '{{ $item['id'] }}'" x-collapse>
+                            <div x-show="active === '{{ $item['id'] }}'" x-collapse
+                                 x-transition:enter="transition ease-out duration-300"
+                                 x-transition:enter-start="opacity-0 translate-y-2"
+                                 x-transition:enter-end="opacity-100 translate-y-0">
                                 <div class="px-5 pb-5 pl-5 sm:pl-[4.5rem]">
                                     <p class="text-gray-500 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ $item['desc'] }}</p>
                                 </div>
