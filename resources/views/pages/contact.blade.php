@@ -147,7 +147,7 @@
                                     </div>
                                 @endif
 
-                                <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                                <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-5" x-data="{ submitting: false }" x-on:submit="submitting = true">
                                     @csrf
 
                                     <!-- Name -->
@@ -221,10 +221,9 @@
                                     </div>
 
                                     <!-- Submit -->
-                                    <div class="flex items-center justify-between pt-3" x-data="{ submitting: false }">
+                                    <div class="flex items-center justify-between pt-3">
                                         <p class="text-xs text-gray-400">* {{ __('required fields') }}</p>
                                         <button type="submit"
-                                            x-on:click="submitting = true"
                                             x-bind:disabled="submitting"
                                             class="inline-flex items-center gap-2 h-11 px-7 rounded-xl text-sm font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 group disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-md"
                                             style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
