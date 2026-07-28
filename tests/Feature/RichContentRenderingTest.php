@@ -16,4 +16,15 @@ class RichContentRenderingTest extends TestCase
         $this->assertStringNotContainsString('<urli', $rendered);
         $this->assertStringContainsString('<ul><li>ជាន់៖ 17 ជាន់ </li><li><b> ខែ</li></ul>', $rendered);
     }
+
+    public function test_project_content_repairs_bullet_paragraphs_and_ignores_malformed_links(): void
+    {
+        $content = '<p>• First responsibility<br>• Second responsibility</p><p><a href="https://example.com>Broken link text</a></p>';
+
+        $rendered = RichContent::renderProject($content);
+
+        $this->assertStringContainsString('<ul><li>First responsibility</li><li>Second responsibility</li></ul>', $rendered);
+        $this->assertStringContainsString('Broken link text</a>', $rendered);
+        $this->assertStringNotContainsString('<a href="https://example.com>', $rendered);
+    }
 }

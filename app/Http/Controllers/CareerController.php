@@ -81,7 +81,7 @@ class CareerController extends Controller
         $pageDesc = $heroSummary ?: __('Join our team of experts in the construction and investment industry.');
         $canonicalUrl = $slug === 'gen' ? url('/careers/gen') : route('careers.show', ['slug' => $slug]);
 
-        $renderRichText = fn (?string $content) => RichContent::render($content);
+        $renderRichText = fn (?string $content) => RichContent::renderProject($content);
 
         $renderParagraphContent = function (?string $content) {
             $content = trim((string) $content);

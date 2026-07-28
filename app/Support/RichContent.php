@@ -128,6 +128,9 @@ class RichContent
             return '';
         }
 
+        $content = static::removeMalformedAnchors($content);
+        $content = static::normalizeBulletParagraphs($content);
+
         // Strip empty paragraphs
         $content = preg_replace('#<p>(?:\s|&nbsp;|<br\s*/?>)*</p>#i', '', $content) ?? $content;
         // Unwrap <p> inside <li>
@@ -170,5 +173,47 @@ class RichContent
         }
 
         return '<p>'.e($content).'</p>';
+    }
+
+    /**
+     * Remove only malformed link opening tags while retaining their visible text.
+     * Legacy translated content occasionally contains an unclosed href quote.
+     */
+    protected static function removeMalformedAnchors(string $content): string
+    {
+        return preg_replace_callback(
+            '#<a\b([^>]*)>#iu',
+            function (array $matches): string {
+                return preg_match('#\bhref\s*=\s*([\'\"])[^\'\"]*\1#iu', $matches[1])
+                    ? $matches[0]
+                    : '';
+            },
+            $content,
+        ) ?? $content;
+    }
+
+    /**
+     * Convert legacy bullet text separated by line breaks into semantic lists.
+     */
+    protected static function normalizeBulletParagraphs(string $content): string
+    {
+        return preg_replace_callback(
+            '#<p>(.*?)</p>#isu',
+            function (array $matches): string {
+                $items = preg_split('#<br\s*/?>#i', $matches[1]) ?: [];
+
+                if (count($items) < 2 || collect($items)->contains(fn (string $item): bool => ! preg_match('/^\s*(?:•|&bull;|[-–])\s+/u', $item))) {
+                    return $matches[0];
+                }
+
+                $items = array_map(
+                    fn (string $item): string => preg_replace('/^\s*(?:•|&bull;|[-–])\s+/u', '', trim($item)) ?? trim($item),
+                    $items,
+                );
+
+                return '<ul><li>'.implode('</li><li>', $items).'</li></ul>';
+            },
+            $content,
+        ) ?? $content;
     }
 }

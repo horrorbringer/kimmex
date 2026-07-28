@@ -43,18 +43,25 @@ class JobPosting extends Model
         return $this->belongsTo(Department::class, 'departmentId');
     }
 
-    protected static function booted()
+    protected static function booted(): void
     {
-        static::saved(function () {
-            foreach (['en', 'km', 'kh'] as $locale) {
-                Cache::forget("careers_jobs_data_{$locale}");
-            }
+        static::saved(function (self $job): void {
+            static::clearPublicCaches($job, $job->getPrevious('slug'));
         });
 
-        static::deleted(function () {
-            foreach (['en', 'km', 'kh'] as $locale) {
-                Cache::forget("careers_jobs_data_{$locale}");
-            }
+        static::deleted(function (self $job): void {
+            static::clearPublicCaches($job);
         });
+    }
+
+    private static function clearPublicCaches(self $job, ?string $previousSlug = null): void
+    {
+        foreach (['en', 'km', 'kh'] as $locale) {
+            Cache::forget("careers_jobs_data_{$locale}");
+
+            foreach (array_filter([$job->slug, $previousSlug]) as $slug) {
+                Cache::forget("career_job_show_data_{$slug}_{$locale}");
+            }
+        }
     }
 }
