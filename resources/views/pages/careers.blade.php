@@ -64,10 +64,10 @@
             this.filterLoc = '{{ __('All Locations') }}';
             this.searchQuery = '';
         }
-    }" class="bg-white min-h-screen">
+    }" class="bg-white min-h-screen flex flex-col">
 
         <!-- ═══ HERO ═══ -->
-        <section class="relative h-[420px] md:h-[480px] flex items-end overflow-hidden" style="background: #0B2B5C;">
+        <section class="order-1 relative h-[420px] md:h-[480px] flex items-end overflow-hidden" style="background: #0B2B5C;">
             <div class="absolute inset-0">
                 <img src="/images/webp/projects/Thumbnail-5.webp" alt="{{ __('Careers') }}" class="w-full h-full object-cover opacity-40" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/95 via-[#0B2B5C]/50 to-transparent"></div>
@@ -105,7 +105,7 @@
 
 
         <!-- ═══ WHY JOIN US ═══ -->
-        <section class="py-16 md:py-20 bg-white border-b border-gray-100">
+        <section class="order-3 py-16 md:py-20 bg-white border-b border-gray-100">
             <div class="max-w-[1280px] mx-auto px-6">
                 <div class="flex items-center gap-3 mb-10">
                     <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
@@ -136,7 +136,7 @@
 
 
         <!-- ═══ HIRING PROCESS ═══ -->
-        <section class="py-16 md:py-20 bg-gray-50 border-b border-gray-100">
+        <section class="order-4 py-16 md:py-20 bg-gray-50 border-b border-gray-100">
             <div class="max-w-[1280px] mx-auto px-6">
                 <div class="text-center mb-12">
                     <div class="flex items-center justify-center gap-3 mb-4">
@@ -144,7 +144,7 @@
                         <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Process') }}</span>
                         <div class="w-8 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
                     </div>
-                    <h2 class="text-2xl md:text-3xl font-heading font-black text-gray-900 tracking-tight">{{ __('How We Hire') }}</h2>
+                    <h2 class="text-2xl md:text-3xl font-heading font-black text-gray-900 tracking-tight">{{ __('What happens after you apply') }}</h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -173,7 +173,7 @@
 
 
         <!-- ═══ JOB LISTINGS ═══ -->
-        <section id="openings" class="scroll-mt-24 py-16 md:py-24 bg-gray-50">
+        <section id="openings" class="order-2 scroll-mt-24 py-16 md:py-24 bg-gray-50">
             <div class="max-w-[1280px] mx-auto px-6">
 
                 <!-- Header -->
@@ -196,106 +196,101 @@
                     </div>
                 </div>
 
-                <!-- Search + Filters Bar -->
-                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 md:p-5 mb-8">
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <!-- Search -->
-                        <div class="relative flex-grow">
-                            <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 w-4 h-4" />
-                            <input type="text" x-model="searchQuery"
-                                placeholder="{{ __('Search by job title...') }}"
-                                class="w-full pl-11 pr-4 h-12 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:outline-none focus:border-gray-300 focus:bg-white focus:ring-0 transition placeholder:text-gray-400" />
-                        </div>
-                        <!-- Location dropdown -->
-                        <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open"
-                                class="h-12 px-4 rounded-xl border border-gray-200 bg-gray-50 text-sm font-medium text-gray-600 flex items-center gap-2 min-w-[160px] hover:border-gray-300 transition-colors"
-                                :class="filterLoc !== '{{ __('All Locations') }}' ? 'border-gray-400 bg-white' : ''">
-                                <x-lucide-map-pin class="w-4 h-4 text-gray-400 shrink-0" />
-                                <span x-text="filterLoc" class="flex-1 text-left truncate"></span>
-                                <x-lucide-chevron-down class="w-4 h-4 text-gray-400 shrink-0 transition-transform" x-bind:class="open ? 'rotate-180' : ''" />
-                            </button>
-                            <div x-show="open" @click.away="open = false" style="display:none"
-                                class="absolute top-full left-0 mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl py-1 z-50">
-                                @foreach($locations as $loc)
-                                    <button @click="filterLoc = '{{ addslashes($loc) }}'; open = false"
-                                        class="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 flex items-center justify-between transition-colors"
-                                        :class="filterLoc === '{{ addslashes($loc) }}' ? 'text-titan-red font-bold' : 'text-gray-600'">
-                                        <span>{{ $loc }}</span>
-                                        <x-lucide-check x-show="filterLoc === '{{ addslashes($loc) }}'" class="w-4 h-4 text-titan-red" />
-                                    </button>
-                                @endforeach
-                            </div>
-                        </div>
-                        <!-- Reset -->
-                        <button @click="clearFilters()"
-                            x-show="filterDept !== '{{ __('All') }}' || filterLoc !== '{{ __('All Locations') }}' || searchQuery !== ''"
-                            style="display:none"
-                            class="h-12 px-5 rounded-xl border border-gray-200 text-sm font-bold text-gray-500 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all flex items-center gap-2">
-                            <x-lucide-x class="w-4 h-4" /> {{ __('Reset') }}
-                        </button>
-                    </div>
+                <ol class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8" aria-label="{{ __('Apply in 3 simple steps') }}">
+                    @foreach([
+                        ['number' => '1', 'title' => __('Choose a role'), 'description' => __('Pick a job that fits your skills.')],
+                        ['number' => '2', 'title' => __('Read the job details'), 'description' => __('Check the role before you apply.')],
+                        ['number' => '3', 'title' => __('Send your CV'), 'description' => __('Complete the short form with your CV.')],
+                    ] as $step)
+                        <li class="flex items-center gap-3 rounded-xl border border-gray-100 bg-white px-4 py-3">
+                            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-black text-white" style="background: var(--primary-color, #E31E24);">{{ $step['number'] }}</span>
+                            <span>
+                                <span class="block text-sm font-bold text-gray-900">{{ $step['title'] }}</span>
+                                <span class="block text-xs text-gray-500 mt-0.5">{{ $step['description'] }}</span>
+                            </span>
+                        </li>
+                    @endforeach
+                </ol>
 
-                    <!-- Department Tabs -->
-                    <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
-                        @foreach($categories as $cat)
-                            <button @click="filterDept = '{{ addslashes($cat) }}'"
-                                :class="filterDept === '{{ addslashes($cat) }}'
-                                    ? 'bg-gray-900 text-white border-gray-900 shadow-sm'
-                                    : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300 hover:text-gray-700'"
-                                class="h-9 px-4 rounded-full border text-xs font-bold transition-all shrink-0">
-                                {{ $cat }}
-                            </button>
-                        @endforeach
-                    </div>
+                <!-- Compact filters -->
+                <div class="mb-6 grid grid-cols-1 items-center gap-2 rounded-xl border border-gray-200 bg-white p-3 shadow-sm md:grid-cols-[minmax(0,1fr)_11rem_11rem_auto]">
+                    <label class="relative min-w-0 flex-1">
+                        <span class="sr-only">{{ __('Search by job title...') }}</span>
+                        <x-lucide-search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <input type="search" x-model="searchQuery"
+                            placeholder="{{ __('Search jobs') }}"
+                            class="h-10 w-full rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-3 text-sm text-gray-900 transition placeholder:text-gray-400 focus:border-titan-red focus:bg-white focus:outline-none focus:ring-1 focus:ring-titan-red/20" />
+                    </label>
+
+                    <label class="relative min-w-0">
+                        <span class="sr-only">{{ __('Department') }}</span>
+                        <x-lucide-briefcase class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <select x-model="filterDept" class="h-10 w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-8 text-sm font-medium text-gray-600 transition focus:border-titan-red focus:bg-white focus:outline-none focus:ring-1 focus:ring-titan-red/20">
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}">{{ $cat }}</option>
+                            @endforeach
+                        </select>
+                        <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    </label>
+
+                    <label class="relative min-w-0">
+                        <span class="sr-only">{{ __('Location') }}</span>
+                        <x-lucide-map-pin class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <select x-model="filterLoc" class="h-10 w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-8 text-sm font-medium text-gray-600 transition focus:border-titan-red focus:bg-white focus:outline-none focus:ring-1 focus:ring-titan-red/20">
+                            @foreach($locations as $loc)
+                                <option value="{{ $loc }}">{{ $loc }}</option>
+                            @endforeach
+                        </select>
+                        <x-lucide-chevron-down class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    </label>
+
+                    <button @click="clearFilters()"
+                        x-show="filterDept !== '{{ __('All') }}' || filterLoc !== '{{ __('All Locations') }}' || searchQuery !== ''"
+                        x-cloak
+                        class="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-bold text-gray-500 transition hover:bg-gray-100 hover:text-titan-navy">
+                        <x-lucide-rotate-ccw class="h-3.5 w-3.5" /> {{ __('Reset') }}
+                    </button>
                 </div>
 
                 <!-- Job Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <template x-for="(job, index) in filteredJobs" :key="job.id">
                         <a :href="'/careers/' + job.slug"
-                           class="group bg-white rounded-2xl border border-gray-100 p-6 hover:border-gray-200 hover:shadow-[0_12px_40px_-10px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col">
+                           class="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 sm:p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-titan-red/30 hover:shadow-[0_18px_42px_-18px_rgba(7,26,51,0.28)] focus:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-2">
+                            <span aria-hidden="true" class="absolute inset-y-0 left-0 w-1 origin-bottom scale-y-0 bg-titan-red transition-transform duration-300 group-hover:scale-y-100"></span>
 
-                            <!-- Top: Dept + Type + Date -->
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md"
-                                          style="background: color-mix(in srgb, var(--primary-color, #E31E24) 8%, transparent); color: var(--primary-color, #E31E24);"
-                                          x-text="job.dept"></span>
-                                    <span class="text-xs text-gray-400 font-medium" x-text="job.type"></span>
+                            <div class="flex items-start gap-4">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-titan-navy text-white transition-colors duration-300 group-hover:bg-titan-red">
+                                    <x-lucide-briefcase class="h-4 w-4" />
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <div class="mb-2 flex items-center justify-between gap-3">
+                                        <span class="truncate text-[10px] font-black uppercase tracking-[0.14em] text-titan-red" x-text="job.dept"></span>
+                                        <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-emerald-700">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{{ __('Open') }}
+                                        </span>
+                                    </div>
+                                    <h3 class="line-clamp-2 text-lg font-black leading-snug text-titan-navy transition-colors duration-300 group-hover:text-titan-red" x-text="job.title"></h3>
                                 </div>
-                                <span class="text-[11px] text-gray-300" x-text="job.postedDate"></span>
                             </div>
 
-                            <!-- Title -->
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-titan-red transition-colors mb-3 leading-snug flex-grow"
-                                x-text="job.title"></h3>
+                            <p class="mt-3 text-sm leading-relaxed text-gray-500 line-clamp-2" x-show="job.summary" x-text="job.summary"></p>
 
-                            <!-- Summary (if available) -->
-                            <p class="text-sm text-gray-400 leading-relaxed mb-5 line-clamp-2" x-show="job.summary" x-text="job.summary"></p>
-
-                            <!-- Meta -->
-                            <div class="flex flex-wrap items-center gap-3 mb-5 pb-5 border-b border-gray-100">
-                                <span class="inline-flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg">
-                                    <x-lucide-map-pin class="w-3.5 h-3.5 text-gray-400" />
-                                    <span x-text="job.loc"></span>
-                                </span>
-                                <span class="inline-flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg">
-                                    <x-lucide-clock class="w-3.5 h-3.5 text-gray-400" />
-                                    <span x-text="job.experience"></span>
-                                </span>
-                                <span class="inline-flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg">
-                                    <x-lucide-banknote class="w-3.5 h-3.5 text-gray-400" />
-                                    <span x-text="job.salary"></span>
-                                </span>
+                            <div class="mt-4 grid grid-cols-2 overflow-hidden rounded-xl border border-gray-100 bg-gray-50 text-xs">
+                                <div class="flex min-w-0 items-center gap-2 border-r border-gray-100 px-3 py-2.5 text-gray-600">
+                                    <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
+                                    <span class="truncate" x-text="job.loc"></span>
+                                </div>
+                                <div class="flex min-w-0 items-center gap-2 px-3 py-2.5 text-gray-600">
+                                    <x-lucide-clock class="h-4 w-4 shrink-0 text-titan-red" />
+                                    <span class="truncate" x-text="job.type"></span>
+                                </div>
                             </div>
 
-                            <!-- CTA -->
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold uppercase tracking-wider text-gray-400 group-hover:text-gray-600 transition-colors">{{ __('Learn more') }}</span>
-                                <span class="inline-flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 group-hover:shadow-md"
-                                      style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent);">
-                                    <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" style="color: var(--primary-color, #E31E24);" />
+                            <div class="mt-4">
+                                <span class="flex h-10 items-center justify-between rounded-xl bg-titan-navy px-4 text-sm font-bold text-white transition-colors duration-300 group-hover:bg-titan-red">
+                                    {{ __('View Job Details') }}
+                                    <x-lucide-arrow-right class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                                 </span>
                             </div>
                         </a>
@@ -345,13 +340,14 @@
 
             <div x-show="isApplyOpen"
                 x-transition:enter="transition ease-out duration-250" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                class="relative w-full sm:max-w-lg bg-white sm:rounded-2xl shadow-2xl overflow-hidden max-h-[92svh] overflow-y-auto">
+                class="relative w-full sm:max-w-lg bg-white sm:rounded-2xl shadow-2xl overflow-hidden max-h-[92svh] overflow-y-auto"
+                role="dialog" aria-modal="true" aria-labelledby="general-application-title">
 
                 <!-- Header -->
                 <div class="px-6 py-5 flex items-center justify-between" style="background: #071A33;">
                     <div>
                         <p class="text-[10px] font-bold uppercase tracking-wider mb-0.5" style="color: rgba(255,255,255,0.4);">{{ __('Kimmex Careers') }}</p>
-                        <h3 class="text-base font-bold" style="color: #FFFFFF;">{{ __('General Application') }}</h3>
+                        <h3 id="general-application-title" class="text-base font-bold" style="color: #FFFFFF;">{{ __('General Application') }}</h3>
                     </div>
                     <button @click="isApplyOpen = false" class="w-9 h-9 rounded-full flex items-center justify-center transition-colors" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6);">
                         <x-lucide-x class="w-4 h-4" />
@@ -360,6 +356,9 @@
 
                 <!-- Form -->
                 <div class="p-6">
+                    <p class="mb-5 rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-600">
+                        {{ __('You only need your name, contact details, and CV.') }}
+                    </p>
                     @if(session('success'))
                         <div class="flex items-center gap-2 bg-green-50 border border-green-100 text-green-700 rounded-lg p-3 mb-5 text-sm font-medium" x-init="isApplyOpen = true">
                             <x-lucide-check-circle class="w-4 h-4 text-green-500 shrink-0" />
