@@ -4,7 +4,7 @@
             @foreach([
                 ['value' => 25, 'suffix' => '+', 'label' => __('Years of Experience')],
                 ['value' => 150, 'suffix' => '+', 'label' => __('Projects Delivered')],
-                ['value' => 'ISO 9001', 'suffix' => '', 'label' => __('Quality Standard')],
+                ['value' => 'QA/QC', 'suffix' => '', 'label' => __('Quality Assurance')],
                 ['value' => 500, 'suffix' => '+', 'label' => __('Technical Workforce')],
             ] as $highlight)
                 <div

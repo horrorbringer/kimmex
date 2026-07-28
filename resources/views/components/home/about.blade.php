@@ -79,7 +79,7 @@
                 <div class="grid grid-cols-2 gap-4 mb-10">
                     <div class="flex items-center gap-3">
                         <div class="w-2 h-2 rounded-full" style="background: var(--primary-color, #E31E24);"></div>
-                        <span class="text-sm font-semibold text-gray-700">{{ __('ISO 9001 Certified') }}</span>
+                        <span class="text-sm font-semibold text-gray-700">{{ __('Quality Assurance') }}</span>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="w-2 h-2 rounded-full" style="background: var(--primary-color, #E31E24);"></div>

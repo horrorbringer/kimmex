@@ -13,7 +13,7 @@
         ['@type' => 'Question', 'name' => 'What is Kimmex Construction?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex Construction & Investment Co., Ltd is Cambodia\'s premier construction company with over 25 years of experience. Founded in 1999, Kimmex has completed 150+ projects including government buildings, commercial complexes, and infrastructure across Cambodia.']],
         ['@type' => 'Question', 'name' => 'Where is Kimmex located?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex is headquartered in Phnom Penh, Cambodia. The company operates nationwide across all provinces of Cambodia.']],
         ['@type' => 'Question', 'name' => 'How many employees does Kimmex have?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex has over 500 team members including engineers, architects, project managers, and skilled construction workers.']],
-        ['@type' => 'Question', 'name' => 'What are Kimmex\'s core values?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex\'s core values are Safety First (zero-incident policy), Quality Excellence (ISO 9001:2015 certified), Integrity (transparent communication), and Innovation (modern 3D modeling and MEP systems).']],
+        ['@type' => 'Question', 'name' => 'What are Kimmex\'s core values?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex\'s core values are Safety First (zero-incident policy), Quality Excellence (rigorous QA/QC procedures), Integrity (transparent communication), and Innovation (modern 3D modeling and MEP systems).']],
     ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @endpush
@@ -634,7 +634,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             @php
                                 $qualityItems = [
-                                    ['icon' => 'shield', 'title' => 'ISO 9001:2015', 'desc' => __('Quality Management Certified')],
+                                    ['icon' => 'shield', 'title' => __('Quality Assurance'), 'desc' => __('Rigorous QA/QC procedures')],
                                     ['icon' => 'award', 'title' => __('Zero Accidents'), 'desc' => __('Safety record policy')],
                                     ['icon' => 'check-circle-2', 'title' => __('100% Compliance'), 'desc' => __('Building code adherence')],
                                     ['icon' => 'clock', 'title' => __('On-Time Delivery'), 'desc' => __('98% completion rate')],
@@ -669,16 +669,6 @@
                         <div class="rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)]">
                             <img src="/images/webp/projects/Thumbnail-6.webp" alt="{{ __('Safety Inspection') }}"
                                 class="w-full aspect-[4/3] object-cover transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" loading="lazy" decoding="async" />
-                        </div>
-                        <!-- Floating ISO badge -->
-                        <div class="absolute -bottom-5 -left-5 bg-white p-5 rounded-xl shadow-xl border border-gray-100 hidden md:flex items-center gap-4">
-                            <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                                <x-lucide-check-circle-2 class="text-green-600 w-6 h-6" />
-                            </div>
-                            <div>
-                                <div class="text-xl font-black text-titan-navy">ISO</div>
-                                <div class="text-xs text-gray-400 font-medium">{{ __('9001:2015 Certified') }}</div>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -12,7 +12,6 @@
     ['@type' => 'Question', 'name' => 'What construction services does Kimmex provide?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex provides comprehensive construction services including Design & Build, Civil Construction, MEP Systems (Mechanical, Electrical, Plumbing), Project Management, Infrastructure Development, and Engineering Consultancy across Cambodia.']],
     ['@type' => 'Question', 'name' => 'What is Kimmex\'s construction methodology?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex follows a 5-step methodology: Consultation & Analysis, Planning & Design, Construction Execution, Quality Control, and Handover & Support. Each phase ensures quality, safety, and on-time delivery.']],
     ['@type' => 'Question', 'name' => 'What sectors does Kimmex serve?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex serves Government, Education, Commercial, and Infrastructure sectors. We have completed over 150 projects including government buildings, schools, commercial complexes, and road/bridge infrastructure.']],
-    ['@type' => 'Question', 'name' => 'Is Kimmex ISO certified?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Yes, Kimmex is ISO 9001:2015 certified for Quality Management. We maintain strict zero-incident safety policies and 100% building code compliance on all projects.']],
 ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
 @endpush
