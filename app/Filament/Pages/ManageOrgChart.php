@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm;
 use App\Models\OrgUnit;
 use App\Models\SystemSetting;
+use App\Support\PublicStorage;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -16,6 +17,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class ManageOrgChart extends Page implements HasActions, HasForms
@@ -44,11 +46,11 @@ class ManageOrgChart extends Page implements HasActions, HasForms
         return auth()->user()?->isAdmin() ?? false;
     }
 
-    public $chartData = [];
+    public array $chartData = [];
 
     public ?array $data = [];
 
-    public function mount()
+    public function mount(): void
     {
         $org = SystemSetting::get('organization_profile', []);
         $this->form->fill([
@@ -97,7 +99,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             ->statePath('data');
     }
 
-    public function saveDisplaySettings()
+    public function saveDisplaySettings(): void
     {
         $org = SystemSetting::get('organization_profile', []);
         $org = array_merge($org, $this->form->getState());
@@ -163,7 +165,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             });
     }
 
-    public function loadChartData()
+    public function loadChartData(): void
     {
         $unitsByParent = OrgUnit::with(['employee', 'department'])
             ->orderBy('orderIndex')
@@ -171,10 +173,14 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             ->groupBy(fn (OrgUnit $unit): string => (string) ($unit->parentId ?? '__root__'));
 
         $this->chartData = $this->buildTree($unitsByParent);
-        $this->dispatch('chartUpdated');
+        $this->dispatch('chartUpdated', chartData: $this->chartData);
     }
 
-    protected function buildTree($unitsByParent, $parentId = null)
+    /**
+     * @param  Collection<string, Collection<int, OrgUnit>>  $unitsByParent
+     * @return array<int, array<string, mixed>>
+     */
+    protected function buildTree($unitsByParent, ?string $parentId = null): array
     {
         return $unitsByParent->get((string) ($parentId ?? '__root__'), collect())
             ->map(function (OrgUnit $unit) use ($unitsByParent) {
@@ -184,13 +190,13 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     'type' => $unit->type,
                     'name' => $unit->employee?->name ?? ($unit->department ? $unit->department->getTranslation('name', app()->getLocale()) : 'N/A'),
                     'role' => $unit->employee?->role ?? $unit->type,
-                    'image' => $unit->employee?->image,
+                    'image' => PublicStorage::urlIfExists($unit->employee?->image),
                     'children' => $this->buildTree($unitsByParent, $unit->id),
                 ];
             })->toArray();
     }
 
-    public function saveOrder($data)
+    public function saveOrder(array $data): void
     {
         $this->updateHierarchy($data);
 
@@ -207,7 +213,10 @@ class ManageOrgChart extends Page implements HasActions, HasForms
         $this->loadChartData();
     }
 
-    protected function updateHierarchy($items, $parentId = null)
+    /**
+     * @param  array<int, array{id: string, children?: array<int, mixed>}>  $items
+     */
+    protected function updateHierarchy(array $items, ?string $parentId = null): void
     {
         foreach ($items as $index => $item) {
             OrgUnit::where('id', $item['id'])->update([

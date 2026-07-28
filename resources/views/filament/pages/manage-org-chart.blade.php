@@ -138,6 +138,112 @@
                 padding: 1.25rem;
             }
 
+            .org-chart-controls {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .org-chart-search {
+                width: min(100%, 17rem);
+                min-height: 2.5rem;
+                margin-right: auto;
+                border: 1px solid var(--org-border);
+                border-radius: 0.625rem;
+                padding: 0 0.75rem;
+                color: var(--org-navy);
+                font-size: 0.8125rem;
+            }
+
+            .org-chart-control {
+                min-height: 2.5rem;
+                border: 1px solid var(--org-border);
+                border-radius: 0.625rem;
+                padding: 0.5rem 0.75rem;
+                color: var(--org-navy);
+                background: #fff;
+                font-size: 0.75rem;
+                font-weight: 800;
+                cursor: pointer;
+                transition: border-color 0.2s ease, background-color 0.2s ease;
+            }
+
+            .org-chart-control:hover {
+                border-color: var(--org-accent);
+                background: color-mix(in srgb, var(--org-accent) 8%, #fff);
+            }
+
+            .kimmex-org-chart {
+                min-height: 45rem;
+                overflow: hidden;
+                border: 1px solid var(--org-border);
+                border-radius: 0.875rem;
+                background:
+                    radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.25) 1px, transparent 0) 0 0 / 20px 20px,
+                    #f8fafc;
+            }
+
+            .kimmex-org-chart svg {
+                cursor: grab;
+            }
+
+            .kimmex-org-chart svg:active {
+                cursor: grabbing;
+            }
+
+            .kimmex-org-chart .link {
+                stroke: color-mix(in srgb, var(--org-navy) 25%, #cbd5e1) !important;
+                stroke-width: 1.5px !important;
+            }
+
+            .kimmex-org-chart__node {
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                height: 116px;
+                padding: 0.875rem;
+                gap: 0.75rem;
+                border: 1px solid var(--org-border);
+                border-radius: 0.875rem;
+                background: #fff;
+                box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+                transition: box-shadow 0.2s ease, transform 0.2s ease;
+            }
+
+            .kimmex-org-chart__node:hover {
+                box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+                transform: translateY(-2px);
+            }
+
+            .kimmex-org-chart__avatar {
+                display: grid;
+                width: 3rem;
+                height: 3rem;
+                place-items: center;
+                overflow: hidden;
+                flex: none;
+                border-radius: 999px;
+                color: var(--org-navy);
+                background: color-mix(in srgb, var(--org-accent) 14%, #fff);
+                font-size: 0.75rem;
+                font-weight: 800;
+            }
+
+            .kimmex-org-chart__avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .kimmex-org-chart__content { min-width: 0; }
+            .kimmex-org-chart__name { margin: 0; color: var(--org-navy); font-size: 0.875rem; font-weight: 800; line-height: 1.25; }
+            .kimmex-org-chart__title { margin: 0.25rem 0 0; color: var(--org-muted); font-size: 0.6875rem; font-weight: 700; line-height: 1.35; }
+            .kimmex-org-chart__type { display: inline-block; margin-top: 0.5rem; color: var(--org-accent); font-size: 0.5625rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+            .kimmex-org-chart__virtual-root { display: grid; height: 48px; place-items: center; border-radius: 999px; color: #fff; background: var(--org-navy); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; }
+            .kimmex-org-chart__toggle { display: grid; width: 1.75rem; height: 1.75rem; place-items: center; border: 2px solid #fff; border-radius: 999px; color: #fff; background: var(--org-accent); font-size: 1rem; font-weight: 900; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18); }
+
             .org-tree {
                 max-width: 64rem;
                 margin: 0 auto;
@@ -508,6 +614,15 @@
                     align-items: stretch;
                 }
 
+                .org-chart-search {
+                    width: 100%;
+                    margin-right: 0;
+                }
+
+                .kimmex-org-chart {
+                    min-height: 34rem;
+                }
+
                 .node-card {
                     align-items: flex-start;
                     flex-wrap: wrap;
@@ -526,7 +641,11 @@
             }
         </style>
 
-        <div class="org-chart-wrapper">
+        <div class="org-chart-wrapper"
+             data-org-chart
+             data-chart-data="{{ json_encode($chartData, JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_TAG) }}"
+             x-data
+             x-on:org-chart:edit.window="$wire.mountAction('edit', $event.detail)">
             <div class="org-chart-toolbar">
                 <div class="org-chart-title">
                     <div class="org-chart-title-icon">
@@ -534,18 +653,10 @@
                     </div>
                     <div>
                         <h2>{{ __('Organization Chart') }}</h2>
-                        <p>{{ __('Arrange reporting lines, update display files, and save the public chart order.') }}</p>
+                        <p>{{ __('Explore reporting lines, edit units, and choose the public chart display mode.') }}</p>
                     </div>
                 </div>
-                <button 
-                    onclick="triggerSave()" 
-                    class="org-btn-primary"
-                    id="save-btn"
-                >
-                    <x-heroicon-o-bars-arrow-down class="org-icon-sm" />
-                    <span id="save-btn-text">{{ __('Save Display Order') }}</span>
-                    <div id="save-spinner" class="hidden animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                </button>
+                <span class="text-xs font-semibold text-slate-500">{{ __('Click a card to edit it. Use the controls below to explore the hierarchy.') }}</span>
             </div>
 
             <div class="org-chart-stats">
@@ -585,83 +696,19 @@
                         <p>{{ __('Use Add Root Unit above to start building the hierarchy.') }}</p>
                     </div>
                 @else
-                    <div class="org-tree">
-                        <div class="org-tree-root"
-                             id="org-tree-root"
-                             x-data="{
-                                expanded: {},
-                                init() {
-                                    @foreach($chartData as $node)
-                                        this.expanded['{{ $node['id'] }}'] = true;
-                                    @endforeach
-                                }
-                             }">
-                            @foreach($chartData as $node)
-                                @include('filament.pages.org-chart-node', ['node' => $node, 'level' => 0])
-                            @endforeach
-                        </div>
+                    <div class="org-chart-controls">
+                        <label class="sr-only" for="org-chart-search">{{ __('Search organization chart') }}</label>
+                        <input id="org-chart-search" type="search" class="org-chart-search" data-org-chart-search placeholder="{{ __('Search people or positions') }}" />
+                        <button type="button" class="org-chart-control" data-org-chart-action="fit">{{ __('Fit chart') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="expand">{{ __('Expand all') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="collapse">{{ __('Collapse all') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="fullscreen">{{ __('Fullscreen') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="download">{{ __('Download PNG') }}</button>
                     </div>
+                    <div class="kimmex-org-chart" data-org-chart-canvas wire:ignore></div>
                 @endif
             </div>
-
-            @push('scripts')
-                <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-                <script>
-                    document.addEventListener('livewire:init', function () {
-
-                        const initSortable = (el) => {
-                            if (!el || el._sortable) return;
-                            el._sortable = new Sortable(el, {
-                                group:          'org-nested',
-                                animation:      150,
-                                fallbackOnBody: true,
-                                swapThreshold:  0.65,
-                                handle:         '.sortable-handle',
-                                draggable:      '.draggable-item',
-                                ghostClass:     'sortable-ghost',
-                                onEnd() { /* live reorder, save on button click */ }
-                            });
-                        };
-
-                        const initAll = () => {
-                            const root = document.getElementById('org-tree-root');
-                            if (root) initSortable(root);
-                            document.querySelectorAll('.children-container').forEach(initSortable);
-                        };
-
-                        const serializeTree = (container) => {
-                            if (!container) return [];
-                            return Array.from(container.children)
-                                .filter(el => el.hasAttribute('data-id'))
-                                .map(el => ({
-                                    id:       el.getAttribute('data-id'),
-                                    children: serializeTree(el.querySelector('.children-container'))
-                                }));
-                        };
-
-                        window.triggerSave = function () {
-                            const btn     = document.getElementById('save-btn');
-                            const text    = document.getElementById('save-btn-text');
-                            const spinner = document.getElementById('save-spinner');
-
-                            btn.disabled = true;
-                            text.innerText = "{{ __('Saving...') }}";
-                            spinner.classList.remove('hidden');
-
-                            const data = serializeTree(document.getElementById('org-tree-root'));
-                            @this.call('saveOrder', data).then(() => {
-                                btn.disabled = false;
-                                text.innerText = "{{ __('Save Display Order') }}";
-                                spinner.classList.add('hidden');
-                            });
-                        };
-
-                        initAll();
-
-                        Livewire.on('chartUpdated', () => setTimeout(initAll, 150));
-                    });
-                </script>
-            @endpush
         </div>
     </div>
+    @vite('resources/js/admin-org-chart.js')
 </x-filament-panels::page>
