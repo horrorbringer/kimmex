@@ -198,7 +198,7 @@
 
                         @foreach($mvg_items as $item)
                         <div class="relative z-0 border border-gray-200 rounded-xl overflow-visible transition-colors duration-200 hover:border-gray-300"
-                             :class="active === '{{ $item['id'] }}' ? 'z-20 bg-white shadow-lg shadow-titan-navy/10' : 'bg-gray-50'"
+                             :class="active === '{{ $item['id'] }}' ? 'z-20 bg-white shadow-lg shadow-titan-navy/10 md:rounded-b-none md:!border-b-0' : 'bg-gray-50'"
                              @mouseenter="active = '{{ $item['id'] }}'"
                              @mouseleave="active = null"
                              @focusin="active = '{{ $item['id'] }}'"
@@ -239,7 +239,7 @@
                                  x-transition:leave="transition ease-in duration-150"
                                  x-transition:leave-start="opacity-100 translate-y-0"
                                  x-transition:leave-end="opacity-0 translate-y-2"
-                                 class="relative z-30 bg-white md:absolute md:top-full md:left-0 md:right-0 md:rounded-b-xl md:border md:border-t-0 md:border-gray-200 md:shadow-[0_16px_30px_-20px_rgba(15,23,42,0.45)]">
+                                 class="relative z-30 bg-white md:absolute md:top-full md:left-0 md:right-0 md:rounded-b-xl md:shadow-[0_16px_30px_-20px_rgba(15,23,42,0.45)]">
                                 <div class="px-5 pb-5 pt-1 pl-5 sm:pl-[4.5rem] md:pt-3">
                                     <p class="text-gray-500 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ $item['desc'] }}</p>
                                 </div>

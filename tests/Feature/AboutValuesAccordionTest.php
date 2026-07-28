@@ -14,8 +14,10 @@ class AboutValuesAccordionTest extends TestCase
         $this->assertStringContainsString('<!-- Vision / Mission / Strategy Accordion -->', $aboutPage);
         $this->assertMatchesRegularExpression('/<!-- Right: Text Content -->\s*<div>/', $aboutPage);
         $this->assertStringContainsString('<div class="space-y-4" x-data="{ active: null }">', $aboutPage);
-        $this->assertStringContainsString("? 'z-20 bg-white shadow-lg shadow-titan-navy/10' : 'bg-gray-50'", $aboutPage);
+        $this->assertStringContainsString("? 'z-20 bg-white shadow-lg shadow-titan-navy/10 md:rounded-b-none md:!border-b-0' : 'bg-gray-50'", $aboutPage);
         $this->assertStringContainsString('transition-colors duration-200 hover:border-gray-300', $aboutPage);
+        $this->assertStringContainsString('md:rounded-b-none md:!border-b-0', $aboutPage);
+        $this->assertStringNotContainsString('md:border-t-0', $aboutPage);
         $this->assertStringContainsString("@mouseenter=\"active = '{{ \$item['id'] }}'\"", $aboutPage);
         $this->assertStringContainsString('@mouseleave="active = null"', $aboutPage);
         $this->assertStringContainsString('overflow-visible', $aboutPage);
