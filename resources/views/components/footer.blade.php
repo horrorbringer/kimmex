@@ -116,7 +116,6 @@
                 <div class="ft-hours">
                     <span class="ft-hours-label">{{ __('Office Hours') }}</span>
                     <span>{{ __('Mon-Fri') }}: 8:00 - 17:30</span>
-                    <span>{{ __('Sat') }}: 8:00 - 12:00</span>
                 </div>
             </div>
         </div>

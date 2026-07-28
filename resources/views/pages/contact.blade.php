@@ -280,7 +280,7 @@
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-gray-500">{{ __('Saturday') }}</span>
-                                    <span class="text-sm font-semibold text-gray-700">8:00 - 12:00</span>
+                                    <span class="text-sm font-semibold text-gray-700">{{ __('Closed') }}</span>
                                 </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-sm text-gray-500">{{ __('Sunday') }}</span>
