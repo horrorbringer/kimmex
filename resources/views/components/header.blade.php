@@ -56,17 +56,26 @@
         $logo = $profile['logo'] ?? null;
         $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.png');
 
-        $navCategories = \Illuminate\Support\Facades\Cache::remember('nav_categories_v2_' . $lang, now()->addHours(12), function () use ($lang) {
-            return \App\Models\ProjectCategory::where('isActive', true)
-                ->get()
-                ->sortBy(fn($cat) => $cat->localizedName($lang))
-                ->map(fn($cat) => [
-                    'slug' => $cat->slug,
-                    'name' => $cat->localizedName($lang),
-                    'name_en' => $cat->getTranslation('name', 'en')
-                ])
-                ->values()
-                ->all();
+        $navProjectFilters = \Illuminate\Support\Facades\Cache::remember('nav_project_filters_v1_' . $lang, now()->addHours(12), function () use ($lang) {
+            $categoriesForStatus = function (string $status) use ($lang): array {
+                return \App\Models\ProjectCategory::where('isActive', true)
+                    ->whereHas('projects', fn ($query) => $query
+                        ->where('isActive', true)
+                        ->where('status', $status))
+                    ->get()
+                    ->sortBy(fn ($category) => $category->localizedName($lang))
+                    ->map(fn ($category) => [
+                        'slug' => $category->slug,
+                        'name' => $category->localizedName($lang),
+                    ])
+                    ->values()
+                    ->all();
+            };
+
+            return [
+                'completed' => $categoriesForStatus(\App\Enums\ProjectStatus::COMPLETED->value),
+                'ongoing' => $categoriesForStatus(\App\Enums\ProjectStatus::ONGOING->value),
+            ];
         });
 
         $navServices = \Illuminate\Support\Facades\Cache::remember('nav_services_' . $lang, now()->addHours(12), function () use ($lang) {
@@ -270,6 +279,7 @@
                             <div
                                 class="bg-white/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.15)] rounded border border-gray-100 min-w-[280px] p-2">
                                 <!-- Completed Projects with 3rd Level Flyout -->
+                                @if($navProjectFilters['completed'] !== [])
                                 <div class="relative group/nested">
                                     <a href="/projects?status=completed"
                                         class="flex items-center justify-between px-4 py-3.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
@@ -290,7 +300,7 @@
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
                                             class="bg-white/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.15)] rounded border border-gray-100 min-w-[240px] p-2">
-                                            @foreach($navCategories as $navCat)
+                                            @foreach($navProjectFilters['completed'] as $navCat)
                                                 <a href="/projects?status=completed&category={{ urlencode($navCat['slug']) }}"
                                                     class="group/sub flex items-center justify-between px-4 py-3 rounded text-sm font-medium text-titan-navy/70 hover:text-titan-navy hover:bg-gray-50 transition-all">
                                                     <span>{{ $navCat['name'] }}</span>
@@ -301,8 +311,10 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
 
                                 <!-- Projects in Progress with 3rd Level Flyout -->
+                                @if($navProjectFilters['ongoing'] !== [])
                                 <div class="relative group/nested mt-1">
                                     <a href="/projects?status=ongoing"
                                         class="flex items-center justify-between px-4 py-3.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
@@ -323,7 +335,7 @@
                                         class="absolute left-full top-0 ml-2 opacity-0 invisible group-hover/nested:opacity-100 group-hover/nested:visible transition-all duration-300 transform translate-x-2 group-hover/nested:translate-x-0 z-[60]">
                                         <div
                                             class="bg-white/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.15)] rounded border border-gray-100 min-w-[240px] p-2">
-                                            @foreach($navCategories as $navCat)
+                                            @foreach($navProjectFilters['ongoing'] as $navCat)
                                                 <a href="/projects?status=ongoing&category={{ urlencode($navCat['slug']) }}"
                                                     class="group/sub flex items-center justify-between px-4 py-3 rounded text-sm font-medium text-titan-navy/70 hover:text-titan-navy hover:bg-gray-50 transition-all">
                                                     <span>{{ $navCat['name'] }}</span>
@@ -334,6 +346,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -508,32 +521,36 @@
                             x-bind:class="expandedMobileItem === 2 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 2" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
+                        @if($navProjectFilters['completed'] !== [])
                         <a href="/projects?status=completed"
                             class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all mt-1">
                             <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Completed Projects') }}</span>
                         </a>
                         <div class="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
-                            @foreach($navCategories as $navCat)
+                            @foreach($navProjectFilters['completed'] as $navCat)
                                 <a href="/projects?status=completed&category={{ urlencode($navCat['slug']) }}"
                                     class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-titan-red transition-colors">
                                     {{ $navCat['name'] }}
                                 </a>
                             @endforeach
                         </div>
+                        @endif
+                        @if($navProjectFilters['ongoing'] !== [])
                         <a href="/projects?status=ongoing"
                             class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all mt-2">
                             <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
                             <span class="text-sm font-medium">{{ __('Project in Progress') }}</span>
                         </a>
                         <div class="ml-8 border-l border-gray-100 pl-2 space-y-1 my-1">
-                            @foreach($navCategories as $navCat)
+                            @foreach($navProjectFilters['ongoing'] as $navCat)
                                 <a href="/projects?status=ongoing&category={{ urlencode($navCat['slug']) }}"
                                     class="block px-3 py-1.5 text-xs font-medium text-titan-navy/60 hover:text-titan-red transition-colors">
                                     {{ $navCat['name'] }}
                                 </a>
                             @endforeach
                         </div>
+                        @endif
                     </div>
                 </div>
 

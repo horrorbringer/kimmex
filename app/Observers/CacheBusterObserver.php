@@ -65,6 +65,7 @@ class CacheBusterObserver
                 'home_projects_array_en', 'home_projects_array_km',
                 'nav_categories_en', 'nav_categories_km',
                 'nav_categories_v2_en', 'nav_categories_v2_km',
+                'nav_project_filters_v1_en', 'nav_project_filters_v1_km',
             ],
             Service::class => [
                 'home_services_array_v2_en', 'home_services_array_v2_km',
@@ -117,6 +118,7 @@ class CacheBusterObserver
             ProjectCategory::class => [
                 'nav_categories_en', 'nav_categories_km',
                 'nav_categories_v2_en', 'nav_categories_v2_km',
+                'nav_project_filters_v1_en', 'nav_project_filters_v1_km',
             ],
             SystemSetting::class => [
                 'global_settings_en', 'global_settings_km',

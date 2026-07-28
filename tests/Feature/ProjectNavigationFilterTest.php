@@ -12,7 +12,12 @@ class ProjectNavigationFilterTest extends TestCase
         $header = File::get(resource_path('views/components/header.blade.php'));
         $controller = File::get(app_path('Http/Controllers/ProjectController.php'));
 
-        $this->assertStringContainsString("'nav_categories_v2_' . \$lang", $header);
+        $this->assertStringContainsString("'nav_project_filters_v1_' . \$lang", $header);
+        $this->assertStringContainsString("->whereHas('projects'", $header);
+        $this->assertStringContainsString("'completed' => \$categoriesForStatus", $header);
+        $this->assertStringContainsString("'ongoing' => \$categoriesForStatus", $header);
+        $this->assertStringContainsString("@if(\$navProjectFilters['completed'] !== [])", $header);
+        $this->assertStringContainsString("@if(\$navProjectFilters['ongoing'] !== [])", $header);
         $this->assertSame(4, substr_count($header, "category={{ urlencode(\$navCat['slug']) }}"));
         $this->assertStringNotContainsString('category_id={{', $header);
         $this->assertStringNotContainsString('status=in-progress', $header);

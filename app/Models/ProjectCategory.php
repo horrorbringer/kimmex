@@ -66,6 +66,7 @@ class ProjectCategory extends Model
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget("nav_categories_{$locale}");
                 Cache::forget("nav_categories_v2_{$locale}");
+                Cache::forget("nav_project_filters_v1_{$locale}");
                 Cache::forget("projects_index_data_{$locale}");
             }
         });
@@ -74,6 +75,7 @@ class ProjectCategory extends Model
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget("nav_categories_{$locale}");
                 Cache::forget("nav_categories_v2_{$locale}");
+                Cache::forget("nav_project_filters_v1_{$locale}");
                 Cache::forget("projects_index_data_{$locale}");
             }
         });
