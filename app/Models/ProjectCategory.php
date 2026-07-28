@@ -65,6 +65,7 @@ class ProjectCategory extends Model
         static::saved(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget("nav_categories_{$locale}");
+                Cache::forget("nav_categories_v2_{$locale}");
                 Cache::forget("projects_index_data_{$locale}");
             }
         });
@@ -72,6 +73,7 @@ class ProjectCategory extends Model
         static::deleted(function () {
             foreach (['en', 'km', 'kh'] as $locale) {
                 Cache::forget("nav_categories_{$locale}");
+                Cache::forget("nav_categories_v2_{$locale}");
                 Cache::forget("projects_index_data_{$locale}");
             }
         });

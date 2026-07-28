@@ -12,10 +12,11 @@
     @endphp
 
     <div x-data="{
-        filterType: '{{ old('category_id', $categoryId ?? '') }}' ? '' : 'All',
+        filterType: {{ Js::from($selectedCategoryName ?? 'All') }},
         filterStatus: {{ Js::from($status ?? '') }},
         filterYear: {{ Js::from($year ?? '') }},
         filterCategoryId: {{ Js::from($categoryId ?? '') }},
+        filterCategorySlug: {{ Js::from($categorySlug ?? '') }},
         filterLoc: 'All',
         allTypesLabel: {{ Js::from($allTypesLabel) }},
         allLocationsLabel: {{ Js::from($allLocationsLabel) }},
@@ -46,12 +47,13 @@
             }
 
             // Sync category from URL
-            const categoryParam = params.get('category_id');
+            const categoryParam = params.get('category');
             if (categoryParam) {
-                this.filterCategoryId = categoryParam;
+                this.filterCategorySlug = categoryParam;
                 // Find matching category name for tab highlight
-                const match = this.categoryOptions.find(c => c.id === categoryParam);
+                const match = this.categoryOptions.find(c => c.slug === categoryParam);
                 if (match) {
+                    this.filterCategoryId = match.id;
                     this.filterType = match.name;
                 }
             }
@@ -61,7 +63,7 @@
             const params = new URLSearchParams();
             if (this.filterYear) params.set('year', this.filterYear);
             if (this.filterStatus) params.set('status', this.filterStatus);
-            if (this.filterCategoryId) params.set('category_id', this.filterCategoryId);
+            if (this.filterCategorySlug) params.set('category', this.filterCategorySlug);
 
             const qs = params.toString();
             window.location.href = '/projects' + (qs ? '?' + qs : '');
@@ -71,10 +73,12 @@
             if (type === 'All') {
                 this.filterType = 'All';
                 this.filterCategoryId = '';
+                this.filterCategorySlug = '';
             } else {
                 this.filterType = type;
                 const match = this.categoryOptions.find(c => c.name === type);
                 this.filterCategoryId = match ? match.id : '';
+                this.filterCategorySlug = match ? match.slug : '';
             }
             this.applyServerFilters();
         },
@@ -94,6 +98,7 @@
             this.filterStatus = '';
             this.filterYear = '';
             this.filterCategoryId = '';
+            this.filterCategorySlug = '';
             this.filterLoc = 'All';
             this.search = '';
             this.sortBy = 'featured';
@@ -177,74 +182,90 @@
                 </div>
 
                 <!-- Filter Bar -->
-                <div class="sticky top-16 z-30 mb-8 bg-white border-b border-gray-100 pb-5">
-
-                    {{-- Search row --}}
-                    <div class="flex flex-col sm:flex-row gap-3 mb-5">
-                        <div class="relative flex-grow">
-                            <x-lucide-search class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-titan-navy/25" />
-                            <input type="text" x-model="search" placeholder="{{ __('Search projects by name…') }}"
-                                class="w-full h-11 pl-11 pr-4 rounded-lg border border-gray-200 bg-white text-sm font-semibold text-titan-navy placeholder:text-titan-navy/30 focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm" />
+                <div class="sticky top-24 z-30 mb-10 pt-2 lg:top-28">
+                    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                        <div class="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4 md:px-6">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-titan-red/10 text-titan-red">
+                                    <x-lucide-sliders-horizontal class="h-4 w-4" />
+                                </span>
+                                <div>
+                                    <p class="text-sm font-black text-titan-navy">{{ __('Filter Projects') }}</p>
+                                    <p class="text-xs text-titan-navy/45"><span x-text="activeCount"></span> {{ __('projects found') }}</p>
+                                </div>
+                            </div>
+                            <button @click="clearFilters()" x-show="hasActiveFilters" style="display: none"
+                                class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-titan-red/20 bg-titan-red/5 px-3 text-xs font-bold text-titan-red transition-colors hover:bg-titan-red hover:text-white">
+                                <x-lucide-rotate-ccw class="h-3.5 w-3.5" />
+                                {{ __('Reset filters') }}
+                            </button>
                         </div>
-                        <div class="flex gap-2 flex-wrap">
-                            {{-- Year Filter --}}
-                            <div class="relative">
+
+                        <div class="grid gap-3 p-4 sm:grid-cols-2 md:p-5 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
+                            <label class="relative block sm:col-span-2 lg:col-span-1">
+                                <span class="sr-only">{{ __('Search projects') }}</span>
+                                <x-lucide-search class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-navy/35" />
+                                <input type="search" x-model="search" placeholder="{{ __('Search projects by name…') }}"
+                                    class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm font-semibold text-titan-navy placeholder:text-titan-navy/35 transition-all focus:border-titan-red/40 focus:bg-white focus:outline-none focus:ring-4 focus:ring-titan-red/10" />
+                            </label>
+
+                            <label class="relative block">
+                                <span class="sr-only">{{ __('Year') }}</span>
+                                <x-lucide-calendar class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-red/65" />
                                 <select @change="setYear($event.target.value)"
-                                    class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
+                                    class="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white px-11 pr-9 text-sm font-bold text-titan-navy transition-all focus:border-titan-red/40 focus:outline-none focus:ring-4 focus:ring-titan-red/10">
                                     <option value="" :selected="!filterYear">{{ __('All Years') }}</option>
                                     <template x-for="y in years" :key="y">
                                         <option :value="y" x-text="y" :selected="filterYear == y"></option>
                                     </template>
                                 </select>
-                                <x-lucide-calendar class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
-                            </div>
-                            {{-- Location Filter --}}
-                            <div class="relative">
-                                <select x-model="filterLoc"
-                                    class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
-                                    <template x-for="loc in locations" :key="loc">
-                                        <option :value="loc" x-text="loc === 'All' ? allLocationsLabel : loc"></option>
-                                    </template>
-                                </select>
-                                <x-lucide-map-pin class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
-                            </div>
-                            {{-- Status Filter --}}
-                            <div class="relative">
+                                <x-lucide-chevron-down class="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-navy/35" />
+                            </label>
+
+                            <label class="relative block">
+                                <span class="sr-only">{{ __('Status') }}</span>
+                                <x-lucide-activity class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-red/65" />
                                 <select @change="setStatus($event.target.value)"
-                                    class="appearance-none h-11 px-4 pr-9 rounded-lg border border-gray-200 bg-white text-xs font-bold text-titan-navy cursor-pointer focus:outline-none focus:border-titan-red/40 focus:ring-2 focus:ring-titan-red/10 transition-all shadow-sm">
+                                    class="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white px-11 pr-9 text-sm font-bold text-titan-navy transition-all focus:border-titan-red/40 focus:outline-none focus:ring-4 focus:ring-titan-red/10">
                                     <option value="" :selected="!filterStatus">{{ __('All Status') }}</option>
                                     <template x-for="stat in statusOptions" :key="stat.value">
                                         <option :value="stat.value" x-text="stat.label" :selected="filterStatus === stat.value"></option>
                                     </template>
                                 </select>
-                                <x-lucide-activity class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-titan-red/50" />
-                            </div>
-                        </div>
-                    </div>
+                                <x-lucide-chevron-down class="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-navy/35" />
+                            </label>
 
-                    {{-- Category tabs + count --}}
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div class="flex flex-wrap gap-2 overflow-x-auto">
-                            <template x-for="type in categories" :key="type">
-                                <button @click="setCategory(type)"
-                                    class="h-8 px-4 rounded-full text-xs font-bold border transition-all duration-200 whitespace-nowrap"
-                                    :class="filterType === type
-                                        ? 'bg-titan-red text-white border-titan-red shadow-sm'
-                                        : 'bg-gray-50 text-titan-navy/60 border-gray-200 hover:border-titan-red/30 hover:text-titan-red'">
-                                    <span x-text="type === 'All' ? allTypesLabel : type"></span>
-                                </button>
-                            </template>
+                            <label class="relative block">
+                                <span class="sr-only">{{ __('Location') }}</span>
+                                <x-lucide-map-pin class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-red/65" />
+                                <select x-model="filterLoc"
+                                    class="h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white px-11 pr-9 text-sm font-bold text-titan-navy transition-all focus:border-titan-red/40 focus:outline-none focus:ring-4 focus:ring-titan-red/10">
+                                    <template x-for="loc in locations" :key="loc">
+                                        <option :value="loc" x-text="loc === 'All' ? allLocationsLabel : loc"></option>
+                                    </template>
+                                </select>
+                                <x-lucide-chevron-down class="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-titan-navy/35" />
+                            </label>
                         </div>
-                        <div class="flex items-center gap-3 shrink-0">
-                            <span class="text-xs font-bold text-titan-navy/35">
-                                <span x-text="activeCount"></span> {{ __('projects') }}
-                            </span>
-                            <button @click="clearFilters()"
-                                x-show="hasActiveFilters"
-                                style="display:none"
-                                class="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-gray-200 text-xs font-bold text-titan-navy/50 hover:text-titan-red hover:border-titan-red/30 transition-colors">
-                                <x-lucide-x class="w-3 h-3" />{{ __('Reset') }}
-                            </button>
+
+                        <div class="border-t border-slate-100 px-4 py-4 md:px-5">
+                            <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                                <div class="flex min-w-0 gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
+                                    <template x-for="type in categories" :key="type">
+                                        <button @click="setCategory(type)"
+                                            class="h-9 shrink-0 rounded-full border px-4 text-xs font-bold transition-all duration-200"
+                                            :class="filterType === type
+                                                ? 'border-titan-red bg-titan-red text-white'
+                                                : 'border-slate-200 bg-white text-titan-navy/65 hover:border-titan-red/35 hover:text-titan-red'">
+                                            <span x-text="type === 'All' ? allTypesLabel : type"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                                <div x-show="hasActiveFilters" x-transition class="flex shrink-0 items-center gap-2 text-xs font-semibold text-titan-navy/55">
+                                    <x-lucide-filter class="h-3.5 w-3.5 text-titan-red" />
+                                    <span>{{ __('Active filters') }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

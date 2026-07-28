@@ -25,6 +25,20 @@ class ProjectController extends Controller
         $year = $request->query('year');
         $status = $request->query('status');
         $categoryId = $request->query('category_id');
+        $categorySlug = $request->string('category')->trim()->toString();
+
+        // Load the category once, so both old category_id URLs and readable category slugs work.
+        $projectCategories = ProjectCategory::where('isActive', true)->get();
+        $selectedCategory = $categorySlug !== ''
+            ? $projectCategories->firstWhere('slug', $categorySlug)
+            : $projectCategories->firstWhere('id', $categoryId);
+
+        if ($selectedCategory) {
+            $categoryId = $selectedCategory->id;
+            $categorySlug = $selectedCategory->slug;
+        }
+
+        $selectedCategoryName = $selectedCategory?->localizedName($contentLocale);
 
         // Build the query with server-side filters
         $query = Project::where('isActive', true)->with('projectCategory');
@@ -42,9 +56,6 @@ class ProjectController extends Controller
         }
 
         $projectsDb = $query->orderBy('created_at', 'desc')->get();
-
-        // Get all categories for filter options
-        $projectCategories = ProjectCategory::where('isActive', true)->get();
 
         $categoryLookup = $projectCategories->flatMap(function ($category) {
             return [
@@ -72,7 +83,15 @@ class ProjectController extends Controller
 
         $categories = $allProjects->map($localizedCategoryName)->unique()->sort()->values()->toArray();
         $locations = $allProjects->map(fn ($p) => $p->getTranslation('location', $contentLocale))->filter()->unique()->sort()->values()->toArray();
-        $statusOptions = collect(ProjectStatus::cases())->map(fn ($s) => ['value' => $s->value, 'label' => $s->getLabel()])->toArray();
+        $availableStatusValues = $allProjects
+            ->map(fn (Project $project): ?string => $project->status?->value)
+            ->filter()
+            ->unique();
+        $statusOptions = collect(ProjectStatus::cases())
+            ->filter(fn (ProjectStatus $status): bool => $availableStatusValues->contains($status->value))
+            ->map(fn (ProjectStatus $status): array => ['value' => $status->value, 'label' => $status->getLabel()])
+            ->values()
+            ->all();
 
         // Extract available years from completionDate
         $years = $allProjects
@@ -86,6 +105,7 @@ class ProjectController extends Controller
         // Build category options with id and name
         $categoryOptions = $projectCategories->map(fn ($cat) => [
             'id' => $cat->id,
+            'slug' => $cat->slug,
             'name' => $cat->localizedName($contentLocale),
         ])->sortBy('name')->values()->toArray();
 
@@ -135,6 +155,8 @@ class ProjectController extends Controller
             'year',
             'status',
             'categoryId',
+            'categorySlug',
+            'selectedCategoryName',
         ));
     }
 

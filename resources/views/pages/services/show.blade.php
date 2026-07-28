@@ -80,23 +80,6 @@
             ],
         ];
 
-        $featuredProjects = [
-            [
-                'id' => '1',
-                'title' => ['en' => 'Vatthanak Capital Expansion', 'kh' => 'ការពង្រីកបរិវេណ វឌ្ឍនៈ កាពីតាល'],
-                'category' => ['en' => 'Commercial', 'kh' => 'ពាណិជ្ជកម្ម'],
-                'location' => ['en' => 'Phnom Penh', 'kh' => 'ភ្នំពេញ'],
-                'image' => '/images/webp/projects/Thumbnail-1.webp',
-            ],
-            [
-                'id' => '2',
-                'title' => ['en' => 'Skyline Residences', 'kh' => 'អគារលំនៅដ្ឋាន Skyline'],
-                'category' => ['en' => 'Residential', 'kh' => 'លំនៅដ្ឋាន'],
-                'location' => ['en' => 'Siem Reap', 'kh' => 'សៀមរាប'],
-                'image' => '/images/webp/projects/Thumbnail-2.webp',
-            ],
-        ];
-
     @endphp
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$service['image']" :canonical="$canonicalUrl">
@@ -404,6 +387,7 @@
         </section>
 
         <!-- === 6. FEATURED PROJECTS === -->
+        @if ($featuredProjects !== [])
         <section class="py-10 md:py-14 bg-gray-50 text-titan-navy px-4 md:px-6">
             <div class="max-w-[1400px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
@@ -427,9 +411,9 @@
                             style="transition-delay: {{ $i * 100 }}ms"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                             class="w-full md:w-[calc(50%-1.25rem)] transition-all duration-1000">
-                            <a href="/projects/{{ $project['id'] }}"
+                            <a href="{{ route('projects.show', ['slug' => $project['slug']]) }}"
                                 class="group relative aspect-[4/3] sm:aspect-[16/9] overflow-hidden rounded cursor-pointer block shadow-lg md:shadow-2xl h-full">
-                                <img src="{{ $project['image'] }}" alt="{{ $project['title'][$lang] }}"
+                                <img src="{{ $project['image'] }}" alt="{{ $project['title'] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                     loading="lazy" decoding="async" />
                                 <div
@@ -440,13 +424,13 @@
                                     <div
                                         class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                                         <span
-                                            class="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{{ $project['category'][$lang] }}</span>
+                                            class="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{{ $project['category'] }}</span>
                                         <h3 class="text-xl md:text-lg font-bold !text-white mb-2 leading-tight">
-                                            {{ $project['title'][$lang] }}
+                                            {{ $project['title'] }}
                                         </h3>
                                         <div class="flex items-center gap-2 text-white/100 text-sm">
                                             <x-lucide-map-pin class="w-4 h-4 text-titan-red" />
-                                            {{ $project['location'][$lang] }}
+                                            {{ $project['location'] }}
                                         </div>
                                     </div>
                                 </div>
@@ -461,6 +445,7 @@
                 </div>
             </div>
         </section>
+        @endif
 
         <!-- === FOOTER CTA === -->
         <section class="bg-slate-50 px-5 py-16 text-center sm:px-6 md:py-24">
