@@ -252,47 +252,48 @@
                     </button>
                 </div>
 
-                <!-- Job Cards Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Job Listings -->
+                <div class="space-y-3">
                     <template x-for="(job, index) in filteredJobs" :key="job.id">
                         <a :href="'/careers/' + job.slug"
-                           class="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white p-4 sm:p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-titan-red/30 hover:shadow-[0_18px_42px_-18px_rgba(7,26,51,0.28)] focus:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-2">
-                            <span aria-hidden="true" class="absolute inset-y-0 left-0 w-1 origin-bottom scale-y-0 bg-titan-red transition-transform duration-300 group-hover:scale-y-100"></span>
+                           class="group relative grid gap-4 overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:border-titan-red/30 hover:shadow-[0_16px_38px_-22px_rgba(7,26,51,0.38)] focus:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-2 md:grid-cols-[3.5rem_minmax(0,1fr)_auto] md:items-center md:gap-5 md:p-6">
+                            <span aria-hidden="true" class="absolute inset-y-0 left-0 w-1 bg-titan-red opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 
-                            <div class="flex items-start gap-4">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-titan-navy text-white transition-colors duration-300 group-hover:bg-titan-red">
-                                    <x-lucide-briefcase class="h-4 w-4" />
-                                </span>
-                                <div class="min-w-0 flex-1">
-                                    <div class="mb-2 flex items-center justify-between gap-3">
-                                        <span class="truncate text-[10px] font-black uppercase tracking-[0.14em] text-titan-red" x-text="job.dept"></span>
-                                        <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.1em] text-emerald-700">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{{ __('Open') }}
-                                        </span>
-                                    </div>
-                                    <h3 class="line-clamp-2 text-lg font-black leading-snug text-titan-navy transition-colors duration-300 group-hover:text-titan-red" x-text="job.title"></h3>
+                            <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-titan-navy text-white transition-all duration-300 group-hover:bg-titan-red group-hover:shadow-lg group-hover:shadow-red-500/20">
+                                <x-lucide-briefcase class="h-5 w-5" />
+                            </span>
+
+                            <div class="min-w-0">
+                                <div class="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                                    <span class="text-[10px] font-black uppercase tracking-[0.14em] text-titan-red" x-text="job.dept"></span>
+                                    <span class="h-1 w-1 rounded-full bg-gray-300"></span>
+                                    <span class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-emerald-700">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{{ __('Open') }}
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-black leading-snug text-titan-navy transition-colors duration-300 group-hover:text-titan-red md:text-xl" x-text="job.title"></h3>
+                                <p class="mt-1.5 max-w-3xl text-sm leading-relaxed text-gray-500 line-clamp-1" x-show="job.summary" x-text="job.summary"></p>
+
+                                <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-gray-500">
+                                    <span class="inline-flex min-w-0 items-center gap-2">
+                                        <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
+                                        <span class="truncate" x-text="job.loc"></span>
+                                    </span>
+                                    <span class="inline-flex min-w-0 items-center gap-2">
+                                        <x-lucide-clock class="h-4 w-4 shrink-0 text-titan-red" />
+                                        <span class="truncate" x-text="job.type"></span>
+                                    </span>
+                                    <span class="inline-flex min-w-0 items-center gap-2" x-show="job.experience">
+                                        <x-lucide-award class="h-4 w-4 shrink-0 text-titan-red" />
+                                        <span class="truncate" x-text="job.experience"></span>
+                                    </span>
                                 </div>
                             </div>
 
-                            <p class="mt-3 text-sm leading-relaxed text-gray-500 line-clamp-2" x-show="job.summary" x-text="job.summary"></p>
-
-                            <div class="mt-4 grid grid-cols-2 overflow-hidden rounded-xl border border-gray-100 bg-gray-50 text-xs">
-                                <div class="flex min-w-0 items-center gap-2 border-r border-gray-100 px-3 py-2.5 text-gray-600">
-                                    <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
-                                    <span class="truncate" x-text="job.loc"></span>
-                                </div>
-                                <div class="flex min-w-0 items-center gap-2 px-3 py-2.5 text-gray-600">
-                                    <x-lucide-clock class="h-4 w-4 shrink-0 text-titan-red" />
-                                    <span class="truncate" x-text="job.type"></span>
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <span class="flex h-10 items-center justify-between rounded-xl bg-titan-navy px-4 text-sm font-bold text-white transition-colors duration-300 group-hover:bg-titan-red">
-                                    {{ __('View Job Details') }}
-                                    <x-lucide-arrow-right class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                                </span>
-                            </div>
+                            <span class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-titan-navy/15 px-4 text-sm font-bold text-titan-navy transition-all duration-300 group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white md:px-5">
+                                {{ __('View Job Details') }}
+                                <x-lucide-arrow-right class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                            </span>
                         </a>
                     </template>
                 </div>
