@@ -85,9 +85,9 @@
                     <span class="text-white font-semibold">{{ __('About Us') }}</span>
                 </nav>
 
-                <h1 class="font-heading font-[900] text-white leading-[1.05] tracking-tight uppercase mb-4 sm:mb-5 text-[1.5rem] sm:text-[clamp(2rem,5vw,3.5rem)]">
+                <h1 class="font-heading font-[900] !text-white leading-[1.05] tracking-tight uppercase mb-4 sm:mb-5 text-[1.5rem] sm:text-[clamp(2rem,5vw,3.5rem)]" style="color: #FFFFFF !important;">
                     {{ __('BUILDING') }}
-                    <span class="text-titan-red">{{ __('CAMBODIA\'S FUTURE') }}</span>
+                    <span class="text-titan-red" style="color: var(--primary-color, #E31E24) !important;">{{ __('CAMBODIA\'S FUTURE') }}</span>
                 </h1>
 
                 <p class="text-white/70 text-sm sm:text-base md:text-lg max-w-xl leading-relaxed">
