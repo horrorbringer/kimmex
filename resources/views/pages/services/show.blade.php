@@ -369,7 +369,7 @@
         </section>
 
         <!-- === 5. KEY BENEFITS === -->
-        <section class="py-10 md:py-14 px-4 md:px-6 max-w-[1400px] mx-auto">
+        <section class="max-w-6xl mx-auto py-12 md:py-16 px-5 md:px-6">
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                 class="text-center mb-10 md:mb-16 transition-all duration-1000">
@@ -380,19 +380,19 @@
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+            <div class="grid max-w-6xl grid-cols-1 gap-5 mx-auto md:grid-cols-2 md:gap-6 xl:grid-cols-4">
                 @foreach ($valueProp as $i => $benefit)
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         style="transition-delay: {{ $i * 100 }}ms"
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="bg-white p-5 md:p-6 rounded shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
+                        class="bg-white min-h-[230px] p-6 md:p-8 text-center rounded-xl shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group h-full">
                         <div
-                            class="w-10 h-10 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mb-6 group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500">
+                            class="w-12 h-12 bg-gray-50 border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-7 group-hover:border-titan-red group-hover:bg-titan-red/5 transition-all duration-500">
                             <x-dynamic-component :component="$benefit['icon']"
                                 class="w-6 h-6 text-titan-red" stroke-width="1.5" />
                         </div>
                         <h3
-                            class="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">
+                            class="text-xl md:text-2xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">
                             {{ $benefit['title'][$lang] }}
                         </h3>
                         <p class="text-titan-navy/90 leading-relaxed">
