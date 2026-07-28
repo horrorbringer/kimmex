@@ -939,6 +939,23 @@ img[data-image-loaded='true'] {
   font-size: inherit !important;
 }
 
+/* Career detail headers must look identical in English and Khmer. */
+.career-detail-section-heading {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem;
+}
+
+.career-detail-section-heading .career-detail-section-icon {
+  flex: 0 0 2rem;
+}
+
+.career-detail-section-heading .job-section-title {
+  margin: 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.4 !important;
+}
+
 /* ─── Job detail rich content — renders Filament RichEditor / plain text output ─── */
 .job-rich-content {
   color: rgb(11 43 92 / 0.65);

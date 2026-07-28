@@ -120,7 +120,7 @@
                 </div>
 
                 <!-- Title -->
-                <h1 class="font-heading font-[900] leading-tight tracking-tight mb-6 {{ app()->getLocale() === 'km' ? 'font-khmer' : 'uppercase' }}"
+                <h1 class="font-heading font-[900] leading-tight tracking-tight mb-6 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}"
                     style="font-size: clamp(1.5rem, 4vw, 2.5rem); color: #FFFFFF;">
                     {{ $job['title'] }}
                 </h1>
@@ -186,8 +186,8 @@
                         @foreach($sections as $s)
                             @if(!empty(trim(strip_tags($job[$s['key']] ?? ''))))
                             <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                                <div class="px-6 md:px-8 py-5 border-b border-gray-100 flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                <div class="career-detail-section-heading px-6 md:px-8 py-5 border-b border-gray-100">
+                                    <div class="career-detail-section-icon w-8 h-8 rounded-lg flex items-center justify-center"
                                          style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent);">
                                         @if($s['icon'] === 'file-text')
                                             <x-lucide-file-text class="w-4 h-4" style="color: var(--primary-color, #E31E24);" />
@@ -199,7 +199,7 @@
                                             <x-lucide-gift class="w-4 h-4" style="color: var(--primary-color, #E31E24);" />
                                         @endif
                                     </div>
-                                    <h2 class="text-sm font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer text-base' : 'uppercase tracking-wider' }}">{{ $s['label'] }}</h2>
+                                    <h2 class="job-section-title text-base font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ $s['label'] }}</h2>
                                 </div>
                                 <div class="px-6 md:px-8 py-6 job-rich-content">
                                     {!! $renderRichText($job[$s['key']] ?? '') !!}
@@ -211,13 +211,13 @@
 
                         <!-- Apply Form -->
                         <div id="apply-form" class="bg-white rounded-2xl border border-gray-100 overflow-hidden scroll-mt-28">
-                            <div class="px-6 md:px-8 py-5 border-b border-gray-100 flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                            <div class="career-detail-section-heading px-6 md:px-8 py-5 border-b border-gray-100">
+                                <div class="career-detail-section-icon w-8 h-8 rounded-lg flex items-center justify-center"
                                      style="background: color-mix(in srgb, var(--primary-color, #E31E24) 10%, transparent);">
                                     <x-lucide-send class="w-4 h-4" style="color: var(--primary-color, #E31E24);" />
                                 </div>
                                 <div>
-                                    <h2 class="text-sm font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer text-base' : 'uppercase tracking-wider' }}">{{ __('Apply for This Role') }}</h2>
+                                    <h2 class="job-section-title text-base font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ __('Apply for This Role') }}</h2>
                                     <p class="text-xs text-gray-400 mt-0.5">{{ __('Submit your application below.') }}</p>
                                 </div>
                             </div>

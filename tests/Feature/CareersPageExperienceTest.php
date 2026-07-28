@@ -10,6 +10,8 @@ class CareersPageExperienceTest extends TestCase
     public function test_careers_page_prioritizes_open_roles_and_explains_the_application_flow(): void
     {
         $careersPage = File::get(resource_path('views/pages/careers.blade.php'));
+        $careerDetailsPage = File::get(resource_path('views/pages/careers/show.blade.php'));
+        $khmerTranslations = File::get(lang_path('km.json'));
 
         $this->assertStringContainsString('order-2 scroll-mt-24', $careersPage);
         $this->assertStringContainsString("__('Apply in 3 simple steps')", $careersPage);
@@ -28,5 +30,12 @@ class CareersPageExperienceTest extends TestCase
         $this->assertStringContainsString('<select x-model="filterLoc"', $careersPage);
         $this->assertStringContainsString('md:grid-cols-[minmax(0,1fr)_11rem_11rem_auto]', $careersPage);
         $this->assertStringNotContainsString('<!-- Department Tabs -->', $careersPage);
+        $this->assertStringContainsString("{{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}", $careerDetailsPage);
+        $this->assertStringNotContainsString("{{ app()->getLocale() === 'km' ? 'font-khmer' : 'uppercase' }}", $careerDetailsPage);
+        $this->assertStringNotContainsString("? 'font-khmer text-base' : 'uppercase tracking-wider'", $careerDetailsPage);
+        $this->assertStringContainsString('career-detail-section-heading', $careerDetailsPage);
+        $this->assertStringContainsString('job-section-title', $careerDetailsPage);
+        $this->assertStringContainsString('"About This Role": "អំពីតួនាទីនេះ"', $khmerTranslations);
+        $this->assertStringContainsString('"What We Offer": "អ្វីដែលយើងផ្តល់ជូន"', $khmerTranslations);
     }
 }
