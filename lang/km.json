@@ -1102,5 +1102,9 @@
     "Hidden from organization chart": "លាក់ពីគំនូសតាងអង្គការ",
     "No employees yet": "មិនទាន់មានបុគ្គលិក",
     "Create an employee profile first. You can assign their organization position after saving.": "បង្កើតប្រវត្តិរូបបុគ្គលិកជាមុនសិន។ អ្នកអាចចាត់តាំងតួនាទីក្នុងអង្គការបន្ទាប់ពីរក្សាទុក។",
-    "Import Employees": "នាំចូលបុគ្គលិក"
+    "Import Employees": "នាំចូលបុគ្គលិក",
+    "Choose the position type and employee. The employee job title fills automatically.": "ជ្រើសប្រភេទតួនាទី និងបុគ្គលិក។ ចំណងជើងតួនាទីនឹងបំពេញដោយស្វ័យប្រវត្តិពីទិន្នន័យបុគ្គលិក។",
+    "Select an employee to fill the position title automatically.": "ជ្រើសបុគ្គលិក ដើម្បីបំពេញចំណងជើងតួនាទីដោយស្វ័យប្រវត្តិ។",
+    "Position Title": "ចំណងជើងតួនាទី",
+    "Filled from the employee job title. Change it only when this organization position needs a different name.": "បំពេញពីតួនាទីការងាររបស់បុគ្គលិក។ កែប្រែតែនៅពេលតួនាទីក្នុងអង្គការនេះត្រូវការឈ្មោះផ្សេង។"
 }
