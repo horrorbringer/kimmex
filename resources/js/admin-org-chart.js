@@ -75,6 +75,7 @@ const initialiseOrgChart = (root) => {
 
     const canvas = root.querySelector('[data-org-chart-canvas]');
     const searchInput = root.querySelector('[data-org-chart-search]');
+    const searchStatus = root.querySelector('[data-org-chart-search-status]');
 
     if (!canvas) {
         return;
@@ -134,13 +135,18 @@ const initialiseOrgChart = (root) => {
         chart.clearHighlighting();
 
         if (query) {
-            const match = data.find((node) => `${node.name} ${node.title} ${node.role}`.toLowerCase().includes(query));
+            const matches = data.filter((node) => `${node.name} ${node.title} ${node.role}`.toLowerCase().includes(query));
+            const match = matches[0];
 
             if (match) {
                 chart.setHighlighted(match.id).render();
+                searchStatus.textContent = `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}`;
+            } else {
+                searchStatus.textContent = 'No matches';
             }
         } else {
             chart.render();
+            searchStatus.textContent = '';
         }
     });
 

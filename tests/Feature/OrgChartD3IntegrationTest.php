@@ -19,8 +19,12 @@ class OrgChartD3IntegrationTest extends TestCase
         $this->assertStringContainsString("new CustomEvent('org-chart:edit'", $script);
         $this->assertStringContainsString('chart.exportImg', $script);
         $this->assertStringContainsString('data-org-chart-canvas wire:ignore', $view);
+        $this->assertStringContainsString('Website display settings', $view);
+        $this->assertStringContainsString('data-org-chart-search-status', $view);
+        $this->assertStringContainsString('Interactive builder', $view);
         $this->assertStringContainsString("x-on:org-chart:edit.window=\"\$wire.mountAction('edit', \$event.detail)\"", $view);
         $this->assertStringContainsString("@vite('resources/js/admin-org-chart.js')", $view);
         $this->assertStringContainsString("\$this->dispatch('chartUpdated', chartData: \$this->chartData)", $page);
+        $this->assertStringContainsString("searchStatus.textContent = 'No matches'", $script);
     }
 }

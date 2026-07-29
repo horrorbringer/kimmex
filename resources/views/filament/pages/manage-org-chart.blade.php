@@ -50,10 +50,10 @@
 
             .org-chart-toolbar {
                 display: grid;
-                gap: 1.25rem;
+                gap: 1rem;
                 grid-template-columns: minmax(0, 1fr) auto;
                 align-items: center;
-                padding: 1.25rem;
+                padding: 1rem 1.25rem;
                 border-bottom: 1px solid var(--org-border);
             }
 
@@ -88,6 +88,27 @@
                 font-size: 0.8125rem;
                 line-height: 1.4;
                 margin: 0.125rem 0 0;
+            }
+
+            .org-chart-mode {
+                display: inline-flex;
+                align-items: center;
+                min-height: 1.75rem;
+                margin-top: 0.5rem;
+                padding: 0.25rem 0.625rem;
+                border-radius: 999px;
+                color: var(--org-navy);
+                background: color-mix(in srgb, var(--org-accent) 13%, white);
+                font-size: 0.6875rem;
+                font-weight: 800;
+            }
+
+            .org-chart-tip {
+                max-width: 18rem;
+                color: var(--org-muted);
+                font-size: 0.75rem;
+                line-height: 1.45;
+                text-align: right;
             }
 
             .org-chart-stats {
@@ -131,7 +152,48 @@
             .org-chart-settings-card {
                 border: 1px solid var(--org-border);
                 border-radius: 0.875rem;
+                overflow: hidden;
+                background: #fff;
+            }
+
+            .org-chart-settings-card summary {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 0.875rem 1rem;
+                color: var(--org-navy);
+                cursor: pointer;
+                font-size: 0.8125rem;
+                font-weight: 800;
+                list-style: none;
+            }
+
+            .org-chart-settings-card summary::-webkit-details-marker { display: none; }
+
+            .org-chart-settings-card summary::after {
+                content: '+';
+                display: grid;
+                width: 1.5rem;
+                height: 1.5rem;
+                place-items: center;
+                border-radius: 999px;
+                color: var(--org-navy);
+                background: #f1f5f9;
+                font-size: 1rem;
+            }
+
+            .org-chart-settings-card[open] summary::after { content: '−'; }
+
+            .org-chart-settings-body {
                 padding: 1rem;
+                border-top: 1px solid var(--org-border);
+            }
+
+            .org-chart-settings-body > p {
+                margin: 0 0 1rem;
+                color: var(--org-muted);
+                font-size: 0.75rem;
             }
 
             .org-chart-board {
@@ -157,7 +219,16 @@
                 font-size: 0.8125rem;
             }
 
+            .org-chart-search-status {
+                color: var(--org-muted);
+                font-size: 0.6875rem;
+                font-weight: 700;
+            }
+
             .org-chart-control {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.375rem;
                 min-height: 2.5rem;
                 border: 1px solid var(--org-border);
                 border-radius: 0.625rem;
@@ -169,6 +240,8 @@
                 cursor: pointer;
                 transition: border-color 0.2s ease, background-color 0.2s ease;
             }
+
+            .org-chart-control svg { width: 1rem; height: 1rem; }
 
             .org-chart-control:hover {
                 border-color: var(--org-accent);
@@ -202,7 +275,7 @@
                 box-sizing: border-box;
                 display: flex;
                 align-items: center;
-                height: 116px;
+                height: 106px;
                 padding: 0.875rem;
                 gap: 0.75rem;
                 border: 1px solid var(--org-border);
@@ -614,6 +687,8 @@
                     align-items: stretch;
                 }
 
+                .org-chart-tip { max-width: none; text-align: left; }
+
                 .org-chart-search {
                     width: 100%;
                     margin-right: 0;
@@ -653,10 +728,11 @@
                     </div>
                     <div>
                         <h2>{{ __('Organization Chart') }}</h2>
-                        <p>{{ __('Explore reporting lines, edit units, and choose the public chart display mode.') }}</p>
+                        <p>{{ __('Browse the team structure and click any card to edit it.') }}</p>
+                        <span class="org-chart-mode">{{ __('Interactive builder') }}</span>
                     </div>
                 </div>
-                <span class="text-xs font-semibold text-slate-500">{{ __('Click a card to edit it. Use the controls below to explore the hierarchy.') }}</span>
+                <span class="org-chart-tip">{{ __('Search a person or role, then use the chart controls to focus on the hierarchy.') }}</span>
             </div>
 
             <div class="org-chart-stats">
@@ -675,15 +751,19 @@
             </div>
 
             <div class="org-chart-settings">
-                <form wire:submit="saveDisplaySettings" class="org-chart-settings-card">
-                    {{ $this->form }}
-                    <div class="mt-6 flex justify-end">
-                        <button type="submit" class="org-btn-primary" wire:loading.attr="disabled" wire:target="saveDisplaySettings">
-                            <x-heroicon-o-check class="org-icon-sm" />
-                            {{ __('Save Display Settings') }}
-                        </button>
-                    </div>
-                </form>
+                <details class="org-chart-settings-card">
+                    <summary>{{ __('Website display settings') }}</summary>
+                    <form wire:submit="saveDisplaySettings" class="org-chart-settings-body">
+                        <p>{{ __('Choose whether the public About page shows this interactive chart, an image, or a PDF.') }}</p>
+                        {{ $this->form }}
+                        <div class="mt-5 flex justify-end">
+                            <button type="submit" class="org-btn-primary" wire:loading.attr="disabled" wire:target="saveDisplaySettings">
+                                <x-heroicon-o-check class="org-icon-sm" />
+                                {{ __('Save display') }}
+                            </button>
+                        </div>
+                    </form>
+                </details>
             </div>
 
             <div class="org-chart-board">
@@ -699,11 +779,12 @@
                     <div class="org-chart-controls">
                         <label class="sr-only" for="org-chart-search">{{ __('Search organization chart') }}</label>
                         <input id="org-chart-search" type="search" class="org-chart-search" data-org-chart-search placeholder="{{ __('Search people or positions') }}" />
-                        <button type="button" class="org-chart-control" data-org-chart-action="fit">{{ __('Fit chart') }}</button>
-                        <button type="button" class="org-chart-control" data-org-chart-action="expand">{{ __('Expand all') }}</button>
-                        <button type="button" class="org-chart-control" data-org-chart-action="collapse">{{ __('Collapse all') }}</button>
-                        <button type="button" class="org-chart-control" data-org-chart-action="fullscreen">{{ __('Fullscreen') }}</button>
-                        <button type="button" class="org-chart-control" data-org-chart-action="download">{{ __('Download PNG') }}</button>
+                        <span class="org-chart-search-status" data-org-chart-search-status></span>
+                        <button type="button" class="org-chart-control" data-org-chart-action="fit"><x-heroicon-o-arrows-pointing-in class="org-icon-sm" />{{ __('Fit') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="expand"><x-heroicon-o-plus class="org-icon-sm" />{{ __('Expand') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="collapse"><x-heroicon-o-minus class="org-icon-sm" />{{ __('Collapse') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="fullscreen"><x-heroicon-o-arrows-pointing-out class="org-icon-sm" />{{ __('Fullscreen') }}</button>
+                        <button type="button" class="org-chart-control" data-org-chart-action="download"><x-heroicon-o-arrow-down-tray class="org-icon-sm" />{{ __('PNG') }}</button>
                     </div>
                     <div class="kimmex-org-chart" data-org-chart-canvas wire:ignore></div>
                 @endif
