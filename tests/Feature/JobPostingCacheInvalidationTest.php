@@ -12,7 +12,9 @@ class JobPostingCacheInvalidationTest extends TestCase
         $model = File::get(app_path('Models/JobPosting.php'));
 
         $this->assertStringContainsString('static::saved(function (self $job): void {', $model);
-        $this->assertStringContainsString("static::clearPublicCaches(\$job, \$job->getPrevious('slug'))", $model);
+        $this->assertStringContainsString('$previous = $job->getPrevious();', $model);
+        $this->assertStringContainsString("\$previousSlug = \$previous['slug'] ?? null;", $model);
+        $this->assertStringContainsString('is_string($previousSlug) ? $previousSlug : null', $model);
         $this->assertStringContainsString('Cache::forget("career_job_show_data_{$slug}_{$locale}")', $model);
         $this->assertStringContainsString("foreach (['en', 'km', 'kh'] as \$locale)", $model);
     }

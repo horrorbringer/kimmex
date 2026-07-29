@@ -110,6 +110,7 @@ class JobPostingForm
                     ->components([
                         RichEditor::make('summary')->resizableImages()
                             ->label(__('Summary'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('summary'))
                             ->toolbarButtons([
                                 ['bold', 'italic', 'underline', 'link'],
                                 [ToolbarButtonGroup::make('Heading', ['h3', 'h4'])->textualButtons()],
@@ -121,6 +122,7 @@ class JobPostingForm
                             ->columnSpanFull(),
                         RichEditor::make('responsibilities')->resizableImages()
                             ->label(__('Responsibilities'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('responsibilities'))
                             ->toolbarButtons([
                                 ['bold', 'italic', 'underline', 'link'],
                                 ['bulletList', 'orderedList'],
@@ -131,6 +133,7 @@ class JobPostingForm
                             ->columnSpanFull(),
                         RichEditor::make('requirements')->resizableImages()
                             ->label(__('Requirements'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('requirements'))
                             ->toolbarButtons([
                                 ['bold', 'italic', 'underline', 'link'],
                                 ['bulletList', 'orderedList'],
@@ -141,6 +144,7 @@ class JobPostingForm
                             ->columnSpanFull(),
                         RichEditor::make('benefits')->resizableImages()
                             ->label(__('Benefits'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('benefits'))
                             ->toolbarButtons([
                                 ['bold', 'italic', 'underline', 'link'],
                                 ['bulletList', 'orderedList'],

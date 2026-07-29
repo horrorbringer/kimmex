@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Testimonials\Schemas;
 
+use App\Filament\Support\TranslationHelper;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -56,6 +57,7 @@ class TestimonialForm
                             ->default(5),
                         RichEditor::make('content')->resizableImages()
                             ->label(__('Content'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('content'))
                             ->required()
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')

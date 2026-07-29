@@ -9,9 +9,9 @@ class AutoTranslateService
 {
     protected GoogleTranslate $translator;
 
-    public function __construct()
+    public function __construct(?GoogleTranslate $translator = null)
     {
-        $this->translator = new GoogleTranslate;
+        $this->translator = $translator ?? new GoogleTranslate;
         $this->translator->setSource('en');
         $this->translator->setTarget('km');
     }
@@ -56,11 +56,68 @@ class AutoTranslateService
      */
     protected function translateHtml(string $html, string $targetLocale): string
     {
-        // Extract text nodes, translate, and reconstruct
         $this->translator->setTarget($targetLocale);
 
-        // Simple approach: translate the whole HTML (Google handles tags well)
-        return $this->translator->translate($html);
+        $previousLibxmlState = libxml_use_internal_errors(true);
+
+        try {
+            $document = new \DOMDocument('1.0', 'UTF-8');
+            $document->loadHTML(
+                '<?xml encoding="UTF-8"><div id="translation-root">'.$html.'</div>',
+                LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD,
+            );
+
+            $root = $document->getElementById('translation-root');
+
+            if (! $root) {
+                return $html;
+            }
+
+            $this->translateTextNodes($root);
+
+            $translatedHtml = '';
+            foreach ($root->childNodes as $child) {
+                $translatedHtml .= $document->saveHTML($child);
+            }
+
+            return $translatedHtml;
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousLibxmlState);
+        }
+    }
+
+    public function containsHtml(string $content): bool
+    {
+        return preg_match('/<\/?[a-z][^>]*>/i', $content) === 1;
+    }
+
+    private function translateTextNodes(\DOMNode $node): void
+    {
+        foreach ($node->childNodes as $child) {
+            if ($child instanceof \DOMText) {
+                $child->nodeValue = $this->translateTextNode($child->nodeValue);
+
+                continue;
+            }
+
+            if ($child instanceof \DOMElement && in_array(strtolower($child->tagName), ['script', 'style'], true)) {
+                continue;
+            }
+
+            $this->translateTextNodes($child);
+        }
+    }
+
+    private function translateTextNode(string $text): string
+    {
+        if (trim($text) === '') {
+            return $text;
+        }
+
+        preg_match('/^(\s*)(.*?)(\s*)$/us', $text, $matches);
+
+        return ($matches[1] ?? '').$this->translator->translate($matches[2] ?? $text).($matches[3] ?? '');
     }
 
     /**

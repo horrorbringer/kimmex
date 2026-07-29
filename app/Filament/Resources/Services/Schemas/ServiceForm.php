@@ -106,6 +106,7 @@ class ServiceForm
                                 ->hintActions([
                                     AIHelper::getGenerateAction('description', 'Service Description'),
                                     AIHelper::getImproveAction('description'),
+                                    TranslationHelper::getAutoTranslateAction('description'),
                                 ]),
                         ]),
                     ]),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Documents\Schemas;
 
+use App\Filament\Support\TranslationHelper;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -62,6 +63,7 @@ class DocumentForm
                     ->components([
                         RichEditor::make('description')->resizableImages()
                             ->label(__('Description'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->columnSpanFull(),

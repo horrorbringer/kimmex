@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Departments\Schemas;
 
+use App\Filament\Support\TranslationHelper;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
@@ -61,6 +62,7 @@ class DepartmentForm
                     ->components([
                         RichEditor::make('description')->resizableImages()->resizableImages()
                             ->label(__('Detailed Description'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                             ->fileAttachmentsVisibility('public')
                             ->placeholder(__('Describe the department goals...'))

@@ -3,11 +3,13 @@
 namespace App\Filament\Resources\Milestones\Tables;
 
 use App\Filament\Support\FlatRecordDetails;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -42,9 +44,14 @@ class MilestonesTable
                 //
             ])
             ->actions([
-                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
-                EditAction::make(),
-                DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                ActionGroup::make([
+                    ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
+                    EditAction::make(),
+                    DeleteAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+                ])
+                    ->icon(Heroicon::EllipsisVertical)
+                    ->iconButton()
+                    ->tooltip(__('Actions')),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

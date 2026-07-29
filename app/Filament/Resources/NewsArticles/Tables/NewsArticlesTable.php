@@ -5,11 +5,13 @@ namespace App\Filament\Resources\NewsArticles\Tables;
 use App\Filament\Support\FlatRecordDetails;
 use App\Models\NewsArticle;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -46,22 +48,27 @@ class NewsArticlesTable
                 //
             ])
             ->actions([
-                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
-                Action::make('viewOnWebsite')
-                    ->label(__('View on Website'))
-                    ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->color('info')
-                    ->url(fn (NewsArticle $record): string => route('news.show', ['slug' => $record->slug]))
-                    ->openUrlInNewTab(),
-                Action::make('copy_link')
-                    ->label(__('Copy Link'))
-                    ->icon('heroicon-o-link')
-                    ->color('gray')
-                    ->extraAttributes(fn ($record) => [
-                        'x-on:click' => "window.navigator.clipboard.writeText('".route('news.show', ['slug' => $record->slug])."')",
-                    ])
-                    ->action(fn () => Notification::make()->title(__('Link Copied'))->success()->send()),
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
+                    EditAction::make(),
+                    Action::make('viewOnWebsite')
+                        ->label(__('View on Website'))
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->color('info')
+                        ->url(fn (NewsArticle $record): string => route('news.show', ['slug' => $record->slug]))
+                        ->openUrlInNewTab(),
+                    Action::make('copy_link')
+                        ->label(__('Copy Link'))
+                        ->icon('heroicon-o-link')
+                        ->color('gray')
+                        ->extraAttributes(fn ($record) => [
+                            'x-on:click' => "window.navigator.clipboard.writeText('".route('news.show', ['slug' => $record->slug])."')",
+                        ])
+                        ->action(fn () => Notification::make()->title(__('Link Copied'))->success()->send()),
+                ])
+                    ->icon(Heroicon::EllipsisVertical)
+                    ->iconButton()
+                    ->tooltip(__('Actions')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

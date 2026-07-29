@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\ActivityLogs\Tables;
 
 use App\Filament\Support\FlatRecordDetails;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -63,7 +65,12 @@ class ActivityLogsTable
                 //
             ])
             ->recordActions([
-                ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
+                ActionGroup::make([
+                    ViewAction::make()->schema(fn ($record): array => FlatRecordDetails::schema($record)),
+                ])
+                    ->icon(Heroicon::EllipsisVertical)
+                    ->iconButton()
+                    ->tooltip(__('Actions')),
             ])
             ->toolbarActions([]);
     }

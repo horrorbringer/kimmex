@@ -46,7 +46,10 @@ class JobPosting extends Model
     protected static function booted(): void
     {
         static::saved(function (self $job): void {
-            static::clearPublicCaches($job, $job->getPrevious('slug'));
+            $previous = $job->getPrevious();
+            $previousSlug = $previous['slug'] ?? null;
+
+            static::clearPublicCaches($job, is_string($previousSlug) ? $previousSlug : null);
         });
 
         static::deleted(function (self $job): void {

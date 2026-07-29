@@ -98,6 +98,7 @@ class NewsArticleForm
                                             ->hintActions([
                                                 AIHelper::getGenerateAction('content', 'News Article'),
                                                 AIHelper::getImproveAction('content', 'Rewrite this news article to be more professional.'),
+                                                TranslationHelper::getAutoTranslateAction('content'),
                                             ])
                                             ->live(onBlur: true)
                                             ->afterStateUpdated(function (Set $set, $state, $get) {

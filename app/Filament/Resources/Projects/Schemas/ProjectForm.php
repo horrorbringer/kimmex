@@ -114,6 +114,7 @@ class ProjectForm
                                         ->hintActions([
                                             AIHelper::getGenerateAction('description', 'Project Description'),
                                             AIHelper::getImproveAction('description'),
+                                            TranslationHelper::getAutoTranslateAction('description'),
                                         ]),
                                 ]),
 
@@ -123,7 +124,10 @@ class ProjectForm
                                     RichEditor::make('background')
                                         ->label(__('Background'))
                                         ->toolbarButtons([['bold', 'italic', 'link'], ['bulletList', 'orderedList'], ['undo', 'redo']])
-                                        ->hintActions([AIHelper::getImproveAction('background')]),
+                                        ->hintActions([
+                                            AIHelper::getImproveAction('background'),
+                                            TranslationHelper::getAutoTranslateAction('background'),
+                                        ]),
                                     Textarea::make('objectives')
                                         ->label(__('Objectives'))
                                         ->helperText(__('Write one objective per line. Each line becomes a bullet on the website.'))
