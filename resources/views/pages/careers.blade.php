@@ -290,8 +290,8 @@
                                 </div>
                             </div>
 
-                            <span class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-titan-navy/15 px-4 text-sm font-bold text-titan-navy transition-all duration-300 group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white md:px-5">
-                                {{ __('View Job Details') }}
+                            <span class="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-titan-navy/15 px-4 text-sm font-bold text-titan-navy transition-all duration-300 group-hover:border-titan-red group-hover:bg-titan-red group-hover:!text-white md:px-5">
+                                {{ __('Apply Now') }}
                                 <x-lucide-arrow-right class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                             </span>
                         </a>
