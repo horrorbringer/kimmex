@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
@@ -113,7 +114,8 @@ class JobPostingForm
                                 ->all())
                             ->searchable()
                             ->placeholder(__('No shared channel selected'))
-                            ->helperText(__('Select a channel managed in System Settings.')),
+                            ->helperText(__('Select a channel managed in System Settings. Clear this field to use a manual channel.'))
+                            ->live(),
 
                         FileUpload::make('telegramQr')
                             ->label(__('Manual Telegram QR Image'))
@@ -123,13 +125,15 @@ class JobPostingForm
                             ->maxSize(2048)
                             ->disk(config('filesystems.public_uploads_disk'))
                             ->directory('jobs/telegram-qr')
-                            ->visibility('public'),
+                            ->visibility('public')
+                            ->visible(fn (Get $get): bool => blank($get('telegramChannelId'))),
 
                         TextInput::make('telegramUrl')
                             ->label(__('Manual Telegram Careers Link'))
                             ->helperText(__('Optional override for a different channel on this job.'))
                             ->url()
-                            ->placeholder('https://t.me/kimmexcareers'),
+                            ->placeholder('https://t.me/kimmexcareers')
+                            ->visible(fn (Get $get): bool => blank($get('telegramChannelId'))),
                     ]),
 
                 Section::make(__('Job Description'))

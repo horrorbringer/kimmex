@@ -26,6 +26,8 @@ class CareerTelegramQrExperienceTest extends TestCase
         $this->assertStringContainsString("->directory('jobs/telegram-qr')", $jobPostingForm);
         $this->assertStringContainsString("TextInput::make('telegramUrl')", $jobPostingForm);
         $this->assertStringContainsString("Select::make('telegramChannelId')", $jobPostingForm);
+        $this->assertStringContainsString('->live()', $jobPostingForm);
+        $this->assertStringContainsString("->visible(fn (Get \$get): bool => blank(\$get('telegramChannelId')))", $jobPostingForm);
         $this->assertStringContainsString("'telegramQr'", $jobPostingModel);
         $this->assertStringContainsString("'telegramUrl'", $jobPostingModel);
         $this->assertStringContainsString("'telegramChannelId'", $jobPostingModel);
@@ -34,12 +36,13 @@ class CareerTelegramQrExperienceTest extends TestCase
         $this->assertStringContainsString("'telegramUrl' => \$jobDb->telegramUrl", $careerController);
         $this->assertStringContainsString("'telegramChannelId' => \$jobDb->telegramChannelId", $careerController);
         $this->assertStringContainsString("SystemSetting::get('career_telegram_channels', [])", $careerController);
+        $this->assertStringContainsString("\$selectedTelegramChannel['qr'] ?? \$job['telegramQr'] ?? null", $careerController);
         $this->assertStringContainsString('$telegramQrUrl = PublicStorage::urlIfExists', $careerController);
         $this->assertStringContainsString("Str::startsWith(\$telegramUrl, ['https://', 'http://'])", $careerController);
         $this->assertStringContainsString('Carbon::JUST_NOW', $careerController);
         $this->assertStringContainsString("\$job['postedAt'] ?? \$job['postedDate'] ?? now()", $careerController);
         $this->assertStringContainsString('@if($telegramQrUrl)', $careerDetailsPage);
-        $this->assertStringContainsString('w-32 h-32', $careerDetailsPage);
+        $this->assertStringContainsString('w-[250px]', $careerDetailsPage);
         $this->assertStringContainsString('href="{{ $telegramUrl }}"', $careerDetailsPage);
         $this->assertStringContainsString("{{ __('Careers on Telegram') }}", $careerDetailsPage);
         $this->assertStringContainsString("{{ __('Please Join Us on Telegram') }}", $careerDetailsPage);

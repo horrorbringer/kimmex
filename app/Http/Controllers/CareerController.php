@@ -90,13 +90,9 @@ class CareerController extends Controller
         $canonicalUrl = $slug === 'gen' ? url('/careers/gen') : route('careers.show', ['slug' => $slug]);
         $selectedTelegramChannel = collect(SystemSetting::get('career_telegram_channels', []))
             ->first(fn ($channel): bool => is_array($channel) && ($channel['id'] ?? null) === ($job['telegramChannelId'] ?? null));
-        $telegramQrPath = filled($job['telegramQr'] ?? null)
-            ? $job['telegramQr']
-            : ($selectedTelegramChannel['qr'] ?? null);
+        $telegramQrPath = $selectedTelegramChannel['qr'] ?? $job['telegramQr'] ?? null;
         $telegramQrUrl = PublicStorage::urlIfExists($telegramQrPath);
-        $telegramUrl = trim((string) (filled($job['telegramUrl'] ?? null)
-            ? $job['telegramUrl']
-            : ($selectedTelegramChannel['url'] ?? '')));
+        $telegramUrl = trim((string) ($selectedTelegramChannel['url'] ?? $job['telegramUrl'] ?? ''));
         $telegramUrl = Str::startsWith($telegramUrl, ['https://', 'http://']) ? $telegramUrl : null;
         $postedRelative = Carbon::parse($job['postedAt'] ?? $job['postedDate'] ?? now())
             ->locale(app()->getLocale())

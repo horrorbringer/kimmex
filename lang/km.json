@@ -1127,6 +1127,7 @@
     "Shared Telegram Career Channel": "ឆានែល Telegram ការងាររួម",
     "No shared channel selected": "មិនបានជ្រើសឆានែលរួម",
     "Select a channel managed in System Settings.": "ជ្រើសឆានែលដែលបានគ្រប់គ្រងនៅក្នុងការកំណត់ប្រព័ន្ធ។",
+    "Select a channel managed in System Settings. Clear this field to use a manual channel.": "ជ្រើសឆានែលដែលបានគ្រប់គ្រងនៅក្នុងការកំណត់ប្រព័ន្ធ។ លុបការជ្រើសរើសនេះ ដើម្បីប្រើឆានែលដោយដៃ។",
     "Manual Telegram QR Image": "រូបភាពកូដ QR Telegram ដោយដៃ",
     "Manual Telegram Careers Link": "តំណ Telegram ការងារដោយដៃ",
     "Optional override for a different channel on this job.": "ជាជម្រើសសម្រាប់ប្ដូរទៅឆានែលផ្សេងសម្រាប់ការងារនេះ។"
