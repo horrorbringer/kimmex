@@ -1117,5 +1117,17 @@
     "Career Opportunity": "ឱកាសការងារ",
     "Apply for this role": "ដាក់ពាក្យសម្រាប់តួនាទីនេះ",
     "Send your CV in a few simple steps.": "ផ្ញើប្រវត្តិរូបរបស់អ្នកតាមជំហានងាយៗមួយចំនួន។",
-    "This role is currently open.": "តួនាទីនេះកំពុងបើកទទួលពាក្យ។"
+    "This role is currently open.": "តួនាទីនេះកំពុងបើកទទួលពាក្យ។",
+    "Telegram Careers Link": "តំណឱកាសការងារ Telegram",
+    "Optional. Where the QR image and Careers on Telegram link should open.": "ជាជម្រើស។ ទីតាំងដែលរូបភាព QR និងតំណឱកាសការងារ Telegram ត្រូវបើក។",
+    "Career Telegram Channels": "ឆានែល Telegram សម្រាប់ការងារ",
+    "Manage reusable Telegram QR codes and links for job postings.": "គ្រប់គ្រងកូដ QR និងតំណ Telegram ដែលអាចប្រើឡើងវិញសម្រាប់ប្រកាសការងារ។",
+    "Channel Name": "ឈ្មោះឆានែល",
+    "New channel": "ឆានែលថ្មី",
+    "Shared Telegram Career Channel": "ឆានែល Telegram ការងាររួម",
+    "No shared channel selected": "មិនបានជ្រើសឆានែលរួម",
+    "Select a channel managed in System Settings.": "ជ្រើសឆានែលដែលបានគ្រប់គ្រងនៅក្នុងការកំណត់ប្រព័ន្ធ។",
+    "Manual Telegram QR Image": "រូបភាពកូដ QR Telegram ដោយដៃ",
+    "Manual Telegram Careers Link": "តំណ Telegram ការងារដោយដៃ",
+    "Optional override for a different channel on this job.": "ជាជម្រើសសម្រាប់ប្ដូរទៅឆានែលផ្សេងសម្រាប់ការងារនេះ។"
 }

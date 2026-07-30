@@ -4,6 +4,7 @@ namespace App\Filament\Resources\JobPostings\Schemas;
 
 use App\Enums\JobPostingStatus;
 use App\Filament\Support\TranslationHelper;
+use App\Models\SystemSetting;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -104,15 +105,31 @@ class JobPostingForm
                             ->required()
                             ->default(JobPostingStatus::DRAFT),
 
+                        Select::make('telegramChannelId')
+                            ->label(__('Shared Telegram Career Channel'))
+                            ->options(fn (): array => collect(SystemSetting::get('career_telegram_channels', []))
+                                ->pluck('name', 'id')
+                                ->filter()
+                                ->all())
+                            ->searchable()
+                            ->placeholder(__('No shared channel selected'))
+                            ->helperText(__('Select a channel managed in System Settings.')),
+
                         FileUpload::make('telegramQr')
-                            ->label(__('Telegram QR Image'))
-                            ->helperText(__('Optional. Upload a QR image only when this role uses a specific Telegram channel.'))
+                            ->label(__('Manual Telegram QR Image'))
+                            ->helperText(__('Optional override for a different channel on this job.'))
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
                             ->maxSize(2048)
                             ->disk(config('filesystems.public_uploads_disk'))
                             ->directory('jobs/telegram-qr')
                             ->visibility('public'),
+
+                        TextInput::make('telegramUrl')
+                            ->label(__('Manual Telegram Careers Link'))
+                            ->helperText(__('Optional override for a different channel on this job.'))
+                            ->url()
+                            ->placeholder('https://t.me/kimmexcareers'),
                     ]),
 
                 Section::make(__('Job Description'))

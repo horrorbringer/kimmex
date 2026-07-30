@@ -32,13 +32,13 @@
     </url>
     <url>
         <loc>http://kimmex.test/careers</loc>
-        <lastmod>2026-07-30T09:08:43+07:00</lastmod>
+        <lastmod>2026-07-30T09:51:56+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>http://kimmex.test/careers/site-engineer</loc>
-        <lastmod>2026-07-30T09:08:43+07:00</lastmod>
+        <loc>http://kimmex.test/careers/project-engineer</loc>
+        <lastmod>2026-07-30T09:51:56+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>

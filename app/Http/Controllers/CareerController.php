@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\JobPostingStatus;
 use App\Models\JobPosting;
+use App\Models\SystemSetting;
 use App\Support\PublicStorage;
 use App\Support\RichContent;
 use Illuminate\Http\RedirectResponse;
@@ -54,6 +55,8 @@ class CareerController extends Controller
                 'requirements' => $pickTranslation($jobDb, 'requirements'),
                 'benefits' => $pickTranslation($jobDb, 'benefits'),
                 'telegramQr' => $jobDb->telegramQr,
+                'telegramUrl' => $jobDb->telegramUrl,
+                'telegramChannelId' => $jobDb->telegramChannelId,
             ];
         });
 
@@ -85,7 +88,16 @@ class CareerController extends Controller
         $pageTitle = $job['title'] ?? __('Job Details');
         $pageDesc = $heroSummary ?: __('Join our team of experts in the construction and investment industry.');
         $canonicalUrl = $slug === 'gen' ? url('/careers/gen') : route('careers.show', ['slug' => $slug]);
-        $telegramQrUrl = PublicStorage::urlIfExists($job['telegramQr'] ?? null);
+        $selectedTelegramChannel = collect(SystemSetting::get('career_telegram_channels', []))
+            ->first(fn ($channel): bool => is_array($channel) && ($channel['id'] ?? null) === ($job['telegramChannelId'] ?? null));
+        $telegramQrPath = filled($job['telegramQr'] ?? null)
+            ? $job['telegramQr']
+            : ($selectedTelegramChannel['qr'] ?? null);
+        $telegramQrUrl = PublicStorage::urlIfExists($telegramQrPath);
+        $telegramUrl = trim((string) (filled($job['telegramUrl'] ?? null)
+            ? $job['telegramUrl']
+            : ($selectedTelegramChannel['url'] ?? '')));
+        $telegramUrl = Str::startsWith($telegramUrl, ['https://', 'http://']) ? $telegramUrl : null;
         $postedRelative = Carbon::parse($job['postedAt'] ?? $job['postedDate'] ?? now())
             ->locale(app()->getLocale())
             ->diffForHumans(null, null, false, 1, Carbon::JUST_NOW);
@@ -118,6 +130,7 @@ class CareerController extends Controller
             'renderRichText',
             'renderParagraphContent',
             'telegramQrUrl',
+            'telegramUrl',
             'postedRelative',
         ));
     }

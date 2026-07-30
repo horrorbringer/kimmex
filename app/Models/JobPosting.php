@@ -25,6 +25,8 @@ class JobPosting extends Model
         'requirements',
         'benefits',
         'telegramQr',
+        'telegramUrl',
+        'telegramChannelId',
         'closingDate',
         'experience',
         'salary',

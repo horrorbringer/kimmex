@@ -287,14 +287,27 @@
 
                         @if($telegramQrUrl)
                             <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-24 h-24 rounded-xl border border-gray-100 bg-white p-1.5 shrink-0">
-                                        <img src="{{ $telegramQrUrl }}" alt="{{ __('Telegram QR Code') }}" class="w-full h-full object-contain" loading="lazy" decoding="async" />
+                                <div class="flex flex-col items-center gap-4">
+                                    <div class="w-[250px] rounded-2xl border border-gray-100 bg-white p-1 shrink-0 shadow-sm">
+                                        @if($telegramUrl)
+                                            <a href="{{ $telegramUrl }}" target="_blank" rel="noopener noreferrer" aria-label="{{ __('Careers on Telegram') }}">
+                                                <img src="{{ $telegramQrUrl }}" alt="{{ __('Telegram QR Code') }}" class="w-full h-full object-contain" loading="lazy" decoding="async" />
+                                            </a>
+                                        @else
+                                            <img src="{{ $telegramQrUrl }}" alt="{{ __('Telegram QR Code') }}" class="w-full h-full object-contain" loading="lazy" decoding="async" />
+                                        @endif
                                     </div>
                                     <div class="min-w-0">
                                         <div class="flex items-center gap-2 mb-1">
                                             <x-social-icon network="telegram" class="w-4 h-4 text-social-telegram" />
-                                            <h4 class="text-sm font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ __('Careers on Telegram') }}</h4>
+                                            @if($telegramUrl)                                                
+                                                <a href="{{ $telegramUrl }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 mt-2 text-xs font-bold text-social-telegram hover:brightness-75 transition-colors">
+                                                {{ __('Open Telegram') }}
+                                                <x-lucide-external-link class="w-3.5 h-3.5" />
+                                            </a>
+                                            @else
+                                                <h4 class="text-sm font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ __('Careers on Telegram') }}</h4>
+                                            @endif
                                         </div>
                                         <p class="text-xs text-gray-500 leading-relaxed">{{ __('Please Join Us on Telegram') }}</p>
                                     </div>

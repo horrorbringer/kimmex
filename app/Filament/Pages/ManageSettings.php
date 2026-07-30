@@ -9,6 +9,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
@@ -32,6 +33,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class ManageSettings extends Page implements HasForms
@@ -99,6 +101,7 @@ class ManageSettings extends Page implements HasForms
             'instagram' => $org['instagram'] ?? '',
             'telegram' => $org['telegram'] ?? '',
             'tiktok' => $org['tiktok'] ?? '',
+            'career_telegram_channels' => SystemSetting::get('career_telegram_channels', []),
 
             // Branding
             'ceo_name' => $brand['ceo_name'] ?? '',
@@ -465,6 +468,36 @@ class ManageSettings extends Page implements HasForms
                                             ->url()
                                             ->placeholder('https://www.tiktok.com/@your-account'),
                                     ]),
+                                Section::make(__('Career Telegram Channels'))
+                                    ->description(__('Manage reusable Telegram QR codes and links for job postings.'))
+                                    ->schema([
+                                        Repeater::make('career_telegram_channels')
+                                            ->label(__('Career Telegram Channels'))
+                                            ->schema([
+                                                Hidden::make('id')->default(fn (): string => (string) Str::uuid()),
+                                                TextInput::make('name')
+                                                    ->label(__('Channel Name'))
+                                                    ->required(),
+                                                TextInput::make('url')
+                                                    ->label(__('Telegram Careers Link'))
+                                                    ->url()
+                                                    ->required(),
+                                                FileUpload::make('qr')
+                                                    ->label(__('Telegram QR Image'))
+                                                    ->image()
+                                                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                                                    ->maxSize(2048)
+                                                    ->disk(config('filesystems.public_uploads_disk'))
+                                                    ->directory('organization/career-telegram')
+                                                    ->visibility('public')
+                                                    ->required(),
+                                            ])
+                                            ->columns(2)
+                                            ->collapsible()
+                                            ->itemLabel(fn (array $state): string => $state['name'] ?? __('New channel')),
+                                    ])
+                                    ->collapsible()
+                                    ->collapsed(),
                                 Section::make(__('Telegram Bot Alerts'))
                                     ->schema([
                                         Toggle::make('telegram_enabled')->label(__('Enable Bot Notifications'))->live(),
@@ -778,6 +811,17 @@ class ManageSettings extends Page implements HasForms
             'telegram_jobs_chat_id' => $state['telegram_jobs_chat_id'] ?? '',
             'telegram_inquiries_chat_id' => $state['telegram_inquiries_chat_id'] ?? '',
         ]);
+
+        SystemSetting::set('career_telegram_channels', collect($state['career_telegram_channels'] ?? [])
+            ->filter(fn ($channel): bool => is_array($channel) && filled($channel['name'] ?? null))
+            ->map(fn (array $channel): array => [
+                'id' => filled($channel['id'] ?? null) ? $channel['id'] : (string) Str::uuid(),
+                'name' => $channel['name'],
+                'url' => $channel['url'] ?? '',
+                'qr' => $channel['qr'] ?? '',
+            ])
+            ->values()
+            ->all());
         // 5. Theme Settings
         SystemSetting::set('theme_settings', [
             'primary_color' => $state['primary_color'],
