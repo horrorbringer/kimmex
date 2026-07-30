@@ -259,44 +259,69 @@
                     <!-- Sidebar: 4 cols -->
                     <aside class="lg:col-span-4 space-y-5 lg:sticky lg:top-28 h-fit">
 
-                        <!-- Quick Apply Card -->
-                        <div class="rounded-2xl overflow-hidden" style="background: linear-gradient(135deg, #071A33, #0B2B5C);">
-                            <div class="p-6">
-                                <p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color: rgba(255,255,255,0.35);">{{ __('Open Position') }}</p>
-                                <h3 class="text-base font-bold leading-snug mb-5 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}" style="color: #FFFFFF;">{{ $job['title'] }}</h3>
+                        <!-- Application Callout -->
+                        <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_12px_30px_-24px_rgba(7,26,51,0.35)]">
+                            <div class="flex items-start gap-3 mb-5">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-titan-red/10 text-titan-red">
+                                    <x-lucide-send class="w-4 h-4" />
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-base font-bold text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ __('Apply for this role') }}</h3>
+                                    <p class="mt-0.5 text-xs text-gray-500">{{ __('This role is currently open.') }}</p>
+                                </div>
+                            </div>
+                            <div class="rounded-xl bg-gray-50 px-4 py-3 mb-5">
+                                <p class="text-sm font-bold leading-snug text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ $job['title'] }}</p>
+                                <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
+                                    <x-lucide-clock-3 class="w-3.5 h-3.5 text-titan-red" />
+                                    {{ __('Posted') }} {{ $postedRelative }}
+                                </div>
+                            </div>
                                 <a href="#apply-form"
-                                    class="flex items-center justify-center gap-2 w-full h-11 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 mb-3"
+                                    class="flex items-center justify-center gap-2 w-full h-11 rounded-xl text-sm font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                                     style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
-                                    {{ __('Apply Now') }}
+                                    {{ __('Apply for this role') }}
                                     <x-lucide-arrow-down class="w-4 h-4" />
                                 </a>
-                                <a href="mailto:careers@kimmex.com?subject={{ urlencode('Application: '.$job['title']) }}"
-                                    class="block text-center text-xs transition-colors" style="color: rgba(255,255,255,0.35);">
-                                    {{ __('or email us directly') }}
-                                </a>
-                            </div>
                         </div>
+
+                        @if($telegramQrUrl)
+                            <div class="bg-white rounded-2xl border border-gray-100 p-5">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-24 h-24 rounded-xl border border-gray-100 bg-white p-1.5 shrink-0">
+                                        <img src="{{ $telegramQrUrl }}" alt="{{ __('Telegram QR Code') }}" class="w-full h-full object-contain" loading="lazy" decoding="async" />
+                                    </div>
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <x-social-icon network="telegram" class="w-4 h-4 text-social-telegram" />
+                                            <h4 class="text-sm font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ __('Careers on Telegram') }}</h4>
+                                        </div>
+                                        <p class="text-xs text-gray-500 leading-relaxed">{{ __('Please Join Us on Telegram') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
                         <!-- Job Details Card -->
                         <div class="bg-white rounded-2xl border border-gray-100 p-6">
                             <h4 class="text-xs font-bold text-gray-900 uppercase tracking-wider mb-5 pb-3 border-b border-gray-100">{{ __('Job Details') }}</h4>
-                            <div class="space-y-4">
+                            <div class="divide-y divide-gray-100">
                                 @foreach([
                                     ['icon' => 'lucide-map-pin', 'label' => __('Location'), 'value' => $job['loc']],
                                     ['icon' => 'lucide-briefcase', 'label' => __('Experience'), 'value' => $job['experience']],
                                     ['icon' => 'lucide-clock', 'label' => __('Type'), 'value' => $job['type']],
                                     ['icon' => 'lucide-banknote', 'label' => __('Salary'), 'value' => $job['salary']],
                                     ['icon' => 'lucide-building-2', 'label' => __('Department'), 'value' => $job['dept']],
-                                    ['icon' => 'lucide-calendar', 'label' => __('Posted'), 'value' => $job['postedDate']],
+                                    ['icon' => 'lucide-calendar', 'label' => __('Posted'), 'value' => $postedRelative],
                                 ] as $detail)
-                                    <div class="flex items-start gap-3">
-                                        <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 mt-0.5">
-                                            <x-dynamic-component :component="$detail['icon']" class="w-3.5 h-3.5 text-gray-400" stroke-width="1.8" />
+                                    <div class="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                                        <div class="flex items-center gap-3 min-w-0">
+                                            <div class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center shrink-0">
+                                                <x-dynamic-component :component="$detail['icon']" class="w-3.5 h-3.5 text-gray-400" stroke-width="1.8" />
+                                            </div>
+                                            <p class="text-xs font-semibold text-gray-500">{{ $detail['label'] }}</p>
                                         </div>
-                                        <div>
-                                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{{ $detail['label'] }}</p>
-                                            <p class="text-sm font-medium text-gray-700 mt-0.5">{{ $detail['value'] }}</p>
-                                        </div>
+                                        <p class="max-w-[60%] text-right text-sm font-semibold text-gray-800 leading-snug {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ $detail['value'] }}</p>
                                     </div>
                                 @endforeach
                             </div>

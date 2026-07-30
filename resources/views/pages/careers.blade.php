@@ -28,6 +28,7 @@
                     'salary' => $j->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
                     'experience' => $j->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
                     'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
+                    'postedAt' => $j->created_at?->toIso8601String(),
                     'tags' => [$deptName],
                     'summary' => \Illuminate\Support\Str::limit(strip_tags($j->getTranslation('summary', app()->getLocale())), 150)
                 ];
@@ -39,7 +40,7 @@
 
         if (empty($jobs)) {
             $jobs = [
-                ['id' => 'gen', 'slug' => 'gen', 'title' => __('Visionary Talent'), 'dept' => __('General'), 'loc' => __('Phnom Penh'), 'type' => __('Full-time'), 'salary' => __('Competitive'), 'experience' => __('Mixed'), 'postedDate' => now()->format('M d, Y'), 'tags' => [__('Hiring')], 'summary' => __('We are always looking for exceptional engineers and managers.')]
+                ['id' => 'gen', 'slug' => 'gen', 'title' => __('Visionary Talent'), 'dept' => __('General'), 'loc' => __('Phnom Penh'), 'type' => __('Full-time'), 'salary' => __('Competitive'), 'experience' => __('Mixed'), 'postedDate' => now()->format('M d, Y'), 'postedAt' => now()->toIso8601String(), 'tags' => [__('Hiring')], 'summary' => __('We are always looking for exceptional engineers and managers.')]
             ];
         }
     @endphp
@@ -63,6 +64,14 @@
             this.filterDept = '{{ __('All') }}';
             this.filterLoc = '{{ __('All Locations') }}';
             this.searchQuery = '';
+        },
+        relativeTime(date) {
+            const seconds = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 1000));
+            const units = [[31536000, 'year'], [2592000, 'month'], [86400, 'day'], [3600, 'hour'], [60, 'minute']];
+            const [secondsPerUnit, unit] = units.find(([secondsPerUnit]) => seconds >= secondsPerUnit) || [1, 'second'];
+            const value = Math.floor(seconds / secondsPerUnit);
+
+            return new Intl.RelativeTimeFormat('{{ app()->getLocale() }}', { numeric: 'auto' }).format(-value, unit);
         }
     }" class="bg-white min-h-screen flex flex-col">
 
@@ -269,6 +278,10 @@
                                     <span class="h-1 w-1 rounded-full bg-gray-300"></span>
                                     <span class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.1em] text-emerald-700">
                                         <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{{ __('Open') }}
+                                    </span>
+                                    <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-gray-400" x-show="job.postedAt || job.postedDate">
+                                        <x-lucide-clock-3 class="h-3.5 w-3.5" />
+                                        <span x-text="relativeTime(job.postedAt || job.postedDate)"></span>
                                     </span>
                                 </div>
                                 <h3 class="text-lg font-black leading-snug text-titan-navy transition-colors duration-300 group-hover:text-titan-red md:text-xl" x-text="job.title"></h3>

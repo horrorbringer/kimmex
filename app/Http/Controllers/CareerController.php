@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\JobPostingStatus;
 use App\Models\JobPosting;
+use App\Support\PublicStorage;
 use App\Support\RichContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -46,10 +48,12 @@ class CareerController extends Controller
                 'salary' => $pickTranslation($jobDb, 'salary') ?: __('Negotiable'),
                 'experience' => $pickTranslation($jobDb, 'experience') ?: __('2-3 Years'),
                 'postedDate' => $jobDb->created_at ? $jobDb->created_at->format('M d, Y') : now()->format('M d, Y'),
+                'postedAt' => $jobDb->created_at?->toIso8601String(),
                 'description' => $pickTranslation($jobDb, 'summary'),
                 'responsibilities' => $pickTranslation($jobDb, 'responsibilities'),
                 'requirements' => $pickTranslation($jobDb, 'requirements'),
                 'benefits' => $pickTranslation($jobDb, 'benefits'),
+                'telegramQr' => $jobDb->telegramQr,
             ];
         });
 
@@ -64,6 +68,7 @@ class CareerController extends Controller
                 'salary' => __('Competitive'),
                 'experience' => __('Mixed'),
                 'postedDate' => now()->format('M d, Y'),
+                'postedAt' => now()->toIso8601String(),
                 'description' => __('We are always looking for exceptional engineers and managers. Even if there is no specific opening that matches your profile, we encourage you to submit your general application.'),
                 'responsibilities' => '<ul><li>'.__('Willingness to learn and grow within the Kimmex ecosystem').'</li><li>'.__('Contributing to various projects across departments').'</li><li>'.__('Maintaining professional excellence in all tasks').'</li></ul>',
                 'requirements' => '<ul><li>'.__('Strong technical background in engineering or construction').'</li><li>'.__('Passion for innovation and quality').'</li><li>'.__('Excellent teamwork and communication skills').'</li></ul>',
@@ -80,6 +85,10 @@ class CareerController extends Controller
         $pageTitle = $job['title'] ?? __('Job Details');
         $pageDesc = $heroSummary ?: __('Join our team of experts in the construction and investment industry.');
         $canonicalUrl = $slug === 'gen' ? url('/careers/gen') : route('careers.show', ['slug' => $slug]);
+        $telegramQrUrl = PublicStorage::urlIfExists($job['telegramQr'] ?? null);
+        $postedRelative = Carbon::parse($job['postedAt'] ?? $job['postedDate'] ?? now())
+            ->locale(app()->getLocale())
+            ->diffForHumans(null, null, false, 1, Carbon::JUST_NOW);
 
         $renderRichText = fn (?string $content) => RichContent::renderProject($content);
 
@@ -108,6 +117,8 @@ class CareerController extends Controller
             'canonicalUrl',
             'renderRichText',
             'renderParagraphContent',
+            'telegramQrUrl',
+            'postedRelative',
         ));
     }
 }

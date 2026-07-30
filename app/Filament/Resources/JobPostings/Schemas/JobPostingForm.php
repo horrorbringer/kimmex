@@ -6,6 +6,7 @@ use App\Enums\JobPostingStatus;
 use App\Filament\Support\TranslationHelper;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
@@ -102,6 +103,16 @@ class JobPostingForm
                             ->options(JobPostingStatus::class)
                             ->required()
                             ->default(JobPostingStatus::DRAFT),
+
+                        FileUpload::make('telegramQr')
+                            ->label(__('Telegram QR Image'))
+                            ->helperText(__('Optional. Upload a QR image only when this role uses a specific Telegram channel.'))
+                            ->image()
+                            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                            ->maxSize(2048)
+                            ->disk(config('filesystems.public_uploads_disk'))
+                            ->directory('jobs/telegram-qr')
+                            ->visibility('public'),
                     ]),
 
                 Section::make(__('Job Description'))

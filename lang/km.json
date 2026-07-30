@@ -1095,7 +1095,6 @@
     "No admin account linked": "មិនមានគណនីគ្រប់គ្រងដែលបានភ្ជាប់",
     "Organization Position": "តួនាទីក្នុងអង្គការ",
     "Not assigned yet": "មិនទាន់ចាត់តាំង",
-    "Expertise": "ជំនាញ",
     "Visible": "បង្ហាញ",
     "All employees": "បុគ្គលិកទាំងអស់",
     "Visible on organization chart": "បង្ហាញលើគំនូសតាងអង្គការ",
@@ -1106,5 +1105,17 @@
     "Choose the position type and employee. The employee job title fills automatically.": "ជ្រើសប្រភេទតួនាទី និងបុគ្គលិក។ ចំណងជើងតួនាទីនឹងបំពេញដោយស្វ័យប្រវត្តិពីទិន្នន័យបុគ្គលិក។",
     "Select an employee to fill the position title automatically.": "ជ្រើសបុគ្គលិក ដើម្បីបំពេញចំណងជើងតួនាទីដោយស្វ័យប្រវត្តិ។",
     "Position Title": "ចំណងជើងតួនាទី",
-    "Filled from the employee job title. Change it only when this organization position needs a different name.": "បំពេញពីតួនាទីការងាររបស់បុគ្គលិក។ កែប្រែតែនៅពេលតួនាទីក្នុងអង្គការនេះត្រូវការឈ្មោះផ្សេង។"
+    "Filled from the employee job title. Change it only when this organization position needs a different name.": "បំពេញពីតួនាទីការងាររបស់បុគ្គលិក។ កែប្រែតែនៅពេលតួនាទីក្នុងអង្គការនេះត្រូវការឈ្មោះផ្សេង។",
+    "Telegram QR Code": "កូដ QR Telegram",
+    "Telegram QR Image": "រូបភាពកូដ QR Telegram",
+    "Optional. Upload a QR image only when this role uses a specific Telegram channel.": "ជាជម្រើស។ បញ្ចូលរូបភាពកូដ QR តែនៅពេលតួនាទីនេះប្រើឆានែល Telegram ជាក់លាក់។",
+    "Apply on Telegram": "ដាក់ពាក្យតាម Telegram",
+    "Scan to message our recruitment team.": "ស្កេន ដើម្បីផ្ញើសារទៅក្រុមជ្រើសរើសបុគ្គលិករបស់យើង។",
+    "Careers on Telegram": "ឱកាសការងារ Kimmex នៅលើ Telegram",
+    "Please Join Us on Telegram": "សូមចូលរួមជាមួយយើងនៅលើ Telegram",
+    "Open Telegram": "បើក Telegram",
+    "Career Opportunity": "ឱកាសការងារ",
+    "Apply for this role": "ដាក់ពាក្យសម្រាប់តួនាទីនេះ",
+    "Send your CV in a few simple steps.": "ផ្ញើប្រវត្តិរូបរបស់អ្នកតាមជំហានងាយៗមួយចំនួន។",
+    "This role is currently open.": "តួនាទីនេះកំពុងបើកទទួលពាក្យ។"
 }

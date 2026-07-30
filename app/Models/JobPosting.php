@@ -24,6 +24,7 @@ class JobPosting extends Model
         'summary',
         'requirements',
         'benefits',
+        'telegramQr',
         'closingDate',
         'experience',
         'salary',
