@@ -309,7 +309,6 @@
                                                 <h4 class="text-sm font-bold text-gray-900 {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}">{{ __('Careers on Telegram') }}</h4>
                                             @endif
                                         </div>
-                                        <p class="text-xs text-gray-500 leading-relaxed">{{ __('Please Join Us on Telegram') }}</p>
                                     </div>
                                 </div>
                             </div>

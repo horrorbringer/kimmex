@@ -4,6 +4,7 @@
         return \App\Models\Milestone::query()
             ->where('isActive', true)
             ->orderBy('sortOrder')
+            ->select(['year', 'title', 'description', 'detailed_description', 'image'])
             ->get()
             ->map(function (\App\Models\Milestone $milestone, int $index) use ($locale): array {
                 $fallbackImage = '/images/webp/projects/Thumbnail-'.(($index % 6) + 1).'.webp';
@@ -31,11 +32,17 @@
         ['text' => 'text-[#F16F24]', 'hex' => '#F16F24', 'border' => 'border-[#F16F24]/20'],
         ['text' => 'text-[#D51B59]', 'hex' => '#D51B59', 'border' => 'border-[#D51B59]/20'],
     ];
-    $roadHeight = max(1512, (count($milestones) * 168) + 144);
+    $roadLanes = [
+        ['start' => 10, 'end' => 74, 'y' => 8],
+        ['start' => 76, 'end' => 24, 'y' => 50],
+        ['start' => 24, 'end' => 87, 'y' => 92],
+    ];
+    $yearsPerRoad = 4;
+    $roadHeight = max(540, (int) ceil(count($milestones) / $yearsPerRoad) * 180);
 @endphp
 
 @if (! empty($milestones))
-    <section class="overflow-hidden border-y border-titan-navy/10 bg-white py-16 md:py-24">
+    <section class="overflow-visible border-y border-titan-navy/10 bg-white py-16 md:py-24">
         <div class="mx-auto max-w-[1400px] px-6">
             <div class="mx-auto mb-12 max-w-2xl text-center lg:mb-16">
                 <div class="mb-4 flex items-center justify-center gap-3">
@@ -49,22 +56,26 @@
 
             <div x-data="{
                     active: false,
+                    observer: null,
                     init() {
-                        const observer = new IntersectionObserver(([entry]) => {
+                        this.observer = new IntersectionObserver(([entry]) => {
                             if (entry.isIntersecting) {
                                 this.active = true;
-                                observer.disconnect();
+                                this.observer?.disconnect();
                             }
                         }, { threshold: 0.18 });
-                        observer.observe(this.$el);
+                        this.observer.observe(this.$el);
+                    },
+                    destroy() {
+                        this.observer?.disconnect();
                     }
                 }"
                 x-init="init()"
                 :class="active ? 'home-milestone-route-active' : ''"
-                class="home-milestone-route relative mx-auto max-w-[1140px] pb-32 lg:pb-40">
-                <svg class="pointer-events-none absolute left-1/2 top-0 hidden w-[620px] -translate-x-1/2 lg:block" style="height: {{ $roadHeight }}px" viewBox="0 0 620 1512" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                class="home-milestone-route relative mx-auto w-full pb-20 lg:pb-24">
+                <svg class="pointer-events-none absolute inset-x-0 top-0 hidden w-full lg:block" style="height: {{ $roadHeight }}px" viewBox="0 0 1140 1000" preserveAspectRatio="none" fill="none" aria-hidden="true">
                     <defs>
-                        <linearGradient id="milestone-road-gradient" x1="0" y1="0" x2="620" y2="1512" gradientUnits="userSpaceOnUse">
+                        <linearGradient id="milestone-road-gradient" x1="0" y1="0" x2="1140" y2="1000" gradientUnits="userSpaceOnUse">
                             <stop stop-color="#8A35B5" />
                             <stop offset="0.3" stop-color="#2E34BC" />
                             <stop offset="0.52" stop-color="#1686D9" />
@@ -73,16 +84,24 @@
                             <stop offset="1" stop-color="#D51B59" />
                         </linearGradient>
                     </defs>
-                    <path d="M80 84C215 35 410 50 470 160C535 278 410 340 300 420C200 495 205 610 330 675C455 740 468 842 375 920C290 990 242 1080 340 1170C412 1235 470 1320 520 1428" stroke="#0B2B5C" stroke-opacity="0.13" stroke-width="48" stroke-linecap="round" />
-                    <path class="home-milestone-road-path" d="M80 84C215 35 410 50 470 160C535 278 410 340 300 420C200 495 205 610 330 675C455 740 468 842 375 920C290 990 242 1080 340 1170C412 1235 470 1320 520 1428" stroke="url(#milestone-road-gradient)" stroke-width="32" stroke-linecap="round" />
-                    <path class="home-milestone-road-flow" d="M80 84C215 35 410 50 470 160C535 278 410 340 300 420C200 495 205 610 330 675C455 740 468 842 375 920C290 990 242 1080 340 1170C412 1235 470 1320 520 1428" stroke="white" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round" />
+                    <path d="M108 80H850C1045 80 1045 500 850 500H274C95 500 95 920 274 920H900C1050 920 1050 980 1090 980" stroke="#0B2B5C" stroke-opacity="0.13" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" />
+                    <path class="home-milestone-road-path" pathLength="1" d="M108 80H850C1045 80 1045 500 850 500H274C95 500 95 920 274 920H900C1050 920 1050 980 1090 980" stroke="url(#milestone-road-gradient)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+                    <path class="home-milestone-road-flow" d="M108 80H850C1045 80 1045 500 850 500H274C95 500 95 920 274 920H900C1050 920 1050 980 1090 980" stroke="white" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-
-                <div class="relative space-y-7 border-l border-titan-navy/10 pl-6 lg:space-y-0 lg:border-l-0 lg:pl-0">
+                <div class="home-milestone-mobile-track relative space-y-5 pl-6 lg:block lg:h-[var(--road-height)] lg:space-y-0 lg:pl-0" style="--road-height: {{ $roadHeight }}px">
                     @foreach ($milestones as $index => $milestone)
                         @php
                             $color = $roadColors[$index % count($roadColors)];
-                            $side = $index % 2 === 0 ? 'lg:col-start-1 lg:mr-10' : 'lg:col-start-3 lg:ml-10';
+                            $roadLaneIndex = min(intdiv($index, $yearsPerRoad), count($roadLanes) - 1);
+                            $roadLane = $roadLanes[$roadLaneIndex];
+                            $itemsInRoad = min($yearsPerRoad, count($milestones) - ($roadLaneIndex * $yearsPerRoad));
+                            $positionInRoad = $index % $yearsPerRoad;
+                            $roadStop = [
+                                'x' => $itemsInRoad === 1
+                                    ? ($roadLane['start'] + $roadLane['end']) / 2
+                                    : $roadLane['start'] + (($roadLane['end'] - $roadLane['start']) * ($positionInRoad / ($itemsInRoad - 1))),
+                                'y' => $roadLane['y'],
+                            ];
                             $detail = $milestone['detail'] ?? '';
                             $hasDetail = filled(trim(strip_tags((string) $detail)));
                         @endphp
@@ -91,33 +110,24 @@
                                 cardShown: false,
                                 detailOpen: false,
                                 detailTrigger: null,
+                                previewOpen: false,
                                 hydrated: false,
                                 reducedMotion: false,
-                                canTilt: false,
+                                observer: null,
                                 init() {
                                     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                                    this.canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
                                     this.hydrated = true;
-                                    const observer = new IntersectionObserver(([entry]) => {
+                                    this.observer = new IntersectionObserver(([entry]) => {
                                         if (entry.isIntersecting) {
                                             this.pinShown = true;
                                             window.setTimeout(() => this.cardShown = true, this.reducedMotion ? 0 : 180);
-                                            observer.disconnect();
+                                            this.observer?.disconnect();
                                         }
                                     }, { threshold: 0.3, rootMargin: '0px 0px -10% 0px' });
-                                    observer.observe(this.$el);
+                                    this.observer.observe(this.$el);
                                 },
-                                tilt(event) {
-                                    if (this.reducedMotion || !this.canTilt) return;
-                                    const bounds = event.currentTarget.getBoundingClientRect();
-                                    const rotateY = ((event.clientX - bounds.left) / bounds.width - 0.5) * 8;
-                                    const rotateX = ((event.clientY - bounds.top) / bounds.height - 0.5) * -8;
-                                    event.currentTarget.style.setProperty('--milestone-rotate-x', `${rotateX}deg`);
-                                    event.currentTarget.style.setProperty('--milestone-rotate-y', `${rotateY}deg`);
-                                },
-                                resetTilt(event) {
-                                    event.currentTarget.style.setProperty('--milestone-rotate-x', '0deg');
-                                    event.currentTarget.style.setProperty('--milestone-rotate-y', '0deg');
+                                destroy() {
+                                    this.observer?.disconnect();
                                 },
                                 openDetail(event) {
                                     this.detailTrigger = event.currentTarget;
@@ -130,55 +140,48 @@
                                 }
                             }"
                             x-init="init()"
-                            @mousemove="tilt($event)"
-                            @mouseleave="resetTilt($event)"
                             :class="[
                                 hydrated && !pinShown ? 'milestone-pin-waiting' : pinShown ? 'milestone-pin-visible' : '',
                                 hydrated && !cardShown ? 'milestone-card-waiting' : cardShown ? 'milestone-card-visible' : ''
                             ]"
-                            class="home-milestone-stop relative lg:grid lg:min-h-[168px] lg:grid-cols-[1fr_180px_1fr] lg:items-center">
-                            <span class="home-milestone-mobile-pin absolute -left-[2.05rem] top-5 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white lg:hidden" style="background-color: {{ $color['hex'] }}">
-                                <span class="home-milestone-mobile-pin-ring absolute inset-0 rounded-full border-2" style="border-color: {{ $color['hex'] }}"></span>
-                            </span>
-                            <div class="home-milestone-card-wrap relative z-1 {{ $side }}">
-                                <span class="home-milestone-card-pin absolute -top-8 right-5 z-10 hidden h-14 w-12 lg:block">
-                                    <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
-                                    <svg viewBox="0 0 48 60" class="home-milestone-pin h-full w-full drop-shadow-[0_8px_8px_rgba(11,43,92,0.25)]" aria-hidden="true">
-                                        <path d="M24 2C11.85 2 2 11.85 2 24c0 16.5 18.02 31.96 21.1 34.44a1.45 1.45 0 0 0 1.8 0C27.98 55.96 46 40.5 46 24 46 11.85 36.15 2 24 2Z" fill="{{ $color['hex'] }}" />
-                                        <circle cx="24" cy="24" r="8" fill="white" />
-                                    </svg>
-                                </span>
-                                <div class="home-milestone-card relative overflow-hidden rounded-2xl border bg-white p-4 pl-5 shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $color['border'] }} lg:min-h-[112px] lg:flex lg:items-center lg:gap-4 lg:bg-white/95 {{ $hasDetail ? 'home-milestone-card-interactive cursor-pointer focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/30' : '' }}"
+                            class="home-milestone-stop relative min-h-14 lg:pointer-events-none lg:absolute lg:inset-0 lg:min-h-0">
+                            <div class="home-milestone-station-wrap relative z-10 -ml-14 w-fit lg:pointer-events-auto lg:absolute lg:ml-0 lg:left-[var(--road-stop-x)] lg:top-[var(--road-stop-y)] lg:-translate-x-1/2 lg:-translate-y-1/2"
+                                style="--road-stop-x: {{ $roadStop['x'] }}%; --road-stop-y: {{ $roadStop['y'] }}%"
+                                @mouseenter="previewOpen = true"
+                                @mouseleave="previewOpen = false"
+                                @focusin="previewOpen = true"
+                                @focusout="previewOpen = false">
+                                <button type="button"
+                                    class="home-milestone-station home-milestone-card-pin home-milestone-pin inline-flex h-10 min-w-16 items-center justify-center rounded-full border-2 border-white px-2 text-center shadow-[0_8px_14px_-7px_rgba(11,43,92,0.55)] transition-transform duration-200 hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/30"
+                                    style="background-color: {{ $color['hex'] }}"
+                                    aria-label="{{ __('Read story') }}: {{ $milestone['year'] }} — {{ $milestone['title'] }}"
                                     @if ($hasDetail)
-                                        role="button"
-                                        tabindex="0"
                                         aria-haspopup="dialog"
                                         @click="openDetail($event)"
-                                        @keydown.enter.prevent="openDetail($event)"
-                                        @keydown.space.prevent="openDetail($event)"
                                     @endif>
-                                    <span class="absolute inset-y-0 left-0 w-1" style="background-color: {{ $color['hex'] }}"></span>
-                                    @if ($milestone['image'])
-                                        <div class="mb-4 aspect-[16/7] overflow-hidden rounded-xl bg-titan-navy/5 lg:mb-0 lg:h-20 lg:w-28 lg:shrink-0 lg:aspect-auto">
-                                            <img src="{{ $milestone['image'] }}" alt="" class="h-full w-full object-cover" loading="lazy" decoding="async" />
-                                        </div>
-                                    @endif
-                                    <div>
-                                        <p class="font-heading text-xl font-black tracking-tight {{ $color['text'] }}">{{ $milestone['year'] }}</p>
-                                        <h3 class="mt-1 font-heading text-lg font-black tracking-tight text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-xl' : '' }}">{{ $milestone['title'] }}</h3>
-                                        <p class="mt-2 line-clamp-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
-                                        @if ($hasDetail)
-                                            <span class="mt-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] {{ $color['text'] }}">
-                                                {{ __('Read story') }}
-                                                <x-lucide-arrow-up-right class="h-3.5 w-3.5" />
-                                            </span>
+                                    <span class="home-milestone-pin-ring absolute inset-0 rounded-full border-2 border-white/80"></span>
+                                    <span class="relative font-heading text-xs font-black tracking-tight text-white">{{ $milestone['year'] }}</span>
+                                </button>
+
+                                <div x-cloak x-show="previewOpen" x-transition:enter="ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-2 scale-95" class="pointer-events-none absolute bottom-[calc(100%+0.8rem)] left-1/2 z-30 hidden w-72 -translate-x-1/2 overflow-hidden rounded-2xl border border-titan-navy/10 bg-white p-4 shadow-[0_22px_50px_-24px_rgba(11,43,92,0.5)] lg:block">
+                                    <div class="flex items-start gap-3">
+                                        @if ($milestone['image'])
+                                            <img src="{{ $milestone['image'] }}" alt="" class="h-14 w-16 shrink-0 rounded-lg object-cover" loading="lazy" decoding="async" />
                                         @endif
+                                        <div class="min-w-0">
+                                            <p class="font-heading text-sm font-black {{ $color['text'] }}">{{ $milestone['year'] }}</p>
+                                            <h3 class="mt-0.5 line-clamp-2 font-heading text-base font-black leading-tight text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-lg' : '' }}">{{ $milestone['title'] }}</h3>
+                                        </div>
                                     </div>
+                                    <p class="mt-3 line-clamp-2 text-xs leading-relaxed text-titan-navy/60">{{ $milestone['description'] }}</p>
+                                    @if ($hasDetail)
+                                        <span class="mt-3 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.14em] {{ $color['text'] }}">{{ __('Read story') }} <x-lucide-arrow-up-right class="h-3.5 w-3.5" /></span>
+                                    @endif
                                 </div>
                             </div>
 
                             @if ($hasDetail)
-                                <div x-cloak x-show="detailOpen" @keydown.escape.window="closeDetail()" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="milestone-detail-{{ $index }}">
+                                <div x-cloak x-show="detailOpen" @keydown.escape.window="closeDetail()" class="pointer-events-auto fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="milestone-detail-{{ $index }}">
                                     <div x-show="detailOpen" x-transition.opacity @click="closeDetail()" class="absolute inset-0 bg-titan-navy/80 backdrop-blur-sm"></div>
                                     <div x-show="detailOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-5 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 scale-100" x-transition:leave-end="opacity-0 translate-y-5 scale-95" @click.stop class="relative z-10 max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl sm:p-8">
                                         <button x-ref="detailClose" type="button" @click="closeDetail()" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-titan-navy/5 text-titan-navy transition-colors hover:bg-titan-red hover:text-white focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/30" aria-label="{{ __('Close') }}">
