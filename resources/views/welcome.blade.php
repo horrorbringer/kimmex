@@ -39,7 +39,7 @@
     <x-home.trust-strip />
     <x-home.about />
     <x-home.milestones />
-    <x-home.services />
+    <!-- <x-home.services /> -->
     <x-home.process />
     <x-home.projects />
     <x-home.testimonials />
