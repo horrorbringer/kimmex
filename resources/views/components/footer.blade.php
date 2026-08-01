@@ -25,7 +25,7 @@
     $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=');
     $googleMapsLink = (!empty($googleMapsUrl) && !$isEmbed) ? $googleMapsUrl : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
 
-    $logo = $profile['logo'] ?? null;
+    $logo = (! empty($profile['logo_footer'])) ? $profile['logo_footer'] : ($profile['logo'] ?? null);
     $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.png');
 
     $footerServices = \Illuminate\Support\Facades\Cache::remember('nav_services_'.$lang, now()->addHours(12), function() use ($lang) {

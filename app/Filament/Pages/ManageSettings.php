@@ -91,6 +91,8 @@ class ManageSettings extends Page implements HasForms
             'address' => $org['en']['address'] ?? '',
             'google_maps_url' => $org['google_maps_url'] ?? '',
             'logo' => $org['logo'] ?? '',
+            'logo_header' => $org['logo_header'] ?? '',
+            'logo_footer' => $org['logo_footer'] ?? '',
             'favicon' => $org['favicon'] ?? '',
             'website_title' => $org['en']['website_title'] ?? '',
 
@@ -187,12 +189,16 @@ class ManageSettings extends Page implements HasForms
                                         ->columnSpan(1)
                                         ->schema([
                                             Grid::make(2)->schema([
-                                                $this->makeImageUpload('logo', __('Logo'), 'organization')
-                                                    ->helperText(__('PNG, JPG, WebP, or SVG. Maximum size: 5 MB.')),
+                                                $this->makeImageUpload('logo', __('Default Logo'), 'organization')
+                                                    ->helperText(__('Main logo. Used if header/footer logo is not set.')),
                                                 $this->makeImageUpload('favicon', __('Favicon'), 'organization')
                                                     ->helperText(__('PNG, ICO, JPG, WebP, or SVG. Maximum size: 2 MB.'))
                                                     ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/svg+xml'])
                                                     ->maxSize(2048),
+                                                $this->makeImageUpload('logo_header', __('Header Logo'), 'organization')
+                                                    ->helperText(__('Optional. Navbar header logo. Falls back to Default Logo.')),
+                                                $this->makeImageUpload('logo_footer', __('Footer Logo'), 'organization')
+                                                    ->helperText(__('Optional. Site footer logo. Falls back to Default Logo.')),
                                             ]),
                                             TextInput::make('company_name')->label(__('Company Name'))->required(),
                                             TextInput::make('website_title')
@@ -742,6 +748,8 @@ class ManageSettings extends Page implements HasForms
             'email' => $state['email'],
             'google_maps_url' => $state['google_maps_url'],
             'logo' => $state['logo'],
+            'logo_header' => $state['logo_header'] ?? '',
+            'logo_footer' => $state['logo_footer'] ?? '',
             'favicon' => $state['favicon'] ?? '',
             'facebook' => $state['facebook'],
             'linkedin' => $state['linkedin'],
