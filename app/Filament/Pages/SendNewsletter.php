@@ -15,6 +15,9 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
@@ -78,62 +81,53 @@ class SendNewsletter extends Page implements HasForms
     {
         return $form
             ->schema([
-                Select::make('articleId')
-                    ->label(__('Select Article'))
-                    ->options(
-                        NewsArticle::query()
-                            ->whereNotNull('publishedAt')
-                            ->orderByDesc('publishedAt')
-                            ->limit(20)
-                            ->get()
-                            ->mapWithKeys(fn ($a) => [$a->id => $a->getTranslation('title', 'en').' ('.($a->publishedAt?->format('M d') ?? '').')'])
-                    )
-                    ->searchable()
-                    ->required()
-                    ->live()
-                    ->afterStateUpdated(fn () => $this->loadPreview())
-                    ->helperText(__('Choose which article to send to all active subscribers.')),
-
-                TextInput::make('customIntro')
-                    ->label(__('Custom Intro (optional)'))
-                    ->placeholder(__('e.g. Check out our latest project update!'))
-                    ->helperText(__('This appears above the article in the email. Leave blank for default.')),
-
-                CheckboxList::make('segments')
-                    ->label(__('Target Segments (optional)'))
-                    ->options(Subscriber::AVAILABLE_TAGS)
-                    ->helperText(__('Leave empty to send to all subscribers.')),
-
-                Toggle::make('enableAbTest')
-                    ->label(__('Enable A/B Test'))
-                    ->helperText(__('Split a portion of subscribers to test two subject lines before sending to the rest.'))
-                    ->live()
-                    ->default(false),
-
-                TextInput::make('subjectA')
-                    ->label(__('Subject A'))
-                    ->placeholder(__('First subject line variant'))
-                    ->required()
-                    ->visible(fn ($get) => $get('enableAbTest'))
-                    ->maxLength(255),
-
-                TextInput::make('subjectB')
-                    ->label(__('Subject B'))
-                    ->placeholder(__('Second subject line variant'))
-                    ->required()
-                    ->visible(fn ($get) => $get('enableAbTest'))
-                    ->maxLength(255),
-
-                TextInput::make('abTestPercentage')
-                    ->label(__('Test Percentage'))
-                    ->helperText(__('Percentage of subscribers to use for testing (split between A and B). The rest will receive the winning subject.'))
-                    ->numeric()
-                    ->minValue(5)
-                    ->maxValue(50)
-                    ->default(20)
-                    ->suffix('%')
-                    ->visible(fn ($get) => $get('enableAbTest')),
-            ]);
+                Section::make(__('Newsletter'))
+                    ->description(__('Choose which article to send to all active subscribers.'))
+                    ->schema([
+                        Select::make('articleId')
+                            ->label(__('Select Article'))
+                            ->options(
+                                NewsArticle::query()
+                                    ->whereNotNull('publishedAt')
+                                    ->orderByDesc('publishedAt')
+                                    ->limit(20)
+                                    ->get()
+                                    ->mapWithKeys(fn ($a) => [$a->id => $a->getTranslation('title', 'en').' ('.($a->publishedAt?->format('M d') ?? '').')'])
+                            )
+                            ->searchable()
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(fn () => $this->loadPreview()),
+                        TextInput::make('customIntro')
+                            ->label(__('Custom Intro (optional)'))
+                            ->placeholder(__('e.g. Check out our latest project update!'))
+                            ->helperText(__('This appears above the article in the email. Leave blank for default.')),
+                    ]),
+                Section::make(__('Subscribers'))
+                    ->description(__('Leave empty to send to all subscribers.'))
+                    ->schema([
+                        CheckboxList::make('segments')
+                            ->label(__('Target Segments (optional)'))
+                            ->options(Subscriber::AVAILABLE_TAGS)
+                            ->columns(2),
+                    ]),
+                Section::make(__('A/B Test'))
+                    ->description(__('Split a portion of subscribers to test two subject lines before sending to the rest.'))
+                    ->schema([
+                        Toggle::make('enableAbTest')
+                            ->label(__('Enable A/B Test'))
+                            ->live()
+                            ->default(false),
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('subjectA')->label(__('Subject A'))->placeholder(__('First subject line variant'))->required()->maxLength(255),
+                                TextInput::make('subjectB')->label(__('Subject B'))->placeholder(__('Second subject line variant'))->required()->maxLength(255),
+                                TextInput::make('abTestPercentage')->label(__('Test Percentage'))->numeric()->minValue(5)->maxValue(50)->default(20)->suffix('%')->columnSpanFull(),
+                            ])
+                            ->visible(fn (Get $get): bool => $get('enableAbTest')),
+                    ]),
+            ])
+            ->columns(1);
     }
 
     public function loadPreview(): void
