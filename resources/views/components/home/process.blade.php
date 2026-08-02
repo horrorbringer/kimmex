@@ -47,7 +47,7 @@
 
                     <div class="mb-8 flex items-center justify-between">
                         <span class="font-heading text-5xl font-black leading-none text-titan-navy/10">{{ $s['step'] }}</span>
-                        <div class="flex h-11 w-11 items-center justify-center rounded-full border border-titan-navy/10 text-titan-red transition-[background-color,color,border-color] duration-300 ease-out group-hover:border-titan-red group-hover:bg-titan-red group-hover:text-white">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-full border border-titan-navy/10 text-titan-red transition-[background-color,color,border-color] duration-300 ease-out group-hover:border-titan-red group-hover:bg-titan-red group-hover:!text-white">
                             <x-dynamic-component :component="$s['icon']" class="h-5 w-5" stroke-width="1.8" />
                         </div>
                     </div>

@@ -24,18 +24,6 @@
                 </button>
             </div>
 
-            {{-- Interest checkboxes --}}
-            <div class="flex flex-wrap gap-x-4 gap-y-2">
-                <span class="text-[11px] text-white/50 uppercase tracking-wider w-full">{{ __('Interests (optional)') }}</span>
-                @foreach($this->getAvailableInterests() as $value => $label)
-                    <label class="inline-flex items-center gap-1.5 cursor-pointer group">
-                        <input type="checkbox" wire:model="interests" value="{{ $value }}"
-                            class="w-3.5 h-3.5 rounded border-white/30 bg-white/10 text-titan-red focus:ring-titan-red/30 focus:ring-offset-0" />
-                        <span class="text-xs text-white/70 group-hover:text-white transition-colors">{{ __($label) }}</span>
-                    </label>
-                @endforeach
-            </div>
-
             @if($error)
                 <p class="text-[11px] text-red-400 mt-1.5">{{ $error }}</p>
             @endif
