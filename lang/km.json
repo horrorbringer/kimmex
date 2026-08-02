@@ -1131,5 +1131,16 @@
     "Select a channel managed in System Settings. Clear this field to use a manual channel.": "ជ្រើសឆានែលដែលបានគ្រប់គ្រងនៅក្នុងការកំណត់ប្រព័ន្ធ។ លុបការជ្រើសរើសនេះ ដើម្បីប្រើឆានែលដោយដៃ។",
     "Manual Telegram QR Image": "រូបភាពកូដ QR Telegram ដោយដៃ",
     "Manual Telegram Careers Link": "តំណ Telegram ការងារដោយដៃ",
-    "Optional override for a different channel on this job.": "ជាជម្រើសសម្រាប់ប្ដូរទៅឆានែលផ្សេងសម្រាប់ការងារនេះ។"
+    "Optional override for a different channel on this job.": "ជាជម្រើសសម្រាប់ប្ដូរទៅឆានែលផ្សេងសម្រាប់ការងារនេះ។",
+    "Quick Actions": "សកម្មភាពរហ័ស",
+    "Start the tasks you use most often.": "ចាប់ផ្តើមកិច្ចការដែលអ្នកប្រើញឹកញាប់។",
+    "New Article": "អត្ថបទថ្មី",
+    "Publish a news update": "ផ្សព្វផ្សាយព័ត៌មានថ្មី",
+    "New Project": "គម្រោងថ្មី",
+    "Add a portfolio project": "បន្ថែមគម្រោងទៅស្នាដៃ",
+    "Post Job": "ប្រកាសការងារ",
+    "Create a new vacancy": "បង្កើតតំណែងទំនេរថ្មី",
+    "Prepare an email campaign": "រៀបចំយុទ្ធនាការអ៊ីមែល",
+    "Review messages from visitors": "ពិនិត្យសារពីអ្នកចូលមើល",
+    "Explore site performance": "មើលការអនុវត្តន៍របស់គេហទំព័រ"
 }

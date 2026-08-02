@@ -121,8 +121,8 @@
                     <img src="{{ $featured['image'] }}" alt="{{ $featured['title'] }}"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.2s]"
                          loading="eager" decoding="async" />
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/65 via-black/30 to-black/5"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"></div>
                 </div>
                 <div class="relative z-10 flex flex-col justify-end h-full p-7 md:p-12" style="min-height: 340px;">
                     <div class="max-w-2xl">
