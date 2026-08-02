@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Prevent iOS Safari from zooming the page when a frontend form control receives focus. */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @theme {
   /* ========================================================================
      KMD DESIGN SYSTEM — Single Source of Truth
