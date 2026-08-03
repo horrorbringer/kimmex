@@ -5,14 +5,17 @@
     $priorityHeroImage = \Illuminate\Support\Facades\Cache::remember('hero_priority_image_'.$heroLocale, now()->addHours(6), function () {
         $image = \App\Models\Project::where('isFeatured', true)
             ->where('isActive', true)
+            ->orderByDesc('created_at')
             ->value('heroImage');
 
         return \App\Support\PublicStorage::urlIfExists($image, '/images/webp/hero/hero-1.webp');
     });
+    $priorityHeroImageSrcset = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($priorityHeroImage);
 @endphp
 
 <x-layouts.app title="Home"
     :priority-image="$priorityHeroImage"
+    :priority-image-srcset="$priorityHeroImageSrcset"
     description="Kimmex is a leading construction and engineering company in Cambodia delivering high-quality building and management solutions.">
 
     @push('head')

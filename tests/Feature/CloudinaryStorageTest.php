@@ -48,6 +48,17 @@ class CloudinaryStorageTest extends TestCase
         }
     }
 
+    public function test_cloudinary_image_urls_generate_responsive_sources(): void
+    {
+        $url = 'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/projects/hero.webp';
+
+        $this->assertSame(
+            'https://res.cloudinary.com/demo-cloud/image/upload/f_auto,q_auto,w_640/kimmex/projects/hero.webp 640w, https://res.cloudinary.com/demo-cloud/image/upload/f_auto,q_auto,w_1280/kimmex/projects/hero.webp 1280w',
+            PublicStorage::cloudinaryResponsiveSrcset($url, [640, 1280]),
+        );
+        $this->assertNull(PublicStorage::cloudinaryResponsiveSrcset('/images/webp/hero/hero-1.webp'));
+    }
+
     public function test_cloudinary_uses_existing_public_assets_for_legacy_image_paths(): void
     {
         $this->assertSame(

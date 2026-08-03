@@ -62,6 +62,7 @@ class CacheBusterObserver
         $cacheMap = [
             Project::class => [
                 'hero_featured_projects_en', 'hero_featured_projects_km',
+                'hero_priority_image_en', 'hero_priority_image_km',
                 'home_projects_array_en', 'home_projects_array_km',
                 'nav_categories_en', 'nav_categories_km',
                 'nav_categories_v2_en', 'nav_categories_v2_km',

@@ -71,6 +71,26 @@ class PublicStorage
         return self::exists($path) ? self::url($path) : $fallback;
     }
 
+    public static function cloudinaryResponsiveSrcset(?string $url, array $widths = [640, 960, 1440, 1920]): ?string
+    {
+        if (! filled($url) || ! Str::startsWith($url, 'https://res.cloudinary.com/') || ! Str::contains($url, '/image/upload/')) {
+            return null;
+        }
+
+        $sources = collect($widths)
+            ->filter(fn (mixed $width): bool => is_int($width) && $width > 0)
+            ->unique()
+            ->sort()
+            ->map(fn (int $width): string => str_replace(
+                '/image/upload/',
+                "/image/upload/f_auto,q_auto,w_{$width}/",
+                $url,
+            )." {$width}w")
+            ->implode(', ');
+
+        return filled($sources) ? $sources : null;
+    }
+
     public static function delete(string|array|null $paths): void
     {
         $paths = collect((array) $paths)

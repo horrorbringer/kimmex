@@ -20,6 +20,8 @@ class HomeHeroServerRenderTest extends TestCase
         $this->assertStringContainsString('@if($index !== 0) style="display: none;" @endif', $template);
         $this->assertStringContainsString('.home-hero-viewport {', $template);
         $this->assertStringContainsString('height: 62svh;', $template);
+        $this->assertStringContainsString("PublicStorage::cloudinaryResponsiveSrcset(\$slide['image'])", $template);
+        $this->assertStringContainsString("srcset=\"{{ \$slide['srcset'] }}\"", $template);
         $this->assertStringContainsString('@media (min-width: 640px)', $template);
         $this->assertStringContainsString('$heroTitleSize = \\Illuminate\\Support\\Str::length($slide[\'title\']) > 48', $template);
         $this->assertStringNotContainsString(':class="{{ \\Illuminate\\Support\\Str::length($slide[\'title\'])', $template);

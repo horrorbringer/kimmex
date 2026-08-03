@@ -1,4 +1,4 @@
-@props(['title' => null, 'description' => null, 'image' => null, 'imageAlt' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null, 'priorityImage' => null])
+@props(['title' => null, 'description' => null, 'image' => null, 'imageAlt' => null, 'canonical' => null, 'ogType' => 'website', 'robots' => null, 'priorityImage' => null, 'priorityImageSrcset' => null])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
@@ -92,7 +92,7 @@
 
     {{-- Let the browser fetch the above-the-fold image before JavaScript starts. --}}
     @if(filled($priorityImage))
-        <link rel="preload" as="image" href="{{ $priorityImage }}" fetchpriority="high">
+        <link rel="preload" as="image" href="{{ $priorityImage }}" @if(filled($priorityImageSrcset)) imagesrcset="{{ $priorityImageSrcset }}" imagesizes="100vw" @endif fetchpriority="high">
         @if(\Illuminate\Support\Str::startsWith($priorityImage, ['http://', 'https://']))
             <link rel="preconnect" href="{{ parse_url($priorityImage, PHP_URL_SCHEME) . '://' . parse_url($priorityImage, PHP_URL_HOST) }}" crossorigin>
         @endif

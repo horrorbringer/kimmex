@@ -84,6 +84,8 @@ class Project extends Model
                 Cache::forget("projects_index_data_{$locale}");
                 Cache::forget("home_projects_array_{$locale}");
                 Cache::forget("home_featured_projects_{$locale}");
+                Cache::forget("hero_featured_projects_{$locale}");
+                Cache::forget("hero_priority_image_{$locale}");
                 Cache::forget("service_featured_projects_{$locale}");
                 Cache::forget("nav_project_filters_v1_{$locale}");
                 Cache::forget("project_show_data_{$project->slug}_{$locale}");
@@ -97,6 +99,8 @@ class Project extends Model
                 Cache::forget("projects_index_data_{$locale}");
                 Cache::forget("home_projects_array_{$locale}");
                 Cache::forget("home_featured_projects_{$locale}");
+                Cache::forget("hero_featured_projects_{$locale}");
+                Cache::forget("hero_priority_image_{$locale}");
                 Cache::forget("service_featured_projects_{$locale}");
                 Cache::forget("nav_project_filters_v1_{$locale}");
                 Cache::forget("project_show_data_{$project->slug}_{$locale}");

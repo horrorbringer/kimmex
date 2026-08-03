@@ -5,6 +5,7 @@
         return \App\Models\Project::where('isFeatured', true)
             ->where('isActive', true)
             ->with('projectCategory')
+            ->orderByDesc('created_at')
             ->take(5)
             ->get()
             ->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {
@@ -48,6 +49,12 @@
             ]
         ];
     }
+
+    $slides = array_map(function (array $slide): array {
+        $slide['srcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($slide['image']);
+
+        return $slide;
+    }, $slides);
 @endphp
 
 <style>
@@ -118,12 +125,23 @@
             this.isPaused = false;
             this.startTimer();
         },
-        preloadImage(src) {
+        preloadImage(src, srcset = null) {
             if (!src) return;
-            const img = new Image(); img.decoding = 'async'; img.src = src;
+            const candidates = (srcset || '')
+                .split(',')
+                .map((candidate) => {
+                    const [url, width] = candidate.trim().split(/\s+/);
+                    return { url, width: Number.parseInt(width, 10) || 0 };
+                })
+                .filter((candidate) => candidate.url && candidate.width > 0)
+                .sort((a, b) => a.width - b.width);
+            const targetWidth = window.innerWidth * (window.devicePixelRatio || 1);
+            const responsiveSource = candidates.find((candidate) => candidate.width >= targetWidth) || candidates.at(-1);
+            const img = new Image(); img.decoding = 'async'; img.src = responsiveSource?.url || src;
         },
         preloadNext() {
-            this.preloadImage(this.slides[(this.current + 1) % this.slides.length]?.image);
+            const slide = this.slides[(this.current + 1) % this.slides.length];
+            this.preloadImage(slide?.image, slide?.srcset);
         },
         initCarousel() {
             this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -172,6 +190,7 @@
                 alt="{{ $slide['title'] }}"
                 width="1920"
                 height="1080"
+                @if(filled($slide['srcset'])) srcset="{{ $slide['srcset'] }}" @endif
                 sizes="100vw"
                 :class="{{ $index }} === current && !prefersReducedMotion ? 'animate-hero-kenburns' : ''"
                 class="hero-slide-image object-cover object-[62%_center] sm:object-center w-full h-full"
