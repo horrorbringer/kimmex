@@ -91,7 +91,8 @@
         });
     @endphp
     <!-- TOP BAR -->
-    <div :class="isScrolled ? 'h-0 opacity-0 border-transparent' : 'h-8 opacity-100 border-gray-100 bg-white'"
+    <div :class="isScrolled ? 'opacity-0 border-transparent' : 'opacity-100 border-gray-100 bg-white'"
+        :style="{ height: isScrolled ? '0px' : '2rem' }"
         class="text-titan-navy text-[11px] tracking-wide font-medium transition-all duration-500 overflow-hidden relative border-b">
         <div class="max-w-[1600px] mx-auto px-3 sm:px-6 h-full flex justify-between items-center">
             <div class="flex gap-2 sm:gap-6 items-center">
