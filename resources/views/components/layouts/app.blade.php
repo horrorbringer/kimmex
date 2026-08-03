@@ -182,9 +182,9 @@
     {{-- Critical CSS: prevent FOUC on header/navbar while full CSS downloads --}}
     <style>
         /* Navbar critical styles — renders correctly before app.css arrives */
-        body > header:first-child { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
+        body > header { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
         /* Top bar — initial state only; Alpine/Tailwind takes over on scroll */
-        body > header:first-child > div:first-child {
+        body > header > div:first-child {
             font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.025em;
@@ -193,7 +193,7 @@
             border-bottom: 1px solid #f3f4f6;
             overflow: hidden;
         }
-        body > header:first-child > div:first-child > div {
+        body > header > div:first-child > div {
             max-width: 1600px;
             margin: 0 auto;
             padding: 0 0.75rem;
@@ -203,7 +203,7 @@
             align-items: center;
             height: 100%;
         }
-        body > header:first-child > div:first-child a {
+        body > header > div:first-child a {
             display: inline-flex;
             align-items: center;
             gap: 0.375rem;
@@ -211,20 +211,20 @@
             text-decoration: none;
             white-space: nowrap;
         }
-        body > header:first-child > div:first-child svg {
+        body > header > div:first-child svg {
             width: 12px;
             height: 12px;
             flex-shrink: 0;
         }
         /* Main nav */
-        body > header:first-child nav {
+        body > header nav {
             background: #fff;
             border-bottom: 1px solid #f3f4f6;
             width: 100%;
         }
-        body > header:first-child nav > div { max-width: 1600px; margin: 0 auto; padding: 0 1.5rem; }
-        body > header:first-child nav > div > div { display: flex; justify-content: space-between; align-items: center; height: 5rem; }
-        body > header:first-child nav img { height: 3.5rem; width: auto; }
+        body > header nav > div { max-width: 1600px; margin: 0 auto; padding: 0 1.5rem; }
+        body > header nav > div > div { display: flex; justify-content: space-between; align-items: center; height: 5rem; }
+        body > header nav img { height: 3.5rem; width: auto; }
         /* Utilities */
         .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         .flex-col { display: flex; flex-direction: column; }
