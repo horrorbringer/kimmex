@@ -8,6 +8,12 @@
 
     $story = $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time.");
     $tagline = $org['tagline'] ?? __("Cambodia's Premier Construction Partner");
+    $aboutLargeImage = '/images/webp/projects/Thumbnail-2.webp';
+    $aboutTopImage = '/images/webp/projects/Thumbnail-3.webp';
+    $aboutBottomImage = '/images/webp/projects/Thumbnail-4.webp';
+    $aboutLargeImageSrcset = \App\Support\PublicStorage::localResponsiveSrcset($aboutLargeImage, [320, 640, 960]);
+    $aboutTopImageSrcset = \App\Support\PublicStorage::localResponsiveSrcset($aboutTopImage, [320, 640, 960]);
+    $aboutBottomImageSrcset = \App\Support\PublicStorage::localResponsiveSrcset($aboutBottomImage, [320, 640, 960]);
 @endphp
 
 <section class="py-12 md:py-16 bg-white overflow-hidden">
@@ -23,21 +29,24 @@
                     {{-- Large left image --}}
                     <div class="col-span-7 row-span-2">
                         <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-xl">
-                            <img src="/images/webp/projects/Thumbnail-2.webp" alt="{{ __('Construction project') }}"
+                            <img src="{{ $aboutLargeImage }}" @if (filled($aboutLargeImageSrcset)) srcset="{{ $aboutLargeImageSrcset }}" @endif
+                                sizes="(min-width: 1024px) 26vw, 58vw" width="810" height="1080" alt="{{ __('Construction project') }}"
                                 class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                     </div>
                     {{-- Top right --}}
                     <div class="col-span-5">
                         <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
-                            <img src="/images/webp/projects/Thumbnail-3.webp" alt="{{ __('Construction project') }}"
+                            <img src="{{ $aboutTopImage }}" @if (filled($aboutTopImageSrcset)) srcset="{{ $aboutTopImageSrcset }}" @endif
+                                sizes="(min-width: 1024px) 19vw, 42vw" width="1718" height="1291" alt="{{ __('Construction project') }}"
                                 class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                     </div>
                     {{-- Bottom right --}}
                     <div class="col-span-5">
                         <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg relative">
-                            <img src="/images/webp/projects/Thumbnail-4.webp" alt="{{ __('Construction project') }}"
+                            <img src="{{ $aboutBottomImage }}" @if (filled($aboutBottomImageSrcset)) srcset="{{ $aboutBottomImageSrcset }}" @endif
+                                sizes="(min-width: 1024px) 19vw, 42vw" width="1434" height="1080" alt="{{ __('Construction project') }}"
                                 class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
                     </div>

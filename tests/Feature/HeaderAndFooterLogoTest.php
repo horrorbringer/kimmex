@@ -46,4 +46,13 @@ class HeaderAndFooterLogoTest extends TestCase
         $footerView = view('components.footer')->render();
         $this->assertStringContainsString('organization/main-logo.png', $footerView);
     }
+
+    public function test_header_uses_the_lightweight_webp_logo_when_no_logo_is_configured(): void
+    {
+        SystemSetting::set('organization_profile', []);
+
+        $headerView = view('components.header')->render();
+
+        $this->assertStringContainsString('/logo.webp', $headerView);
+    }
 }

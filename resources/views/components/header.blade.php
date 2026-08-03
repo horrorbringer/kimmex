@@ -54,7 +54,7 @@
         $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
         $tagline = $globalSettings['brand']['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
         $logo = (! empty($profile['logo_header'])) ? $profile['logo_header'] : ($profile['logo'] ?? null);
-        $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.png');
+        $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.webp');
 
         $navProjectFilters = \Illuminate\Support\Facades\Cache::remember('nav_project_filters_v1_' . $lang, now()->addHours(12), function () use ($lang) {
             $categoriesForStatus = function (string $status) use ($lang): array {
