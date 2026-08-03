@@ -24,6 +24,8 @@ class FrontendLifecyclePerformanceTest extends TestCase
         $this->assertStringContainsString('clearTimeout(this.transitionTimer)', $hero);
         $this->assertStringContainsString('preloadImage(src, srcset = null)', $hero);
         $this->assertStringContainsString('this.preloadImage(slide?.image, slide?.srcset)', $hero);
+        $this->assertStringContainsString("'hero-slide-enter-right': isAnimating", $hero);
+        $this->assertStringContainsString("'hero-slide-leave-left': isAnimating", $hero);
     }
 
     public function test_public_pages_avoid_duplicate_prefetching_and_eager_load_hero_categories(): void

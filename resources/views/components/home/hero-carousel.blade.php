@@ -172,10 +172,10 @@
             :class="{
                 'z-10': {{ $index }} === current,
                 'z-[9]': {{ $index }} === prev,
-                'hero-slide-enter-right': {{ $index }} === current && slideDirection === 'next',
-                'hero-slide-enter-left': {{ $index }} === current && slideDirection === 'previous',
-                'hero-slide-leave-left': {{ $index }} === prev && slideDirection === 'next',
-                'hero-slide-leave-right': {{ $index }} === prev && slideDirection === 'previous',
+                'hero-slide-enter-right': isAnimating && {{ $index }} === current && slideDirection === 'next',
+                'hero-slide-enter-left': isAnimating && {{ $index }} === current && slideDirection === 'previous',
+                'hero-slide-leave-left': isAnimating && {{ $index }} === prev && slideDirection === 'next',
+                'hero-slide-leave-right': isAnimating && {{ $index }} === prev && slideDirection === 'previous',
                 'z-0 opacity-0': {{ $index }} !== current && {{ $index }} !== prev
             }">
             <img
