@@ -2,8 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\TrackPageView;
 use App\Models\PageView;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -33,6 +36,28 @@ class TrackPageViewTest extends TestCase
             'path' => '/analytics-performance-test',
             'ip' => '8.8.8.8',
             'country' => 'Unknown',
+        ]);
+    }
+
+    public function test_it_defers_analytics_until_after_the_response_is_ready(): void
+    {
+        $middleware = app(TrackPageView::class);
+        $request = Request::create('/analytics-termination-test', 'GET', server: [
+            'REMOTE_ADDR' => '8.8.8.8',
+            'HTTP_USER_AGENT' => 'Performance test browser',
+        ]);
+        $response = new Response('<title>Performance test</title>');
+
+        $handledResponse = $middleware->handle($request, fn (Request $request): Response => $response);
+
+        $this->assertSame($response, $handledResponse);
+        $this->assertDatabaseCount(PageView::class, 0);
+
+        $middleware->terminate($request, $response);
+
+        $this->assertDatabaseHas(PageView::class, [
+            'path' => '/analytics-termination-test',
+            'ip' => '8.8.8.8',
         ]);
     }
 

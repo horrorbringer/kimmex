@@ -34,11 +34,18 @@ class TrackPageView
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $response = $next($request);
+        return $next($request);
+    }
+
+    /**
+     * Record analytics after Laravel has sent the response to the visitor.
+     */
+    public function terminate(Request $request, Response $response): void
+    {
 
         // Only track GET requests
         if ($request->method() !== 'GET') {
-            return $response;
+            return;
         }
 
         $path = $request->path();
@@ -46,7 +53,7 @@ class TrackPageView
         // Skip excluded paths
         foreach ($this->skipPaths as $skipPath) {
             if (str_starts_with('/'.$path, $skipPath)) {
-                return $response;
+                return;
             }
         }
 
@@ -54,19 +61,19 @@ class TrackPageView
         $lowerPath = strtolower($path);
         foreach ($this->skipExtensions as $ext) {
             if (str_ends_with($lowerPath, $ext)) {
-                return $response;
+                return;
             }
         }
 
         // Skip bots
         $userAgent = $request->userAgent() ?? '';
         if (preg_match('/bot|crawl|spider|slurp|bingpreview|facebookexternalhit/i', $userAgent)) {
-            return $response;
+            return;
         }
 
         // Only track successful HTML responses
         if ($response->getStatusCode() !== 200) {
-            return $response;
+            return;
         }
 
         // Extract page title from response content
@@ -82,7 +89,7 @@ class TrackPageView
             $realIp = $this->getRealIp($request);
 
             if (! Cache::add($this->deduplicationKey($path, $realIp), true, now()->addMinutes(30))) {
-                return $response;
+                return;
             }
 
             $country = $this->resolveCountry($realIp) ?? 'Unknown';
@@ -106,7 +113,6 @@ class TrackPageView
             report($e);
         }
 
-        return $response;
     }
 
     /**
