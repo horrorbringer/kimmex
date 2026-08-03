@@ -176,7 +176,7 @@
         $footerSurface = $isLightFooter ? 'rgba(11, 43, 92, 0.035)' : 'rgba(255, 255, 255, 0.06)';
         
         $fontsToLoad = collect([$fontEn, $fontKm, $fontHeading])->unique()->filter();
-        $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@300;400;500;600;700;800;900")->implode('&') . "&display=swap";
+        $fontUrl = "https://fonts.googleapis.com/css2?" . $fontsToLoad->map(fn($f) => "family=" . str_replace(' ', '+', $f) . ":wght@400;500;600;700;800;900")->implode('&') . "&display=swap";
     @endphp
 
     {{-- Critical CSS: prevent FOUC on header/navbar while full CSS downloads --}}
@@ -427,8 +427,6 @@
             <x-lucide-arrow-up class="w-5 h-5 group-hover:-translate-y-1 transition-transform duration-300" />
         </button>
     </div>
-    {{-- Prefetch pages on hover for instant navigation --}}
-    <script src="//instant.page/5.2.0" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z" data-no-instant></script>
     @livewireScripts
 </body>
 

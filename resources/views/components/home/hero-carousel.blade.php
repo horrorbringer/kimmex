@@ -4,6 +4,7 @@
     $featuredProjects = \Illuminate\Support\Facades\Cache::remember('hero_featured_projects_'.$contentLocale, now()->addHours(6), function() use ($fallbackImage, $contentLocale) {
         return \App\Models\Project::where('isFeatured', true)
             ->where('isActive', true)
+            ->with('projectCategory')
             ->take(5)
             ->get()
             ->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {

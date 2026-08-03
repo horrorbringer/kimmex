@@ -23,4 +23,14 @@ class FrontendLifecyclePerformanceTest extends TestCase
         $this->assertStringContainsString('clearTimeout(this.preloadTimer)', $hero);
         $this->assertStringContainsString('clearTimeout(this.transitionTimer)', $hero);
     }
+
+    public function test_public_pages_avoid_duplicate_prefetching_and_eager_load_hero_categories(): void
+    {
+        $layout = File::get(resource_path('views/components/layouts/app.blade.php'));
+        $hero = File::get(resource_path('views/components/home/hero-carousel.blade.php'));
+
+        $this->assertStringContainsString(':wght@400;500;600;700;800;900', $layout);
+        $this->assertStringNotContainsString('instant.page', $layout);
+        $this->assertStringContainsString("->with('projectCategory')", $hero);
+    }
 }
