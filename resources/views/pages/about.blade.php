@@ -1,4 +1,14 @@
+@php
+    $aboutHeroImageSrcset = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($aboutHeroImageUrl, [640, 960, 1440]);
+    $aboutSectionImageSrcsets = array_map(
+        fn (string $image): ?string => \App\Support\PublicStorage::cloudinaryResponsiveSrcset($image, [320, 640, 960]),
+        $aboutSectionImages,
+    );
+@endphp
+
 <x-layouts.app title="About Us"
+    :priority-image="$aboutHeroImageUrl"
+    :priority-image-srcset="$aboutHeroImageSrcset"
     description="Learn about Kimmex's history, mission, vision, and core values in construction.">
 
     @push('head')
@@ -72,7 +82,8 @@
         <!-- === HERO SECTION === -->
         <section class="relative h-[380px] sm:h-[420px] md:h-[500px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
-                <img src="{{ $aboutHeroImageUrl }}" alt="{{ __('About Kimmex') }}" class="w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" />
+                <img src="{{ $aboutHeroImageUrl }}" @if (filled($aboutHeroImageSrcset)) srcset="{{ $aboutHeroImageSrcset }}" @endif
+                    sizes="100vw" alt="{{ __('About Kimmex') }}" class="w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" />
                 <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-titan-navy/20"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-transparent to-transparent"></div>
             </div>
@@ -149,18 +160,22 @@
                         class="grid grid-cols-2 gap-3 md:gap-4 transition-all duration-1000 max-w-[520px] mx-auto lg:mx-0">
                         <div class="space-y-3 md:space-y-4">
                             <div class="aspect-[4/5] rounded-xl overflow-hidden shadow-lg">
-                                <img src="{{ $aboutSectionImages[0] }}" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                <img src="{{ $aboutSectionImages[0] }}" @if (filled($aboutSectionImageSrcsets[0])) srcset="{{ $aboutSectionImageSrcsets[0] }}" @endif
+                                    sizes="(min-width: 1024px) 22vw, 50vw" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                             <div class="aspect-square rounded-xl overflow-hidden shadow-lg">
-                                <img src="{{ $aboutSectionImages[1] }}" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                <img src="{{ $aboutSectionImages[1] }}" @if (filled($aboutSectionImageSrcsets[1])) srcset="{{ $aboutSectionImageSrcsets[1] }}" @endif
+                                    sizes="(min-width: 1024px) 22vw, 50vw" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                         </div>
                         <div class="space-y-3 md:space-y-4 pt-8 md:pt-12">
                             <div class="aspect-square rounded-xl overflow-hidden shadow-lg">
-                                <img src="{{ $aboutSectionImages[2] }}" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                <img src="{{ $aboutSectionImages[2] }}" @if (filled($aboutSectionImageSrcsets[2])) srcset="{{ $aboutSectionImageSrcsets[2] }}" @endif
+                                    sizes="(min-width: 1024px) 22vw, 50vw" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                             </div>
                             <div class="aspect-[4/5] rounded-xl overflow-hidden shadow-lg relative">
-                                <img src="{{ $aboutSectionImages[3] }}" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
+                                <img src="{{ $aboutSectionImages[3] }}" @if (filled($aboutSectionImageSrcsets[3])) srcset="{{ $aboutSectionImageSrcsets[3] }}" @endif
+                                    sizes="(min-width: 1024px) 22vw, 50vw" alt="" class="object-cover w-full h-full hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                                 <!-- Experience Badge -->
                                 <div class="absolute bottom-4 right-4 bg-titan-red text-white p-4 md:p-5 rounded-xl shadow-[0_10px_30px_rgba(227,30,36,0.35)] flex flex-col items-center justify-center">
                                     <span class="text-2xl md:text-3xl font-black leading-none">25+</span>
