@@ -22,7 +22,8 @@
 
     $milestones = array_map(function (array $milestone): array {
         $milestone['image'] = \App\Support\PublicStorage::optimizedLocalImageUrl($milestone['image']);
-        $milestone['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($milestone['image'], [160, 320]);
+        $milestone['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($milestone['image'], [160, 320])
+            ?? \App\Support\PublicStorage::localResponsiveSrcset($milestone['image'], [160, 320]);
 
         return $milestone;
     }, $milestones);

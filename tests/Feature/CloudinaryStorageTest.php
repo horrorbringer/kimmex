@@ -71,6 +71,15 @@ class CloudinaryStorageTest extends TestCase
         );
     }
 
+    public function test_public_storage_generates_srcsets_for_local_project_thumbnails(): void
+    {
+        $this->assertSame(
+            '/images/webp/projects/responsive/Thumbnail-5-160.webp 160w, /images/webp/projects/responsive/Thumbnail-5-320.webp 320w',
+            PublicStorage::localResponsiveSrcset('/images/webp/projects/Thumbnail-5.webp', [160, 320]),
+        );
+        $this->assertNull(PublicStorage::localResponsiveSrcset('/images/projects/Thumbnail-5.jpg', [160, 320]));
+    }
+
     public function test_cloudinary_uses_existing_public_assets_for_legacy_image_paths(): void
     {
         $this->assertSame(

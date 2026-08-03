@@ -31,7 +31,8 @@
 
     $projects = array_map(function (array $project): array {
         $project['image'] = \App\Support\PublicStorage::optimizedLocalImageUrl($project['image']);
-        $project['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($project['image'], [640, 960, 1440]);
+        $project['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($project['image'], [640, 960, 1440])
+            ?? \App\Support\PublicStorage::localResponsiveSrcset($project['image'], [320, 640]);
 
         return $project;
     }, $projects);

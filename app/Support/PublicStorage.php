@@ -102,6 +102,28 @@ class PublicStorage
         return file_exists(public_path(ltrim($optimizedUrl, '/'))) ? $optimizedUrl : $url;
     }
 
+    public static function localResponsiveSrcset(?string $url, array $widths): ?string
+    {
+        if (! filled($url) || ! Str::startsWith($url, '/images/webp/projects/') || ! Str::endsWith($url, '.webp')) {
+            return null;
+        }
+
+        $filename = pathinfo($url, PATHINFO_FILENAME);
+        $sources = collect($widths)
+            ->filter(fn (mixed $width): bool => is_int($width) && $width > 0)
+            ->unique()
+            ->sort()
+            ->map(function (int $width) use ($filename): ?string {
+                $responsiveUrl = "/images/webp/projects/responsive/{$filename}-{$width}.webp";
+
+                return file_exists(public_path(ltrim($responsiveUrl, '/'))) ? "{$responsiveUrl} {$width}w" : null;
+            })
+            ->filter()
+            ->implode(', ');
+
+        return filled($sources) ? $sources : null;
+    }
+
     public static function delete(string|array|null $paths): void
     {
         $paths = collect((array) $paths)

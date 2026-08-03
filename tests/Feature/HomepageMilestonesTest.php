@@ -19,6 +19,7 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString("Cache::remember('home_milestones_'.\$locale", $milestones);
         $this->assertStringContainsString('optimizedLocalImageUrl($milestone[\'image\'])', $milestones);
         $this->assertStringContainsString('cloudinaryResponsiveSrcset($milestone[\'image\'], [160, 320])', $milestones);
+        $this->assertStringContainsString('localResponsiveSrcset($milestone[\'image\'], [160, 320])', $milestones);
         $this->assertStringContainsString('sizes="(min-width: 1024px) 64px, 80px"', $milestones);
         $this->assertStringContainsString('milestone-road-gradient', $milestones);
         $this->assertStringContainsString('$roadStops = [];', $milestones);
