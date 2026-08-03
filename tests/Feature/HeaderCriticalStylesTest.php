@@ -13,6 +13,8 @@ class HeaderCriticalStylesTest extends TestCase
 
         $this->assertStringContainsString('<div id="page-loading-bar" aria-hidden="true"></div>', $layoutTemplate);
         $this->assertStringContainsString('body > header { position: fixed;', $layoutTemplate);
+        $this->assertStringContainsString('height: 2rem;', $layoutTemplate);
+        $this->assertStringContainsString('@media (min-width: 640px)', $layoutTemplate);
         $this->assertStringNotContainsString('body > header:first-child', $layoutTemplate);
     }
 }

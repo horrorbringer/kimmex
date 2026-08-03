@@ -185,6 +185,8 @@
         body > header { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
         /* Top bar — initial state only; Alpine/Tailwind takes over on scroll */
         body > header > div:first-child {
+            box-sizing: border-box;
+            height: 2rem;
             font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.025em;
@@ -215,6 +217,12 @@
             width: 12px;
             height: 12px;
             flex-shrink: 0;
+        }
+        @media (min-width: 640px) {
+            body > header > div:first-child > div {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
         }
         /* Main nav */
         body > header nav {
