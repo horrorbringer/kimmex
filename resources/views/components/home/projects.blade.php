@@ -28,6 +28,13 @@
             ['slug' => 'bank', 'image' => '/images/webp/projects/Thumbnail-3.webp', 'type' => __('Commercial'), 'title' => __('Commercial Bank HQ'), 'location' => __('Phnom Penh'), 'status' => __('ONGOING')],
         ];
     }
+
+    $projects = array_map(function (array $project): array {
+        $project['image'] = \App\Support\PublicStorage::optimizedLocalImageUrl($project['image']);
+        $project['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($project['image'], [640, 960, 1440]);
+
+        return $project;
+    }, $projects);
 @endphp
 
 <section class="py-12 md:py-16 bg-gray-50">
@@ -64,6 +71,8 @@
                     <a href="/projects/{{ $projects[0]['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded-2xl h-full min-h-[400px] lg:min-h-full" style="background: #0B2B5C;">
                             <img src="{{ $projects[0]['image'] }}" alt="{{ $projects[0]['title'] }}"
+                                @if (filled($projects[0]['imageSrcset'])) srcset="{{ $projects[0]['imageSrcset'] }}" @endif
+                                sizes="(min-width: 1024px) 50vw, 100vw" width="1280" height="720"
                                 class="object-cover w-full h-full absolute inset-0 group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
                             <div class="absolute top-5 left-5 z-20">
@@ -103,6 +112,8 @@
                     <a href="/projects/{{ $p['slug'] }}" class="group block h-full">
                         <div class="relative overflow-hidden rounded-2xl h-full min-h-[240px]" style="background: #0B2B5C;">
                             <img src="{{ $p['image'] }}" alt="{{ $p['title'] }}"
+                                @if (filled($p['imageSrcset'])) srcset="{{ $p['imageSrcset'] }}" @endif
+                                sizes="(min-width: 1024px) 50vw, 100vw" width="1280" height="720"
                                 class="object-cover w-full h-full absolute inset-0 group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent z-10"></div>
                             <div class="absolute top-4 left-4 z-20">

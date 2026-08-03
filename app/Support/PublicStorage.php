@@ -91,6 +91,17 @@ class PublicStorage
         return filled($sources) ? $sources : null;
     }
 
+    public static function optimizedLocalImageUrl(?string $url): ?string
+    {
+        if (! filled($url) || ! Str::startsWith($url, '/images/projects/') || ! Str::endsWith($url, ['.jpg', '.jpeg'])) {
+            return $url;
+        }
+
+        $optimizedUrl = '/images/webp/projects/'.pathinfo($url, PATHINFO_FILENAME).'.webp';
+
+        return file_exists(public_path(ltrim($optimizedUrl, '/'))) ? $optimizedUrl : $url;
+    }
+
     public static function delete(string|array|null $paths): void
     {
         $paths = collect((array) $paths)

@@ -17,6 +17,9 @@ class HomepageMilestonesTest extends TestCase
 
         $this->assertStringContainsString('<x-home.milestones />', $homepage);
         $this->assertStringContainsString("Cache::remember('home_milestones_'.\$locale", $milestones);
+        $this->assertStringContainsString('optimizedLocalImageUrl($milestone[\'image\'])', $milestones);
+        $this->assertStringContainsString('cloudinaryResponsiveSrcset($milestone[\'image\'], [160, 320])', $milestones);
+        $this->assertStringContainsString('sizes="(min-width: 1024px) 64px, 80px"', $milestones);
         $this->assertStringContainsString('milestone-road-gradient', $milestones);
         $this->assertStringContainsString('$roadStops = [];', $milestones);
         $this->assertStringContainsString('$roadWidth = max(1440, count($milestones) * 280);', $milestones);
@@ -53,7 +56,7 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('home-milestone-desktop-scroll', $milestones);
         $this->assertStringContainsString('w-[12.5rem]', $milestones);
         $this->assertStringContainsString('line-clamp-2 font-heading text-xs', $milestones);
-        $this->assertStringContainsString("\$loop->last", $milestones);
+        $this->assertStringContainsString('$loop->last', $milestones);
         $this->assertStringContainsString("{{ __('Latest') }}", $milestones);
         $this->assertStringNotContainsString('Scroll sideways to explore', $milestones);
         $this->assertStringContainsString('--milestone-delay: {{ $index * 110 }}ms', $milestones);

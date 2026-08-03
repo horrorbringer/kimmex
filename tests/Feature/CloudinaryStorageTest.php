@@ -59,6 +59,18 @@ class CloudinaryStorageTest extends TestCase
         $this->assertNull(PublicStorage::cloudinaryResponsiveSrcset('/images/webp/hero/hero-1.webp'));
     }
 
+    public function test_public_storage_uses_existing_webp_project_thumbnails(): void
+    {
+        $this->assertSame(
+            '/images/webp/projects/Thumbnail-5.webp',
+            PublicStorage::optimizedLocalImageUrl('/images/projects/Thumbnail-5.jpg'),
+        );
+        $this->assertSame(
+            '/images/projects/missing.jpg',
+            PublicStorage::optimizedLocalImageUrl('/images/projects/missing.jpg'),
+        );
+    }
+
     public function test_cloudinary_uses_existing_public_assets_for_legacy_image_paths(): void
     {
         $this->assertSame(
