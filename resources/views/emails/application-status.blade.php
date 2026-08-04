@@ -30,7 +30,7 @@
             App\Enums\ApplicationStatus::REVIEWING => 'Your application is now with our recruitment team for review. We will be in touch when there is an update.',
             App\Enums\ApplicationStatus::SHORTLISTED => 'Your experience stood out to our team. We are pleased to move you forward to the next stage.',
             App\Enums\ApplicationStatus::INTERVIEW => 'We are pleased to invite you to an interview. Our HR team will contact you with the scheduling details.',
-            App\Enums\ApplicationStatus::ACCEPTED => 'Congratulations — your application has been accepted. Our HR team will contact you with your onboarding details.',
+            App\Enums\ApplicationStatus::ACCEPTED => 'Congratulations. Your application has been accepted. Our HR team will contact you with your onboarding details.',
             App\Enums\ApplicationStatus::REJECTED => 'Thank you for the time and care you put into your application. We have decided to move forward with other candidates for this role.',
         };
     @endphp

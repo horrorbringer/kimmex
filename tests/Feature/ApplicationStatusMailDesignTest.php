@@ -25,6 +25,7 @@ class ApplicationStatusMailDesignTest extends TestCase
 
         $renderedMail = $mail->render();
 
+        $this->assertSame('Interview Invitation', $mail->envelope()->subject);
         $this->assertStringContainsString('Career update', $renderedMail);
         $this->assertStringContainsString('Application update', $renderedMail);
         $this->assertStringContainsString('Interview Invitation', $renderedMail);

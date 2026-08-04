@@ -24,8 +24,8 @@ class NewsAnnouncementMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = $this->subjectOverride
-            ? $this->subjectOverride.' — Kimmex News'
-            : $this->article->getTranslation('title', 'en').' — Kimmex News';
+            ? 'Kimmex News: '.$this->subjectOverride
+            : 'Kimmex News: '.$this->article->getTranslation('title', 'en');
 
         return new Envelope(
             subject: $subject,

@@ -23,7 +23,7 @@ class WeeklyDigestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Kimmex Weekly Digest — '.now()->format('M d, Y'),
+            subject: 'Kimmex Weekly Digest: '.now()->format('M d, Y'),
         );
     }
 

@@ -43,14 +43,14 @@
                 <div class="highlight-box">
                     <h3>While you're here, explore:</h3>
                     <ul>
-                        <li><a href="{{ $projectsUrl }}">Our Projects</a> — See what we've built across Cambodia</li>
-                        <li><a href="{{ $newsUrl }}">News & Updates</a> — Latest announcements and milestones</li>
-                        <li><a href="{{ $websiteUrl }}/about">About Us</a> — 25+ years of construction excellence</li>
+                        <li><a href="{{ $projectsUrl }}">Our Projects</a>: See what we've built across Cambodia</li>
+                        <li><a href="{{ $newsUrl }}">News & Updates</a>: Latest announcements and milestones</li>
+                        <li><a href="{{ $websiteUrl }}/about">About Us</a>: 25+ years of construction excellence</li>
                     </ul>
                 </div>
 
                 <p class="text">
-                    We respect your inbox — you'll only hear from us when we have something valuable to share.
+                    We respect your inbox. You'll only hear from us when we have something valuable to share.
                 </p>
 
                 <a href="{{ $websiteUrl }}" class="btn">Visit Our Website</a>
