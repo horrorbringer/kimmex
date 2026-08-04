@@ -23,4 +23,15 @@ class HeaderNavigationExperienceTest extends TestCase
         $this->assertStringContainsString("document.addEventListener('livewire:navigate'", $scripts);
         $this->assertStringContainsString("document.addEventListener('livewire:navigated'", $scripts);
     }
+
+    public function test_services_navigation_uses_the_configured_service_order(): void
+    {
+        $header = File::get(resource_path('views/components/header.blade.php'));
+        $footer = File::get(resource_path('views/components/footer.blade.php'));
+
+        $this->assertSame(1, substr_count($header, "->orderBy('orderIndex')"));
+        $this->assertSame(1, substr_count($footer, "->orderBy('orderIndex')"));
+        $this->assertStringNotContainsString("->sortBy(fn(\$svc) => \$svc->getTranslation('title', \$lang))", $header);
+        $this->assertStringNotContainsString("->sortBy(fn(\$svc) => \$svc->getTranslation('title', \$lang))", $footer);
+    }
 }

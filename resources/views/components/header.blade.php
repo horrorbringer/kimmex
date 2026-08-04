@@ -80,8 +80,9 @@
 
         $navServices = \Illuminate\Support\Facades\Cache::remember('nav_services_' . $lang, now()->addHours(12), function () use ($lang) {
             return \App\Models\Service::where('isActive', true)
+                ->orderBy('orderIndex')
+                ->orderBy('id')
                 ->get()
-                ->sortBy(fn($svc) => $svc->getTranslation('title', $lang))
                 ->map(fn($svc) => [
                     'slug' => $svc->slug,
                     'title' => $svc->getTranslation('title', $lang)
