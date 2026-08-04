@@ -10,6 +10,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -25,18 +26,13 @@ class JobApplicationsTable
                     ->getStateUsing(fn ($record): string => $record->job?->title ?? __('General Application'))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('status')
+                SelectColumn::make('status')
                     ->label(__('Status'))
-                    ->badge()
-                    ->color(fn ($state): string => match (is_string($state) ? $state : $state->value) {
-                        'PENDING' => 'warning',
-                        'REVIEWING' => 'info',
-                        'INTERVIEW' => 'warning',
-                        'ACCEPTED' => 'success',
-                        'REJECTED' => 'danger',
-                        default => 'gray',
-                    })
-                    ->formatStateUsing(fn ($state) => $state instanceof ApplicationStatus ? $state->getLabel() : $state)
+                    ->options(ApplicationStatus::class)
+                    ->rules(['required'])
+                    ->selectablePlaceholder(false)
+                    ->native(false)
+                    ->disabled(fn (): bool => ! auth()->user()?->isAdmin())
                     ->searchable(),
                 TextColumn::make('submittedAt')
                     ->label(__('Submitted At'))
