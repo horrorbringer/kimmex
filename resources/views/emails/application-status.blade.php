@@ -43,13 +43,13 @@
                         <td style="height: 5px; background-color: {{ $statusStyles['accent'] }}; font-size: 0; line-height: 0;">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td class="email-padding" style="padding: 30px 40px 26px; background-color: #0b2b5c;">
+                        <td class="email-padding" style="padding: 24px 40px; border-bottom: 1px solid #e2e8f0; background-color: #ffffff;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                                 <tr>
                                     <td style="vertical-align: middle;">
                                         <img src="{{ asset('logo.png') }}" alt="Kimmex" width="116" style="display: block; width: 116px; max-width: 116px; height: auto; border: 0;">
                                     </td>
-                                    <td align="right" style="vertical-align: middle; color: #b9c7dd; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;">
+                                    <td align="right" style="vertical-align: middle; color: #5f6e82; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;">
                                         Career update
                                     </td>
                                 </tr>

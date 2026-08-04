@@ -32,5 +32,6 @@ class ApplicationStatusMailDesignTest extends TestCase
         $this->assertStringContainsString('Please keep Wednesday afternoon available.', $renderedMail);
         $this->assertStringContainsString('recruitment@kimmex.com.kh', $renderedMail);
         $this->assertStringContainsString('max-width: 600px', $renderedMail);
+        $this->assertStringNotContainsString('background-color: #0b2b5c;', $renderedMail);
     }
 }
