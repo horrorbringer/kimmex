@@ -121,7 +121,7 @@
                         ];
                     @endphp
                     @foreach($stats as $stat)
-                        <div @if($stat['icon'] !== 'eye') x-data="{ count: 0, target: {{ $stat['value'] }}, shown: false }"
+                        <div @if($stat['icon'] !== 'eye') x-data="{ count: {{ $stat['value'] ?? 0 }}, target: {{ $stat['value'] ?? 0 }}, shown: false }"
                             x-intersect.once="shown = true; let steps = 50; let step = target / steps; let c = 0; let timer = setInterval(() => { c += step; if (c >= target) { count = target; clearInterval(timer); } else { count = Math.floor(c); } }, 1500 / steps);" @endif
                             class="flex flex-col items-center justify-center py-5 sm:py-8 md:py-10 px-2 sm:px-4 text-center group hover:bg-gray-50/50 transition-colors first:rounded-l-xl last:rounded-r-xl">
                             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-titan-red/10 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-titan-red/20 transition-colors">
@@ -139,7 +139,7 @@
                                 @if($stat['icon'] === 'eye')
                                     <x-page-view-count :total="true" :count-only="true" class="!text-2xl sm:!text-3xl md:!text-4xl !tracking-normal" />
                                 @else
-                                    <span x-text="count">0</span><span class="text-titan-red">{{ $stat['suffix'] }}</span>
+                                    <span x-text="count">{{ $stat['value'] }}</span><span class="text-titan-red">{{ $stat['suffix'] }}</span>
                                 @endif
                             </div>
                             <div class="text-[9px] sm:text-xs uppercase tracking-wider text-titan-navy/50 font-bold leading-tight">{{ $stat['label'] }}</div>
