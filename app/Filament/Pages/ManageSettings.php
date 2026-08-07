@@ -28,7 +28,6 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -718,39 +717,6 @@ class ManageSettings extends Page implements HasForms
                     ]),
             ])
             ->statePath('data');
-    }
-
-    protected function getAiImproveAction(string $field, ?string $prompt = null): Action
-    {
-        return Action::make('aiImprove'.ucfirst($field))
-            ->icon('heroicon-m-sparkles')
-            ->tooltip(__('Improve with AI'))
-            ->action(function ($state, $get, Set $set, AIGeneratorService $ai) use ($field, $prompt) {
-                if (empty($state)) {
-                    return;
-                }
-                $settings = [
-                    'provider' => $get('ai_provider'),
-                    'gemini' => [
-                        'api_key' => $get('gemini_api_key'),
-                        'model' => $get('gemini_model'),
-                    ],
-                    'openrouter' => [
-                        'api_key' => $get('openrouter_api_key'),
-                        'model' => $get('openrouter_model'),
-                    ],
-                    'ollama' => [
-                        'base_url' => $get('ollama_base_url'),
-                        'model' => $get('ollama_model'),
-                    ],
-                    'base_url' => $get('ollama_base_url'),
-                    'system_prompt' => $get('ai_system_prompt'),
-                    'temperature' => $get('ai_temperature'),
-                    'tone' => $get('ai_tone'),
-                ];
-                $set($field, $ai->improveContent($state, $prompt ?? 'Improve this text.', $settings));
-                Notification::make()->title(__('Content Improved'))->success()->send();
-            });
     }
 
     protected static ?int $navigationSort = 1;
