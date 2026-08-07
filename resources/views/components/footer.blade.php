@@ -4,10 +4,11 @@
     $brand = $globalSettings['brand'] ?? [];
 
     $getVal = function ($field, $default) use ($profile, $lang) {
-        if (isset($profile[$field]) && is_array($profile[$field])) {
-            return $profile[$field][$lang] ?? $profile[$field]['en'] ?? $default;
-        }
-        return $profile[$field] ?? $default;
+        return $profile[$lang][$field]
+            ?? $profile['en'][$field]
+            ?? (isset($profile[$field]) && is_array($profile[$field]) ? ($profile[$field][$lang] ?? $profile[$field]['en'] ?? null) : null)
+            ?? $profile[$field]
+            ?? $default;
     };
 
     $companyName = $getVal('company_name', 'KIMMEX');
@@ -51,7 +52,7 @@
             <div class="ft-brand">
                 <img src="{{ $logoUrl }}" alt="{{ $companyName }}" class="ft-logo" loading="lazy" decoding="async" />
                 <p class="ft-desc">
-                    {{ \Illuminate\Support\Str::limit($brand['company_story'] ?? __('Over 25 years of excellence in building Cambodia\'s future. We deliver high-quality infrastructure and construction solutions.'), 160) }}
+                    {{ $brand['company_story'] ?? __('Over 25 years of excellence in building Cambodia\'s future. We deliver high-quality infrastructure and construction solutions.') }}
                 </p>
                 <div class="ft-socials">
                     @if($facebook && $facebook !== '#')

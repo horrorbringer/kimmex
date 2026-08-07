@@ -461,14 +461,14 @@
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-1000 relative z-10">
-                    <h2 class="mb-4 font-heading text-2xl font-black text-white md:text-3xl">
+                    <h2 class="mb-4 font-heading text-2xl font-black !text-white md:text-3xl">
                         {{ $lang === 'kh' ? 'រួចរាល់សម្រាប់ការចាប់ផ្តើម?' : 'Ready to start?' }}
                     </h2>
                     <p class="mx-auto mb-8 max-w-2xl text-base font-normal leading-7 text-white/75">
                         {{ $lang === 'kh' ? 'ទាក់ទងក្រុមការងារជំនាញរបស់យើងថ្ងៃនេះ សម្រាប់ការពិគ្រោះយោបល់ និងការសិក្សាសមិទ្ធភាពដោយឥតគិតថ្លៃ។' : 'Contact our expert team today for a free consultation and feasibility study.' }}
                     </p>
                     <a href="/contact"
-                        class="group inline-flex min-h-12 items-center gap-2 rounded bg-titan-red px-6 py-3 text-xs font-black uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-white hover:text-titan-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-titan-navy md:px-10 md:py-4">
+                        class="group inline-flex min-h-12 items-center gap-2 rounded bg-titan-red px-6 py-3 text-xs font-black uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-titan-navy md:px-10 md:py-4">
                         {{ $lang === 'kh' ? 'ស្នើសុំការប្រឹក្សា' : 'Request Quote' }} <x-lucide-arrow-right
                             class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </a>
