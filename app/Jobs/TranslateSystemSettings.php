@@ -29,14 +29,18 @@ class TranslateSystemSettings implements ShouldQueue
         $organization = SystemSetting::get('organization_profile', []);
 
         if (($organization['en'] ?? []) === $this->organizationEnglish) {
-            $organization['km'] = $translator->translateArray($this->organizationEnglish, [], 'km');
+            $existingKm = array_filter($organization['km'] ?? [], fn ($val) => filled($val));
+            $autoTranslatedKm = $translator->translateArray($this->organizationEnglish, [], 'km');
+            $organization['km'] = array_merge($autoTranslatedKm, $existingKm);
             SystemSetting::set('organization_profile', $organization);
         }
 
         $brand = SystemSetting::get('brand_identity', []);
 
         if (($brand['en'] ?? []) === $this->brandEnglish) {
-            $brand['km'] = $translator->translateArray($this->brandEnglish, ['icon', 'image'], 'km');
+            $existingKm = array_filter($brand['km'] ?? [], fn ($val) => filled($val));
+            $autoTranslatedKm = $translator->translateArray($this->brandEnglish, ['icon', 'image'], 'km');
+            $brand['km'] = array_merge($autoTranslatedKm, $existingKm);
             SystemSetting::set('brand_identity', $brand);
         }
     }
