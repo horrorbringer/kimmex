@@ -373,6 +373,23 @@
                 left: auto;
                 right: 0;
             }
+            .milestone-list a {
+                color: var(--primary-color, #E31E24);
+                font-weight: 600;
+                text-decoration: none;
+                background-image: linear-gradient(to right, #071A33, #071A33);
+                background-position: 0% 100%;
+                background-repeat: no-repeat;
+                background-size: 0% 2px;
+                padding-bottom: 2px;
+                border-bottom: 1.5px solid rgba(227, 30, 36, 0.3);
+                transition: color 0.2s ease, background-size 0.3s ease, border-color 0.2s ease;
+            }
+            .milestone-list a:hover {
+                color: #071A33;
+                background-size: 100% 2px;
+                border-bottom-color: transparent;
+            }
             .milestone-animate {
                 will-change: transform, opacity;
             }
@@ -445,7 +462,7 @@
                                 @if($hasMilestoneDetail)
                                     <button @click="open = !open" class="mt-4 inline-flex items-center gap-2 text-titan-red text-xs font-bold uppercase tracking-wider hover:gap-3 transition-all">
                                         <span x-text="open ? '{{ __('Close') }}' : '{{ __('Read More') }}'"></span>
-                                        <x-lucide-chevron-down class="w-3.5 h-3.5 transition-transform" :class="open ? 'rotate-180' : ''" />
+                                        <x-lucide-chevron-down class="w-3.5 h-3.5 transition-transform" x-bind:class="open ? 'rotate-180' : ''" />
                                     </button>
                                     <div x-show="open" x-collapse>
                                         <div class="mt-4 p-5 bg-white rounded-lg border border-gray-100 text-gray-500 text-sm leading-relaxed">
