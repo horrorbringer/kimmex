@@ -16,7 +16,7 @@
                     {{ __('Legal & Compliance') }}
                 </div>
 
-                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'" class="transition-all duration-700 delay-300 font-heading font-[900] text-white mb-3 sm:mb-4 leading-[1.05] tracking-tight uppercase text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                <h1 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'" class="transition-all duration-700 delay-300 font-heading font-[900] !text-white mb-3 sm:mb-4 leading-[1.05] tracking-tight uppercase text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                     {{ __('Privacy Policy') }}
                 </h1>
 
@@ -163,13 +163,13 @@
                     <h2 class="text-xl sm:text-2xl font-black text-titan-navy uppercase tracking-tight">{{ __('Data Storage & Security') }}</h2>
                 </div>
 
-                <div class="bg-titan-navy rounded-xl p-5 sm:p-8 lg:p-10 text-white">
+                <div class="bg-titan-navy rounded-xl p-5 sm:p-8 lg:p-10 !text-white">
                     <div class="flex flex-col sm:flex-row items-start gap-4 mb-6">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-white/10 flex items-center justify-center !text-white shrink-0">
                             <x-lucide-lock class="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                         <div>
-                            <h3 class="text-lg sm:text-xl font-black uppercase tracking-tight mb-2 sm:mb-3">{{ __('Our Security Commitment') }}</h3>
+                            <h3 class="text-lg !text-white sm:text-xl font-black uppercase tracking-tight mb-2 sm:mb-3">{{ __('Our Security Commitment') }}</h3>
                             <p class="text-white/70 text-sm sm:text-base leading-relaxed">
                                 {{ __('We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These include:') }}
                             </p>
