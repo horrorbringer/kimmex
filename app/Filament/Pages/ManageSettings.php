@@ -80,8 +80,22 @@ class ManageSettings extends Page implements HasForms
         $theme = SystemSetting::get('theme_settings', []);
 
         $this->data = [
-            // Organization
-            'company_name' => $org['en']['company_name'] ?? 'Kimmex Construction',
+            // Organization English
+            'company_name_en' => $org['en']['company_name'] ?? ($org['company_name'] ?? 'Kimmex Construction'),
+            'website_title_en' => $org['en']['website_title'] ?? ($org['website_title'] ?? ''),
+            'tagline_en' => $org['en']['tagline'] ?? ($org['tagline'] ?? ''),
+            'working_hours_en' => $org['en']['working_hours'] ?? ($org['working_hours'] ?? ''),
+            'address_en' => $org['en']['address'] ?? ($org['address'] ?? ''),
+
+            // Organization Khmer
+            'company_name_km' => $org['km']['company_name'] ?? '',
+            'website_title_km' => $org['km']['website_title'] ?? '',
+            'tagline_km' => $org['km']['tagline'] ?? '',
+            'working_hours_km' => $org['km']['working_hours'] ?? '',
+            'address_km' => $org['km']['address'] ?? '',
+
+            // Organization General
+            'company_name' => $org['en']['company_name'] ?? ($org['company_name'] ?? 'Kimmex Construction'),
             'tagline' => $org['en']['tagline'] ?? '',
             'registration_number' => $org['registration_number'] ?? '',
             'founded_date' => $org['founded_date'] ?? '',
@@ -105,18 +119,28 @@ class ManageSettings extends Page implements HasForms
             'tiktok' => $org['tiktok'] ?? '',
             'career_telegram_channels' => SystemSetting::get('career_telegram_channels', []),
 
-            // Branding
+            // Branding English & Khmer
             'ceo_name' => $brand['ceo_name'] ?? '',
             'about_hero_image' => $brand['about_hero_image'] ?? '',
             'about_section_image_1' => $brand['about_section_images'][0] ?? '',
             'about_section_image_2' => $brand['about_section_images'][1] ?? '',
             'about_section_image_3' => $brand['about_section_images'][2] ?? '',
             'about_section_image_4' => $brand['about_section_images'][3] ?? '',
-            'company_story' => $brand['en']['company_story'] ?? '',
-            'ceo_message' => $brand['en']['ceo_message'] ?? '',
-            'mission' => $brand['en']['mission'] ?? '',
-            'vision' => $brand['en']['vision'] ?? '',
-            'goal' => $brand['en']['goal'] ?? '',
+            'company_story_en' => $brand['en']['company_story'] ?? ($brand['company_story'] ?? ''),
+            'company_story_km' => $brand['km']['company_story'] ?? '',
+            'ceo_message_en' => $brand['en']['ceo_message'] ?? ($brand['ceo_message'] ?? ''),
+            'ceo_message_km' => $brand['km']['ceo_message'] ?? '',
+            'mission_en' => $brand['en']['mission'] ?? ($brand['mission'] ?? ''),
+            'mission_km' => $brand['km']['mission'] ?? '',
+            'vision_en' => $brand['en']['vision'] ?? ($brand['vision'] ?? ''),
+            'vision_km' => $brand['km']['vision'] ?? '',
+            'goal_en' => $brand['en']['goal'] ?? ($brand['goal'] ?? ''),
+            'goal_km' => $brand['km']['goal'] ?? '',
+            'company_story' => $brand['en']['company_story'] ?? ($brand['company_story'] ?? ''),
+            'ceo_message' => $brand['en']['ceo_message'] ?? ($brand['ceo_message'] ?? ''),
+            'mission' => $brand['en']['mission'] ?? ($brand['mission'] ?? ''),
+            'vision' => $brand['en']['vision'] ?? ($brand['vision'] ?? ''),
+            'goal' => $brand['en']['goal'] ?? ($brand['goal'] ?? ''),
             'values' => $this->normalizeCoreValues($brand['en']['values_list'] ?? []),
 
             // AI
@@ -184,8 +208,8 @@ class ManageSettings extends Page implements HasForms
                             ->icon('heroicon-o-building-office-2')
                             ->schema([
                                 Grid::make(2)->schema([
-                                    Section::make(__('Identity & Brand'))
-                                        ->description(__('Manage your logo, favicon, name, and catchphrase.'))
+                                    Section::make(__('Identity & Brand Assets'))
+                                        ->description(__('Manage logos, favicon, registration, and date.'))
                                         ->columnSpan(1)
                                         ->schema([
                                             Grid::make(2)->schema([
@@ -200,37 +224,79 @@ class ManageSettings extends Page implements HasForms
                                                 $this->makeImageUpload('logo_footer', __('Footer Logo'), 'organization')
                                                     ->helperText(__('Optional. Site footer logo. Falls back to Default Logo.')),
                                             ]),
-                                            TextInput::make('company_name')->label(__('Company Name'))->required(),
-                                            TextInput::make('website_title')
-                                                ->label(__('Website Title'))
-                                                ->helperText(__('Custom title used for browser tabs and SEO.')),
-                                            TextInput::make('tagline')
-                                                ->label(__('Tagline'))
-                                                ->hintAction($this->getAiImproveAction('tagline', 'Improve this tagline for a construction company.')),
                                             TextInput::make('registration_number')->label(__('Registration #')),
                                             DatePicker::make('founded_date')->label(__('Founded Date')),
                                         ]),
 
                                     Section::make(__('Contact & Location'))
-                                        ->description(__('How clients can reach you.'))
+                                        ->description(__('Global contact details and map.'))
                                         ->columnSpan(1)
                                         ->schema([
                                             TextInput::make('email')->email()->label(__('Official Email')),
                                             TextInput::make('phone')->tel()->label(__('Contact Phone')),
-                                            TextInput::make('working_hours')->label(__('Office Hours')),
-                                            Textarea::make('address')->rows(3)->label(__('Physical Address')),
                                             TextInput::make('google_maps_url')->url()->label(__('Google Maps Link')),
                                         ]),
                                 ]),
 
+                                Section::make(__('Localized Organization Profile'))
+                                    ->description(__('Manage company name, tagline, address, and office hours for English and Khmer languages.'))
+                                    ->schema([
+                                        Tabs::make('OrgLocalizedTabs')
+                                            ->tabs([
+                                                Tab::make('🇬🇧 English')
+                                                    ->schema([
+                                                        TextInput::make('company_name_en')->label(__('Company Name (English)'))->required(),
+                                                        TextInput::make('website_title_en')
+                                                            ->label(__('Website Title (English)'))
+                                                            ->helperText(__('Custom title used for browser tabs and SEO.')),
+                                                        TextInput::make('tagline_en')
+                                                            ->label(__('Tagline (English)'))
+                                                            ->hintAction($this->getAiImproveAction('tagline_en', 'Improve this tagline for a construction company.')),
+                                                        TextInput::make('working_hours_en')->label(__('Office Hours (English)')),
+                                                        Textarea::make('address_en')->rows(3)->label(__('Physical Address (English)')),
+                                                    ]),
+                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
+                                                    ->schema([
+                                                        TextInput::make('company_name_km')->label(__('ឈ្មោះក្រុមហ៊ុន (ភាសាខ្មែរ)')),
+                                                        TextInput::make('website_title_km')->label(__('ចំណងជើងគេហទំព័រ (ភាសាខ្មែរ)')),
+                                                        TextInput::make('tagline_km')->label(__('ពាក្យស្លោក (ភាសាខ្មែរ)')),
+                                                        TextInput::make('working_hours_km')->label(__('ម៉ោងធ្វើការ (ភាសាខ្មែរ)')),
+                                                        Textarea::make('address_km')->rows(3)->label(__('អាសយដ្ឋាន (ភាសាខ្មែរ)')),
+                                                    ]),
+                                            ]),
+                                    ]),
+
                                 Section::make(__('Executive Message & Bio'))
                                     ->schema([
                                         TextInput::make('ceo_name')->label(__('CEO Name')),
-                                        RichEditor::make('ceo_message')->resizableImages()->label(__('CEO Official Message'))->columnSpanFull()->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))->fileAttachmentsVisibility('public'),
-                                        Textarea::make('company_story')
-                                            ->label(__('Our Story'))
-                                            ->rows(4)
-                                            ->hintAction($this->getAiImproveAction('company_story', 'Make this company story more inspiring and professional.')),
+                                        Tabs::make('CeoStoryTabs')
+                                            ->tabs([
+                                                Tab::make('🇬🇧 English')
+                                                    ->schema([
+                                                        RichEditor::make('ceo_message_en')
+                                                            ->resizableImages()
+                                                            ->label(__('CEO Official Message (English)'))
+                                                            ->columnSpanFull()
+                                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
+                                                            ->fileAttachmentsVisibility('public'),
+                                                        Textarea::make('company_story_en')
+                                                            ->label(__('Our Story (English)'))
+                                                            ->rows(4)
+                                                            ->hintAction($this->getAiImproveAction('company_story_en', 'Make this company story more inspiring and professional.')),
+                                                    ]),
+                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
+                                                    ->schema([
+                                                        RichEditor::make('ceo_message_km')
+                                                            ->resizableImages()
+                                                            ->label(__('សារផ្លូវការរបស់នាយកប្រតិបត្តិ (ភាសាខ្មែរ)'))
+                                                            ->columnSpanFull()
+                                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
+                                                            ->fileAttachmentsVisibility('public'),
+                                                        Textarea::make('company_story_km')
+                                                            ->label(__('រឿងរ៉ាវក្រុមហ៊ុន (ភាសាខ្មែរ)'))
+                                                            ->rows(4),
+                                                    ]),
+                                            ]),
                                     ])->collapsible(),
 
                                 Section::make(__('About Page Images'))
@@ -248,11 +314,26 @@ class ManageSettings extends Page implements HasForms
                                     ->collapsible(),
 
                                 Section::make(__('Mission, Vision & Goals'))
-                                    ->columns(3)
                                     ->schema([
-                                        Textarea::make('mission')->rows(3)->hintAction($this->getAiImproveAction('mission')),
-                                        Textarea::make('vision')->rows(3)->hintAction($this->getAiImproveAction('vision')),
-                                        Textarea::make('goal')->rows(3)->hintAction($this->getAiImproveAction('goal')),
+                                        Tabs::make('MissionTabs')
+                                            ->tabs([
+                                                Tab::make('🇬🇧 English')
+                                                    ->schema([
+                                                        Grid::make(3)->schema([
+                                                            Textarea::make('mission_en')->label(__('Mission (English)'))->rows(3)->hintAction($this->getAiImproveAction('mission_en')),
+                                                            Textarea::make('vision_en')->label(__('Vision (English)'))->rows(3)->hintAction($this->getAiImproveAction('vision_en')),
+                                                            Textarea::make('goal_en')->label(__('Goal (English)'))->rows(3)->hintAction($this->getAiImproveAction('goal_en')),
+                                                        ]),
+                                                    ]),
+                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
+                                                    ->schema([
+                                                        Grid::make(3)->schema([
+                                                            Textarea::make('mission_km')->label(__('បេសកកម្ម (ភាសាខ្មែរ)'))->rows(3),
+                                                            Textarea::make('vision_km')->label(__('ចក្ខុវិស័យ (ភាសាខ្មែរ)'))->rows(3),
+                                                            Textarea::make('goal_km')->label(__('គោលដៅ (ភាសាខ្មែរ)'))->rows(3),
+                                                        ]),
+                                                    ]),
+                                            ]),
                                     ])->collapsible()->collapsed(),
 
                                 Section::make(__('Core Values'))
@@ -730,15 +811,25 @@ class ManageSettings extends Page implements HasForms
 
         // 1. Organization Profile
         $orgEn = [
-            'company_name' => $state['company_name'],
-            'website_title' => $state['website_title'] ?? '',
-            'tagline' => $state['tagline'],
-            'address' => $state['address'],
-            'working_hours' => $state['working_hours'],
+            'company_name' => $state['company_name_en'] ?? ($state['company_name'] ?? 'Kimmex'),
+            'website_title' => $state['website_title_en'] ?? ($state['website_title'] ?? ''),
+            'tagline' => $state['tagline_en'] ?? ($state['tagline'] ?? ''),
+            'address' => $state['address_en'] ?? ($state['address'] ?? ''),
+            'working_hours' => $state['working_hours_en'] ?? ($state['working_hours'] ?? ''),
         ];
 
         $existingOrganizationProfile = SystemSetting::get('organization_profile', []);
-        $orgKm = $existingOrganizationProfile['km'] ?? [];
+        $existingOrgKm = $existingOrganizationProfile['km'] ?? [];
+
+        $orgKmManual = array_filter([
+            'company_name' => $state['company_name_km'] ?? null,
+            'website_title' => $state['website_title_km'] ?? null,
+            'tagline' => $state['tagline_km'] ?? null,
+            'address' => $state['address_km'] ?? null,
+            'working_hours' => $state['working_hours_km'] ?? null,
+        ], fn ($val) => filled($val));
+
+        $orgKm = array_merge($existingOrgKm, $orgKmManual);
 
         SystemSetting::set('organization_profile', [
             ...$existingOrganizationProfile,
@@ -763,15 +854,26 @@ class ManageSettings extends Page implements HasForms
 
         // 2. Brand Identity
         $brandEn = [
-            'company_story' => $state['company_story'],
-            'ceo_message' => $state['ceo_message'],
-            'mission' => $state['mission'],
-            'vision' => $state['vision'],
-            'goal' => $state['goal'],
+            'company_story' => $state['company_story_en'] ?? ($state['company_story'] ?? ''),
+            'ceo_message' => $state['ceo_message_en'] ?? ($state['ceo_message'] ?? ''),
+            'mission' => $state['mission_en'] ?? ($state['mission'] ?? ''),
+            'vision' => $state['vision_en'] ?? ($state['vision'] ?? ''),
+            'goal' => $state['goal_en'] ?? ($state['goal'] ?? ''),
             'values_list' => $this->normalizeCoreValues($state['values'] ?? []),
         ];
 
-        $brandKm = SystemSetting::get('brand_identity')['km'] ?? [];
+        $existingBrand = SystemSetting::get('brand_identity', []);
+        $existingBrandKm = $existingBrand['km'] ?? [];
+
+        $brandKmManual = array_filter([
+            'company_story' => $state['company_story_km'] ?? null,
+            'ceo_message' => $state['ceo_message_km'] ?? null,
+            'mission' => $state['mission_km'] ?? null,
+            'vision' => $state['vision_km'] ?? null,
+            'goal' => $state['goal_km'] ?? null,
+        ], fn ($val) => filled($val));
+
+        $brandKm = array_merge($existingBrandKm, $brandKmManual);
 
         $brandKm['values_list'] = $this->syncCoreValueAssets(
             $brandEn['values_list'],

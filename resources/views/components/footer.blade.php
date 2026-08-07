@@ -22,9 +22,10 @@
     $telegram = $profile['telegram'] ?? null;
     $tiktok = $profile['tiktok'] ?? null;
 
+    $addressEn = $profile['en']['address'] ?? $profile['address'] ?? 'Phnom Penh, Cambodia';
     $googleMapsUrl = $profile['google_maps_url'] ?? '';
     $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=');
-    $googleMapsLink = (!empty($googleMapsUrl) && !$isEmbed) ? $googleMapsUrl : "https://www.google.com/maps/search/?api=1&query=" . urlencode($address);
+    $googleMapsLink = (!empty($googleMapsUrl) && !$isEmbed) ? $googleMapsUrl : "https://www.google.com/maps/search/?api=1&query=" . urlencode($addressEn);
 
     $logo = (! empty($profile['logo_footer'])) ? $profile['logo_footer'] : ($profile['logo'] ?? null);
     $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.png');
