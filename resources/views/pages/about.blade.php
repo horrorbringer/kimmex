@@ -321,7 +321,7 @@
                                 class="transition-all duration-700 w-full overflow-hidden rounded-xl"
                                 style="transition-delay: {{ $i * 100 }}ms">
                                 <img src="{{ $value['image'] }}" alt="{{ $value['title'] }}"
-                                    class="w-full object-cover transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" decoding="async" loading="lazy" />
+                                    class="w-full object-cover" decoding="async" loading="lazy" />
                             </div>
                         @endforeach
                     </div>
@@ -331,9 +331,9 @@
                         @foreach($aboutData['values'] as $i => $value)
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="transition-all duration-700 p-6 md:p-8 rounded-xl border border-gray-100 hover:border-titan-red/20 hover:shadow-lg group text-center bg-white"
+                                class="transition-all duration-700 p-6 md:p-8 rounded-xl border border-gray-100 text-center bg-white"
                                 style="transition-delay: {{ $i * 100 }}ms">
-                                <div class="w-14 h-14 mx-auto rounded-xl bg-titan-red/10 flex items-center justify-center mb-5 group-hover:bg-titan-red group-hover:!text-white text-titan-red transition-all duration-300 group-hover:shadow-md group-hover:shadow-titan-red/20">
+                                <div class="w-14 h-14 mx-auto rounded-xl bg-titan-red/10 flex items-center justify-center mb-5 text-titan-red">
                                     @php $iconName = str_replace('lucide-', '', $value['icon']); @endphp
                                     <x-dynamic-component :component="'lucide-' . $iconName" class="w-6 h-6" />
                                 </div>
