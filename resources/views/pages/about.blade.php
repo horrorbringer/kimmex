@@ -188,7 +188,6 @@
 
                 <!-- Right: Text Content -->
                 <div>
-
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-[2px] bg-titan-red"></div>
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('WHO WE ARE') }}</span>
@@ -198,71 +197,9 @@
                         {{ $tagline }}
                     </h2>
 
-                    <p class="text-gray-500 text-base md:text-lg leading-relaxed mb-10 whitespace-pre-line">{{ $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}</p>
-
-
-                    <!-- Vision / Mission / Strategy Accordion -->
-                    <div class="space-y-4" x-data="{ active: null }">
-                        @php
-                            $mvg_items = [
-                                ['id' => 'vision', 'icon' => 'eye', 'title' => __('Our Vision'), 'desc' => $brand['vision'] ?? __('To be the most trusted and innovative construction partner in Cambodia.')],
-                                ['id' => 'mission', 'icon' => 'flag', 'title' => __('Our Mission'), 'desc' => $brand['mission'] ?? __('To bridge the gap between concept and reality through exceptional engineering and safety.')],
-                                ['id' => 'goal', 'icon' => 'target', 'title' => __('Our Strategy'), 'desc' => $brand['goal'] ?? __('To maintain long-term leadership in the Cambodian market through talent development and CMS investment.')],
-                            ];
-                        @endphp
-
-                        @foreach($mvg_items as $item)
-                        <div class="relative z-0 border border-gray-200 rounded-xl overflow-visible transition-colors duration-200 hover:border-gray-300"
-                             :class="active === '{{ $item['id'] }}' ? 'z-20 bg-white shadow-lg shadow-titan-navy/10 md:rounded-b-none md:!border-b-0' : 'bg-gray-50'"
-                             @mouseenter="active = '{{ $item['id'] }}'"
-                             @mouseleave="active = null"
-                             @focusin="active = '{{ $item['id'] }}'"
-                             @keydown.escape="active = null"
-                             @click="active = (active === '{{ $item['id'] }}' ? null : '{{ $item['id'] }}')"
-                             role="button"
-                             tabindex="0"
-                             :aria-expanded="active === '{{ $item['id'] }}'">
-                            <div class="flex items-center gap-4 p-4 md:p-5 cursor-pointer">
-                                <div class="w-11 h-11 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300"
-                                     :class="active === '{{ $item['id'] }}' ? 'bg-titan-red text-white shadow-md shadow-titan-red/20' : 'bg-titan-red/10 text-titan-red'">
-                                    @if($item['icon'] === 'eye')
-                                        <x-lucide-eye class="w-5 h-5" />
-                                    @elseif($item['icon'] === 'flag')
-                                        <x-lucide-flag class="w-5 h-5" />
-                                    @elseif($item['icon'] === 'target')
-                                        <x-lucide-target class="w-5 h-5" />
-                                    @endif
-                                </div>
-                                <div class="flex-grow min-w-0">
-                                    <h3 class="text-base font-bold text-titan-navy transition-colors"
-                                        :class="active === '{{ $item['id'] }}' ? 'text-titan-red' : ''">
-                                        {{ $item['title'] }}
-                                    </h3>
-                                    <p x-show="active !== '{{ $item['id'] }}'" class="text-sm text-gray-400 truncate mt-0.5">
-                                        {{ \Illuminate\Support\Str::limit($item['desc'], 60) }}
-                                    </p>
-                                </div>
-                                <div class="w-7 h-7 rounded-full border flex items-center justify-center transition-all duration-300 shrink-0"
-                                     :class="active === '{{ $item['id'] }}' ? 'border-titan-red text-titan-red rotate-180' : 'border-gray-200 text-gray-400'">
-                                    <x-lucide-chevron-down class="w-4 h-4" />
-                                </div>
-                            </div>
-                            <div x-show="active === '{{ $item['id'] }}'" x-collapse
-                                 x-transition:enter="transition ease-out duration-300"
-                                 x-transition:enter-start="opacity-0 translate-y-2"
-                                 x-transition:enter-end="opacity-100 translate-y-0"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 translate-y-0"
-                                 x-transition:leave-end="opacity-0 translate-y-2"
-                                 class="relative z-30 bg-white md:absolute md:top-full md:left-0 md:right-0 md:rounded-b-xl md:shadow-[0_16px_30px_-20px_rgba(15,23,42,0.45)]">
-                                <div class="px-5 pb-5 pt-1 pl-5 sm:pl-[4.5rem] md:pt-3">
-                                    <p class="text-gray-500 text-sm md:text-base leading-relaxed whitespace-pre-line">{{ $item['desc'] }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
+                    <p class="text-gray-500 text-base md:text-lg leading-relaxed whitespace-pre-line">{{ $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time and elevate communities.") }}</p>
                 </div>
+
             </div>
         </section>
 

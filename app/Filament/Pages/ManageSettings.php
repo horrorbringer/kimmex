@@ -250,8 +250,7 @@ class ManageSettings extends Page implements HasForms
                                                             ->label(__('Website Title (English)'))
                                                             ->helperText(__('Custom title used for browser tabs and SEO.')),
                                                         TextInput::make('tagline_en')
-                                                            ->label(__('Tagline (English)'))
-                                                            ->hintAction($this->getAiImproveAction('tagline_en', 'Improve this tagline for a construction company.')),
+                                                            ->label(__('Tagline (English)')),
                                                         TextInput::make('working_hours_en')->label(__('Office Hours (English)')),
                                                         Textarea::make('address_en')->rows(3)->label(__('Physical Address (English)')),
                                                     ]),
@@ -281,8 +280,7 @@ class ManageSettings extends Page implements HasForms
                                                             ->fileAttachmentsVisibility('public'),
                                                         Textarea::make('company_story_en')
                                                             ->label(__('Our Story (English)'))
-                                                            ->rows(4)
-                                                            ->hintAction($this->getAiImproveAction('company_story_en', 'Make this company story more inspiring and professional.')),
+                                                            ->rows(4),
                                                     ]),
                                                 Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
                                                     ->schema([
@@ -320,9 +318,9 @@ class ManageSettings extends Page implements HasForms
                                                 Tab::make('🇬🇧 English')
                                                     ->schema([
                                                         Grid::make(3)->schema([
-                                                            Textarea::make('mission_en')->label(__('Mission (English)'))->rows(3)->hintAction($this->getAiImproveAction('mission_en')),
-                                                            Textarea::make('vision_en')->label(__('Vision (English)'))->rows(3)->hintAction($this->getAiImproveAction('vision_en')),
-                                                            Textarea::make('goal_en')->label(__('Goal (English)'))->rows(3)->hintAction($this->getAiImproveAction('goal_en')),
+                                                            Textarea::make('mission_en')->label(__('Mission (English)'))->rows(3),
+                                                            Textarea::make('vision_en')->label(__('Vision (English)'))->rows(3),
+                                                            Textarea::make('goal_en')->label(__('Goal (English)'))->rows(3),
                                                         ]),
                                                     ]),
                                                 Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
