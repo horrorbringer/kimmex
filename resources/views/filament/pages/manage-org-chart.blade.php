@@ -310,10 +310,13 @@
                 object-fit: cover;
             }
 
-            .kimmex-org-chart__content { min-width: 0; }
+            .kimmex-org-chart__content { min-width: 0; flex: 1; }
             .kimmex-org-chart__name { margin: 0; color: var(--org-navy); font-size: 0.875rem; font-weight: 800; line-height: 1.25; }
             .kimmex-org-chart__title { margin: 0.25rem 0 0; color: var(--org-muted); font-size: 0.6875rem; font-weight: 700; line-height: 1.35; }
             .kimmex-org-chart__type { display: inline-block; margin-top: 0.5rem; color: var(--org-accent); font-size: 0.5625rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+            .kimmex-org-chart__badge { display: inline-block; padding: 0.125rem 0.375rem; border-radius: 999px; font-size: 0.5625rem; font-weight: 800; text-transform: uppercase; line-height: 1; }
+            .kimmex-org-chart__badge--visible { color: #166534; background: #dcfce7; }
+            .kimmex-org-chart__badge--hidden { color: #991b1b; background: #fee2e2; }
             .kimmex-org-chart__virtual-root { display: grid; height: 48px; place-items: center; border-radius: 999px; color: #fff; background: var(--org-navy); font-size: 0.75rem; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; }
             .kimmex-org-chart__toggle { display: grid; width: 1.75rem; height: 1.75rem; place-items: center; border: 2px solid #fff; border-radius: 999px; color: #fff; background: var(--org-accent); font-size: 1rem; font-weight: 900; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18); }
 

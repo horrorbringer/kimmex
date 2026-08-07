@@ -494,6 +494,7 @@
         </section>
 
 
+        @if(($orgChartVisible ?? true) && $orgChartType !== 'none')
         <!-- === ORG CHART === -->
         <section id="leadership" class="py-14 sm:py-20 md:py-28 px-4 sm:px-6 bg-white overflow-hidden">
             <div class="max-w-[1700px] mx-auto">
@@ -586,6 +587,7 @@
                 @endif
             </div>
         </section>
+        @endif
 
 
         <!-- === QUALITY & SAFETY === -->

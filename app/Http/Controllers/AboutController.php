@@ -159,7 +159,11 @@ class AboutController extends Controller
             });
 
             $orgProfile = SystemSetting::get('organization_profile', []);
+            $orgChartVisible = (bool) ($orgProfile['org_chart_visible'] ?? true);
             $orgChartType = $orgProfile['org_chart_type'] ?? 'dynamic';
+            if (! $orgChartVisible) {
+                $orgChartType = 'none';
+            }
             $orgChartImage = $orgProfile['org_chart_image'] ?? null;
             $orgChartPdf = $orgProfile['org_chart_pdf'] ?? null;
 
@@ -178,7 +182,7 @@ class AboutController extends Controller
                 'ceoName', 'aboutHeroImageUrl',
                 'aboutSectionImages', 'aboutData',
                 'milestones', 'orgChart',
-                'orgProfile', 'orgChartType', 'orgChartImage', 'orgChartPdf',
+                'orgProfile', 'orgChartVisible', 'orgChartType', 'orgChartImage', 'orgChartPdf',
                 'tagline',
             ))->render();
         });

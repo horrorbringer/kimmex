@@ -18,6 +18,7 @@ const flattenTree = (nodes, parentId = null) => nodes.flatMap((node) => {
         name: node.name,
         role: node.role,
         image: node.image,
+        isActive: node.isActive !== false,
     };
 
     return [currentNode, ...flattenTree(node.children || [], node.id)];
@@ -56,11 +57,20 @@ const nodeMarkup = (node) => {
         ? `<img src="${escapeHtml(node.image)}" alt="" loading="lazy" />`
         : `<span>${escapeHtml(initials(node.name))}</span>`;
 
+    const statusBadge = node.isActive === false
+        ? `<span class="kimmex-org-chart__badge kimmex-org-chart__badge--hidden">Hidden</span>`
+        : `<span class="kimmex-org-chart__badge kimmex-org-chart__badge--visible">Visible</span>`;
+
+    const opacityStyle = node.isActive === false ? 'opacity: 0.65; border-style: dashed;' : '';
+
     return `
-        <article class="kimmex-org-chart__node">
+        <article class="kimmex-org-chart__node" style="${opacityStyle}">
             <div class="kimmex-org-chart__avatar">${avatar}</div>
             <div class="kimmex-org-chart__content">
-                <p class="kimmex-org-chart__name">${escapeHtml(node.name)}</p>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+                    <p class="kimmex-org-chart__name">${escapeHtml(node.name)}</p>
+                    ${statusBadge}
+                </div>
                 <p class="kimmex-org-chart__title">${escapeHtml(node.title || node.role || node.type)}</p>
                 <span class="kimmex-org-chart__type">${escapeHtml(node.type || '')}</span>
             </div>

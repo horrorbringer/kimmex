@@ -6,6 +6,8 @@ use App\Models\Inquiry;
 use App\Support\PublicStorage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -15,6 +17,8 @@ class ContactInquirySubmissionTest extends TestCase
 
     public function test_contact_attachment_stores_on_public_uploads_disk(): void
     {
+        Http::fake();
+        Queue::fake();
         Storage::fake(PublicStorage::diskName());
 
         $response = $this->post(route('contact.submit'), [

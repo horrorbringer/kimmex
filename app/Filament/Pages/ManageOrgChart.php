@@ -12,6 +12,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -54,6 +55,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
     {
         $org = SystemSetting::get('organization_profile', []);
         $this->form->fill([
+            'org_chart_visible' => (bool) ($org['org_chart_visible'] ?? true),
             'org_chart_type' => $org['org_chart_type'] ?? 'dynamic',
             'org_chart_image' => $org['org_chart_image'] ?? null,
             'org_chart_pdf' => $org['org_chart_pdf'] ?? null,
@@ -65,15 +67,22 @@ class ManageOrgChart extends Page implements HasActions, HasForms
     {
         return $form
             ->schema([
-                Section::make(__('Display Mode'))
-                    ->description(__('Choose whether to build an interactive chart below, or upload a static file.'))
+                Section::make(__('Display & Visibility Settings'))
+                    ->description(__('Manage overall org chart visibility and display format on the public website.'))
                     ->schema([
+                        Toggle::make('org_chart_visible')
+                            ->label(__('Show Org Chart on Website'))
+                            ->helperText(__('Enable or disable displaying the organization chart section on the About page.'))
+                            ->default(true)
+                            ->live()
+                            ->columnSpanFull(),
                         Select::make('org_chart_type')
                             ->label(__('Chart Type'))
                             ->options([
                                 'dynamic' => __('Interactive Chart (Builder Below)'),
                                 'image' => __('Upload Image (PNG/JPG)'),
                                 'pdf' => __('Upload PDF'),
+                                'none' => __('Hidden (Do Not Show on Website)'),
                             ])
                             ->default('dynamic')
                             ->required()
@@ -85,7 +94,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                             ->directory('organization')
                             ->visibility('public')
                             ->maxSize(102400) // 100MB
-                            ->visible(fn ($get) => $get('org_chart_type') === 'image'),
+                            ->visible(fn ($get) => (bool) $get('org_chart_visible') && $get('org_chart_type') === 'image'),
                         FileUpload::make('org_chart_pdf')
                             ->label(__('Organization Chart PDF'))
                             ->disk(config('filesystems.public_uploads_disk'))
@@ -93,7 +102,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                             ->visibility('public')
                             ->acceptedFileTypes(['application/pdf'])
                             ->maxSize(1048576) // 1GB limit in app
-                            ->visible(fn ($get) => $get('org_chart_type') === 'pdf'),
+                            ->visible(fn ($get) => (bool) $get('org_chart_visible') && $get('org_chart_type') === 'pdf'),
                     ])->columns(2),
             ])
             ->statePath('data');
@@ -109,6 +118,9 @@ class ManageOrgChart extends Page implements HasActions, HasForms
         Cache::forget('about_orgchart_en');
         Cache::forget('about_orgchart_kh');
         Cache::forget('about_orgchart_km');
+        Cache::forget('about_page_en');
+        Cache::forget('about_page_kh');
+        Cache::forget('about_page_km');
 
         Notification::make()
             ->title(__('Display Settings Saved'))
@@ -134,6 +146,19 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             ->fillForm(fn (array $arguments): array => OrgUnit::find($arguments['id'])->toArray())
             ->action(function (array $data, array $arguments): void {
                 OrgUnit::find($arguments['id'])->update($data);
+                $this->loadChartData();
+            });
+    }
+
+    public function toggleActiveAction(): Action
+    {
+        return Action::make('toggleActive')
+            ->model(OrgUnit::class)
+            ->action(function (array $arguments): void {
+                $unit = OrgUnit::find($arguments['id'] ?? null);
+                if ($unit) {
+                    $unit->update(['isActive' => ! $unit->isActive]);
+                }
                 $this->loadChartData();
             });
     }
@@ -191,6 +216,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     'name' => $unit->employee?->name ?? ($unit->department ? $unit->department->getTranslation('name', app()->getLocale()) : 'N/A'),
                     'role' => $unit->employee?->role ?? $unit->type,
                     'image' => PublicStorage::urlIfExists($unit->employee?->image),
+                    'isActive' => (bool) $unit->isActive,
                     'children' => $this->buildTree($unitsByParent, $unit->id),
                 ];
             })->toArray();
@@ -204,6 +230,9 @@ class ManageOrgChart extends Page implements HasActions, HasForms
         Cache::forget('about_orgchart_en');
         Cache::forget('about_orgchart_kh');
         Cache::forget('about_orgchart_km');
+        Cache::forget('about_page_en');
+        Cache::forget('about_page_kh');
+        Cache::forget('about_page_km');
 
         Notification::make()
             ->title(__('Saved successfully'))

@@ -25,6 +25,8 @@ class OrgChartD3IntegrationTest extends TestCase
         $this->assertStringContainsString("x-on:org-chart:edit.window=\"\$wire.mountAction('edit', \$event.detail)\"", $view);
         $this->assertStringContainsString("@vite('resources/js/admin-org-chart.js')", $view);
         $this->assertStringContainsString("\$this->dispatch('chartUpdated', chartData: \$this->chartData)", $page);
+        $this->assertStringContainsString('toggleActiveAction', $page);
+        $this->assertStringContainsString('kimmex-org-chart__badge', $script);
         $this->assertStringContainsString("searchStatus.textContent = 'No matches'", $script);
     }
 }

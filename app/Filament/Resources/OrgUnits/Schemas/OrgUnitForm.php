@@ -91,20 +91,22 @@ class OrgUnitForm
                     ]),
                 ]),
 
-            Section::make(__('Display Settings'))
+            Section::make(__('Display & Visibility Settings'))
                 ->icon('heroicon-o-adjustments-horizontal')
-                ->collapsed()
                 ->components([
-                    TextInput::make('orderIndex')
-                        ->label(__('Sort Priority'))
-                        ->helperText(__('Lower numbers appear first in lists.'))
-                        ->required()
-                        ->numeric()
-                        ->default(0),
-                    Toggle::make('isActive')
-                        ->label(__('Is Active'))
-                        ->default(true)
-                        ->required(),
+                    Grid::make(2)->components([
+                        TextInput::make('orderIndex')
+                            ->label(__('Sort Priority'))
+                            ->helperText(__('Lower numbers appear first in lists.'))
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                        Toggle::make('isActive')
+                            ->label(__('Visible on Public Website'))
+                            ->helperText(__('When turned off, this position will be hidden from the public website org chart.'))
+                            ->default(true)
+                            ->required(),
+                    ]),
                 ]),
         ];
     }
