@@ -141,7 +141,8 @@ class NewsArticleForm
                                             ->imageResizeTargetWidth('1920')
                                             ->imageResizeTargetHeight('1080')
                                             ->maxSize(5120)
-                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif'])
+                                            ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
                                             ->panelLayout('grid'),
                                     ]),
 

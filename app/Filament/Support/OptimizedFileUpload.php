@@ -18,8 +18,8 @@ class OptimizedFileUpload
             ->disk(config('filesystems.public_uploads_disk'))
             ->visibility('public')
             ->maxSize(5120)
-            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
-            ->mimeTypeMap(['webp' => 'image/webp']);
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'])
+            ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif']);
     }
 
     public static function hero(string $name): FileUpload
@@ -29,8 +29,8 @@ class OptimizedFileUpload
             ->disk(config('filesystems.public_uploads_disk'))
             ->visibility('public')
             ->maxSize(8192)
-            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
-            ->mimeTypeMap(['webp' => 'image/webp']);
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif'])
+            ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif']);
     }
 
     public static function thumbnail(string $name): FileUpload
@@ -44,7 +44,8 @@ class OptimizedFileUpload
             ->imageResizeTargetWidth('400')
             ->imageResizeTargetHeight('400')
             ->maxSize(2048)
-            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp']);
+            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif'])
+            ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif']);
     }
 
     public static function logo(string $name): FileUpload
@@ -57,7 +58,8 @@ class OptimizedFileUpload
             ->imageResizeTargetWidth('800')
             ->imageResizeTargetHeight('800')
             ->maxSize(2048)
-            ->acceptedFileTypes(['image/png', 'image/svg+xml', 'image/webp']);
+            ->acceptedFileTypes(['image/png', 'image/svg+xml', 'image/webp', 'image/avif'])
+            ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif']);
     }
 
     /**
