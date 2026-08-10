@@ -76,13 +76,11 @@ class AboutController extends Controller
                 ['year' => '2026', 'title' => __('Industry Leaders'), 'desc' => __('Recognized as the top infrastructure firm in the Kingdom of Cambodia.'), 'detail' => '', 'has_detail' => false, 'is_featured' => true, 'image' => '/images/webp/projects/Thumbnail-3.webp'],
             ];
 
-            $milestones = Cache::remember('about_milestones_data_'.$localeKey, 43200, function () use ($localeKey, $milestoneFallback) {
-                $milestonesDb = Milestone::where('isActive', true)->orderBy('sortOrder')->get();
-                if ($milestonesDb->isEmpty()) {
-                    return $milestoneFallback;
-                }
-
-                return $milestonesDb->values()->map(function (Milestone $m, int $index) use ($localeKey) {
+            $milestonesDb = Milestone::where('isActive', true)->orderBy('sortOrder')->orderBy('year')->get();
+            if ($milestonesDb->isEmpty()) {
+                $milestones = $milestoneFallback;
+            } else {
+                $milestones = $milestonesDb->values()->map(function (Milestone $m, int $index) use ($localeKey) {
                     $detail = $m->getTranslation('detailed_description', $localeKey);
                     $hasDetail = filled(trim(strip_tags((string) $detail)));
                     $fallbackImage = '/images/webp/projects/Thumbnail-'.(($index % 6) + 1).'.webp';
@@ -97,7 +95,7 @@ class AboutController extends Controller
                         'image' => PublicStorage::urlIfExists($m->image, $fallbackImage),
                     ];
                 })->toArray();
-            });
+            }
 
             $orgChart = Cache::remember('about_orgchart_'.$localeKey, 43200, function () use ($localeKey) {
                 $unitsByParent = OrgUnit::where('isActive', true)

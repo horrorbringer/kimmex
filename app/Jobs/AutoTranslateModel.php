@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ProjectCategory;
+use App\Observers\CacheBusterObserver;
 use App\Services\AutoTranslateService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -74,6 +75,9 @@ class AutoTranslateModel implements ShouldQueue
         if ($changed) {
             // saveQuietly avoids re-firing the saved event and re-dispatching this job
             $model->saveQuietly();
+
+            // Invalidate frontend caches after background translation updates
+            app(CacheBusterObserver::class)->saved($model);
         }
     }
 }

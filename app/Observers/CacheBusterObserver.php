@@ -85,17 +85,17 @@ class CacheBusterObserver
                 'home_testimonials_array_en', 'home_testimonials_array_km',
             ],
             Milestone::class => [
-                'about_milestones_data_en', 'about_milestones_data_km',
-                'home_milestones_en', 'home_milestones_km',
-                'about_page_en', 'about_page_km',
+                'about_milestones_data_en', 'about_milestones_data_km', 'about_milestones_data_kh',
+                'home_milestones_en', 'home_milestones_km', 'home_milestones_kh',
+                'about_page_en', 'about_page_km', 'about_page_kh',
             ],
             OrgUnit::class => [
-                'about_orgchart_en', 'about_orgchart_km',
-                'about_page_en', 'about_page_km',
+                'about_orgchart_en', 'about_orgchart_km', 'about_orgchart_kh',
+                'about_page_en', 'about_page_km', 'about_page_kh',
             ],
             Employee::class => [
-                'about_orgchart_en', 'about_orgchart_km',
-                'about_page_en', 'about_page_km',
+                'about_orgchart_en', 'about_orgchart_km', 'about_orgchart_kh',
+                'about_page_en', 'about_page_km', 'about_page_kh',
             ],
             MethodologyStep::class => [
                 'process_index_array_en', 'process_index_array_km',
