@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\OrgUnits\Schemas;
 
+use App\Filament\Support\TranslationHelper;
 use App\Models\Employee;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -63,6 +64,7 @@ class OrgUnitForm
                             ->label(__('Position Title'))
                             ->placeholder(__('E.g., Engineering Lead, HR Group'))
                             ->helperText(__('Filled from the employee job title. Change it only when this organization position needs a different name.'))
+                            ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
                             ->required(),
                     ]),
                 ]),

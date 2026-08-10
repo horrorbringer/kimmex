@@ -30,6 +30,7 @@ class DepartmentForm
                                 ->placeholder(__('E.g., Civil Engineering'))
                                 ->required()
                                 ->live(onBlur: true)
+                                ->suffixAction(TranslationHelper::getAutoTranslateAction('name'))
                                 ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('URL Slug'))

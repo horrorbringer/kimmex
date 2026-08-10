@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Services\Schemas;
 
 use App\Filament\Support\AIHelper;
 use App\Filament\Support\TranslationHelper;
+use App\Services\AutoTranslateService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
@@ -14,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
@@ -122,10 +124,86 @@ class ServiceForm
                             ->columnSpanFull(),
 
                         Repeater::make('features')
+                            ->label(__('Scope Items & Features'))
                             ->schema([
-                                TextInput::make('name')
-                                    ->label(__('Name'))
-                                    ->required(),
+                                Grid::make(2)->components([
+                                    TextInput::make('name')
+                                        ->label(__('English Name'))
+                                        ->placeholder('e.g. Mechanical Design Service')
+                                        ->required()
+                                        ->suffixAction(
+                                            Action::make('autoTranslateFeature')
+                                                ->label(__('To KH'))
+                                                ->icon('heroicon-m-language')
+                                                ->tooltip(__('Translate to Khmer'))
+                                                ->action(function (Set $set, $state) {
+                                                    if (empty($state)) {
+                                                        Notification::make()
+                                                            ->warning()
+                                                            ->title(__('No text entered'))
+                                                            ->body(__('Please enter an English feature name first.'))
+                                                            ->send();
+
+                                                        return;
+                                                    }
+
+                                                    $translator = app(AutoTranslateService::class);
+                                                    $translated = $translator->translateFrom($state, 'km', 'en');
+                                                    $translated ??= __($state, [], 'km');
+
+                                                    if ($translated && $translated !== $state) {
+                                                        $set('name_kh', $translated);
+                                                        Notification::make()
+                                                            ->success()
+                                                            ->title(__('Feature translated to Khmer'))
+                                                            ->send();
+                                                    } else {
+                                                        Notification::make()
+                                                            ->warning()
+                                                            ->title(__('Translation notice'))
+                                                            ->body(__('Could not automatically translate feature.'))
+                                                            ->send();
+                                                    }
+                                                })
+                                        ),
+                                    TextInput::make('name_kh')
+                                        ->label(__('Khmer Name (ឈ្មោះជាភាសាខ្មែរ)'))
+                                        ->placeholder('ឧទាហរណ៍៖ សេវាកម្មរចនាមេកានិក')
+                                        ->suffixAction(
+                                            Action::make('autoTranslateFeatureToEn')
+                                                ->label(__('To EN'))
+                                                ->icon('heroicon-m-language')
+                                                ->tooltip(__('Translate to English'))
+                                                ->action(function (Set $set, $state) {
+                                                    if (empty($state)) {
+                                                        Notification::make()
+                                                            ->warning()
+                                                            ->title(__('No text entered'))
+                                                            ->body(__('Please enter a Khmer feature name first.'))
+                                                            ->send();
+
+                                                        return;
+                                                    }
+
+                                                    $translator = app(AutoTranslateService::class);
+                                                    $translated = $translator->translateFrom($state, 'en', 'km');
+
+                                                    if ($translated && $translated !== $state) {
+                                                        $set('name', $translated);
+                                                        Notification::make()
+                                                            ->success()
+                                                            ->title(__('Feature translated to English'))
+                                                            ->send();
+                                                    } else {
+                                                        Notification::make()
+                                                            ->warning()
+                                                            ->title(__('Translation notice'))
+                                                            ->body(__('Could not automatically translate feature.'))
+                                                            ->send();
+                                                    }
+                                                })
+                                        ),
+                                ]),
                             ])
                             ->columnSpanFull(),
                     ]),
