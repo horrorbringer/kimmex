@@ -222,8 +222,11 @@ class ProjectController extends Controller
                 'scope' => $resolveContent($projectDb, 'scopeContributions'),
 
                 'images' => $projectDb->images
-                    ->map(fn ($img) => PublicStorage::urlIfExists($img->url))
-                    ->filter()
+                    ->map(fn ($img) => [
+                        'url' => PublicStorage::urlIfExists($img->url),
+                        'caption' => $img->caption ?? '',
+                    ])
+                    ->filter(fn ($item) => ! empty($item['url']))
                     ->values()
                     ->toArray(),
 

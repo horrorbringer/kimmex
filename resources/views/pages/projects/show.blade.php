@@ -183,101 +183,170 @@
             </div>
         </section>
 
-        <!-- --- GALLERY SECTION --- -->
+        <!-- --- GALLERY SECTION WITH PHOTOSWIPE --- -->
         @if(count($project['images']) > 0)
-            <div x-data="{ lightboxOpen: false, lightboxIndex: 0, images: {{ Js::from($project['images']) }} }">
-            <section id="project-gallery" class="bg-slate-50 py-10 md:py-14 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10">
-                <div class="max-w-[1400px] mx-auto">
-                    <h2 class="text-xl md:text-2xl font-black mb-6 md:mb-8 border-l-4 border-titan-red pl-4 md:pl-6">{{ __('Project Gallery') }}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
-                        @foreach($project['images'] as $i => $img)
-                            @if($i < 3)
-                                @php
-                                    $gridClass = "md:col-span-2 aspect-[4/3]";
-                                    $count = count($project['images']);
-                                    if ($count === 1) {
-                                        $gridClass = "md:col-span-6 aspect-video";
-                                    } elseif ($count === 2) {
-                                        $gridClass = "md:col-span-3 aspect-[4/3]";
-                                    } elseif ($count >= 3) {
-                                        if ($i === 0)
-                                            $gridClass = "md:col-span-4 md:row-span-2 aspect-square md:aspect-auto h-full";
-                                        else
-                                            $gridClass = "md:col-span-2 aspect-[4/3]";
-                                    }
-                                @endphp
+            @push('head')
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css">
+            @endpush
 
-                                <button type="button" @click="lightboxIndex = {{ $i }}; lightboxOpen = true"
-                                    aria-label="{{ __('Open gallery image :number', ['number' => $i + 1]) }}"
-                                    class="project-gallery-card rounded-lg overflow-hidden group cursor-pointer relative block w-full h-full bg-white text-left shadow-[0_16px_44px_rgba(11,43,92,0.10)] {{ $gridClass }}">
-                                    <img src="{{ $img }}" alt="Gallery {{ $i + 1 }}"
-                                        class="project-gallery-image absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-[1.06]' : '' }}"
-                                        loading="lazy" decoding="async" />
+            <div x-data="{ displayMode: 'grid' }">
+                <section id="project-gallery" class="bg-slate-50 py-10 md:py-14 px-4 md:px-6 text-titan-navy border-y border-titan-navy/10">
+                    <div class="max-w-[1400px] mx-auto">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8 pb-4 border-b border-titan-navy/10">
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-black border-l-4 border-titan-red pl-4 md:pl-6 leading-tight">
+                                    {{ __('Project Gallery') }}
+                                </h2>
+                                <p class="text-xs text-titan-navy/60 pl-4 md:pl-6 mt-1 font-medium">
+                                    {{ __('Explore high-resolution project photography with interactive PhotoSwipe controls.') }}
+                                </p>
+                            </div>
 
-                                    @if($i === 2 && $count > 3)
-                                        <div
-                                            class="project-gallery-more absolute inset-0 flex flex-col items-center justify-center bg-titan-navy/70 z-10">
-                                            <span class="text-4xl md:text-5xl font-black text-white mb-2">+{{ $count - 3 }}</span>
-                                            <span
-                                                class="text-xs font-bold text-titan-red uppercase tracking-widest">{{ __('More Gallery') }}</span>
-                                        </div>
-                                    @else
-                                        <div
-                                            class="project-gallery-overlay absolute inset-0 bg-black/20">
-                                        </div>
-                                        <div
-                                            class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100">
-                                            <div class="translate-y-2 scale-90 rounded-full bg-white/20 p-4 backdrop-blur-md transition-transform duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100">
-                                                <x-lucide-maximize class="w-6 h-6 text-white" />
-                                            </div>
-                                        </div>
-                                    @endif
+                            {{-- Visualize Display Switcher --}}
+                            <div class="flex items-center gap-2 self-start sm:self-auto bg-white p-1 rounded-lg shadow-sm border border-titan-navy/10">
+                                <button type="button" @click="displayMode = 'grid'"
+                                    :class="displayMode === 'grid' ? 'bg-titan-navy text-white shadow-xs' : 'text-titan-navy/70 hover:text-titan-navy hover:bg-slate-100'"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer">
+                                    <x-lucide-layout-grid class="w-3.5 h-3.5" />
+                                    <span>{{ __('Feature Grid') }}</span>
                                 </button>
-                            @endif
-                        @endforeach
+                                <button type="button" @click="displayMode = 'photoswipe'"
+                                    :class="displayMode === 'photoswipe' ? 'bg-titan-navy text-white shadow-xs' : 'text-titan-navy/70 hover:text-titan-navy hover:bg-slate-100'"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer">
+                                    <x-lucide-images class="w-3.5 h-3.5" />
+                                    <span>{{ __('PhotoSwipe Gallery') }}</span>
+                                </button>
+                                <button type="button" onclick="window.openPhotoSwipeAt(0)"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold bg-titan-red text-white hover:bg-titan-red/90 transition-all cursor-pointer">
+                                    <x-lucide-maximize-2 class="w-3.5 h-3.5" />
+                                    <span>{{ __('Full View') }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Hidden PhotoSwipe Gallery Link Container --}}
+                        <div id="project-gallery-pswp" class="hidden">
+                            @foreach($project['images'] as $i => $img)
+                                @php
+                                    $imgUrl = is_array($img) ? $img['url'] : $img;
+                                    $imgCaption = is_array($img) ? ($img['caption'] ?? '') : '';
+                                @endphp
+                                <a href="{{ $imgUrl }}"
+                                   class="pswp-item"
+                                   data-pswp-width="1920"
+                                   data-pswp-height="1080"
+                                   data-pswp-caption="{{ $imgCaption ?: $project['title'] . ' - Image ' . ($i + 1) }}"
+                                   target="_blank">
+                                    <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" />
+                                </a>
+                            @endforeach
+                        </div>
+
+                        {{-- DISPLAY MODE 1: Bento Feature Grid --}}
+                        <div x-show="displayMode === 'grid'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
+                                @foreach($project['images'] as $i => $img)
+                                    @php
+                                        $imgUrl = is_array($img) ? $img['url'] : $img;
+                                        $count = count($project['images']);
+                                        $gridClass = "md:col-span-2 aspect-[4/3]";
+                                        if ($count === 1) {
+                                            $gridClass = "md:col-span-6 aspect-video";
+                                        } elseif ($count === 2) {
+                                            $gridClass = "md:col-span-3 aspect-[4/3]";
+                                        } elseif ($count >= 3) {
+                                            if ($i === 0)
+                                                $gridClass = "md:col-span-4 md:row-span-2 aspect-square md:aspect-auto h-full";
+                                            else
+                                                $gridClass = "md:col-span-2 aspect-[4/3]";
+                                        }
+                                    @endphp
+
+                                    @if($i < 3)
+                                        <button type="button" onclick="window.openPhotoSwipeAt({{ $i }})"
+                                            aria-label="{{ __('Open gallery image :number', ['number' => $i + 1]) }}"
+                                            class="project-gallery-card rounded-lg overflow-hidden group cursor-pointer relative block w-full h-full bg-white text-left shadow-[0_16px_44px_rgba(11,43,92,0.10)] {{ $gridClass }}">
+                                            <img src="{{ $imgUrl }}" alt="Gallery {{ $i + 1 }}"
+                                                class="project-gallery-image absolute inset-0 w-full h-full object-cover {{ !($i === 2 && $count > 3) ? 'group-hover:scale-[1.06]' : '' }}"
+                                                loading="lazy" decoding="async" />
+
+                                            @if($i === 2 && $count > 3)
+                                                <div class="project-gallery-more absolute inset-0 flex flex-col items-center justify-center bg-titan-navy/75 backdrop-blur-xs z-10">
+                                                    <span class="text-4xl md:text-5xl font-black text-white mb-1">+{{ $count - 3 }}</span>
+                                                    <span class="text-[11px] font-bold text-titan-red uppercase tracking-widest flex items-center gap-1">
+                                                        <x-lucide-images class="w-3.5 h-3.5" /> {{ __('More Gallery') }}
+                                                    </span>
+                                                </div>
+                                            @else
+                                                <div class="project-gallery-overlay absolute inset-0 bg-black/20"></div>
+                                                <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100">
+                                                    <div class="translate-y-2 scale-90 rounded-full bg-white/20 p-3.5 backdrop-blur-md transition-transform duration-300 ease-out group-hover:translate-y-0 group-hover:scale-100 shadow-lg">
+                                                        <x-lucide-maximize class="w-5 h-5 text-white" />
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </button>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+
+                        {{-- DISPLAY MODE 2: PhotoSwipe All Images Grid --}}
+                        <div x-show="displayMode === 'photoswipe'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                                @foreach($project['images'] as $i => $img)
+                                    @php
+                                        $imgUrl = is_array($img) ? $img['url'] : $img;
+                                        $imgCaption = is_array($img) ? ($img['caption'] ?? '') : '';
+                                    @endphp
+                                    <button type="button" onclick="window.openPhotoSwipeAt({{ $i }})"
+                                        class="group rounded-xl overflow-hidden bg-white shadow-sm border border-titan-navy/10 text-left transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+                                        <div class="aspect-[4/3] relative overflow-hidden bg-titan-navy/5">
+                                            <img src="{{ $imgUrl }}" alt="Photo {{ $i + 1 }}"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+                                                <span class="text-xs font-semibold text-white flex items-center gap-1.5">
+                                                    <x-lucide-zoom-in class="w-4 h-4 text-titan-red shrink-0" />
+                                                    <span>{{ __('Click for PhotoSwipe Zoom') }}</span>
+                                                </span>
+                                            </div>
+                                            <span class="absolute top-2.5 right-2.5 bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                {{ $i + 1 }} / {{ count($project['images']) }}
+                                            </span>
+                                        </div>
+                                        @if($imgCaption)
+                                            <div class="p-3 bg-white border-t border-titan-navy/5">
+                                                <p class="text-xs font-medium text-titan-navy/80 line-clamp-1">{{ $imgCaption }}</p>
+                                            </div>
+                                        @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </section>
-
-            <!-- LIGHTBOX — outside section to avoid overflow/transform issues -->
-            <div x-show="lightboxOpen"
-                x-effect="document.body.style.overflow = lightboxOpen ? 'hidden' : ''"
-                @keydown.escape.window="lightboxOpen = false"
-                @keydown.arrow-right.window="if(lightboxOpen) { lightboxIndex = (lightboxIndex + 1) % images.length }"
-                @keydown.arrow-left.window="if(lightboxOpen) { lightboxIndex = (lightboxIndex - 1 + images.length) % images.length }"
-                class="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
-                x-cloak>
-
-                <!-- Close -->
-                <button @click="lightboxOpen = false" type="button"
-                    class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
-                    <x-lucide-x class="w-5 h-5 text-white" />
-                </button>
-
-                <!-- Prev -->
-                <button @click="lightboxIndex = (lightboxIndex - 1 + images.length) % images.length" type="button"
-                    class="absolute left-4 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
-                    <x-lucide-chevron-left class="w-5 h-5 text-white" />
-                </button>
-
-                <!-- Next -->
-                <button @click="lightboxIndex = (lightboxIndex + 1) % images.length" type="button"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 z-50 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors cursor-pointer">
-                    <x-lucide-chevron-right class="w-5 h-5 text-white" />
-                </button>
-
-                <!-- Image -->
-                <img :src="images[lightboxIndex]"
-                    class="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-2xl select-none" decoding="async" />
-
-                <!-- Counter -->
-                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                    <span class="text-white/80 text-xs font-bold">
-                        <span x-text="lightboxIndex + 1"></span> / <span x-text="images.length"></span>
-                    </span>
-                </div>
+                </section>
             </div>
-            </div>
+
+            {{-- PhotoSwipe 5 ES Module Script --}}
+            <script type="module">
+                import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
+                import PhotoSwipe from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js';
+
+                let lightbox = new PhotoSwipeLightbox({
+                    gallery: '#project-gallery-pswp',
+                    children: 'a.pswp-item',
+                    pswpModule: PhotoSwipe,
+                    bgOpacity: 0.92,
+                    showHideAnimationType: 'zoom',
+                    wheelToZoom: true
+                });
+
+                lightbox.init();
+
+                window.openPhotoSwipeAt = function(index = 0) {
+                    lightbox.loadAndOpen(index);
+                };
+            </script>
         @endif
 
         <!-- --- RELATED PROJECTS --- -->
