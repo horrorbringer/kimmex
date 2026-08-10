@@ -222,7 +222,7 @@
                                     <x-lucide-camera class="w-3.5 h-3.5" />
                                     <span>{{ __('Visual Showcase') }}</span>
                                 </div>
-                                <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">
+                                <h2 class="text-2xl md:text-3xl font-black !text-white tracking-tight leading-tight">
                                     {{ __('Project Media & Gallery') }}
                                 </h2>
                                 <p class="text-xs md:text-sm text-slate-400 mt-1 font-medium max-w-xl">
