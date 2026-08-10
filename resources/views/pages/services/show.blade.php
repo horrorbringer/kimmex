@@ -84,6 +84,45 @@
 
 <x-layouts.app :title="$pageTitle" :description="$pageDesc" :image="$service['image']" :canonical="$canonicalUrl">
     @push('head')
+        <style>
+            .service-scope-card {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                background-color: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+            }
+            .service-scope-card:hover {
+                background-color: #0F172A !important;
+                border-color: #0F172A !important;
+                transform: translateY(-4px) !important;
+                box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.4) !important;
+            }
+            .service-scope-card .service-scope-icon {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                background-color: rgba(227, 30, 36, 0.1) !important;
+                border: 1px solid rgba(227, 30, 36, 0.2) !important;
+                color: #E31E24 !important;
+            }
+            .service-scope-card:hover .service-scope-icon {
+                background-color: #E31E24 !important;
+                border-color: #E31E24 !important;
+                color: #ffffff !important;
+                transform: scale(1.1) !important;
+            }
+            .service-scope-card .service-scope-title {
+                transition: color 0.3s ease !important;
+                color: #0F172A !important;
+            }
+            .service-scope-card:hover .service-scope-title {
+                color: #ffffff !important;
+            }
+            .service-scope-card .service-scope-badge {
+                transition: color 0.3s ease !important;
+                color: #E31E24 !important;
+            }
+            .service-scope-card:hover .service-scope-badge {
+                color: rgba(255, 255, 255, 0.75) !important;
+            }
+        </style>
         <script type="application/ld+json">
             {!! json_encode([
                 '@context' => 'https://schema.org',
@@ -150,7 +189,7 @@
                                     {{ __('View Scope') }}
                                 </a>
                                 <a href="/contact"
-                                    class="inline-flex min-h-11 items-center gap-2 rounded border border-slate-300 bg-white px-5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy transition-colors duration-200 hover:border-titan-navy hover:bg-titan-navy hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-4">
+                                    class="inline-flex min-h-11 items-center gap-2 rounded border border-slate-300 bg-white px-5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy transition-colors duration-200 hover:border-titan-navy hover:bg-titan-navy hover:!text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-4">
                                     <x-lucide-phone class="h-4 w-4" />
                                     {{ __('Contact Us') }}
                                 </a>
@@ -182,14 +221,19 @@
                             </div>
 
                             @if(!empty($service['scopeItems']))
-                                <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-3 md:gap-3">
-                                    @foreach(array_slice($service['scopeItems'], 0, 3) as $item)
-                                        <div class="rounded-xl border border-slate-200 bg-white/95 px-3.5 py-3 text-titan-navy shadow-sm backdrop-blur md:px-4">
-                                            <div class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-1">
-                                                {{ __('Included') }}
+                                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                    @foreach($service['scopeItems'] as $item)
+                                        <div class="service-scope-card group flex items-start gap-3 rounded-xl border border-slate-200/90 bg-white/95 p-3.5 text-titan-navy shadow-sm backdrop-blur md:p-4">
+                                            <div class="service-scope-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-titan-red/20 bg-titan-red/10 text-titan-red">
+                                                <x-lucide-check-circle-2 class="h-4 w-4 stroke-[2.2]" />
                                             </div>
-                                            <div class="text-sm font-bold leading-tight text-titan-navy/80 line-clamp-2">
-                                                {{ $item[$lang] }}
+                                            <div class="min-w-0 flex-1">
+                                                <div class="service-scope-badge text-[9px] font-black uppercase tracking-[0.16em] text-titan-red mb-0.5">
+                                                    {{ __('Included') }}
+                                                </div>
+                                                <div class="service-scope-title text-titan-navy/90 {{ $lang === 'kh' ? 'font-khmer text-xs font-bold leading-relaxed' : 'text-xs font-bold leading-snug md:text-sm' }} line-clamp-2">
+                                                    {{ $item[$lang] ?? $item['en'] ?? '' }}
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -260,15 +304,15 @@
                     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
                         @foreach ($service['scopeItems'] as $i => $item)
                             <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                                style="transition-delay: {{ $i * 100 }}ms"
+                                style="transition-delay: {{ $i * 80 }}ms"
                                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                                class="group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-titan-red/30 hover:shadow-[0_18px_35px_-25px_rgba(15,23,42,0.35)] md:gap-5 md:p-6">
+                                class="service-scope-card group flex h-full items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 shadow-sm md:gap-5 md:p-6">
                                 <div
-                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-titan-red/20 bg-titan-red/10 transition-colors duration-200 group-hover:border-titan-red group-hover:bg-titan-red">
-                                    <x-lucide-check-circle-2 class="w-5 h-5 text-titan-red group-hover:text-white transition-colors duration-300" />
+                                    class="service-scope-icon flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-titan-red/20 bg-titan-red/10 text-titan-red">
+                                    <x-lucide-check-circle-2 class="w-5 h-5 stroke-[2]" />
                                 </div>
                                 <span
-                                    class="pt-1.5 text-base font-bold leading-snug text-titan-navy transition-colors duration-200 group-hover:text-titan-red md:pt-2 md:text-lg">{{ $item[$lang] }}</span>
+                                    class="service-scope-title pt-1.5 text-base font-bold leading-relaxed text-titan-navy md:pt-2 md:text-lg {{ $lang === 'kh' ? 'font-khmer' : '' }}">{{ $item[$lang] ?? $item['en'] ?? '' }}</span>
                             </div>
                         @endforeach
                     </div>

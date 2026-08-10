@@ -46,12 +46,49 @@ class ServiceController extends Controller
                 ],
                 'icon' => $serviceDb->icon,
                 'image' => PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
-                'scopeItems' => is_array($serviceDb->features)
-                    ? array_map(
-                        fn ($f) => ['en' => $f['name'] ?? '', 'kh' => $f['name'] ?? ''],
-                        $serviceDb->features,
-                    )
-                    : [],
+                'scopeItems' => (function () use ($serviceDb): array {
+                    $enFeatures = $serviceDb->getTranslation('features', 'en');
+                    $kmFeatures = $serviceDb->getTranslation('features', 'km') ?: $serviceDb->getTranslation('features', 'kh');
+
+                    if (! is_array($enFeatures) || empty($enFeatures)) {
+                        $enFeatures = is_array($serviceDb->features) ? $serviceDb->features : [];
+                    }
+                    if (! is_array($kmFeatures) || empty($kmFeatures)) {
+                        $kmFeatures = $enFeatures;
+                    }
+
+                    $scopeItems = [];
+                    $maxCount = max(count((array) $enFeatures), count((array) $kmFeatures));
+
+                    for ($i = 0; $i < $maxCount; $i++) {
+                        $itemEn = $enFeatures[$i] ?? null;
+                        $itemKm = $kmFeatures[$i] ?? $itemEn;
+
+                        $nameEn = '';
+                        if (is_array($itemEn)) {
+                            $nameEn = $itemEn['name'] ?? $itemEn['en'] ?? '';
+                        } elseif (is_string($itemEn)) {
+                            $nameEn = $itemEn;
+                        }
+
+                        $nameKh = '';
+                        if (is_array($itemKm)) {
+                            $nameKh = $itemKm['name_kh'] ?? $itemKm['name_km'] ?? $itemKm['kh'] ?? $itemKm['km'] ?? $itemKm['name'] ?? '';
+                        } elseif (is_string($itemKm)) {
+                            $nameKh = $itemKm;
+                        }
+
+                        if ($nameEn !== '' || $nameKh !== '') {
+                            $transKh = __($nameEn ?: $nameKh, [], 'km');
+                            $scopeItems[] = [
+                                'en' => $nameEn ?: $nameKh,
+                                'kh' => ($nameKh && $nameKh !== $nameEn) ? $nameKh : ($transKh !== ($nameEn ?: $nameKh) ? $transKh : ($nameEn ?: $nameKh)),
+                            ];
+                        }
+                    }
+
+                    return $scopeItems;
+                })(),
             ];
         });
 
