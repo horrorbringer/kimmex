@@ -167,7 +167,7 @@ class ProjectForm
                                         ->relationship('images')
                                         ->reorderable()
                                         ->orderColumn('sort_order')
-                                        ->maxItems(15)
+                                        ->maxItems(50)
                                         ->schema([
                                             OptimizedFileUpload::image('url')
                                                 ->directory('projects/gallery')
