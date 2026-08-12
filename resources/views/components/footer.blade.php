@@ -140,7 +140,7 @@
             <p>&copy; {{ date('Y') }} {{ $companyName }}. {{ __('All rights reserved') }}.</p>
             <div class="ft-bottom-links">
                 <a href="/privacy-policy">{{ __('Privacy Policy') }}</a>
-                <a href="/sitemap.xml">{{ __('Sitemap') }}</a>
+                <!-- <a href="/sitemap.xml">{{ __('Sitemap') }}</a> -->
             </div>
         </div>
     </div>
