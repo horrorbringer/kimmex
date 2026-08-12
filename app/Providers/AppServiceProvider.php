@@ -236,12 +236,12 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
 
-            AutoTranslateModel::dispatch(
+            AutoTranslateModel::dispatchSync(
                 get_class($model),
                 $model->getKey(),
                 $model->translatable,
                 json_encode($originals),
-            )->onQueue('default');
+            );
         });
 
         // Register model observers

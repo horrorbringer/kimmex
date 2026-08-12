@@ -46,12 +46,8 @@ class AutoTranslateModel implements ShouldQueue
                 continue;
             }
 
-            // Rich-editor HTML must be translated only through its explicit
-            // review action. Background translation could overwrite editor
-            // content while the administrator is reviewing it.
-            if (is_string($currentEn) && $translator->containsHtml($currentEn)) {
-                continue;
-            }
+            // Rich-editor HTML is safely translated through AutoTranslateService preserving tags
+            $isHtml = is_string($currentEn) && $translator->containsHtml($currentEn);
 
             $originalEn = $originals[$field] ?? null;
             $khmerIsEmpty = empty($translations['km']);
