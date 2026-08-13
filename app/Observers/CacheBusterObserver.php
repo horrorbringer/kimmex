@@ -10,6 +10,7 @@ use App\Models\JobPosting;
 use App\Models\MethodologyStep;
 use App\Models\Milestone;
 use App\Models\NewsArticle;
+use App\Models\NewsCategory;
 use App\Models\OrgUnit;
 use App\Models\Partner;
 use App\Models\Project;
@@ -77,6 +78,7 @@ class CacheBusterObserver
                 'news_index_data_en', 'news_index_data_km',
                 'news_sidebar_documents_en', 'news_sidebar_documents_km',
                 'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
+                'news_categories_list_en', 'news_categories_list_km',
             ],
             Partner::class => [
                 'home_partners_array_en', 'home_partners_array_km',
@@ -120,6 +122,10 @@ class CacheBusterObserver
                 'nav_categories_en', 'nav_categories_km',
                 'nav_categories_v2_en', 'nav_categories_v2_km',
                 'nav_project_filters_v1_en', 'nav_project_filters_v1_km',
+            ],
+            NewsCategory::class => [
+                'news_categories_list_en', 'news_categories_list_km', 'news_categories_list_kh',
+                'news_index_data_en', 'news_index_data_km',
             ],
             SystemSetting::class => [
                 'global_settings_en', 'global_settings_km',

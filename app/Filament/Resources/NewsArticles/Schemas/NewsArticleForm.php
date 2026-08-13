@@ -6,6 +6,7 @@ use App\Filament\Support\AIHelper;
 use App\Filament\Support\OptimizedFileUpload;
 use App\Filament\Support\TranslationHelper;
 use App\Models\Employee;
+use App\Models\NewsCategory;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -170,10 +171,20 @@ class NewsArticleForm
                                             ->required()
                                             ->default(now())
                                             ->native(false),
-                                        TextInput::make('category')
+                                        Select::make('news_category_id')
                                             ->label(__('Category'))
-                                            ->required()
-                                            ->suffixAction(TranslationHelper::getAutoTranslateAction('category')),
+                                            ->relationship('newsCategory', 'name')
+                                            ->preload()
+                                            ->searchable()
+                                            ->live()
+                                            ->afterStateUpdated(function (Set $set, $state) {
+                                                if ($state) {
+                                                    $cat = NewsCategory::find($state);
+                                                    if ($cat) {
+                                                        $set('category', $cat->getTranslation('name', 'en'));
+                                                    }
+                                                }
+                                            }),
                                         TextInput::make('readTime')
                                             ->label(__('Read Time'))
                                             ->suffix(__('mins'))

@@ -26,6 +26,7 @@ class NewsArticle extends Model
         'coverImage',
         'publishedAt',
         'category',
+        'news_category_id',
         'tags',
         'authorId',
         'isFeatured',
@@ -88,6 +89,11 @@ class NewsArticle extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'authorId');
+    }
+
+    public function newsCategory(): BelongsTo
+    {
+        return $this->belongsTo(NewsCategory::class, 'news_category_id');
     }
 
     public function projects(): BelongsToMany

@@ -13,6 +13,7 @@ use App\Models\JobPosting;
 use App\Models\MethodologyStep;
 use App\Models\Milestone;
 use App\Models\NewsArticle;
+use App\Models\NewsCategory;
 use App\Models\OrgUnit;
 use App\Models\Partner;
 use App\Models\Project;
@@ -40,6 +41,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use League\Flysystem\Filesystem;
 use Spatie\Translatable\HasTranslations;
 
@@ -101,6 +103,7 @@ class AppServiceProvider extends ServiceProvider
         DocumentCategory::observe($cacheBuster);
         ProjectCategory::observe($cacheBuster);
         SystemSetting::observe($cacheBuster);
+        NewsCategory::observe($cacheBuster);
 
         View::composer('*', function ($view) {
             if (app()->runningInConsole() && ! app()->runningUnitTests()) {
@@ -128,9 +131,48 @@ class AppServiceProvider extends ServiceProvider
 
             $hasPublicDocuments ??= Cache::remember('has_public_documents', now()->addHours(1), fn () => Document::publicDocumentsExist());
 
+            $newsCategories = Cache::remember('news_categories_list_'.$lang, now()->addHours(12), function () use ($lang) {
+                $dbCategories = NewsCategory::where('is_active', true)
+                    ->orderBy('order_index')
+                    ->get()
+                    ->map(function ($cat) use ($lang) {
+                        $name = $cat->getTranslation('name', $lang) ?: $cat->getTranslation('name', 'en');
+
+                        return [
+                            'name' => $name,
+                            'slug' => $cat->slug,
+                            'url' => '/news?category='.urlencode($name),
+                        ];
+                    })->toArray();
+
+                if (! empty($dbCategories)) {
+                    return $dbCategories;
+                }
+
+                $rawCategories = NewsArticle::where('isActive', true)
+                    ->where('publishedAt', '<=', now())
+                    ->get()
+                    ->map(fn ($n) => $n->getTranslation('category', $lang) ?: $n->getTranslation('category', 'en'))
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->toArray();
+
+                if (empty($rawCategories)) {
+                    $rawCategories = [__('Building Construction'), __('General News')];
+                }
+
+                return array_map(fn ($cat) => [
+                    'name' => $cat,
+                    'slug' => Str::slug($cat),
+                    'url' => '/news?category='.urlencode($cat),
+                ], $rawCategories);
+            });
+
             $view->with('globalSettings', $settings);
             $view->with('siteLocale', $lang);
             $view->with('hasPublicDocuments', $hasPublicDocuments);
+            $view->with('newsCategories', $newsCategories);
         });
 
         FilamentView::registerRenderHook(

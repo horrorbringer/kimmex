@@ -366,22 +366,30 @@
                             class="absolute top-full left-0 pt-0 opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-2 group-hover/nav:translate-y-0 z-50">
                             <div
                                 class="bg-white/95 backdrop-blur-xl shadow-[0_40px_80px_-12px_rgba(0,0,0,0.15)] rounded border border-gray-100 min-w-[280px] p-2">
-                                <a href="/news"
-                                    class="flex items-center px-4 py-3.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
-                                    <div>
-                                        <div
-                                            class="font-medium text-titan-navy group-hover/item:text-titan-red text-sm transition-colors">
-                                            {{ __('News & Updates') }}
+                                @php
+                                    $categoriesList = $newsCategories ?? [
+                                        ['name' => __('Building Construction'), 'url' => '/news?category='.urlencode(__('Building Construction'))],
+                                        ['name' => __('General News'), 'url' => '/news?category='.urlencode(__('General News'))],
+                                    ];
+                                @endphp
+                                @foreach($categoriesList as $index => $catItem)
+                                    <a href="{{ $catItem['url'] }}"
+                                        class="flex items-center px-4 py-2.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
+                                        <div>
+                                            <div
+                                                class="font-medium text-titan-navy group-hover/item:text-titan-red text-sm transition-colors">
+                                                {{ $catItem['name'] }}
+                                            </div>
                                         </div>
-                                        <div
-                                            class="text-[10px] text-titan-navy/40 mt-0.5 group-hover/item:text-titan-navy/60 transition-colors">
-                                            {{ __('Latest announcements') }}
-                                        </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                    @if(!$loop->last)
+                                        <div class="h-[1px] bg-gray-100/40 my-0.5 mx-1"></div>
+                                    @endif
+                                @endforeach
                                 @if($hasPublicDocuments)
+                                    <div class="h-[1px] bg-gray-100/70 my-1 mx-1"></div>
                                     <a href="/documents"
-                                        class="flex items-center px-4 py-3.5 rounded hover:bg-gray-50 transition-all duration-200 group/item">
+                                        class="flex items-center px-4 py-3 rounded hover:bg-gray-50 transition-all duration-200 group/item">
                                         <div>
                                             <div
                                                 class="font-medium text-titan-navy group-hover/item:text-titan-red text-sm transition-colors">
@@ -565,12 +573,18 @@
                             x-bind:class="expandedMobileItem === 3 ? 'rotate-180' : ''" />
                     </div>
                     <div x-show="expandedMobileItem === 3" x-collapse style="display:none" class="ml-4 mt-1 space-y-1">
-                        <a href="/news"
-                            class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
-                            <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
-                            <span class="text-sm font-medium">{{ __('News & Updates') }}</span>
-                        </a>
+                        @foreach($categoriesList as $index => $catItem)
+                            <a href="{{ $catItem['url'] }}"
+                                class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
+                                <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
+                                <span class="text-sm font-medium">{{ $catItem['name'] }}</span>
+                            </a>
+                            @if(!$loop->last)
+                                <div class="h-[1px] bg-gray-100/40 my-0.5 mx-2"></div>
+                            @endif
+                        @endforeach
                         @if($hasPublicDocuments)
+                            <div class="h-[1px] bg-gray-100/60 my-1 mx-2"></div>
                             <a href="/documents"
                                 class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">
                                 <div class="w-1.5 h-1.5 rounded-full bg-titan-red"></div>
