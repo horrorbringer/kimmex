@@ -123,38 +123,37 @@
         </section>
 
 
-        <!-- ═══ FEATURED ARTICLE ═══ -->
+        <!-- ═══ FEATURED ARTICLE (DUAL HORIZONTAL 50/50 SPLIT LAYOUT) ═══ -->
         @if($featured)
-        <section class="max-w-[1280px] mx-auto px-6 -mt-8 relative z-20">
+        <section class="max-w-[1280px] mx-auto px-6 -mt-10 relative z-20 w-full">
             <a href="/news/{{ $featured['slug'] }}"
-               class="group relative block rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)] hover:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.25)] transition-all duration-500"
-               style="min-height: 340px; background: #0B2B5C;">
-                <div class="absolute inset-0">
-                    <img src="{{ $featured['image'] }}" alt="{{ $featured['title'] }}"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.2s]"
-                         loading="eager" decoding="async" />
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/65 via-black/30 to-black/5"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"></div>
-                </div>
-                <div class="relative z-10 flex flex-col justify-end h-full p-7 md:p-12" style="min-height: 340px;">
-                    <div class="max-w-2xl">
-                        <div class="flex items-center gap-3 mb-4">
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-md" style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
+               class="group grid grid-cols-1 md:grid-cols-2 w-full rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border border-gray-200/80 bg-white hover:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.2)] transition-all duration-500 min-h-[360px]">
+                <!-- Left Side: Text Content -->
+                <div class="p-7 md:p-10 flex flex-col justify-between bg-white text-gray-900 min-w-0">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4 flex-wrap">
+                            <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-md bg-titan-red text-white shadow-sm inline-block">
                                 {{ $featured['category'] }}
                             </span>
-                            <span class="text-xs font-medium" style="color: rgba(255,255,255,0.5);">{{ $featured['date'] }}</span>
+                            <span class="text-xs font-medium text-gray-400">{{ $featured['date'] }}</span>
                         </div>
-                        <h2 class="text-2xl md:text-3xl font-heading font-black leading-tight mb-4" style="color: #FFFFFF;">
+                        <h2 class="text-2xl md:text-3xl font-heading font-black leading-snug text-titan-navy group-hover:text-titan-red transition-colors mb-4">
                             {{ $featured['title'] }}
                         </h2>
-                        <p class="text-sm md:text-base leading-relaxed line-clamp-2 mb-6 hidden sm:block" style="color: rgba(255,255,255,0.7);">
+                        <p class="text-sm leading-relaxed text-gray-600 line-clamp-4 mb-6">
                             {{ $featured['excerpt'] }}
                         </p>
-                        <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider group-hover:gap-3 transition-all" style="color: var(--primary-color, #E31E24);">
-                            {{ __('Read Full Story') }}
-                            <x-lucide-arrow-right class="w-4 h-4" />
-                        </div>
                     </div>
+                    <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-titan-red group-hover:gap-3 transition-all pt-4 border-t border-gray-100">
+                        {{ __('Read Full Story') }}
+                        <x-lucide-arrow-right class="w-4 h-4" />
+                    </div>
+                </div>
+                <!-- Right Side: Featured Image -->
+                <div class="relative min-h-[260px] md:min-h-[360px] h-full overflow-hidden bg-gray-100 min-w-0">
+                    <img src="{{ $featured['image'] }}" alt="{{ $featured['title'] }}"
+                         class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                         loading="eager" decoding="async" />
                 </div>
             </a>
         </section>
@@ -190,7 +189,7 @@
                                class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col">
                                 <div class="relative aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
                                     <img :src="article.image" :alt="article.title"
-                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                         class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                                          loading="lazy" decoding="async" />
                                     <div class="absolute top-3 left-3">
                                         <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md backdrop-blur-sm"
