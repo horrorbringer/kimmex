@@ -52,7 +52,7 @@ class NewsController extends Controller
 
             return [
                 'slug' => $articleDb->slug,
-                'category' => $articleDb->getTranslation('category', $locale) ?: __('Updates'),
+                'category' => $articleDb->newsCategory ? ($articleDb->newsCategory->getTranslation('name', $locale) ?: $articleDb->newsCategory->getTranslation('name', 'en')) : ($articleDb->getTranslation('category', $locale) ?: __('Updates')),
                 'image' => $resolveNewsImage($articleDb->coverImage, $fallbackImage),
                 'title' => $articleDb->getTranslation('title', $locale),
                 'metaTitle' => $articleDb->getTranslation('metaTitle', $locale),

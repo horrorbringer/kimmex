@@ -164,7 +164,7 @@ class NewsArticleForm
                             ->icon('heroicon-o-calendar')
                             ->schema([
                                 Section::make(__('Schedule & Category'))
-                                    ->columns(3)
+                                    ->columns(4)
                                     ->components([
                                         DateTimePicker::make('publishedAt')
                                             ->label(__('Published At'))
@@ -172,8 +172,9 @@ class NewsArticleForm
                                             ->default(now())
                                             ->native(false),
                                         Select::make('news_category_id')
-                                            ->label(__('Category'))
+                                            ->label(__('Category (Select)'))
                                             ->relationship('newsCategory', 'name')
+                                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->getTranslation('name', app()->getLocale()) ?: $record->getTranslation('name', 'en'))
                                             ->preload()
                                             ->searchable()
                                             ->live()
@@ -185,6 +186,16 @@ class NewsArticleForm
                                                     }
                                                 }
                                             }),
+                                        TextInput::make('category')
+                                            ->label(__('Manual Category'))
+                                            ->placeholder('e.g., Special Announcement')
+                                            ->helperText(__('Custom category text if not using category list.'))
+                                            ->afterStateHydrated(function (TextInput $component, $state) {
+                                                if (is_array($state)) {
+                                                    $component->state($state['en'] ?? $state['km'] ?? reset($state) ?: '');
+                                                }
+                                            })
+                                            ->suffixAction(TranslationHelper::getAutoTranslateAction('category')),
                                         TextInput::make('readTime')
                                             ->label(__('Read Time'))
                                             ->suffix(__('mins'))

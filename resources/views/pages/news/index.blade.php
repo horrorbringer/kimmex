@@ -16,7 +16,7 @@
                         ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 160);
                     return [
                         'slug'       => $n->slug,
-                        'category'   => $n->getTranslation('category', $locale) ?: __('Updates'),
+                        'category'   => $n->newsCategory ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en')) : ($n->getTranslation('category', $locale) ?: __('Updates')),
                         'image'      => \App\Support\PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
                         'title'      => $n->getTranslation('title', $locale),
                         'date'       => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),

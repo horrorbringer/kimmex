@@ -20,6 +20,7 @@ class NewsCategoriesTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Category Name'))
+                    ->formatStateUsing(fn ($state, $record) => is_array($state) ? ($record?->getTranslation('name', app()->getLocale()) ?: reset($state)) : $state)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('slug')
