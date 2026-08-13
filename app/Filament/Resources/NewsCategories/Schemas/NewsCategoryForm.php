@@ -26,12 +26,6 @@ class NewsCategoryForm
                                 ->placeholder('e.g., Building Construction')
                                 ->required()
                                 ->live(onBlur: true)
-                                ->afterStateHydrated(function (TextInput $component, $state) {
-                                    if (is_array($state)) {
-                                        $locale = app()->getLocale();
-                                        $component->state($state[$locale] ?? $state['en'] ?? reset($state) ?: '');
-                                    }
-                                })
                                 ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state ?? '')))
                                 ->suffixAction(TranslationHelper::getAutoTranslateAction('name')),
                             TextInput::make('slug')
@@ -43,12 +37,6 @@ class NewsCategoryForm
                         Textarea::make('description')
                             ->label(__('Description'))
                             ->rows(3)
-                            ->afterStateHydrated(function (Textarea $component, $state) {
-                                if (is_array($state)) {
-                                    $locale = app()->getLocale();
-                                    $component->state($state[$locale] ?? $state['en'] ?? reset($state) ?: '');
-                                }
-                            })
                             ->hintAction(TranslationHelper::getAutoTranslateAction('description')),
                     ]),
 

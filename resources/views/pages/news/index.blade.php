@@ -14,14 +14,17 @@
                 ->map(function ($n) use ($locale, $fallbackImage) {
                     $excerpt = $n->getTranslation('excerpt', $locale)
                         ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 160);
+                    $catName = $n->newsCategory ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en')) : ($n->getTranslation('category', $locale) ?: __('Updates'));
+                    $catSlug = $n->newsCategory ? $n->newsCategory->slug : \Illuminate\Support\Str::slug($n->getTranslation('category', 'en') ?: 'updates');
                     return [
-                        'slug'       => $n->slug,
-                        'category'   => $n->newsCategory ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en')) : ($n->getTranslation('category', $locale) ?: __('Updates')),
-                        'image'      => \App\Support\PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
-                        'title'      => $n->getTranslation('title', $locale),
-                        'date'       => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-                        'excerpt'    => $excerpt,
-                        'isFeatured' => (bool) $n->isFeatured,
+                        'slug'         => $n->slug,
+                        'category'     => $catName,
+                        'categorySlug' => $catSlug,
+                        'image'        => \App\Support\PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
+                        'title'        => $n->getTranslation('title', $locale),
+                        'date'         => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                        'excerpt'      => $excerpt,
+                        'isFeatured'   => (bool) $n->isFeatured,
                     ];
                 })->toArray();
         });
@@ -62,18 +65,27 @@
 
     <div class="min-h-screen bg-gray-50"
          x-data="{
-            activeCategory: 'all',
+            activeCategory: {{ Js::from(request('category', 'all')) }},
             perPage: {{ $perPage }},
             visible: {{ $perPage }},
             allArticles: {{ Js::from($gridArticles) }},
             get filtered() {
-                if (this.activeCategory === 'all') return this.allArticles;
-                return this.allArticles.filter(a => a.category === this.activeCategory);
+                if (!this.activeCategory || this.activeCategory === 'all') return this.allArticles;
+                const target = String(this.activeCategory).toLowerCase();
+                return this.allArticles.filter(a =>
+                    String(a.category).toLowerCase() === target ||
+                    String(a.categorySlug).toLowerCase() === target
+                );
             },
             get shown() { return this.filtered.slice(0, this.visible); },
             get hasMore() { return this.visible < this.filtered.length; },
             loadMore() { this.visible += this.perPage; },
-            setCategory(cat) { this.activeCategory = cat; this.visible = this.perPage; }
+            setCategory(cat) { this.activeCategory = cat; this.visible = this.perPage; },
+            isCategoryActive(cat) {
+                if (cat === 'all') return !this.activeCategory || this.activeCategory === 'all';
+                const target = String(this.activeCategory).toLowerCase();
+                return String(cat).toLowerCase() === target;
+            }
          }">
 
         <!-- ═══ HERO ═══ -->
@@ -158,13 +170,13 @@
                     <!-- Category Filters -->
                     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-8">
                         <button @click="setCategory('all')"
-                            :class="activeCategory === 'all' ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'"
+                            :class="isCategoryActive('all') ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'"
                             class="h-9 px-4 rounded-lg border text-xs font-bold transition-all shrink-0 whitespace-nowrap">
                             {{ __('All') }} <span class="opacity-50 ml-1">({{ count($gridArticles) }})</span>
                         </button>
                         @foreach($categories as $cat)
                             <button @click="setCategory(@js($cat))"
-                                :class="activeCategory === @js($cat) ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'"
+                                :class="isCategoryActive(@js($cat)) ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'"
                                 class="h-9 px-4 rounded-lg border text-xs font-bold transition-all shrink-0 whitespace-nowrap">
                                 {{ $cat }} <span class="opacity-50 ml-1">({{ $categoryCounts[$cat] ?? 0 }})</span>
                             </button>

@@ -141,7 +141,7 @@ class AppServiceProvider extends ServiceProvider
                         return [
                             'name' => $name,
                             'slug' => $cat->slug,
-                            'url' => '/news?category='.urlencode($name),
+                            'url' => '/news?category='.urlencode($cat->slug),
                         ];
                     })->toArray();
 
