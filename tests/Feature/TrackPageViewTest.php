@@ -32,10 +32,12 @@ class TrackPageViewTest extends TestCase
         ])->get('/analytics-performance-test')
             ->assertOk();
 
+        $expectedCountry = file_exists(storage_path('app/geoip/GeoLite2-Country.mmdb')) ? 'United States' : 'Unknown';
+
         $this->assertDatabaseHas(PageView::class, [
             'path' => '/analytics-performance-test',
             'ip' => '8.8.8.8',
-            'country' => 'Unknown',
+            'country' => $expectedCountry,
         ]);
     }
 

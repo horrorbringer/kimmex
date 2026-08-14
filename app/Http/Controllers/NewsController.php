@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class NewsController extends Controller
@@ -37,7 +36,7 @@ class NewsController extends Controller
             }
 
             $excerpt = $articleDb->getTranslation('excerpt', $locale)
-                ?: Str::limit(strip_tags($articleDb->getTranslation('content', $locale)), 180);
+                ?: strip_tags($articleDb->getTranslation('content', $locale));
 
             $relatedProjects = $articleDb->projects()
                 ->where('isActive', true)
@@ -120,10 +119,22 @@ class NewsController extends Controller
                     ->first();
 
                 if ($nextDb) {
-                    $next = ['slug' => $nextDb->slug, 'title' => $nextDb->getTranslation('title', $locale)];
+                    $next = [
+                        'slug' => $nextDb->slug,
+                        'title' => $nextDb->getTranslation('title', $locale),
+                        'image' => $resolveNewsImage($nextDb->coverImage, $fallbackImage),
+                        'category' => $nextDb->newsCategory ? ($nextDb->newsCategory->getTranslation('name', $locale) ?: $nextDb->newsCategory->getTranslation('name', 'en')) : ($nextDb->getTranslation('category', $locale) ?: __('Updates')),
+                        'date' => $nextDb->publishedAt ? $nextDb->publishedAt->format('M d, Y') : $nextDb->created_at->format('M d, Y'),
+                    ];
                 }
                 if ($prevDb) {
-                    $prev = ['slug' => $prevDb->slug, 'title' => $prevDb->getTranslation('title', $locale)];
+                    $prev = [
+                        'slug' => $prevDb->slug,
+                        'title' => $prevDb->getTranslation('title', $locale),
+                        'image' => $resolveNewsImage($prevDb->coverImage, $fallbackImage),
+                        'category' => $prevDb->newsCategory ? ($prevDb->newsCategory->getTranslation('name', $locale) ?: $prevDb->newsCategory->getTranslation('name', 'en')) : ($prevDb->getTranslation('category', $locale) ?: __('Updates')),
+                        'date' => $prevDb->publishedAt ? $prevDb->publishedAt->format('M d, Y') : $prevDb->created_at->format('M d, Y'),
+                    ];
                 }
             }
 
