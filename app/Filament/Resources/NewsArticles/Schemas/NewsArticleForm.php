@@ -12,7 +12,6 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
 use Filament\Forms\Components\Select;
@@ -20,6 +19,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -231,11 +231,19 @@ class NewsArticleForm
                             ->schema([
                                 Section::make(__('Cover Image'))
                                     ->components([
-                                        Radio::make('coverImage_source')
+                                        ToggleButtons::make('coverImage_source')
                                             ->label(__('Cover Image Source'))
                                             ->options([
-                                                'upload' => __('📁 Upload Image File (Auto WebP/AVIF)'),
-                                                'url' => __('🔗 External Image URL (CDN / Direct Link)'),
+                                                'upload' => __('Upload File'),
+                                                'url' => __('External Image URL'),
+                                            ])
+                                            ->icons([
+                                                'upload' => 'heroicon-m-arrow-up-tray',
+                                                'url' => 'heroicon-m-link',
+                                            ])
+                                            ->colors([
+                                                'upload' => 'primary',
+                                                'url' => 'info',
                                             ])
                                             ->default('upload')
                                             ->inline()
@@ -350,12 +358,22 @@ class NewsArticleForm
                                     ->description(__('Upload files or add external image links (max 12)'))
                                     ->collapsible()
                                     ->components([
-                                        Radio::make('gallery_source')
+                                        ToggleButtons::make('gallery_source')
                                             ->label(__('Gallery Source'))
                                             ->options([
-                                                'upload' => __('📁 Upload Files'),
-                                                'urls' => __('🔗 External Image URLs'),
-                                                'both' => __('⚡ Both (Uploads + URLs)'),
+                                                'upload' => __('Upload Files'),
+                                                'urls' => __('External Image URLs'),
+                                                'both' => __('Both (Uploads + URLs)'),
+                                            ])
+                                            ->icons([
+                                                'upload' => 'heroicon-m-arrow-up-tray',
+                                                'urls' => 'heroicon-m-link',
+                                                'both' => 'heroicon-m-sparkles',
+                                            ])
+                                            ->colors([
+                                                'upload' => 'primary',
+                                                'urls' => 'info',
+                                                'both' => 'warning',
                                             ])
                                             ->default('upload')
                                             ->inline()

@@ -37,13 +37,13 @@
     </url>
     <url>
         <loc>http://kimmex.test/documents</loc>
-        <lastmod>2026-08-14T16:48:31+07:00</lastmod>
+        <lastmod>2026-08-14T16:59:27+07:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>http://kimmex.test/documents/annual-report</loc>
-        <lastmod>2026-08-14T16:48:31+07:00</lastmod>
+        <lastmod>2026-08-14T16:59:27+07:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
