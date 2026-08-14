@@ -76,9 +76,16 @@ Route::get('/manifest.json', function () {
 })->name('pwa.manifest');
 
 Route::get('/robots.txt', function () {
+    $path = public_path('robots.txt');
+
+    if (file_exists($path)) {
+        return response(file_get_contents($path), 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+    }
+
     return response(implode("\n", [
         'User-agent: *',
-        'Disallow:',
+        'Allow: /',
+        'Disallow: /admin',
         'Sitemap: '.url('/sitemap.xml'),
         '',
     ]), 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
