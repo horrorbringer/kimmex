@@ -265,6 +265,11 @@ class AIHelper
                 'description' => __('Generate description, highlights, and SEO from the project title.'),
                 'fields' => ['description', 'metaTitle', 'metaDescription'],
             ],
+            'document' => [
+                'label' => __('AI Auto-Fill Document'),
+                'description' => __('Generate document description and overview from the title.'),
+                'fields' => ['description_en'],
+            ],
             default => [
                 'label' => __('AI Auto-Fill'),
                 'description' => __('Auto-generate content from existing fields.'),
@@ -390,6 +395,15 @@ class AIHelper
                                 $filled++;
                             }
                         }
+                    } elseif ($type === 'document') {
+                        $docTitle = $get('title_en') ?: ($get('title') ?: $title);
+                        if (empty(trim(strip_tags($get('description_en') ?? '')))) {
+                            $desc = $ai->generateContent($docTitle, 'text', 'Write a 2-3 sentence professional overview and summary for this corporate/engineering publication document.');
+                            if ($desc) {
+                                $set('description_en', '<p>'.trim(strip_tags($desc)).'</p>');
+                                $filled++;
+                            }
+                        }
                     }
 
                     if ($filled > 0) {
@@ -493,6 +507,12 @@ class AIHelper
 
             if (empty(trim($get('metaDescription') ?? ''))) {
                 $set('metaDescription', Str::limit($title.' - A construction project by Kimmex Construction & Investment.', 155));
+                $filled++;
+            }
+        } elseif ($type === 'document') {
+            $docTitle = $get('title_en') ?: ($get('title') ?: $title);
+            if (empty(trim(strip_tags($get('description_en') ?? '')))) {
+                $set('description_en', '<p>'.$docTitle.' is an official corporate publication provided by Kimmex Construction & Investment Co., Ltd.</p>');
                 $filled++;
             }
         }

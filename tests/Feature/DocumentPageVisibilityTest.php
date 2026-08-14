@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\DocumentLibrary;
 use App\Models\Document;
 use App\Models\DocumentCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class DocumentPageVisibilityTest extends TestCase
@@ -44,5 +46,38 @@ class DocumentPageVisibilityTest extends TestCase
         ]);
 
         $this->get('/documents')->assertOk();
+    }
+
+    public function test_categories_without_documents_are_hidden_from_library(): void
+    {
+        $categoryWithDoc = DocumentCategory::create([
+            'name' => ['en' => 'ActiveCategoryAlpha', 'km' => 'ActiveCategoryAlpha'],
+            'slug' => 'active-category-alpha',
+            'isActive' => true,
+        ]);
+
+        $emptyCategory = DocumentCategory::create([
+            'name' => ['en' => 'EmptyCategoryBeta', 'km' => 'EmptyCategoryBeta'],
+            'slug' => 'empty-category-beta',
+            'isActive' => true,
+        ]);
+
+        Document::create([
+            'title' => ['en' => 'Active Doc', 'km' => 'Active Doc'],
+            'slug' => 'active-doc',
+            'description' => ['en' => 'Doc desc', 'km' => 'Doc desc'],
+            'fileUrl' => 'documents/active.pdf',
+            'category' => 'ActiveCategoryAlpha',
+            'document_category_id' => $categoryWithDoc->id,
+            'isPublic' => true,
+            'isActive' => true,
+        ]);
+
+        $categoryWithDoc->refresh();
+        $emptyCategory->refresh();
+
+        Livewire::test(DocumentLibrary::class)
+            ->assertSee($categoryWithDoc->getTranslation('name', app()->getLocale()))
+            ->assertDontSee($emptyCategory->getTranslation('name', app()->getLocale()));
     }
 }

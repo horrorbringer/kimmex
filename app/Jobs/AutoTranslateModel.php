@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Models\Document;
+use App\Models\NewsArticle;
 use App\Models\ProjectCategory;
 use App\Observers\CacheBusterObserver;
 use App\Services\AutoTranslateService;
@@ -53,7 +55,7 @@ class AutoTranslateModel implements ShouldQueue
             $khmerIsEmpty = empty($translations['km']);
             $englishChanged = $currentEn !== $originalEn;
 
-            $shouldTranslate = $model instanceof ProjectCategory
+            $shouldTranslate = ($model instanceof ProjectCategory || $model instanceof NewsArticle || $model instanceof Document)
                 ? $khmerIsEmpty
                 : ($khmerIsEmpty || $englishChanged);
 

@@ -50,7 +50,7 @@
         $telegram = $profile['telegram'] ?? null;
         $tiktok = $profile['tiktok'] ?? null;
 
-        $lang = $siteLocale;
+        $lang = $siteLocale ?? app()->getLocale();
         $companyName = $profile[$lang]['company_name'] ?? $profile['en']['company_name'] ?? 'KIMMEX';
         $tagline = $globalSettings['brand']['tagline'] ?? $profile['en']['tagline'] ?? __('Construction & Investment');
         $logo = (! empty($profile['logo_header'])) ? $profile['logo_header'] : ($profile['logo'] ?? null);

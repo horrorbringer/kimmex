@@ -81,8 +81,11 @@ class Document extends Model
         Cache::forget('document_library_total_documents');
         Cache::forget('document_library_total_categories');
 
-        foreach (['en', 'km'] as $locale) {
+        foreach (['en', 'km', 'kh'] as $locale) {
             Cache::forget("news_sidebar_documents_{$locale}");
+            Cache::forget("document_library_categories_{$locale}");
+            Cache::forget("document_library_categories_v2_{$locale}");
+            Cache::forget("document_library_categories_v3_{$locale}");
         }
     }
 

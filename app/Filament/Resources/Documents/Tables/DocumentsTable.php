@@ -33,6 +33,16 @@ class DocumentsTable
                     ->badge()
                     ->color('info')
                     ->searchable(),
+                TextColumn::make('fileType')
+                    ->label(__('File Type'))
+                    ->badge()
+                    ->color(fn ($state, $record) => str_starts_with((string) $record->fileUrl, 'http') ? 'info' : 'gray')
+                    ->formatStateUsing(function ($state, $record) {
+                        $isExternal = str_starts_with((string) $record->fileUrl, 'http');
+                        $ext = $state ?: ($isExternal ? 'URL' : 'FILE');
+
+                        return ($isExternal ? '🔗 ' : '📄 ').$ext;
+                    }),
                 ToggleColumn::make('isPublic')
                     ->label(__('Public')),
                 ToggleColumn::make('isActive')

@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Document;
 use App\Models\DocumentCategory;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -16,7 +15,14 @@ class DocumentLibrary extends Component
 
     public $activeTabId = 'all';
 
+    public $sortBy = 'latest';
+
     public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortBy()
     {
         $this->resetPage();
     }
@@ -29,16 +35,19 @@ class DocumentLibrary extends Component
 
     public function render()
     {
-        $categories = Cache::remember('document_library_categories_v2_'.app()->getLocale(), now()->addMinutes(10), function () {
-            return DocumentCategory::where('isActive', true)
-                ->orderBy('name->en')
-                ->get()
-                ->map(fn ($cat) => [
-                    'id' => (string) $cat->id,
-                    'name' => $cat->getTranslation('name', app()->getLocale()),
-                ])
-                ->all();
-        });
+        $locale = app()->getLocale();
+
+        $categories = DocumentCategory::where('isActive', true)
+            ->whereHas('documents', function ($query) {
+                $query->publiclyVisible();
+            })
+            ->orderBy('sort_order')
+            ->get()
+            ->map(fn ($cat) => [
+                'id' => (string) $cat->id,
+                'name' => $cat->getTranslation('name', $locale) ?: $cat->getTranslation('name', 'en'),
+            ])
+            ->all();
 
         $query = Document::with('documentCategory')->publiclyVisible();
 
@@ -55,11 +64,20 @@ class DocumentLibrary extends Component
             });
         }
 
+        $query->orderByDesc('is_featured');
+
+        match ($this->sortBy) {
+            'oldest' => $query->oldest(),
+            'title_asc' => $query->orderBy('title->'.$locale, 'asc'),
+            'title_desc' => $query->orderBy('title->'.$locale, 'desc'),
+            default => $query->latest(),
+        };
+
         return view('livewire.document-library', [
-            'documents' => $query->orderByDesc('is_featured')->latest()->paginate(12),
+            'documents' => $query->paginate(12),
             'categories' => $categories,
-            'totalDocuments' => Cache::remember('document_library_total_documents', now()->addMinutes(10), fn () => Document::publiclyVisible()->count()),
-            'totalCategories' => Cache::remember('document_library_total_categories', now()->addMinutes(10), fn () => DocumentCategory::where('isActive', true)->count()),
+            'totalDocuments' => Document::publiclyVisible()->count(),
+            'totalCategories' => count($categories),
         ]);
     }
 }
