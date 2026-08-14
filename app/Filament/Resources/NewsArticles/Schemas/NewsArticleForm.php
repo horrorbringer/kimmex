@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\ToolbarButtonGroup;
@@ -26,6 +27,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class NewsArticleForm
@@ -232,8 +234,8 @@ class NewsArticleForm
                                         Radio::make('coverImage_source')
                                             ->label(__('Cover Image Source'))
                                             ->options([
-                                                'upload' => __('📁 Upload Image File'),
-                                                'url' => __('🔗 External Image URL'),
+                                                'upload' => __('📁 Upload Image File (Auto WebP/AVIF)'),
+                                                'url' => __('🔗 External Image URL (CDN / Direct Link)'),
                                             ])
                                             ->default('upload')
                                             ->inline()
@@ -242,14 +244,105 @@ class NewsArticleForm
                                         OptimizedFileUpload::hero('coverImage')
                                             ->directory('news/covers')
                                             ->label(__('Cover Image File'))
+                                            ->helperText(__('Upload high-resolution image. It will be automatically optimized.'))
                                             ->visible(fn (Get $get) => ($get('coverImage_source') ?? 'upload') === 'upload'),
 
                                         TextInput::make('coverImageUrl')
                                             ->label(__('External Cover Image URL'))
                                             ->placeholder('https://images.unsplash.com/... or https://example.com/image.jpg')
-                                            ->helperText(__('Enter direct image link (e.g., https://... or http://...)'))
+                                            ->prefixIcon('heroicon-o-link')
+                                            ->helperText(__('Enter direct image link (supports https:// or http://). Changes preview immediately.'))
                                             ->url()
                                             ->live(onBlur: true)
+                                            ->suffixActions([
+                                                Action::make('openLink')
+                                                    ->icon('heroicon-o-arrow-top-right-on-square')
+                                                    ->tooltip(__('Open image in new tab'))
+                                                    ->url(fn (Get $get) => $get('coverImageUrl'), shouldOpenInNewTab: true)
+                                                    ->visible(fn (Get $get) => filled($get('coverImageUrl'))),
+                                                Action::make('clearUrl')
+                                                    ->icon('heroicon-o-x-mark')
+                                                    ->tooltip(__('Clear URL'))
+                                                    ->action(fn (Set $set) => $set('coverImageUrl', ''))
+                                                    ->visible(fn (Get $get) => filled($get('coverImageUrl'))),
+                                            ])
+                                            ->visible(fn (Get $get) => $get('coverImage_source') === 'url'),
+
+                                        Placeholder::make('coverImage_preview')
+                                            ->hiddenLabel()
+                                            ->content(function (Get $get) {
+                                                $url = trim((string) $get('coverImageUrl'));
+                                                if (empty($url) || ! filter_var($url, FILTER_VALIDATE_URL)) {
+                                                    return new HtmlString('
+                                                        <div class="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50 text-gray-400 text-center">
+                                                            <svg class="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                            <span class="text-xs font-medium">'.e(__('Enter a valid image URL above to see live preview and metadata.')).'</span>
+                                                        </div>
+                                                    ');
+                                                }
+
+                                                $ext = strtoupper(pathinfo(parse_url($url, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+                                                if (empty($ext) || strlen($ext) > 5) {
+                                                    $ext = 'WEB-IMG';
+                                                }
+
+                                                return new HtmlString('
+                                                    <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-900 shadow-md max-w-xl">
+                                                        <div class="aspect-[16/9] w-full overflow-hidden bg-gray-950 flex items-center justify-center relative group">
+                                                            <img src="'.e($url).'" 
+                                                                 alt="Cover Preview" 
+                                                                 class="w-full h-full object-cover" 
+                                                                 onload="
+                                                                    const w = this.naturalWidth;
+                                                                    const h = this.naturalHeight;
+                                                                    const r = (w / h).toFixed(2);
+                                                                    let ratioName = \'Landscape\';
+                                                                    if (Math.abs(r - 1.78) < 0.1) ratioName = \'16:9 (Hero Standard)\';
+                                                                    else if (Math.abs(r - 1.33) < 0.1) ratioName = \'4:3\';
+                                                                    else if (Math.abs(r - 1.0) < 0.1) ratioName = \'1:1 (Square)\';
+                                                                    else if (r < 0.9) ratioName = \'Portrait\';
+
+                                                                    let quality = \'Standard\';
+                                                                    let qColor = \'bg-blue-500/20 text-blue-400 border-blue-500/30\';
+                                                                    if (w >= 3840) { quality = \'4K Ultra HD\'; qColor = \'bg-amber-500/20 text-amber-300 border-amber-500/30\'; }
+                                                                    else if (w >= 2560) { quality = \'2K QHD\'; qColor = \'bg-purple-500/20 text-purple-300 border-purple-500/30\'; }
+                                                                    else if (w >= 1920) { quality = \'Full HD 1080p\'; qColor = \'bg-emerald-500/20 text-emerald-300 border-emerald-500/30\'; }
+                                                                    else if (w >= 1280) { quality = \'HD 720p\'; qColor = \'bg-cyan-500/20 text-cyan-300 border-cyan-500/30\'; }
+
+                                                                    const metaBox = document.getElementById(\'cover-img-meta\');
+                                                                    if (metaBox) {
+                                                                        metaBox.innerHTML = `
+                                                                            <div class=\'flex items-center gap-2 flex-wrap\'>
+                                                                                <span class=\'font-mono font-bold text-gray-800 dark:text-gray-100\'>${w} &times; ${h} px</span>
+                                                                                <span class=\'text-gray-300 dark:text-gray-600\'>&bull;</span>
+                                                                                <span class=\'text-gray-500 dark:text-gray-400\'>${ratioName}</span>
+                                                                                <span class=\'px-1.5 py-0.5 rounded text-[10px] font-bold border ${qColor}\'>${quality}</span>
+                                                                            </div>
+                                                                        `;
+                                                                    }
+                                                                 "
+                                                                 onerror="this.parentElement.innerHTML=\'<div class=\\\'p-6 text-xs text-rose-500 font-medium text-center\\\'>⚠️ Unable to load image from this URL. Please verify the link.</div>\'" />
+                                                            <div class="absolute top-2 right-2 bg-black/75 backdrop-blur-md text-white text-[10px] font-mono font-bold px-2 py-1 rounded-md border border-white/10 shadow-sm">
+                                                                '.e($ext).'
+                                                            </div>
+                                                        </div>
+                                                        <div class="p-3.5 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 space-y-2">
+                                                            <div class="flex items-center justify-between text-xs">
+                                                                <div id="cover-img-meta" class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+                                                                    <span class="animate-pulse">⏳ '.__('Detecting dimensions...').'</span>
+                                                                </div>
+                                                                <a href="'.e($url).'" target="_blank" rel="noopener" class="text-primary-600 dark:text-primary-400 hover:underline font-semibold text-xs inline-flex items-center gap-1 shrink-0">
+                                                                    '.__('View Full Size').' ↗
+                                                                </a>
+                                                            </div>
+                                                            <div class="flex items-center gap-2 text-[11px] text-emerald-600 dark:text-emerald-400 font-medium pt-1 border-t border-gray-100 dark:border-gray-700/60">
+                                                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                                                <span>'.__('Live External Image Connected').'</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ');
+                                            })
                                             ->visible(fn (Get $get) => $get('coverImage_source') === 'url'),
                                     ]),
 
@@ -289,7 +382,56 @@ class NewsArticleForm
                                         TagsInput::make('galleryUrls')
                                             ->label(__('External Gallery URLs'))
                                             ->placeholder(__('Paste image URL and press Enter...'))
-                                            ->helperText(__('Add direct image links (https://...)'))
+                                            ->prefixIcon('heroicon-o-link')
+                                            ->helperText(__('Paste direct image links (https://...) and hit Enter to add multiple.'))
+                                            ->live(onBlur: true)
+                                            ->visible(fn (Get $get) => in_array($get('gallery_source'), ['urls', 'both'], true)),
+
+                                        Placeholder::make('galleryUrls_preview')
+                                            ->hiddenLabel()
+                                            ->content(function (Get $get) {
+                                                $urls = (array) ($get('galleryUrls') ?? []);
+                                                $validUrls = array_filter($urls, fn ($u) => is_string($u) && filter_var(trim($u), FILTER_VALIDATE_URL));
+
+                                                if (empty($validUrls)) {
+                                                    return new HtmlString('
+                                                        <div class="p-4 border border-dashed border-gray-200 dark:border-gray-700 rounded-lg text-xs text-gray-400 text-center">
+                                                            '.__('No external gallery URLs added yet. Paste links above to see preview grid with dimensions.').'
+                                                        </div>
+                                                    ');
+                                                }
+
+                                                $itemsHtml = '';
+                                                foreach ($validUrls as $idx => $url) {
+                                                    $ext = strtoupper(pathinfo(parse_url($url, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION)) ?: 'IMG';
+                                                    $itemsHtml .= '
+                                                        <div class="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-900 aspect-[16/10] shadow-sm">
+                                                            <img src="'.e($url).'" 
+                                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+                                                                 onload="
+                                                                    const el = document.getElementById(\'g-meta-'.($idx + 1).'\');
+                                                                    if (el) el.innerText = `${this.naturalWidth}&times;${this.naturalHeight}`;
+                                                                 "
+                                                                 onerror="this.parentElement.classList.add(\'opacity-50\')" />
+                                                            <div class="absolute top-1 left-1 bg-black/75 text-white text-[9px] font-bold px-1.5 py-0.5 rounded backdrop-blur-xs">#'.($idx + 1).'</div>
+                                                            <div id="g-meta-'.($idx + 1).'" class="absolute bottom-1 left-1 bg-black/75 text-white text-[9px] font-mono px-1.5 py-0.5 rounded backdrop-blur-xs">...</div>
+                                                            <a href="'.e($url).'" target="_blank" class="absolute bottom-1 right-1 bg-black/75 hover:bg-black text-white text-[9px] font-medium px-1.5 py-0.5 rounded backdrop-blur-xs">↗</a>
+                                                        </div>
+                                                    ';
+                                                }
+
+                                                return new HtmlString('
+                                                    <div class="pt-2">
+                                                        <div class="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2 flex items-center gap-1.5">
+                                                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                                            '.count($validUrls).' '.__('External Images Active (with live dimensions):').'
+                                                        </div>
+                                                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                                                            '.$itemsHtml.'
+                                                        </div>
+                                                    </div>
+                                                ');
+                                            })
                                             ->visible(fn (Get $get) => in_array($get('gallery_source'), ['urls', 'both'], true)),
                                     ]),
 
