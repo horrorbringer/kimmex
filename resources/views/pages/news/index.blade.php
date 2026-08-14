@@ -125,7 +125,7 @@
 
         <!-- ═══ FEATURED ARTICLE (DUAL HORIZONTAL 50/50 SPLIT LAYOUT) ═══ -->
         @if($featured)
-        <section class="max-w-[1280px] mx-auto px-6 -mt-10 relative z-20 w-full">
+        <section x-show="isCategoryActive('all')" x-transition class="max-w-[1280px] mx-auto px-6 -mt-10 relative z-20 w-full">
             <a href="/news/{{ $featured['slug'] }}"
                class="group grid grid-cols-1 md:grid-cols-2 w-full rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border border-gray-200/80 bg-white hover:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.2)] transition-all duration-500 min-h-[360px]">
                 <!-- Left Side: Text Content -->
