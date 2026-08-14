@@ -10,6 +10,7 @@ use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TestimonialController;
 use App\Models\Document;
 use App\Models\JobPosting;
@@ -83,6 +84,10 @@ Route::get('/robots.txt', function () {
     ]), 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
 })->name('robots');
 
+// HTML Sitemap (Human-Readable)
+Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap');
+
+// XML Sitemap (Search Engines)
 Route::get('/sitemap.xml', function () {
     $urls = collect();
     $add = function (string $loc, ?CarbonInterface $lastmod = null, string $changefreq = 'monthly', string $priority = '0.7') use ($urls) {
@@ -107,6 +112,7 @@ Route::get('/sitemap.xml', function () {
     $add('/news', $newsLastModified ? Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
     $add('/careers', $jobLastModified ? Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
     $add('/contact', null, 'monthly', '0.7');
+    $add('/sitemap', null, 'weekly', '0.7');
 
     if ($documentLastModified) {
         $add('/documents', $documentLastModified ? Carbon::parse($documentLastModified) : null, 'weekly', '0.7');
@@ -130,7 +136,7 @@ Route::get('/sitemap.xml', function () {
     return response()
         ->view('sitemap', ['urls' => $urls], 200)
         ->header('Content-Type', 'application/xml; charset=UTF-8');
-})->name('sitemap');
+})->name('sitemap.xml');
 
 // Home Page
 Route::get('/', function () {
