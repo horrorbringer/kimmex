@@ -9,52 +9,49 @@
             }
          }">
 
-        <!-- ═══ CLEAN & LIGHT HERO SECTION ═══ -->
-        <section class="bg-white border-b border-gray-200/80 pt-28 sm:pt-36 pb-12 sm:pb-16 relative">
+        <!-- ═══ CLEAN & COMPACT SITEMAP HEADER ═══ -->
+        <section class="bg-white border-b border-gray-200/80 pt-10 sm:pt-10 pb-6 sm:pb-8 relative shadow-2xs">
             <div class="max-w-[1280px] mx-auto px-6">
-                <!-- Breadcrumbs -->
-                <nav class="flex items-center gap-2 text-xs text-gray-400 mb-5">
-                    <a href="/" class="hover:text-titan-navy transition-colors">{{ __('Home') }}</a>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
-                    <span class="text-gray-700 font-semibold">{{ __('Sitemap') }}</span>
-                </nav>
+                <!-- Top Row: Breadcrumbs & XML link -->
+                <div class="flex items-center justify-between gap-4 mb-3">
+                    <nav class="flex items-center gap-1.5 text-xs text-gray-400">
+                        <a href="/" class="hover:text-titan-navy transition-colors">{{ __('Home') }}</a>
+                        <x-lucide-chevron-right class="w-3.5 h-3.5 text-gray-300" />
+                        <span class="text-titan-navy font-semibold">{{ __('Sitemap') }}</span>
+                    </nav>
 
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 text-titan-red text-[11px] font-bold uppercase tracking-wider mb-4 border border-red-100">
-                    <x-lucide-map class="w-3.5 h-3.5" />
-                    {{ __('Website Directory') }}
+                    <a href="/sitemap.xml" target="_blank"
+                       class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border border-gray-200 bg-gray-50/80 hover:bg-white hover:border-titan-red/30 text-gray-700 hover:text-titan-red text-xs font-semibold transition-all group shadow-2xs">
+                        <x-lucide-code class="w-3.5 h-3.5 text-titan-red group-hover:rotate-12 transition-transform" />
+                        <span>{{ __('XML Sitemap') }}</span>
+                        <x-lucide-external-link class="w-3 h-3 text-gray-400 group-hover:text-titan-red transition-colors" />
+                    </a>
                 </div>
 
-                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <!-- Main Row: Title & Search Bar -->
+                <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px] gap-4 lg:gap-8 items-end">
                     <div>
-                        <h1 class="font-heading font-black uppercase leading-tight text-3xl sm:text-4xl md:text-5xl text-titan-navy mb-3">
+                        <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-red-50 text-titan-red text-[10px] font-bold uppercase tracking-wider mb-1.5 border border-red-100/80">
+                            <x-lucide-map class="w-3 h-3" />
+                            <span>{{ __('Directory & Navigation') }}</span>
+                        </div>
+                        <h1 class="font-heading font-black uppercase leading-tight text-2xl sm:text-3xl text-titan-navy">
                             {{ __('Site') }} <span class="text-titan-red">{{ __('Map') }}</span>
                         </h1>
-                        <p class="text-gray-500 text-sm sm:text-base max-w-2xl leading-relaxed">
-                            {{ __('Explore the complete directory of KIM MEX Construction & Investment. Easily find services, engineering projects, news updates, career openings, and corporate documents.') }}
+                        <p class="text-gray-500 text-xs sm:text-sm mt-0.5 max-w-xl leading-relaxed">
+                            {{ __('Complete directory of KIM MEX pages, engineering services, projects, and updates.') }}
                         </p>
                     </div>
 
-                    <!-- XML Sitemap Callout Badge -->
-                    <div class="shrink-0">
-                        <a href="/sitemap.xml" target="_blank"
-                           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold transition-all group shadow-sm">
-                            <x-lucide-code class="w-4 h-4 text-titan-red group-hover:rotate-12 transition-transform" />
-                            <span>{{ __('XML Sitemap (For Search Engines)') }}</span>
-                            <x-lucide-external-link class="w-3.5 h-3.5 text-gray-400 group-hover:text-titan-navy transition-colors" />
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Instant Search Bar -->
-                <div class="mt-8 max-w-2xl">
+                    <!-- Instant Search Bar -->
                     <div class="relative">
-                        <x-lucide-search class="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <x-lucide-search class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input type="text"
                                x-model="searchQuery"
-                               placeholder="{{ __('Search any page, service, project, or article...') }}"
-                               class="w-full h-11 pl-11 pr-24 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:bg-white focus:border-titan-navy focus:ring-2 focus:ring-titan-navy/10 transition-all" />
+                               placeholder="{{ __('Search any page, service, project...') }}"
+                               class="w-full h-10 pl-10 pr-20 bg-gray-50/90 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:bg-white focus:border-titan-navy focus:ring-2 focus:ring-titan-navy/10 transition-all shadow-2xs" />
                         <button x-show="searchQuery" @click="searchQuery = ''"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-700 px-2 py-1 bg-gray-200 rounded-md font-bold transition-colors">
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-gray-500 hover:text-gray-800 px-2 py-0.5 bg-gray-200/80 rounded font-bold transition-colors">
                             {{ __('Clear') }}
                         </button>
                     </div>
@@ -63,7 +60,7 @@
         </section>
 
         <!-- ═══ DIRECTORY SECTIONS ═══ -->
-        <section class="max-w-[1280px] mx-auto px-6 mt-10">
+        <section class="max-w-[1280px] mx-auto px-6 mt-6 sm:mt-8">
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
 
@@ -75,7 +72,7 @@
                             <x-lucide-building-2 class="w-5 h-5" />
                         </div>
                         <div>
-                            <h2 class="font-heading font-black text-base text-titan-navy uppercase tracking-wide">{{ __('Corporate & Main') }}</h2>
+                            <h2 class="font-heading font-black !text-xl text-titan-navy uppercase tracking-wide">{{ __('Corporate & Main') }}</h2>
                             <p class="text-[11px] text-gray-400 font-medium">{{ __('Core company pages') }}</p>
                         </div>
                     </div>
@@ -176,7 +173,7 @@
                                 <x-lucide-wrench class="w-5 h-5" />
                             </div>
                             <div>
-                                <h2 class="font-heading font-black text-base text-titan-navy uppercase tracking-wide">{{ __('Our Services') }}</h2>
+                                <h2 class="font-heading font-black !text-xl text-titan-navy uppercase tracking-wide">{{ __('Our Services') }}</h2>
                                 <p class="text-[11px] text-gray-400 font-medium">{{ count($services) }} {{ __('Disciplines') }}</p>
                             </div>
                         </div>
@@ -207,7 +204,7 @@
                                 <x-lucide-briefcase class="w-5 h-5" />
                             </div>
                             <div>
-                                <h2 class="font-heading font-black text-base text-titan-navy uppercase tracking-wide">{{ __('Careers') }}</h2>
+                                <h2 class="font-heading font-black !text-xl text-titan-navy uppercase tracking-wide">{{ __('Careers') }}</h2>
                                 <p class="text-[11px] text-gray-400 font-medium">{{ count($jobs) }} {{ __('Open Positions') }}</p>
                             </div>
                         </div>
@@ -248,7 +245,7 @@
                                 <x-lucide-hard-hat class="w-5 h-5" />
                             </div>
                             <div>
-                                <h2 class="font-heading font-black text-base text-titan-navy uppercase tracking-wide">{{ __('Projects Portfolio') }}</h2>
+                                <h2 class="font-heading font-black !text-xl text-titan-navy uppercase tracking-wide">{{ __('Projects Portfolio') }}</h2>
                                 <p class="text-[11px] text-gray-400 font-medium">{{ __('Key developments & categorized landmarks') }}</p>
                             </div>
                         </div>
@@ -292,7 +289,7 @@
                                 <x-lucide-newspaper class="w-5 h-5" />
                             </div>
                             <div>
-                                <h2 class="font-heading font-black text-base text-titan-navy uppercase tracking-wide">{{ __('News & Insights') }}</h2>
+                                <h2 class="font-heading font-black !text-xl !text-titan-navy uppercase tracking-wide">{{ __('News & Insights') }}</h2>
                                 <p class="text-[11px] text-gray-400 font-medium">{{ __('Articles & Updates') }}</p>
                             </div>
                         </div>
