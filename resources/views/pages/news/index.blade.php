@@ -285,7 +285,7 @@
 
                     <!-- Careers -->
                     @if(!empty($sidebarJobs))
-                    <div class="rounded-xl overflow-hidden" style="background: #071A33;">
+                    <div x-show="isCategoryActive('all')" x-transition class="rounded-xl overflow-hidden" style="background: #071A33;">
                         <div class="px-5 py-4" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-xs font-bold uppercase tracking-wider" style="color: #FFFFFF;">{{ __('We\'re Hiring') }}</h3>
