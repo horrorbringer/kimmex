@@ -5,6 +5,7 @@ namespace App\Filament\Resources\OrgUnits\Pages;
 use App\Filament\Resources\OrgUnits\OrgUnitResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher;
 use LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
 
 class ListOrgUnits extends ListRecords
@@ -16,6 +17,7 @@ class ListOrgUnits extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            LocaleSwitcher::make(),
             CreateAction::make(),
         ];
     }

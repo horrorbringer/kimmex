@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Milestones\Pages;
 
 use App\Filament\Resources\Milestones\MilestoneResource;
 use Filament\Resources\Pages\CreateRecord;
+use LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher;
 use LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
 class CreateMilestone extends CreateRecord
@@ -15,7 +16,7 @@ class CreateMilestone extends CreateRecord
     protected function getHeaderActions(): array
     {
         return [
-            //
+            LocaleSwitcher::make(),
         ];
     }
 }

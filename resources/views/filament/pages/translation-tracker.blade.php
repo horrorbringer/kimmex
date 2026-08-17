@@ -56,7 +56,7 @@
         <x-slot name="heading">
             <div class="flex items-center gap-2">
                 <x-heroicon-o-language style="width: 18px; height: 18px;" />
-                {{ __('Records Missing Khmer Translations') }}
+                {{ __('🇰🇭 Records Missing Khmer Translations') }}
             </div>
         </x-slot>
 
@@ -72,8 +72,8 @@
                     <thead>
                         <tr style="border-bottom: 1px solid var(--gray-200);">
                             <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: var(--gray-600);">{{ __('Model') }}</th>
-                            <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: var(--gray-600);">{{ __('Title (EN)') }}</th>
-                            <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: var(--gray-600);">{{ __('Missing Fields') }}</th>
+                            <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: var(--gray-600);">{{ __('🇬🇧 Title (English)') }}</th>
+                            <th style="text-align: left; padding: 10px 12px; font-weight: 600; color: var(--gray-600);">{{ __('🇰🇭 Missing Fields') }}</th>
                             <th style="text-align: center; padding: 10px 12px; font-weight: 600; color: var(--gray-600);">{{ __('Action') }}</th>
                         </tr>
                     </thead>

@@ -6,6 +6,7 @@ use App\Filament\Resources\DocumentCategories\Pages\CreateDocumentCategory;
 use App\Filament\Resources\DocumentCategories\Pages\EditDocumentCategory;
 use App\Filament\Resources\DocumentCategories\Pages\ListDocumentCategories;
 use App\Filament\Support\FlatRecordDetails;
+use App\Filament\Support\TranslationHelper;
 use App\Models\DocumentCategory;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -75,6 +76,7 @@ class DocumentCategoryResource extends Resource
                                 ->label(__('Name'))
                                 ->required()
                                 ->live(onBlur: true)
+                                ->suffixAction(TranslationHelper::getAutoTranslateAction('name'))
                                 ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
@@ -117,6 +119,7 @@ class DocumentCategoryResource extends Resource
                         ]),
                         Textarea::make('description')
                             ->label(__('Description'))
+                            ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->columnSpanFull(),
                     ]),
             ]);

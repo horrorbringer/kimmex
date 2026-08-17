@@ -117,7 +117,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 SpatieTranslatablePlugin::make()
-                    ->defaultLocales(['en', 'km']),
+                    ->defaultLocales(['en', 'km'])
+                    ->getLocaleLabelUsing(fn (string $locale): string => match ($locale) {
+                        'en' => '🇬🇧 English',
+                        'km' => '🇰🇭 ភាសាខ្មែរ',
+                        default => strtoupper($locale),
+                    }),
             ])
             ->renderHook(
                 PanelsRenderHook::BODY_END,

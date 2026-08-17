@@ -22,9 +22,9 @@ class TranslationHelper
         $targetField ??= $sourceField;
 
         return Action::make('autoTranslate_'.$sourceField.'_'.$targetField)
-            ->label(fn (Component $livewire): string => self::activeLocale($livewire) === 'km' ? __('To EN') : __('To KH'))
+            ->label(fn (Component $livewire): string => self::activeLocale($livewire) === 'km' ? '🇬🇧 '.__('To EN') : '🇰🇭 '.__('To KH'))
             ->icon('heroicon-m-language')
-            ->tooltip(fn (Component $livewire): string => self::activeLocale($livewire) === 'km' ? __('Translate to English') : __('Translate to Khmer'))
+            ->tooltip(fn (Component $livewire): string => self::activeLocale($livewire) === 'km' ? __('Translate to English 🇬🇧') : __('Translate to Khmer 🇰🇭'))
             ->action(function (Get $get, Set $set, $state, $record, Component $livewire) use ($sourceField, $targetLocale) {
                 $sourceText = $get($sourceField) ?? $state;
                 $sourceLocale = self::activeLocale($livewire, (string) $sourceText);

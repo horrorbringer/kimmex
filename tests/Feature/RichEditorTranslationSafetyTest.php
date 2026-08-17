@@ -59,7 +59,7 @@ class RichEditorTranslationSafetyTest extends TestCase
         $this->assertStringContainsString('...self::recordLocaleData($record, $resolvedTargetLocale),', $helper);
         $this->assertStringContainsString('...$translatedData,', $helper);
         $this->assertStringContainsString('setActiveLocale($resolvedTargetLocale)', $helper);
-        $this->assertStringContainsString("self::activeLocale(\$livewire) === 'km' ? __('To EN') : __('To KH')", $helper);
+        $this->assertStringContainsString("self::activeLocale(\$livewire) === 'km' ? '🇬🇧 '.__('To EN') : '🇰🇭 '.__('To KH')", $helper);
         $this->assertStringContainsString('$sourceLocale = self::activeLocale($livewire, (string) $sourceText);', $helper);
     }
 }

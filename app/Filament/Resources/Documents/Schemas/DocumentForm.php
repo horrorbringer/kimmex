@@ -39,7 +39,7 @@ class DocumentForm
                                     ->tabs([
                                         // 🇬🇧 ENGLISH TAB
                                         Tab::make('en')
-                                            ->label('🇬🇧 '.__('English (English)'))
+                                            ->label('🇬🇧 '.__('English (Original)'))
                                             ->schema([
                                                 Section::make(__('Document Identity (English)'))
                                                     ->components([

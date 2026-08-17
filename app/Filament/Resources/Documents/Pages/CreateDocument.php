@@ -20,10 +20,10 @@ class CreateDocument extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $titleEn = $data['title_en'] ?? '';
-        $titleKm = ! empty($data['title_km']) ? $data['title_km'] : $titleEn;
+        $titleKm = ! empty($data['title_km']) ? $data['title_km'] : '';
 
         $descEn = $data['description_en'] ?? '';
-        $descKm = ! empty($data['description_km']) ? $data['description_km'] : $descEn;
+        $descKm = ! empty($data['description_km']) ? $data['description_km'] : '';
 
         $data['title'] = [
             'en' => $titleEn,

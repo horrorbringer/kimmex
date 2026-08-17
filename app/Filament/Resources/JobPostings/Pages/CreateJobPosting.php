@@ -5,6 +5,7 @@ namespace App\Filament\Resources\JobPostings\Pages;
 use App\Filament\Resources\JobPostings\JobPostingResource;
 use App\Filament\Support\AIHelper;
 use Filament\Resources\Pages\CreateRecord;
+use LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher;
 use LaraZeus\SpatieTranslatable\Resources\Pages\CreateRecord\Concerns\Translatable;
 
 class CreateJobPosting extends CreateRecord
@@ -16,6 +17,7 @@ class CreateJobPosting extends CreateRecord
     protected function getHeaderActions(): array
     {
         return [
+            LocaleSwitcher::make(),
             AIHelper::getAutoFillAction('job'),
         ];
     }

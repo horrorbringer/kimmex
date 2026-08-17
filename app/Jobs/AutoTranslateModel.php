@@ -2,9 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Document;
-use App\Models\NewsArticle;
-use App\Models\ProjectCategory;
 use App\Observers\CacheBusterObserver;
 use App\Services\AutoTranslateService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -52,12 +49,10 @@ class AutoTranslateModel implements ShouldQueue
             $isHtml = is_string($currentEn) && $translator->containsHtml($currentEn);
 
             $originalEn = $originals[$field] ?? null;
-            $khmerIsEmpty = empty($translations['km']);
-            $englishChanged = $currentEn !== $originalEn;
+            $khmerIsEmpty = empty($translations['km']) || (is_string($translations['km']) && trim(strip_tags($translations['km'])) === '');
 
-            $shouldTranslate = ($model instanceof ProjectCategory || $model instanceof NewsArticle || $model instanceof Document)
-                ? $khmerIsEmpty
-                : ($khmerIsEmpty || $englishChanged);
+            // Manual translations ALWAYS take priority: never overwrite existing manual Khmer translations
+            $shouldTranslate = $khmerIsEmpty;
 
             if ($shouldTranslate) {
                 $translated = is_array($currentEn)

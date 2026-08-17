@@ -20,22 +20,22 @@ class CreateNewsArticle extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $titleEn = $data['title_en'] ?? '';
-        $titleKm = ! empty($data['title_km']) ? $data['title_km'] : $titleEn;
+        $titleKm = ! empty($data['title_km']) ? $data['title_km'] : '';
 
         $excerptEn = $data['excerpt_en'] ?? '';
-        $excerptKm = ! empty($data['excerpt_km']) ? $data['excerpt_km'] : $excerptEn;
+        $excerptKm = ! empty($data['excerpt_km']) ? $data['excerpt_km'] : '';
 
         $contentEn = $data['content_en'] ?? '';
-        $contentKm = ! empty($data['content_km']) ? $data['content_km'] : $contentEn;
+        $contentKm = ! empty($data['content_km']) ? $data['content_km'] : '';
 
         $authorNameEn = ! empty($data['authorName_en']) ? $data['authorName_en'] : (auth()->user()?->name ?? '');
         $authorNameKm = ! empty($data['authorName_km']) ? $data['authorName_km'] : $authorNameEn;
 
         $metaTitleEn = ! empty($data['metaTitle_en']) ? $data['metaTitle_en'] : $titleEn;
-        $metaTitleKm = ! empty($data['metaTitle_km']) ? $data['metaTitle_km'] : $titleKm;
+        $metaTitleKm = ! empty($data['metaTitle_km']) ? $data['metaTitle_km'] : '';
 
         $metaDescriptionEn = ! empty($data['metaDescription_en']) ? $data['metaDescription_en'] : $excerptEn;
-        $metaDescriptionKm = ! empty($data['metaDescription_km']) ? $data['metaDescription_km'] : $excerptKm;
+        $metaDescriptionKm = ! empty($data['metaDescription_km']) ? $data['metaDescription_km'] : '';
 
         $data['title'] = [
             'en' => $titleEn,
