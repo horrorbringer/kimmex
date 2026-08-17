@@ -68,12 +68,31 @@ if (count($process) < 3) {
     ];
 }
 
-$sectors = [
-    ["title" => ["en" => "Government", "kh" => "រដ្ឋាភិបាល"], "image" => "/images/webp/projects/Thumbnail-1.webp", "icon" => "lucide-landmark"],
-    ["title" => ["en" => "Education", "kh" => "អប់រំ"], "image" => "/images/webp/projects/Thumbnail-2.webp", "icon" => "lucide-graduation-cap"],
-    ["title" => ["en" => "Commercial", "kh" => "ពាណិជ្ជកម្ម"], "image" => "/images/webp/projects/Thumbnail-3.webp", "icon" => "lucide-building"],
-    ["title" => ["en" => "Infrastructure", "kh" => "ហេដ្ឋារចនាសម្ព័ន្ធ"], "image" => "/images/webp/projects/Thumbnail-6.webp", "icon" => "lucide-route"],
-];
+$sectors = \Illuminate\Support\Facades\Cache::remember('services_sectors_array_'.$lang, now()->addHours(12), function() {
+    $sectorsDb = \App\Models\Sector::where('isActive', true)->orderBy('orderIndex')->get();
+    if ($sectorsDb->isEmpty()) {
+        return [];
+    }
+    return $sectorsDb->map(function($sector) {
+        return [
+            "title" => [
+                "en" => $sector->getTranslation('title', 'en'),
+                "kh" => $sector->getTranslation('title', 'km') ?: $sector->getTranslation('title', 'en'),
+            ],
+            "image" => \App\Support\PublicStorage::urlIfExists($sector->image, "/images/webp/projects/Thumbnail-1.webp"),
+            "icon" => $sector->icon ?: 'lucide-building',
+        ];
+    })->toArray();
+});
+
+if (empty($sectors)) {
+    $sectors = [
+        ["title" => ["en" => "Government", "kh" => "រដ្ឋាភិបាល"], "image" => "/images/webp/projects/Thumbnail-1.webp", "icon" => "lucide-landmark"],
+        ["title" => ["en" => "Education", "kh" => "អប់រំ"], "image" => "/images/webp/projects/Thumbnail-2.webp", "icon" => "lucide-graduation-cap"],
+        ["title" => ["en" => "Commercial", "kh" => "ពាណិជ្ជកម្ម"], "image" => "/images/webp/projects/Thumbnail-3.webp", "icon" => "lucide-building"],
+        ["title" => ["en" => "Infrastructure", "kh" => "ហេដ្ឋារចនាសម្ព័ន្ធ"], "image" => "/images/webp/projects/Thumbnail-6.webp", "icon" => "lucide-route"],
+    ];
+}
 @endphp
 
 
@@ -227,43 +246,45 @@ $sectors = [
 
 
     <!-- ═══ SECTORS ═══ -->
-    <section class="py-20 md:py-28">
-        <div class="max-w-[1280px] mx-auto px-6">
-            <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                class="transition-all duration-1000 mb-12">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                    <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Industries') }}</span>
+    @if(!empty($sectors))
+        <section class="py-20 md:py-28">
+            <div class="max-w-[1280px] mx-auto px-6">
+                <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                    class="transition-all duration-1000 mb-12">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
+                        <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Industries') }}</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Sectors We Serve') }}</h2>
                 </div>
-                <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Sectors We Serve') }}</h2>
-            </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-                @foreach($sectors as $i => $sector)
-                    <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                        style="transition-delay: {{ $i * 80 }}ms"
-                        :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                        class="transition-all duration-700">
-                        <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-default">
-                            <img src="{{ $sector['image'] }}" alt="{{ $sector['title'][$lang] ?? '' }}"
-                                class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" decoding="async" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                                <div class="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3 border border-white/10">
-                                    <x-dynamic-component :component="$sector['icon']" class="w-4 h-4" style="color: #FFFFFF;" stroke-width="1.8" />
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                    @foreach($sectors as $i => $sector)
+                        <div x-data="{ shown: false }" x-intersect.once="shown = true"
+                            style="transition-delay: {{ $i * 80 }}ms"
+                            :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                            class="transition-all duration-700">
+                            <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-default">
+                                <img src="{{ $sector['image'] }}" alt="{{ $sector['title'][$lang] ?? ($sector['title']['en'] ?? '') }}"
+                                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" decoding="async" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                <div class="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                                    <div class="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3 border border-white/10">
+                                        <x-dynamic-component :component="$sector['icon']" class="w-4 h-4" style="color: #FFFFFF;" stroke-width="1.8" />
+                                    </div>
+                                    <h3 class="text-sm md:text-base font-bold leading-tight {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}" style="color: #FFFFFF;">
+                                        {{ $sector['title'][$lang] ?? ($sector['title']['en'] ?? '') }}
+                                    </h3>
+                                    <div class="w-6 h-[2px] mt-2 group-hover:w-10 transition-all duration-300" style="background: var(--primary-color, #E31E24);"></div>
                                 </div>
-                                <h3 class="text-sm md:text-base font-bold leading-tight {{ app()->getLocale() === 'km' ? 'font-khmer' : '' }}" style="color: #FFFFFF;">
-                                    {{ $sector['title'][$lang] ?? '' }}
-                                </h3>
-                                <div class="w-6 h-[2px] mt-2 group-hover:w-10 transition-all duration-300" style="background: var(--primary-color, #E31E24);"></div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
 
     <!-- ═══ CTA ═══ -->

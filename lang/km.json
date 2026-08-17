@@ -1208,5 +1208,13 @@
     "Official Kimmex Document": "ឯកសារផ្លូវការរបស់ គីមម៉ិច",
     "Storage Source": "ប្រភពផ្ទុក",
     "Direct Storage": "ការផ្ទុកផ្ទាល់",
-    "Verification": "ការផ្ទៀងផ្ទាត់"
+    "Verification": "ការផ្ទៀងផ្ទាត់",
+    "Sector": "វិស័យ",
+    "Sectors": "វិស័យ",
+    "Sector Information": "ព័ត៌មានវិស័យ",
+    "Cover Image": "រូបភាពក្រប",
+    "Generate Default Sectors": "បង្កើតវិស័យលំនាំដើម",
+    "Generate default sectors?": "បង្កើតវិស័យលំនាំដើម?",
+    "This will create or update the default industry sectors displayed on the Services page.": "វានឹងបង្កើត ឬធ្វើបច្ចុប្បន្នភាពវិស័យឧស្សាហកម្មលំនាំដើមដែលបង្ហាញនៅលើទំព័រសេវាកម្ម។",
+    "Default sectors generated successfully": "បានបង្កើតវិស័យលំនាំដើមដោយជោគជ័យ"
 }

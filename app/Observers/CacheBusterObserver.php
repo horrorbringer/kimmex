@@ -15,6 +15,7 @@ use App\Models\OrgUnit;
 use App\Models\Partner;
 use App\Models\Project;
 use App\Models\ProjectCategory;
+use App\Models\Sector;
 use App\Models\Service;
 use App\Models\SystemSetting;
 use App\Models\Testimonial;
@@ -102,6 +103,10 @@ class CacheBusterObserver
             MethodologyStep::class => [
                 'process_index_array_en', 'process_index_array_km',
                 'services_process_array_en', 'services_process_array_km',
+            ],
+            Sector::class => [
+                'services_sectors_array_en', 'services_sectors_array_km', 'services_sectors_array_kh',
+                'services_sectors_data',
             ],
             JobPosting::class => [
                 'careers_jobs_data_en', 'careers_jobs_data_km',

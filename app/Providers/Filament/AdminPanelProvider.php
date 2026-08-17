@@ -23,6 +23,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -80,6 +81,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->font('Suwannaphum')
             ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(Width::Full)
+            ->simplePageMaxContentWidth(Width::Full)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
                 'primary' => Color::hex(self::getThemeColor('primary_color', '#E31E24')),
@@ -344,6 +347,33 @@ class AdminPanelProvider extends PanelProvider
                         .fi-toggle > div {
                             background-color: #ffffff !important;
                             box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2) !important;
+                        }
+
+                        /* Full width layout for Create, Edit, and Form pages */
+                        .fi-main,
+                        .fi-main > *,
+                        .fi-page,
+                        .fi-page-header,
+                        .fi-page-header-main-ctn,
+                        .fi-page-content,
+                        .fi-page-content > *,
+                        .fi-sc,
+                        .fi-sc-form,
+                        .fi-sc-component,
+                        .fi-form,
+                        .fi-section,
+                        .fi-section-content-ctn,
+                        .fi-grid-col,
+                        .fi-sc > .fi-grid-col,
+                        .fi-main.fi-width-7xl,
+                        .fi-main.fi-width-6xl,
+                        .fi-main.fi-width-5xl,
+                        .fi-main.fi-width-4xl,
+                        .fi-main.fi-width-3xl,
+                        .fi-main.fi-width-2xl,
+                        .fi-main.fi-width-xl {
+                            max-width: 100% !important;
+                            width: 100% !important;
                         }
                     </style>";
                 }

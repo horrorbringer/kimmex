@@ -18,6 +18,7 @@ use App\Models\OrgUnit;
 use App\Models\Partner;
 use App\Models\Project;
 use App\Models\ProjectCategory;
+use App\Models\Sector;
 use App\Models\Service;
 use App\Models\SystemSetting;
 use App\Models\Testimonial;
@@ -98,6 +99,7 @@ class AppServiceProvider extends ServiceProvider
         OrgUnit::observe($cacheBuster);
         Employee::observe($cacheBuster);
         MethodologyStep::observe($cacheBuster);
+        Sector::observe($cacheBuster);
         JobPosting::observe($cacheBuster);
         Document::observe($cacheBuster);
         DocumentCategory::observe($cacheBuster);
