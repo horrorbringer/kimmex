@@ -47,7 +47,7 @@ class OrgUnitForm
                             ->default('STAFF'),
                         Select::make('employeeId')
                             ->label(__('Assigned Employee'))
-                            ->helperText(__('Select an employee to fill the position title automatically.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Select an employee to fill the position title automatically.'))
                             ->relationship('employee', 'name')
                             ->visible(fn ($get) => in_array($get('type'), ['EXECUTIVE', 'MANAGEMENT', 'DIRECTOR', 'MANAGER', 'STAFF']))
                             ->searchable()
@@ -63,7 +63,7 @@ class OrgUnitForm
                         TextInput::make('title')
                             ->label(__('Position Title'))
                             ->placeholder(__('E.g., Engineering Lead, HR Group'))
-                            ->helperText(__('Filled from the employee job title. Change it only when this organization position needs a different name.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Filled from the employee job title. Change it only when this organization position needs a different name.'))
                             ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
                             ->required(),
                     ]),
@@ -85,7 +85,7 @@ class OrgUnitForm
 
                         Select::make('departmentId')
                             ->label(__('Related Department'))
-                            ->helperText(__('Link a formal department structure to this unit.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Link a formal department structure to this unit.'))
                             ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en'))
                             ->visible(fn ($get) => in_array($get('type'), ['DEPARTMENT', 'DIRECTOR', 'MANAGER']))
                             ->searchable()
@@ -99,13 +99,13 @@ class OrgUnitForm
                     Grid::make(2)->components([
                         TextInput::make('orderIndex')
                             ->label(__('Sort Priority'))
-                            ->helperText(__('Lower numbers appear first in lists.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Lower numbers appear first in lists.'))
                             ->required()
                             ->numeric()
                             ->default(0),
                         Toggle::make('isActive')
                             ->label(__('Visible on Public Website'))
-                            ->helperText(__('When turned off, this position will be hidden from the public website org chart.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('When turned off, this position will be hidden from the public website org chart.'))
                             ->default(true)
                             ->required(),
                     ]),

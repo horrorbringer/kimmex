@@ -37,10 +37,10 @@ class EmployeeForm
                                 ->directory('employees')
                                 ->visibility('public')
                                 ->label(__('Profile Photo'))
-                                ->helperText(__('Optional. A clear head-and-shoulders photo works best.')),
+                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional. A clear head-and-shoulders photo works best.')),
                             Toggle::make('isActive')
                                 ->label(__('Show on organization chart'))
-                                ->helperText(__('Turn this off to hide the employee from public organization displays.'))
+                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Turn this off to hide the employee from public organization displays.'))
                                 ->default(true)
                                 ->hiddenOn('create')
                                 ->required(),
@@ -96,7 +96,7 @@ class EmployeeForm
                             ->relationship('user', 'email')
                             ->searchable()
                             ->placeholder(__('No admin account linked'))
-                            ->helperText(__('Linking a user allows automatic author assignment for news articles.')),
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Linking a user allows automatic author assignment for news articles.')),
                     ]),
             ]);
     }

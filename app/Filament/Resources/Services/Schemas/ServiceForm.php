@@ -40,7 +40,7 @@ class ServiceForm
                                 ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                             TextInput::make('slug')
                                 ->label(__('Slug'))
-                                ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
+                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Auto-generated. Click ✏️ to edit manually.'))
                                 ->required()
                                 ->unique(ignoreRecord: true)
                                 ->disabled(fn ($get) => ! $get('_slug_manual'))

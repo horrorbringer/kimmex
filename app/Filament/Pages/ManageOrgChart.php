@@ -72,7 +72,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     ->schema([
                         Toggle::make('org_chart_visible')
                             ->label(__('Show Org Chart on Website'))
-                            ->helperText(__('Enable or disable displaying the organization chart section on the About page.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Enable or disable displaying the organization chart section on the About page.'))
                             ->default(true)
                             ->live()
                             ->columnSpanFull(),

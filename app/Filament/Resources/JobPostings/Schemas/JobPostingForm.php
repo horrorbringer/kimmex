@@ -35,7 +35,7 @@ class JobPostingForm
 
                 TextInput::make('slug')
                     ->label(__('Slug'))
-                    ->helperText(__('Auto-generated from title. Click ✏️ to edit manually.'))
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Auto-generated from title. Click ✏️ to edit manually.'))
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->prefix('kimmex.com/careers/')
@@ -97,7 +97,7 @@ class JobPostingForm
 
                         DateTimePicker::make('closingDate')
                             ->label(__('Closing Date'))
-                            ->helperText(__('Leave blank for no closing date'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Leave blank for no closing date'))
                             ->native(false),
 
                         Select::make('status')
@@ -114,12 +114,12 @@ class JobPostingForm
                                 ->all())
                             ->searchable()
                             ->placeholder(__('No shared channel selected'))
-                            ->helperText(__('Select a channel managed in System Settings. Clear this field to use a manual channel.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Select a channel managed in System Settings. Clear this field to use a manual channel.'))
                             ->live(),
 
                         FileUpload::make('telegramQr')
                             ->label(__('Manual Telegram QR Image'))
-                            ->helperText(__('Optional override for a different channel on this job.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional override for a different channel on this job.'))
                             ->image()
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/avif'])
                             ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
@@ -131,7 +131,7 @@ class JobPostingForm
 
                         TextInput::make('telegramUrl')
                             ->label(__('Manual Telegram Careers Link'))
-                            ->helperText(__('Optional override for a different channel on this job.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional override for a different channel on this job.'))
                             ->url()
                             ->placeholder('https://t.me/kimmexcareers')
                             ->visible(fn (Get $get): bool => blank($get('telegramChannelId'))),

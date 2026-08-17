@@ -37,7 +37,7 @@ class UserForm
                             ->minLength(8)
                             ->required(fn (string $operation): bool => $operation === 'create')
                             ->dehydrated(fn (?string $state) => filled($state))
-                            ->helperText(__('Leave blank when editing to keep the current password.')),
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Leave blank when editing to keep the current password.')),
                         TextInput::make('password_confirmation')
                             ->label(__('Confirm password'))
                             ->password()
@@ -59,12 +59,12 @@ class UserForm
                                 'ADMIN' => __('Admin'),
                                 'EDITOR' => __('Editor'),
                             ])
-                            ->helperText(__('Admin can manage all dashboard modules. Editor has limited dashboard access.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Admin can manage all dashboard modules. Editor has limited dashboard access.'))
                             ->default('EDITOR')
                             ->required(),
                         Toggle::make('is_active')
                             ->label(__('Can Access Dashboard'))
-                            ->helperText(__('Turn off to block this user from logging into the admin dashboard.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Turn off to block this user from logging into the admin dashboard.'))
                             ->default(true)
                             ->disabled(fn ($record): bool => $record?->id === auth()->id())
                             ->dehydrated(fn ($record): bool => $record?->id !== auth()->id()),

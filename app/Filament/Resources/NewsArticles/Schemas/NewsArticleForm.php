@@ -67,7 +67,7 @@ class NewsArticleForm
                                                             }),
                                                         TextInput::make('slug')
                                                             ->label(__('Slug (URL Path)'))
-                                                            ->helperText(__('Auto-generated from title. Click ✏️ to edit manually.'))
+                                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Auto-generated from title. Click ✏️ to edit manually.'))
                                                             ->unique(ignoreRecord: true)
                                                             ->required()
                                                             ->disabled(fn ($get) => ! $get('_slug_manual'))
@@ -252,14 +252,14 @@ class NewsArticleForm
                                         OptimizedFileUpload::hero('coverImage')
                                             ->directory('news/covers')
                                             ->label(__('Cover Image File'))
-                                            ->helperText(__('Upload high-resolution image. It will be automatically optimized.'))
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Upload high-resolution image. It will be automatically optimized.'))
                                             ->visible(fn (Get $get) => ($get('coverImage_source') ?? 'upload') === 'upload'),
 
                                         TextInput::make('coverImageUrl')
                                             ->label(__('External Cover Image URL'))
                                             ->placeholder('https://images.unsplash.com/... or https://example.com/image.jpg')
                                             ->prefixIcon('heroicon-o-link')
-                                            ->helperText(__('Enter direct image link (supports https:// or http://). Changes preview immediately.'))
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Enter direct image link (supports https:// or http://). Changes preview immediately.'))
                                             ->url()
                                             ->live(onBlur: true)
                                             ->suffixActions([
@@ -401,7 +401,7 @@ class NewsArticleForm
                                             ->label(__('External Gallery URLs'))
                                             ->placeholder(__('Paste image URL and press Enter...'))
                                             ->prefixIcon('heroicon-o-link')
-                                            ->helperText(__('Paste direct image links (https://...) and hit Enter to add multiple.'))
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Paste direct image links (https://...) and hit Enter to add multiple.'))
                                             ->live(onBlur: true)
                                             ->visible(fn (Get $get) => in_array($get('gallery_source'), ['urls', 'both'], true)),
 
@@ -461,7 +461,7 @@ class NewsArticleForm
                                             ->label(__('Video URL'))
                                             ->url()
                                             ->placeholder('https://www.youtube.com/watch?v=...')
-                                            ->helperText(__('Paste a YouTube or Vimeo link.')),
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Paste a YouTube or Vimeo link.')),
                                     ]),
                             ]),
 

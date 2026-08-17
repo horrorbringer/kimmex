@@ -35,7 +35,7 @@ class DepartmentForm
                             TextInput::make('slug')
                                 ->label(__('URL Slug'))
                                 ->placeholder(__('civil-engineering'))
-                                ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
+                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Auto-generated. Click ✏️ to edit manually.'))
                                 ->prefix('kimmex.com/dept/')
                                 ->unique(ignoreRecord: true)
                                 ->required()

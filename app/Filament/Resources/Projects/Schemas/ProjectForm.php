@@ -40,14 +40,14 @@ class ProjectForm
                                 ->schema([
                                     TextInput::make('title')
                                         ->label(__('Project Name'))
-                                        ->helperText(__('Example: Cambodia Gambling Management Commission Building'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Example: Cambodia Gambling Management Commission Building'))
                                         ->required()
                                         ->live(onBlur: true)
                                         ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
                                         ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
                                     TextInput::make('slug')
                                         ->label(__('Website Address'))
-                                        ->helperText(__('Created automatically from the project name.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Created automatically from the project name.'))
                                         ->unique(ignoreRecord: true)
                                         ->required()
                                         ->disabled(fn ($get) => ! $get('_slug_manual'))
@@ -84,11 +84,11 @@ class ProjectForm
                                         ->default(ProjectStatus::ONGOING),
                                     TextInput::make('timeline')
                                         ->label(__('Project Timeline'))
-                                        ->helperText(__('Shown in the project facts row.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Shown in the project facts row.'))
                                         ->placeholder('Jan 2024 – Dec 2025'),
                                     TextInput::make('scale')
                                         ->label(__('Built Area / Scale'))
-                                        ->helperText(__('Shown in the project facts row.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Shown in the project facts row.'))
                                         ->placeholder('8,087 m² · 17 floors'),
                                     DateTimePicker::make('completionDate')
                                         ->label(__('Completion Date')),
@@ -130,19 +130,19 @@ class ProjectForm
                                         ]),
                                     Textarea::make('objectives')
                                         ->label(__('Objectives'))
-                                        ->helperText(__('Write one objective per line. Each line becomes a bullet on the website.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Write one objective per line. Each line becomes a bullet on the website.'))
                                         ->rows(5),
                                     Textarea::make('scopeContributions')
                                         ->label(__('Scope of Work'))
-                                        ->helperText(__('Write one contribution per line. Do not use lists or HTML.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Write one contribution per line. Do not use lists or HTML.'))
                                         ->rows(6),
                                     Textarea::make('designConcept')
                                         ->label(__('Design Concept'))
-                                        ->helperText(__('Use short paragraphs in plain text.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Use short paragraphs in plain text.'))
                                         ->rows(5),
                                     Textarea::make('engineeringNarrative')
                                         ->label(__('Engineering Notes'))
-                                        ->helperText(__('Optional technical challenges and solutions.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional technical challenges and solutions.'))
                                         ->rows(5),
                                 ]),
                         ]),
@@ -193,10 +193,10 @@ class ProjectForm
                                 ->schema([
                                     Toggle::make('isFeatured')
                                         ->label(__('Show on Home Page'))
-                                        ->helperText(__('Use only for your most important projects.')),
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Use only for your most important projects.')),
                                     Toggle::make('isActive')
                                         ->label(__('Publish This Project'))
-                                        ->helperText(__('Visitors can see it only when this is on.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Visitors can see it only when this is on.'))
                                         ->default(true)
                                         ->required(),
                                 ]),

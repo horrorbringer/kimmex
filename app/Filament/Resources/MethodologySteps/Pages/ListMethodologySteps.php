@@ -21,15 +21,16 @@ class ListMethodologySteps extends ListRecords
     {
         return [
             LocaleSwitcher::make(),
-            Action::make('generateFakeMethodology')
-                ->label(__('Generate Fake Steps'))
+            Action::make('generateDefaultMethodology')
+                ->label(__('Generate Default Steps'))
                 ->icon('heroicon-m-sparkles')
                 ->color('gray')
+                ->visible(fn (): bool => MethodologyStep::query()->count() === 0)
                 ->requiresConfirmation()
-                ->modalHeading(__('Generate fake methodology steps?'))
+                ->modalHeading(__('Generate default methodology steps?'))
                 ->modalDescription(__('This will create or update the default demo methodology steps used on the website.'))
                 ->action(function (): void {
-                    foreach (self::fakeMethodologySteps() as $step) {
+                    foreach (self::defaultMethodologySteps() as $step) {
                         MethodologyStep::updateOrCreate(
                             ['orderIndex' => $step['orderIndex']],
                             $step,
@@ -37,7 +38,7 @@ class ListMethodologySteps extends ListRecords
                     }
 
                     Notification::make()
-                        ->title(__('Fake methodology steps generated'))
+                        ->title(__('Default methodology steps generated successfully'))
                         ->success()
                         ->send();
                 }),
@@ -45,7 +46,7 @@ class ListMethodologySteps extends ListRecords
         ];
     }
 
-    protected static function fakeMethodologySteps(): array
+    protected static function defaultMethodologySteps(): array
     {
         return [
             [

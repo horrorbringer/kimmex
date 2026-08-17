@@ -71,7 +71,7 @@ class SectorForm
 
                         Toggle::make('isActive')
                             ->label(__('Is Active'))
-                            ->helperText(__('Enable to display this sector on the public Services page.'))
+                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Enable to display this sector on the public Services page.'))
                             ->default(true)
                             ->inline(false)
                             ->columnSpan(1),

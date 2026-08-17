@@ -3,8 +3,9 @@
 namespace App\Filament\Resources\Milestones\Pages;
 
 use App\Filament\Resources\Milestones\MilestoneResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use LaraZeus\SpatieTranslatable\Actions\LocaleSwitcher;
 use LaraZeus\SpatieTranslatable\Resources\Pages\ListRecords\Concerns\Translatable;
 
 class ListMilestones extends ListRecords
@@ -16,7 +17,8 @@ class ListMilestones extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->visible(fn () => auth()->user()?->isAdmin()),
+            LocaleSwitcher::make(),
+            CreateAction::make()->visible(fn () => auth()->user()?->isAdmin()),
         ];
     }
 }

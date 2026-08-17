@@ -59,7 +59,7 @@ class DocumentForm
                                                         Grid::make(2)->schema([
                                                             TextInput::make('slug')
                                                                 ->label(__('Slug / URL Key'))
-                                                                ->helperText(__('Auto-generated. Click ✏️ to edit manually.'))
+                                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Auto-generated. Click ✏️ to edit manually.'))
                                                                 ->unique(ignoreRecord: true)
                                                                 ->required()
                                                                 ->disabled(fn (Get $get) => ! $get('_slug_manual'))
@@ -177,14 +177,14 @@ class DocumentForm
                                                     ])
                                                     ->preserveFilenames()
                                                     ->maxSize(51200)
-                                                    ->helperText(__('PDF, Word, Excel, PowerPoint, ZIP, TXT up to 50MB.'))
+                                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('PDF, Word, Excel, PowerPoint, ZIP, TXT up to 50MB.'))
                                                     ->visible(fn (Get $get) => ($get('fileUrl_source') ?? 'upload') === 'upload'),
 
                                                 TextInput::make('fileUrl_external')
                                                     ->label(__('External Document Link / Cloud URL'))
                                                     ->placeholder('https://drive.google.com/... or https://example.com/file.pdf')
                                                     ->prefixIcon('heroicon-o-link')
-                                                    ->helperText(__('Supports Google Drive, OneDrive, Dropbox, AWS S3, or direct URL.'))
+                                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Supports Google Drive, OneDrive, Dropbox, AWS S3, or direct URL.'))
                                                     ->url()
                                                     ->live(onBlur: true)
                                                     ->suffixActions([
@@ -290,7 +290,7 @@ class DocumentForm
                                                     ->label(__('External Thumbnail URL'))
                                                     ->placeholder('https://images.unsplash.com/... or https://example.com/cover.jpg')
                                                     ->prefixIcon('heroicon-o-link')
-                                                    ->helperText(__('Direct image link (JPG, PNG, WEBP, AVIF).'))
+                                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Direct image link (JPG, PNG, WEBP, AVIF).'))
                                                     ->url()
                                                     ->live(onBlur: true)
                                                     ->suffixActions([
@@ -389,15 +389,15 @@ class DocumentForm
                                         Grid::make(3)->schema([
                                             Toggle::make('isPublic')
                                                 ->label(__('Publicly Accessible'))
-                                                ->helperText(__('Visible in public document library'))
+                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Visible in public document library'))
                                                 ->default(true),
                                             Toggle::make('is_featured')
                                                 ->label(__('Featured Document'))
-                                                ->helperText(__('Pinned at the top of document library'))
+                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Pinned at the top of document library'))
                                                 ->default(false),
                                             Toggle::make('isActive')
                                                 ->label(__('Active Status'))
-                                                ->helperText(__('Enable or disable document'))
+                                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Enable or disable document'))
                                                 ->default(true),
                                         ]),
                                     ]),

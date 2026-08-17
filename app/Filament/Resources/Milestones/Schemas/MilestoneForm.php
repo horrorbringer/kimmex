@@ -68,7 +68,7 @@ class MilestoneForm
                                 ->required(),
                             Toggle::make('isFeatured')
                                 ->label(__('Key Milestone'))
-                                ->helperText(__('Highlights this milestone on the About page.'))
+                                ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Highlights this milestone on the About page.'))
                                 ->default(false),
                         ]),
                     ]),
