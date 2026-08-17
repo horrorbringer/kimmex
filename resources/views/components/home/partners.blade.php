@@ -32,7 +32,7 @@
                 @php
                     $partnerCellClass = $shouldUseMarquee
                         ? 'partner-marquee-item group'
-                        : 'group relative flex h-28 min-w-0 items-center justify-center border-b border-r border-titan-navy/10 px-5 py-4 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-titan-red sm:h-32';
+                        : 'group relative flex h-28 min-w-0 items-center justify-center border-b border-r border-titan-navy/10 p-1.5 focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-titan-red sm:h-32 md:h-36 sm:p-2';
                 @endphp
                 @if(filled($partner['website']))
                     <a href="{{ $partner['website'] }}" target="_blank" rel="noopener noreferrer"
@@ -45,7 +45,7 @@
                         src="{{ $partner['logo'] }}"
                         alt="{{ $partner['name'] }}"
                         title="{{ $partner['name'] }}"
-                        class="h-11 w-full max-w-32 object-contain transition-transform duration-300 ease-out group-hover:scale-[1.04] sm:h-14"
+                        class="h-full w-full max-h-[92%] max-w-[94%] object-contain mix-blend-multiply transition-transform duration-300 ease-out group-hover:scale-[1.04] dark:mix-blend-normal"
                         loading="lazy"
                         decoding="async"
                         onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
@@ -87,13 +87,13 @@
             position: relative;
             display: flex;
             flex: 0 0 clamp(10rem, 16vw, 13rem);
-            height: 8rem;
+            height: 8.5rem;
             min-width: 0;
             align-items: center;
             justify-content: center;
             border: 1px solid rgb(11 43 92 / 0.1);
             border-right: 0;
-            padding: 1rem 1.25rem;
+            padding: 0.35rem 0.6rem;
         }
 
         @keyframes partner-marquee-scroll {
