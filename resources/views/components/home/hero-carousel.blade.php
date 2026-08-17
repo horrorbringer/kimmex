@@ -1,60 +1,7 @@
+@props(['slides' => null])
+
 @php
-    $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
-    $contentLocale = app()->getLocale() === 'kh' ? 'km' : app()->getLocale();
-    $featuredProjects = \Illuminate\Support\Facades\Cache::remember('hero_featured_projects_'.$contentLocale, now()->addHours(6), function() use ($fallbackImage, $contentLocale) {
-        return \App\Models\Project::where('isFeatured', true)
-            ->where('isActive', true)
-            ->with('projectCategory')
-            ->orderByDesc('created_at')
-            ->take(5)
-            ->get()
-            ->map(function (\App\Models\Project $p, $index) use ($fallbackImage, $contentLocale) {
-                return [
-                    'id' => $index + 1,
-                    'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
-                    'subtitle' => $p->projectCategory ? $p->projectCategory->getTranslation('name', $contentLocale) : ($p->category ?: __('Featured Project')),
-                    'title' => $p->getTranslation('title', $contentLocale) ?: $p->getTranslation('title', 'en'),
-                    'desc' => \Illuminate\Support\Str::limit(strip_tags($p->getTranslation('description', $contentLocale) ?: $p->getTranslation('description', 'en')), 120),
-                    'link' => '/projects/' . $p->slug
-                ];
-            })->toArray();
-    });
-    if (count($featuredProjects) > 0) {
-        $slides = $featuredProjects;
-    } else {
-        $slides = [
-            [
-                'id' => 1,
-                'image' => '/images/webp/hero/hero-1.webp',
-                'subtitle' => __('Government Infrastructure'),
-                'title' => __('Ministry of Economy'),
-                'desc' => __('Over 25 years of excellence in building the future of Cambodia. We deliver high-quality infrastructure.'),
-                'link' => '/projects'
-            ],
-            [
-                'id' => 2,
-                'image' => '/images/webp/hero/hero-2.webp',
-                'subtitle' => __('Water Infrastructure'),
-                'title' => __('Khleang Toeuk WTP'),
-                'desc' => __('Ensuring clean and accessible water solutions through state-of-the-art treatment facilities and engineering.'),
-                'link' => '/projects'
-            ],
-            [
-                'id' => 3,
-                'image' => '/images/webp/hero/hero-3.webp',
-                'subtitle' => __('Infrastructure Protection'),
-                'title' => __('Mekong Bank Protection'),
-                'desc' => __('Securing vulnerable riverbanks and developing resilient infrastructure to protect communities and commerce.'),
-                'link' => '/projects'
-            ]
-        ];
-    }
-
-    $slides = array_map(function (array $slide): array {
-        $slide['srcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($slide['image']);
-
-        return $slide;
-    }, $slides);
+    $slides = $slides ?? app(\App\Services\HomePageService::class)->getHeroSlides();
 @endphp
 
 <style>

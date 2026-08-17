@@ -9,41 +9,7 @@
     </script>
     @endpush
 
-    @php
-        $jobs = \Illuminate\Support\Facades\Cache::remember('careers_jobs_data_'.app()->getLocale(), now()->addHours(12), function() {
-            $jobsDb = \App\Models\JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)
-                ->with('department')
-                ->orderBy('created_at', 'desc')
-                ->get();
 
-            return $jobsDb->map(function (\App\Models\JobPosting $j) {
-                $deptName = $j->department ? $j->department->getTranslation('name', app()->getLocale()) : __('General');
-                return [
-                    'id' => $j->id,
-                    'slug' => $j->slug,
-                    'title' => $j->getTranslation('title', app()->getLocale()),
-                    'dept' => $deptName,
-                    'loc' => $j->getTranslation('location', app()->getLocale()),
-                    'type' => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
-                    'salary' => $j->getTranslation('salary', app()->getLocale()) ?: __('Negotiable'),
-                    'experience' => $j->getTranslation('experience', app()->getLocale()) ?: __('2-3 Years'),
-                    'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
-                    'postedAt' => $j->created_at?->toIso8601String(),
-                    'tags' => [$deptName],
-                    'summary' => \Illuminate\Support\Str::limit(strip_tags($j->getTranslation('summary', app()->getLocale())), 150)
-                ];
-            })->toArray();
-        });
-
-        $categories = array_values(array_unique(array_merge([__('All')], array_column($jobs, 'dept'))));
-        $locations = array_values(array_unique(array_merge([__('All Locations')], array_column($jobs, 'loc'))));
-
-        if (empty($jobs)) {
-            $jobs = [
-                ['id' => 'gen', 'slug' => 'gen', 'title' => __('Visionary Talent'), 'dept' => __('General'), 'loc' => __('Phnom Penh'), 'type' => __('Full-time'), 'salary' => __('Competitive'), 'experience' => __('Mixed'), 'postedDate' => now()->format('M d, Y'), 'postedAt' => now()->toIso8601String(), 'tags' => [__('Hiring')], 'summary' => __('We are always looking for exceptional engineers and managers.')]
-            ];
-        }
-    @endphp
 
 
     <div x-data="{

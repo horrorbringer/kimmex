@@ -1,18 +1,3 @@
-@php
-    // This mirrors the hero's cached first slide so the browser can begin its
-    // largest image request from the document head, before Alpine initializes.
-    $heroLocale = app()->getLocale() === 'kh' ? 'km' : app()->getLocale();
-    $priorityHeroImage = \Illuminate\Support\Facades\Cache::remember('hero_priority_image_'.$heroLocale, now()->addHours(6), function () {
-        $image = \App\Models\Project::where('isFeatured', true)
-            ->where('isActive', true)
-            ->orderByDesc('created_at')
-            ->value('heroImage');
-
-        return \App\Support\PublicStorage::urlIfExists($image, '/images/webp/hero/hero-1.webp');
-    });
-    $priorityHeroImageSrcset = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($priorityHeroImage);
-@endphp
-
 <x-layouts.app title="Home"
     :priority-image="$priorityHeroImage"
     :priority-image-srcset="$priorityHeroImageSrcset"
@@ -38,15 +23,15 @@
     </script>
     @endpush
 
-    <x-home.hero-carousel />
+    <x-home.hero-carousel :slides="$heroSlides" />
     <x-home.trust-strip />
-    <x-home.about />
-    <x-home.milestones />
-    <!-- <x-home.services /> -->
-    <x-home.process />
-    <x-home.projects />
-    <x-home.testimonials />
-    <x-home.news />
+    <x-home.about :about-data="$aboutData" />
+    <x-home.milestones :milestones-data="$milestonesData" />
+    <!-- <x-home.services :services="$services" /> -->
+    <x-home.process :processes="$processes" />
+    <x-home.projects :projects="$projects" />
+    <x-home.testimonials :testimonials="$testimonials" />
+    <x-home.news :all-news="$allNews" />
     <x-home.cta />
-    <x-home.partners />
+    <x-home.partners :partners="$partners" />
 </x-layouts.app>

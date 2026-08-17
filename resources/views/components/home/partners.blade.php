@@ -1,36 +1,7 @@
+@props(['partners' => null])
+
 @php
-    $fallbacks = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11];
-
-    $partners = \Illuminate\Support\Facades\Cache::remember('home_partners_array_v3_'.app()->getLocale(), now()->addHours(12), function () use ($fallbacks) {
-        return \App\Models\Partner::query()
-            ->where('isActive', true)
-            ->orderBy('orderIndex')
-            ->get()
-            ->map(function (\App\Models\Partner $partner, int $index) use ($fallbacks): array {
-                $fallbackLogo = '/partners/'.$fallbacks[$index % count($fallbacks)].'.png';
-                $logo = $partner->logoUrl;
-
-                return [
-                    'name' => $partner->getTranslation('name', app()->getLocale()),
-                    'logo' => $logo === 'partners/placeholder.png'
-                        ? $fallbackLogo
-                        : \App\Support\PublicStorage::urlIfExists($logo, $fallbackLogo),
-                    'website' => $partner->website,
-                ];
-            })
-            ->all();
-    });
-
-    if ($partners === []) {
-        $partners = collect($fallbacks)
-            ->map(fn (int $fallback): array => [
-                'name' => __('Partner'),
-                'logo' => '/partners/'.$fallback.'.png',
-                'website' => null,
-            ])
-            ->all();
-    }
-
+    $partners = $partners ?? app(\App\Services\HomePageService::class)->getPartners();
     $shouldUseMarquee = count($partners) > 12;
     $displayPartners = $shouldUseMarquee ? array_merge($partners, $partners) : $partners;
 @endphp

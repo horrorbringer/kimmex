@@ -30,16 +30,7 @@
     $logo = (! empty($profile['logo_footer'])) ? $profile['logo_footer'] : ($profile['logo'] ?? null);
     $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.png');
 
-    $footerServices = \Illuminate\Support\Facades\Cache::remember('nav_services_'.$lang, now()->addHours(12), function() use ($lang) {
-        return \App\Models\Service::where('isActive', true)
-            ->orderBy('orderIndex')
-            ->orderBy('id')
-            ->get()
-            ->map(fn($svc) => ['slug' => $svc->slug, 'title' => $svc->getTranslation('title', $lang)])
-            ->values()
-            ->take(6)
-            ->all();
-    });
+    $footerServices = app(\App\Services\NavigationService::class)->getFooterServices($lang, 6);
 @endphp
 
 

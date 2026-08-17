@@ -2,12 +2,17 @@
 
 namespace App\Filament\Resources\Sectors\Tables;
 
+use App\Filament\Resources\Sectors\Pages\ListSectors;
 use App\Filament\Support\FlatRecordDetails;
+use App\Models\Sector;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontFamily;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ImageColumn;
@@ -64,6 +69,31 @@ class SectorsTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateHeading(__('No sectors found'))
+            ->emptyStateDescription(__('Create your first sector or generate the standard default sectors.'))
+            ->emptyStateActions([
+                Action::make('generateDefaultSectorsEmpty')
+                    ->label(__('Generate Default Sectors'))
+                    ->icon('heroicon-m-sparkles')
+                    ->color('primary')
+                    ->requiresConfirmation()
+                    ->modalHeading(__('Generate default sectors?'))
+                    ->modalDescription(__('This will create default industry sectors (Government, Education, Commercial, Infrastructure).'))
+                    ->action(function (): void {
+                        foreach (ListSectors::defaultSectors() as $sector) {
+                            Sector::updateOrCreate(
+                                ['orderIndex' => $sector['orderIndex']],
+                                $sector,
+                            );
+                        }
+
+                        Notification::make()
+                            ->title(__('Default sectors generated successfully'))
+                            ->success()
+                            ->send();
+                    }),
+                CreateAction::make(),
             ]);
     }
 }

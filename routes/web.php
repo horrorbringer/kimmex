@@ -1,25 +1,17 @@
 <?php
 
-use App\Enums\JobPostingStatus;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\HealthCheckController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TestimonialController;
-use App\Models\Document;
-use App\Models\JobPosting;
-use App\Models\NewsArticle;
-use App\Models\Project;
-use App\Models\Service;
-use App\Models\Subscriber;
-use Carbon\Carbon;
-use Carbon\CarbonInterface;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 
@@ -95,75 +87,21 @@ Route::get('/robots.txt', function () {
 Route::get('/sitemap', [SitemapController::class, 'index'])->name('sitemap');
 
 // XML Sitemap (Search Engines)
-Route::get('/sitemap.xml', function () {
-    $urls = collect();
-    $add = function (string $loc, ?CarbonInterface $lastmod = null, string $changefreq = 'monthly', string $priority = '0.7') use ($urls) {
-        $urls->push([
-            'loc' => url($loc),
-            'lastmod' => $lastmod?->toAtomString(),
-            'changefreq' => $changefreq,
-            'priority' => $priority,
-        ]);
-    };
-
-    $add('/', null, 'weekly', '1.0');
-    $add('/about', null, 'monthly', '0.8');
-    $serviceLastModified = Service::where('isActive', true)->max('updated_at');
-    $projectLastModified = Project::where('isActive', true)->max('updated_at');
-    $newsLastModified = NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at');
-    $jobLastModified = JobPosting::where('status', JobPostingStatus::OPEN)->max('updated_at');
-    $documentLastModified = Document::publiclyVisible()->max('updated_at');
-
-    $add('/services', $serviceLastModified ? Carbon::parse($serviceLastModified) : null, 'weekly', '0.9');
-    $add('/projects', $projectLastModified ? Carbon::parse($projectLastModified) : null, 'weekly', '0.9');
-    $add('/news', $newsLastModified ? Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
-    $add('/careers', $jobLastModified ? Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
-    $add('/contact', null, 'monthly', '0.7');
-    $add('/sitemap', null, 'weekly', '0.7');
-
-    if ($documentLastModified) {
-        $add('/documents', $documentLastModified ? Carbon::parse($documentLastModified) : null, 'weekly', '0.7');
-    }
-
-    Service::where('isActive', true)->select('slug', 'updated_at')->orderBy('orderIndex')->lazy()
-        ->each(fn (Service $service) => $add(route('services.show', ['slug' => $service->slug], false), $service->updated_at, 'monthly', '0.8'));
-
-    Project::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->lazy()
-        ->each(fn (Project $project) => $add(route('projects.show', ['slug' => $project->slug], false), $project->updated_at, 'monthly', '0.8'));
-
-    NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->select('slug', 'updated_at')->orderByDesc('publishedAt')->lazy()
-        ->each(fn (NewsArticle $article) => $add(route('news.show', ['slug' => $article->slug], false), $article->updated_at, 'weekly', '0.7'));
-
-    Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->lazy()
-        ->each(fn (Document $document) => $add(route('documents.show', ['slug' => $document->slug], false), $document->updated_at, 'monthly', '0.6'));
-
-    JobPosting::where('status', JobPostingStatus::OPEN)->select('slug', 'updated_at')->latest('updated_at')->lazy()
-        ->each(fn (JobPosting $job) => $add(route('careers.show', ['slug' => $job->slug], false), $job->updated_at, 'weekly', '0.6'));
-
-    return response()
-        ->view('sitemap', ['urls' => $urls], 200)
-        ->header('Content-Type', 'application/xml; charset=UTF-8');
-})->name('sitemap.xml');
+Route::get('/sitemap.xml', [SitemapController::class, 'xml'])->name('sitemap.xml');
 
 // Home Page
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // About Page
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 
 // Careers Page
-Route::get('/careers', function () {
-    return view('pages.careers');
-})->name('careers');
+Route::get('/careers', [CareerController::class, 'index'])->name('careers');
 
 Route::get('/careers/{slug}', [CareerController::class, 'show'])->name('careers.show');
 
 // Services Archive
-Route::get('/services', function () {
-    return view('pages.services');
-})->name('services.index');
+Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
 
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
@@ -173,23 +111,15 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 
 // News Archive & Single
-Route::get('/news', function () {
-    return view('pages.news.index');
-})->name('news.index');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 
 Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 
 // Contact Page
-Route::get('/contact', function () {
-    return view('pages.contact');
-})->name('contact');
+Route::get('/contact', [FormController::class, 'showContact'])->name('contact');
 
 // Documents Page
-Route::get('/documents', function () {
-    abort_unless(Document::publicDocumentsExist(), 404);
-
-    return view('pages.documents');
-})->name('documents');
+Route::get('/documents', [DocumentController::class, 'index'])->name('documents');
 
 Route::get('/documents/{slug}', [DocumentController::class, 'show'])->name('documents.show');
 
@@ -225,17 +155,4 @@ Route::get('/testimonials/submit', [TestimonialController::class, 'showSubmitFor
 Route::post('/testimonials/submit', [TestimonialController::class, 'store'])->name('testimonials.store');
 
 // Newsletter Unsubscribe
-Route::get('/unsubscribe/{token}', function (string $token) {
-    $subscriber = Subscriber::where('unsubscribe_token', $token)->first();
-
-    if (! $subscriber) {
-        abort(404);
-    }
-
-    $subscriber->update([
-        'is_active' => false,
-        'unsubscribed_at' => now(),
-    ]);
-
-    return view('pages.unsubscribed', ['email' => $subscriber->email]);
-})->name('unsubscribe');
+Route::get('/unsubscribe/{token}', [FormController::class, 'unsubscribe'])->name('unsubscribe');

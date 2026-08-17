@@ -19,10 +19,15 @@ class TikTokSocialLinkTest extends TestCase
         $this->assertStringContainsString("TextInput::make('tiktok')", $settingsPage);
         $this->assertStringContainsString("'tiktok' => \$state['tiktok']", $settingsPage);
 
-        foreach ([$header, $footer, $contactPage] as $view) {
+        $formController = File::get(app_path('Http/Controllers/FormController.php'));
+
+        foreach ([$header, $footer] as $view) {
             $this->assertStringContainsString("\$tiktok = \$profile['tiktok']", $view);
             $this->assertStringContainsString('<x-social-icon network="tiktok"', $view);
         }
+
+        $this->assertStringContainsString("\$tiktok = \$profile['tiktok']", $formController);
+        $this->assertStringContainsString('<x-social-icon network="tiktok"', $contactPage);
 
         $this->assertStringContainsString("@case('tiktok')", $socialIcon);
         $this->assertStringContainsString('<svg', $socialIcon);

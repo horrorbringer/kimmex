@@ -1,61 +1,8 @@
+@props(['milestonesData' => null])
+
 @php
-    $locale = app()->getLocale() === 'kh' ? 'km' : app()->getLocale();
-    $milestones = \Illuminate\Support\Facades\Cache::remember('home_milestones_'.$locale, now()->addHours(12), function () use ($locale) {
-        return \App\Models\Milestone::query()
-            ->where('isActive', true)
-            ->orderBy('sortOrder')
-            ->get()
-            ->map(function (\App\Models\Milestone $milestone, int $index) use ($locale): array {
-                $fallbackImage = '/images/webp/projects/Thumbnail-'.(($index % 6) + 1).'.webp';
-
-                return [
-                    'year' => $milestone->year,
-                    'title' => $milestone->getTranslation('title', $locale, false) ?: $milestone->getTranslation('title', 'en'),
-                    'description' => \Illuminate\Support\Str::limit(trim(strip_tags($milestone->getTranslation('description', $locale, false) ?: $milestone->getTranslation('description', 'en'))), 96),
-                    'detail' => $milestone->getTranslation('detailed_description', $locale, false) ?: $milestone->getTranslation('detailed_description', 'en'),
-                    'image' => \App\Support\PublicStorage::urlIfExists($milestone->image, $fallbackImage),
-                ];
-            })
-            ->values()
-            ->all();
-    });
-
-    $milestones = array_map(function (array $milestone): array {
-        $milestone['image'] = \App\Support\PublicStorage::optimizedLocalImageUrl($milestone['image']);
-        $milestone['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($milestone['image'], [160, 320])
-            ?? \App\Support\PublicStorage::localResponsiveSrcset($milestone['image'], [160, 320]);
-
-        return $milestone;
-    }, $milestones);
-
-    $roadColors = ['#174EA6', '#296DD3', '#2E8CE0', '#1D9D8E', '#18A957', '#D89D13', '#EC7625', '#CF1C5B'];
-    $roadHeight = 600;
-    $roadWidth = max(1440, count($milestones) * 280);
-    $roadStartX = 48;
-    $roadEndX = $roadWidth - 48;
-    $roadStops = [];
-    $roadPath = '';
-    $previousStop = null;
-
-    foreach ($milestones as $index => $milestone) {
-        $x = 280 + (($roadWidth - 560) * $index / max(1, count($milestones) - 1));
-        $y = $index % 2 === 0 ? 300 : 400;
-        $roadStops[] = ['x' => $x, 'y' => $y, 'cardOffset' => $index % 2 === 0 ? -145 : 85];
-
-        if ($previousStop === null) {
-            $roadPath = "M{$roadStartX} {$y} L{$x} {$y}";
-        } else {
-            $controlX = ($previousStop['x'] + $x) / 2;
-            $controlY = $index % 2 === 0 ? 500 : 200;
-            $roadPath .= " Q{$controlX} {$controlY} {$x} {$y}";
-        }
-
-        $previousStop = ['x' => $x, 'y' => $y];
-    }
-
-    if ($previousStop !== null) {
-        $roadPath .= " L{$roadEndX} {$previousStop['y']}";
-    }
+    $data = $milestonesData ?? app(\App\Services\HomePageService::class)->getMilestonesData();
+    extract($data);
 @endphp
 
 @if (! empty($milestones))

@@ -1,25 +1,7 @@
-@php
-    $processes = \Illuminate\Support\Facades\Cache::remember('process_index_array_'.app()->getLocale(), now()->addHours(12), function() {
-        $processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
-        return $processDb->map(function($step, $index) {
-            $description = $step->getTranslation('description', app()->getLocale()) ?: $step->getTranslation('description', 'en');
-            return [
-                "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
-                "icon" => $step->icon ?: 'lucide-check-circle',
-                "title" => $step->getTranslation('title', app()->getLocale()) ?: $step->getTranslation('title', 'en'),
-                "desc" => trim(strip_tags($description))
-            ];
-        })->toArray();
-    });
+@props(['processes' => null])
 
-    if (empty($processes)) {
-        $processes = [
-            ['icon' => 'lucide-clipboard-check', 'step' => '01', 'title' => __('Initial Consultation'), 'desc' => __('We meet to understand your goals, timeline, and budget requirements.')],
-            ['icon' => 'lucide-ruler', 'step' => '02', 'title' => __('Design & Planning'), 'desc' => __('Our architects and engineers draft blueprints and 3D models.')],
-            ['icon' => 'lucide-hammer', 'step' => '03', 'title' => __('Execution'), 'desc' => __('Ground breaks and our professional workforce builds the vision.')],
-            ['icon' => 'lucide-check-circle-2', 'step' => '04', 'title' => __('Final Handover'), 'desc' => __('Quality reviews are conducted before we hand over keys.')],
-        ];
-    }
+@php
+    $processes = $processes ?? app(\App\Services\HomePageService::class)->getProcess();
 @endphp
 
 <section class="bg-white py-16 md:py-24">

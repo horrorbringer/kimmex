@@ -26,12 +26,9 @@ class HeaderNavigationExperienceTest extends TestCase
 
     public function test_services_navigation_uses_the_configured_service_order(): void
     {
-        $header = File::get(resource_path('views/components/header.blade.php'));
-        $footer = File::get(resource_path('views/components/footer.blade.php'));
+        $navigationService = File::get(app_path('Services/NavigationService.php'));
 
-        $this->assertSame(1, substr_count($header, "->orderBy('orderIndex')"));
-        $this->assertSame(1, substr_count($footer, "->orderBy('orderIndex')"));
-        $this->assertStringNotContainsString("->sortBy(fn(\$svc) => \$svc->getTranslation('title', \$lang))", $header);
-        $this->assertStringNotContainsString("->sortBy(fn(\$svc) => \$svc->getTranslation('title', \$lang))", $footer);
+        $this->assertSame(1, substr_count($navigationService, "->orderBy('orderIndex')"));
+        $this->assertStringNotContainsString("->sortBy(fn(\$svc) => \$svc->getTranslation('title', \$lang))", $navigationService);
     }
 }

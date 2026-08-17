@@ -19,8 +19,8 @@ class HomeHeroServerRenderTest extends TestCase
         $this->assertStringContainsString('x-show="{{ $index }} === current || {{ $index }} === prev"', $template);
         $this->assertStringContainsString('@if($index !== 0) style="display: none;" @endif', $template);
         $this->assertStringContainsString('.home-hero-viewport {', $template);
-        $this->assertStringContainsString('height: 62svh;', $template);
-        $this->assertStringContainsString("PublicStorage::cloudinaryResponsiveSrcset(\$slide['image'])", $template);
+        $homePageService = file_get_contents(app_path('Services/HomePageService.php'));
+        $this->assertStringContainsString("PublicStorage::cloudinaryResponsiveSrcset(\$slide['image'])", $homePageService);
         $this->assertStringContainsString("srcset=\"{{ \$slide['srcset'] }}\"", $template);
         $this->assertStringContainsString('@media (min-width: 640px)', $template);
         $this->assertStringContainsString('$heroTitleSize = \\Illuminate\\Support\\Str::length($slide[\'title\']) > 48', $template);

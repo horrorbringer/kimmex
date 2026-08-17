@@ -17,84 +17,8 @@
 @endpush
 
 @php
-$lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
-
-$services = \Illuminate\Support\Facades\Cache::remember('services_index_data', now()->addHours(12), function() {
-    $servicesDb = \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->get();
-    return $servicesDb->map(function($service) {
-        return [
-            "id" => $service->slug,
-            "icon" => $service->icon ?: 'lucide-hammer',
-            "title" => ["en" => $service->getTranslation('title', 'en'), "kh" => $service->getTranslation('title', 'km')],
-            "desc" => [
-                "en" => strip_tags($service->getTranslation('description', 'en')),
-                "kh" => strip_tags($service->getTranslation('description', 'km'))
-            ],
-            "image" => \App\Support\PublicStorage::urlIfExists($service->image, "/images/webp/projects/Thumbnail-1.webp"),
-            "features" => is_array($service->features) ? $service->features : []
-        ];
-    })->toArray();
-});
-
-if (empty($services)) {
-    $services = [
-        ["id" => "design-and-build", "icon" => "lucide-pen-tool", "title" => ["en" => "Design & Build", "kh" => "រចនា និងសាងសង់"], "desc" => ["en" => "End-to-end construction solutions from architectural design through to project completion.", "kh" => "ដំណោះស្រាយសំណង់ពីការរចនាស្ថាបត្យកម្មរហូតដល់ការបញ្ចប់គម្រោង។"], "image" => "/images/webp/projects/Thumbnail-1.webp", "features" => [["name" => "Detail Design"], ["name" => "Civil Work"], ["name" => "MEP Work"]]],
-        ["id" => "construction", "icon" => "lucide-hammer", "title" => ["en" => "Construction", "kh" => "សាងសង់"], "desc" => ["en" => "Premium civil construction services across Cambodia specializing in robust concrete work.", "kh" => "សេវាកម្មសំណង់ស៊ីវិលលំដាប់ខ្ពស់។"], "image" => "/images/webp/projects/Thumbnail-2.webp", "features" => [["name" => "High-Rise Buildings"], ["name" => "Commercial Spaces"], ["name" => "Quality Assurance"]]],
-        ["id" => "project-management", "icon" => "lucide-clipboard-check", "title" => ["en" => "Project Management", "kh" => "ការគ្រប់គ្រងគម្រោង"], "desc" => ["en" => "Expert oversight ensuring on-time delivery, quality control, and safety compliance.", "kh" => "ការត្រួតពិនិត្យជំនាញធានាការផ្តល់ទាន់ពេល និងសុវត្ថិភាព។"], "image" => "/images/webp/projects/Thumbnail-3.webp", "features" => [["name" => "Scheduling"], ["name" => "Quality Control"], ["name" => "Safety"]]],
-        ["id" => "consultants", "icon" => "lucide-lightbulb", "title" => ["en" => "Consultants", "kh" => "ទីប្រឹក្សា"], "desc" => ["en" => "Professional consulting services including project feasibility and structural analysis.", "kh" => "សេវាកម្មប្រឹក្សាវិជ្ជាជីវៈ។"], "image" => "/images/webp/projects/Thumbnail-4.webp", "features" => [["name" => "Feasibility"], ["name" => "Design Consulting"], ["name" => "Analysis"]]],
-    ];
-}
-
-
-$process = \Illuminate\Support\Facades\Cache::remember('services_process_array_'.app()->getLocale(), now()->addHours(12), function() {
-    $processDb = \App\Models\MethodologyStep::where('isActive', true)->orderBy('orderIndex')->get();
-    return $processDb->map(function($step, $index) {
-        return [
-            "step" => str_pad($index + 1, 2, '0', STR_PAD_LEFT),
-            "icon" => $step->icon ?: 'lucide-check-circle',
-            "title" => ["en" => $step->getTranslation('title', 'en'), "kh" => $step->getTranslation('title', 'km')],
-            "desc" => ["en" => trim(strip_tags($step->getTranslation('description', 'en'))), "kh" => trim(strip_tags($step->getTranslation('description', 'km')))]
-        ];
-    })->toArray();
-});
-
-if (count($process) < 3) {
-    $process = [
-        ["step" => "01", "icon" => "lucide-users", "title" => ["en" => "Consultation", "kh" => "ការពិគ្រោះ"], "desc" => ["en" => "We clarify project goals and requirements.", "kh" => "យើងកំណត់គោលដៅគម្រោង។"]],
-        ["step" => "02", "icon" => "lucide-ruler", "title" => ["en" => "Planning & Design", "kh" => "ការរៀបចំផែនការ"], "desc" => ["en" => "Design direction, timeline, and budget.", "kh" => "ទិសដៅរចនា កាលវិភាគ និងថវិកា។"]],
-        ["step" => "03", "icon" => "lucide-hard-hat", "title" => ["en" => "Execution", "kh" => "ការអនុវត្ត"], "desc" => ["en" => "Construction moves according to plan.", "kh" => "សំណង់ដំណើរការតាមផែនការ។"]],
-        ["step" => "04", "icon" => "lucide-shield-check", "title" => ["en" => "Quality Control", "kh" => "ត្រួតពិនិត្យគុណភាព"], "desc" => ["en" => "Each stage checked against standards.", "kh" => "រាល់ដំណាក់កាលត្រូវបានពិនិត្យ។"]],
-        ["step" => "05", "icon" => "lucide-check-circle-2", "title" => ["en" => "Handover", "kh" => "ការប្រគល់"], "desc" => ["en" => "Final inspection and handover.", "kh" => "ការត្រួតពិនិត្យ និងប្រគល់។"]],
-    ];
-}
-
-$sectors = \Illuminate\Support\Facades\Cache::remember('services_sectors_array_'.$lang, now()->addHours(12), function() {
-    $sectorsDb = \App\Models\Sector::where('isActive', true)->orderBy('orderIndex')->get();
-    if ($sectorsDb->isEmpty()) {
-        return [];
-    }
-    return $sectorsDb->map(function($sector) {
-        return [
-            "title" => [
-                "en" => $sector->getTranslation('title', 'en'),
-                "kh" => $sector->getTranslation('title', 'km') ?: $sector->getTranslation('title', 'en'),
-            ],
-            "image" => \App\Support\PublicStorage::urlIfExists($sector->image, "/images/webp/projects/Thumbnail-1.webp"),
-            "icon" => $sector->icon ?: 'lucide-building',
-        ];
-    })->toArray();
-});
-
-if (empty($sectors)) {
-    $sectors = [
-        ["title" => ["en" => "Government", "kh" => "រដ្ឋាភិបាល"], "image" => "/images/webp/projects/Thumbnail-1.webp", "icon" => "lucide-landmark"],
-        ["title" => ["en" => "Education", "kh" => "អប់រំ"], "image" => "/images/webp/projects/Thumbnail-2.webp", "icon" => "lucide-graduation-cap"],
-        ["title" => ["en" => "Commercial", "kh" => "ពាណិជ្ជកម្ម"], "image" => "/images/webp/projects/Thumbnail-3.webp", "icon" => "lucide-building"],
-        ["title" => ["en" => "Infrastructure", "kh" => "ហេដ្ឋារចនាសម្ព័ន្ធ"], "image" => "/images/webp/projects/Thumbnail-6.webp", "icon" => "lucide-route"],
-    ];
-}
+$lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
 @endphp
-
 
 <div class="bg-white text-gray-900">
 
@@ -214,7 +138,7 @@ if (empty($sectors)) {
                 <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight">{{ __('Our Methodology') }}</h2>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-{{ min(count($process), 5) }} gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 {{ $processGridColsClass ?? 'lg:grid-cols-5' }} gap-5">
                 @foreach($process as $i => $s)
                     <div x-data="{ shown: false }" x-intersect.once="shown = true"
                         style="transition-delay: {{ $i * 100 }}ms"

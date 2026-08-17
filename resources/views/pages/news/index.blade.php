@@ -1,66 +1,6 @@
 <x-layouts.app :title="__('News & Updates')" :description="__('Read the latest news, updates, and announcements from Kimmex.')">
 
-    @php
-        $locale        = app()->getLocale();
-        $fallbackImage = '/images/webp/hero/hero-3.webp';
-        $perPage       = 9;
 
-        $newsArticles = \Illuminate\Support\Facades\Cache::remember("news_index_data_{$locale}", now()->addHours(12), function () use ($locale, $fallbackImage) {
-            return \App\Models\NewsArticle::where('isActive', true)
-                ->where('publishedAt', '<=', now())
-                ->orderByDesc('isFeatured')
-                ->orderByDesc('publishedAt')
-                ->get()
-                ->map(function ($n) use ($locale, $fallbackImage) {
-                    $excerpt = $n->getTranslation('excerpt', $locale)
-                        ?: \Illuminate\Support\Str::limit(strip_tags($n->getTranslation('content', $locale)), 160);
-                    $catName = $n->newsCategory ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en')) : ($n->getTranslation('category', $locale) ?: __('Updates'));
-                    $catSlug = $n->newsCategory ? $n->newsCategory->slug : \Illuminate\Support\Str::slug($n->getTranslation('category', 'en') ?: 'updates');
-                    return [
-                        'slug'         => $n->slug,
-                        'category'     => $catName,
-                        'categorySlug' => $catSlug,
-                        'image'        => \App\Support\PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
-                        'title'        => $n->getTranslation('title', $locale),
-                        'date'         => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-                        'excerpt'      => $excerpt,
-                        'isFeatured'   => (bool) $n->isFeatured,
-                    ];
-                })->toArray();
-        });
-
-        $allArticles   = collect($newsArticles);
-        $featured      = $allArticles->first();
-        $gridArticles  = $allArticles->slice(1)->values();
-        $totalArticles = count($newsArticles);
-
-        $categoryCounts = collect($newsArticles)->groupBy('category')->map->count();
-        $categories     = array_values(array_unique(array_column($newsArticles, 'category')));
-
-        $sidebarHeadlines = $gridArticles->slice(0, 4)->values();
-
-        $sidebarDocs = \Illuminate\Support\Facades\Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale) {
-            return \App\Models\Document::with('documentCategory')->publiclyVisible()->latest()->take(3)->get()
-                ->map(fn($d) => [
-                    'slug'     => $d->slug,
-                    'title'    => $d->getTranslation('title', $locale),
-                    'category' => $d->documentCategory ? $d->documentCategory->getTranslation('name', $locale) : ($d->category ?: __('Documents')),
-                    'fileType' => $d->fileType ?: 'PDF',
-                    'fileSize' => $d->fileSize,
-                ])->toArray();
-        });
-
-        $sidebarJobs = \Illuminate\Support\Facades\Cache::remember("news_sidebar_jobs_{$locale}", now()->addHours(12), function () use ($locale) {
-            return \App\Models\JobPosting::where('status', \App\Enums\JobPostingStatus::OPEN)->with('department')->orderByDesc('created_at')->take(3)->get()
-                ->map(fn($j) => [
-                    'slug'     => $j->slug,
-                    'title'    => $j->getTranslation('title', $locale),
-                    'dept'     => $j->department ? $j->department->getTranslation('name', $locale) : __('General'),
-                    'location' => $j->getTranslation('location', $locale),
-                    'type'     => __(str_replace('_', ' ', \Illuminate\Support\Str::title(strtolower($j->type ?? 'FULL_TIME')))),
-                ])->toArray();
-        });
-    @endphp
 
 
     <div class="min-h-screen bg-gray-50"

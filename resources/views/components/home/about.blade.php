@@ -1,19 +1,15 @@
-@php
-    $brandProfile = \App\Models\SystemSetting::get('brand_identity', []);
-    $orgProfile = \App\Models\SystemSetting::get('organization_profile', []);
-    $locale = app()->getLocale();
-    $localeKey = $locale === 'kh' ? 'km' : $locale;
-    $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
-    $org = $orgProfile[$localeKey] ?? ($orgProfile['en'] ?? []);
+@props(['aboutData' => null])
 
-    $story = $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time.");
-    $tagline = $org['tagline'] ?? __("Cambodia's Premier Construction Partner");
-    $aboutLargeImage = '/images/webp/projects/Thumbnail-2.webp';
-    $aboutTopImage = '/images/webp/projects/Thumbnail-3.webp';
-    $aboutBottomImage = '/images/webp/projects/Thumbnail-4.webp';
-    $aboutLargeImageSrcset = \App\Support\PublicStorage::localResponsiveSrcset($aboutLargeImage, [320, 640, 960]);
-    $aboutTopImageSrcset = \App\Support\PublicStorage::localResponsiveSrcset($aboutTopImage, [320, 640, 960]);
-    $aboutBottomImageSrcset = \App\Support\PublicStorage::localResponsiveSrcset($aboutBottomImage, [320, 640, 960]);
+@php
+    $aboutData = $aboutData ?? app(\App\Services\HomePageService::class)->getAboutData();
+    $story = $aboutData['story'];
+    $tagline = $aboutData['tagline'];
+    $aboutLargeImage = $aboutData['aboutLargeImage'];
+    $aboutTopImage = $aboutData['aboutTopImage'];
+    $aboutBottomImage = $aboutData['aboutBottomImage'];
+    $aboutLargeImageSrcset = $aboutData['aboutLargeImageSrcset'];
+    $aboutTopImageSrcset = $aboutData['aboutTopImageSrcset'];
+    $aboutBottomImageSrcset = $aboutData['aboutBottomImageSrcset'];
 @endphp
 
 <section class="py-12 md:py-16 bg-white overflow-hidden">

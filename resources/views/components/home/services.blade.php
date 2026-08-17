@@ -1,34 +1,7 @@
+@props(['services' => null])
+
 @php
-    $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
-    $services = \Illuminate\Support\Facades\Cache::remember('home_services_array_v2_'.app()->getLocale(), now()->addHours(12), function() use ($lang) {
-        $servicesDb = \App\Models\Service::where('isActive', true)->orderBy('orderIndex')->get();
-        return $servicesDb->map(function (\App\Models\Service $s) use ($lang) {
-            $features = is_array($s->features) ? $s->features : [];
-            $mappedFeatures = array_map(function ($f) use ($lang) {
-                if (! is_array($f)) {
-                    return $f;
-                }
-
-                $feature = $f['name'] ?? $f[$lang] ?? $f['en'] ?? '';
-
-                return is_array($feature) ? ($feature[app()->getLocale()] ?? $feature['en'] ?? '') : $feature;
-            }, $features);
-            return [
-                'title' => $s->getTranslation('title', app()->getLocale()),
-                'features' => array_values(array_filter($mappedFeatures)),
-                'slug' => $s->slug
-            ];
-        })->toArray();
-    });
-
-    if (empty($services)) {
-        $services = [
-            ['title' => __('Design & Build'), 'features' => [__('Architectural Planning'), __('3D Modeling'), __('Turnkey Solutions')], 'slug' => 'design-and-build'],
-            ['title' => __('Construction'), 'features' => [__('High-Rise Buildings'), __('Commercial Spaces'), __('Quality Assurance')], 'slug' => 'construction'],
-            ['title' => __('MEP Systems'), 'features' => [__('HVAC Installations'), __('Electrical Grids'), __('Smart Building')], 'slug' => 'mep-systems'],
-            ['title' => __('Infrastructure'), 'features' => [__('Slope Protection'), __('Water Treatment'), __('Road Paving')], 'slug' => 'infrastructure'],
-        ];
-    }
+    $services = $services ?? app(\App\Services\HomePageService::class)->getServices();
 @endphp
 
 <section class="relative overflow-hidden bg-[#f8fafc] py-20 md:py-28">

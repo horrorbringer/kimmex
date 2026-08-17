@@ -29,33 +29,7 @@
     </script>
     @endpush
 
-    @php
-        $profile = \App\Models\SystemSetting::get('organization_profile', []);
-        $lang = app()->getLocale();
-        $email = $profile['email'] ?? 'info@kimmex.com.kh';
-        $phone = $profile['phone'] ?? '+855 23 999 999';
-        $address = $profile[$lang]['address'] ?? ($profile['en']['address'] ?? __('Phnom Penh, Cambodia'));
-        $googleMapsUrl = $profile['google_maps_url'] ?? '';
-        $originalMapsUrl = $googleMapsUrl;
 
-        $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=') || str_contains($googleMapsUrl, 'output=embed');
-
-        if (!$isEmbed && !empty($googleMapsUrl)) {
-            $googleMapsUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
-        } elseif (empty($googleMapsUrl)) {
-            $googleMapsUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
-        }
-
-        $googleMapsLink = !empty($originalMapsUrl) && !$isEmbed ? $originalMapsUrl : 'https://www.google.com/maps/search/?api=1&query=' . urlencode($address);
-
-        $facebook = $profile['facebook'] ?? '#';
-        $linkedin = $profile['linkedin'] ?? '#';
-        $youtube = $profile['youtube'] ?? '#';
-        $instagram = $profile['instagram'] ?? '#';
-        $telegram = $profile['telegram'] ?? '#';
-        $tiktok = $profile['tiktok'] ?? '#';
-        $workingHours = $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
-    @endphp
 
 
     <div class="bg-gray-50 min-h-screen">

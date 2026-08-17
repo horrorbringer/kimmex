@@ -16,6 +16,61 @@ use Illuminate\View\View;
 
 class CareerController extends Controller
 {
+    public function index(): View
+    {
+        $locale = app()->getLocale();
+
+        $jobs = Cache::remember('careers_jobs_data_'.$locale, now()->addHours(12), function () use ($locale): array {
+            $jobsDb = JobPosting::where('status', JobPostingStatus::OPEN)
+                ->with('department')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return $jobsDb->map(function (JobPosting $j) use ($locale): array {
+                $deptName = $j->department ? $j->department->getTranslation('name', $locale) : __('General');
+
+                return [
+                    'id' => $j->id,
+                    'slug' => $j->slug,
+                    'title' => $j->getTranslation('title', $locale),
+                    'dept' => $deptName,
+                    'loc' => $j->getTranslation('location', $locale),
+                    'type' => __(str_replace('_', ' ', Str::title(strtolower($j->type ?? 'FULL_TIME')))),
+                    'salary' => $j->getTranslation('salary', $locale) ?: __('Negotiable'),
+                    'experience' => $j->getTranslation('experience', $locale) ?: __('2-3 Years'),
+                    'postedDate' => $j->created_at ? $j->created_at->format('M d, Y') : now()->format('M d, Y'),
+                    'postedAt' => $j->created_at?->toIso8601String(),
+                    'tags' => [$deptName],
+                    'summary' => Str::limit(strip_tags((string) $j->getTranslation('summary', $locale)), 150),
+                ];
+            })->toArray();
+        });
+
+        if (empty($jobs)) {
+            $jobs = [
+                [
+                    'id' => 'gen',
+                    'slug' => 'gen',
+                    'title' => __('Visionary Talent'),
+                    'dept' => __('General'),
+                    'loc' => __('Phnom Penh'),
+                    'type' => __('Full-time'),
+                    'salary' => __('Competitive'),
+                    'experience' => __('Mixed'),
+                    'postedDate' => now()->format('M d, Y'),
+                    'postedAt' => now()->toIso8601String(),
+                    'tags' => [__('Hiring')],
+                    'summary' => __('We are always looking for exceptional engineers and managers.'),
+                ],
+            ];
+        }
+
+        $categories = array_values(array_unique(array_merge([__('All')], array_column($jobs, 'dept'))));
+        $locations = array_values(array_unique(array_merge([__('All Locations')], array_column($jobs, 'loc'))));
+
+        return view('pages.careers', compact('jobs', 'categories', 'locations'));
+    }
+
     public function show(Request $request, string $slug): View|RedirectResponse
     {
         $job = Cache::remember("career_job_show_data_{$slug}_".app()->getLocale(), now()->addHours(12), function () use ($slug): ?array {

@@ -1,41 +1,7 @@
+@props(['projects' => null])
+
 @php
-    $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
-    $locale = app()->getLocale();
-    $projects = \Illuminate\Support\Facades\Cache::remember('home_projects_array_'.$locale, now()->addHours(12), function() use ($fallbackImage, $locale) {
-        $projectsDb = \App\Models\Project::where('isActive', true)
-            ->with('projectCategory')
-            ->orderBy('isFeatured', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-
-        return $projectsDb->map(function ($p) use ($fallbackImage, $locale) {
-            return [
-                'slug' => $p->slug,
-                'image' => \App\Support\PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
-                'type' => $p->projectCategory ? $p->projectCategory->localizedName($locale) : ($p->category ?: __('Infrastructure')),
-                'title' => $p->getTranslation('title', $locale),
-                'location' => $p->getTranslation('location', $locale),
-                'status' => strtoupper($p->status->value ?? $p->status ?? 'COMPLETED'),
-            ];
-        })->toArray();
-    });
-
-    if (empty($projects)) {
-        $projects = [
-            ['slug' => 'mef', 'image' => '/images/webp/projects/Thumbnail-1.webp', 'type' => __('Government'), 'title' => __('Ministry of Economy Building'), 'location' => __('Phnom Penh'), 'status' => __('COMPLETED')],
-            ['slug' => 'water', 'image' => '/images/webp/projects/Thumbnail-2.webp', 'type' => __('Infrastructure'), 'title' => __('Water Treatment Plant'), 'location' => __('Siem Reap'), 'status' => __('COMPLETED')],
-            ['slug' => 'bank', 'image' => '/images/webp/projects/Thumbnail-3.webp', 'type' => __('Commercial'), 'title' => __('Commercial Bank HQ'), 'location' => __('Phnom Penh'), 'status' => __('ONGOING')],
-        ];
-    }
-
-    $projects = array_map(function (array $project): array {
-        $project['image'] = \App\Support\PublicStorage::optimizedLocalImageUrl($project['image']);
-        $project['imageSrcset'] = \App\Support\PublicStorage::cloudinaryResponsiveSrcset($project['image'], [640, 960, 1440])
-            ?? \App\Support\PublicStorage::localResponsiveSrcset($project['image'], [320, 640]);
-
-        return $project;
-    }, $projects);
+    $projects = $projects ?? app(\App\Services\HomePageService::class)->getProjects();
 @endphp
 
 <section class="py-12 md:py-16 bg-gray-50">

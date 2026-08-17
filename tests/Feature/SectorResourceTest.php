@@ -87,4 +87,33 @@ class SectorResourceTest extends TestCase
         $response->assertStatus(200);
         $response->assertDontSee('Hidden Secret Sector');
     }
+
+    public function test_generate_default_sectors_action_is_visible_when_no_sectors_exist(): void
+    {
+        $admin = User::factory()->create(['role' => 'ADMIN']);
+        $this->actingAs($admin);
+
+        $this->assertEquals(0, Sector::count());
+
+        Livewire::test(ListSectors::class)
+            ->assertActionVisible('generateDefaultSectors')
+            ->callAction('generateDefaultSectors');
+
+        $this->assertEquals(4, Sector::count());
+    }
+
+    public function test_generate_default_sectors_action_is_hidden_when_sectors_exist(): void
+    {
+        $admin = User::factory()->create(['role' => 'ADMIN']);
+        $this->actingAs($admin);
+
+        Sector::create([
+            'title' => ['en' => 'Government', 'km' => 'រដ្ឋាភិបាល'],
+            'orderIndex' => 1,
+            'isActive' => true,
+        ]);
+
+        Livewire::test(ListSectors::class)
+            ->assertActionHidden('generateDefaultSectors');
+    }
 }

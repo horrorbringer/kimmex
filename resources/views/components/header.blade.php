@@ -56,40 +56,9 @@
         $logo = (! empty($profile['logo_header'])) ? $profile['logo_header'] : ($profile['logo'] ?? null);
         $logoUrl = \App\Support\PublicStorage::urlIfExists($logo, '/logo.webp');
 
-        $navProjectFilters = \Illuminate\Support\Facades\Cache::remember('nav_project_filters_v1_' . $lang, now()->addHours(12), function () use ($lang) {
-            $categoriesForStatus = function (string $status) use ($lang): array {
-                return \App\Models\ProjectCategory::where('isActive', true)
-                    ->whereHas('projects', fn ($query) => $query
-                        ->where('isActive', true)
-                        ->where('status', $status))
-                    ->get()
-                    ->sortBy(fn ($category) => $category->localizedName($lang))
-                    ->map(fn ($category) => [
-                        'slug' => $category->slug,
-                        'name' => $category->localizedName($lang),
-                    ])
-                    ->values()
-                    ->all();
-            };
-
-            return [
-                'completed' => $categoriesForStatus(\App\Enums\ProjectStatus::COMPLETED->value),
-                'ongoing' => $categoriesForStatus(\App\Enums\ProjectStatus::ONGOING->value),
-            ];
-        });
-
-        $navServices = \Illuminate\Support\Facades\Cache::remember('nav_services_' . $lang, now()->addHours(12), function () use ($lang) {
-            return \App\Models\Service::where('isActive', true)
-                ->orderBy('orderIndex')
-                ->orderBy('id')
-                ->get()
-                ->map(fn($svc) => [
-                    'slug' => $svc->slug,
-                    'title' => $svc->getTranslation('title', $lang)
-                ])
-                ->values()
-                ->all();
-        });
+        $navigationService = app(\App\Services\NavigationService::class);
+        $navProjectFilters = $navigationService->getNavProjectFilters($lang);
+        $navServices = $navigationService->getNavServices($lang);
     @endphp
     <!-- TOP BAR -->
     <div :class="isScrolled ? 'hidden' : 'h-8 opacity-100 border-gray-100 bg-white'"

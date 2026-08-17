@@ -63,29 +63,30 @@ class CacheBusterObserver
         // Map model classes to their related cache keys
         $cacheMap = [
             Project::class => [
-                'hero_featured_projects_en', 'hero_featured_projects_km',
-                'hero_priority_image_en', 'hero_priority_image_km',
-                'home_projects_array_en', 'home_projects_array_km',
-                'nav_categories_en', 'nav_categories_km',
-                'nav_categories_v2_en', 'nav_categories_v2_km',
-                'nav_project_filters_v1_en', 'nav_project_filters_v1_km',
+                'hero_featured_projects_en', 'hero_featured_projects_km', 'hero_featured_projects_kh',
+                'hero_priority_image_en', 'hero_priority_image_km', 'hero_priority_image_kh',
+                'home_projects_array_en', 'home_projects_array_km', 'home_projects_array_kh',
+                'nav_categories_en', 'nav_categories_km', 'nav_categories_kh',
+                'nav_categories_v2_en', 'nav_categories_v2_km', 'nav_categories_v2_kh',
+                'nav_project_filters_v1_en', 'nav_project_filters_v1_km', 'nav_project_filters_v1_kh',
             ],
             Service::class => [
-                'home_services_array_v2_en', 'home_services_array_v2_km',
-                'nav_services_en', 'nav_services_km',
+                'home_services_array_v2_en', 'home_services_array_v2_km', 'home_services_array_v2_kh',
+                'nav_services_en', 'nav_services_km', 'nav_services_kh',
+                'services_index_data',
             ],
             NewsArticle::class => [
-                'home_news_array_en', 'home_news_array_km',
-                'news_index_data_en', 'news_index_data_km',
-                'news_sidebar_documents_en', 'news_sidebar_documents_km',
-                'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
-                'news_categories_list_en', 'news_categories_list_km',
+                'home_news_array_en', 'home_news_array_km', 'home_news_array_kh',
+                'news_index_data_en', 'news_index_data_km', 'news_index_data_kh',
+                'news_sidebar_documents_en', 'news_sidebar_documents_km', 'news_sidebar_documents_kh',
+                'news_sidebar_jobs_en', 'news_sidebar_jobs_km', 'news_sidebar_jobs_kh',
+                'news_categories_list_en', 'news_categories_list_km', 'news_categories_list_kh',
             ],
             Partner::class => [
-                'home_partners_array_en', 'home_partners_array_km',
+                'home_partners_array_en', 'home_partners_array_km', 'home_partners_array_kh',
             ],
             Testimonial::class => [
-                'home_testimonials_array_en', 'home_testimonials_array_km',
+                'home_testimonials_array_en', 'home_testimonials_array_km', 'home_testimonials_array_kh',
             ],
             Milestone::class => [
                 'about_milestones_data_en', 'about_milestones_data_km', 'about_milestones_data_kh',
@@ -101,32 +102,32 @@ class CacheBusterObserver
                 'about_page_en', 'about_page_km', 'about_page_kh',
             ],
             MethodologyStep::class => [
-                'process_index_array_en', 'process_index_array_km',
-                'services_process_array_en', 'services_process_array_km',
+                'process_index_array_en', 'process_index_array_km', 'process_index_array_kh',
+                'services_process_array_en', 'services_process_array_km', 'services_process_array_kh',
             ],
             Sector::class => [
                 'services_sectors_array_en', 'services_sectors_array_km', 'services_sectors_array_kh',
                 'services_sectors_data',
             ],
             JobPosting::class => [
-                'careers_jobs_data_en', 'careers_jobs_data_km',
-                'news_sidebar_jobs_en', 'news_sidebar_jobs_km',
+                'careers_jobs_data_en', 'careers_jobs_data_km', 'careers_jobs_data_kh',
+                'news_sidebar_jobs_en', 'news_sidebar_jobs_km', 'news_sidebar_jobs_kh',
             ],
             Document::class => [
                 'has_public_documents',
                 'document_library_total_documents',
                 'document_library_total_categories',
-                'document_library_categories_v2_en', 'document_library_categories_v2_km',
-                'news_sidebar_documents_en', 'news_sidebar_documents_km',
+                'document_library_categories_v2_en', 'document_library_categories_v2_km', 'document_library_categories_v2_kh',
+                'news_sidebar_documents_en', 'news_sidebar_documents_km', 'news_sidebar_documents_kh',
             ],
             DocumentCategory::class => [
-                'document_library_categories_v2_en', 'document_library_categories_v2_km',
+                'document_library_categories_v2_en', 'document_library_categories_v2_km', 'document_library_categories_v2_kh',
                 'document_library_total_categories',
             ],
             ProjectCategory::class => [
-                'nav_categories_en', 'nav_categories_km',
-                'nav_categories_v2_en', 'nav_categories_v2_km',
-                'nav_project_filters_v1_en', 'nav_project_filters_v1_km',
+                'nav_categories_en', 'nav_categories_km', 'nav_categories_kh',
+                'nav_categories_v2_en', 'nav_categories_v2_km', 'nav_categories_v2_kh',
+                'nav_project_filters_v1_en', 'nav_project_filters_v1_km', 'nav_project_filters_v1_kh',
             ],
             NewsCategory::class => [
                 'news_categories_list_en', 'news_categories_list_km', 'news_categories_list_kh',

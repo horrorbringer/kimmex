@@ -11,15 +11,73 @@ use App\Models\NewsCategory;
 use App\Models\Project;
 use App\Models\ProjectCategory;
 use App\Models\Service;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class SitemapController extends Controller
 {
     /**
+     * Generate search-engine XML sitemap.
+     */
+    public function xml(): Response
+    {
+        $urls = collect();
+        $add = function (string $loc, ?CarbonInterface $lastmod = null, string $changefreq = 'monthly', string $priority = '0.7') use ($urls) {
+            $urls->push([
+                'loc' => url($loc),
+                'lastmod' => $lastmod?->toAtomString(),
+                'changefreq' => $changefreq,
+                'priority' => $priority,
+            ]);
+        };
+
+        $add('/', null, 'weekly', '1.0');
+        $add('/about', null, 'monthly', '0.8');
+        $serviceLastModified = Service::where('isActive', true)->max('updated_at');
+        $projectLastModified = Project::where('isActive', true)->max('updated_at');
+        $newsLastModified = NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->max('updated_at');
+        $jobLastModified = JobPosting::where('status', JobPostingStatus::OPEN)->max('updated_at');
+        $documentLastModified = Document::publiclyVisible()->max('updated_at');
+
+        $add('/services', $serviceLastModified ? Carbon::parse($serviceLastModified) : null, 'weekly', '0.9');
+        $add('/projects', $projectLastModified ? Carbon::parse($projectLastModified) : null, 'weekly', '0.9');
+        $add('/news', $newsLastModified ? Carbon::parse($newsLastModified) : null, 'weekly', '0.8');
+        $add('/careers', $jobLastModified ? Carbon::parse($jobLastModified) : null, 'weekly', '0.7');
+        $add('/contact', null, 'monthly', '0.7');
+        $add('/sitemap', null, 'weekly', '0.7');
+
+        if ($documentLastModified) {
+            $add('/documents', $documentLastModified ? Carbon::parse($documentLastModified) : null, 'weekly', '0.7');
+        }
+
+        Service::where('isActive', true)->select('slug', 'updated_at')->orderBy('orderIndex')->lazy()
+            ->each(fn (Service $service) => $add(route('services.show', ['slug' => $service->slug], false), $service->updated_at, 'monthly', '0.8'));
+
+        Project::where('isActive', true)->select('slug', 'updated_at')->latest('updated_at')->lazy()
+            ->each(fn (Project $project) => $add(route('projects.show', ['slug' => $project->slug], false), $project->updated_at, 'monthly', '0.8'));
+
+        NewsArticle::where('isActive', true)->where('publishedAt', '<=', now())->select('slug', 'updated_at')->orderByDesc('publishedAt')->lazy()
+            ->each(fn (NewsArticle $article) => $add(route('news.show', ['slug' => $article->slug], false), $article->updated_at, 'weekly', '0.7'));
+
+        Document::publiclyVisible()->select('slug', 'updated_at')->latest('updated_at')->lazy()
+            ->each(fn (Document $document) => $add(route('documents.show', ['slug' => $document->slug], false), $document->updated_at, 'monthly', '0.6'));
+
+        JobPosting::where('status', JobPostingStatus::OPEN)->select('slug', 'updated_at')->latest('updated_at')->lazy()
+            ->each(fn (JobPosting $job) => $add(route('careers.show', ['slug' => $job->slug], false), $job->updated_at, 'weekly', '0.6'));
+
+        return response()
+            ->view('sitemap', ['urls' => $urls], 200)
+            ->header('Content-Type', 'application/xml; charset=UTF-8');
+    }
+
+    /**
      * Display human-readable HTML sitemap.
      */
-    public function index()
+    public function index(): View
     {
         $locale = app()->getLocale();
 

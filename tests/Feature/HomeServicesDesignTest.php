@@ -9,11 +9,12 @@ class HomeServicesDesignTest extends TestCase
 {
     public function test_the_home_services_show_all_service_titles_and_features_in_a_centered_odd_grid(): void
     {
+        $homePageService = File::get(app_path('Services/HomePageService.php'));
         $servicesTemplate = File::get(resource_path('views/components/home/services.blade.php'));
 
-        $this->assertStringContainsString("home_services_array_v2_'.app()->getLocale()", $servicesTemplate);
-        $this->assertStringContainsString("->orderBy('orderIndex')->get()", $servicesTemplate);
-        $this->assertStringNotContainsString("->orderBy('orderIndex')->limit(4)->get()", $servicesTemplate);
+        $this->assertStringContainsString("home_services_array_v2_'.\$locale", $homePageService);
+        $this->assertStringContainsString("->orderBy('orderIndex')->get()", $homePageService);
+        $this->assertStringNotContainsString("->orderBy('orderIndex')->limit(4)->get()", $homePageService);
         $this->assertStringContainsString('relative overflow-hidden bg-[#f8fafc] py-20 md:py-28', $servicesTemplate);
         $this->assertStringContainsString('rounded-3xl border border-slate-200 bg-white/95 p-7', $servicesTemplate);
         $this->assertStringContainsString('count($services) % 2 === 1', $servicesTemplate);
@@ -22,7 +23,7 @@ class HomeServicesDesignTest extends TestCase
         $this->assertStringContainsString('focus-visible:ring-2 focus-visible:ring-titan-red', $servicesTemplate);
         $this->assertStringContainsString('View :service service details', $servicesTemplate);
         $this->assertStringContainsString("str_pad(\$index + 1, 2, '0', STR_PAD_LEFT)", $servicesTemplate);
-        $this->assertStringContainsString("\$f['name'] ?? \$f[\$lang] ?? \$f['en'] ?? ''", $servicesTemplate);
+        $this->assertStringContainsString("\$f['name'] ?? \$f[\$lang] ?? \$f['en'] ?? ''", $homePageService);
         $this->assertStringNotContainsString("\$s['desc']", $servicesTemplate);
     }
 }

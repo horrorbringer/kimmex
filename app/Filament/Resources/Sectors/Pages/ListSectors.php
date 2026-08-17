@@ -25,6 +25,7 @@ class ListSectors extends ListRecords
                 ->label(__('Generate Default Sectors'))
                 ->icon('heroicon-m-sparkles')
                 ->color('gray')
+                ->visible(fn (): bool => Sector::query()->count() === 0)
                 ->requiresConfirmation()
                 ->modalHeading(__('Generate default sectors?'))
                 ->modalDescription(__('This will create or update the default industry sectors displayed on the Services page.'))
@@ -45,7 +46,7 @@ class ListSectors extends ListRecords
         ];
     }
 
-    protected static function defaultSectors(): array
+    public static function defaultSectors(): array
     {
         return [
             [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Service;
+use App\Services\ServicesPageService;
 use App\Support\PublicStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,22 @@ use Illuminate\View\View;
 
 class ServiceController extends Controller
 {
+    public function __construct(
+        protected ServicesPageService $servicesPageService,
+    ) {}
+
+    public function index(): View
+    {
+        $locale = app()->getLocale();
+        $lang = $locale === 'km' ? 'kh' : $locale;
+        $services = $this->servicesPageService->getServices();
+        $process = $this->servicesPageService->getProcess();
+        $sectors = $this->servicesPageService->getSectors($locale);
+        $processGridColsClass = $this->servicesPageService->getProcessGridColsClass(count($process));
+
+        return view('pages.services', compact('services', 'process', 'sectors', 'lang', 'processGridColsClass'));
+    }
+
     public function show(Request $request, string $slug): View|RedirectResponse
     {
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();

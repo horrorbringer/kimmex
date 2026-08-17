@@ -2,16 +2,86 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JobPostingStatus;
+use App\Models\Document;
+use App\Models\JobPosting;
 use App\Models\NewsArticle;
 use App\Support\PublicStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class NewsController extends Controller
 {
+    public function index(): View
+    {
+        $locale = app()->getLocale();
+        $fallbackImage = '/images/webp/hero/hero-3.webp';
+
+        $newsArticles = Cache::remember("news_index_data_{$locale}", now()->addHours(12), function () use ($locale, $fallbackImage): array {
+            return NewsArticle::where('isActive', true)
+                ->where('publishedAt', '<=', now())
+                ->orderByDesc('isFeatured')
+                ->orderByDesc('publishedAt')
+                ->get()
+                ->map(function (NewsArticle $n) use ($locale, $fallbackImage): array {
+                    $excerpt = $n->getTranslation('excerpt', $locale)
+                        ?: Str::limit(strip_tags((string) $n->getTranslation('content', $locale)), 160);
+                    $catName = $n->newsCategory
+                        ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en'))
+                        : ($n->getTranslation('category', $locale) ?: __('Updates'));
+                    $catSlug = $n->newsCategory
+                        ? $n->newsCategory->slug
+                        : Str::slug((string) ($n->getTranslation('category', 'en') ?: 'updates'));
+
+                    return [
+                        'slug' => $n->slug,
+                        'category' => $catName,
+                        'categorySlug' => $catSlug,
+                        'image' => PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
+                        'title' => $n->getTranslation('title', $locale),
+                        'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                        'excerpt' => $excerpt,
+                        'isFeatured' => (bool) $n->isFeatured,
+                    ];
+                })->toArray();
+        });
+
+        $allArticles = collect($newsArticles);
+        $featured = $allArticles->first();
+        $gridArticles = $allArticles->slice(1)->values();
+        $totalArticles = count($newsArticles);
+
+        $categoryCounts = collect($newsArticles)->groupBy('category')->map->count();
+        $categories = array_values(array_unique(array_column($newsArticles, 'category')));
+
+        $sidebarHeadlines = $gridArticles->slice(0, 4)->values();
+
+        $sidebarDocs = $this->getSidebarDocs($locale);
+        $sidebarJobs = $this->getSidebarJobs($locale);
+
+        $perPage = 9;
+
+        return view('pages.news.index', compact(
+            'newsArticles',
+            'allArticles',
+            'featured',
+            'gridArticles',
+            'totalArticles',
+            'categoryCounts',
+            'categories',
+            'sidebarHeadlines',
+            'sidebarDocs',
+            'sidebarJobs',
+            'locale',
+            'fallbackImage',
+            'perPage'
+        ));
+    }
+
     public function show(Request $request, string $slug): View|RedirectResponse
     {
         $locale = app()->getLocale();
@@ -141,6 +211,44 @@ class NewsController extends Controller
             return compact('related', 'next', 'prev');
         });
 
-        return view('pages.news.show', compact('article', 'relatedData', 'locale', 'fallbackImage', 'slug'));
+        $sidebarDocs = $this->getSidebarDocs($locale);
+        $sidebarJobs = $this->getSidebarJobs($locale);
+
+        return view('pages.news.show', compact('article', 'relatedData', 'sidebarDocs', 'sidebarJobs', 'locale', 'fallbackImage', 'slug'));
+    }
+
+    /**
+     * Get cached sidebar documents.
+     */
+    protected function getSidebarDocs(string $locale): array
+    {
+        return Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale): array {
+            return Document::with('documentCategory')->publiclyVisible()->latest()->take(3)->get()
+                ->map(fn (Document $d): array => [
+                    'slug' => $d->slug,
+                    'title' => $d->getTranslation('title', $locale),
+                    'category' => $d->documentCategory ? $d->documentCategory->getTranslation('name', $locale) : ($d->category ?: __('Documents')),
+                    'fileType' => $d->fileType ?: 'PDF',
+                    'fileSize' => $d->fileSize,
+                ])->toArray();
+        });
+    }
+
+    /**
+     * Get cached sidebar job postings.
+     */
+    protected function getSidebarJobs(string $locale): array
+    {
+        return Cache::remember("news_sidebar_jobs_{$locale}", now()->addHours(12), function () use ($locale): array {
+            return JobPosting::where('status', JobPostingStatus::OPEN)->with('department')->orderByDesc('created_at')->take(3)->get()
+                ->map(fn (JobPosting $j): array => [
+                    'slug' => $j->slug,
+                    'title' => $j->getTranslation('title', $locale),
+                    'dept' => $j->department ? $j->department->getTranslation('name', $locale) : __('General'),
+                    'location' => $j->getTranslation('location', $locale),
+                    'type' => __(str_replace('_', ' ', Str::title(strtolower($j->type ?? 'FULL_TIME')))),
+                    'salary' => $j->getTranslation('salary', $locale) ?: __('Negotiable'),
+                ])->toArray();
+        });
     }
 }

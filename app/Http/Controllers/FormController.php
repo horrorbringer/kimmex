@@ -6,13 +6,62 @@ use App\Jobs\SendJobApplicationTelegramNotification;
 use App\Mail\ContactAutoReplyMail;
 use App\Models\Inquiry;
 use App\Models\JobApplication;
+use App\Models\Subscriber;
+use App\Models\SystemSetting;
 use App\Support\PublicStorage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class FormController extends Controller
 {
+    public function showContact(): View
+    {
+        $profile = SystemSetting::get('organization_profile', []);
+        $lang = app()->getLocale();
+        $email = $profile['email'] ?? 'info@kimmex.com.kh';
+        $phone = $profile['phone'] ?? '+855 23 999 999';
+        $address = $profile[$lang]['address'] ?? ($profile['en']['address'] ?? __('Phnom Penh, Cambodia'));
+        $googleMapsUrl = $profile['google_maps_url'] ?? '';
+        $originalMapsUrl = $googleMapsUrl;
+
+        $defaultEmbed = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.667785689154!2d104.89350269999998!3d11.575656499999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095176fe4b5e51%3A0x844dbeef5ee9d25b!2sKim%20mex%20Construction%20%26%20Investment%20Co.%2Cltd!5e0!3m2!1skm!2skh!4v1775701743611!5m2!1skm!2skh';
+
+        $isEmbed = str_contains($googleMapsUrl, '/maps/embed') || str_contains($googleMapsUrl, 'google.com/maps?pb=') || str_contains($googleMapsUrl, 'output=embed');
+
+        if (! $isEmbed && ! empty($googleMapsUrl)) {
+            $googleMapsUrl = $defaultEmbed;
+        } elseif (empty($googleMapsUrl)) {
+            $googleMapsUrl = $defaultEmbed;
+        }
+
+        $googleMapsLink = ! empty($originalMapsUrl) && ! $isEmbed ? $originalMapsUrl : 'https://www.google.com/maps/search/?api=1&query='.urlencode($address);
+
+        $facebook = $profile['facebook'] ?? '#';
+        $linkedin = $profile['linkedin'] ?? '#';
+        $youtube = $profile['youtube'] ?? '#';
+        $instagram = $profile['instagram'] ?? '#';
+        $telegram = $profile['telegram'] ?? '#';
+        $tiktok = $profile['tiktok'] ?? '#';
+        $workingHours = $profile[$lang]['working_hours'] ?? ($profile['en']['working_hours'] ?? 'Mon - Fri: 8:00 AM - 5:00 PM');
+
+        return view('pages.contact', compact(
+            'email',
+            'phone',
+            'address',
+            'googleMapsUrl',
+            'googleMapsLink',
+            'facebook',
+            'linkedin',
+            'youtube',
+            'instagram',
+            'telegram',
+            'tiktok',
+            'workingHours'
+        ));
+    }
+
     public function submitContact(Request $request)
     {
         // 1. Honeypot check
@@ -108,5 +157,21 @@ class FormController extends Controller
         SendJobApplicationTelegramNotification::dispatch($application)->afterCommit();
 
         return redirect()->back()->with('success', __('Your application has been submitted successfully!'));
+    }
+
+    public function unsubscribe(string $token): View
+    {
+        $subscriber = Subscriber::where('unsubscribe_token', $token)->first();
+
+        if (! $subscriber) {
+            abort(404);
+        }
+
+        $subscriber->update([
+            'is_active' => false,
+            'unsubscribed_at' => now(),
+        ]);
+
+        return view('pages.unsubscribed', ['email' => $subscriber->email]);
     }
 }

@@ -25,7 +25,10 @@ use App\Models\Testimonial;
 use App\Observers\CacheBusterObserver;
 use App\Observers\InquiryObserver;
 use App\Observers\JobApplicationObserver;
+use App\Observers\MethodologyStepObserver;
+use App\Observers\SectorObserver;
 use App\Observers\SeoMetaObserver;
+use App\Observers\ServiceObserver;
 use App\Support\PublicStorage;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\FileUpload;
@@ -92,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
         $cacheBuster = CacheBusterObserver::class;
         Project::observe($cacheBuster);
         Service::observe($cacheBuster);
+        Service::observe(ServiceObserver::class);
         NewsArticle::observe($cacheBuster);
         Partner::observe($cacheBuster);
         Testimonial::observe($cacheBuster);
@@ -99,7 +103,9 @@ class AppServiceProvider extends ServiceProvider
         OrgUnit::observe($cacheBuster);
         Employee::observe($cacheBuster);
         MethodologyStep::observe($cacheBuster);
+        MethodologyStep::observe(MethodologyStepObserver::class);
         Sector::observe($cacheBuster);
+        Sector::observe(SectorObserver::class);
         JobPosting::observe($cacheBuster);
         Document::observe($cacheBuster);
         DocumentCategory::observe($cacheBuster);

@@ -15,21 +15,23 @@ class HomepageMilestonesTest extends TestCase
         $aboutPage = File::get(resource_path('views/pages/about.blade.php'));
         $styles = File::get(resource_path('css/app.css'));
 
-        $this->assertStringContainsString('<x-home.milestones />', $homepage);
-        $this->assertStringContainsString("Cache::remember('home_milestones_'.\$locale", $milestones);
-        $this->assertStringContainsString('optimizedLocalImageUrl($milestone[\'image\'])', $milestones);
-        $this->assertStringContainsString('cloudinaryResponsiveSrcset($milestone[\'image\'], [160, 320])', $milestones);
-        $this->assertStringContainsString('localResponsiveSrcset($milestone[\'image\'], [160, 320])', $milestones);
+        $homePageService = File::get(app_path('Services/HomePageService.php'));
+
+        $this->assertStringContainsString('<x-home.milestones', $homepage);
+        $this->assertStringContainsString("Cache::remember('home_milestones_'.\$contentLocale", $homePageService);
+        $this->assertStringContainsString('optimizedLocalImageUrl($milestone[\'image\'])', $homePageService);
+        $this->assertStringContainsString('cloudinaryResponsiveSrcset($milestone[\'image\'], [160, 320])', $homePageService);
+        $this->assertStringContainsString('localResponsiveSrcset($milestone[\'image\'], [160, 320])', $homePageService);
         $this->assertStringContainsString('sizes="(min-width: 1024px) 64px, 80px"', $milestones);
         $this->assertStringContainsString('milestone-road-gradient', $milestones);
-        $this->assertStringContainsString('$roadStops = [];', $milestones);
-        $this->assertStringContainsString('$roadWidth = max(1440, count($milestones) * 280);', $milestones);
-        $this->assertStringContainsString('$roadStartX = 48;', $milestones);
-        $this->assertStringContainsString('$roadEndX = $roadWidth - 48;', $milestones);
-        $this->assertStringContainsString('$roadStops[] = [\'x\' => $x, \'y\' => $y, \'cardOffset\'', $milestones);
-        $this->assertStringContainsString('$x = 280 + (($roadWidth - 560)', $milestones);
+        $this->assertStringContainsString('$roadStops = [];', $homePageService);
+        $this->assertStringContainsString('$roadWidth = max(1440, count($milestones) * 280);', $homePageService);
+        $this->assertStringContainsString('$roadStartX = 48;', $homePageService);
+        $this->assertStringContainsString('$roadEndX = $roadWidth - 48;', $homePageService);
+        $this->assertStringContainsString('$roadStops[] = [\'x\' => $x, \'y\' => $y, \'cardOffset\'', $homePageService);
+        $this->assertStringContainsString('$x = 280 + (($roadWidth - 560)', $homePageService);
         $this->assertStringContainsString('home-milestone-route', $milestones);
-        $this->assertStringContainsString('$roadHeight = 600;', $milestones);
+        $this->assertStringContainsString('$roadHeight = 600;', $homePageService);
         $this->assertStringContainsString('viewBox="0 0 {{ $roadWidth }} {{ $roadHeight }}"', $milestones);
         $this->assertStringContainsString('overflow-x-auto pb-6 lg:block', $milestones);
         $this->assertStringNotContainsString('scroll-smooth', $milestones);
@@ -49,8 +51,8 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringNotContainsString('home-milestone-scroll-journey', $milestones);
         $this->assertStringContainsString('home-milestone-story-card', $milestones);
         $this->assertStringContainsString('A legacy built milestone by milestone', $milestones);
-        $this->assertStringContainsString("'image' => \\App\\Support\\PublicStorage::urlIfExists", $milestones);
-        $this->assertStringContainsString("'detail' => \$milestone->getTranslation('detailed_description'", $milestones);
+        $this->assertStringContainsString("'image' => PublicStorage::urlIfExists", $homePageService);
+        $this->assertStringContainsString("'detail' => \$milestone->getTranslation('detailed_description'", $homePageService);
         $this->assertStringContainsString("\$detail = \$milestone['detail'] ?? '';", $milestones);
         $this->assertStringContainsString('background-color: {{ $color }}', $milestones);
         $this->assertStringContainsString('home-milestone-mobile-track', $milestones);

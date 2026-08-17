@@ -1,19 +1,7 @@
+@props(['testimonials' => null])
+
 @php
-    $testimonials = \Illuminate\Support\Facades\Cache::remember('home_testimonials_array_'.app()->getLocale(), now()->addHours(12), function() {
-        $testimonialsDb = \App\Models\Testimonial::where('isActive', true)->where('isFeatured', true)->orderBy('orderIndex')->take(3)->get();
-        if ($testimonialsDb->count() > 0) {
-            return $testimonialsDb->map(function (\App\Models\Testimonial $t) {
-                return [
-                    'quote' => strip_tags($t->getTranslation('content', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $t->getTranslation('content', 'en')),
-                    'rating' => $t->rating ?? 5,
-                    'author' => $t->getTranslation('clientName', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $t->getTranslation('clientName', 'en'),
-                    'role' => $t->getTranslation('clientRole', app()->getLocale() === 'km' ? 'kh' : app()->getLocale()) ?: $t->getTranslation('clientRole', 'en')
-                ];
-            })->toArray();
-        }
-        return [];
-    });
-    
+    $testimonials = $testimonials ?? app(\App\Services\HomePageService::class)->getTestimonials();
 @endphp
 
 @if(!empty($testimonials))
