@@ -23,6 +23,8 @@
                     observer: null,
                     timelineFrame: null,
                     targetTimelineScrollLeft: 0,
+                    canScrollLeft: false,
+                    canScrollRight: true,
                     init() {
                         this.observer = new IntersectionObserver(([entry]) => {
                             if (entry.isIntersecting) {
@@ -31,6 +33,23 @@
                             }
                         }, { threshold: 0.12 });
                         this.observer.observe(this.$el);
+                        this.$nextTick(() => this.updateScrollState());
+                    },
+                    updateScrollState() {
+                        const timeline = this.$refs.desktopTimeline;
+                        if (! timeline) return;
+                        this.canScrollLeft = timeline.scrollLeft > 15;
+                        this.canScrollRight = timeline.scrollLeft < (timeline.scrollWidth - timeline.clientWidth - 15);
+                    },
+                    scrollTimeline(amount) {
+                        const timeline = this.$refs.desktopTimeline;
+                        if (! timeline) return;
+                        const maximumScroll = Math.max(0, timeline.scrollWidth - timeline.clientWidth);
+                        const current = this.targetTimelineScrollLeft || timeline.scrollLeft;
+                        this.targetTimelineScrollLeft = Math.min(maximumScroll, Math.max(0, current + amount));
+                        if (this.timelineFrame === null) {
+                            this.animateTimelineScroll();
+                        }
                     },
                     handleTimelineWheel(event) {
                         const timeline = this.$refs.desktopTimeline;
@@ -67,6 +86,7 @@
                         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                             timeline.scrollLeft = this.targetTimelineScrollLeft;
                             this.timelineFrame = null;
+                            this.updateScrollState();
 
                             return;
                         }
@@ -76,11 +96,13 @@
                         if (Math.abs(distance) < 0.5) {
                             timeline.scrollLeft = this.targetTimelineScrollLeft;
                             this.timelineFrame = null;
+                            this.updateScrollState();
 
                             return;
                         }
 
                         timeline.scrollLeft += distance * 0.32;
+                        this.updateScrollState();
                         this.timelineFrame = window.requestAnimationFrame(() => this.animateTimelineScroll());
                     },
                     destroy() {
@@ -92,6 +114,28 @@
                 @wheel="handleTimelineWheel($event)"
                 :class="active ? 'home-milestone-route-active' : ''"
                 class="home-milestone-route relative mx-auto">
+                {{-- Floating Left Navigation Arrow --}}
+                <button
+                    type="button"
+                    @click="scrollTimeline(-460)"
+                    :disabled="!canScrollLeft"
+                    :class="canScrollLeft ? 'opacity-100 cursor-pointer pointer-events-auto hover:scale-110 hover:bg-titan-red hover:text-white hover:border-titan-red shadow-[0_12px_28px_rgba(11,43,92,0.25)]' : 'opacity-0 pointer-events-none'"
+                    class="absolute -left-2 top-1/2 z-30 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-titan-navy/15 bg-white text-titan-navy shadow-[0_8px_20px_rgba(11,43,92,0.18)] backdrop-blur-md transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-titan-red active:scale-95 lg:flex"
+                    aria-label="{{ __('Previous milestones') }}">
+                    <x-lucide-chevron-left class="h-6 w-6 stroke-[2.5]" />
+                </button>
+
+                {{-- Floating Right Navigation Arrow --}}
+                <button
+                    type="button"
+                    @click="scrollTimeline(460)"
+                    :disabled="!canScrollRight"
+                    :class="canScrollRight ? 'opacity-100 cursor-pointer pointer-events-auto hover:scale-110 hover:bg-titan-red hover:text-white hover:border-titan-red shadow-[0_12px_28px_rgba(11,43,92,0.25)]' : 'opacity-0 pointer-events-none'"
+                    class="absolute -right-2 top-1/2 z-30 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-titan-navy/15 bg-white text-titan-navy shadow-[0_8px_20px_rgba(11,43,92,0.18)] backdrop-blur-md transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-titan-red active:scale-95 lg:flex"
+                    aria-label="{{ __('Next milestones') }}">
+                    <x-lucide-chevron-right class="h-6 w-6 stroke-[2.5]" />
+                </button>
+
                 <div class="home-milestone-mobile-track relative space-y-5 border-l border-titan-navy/10 pl-6 lg:hidden">
                     @foreach ($milestones as $index => $milestone)
                         @php
@@ -114,7 +158,7 @@
                     @endforeach
                 </div>
 
-                <div x-ref="desktopTimeline" aria-label="{{ __('Company milestones timeline') }}" class="home-milestone-blueprint home-milestone-desktop-scroll hidden overflow-x-auto pb-6 lg:block">
+                <div x-ref="desktopTimeline" @scroll.passive="updateScrollState()" aria-label="{{ __('Company milestones timeline') }}" class="home-milestone-blueprint home-milestone-desktop-scroll hidden overflow-x-auto pb-6 lg:block">
                         <div class="relative" style="width: {{ $roadWidth }}px; height: {{ $roadHeight }}px">
                         <svg class="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 {{ $roadWidth }} {{ $roadHeight }}" fill="none" aria-hidden="true">
                             <defs><linearGradient id="milestone-road-gradient" x1="0" y1="0" x2="{{ $roadWidth }}" y2="600" gradientUnits="userSpaceOnUse"><stop stop-color="#174EA6" /><stop offset="0.4" stop-color="#2E8CE0" /><stop offset="0.7" stop-color="#18A957" /><stop offset="1" stop-color="#D89D13" /></linearGradient></defs>
