@@ -340,7 +340,7 @@
         }
         #site-footer .ft-newsletter-form {
             width: 100%;
-            max-width: 360px;
+            max-width: 440px;
         }
 
         /* ── Bottom bar ── */
