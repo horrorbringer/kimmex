@@ -127,9 +127,9 @@
                 @if(auth()->check() && auth()->user()->isAdmin())
                     <div class="w-[1px] h-3 bg-gray-200 hidden sm:block"></div>
                     <a href="/admin"
-                        class="hidden sm:flex items-center gap-2 px-2 py-1 bg-white/10 hover:bg-titan-red rounded transition-colors group">
-                        <x-lucide-shield class="text-titan-red group-hover:text-white w-2.5 h-2.5" />
-                        <span class="text-[9px] font-bold">{{ __('ADMIN') }}</span>
+                        class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-gray-100 border border-gray-200/80 text-titan-navy hover:bg-titan-red hover:text-white hover:border-titan-red transition-all duration-200 group font-black tracking-wider">
+                        <x-lucide-shield class="text-titan-red group-hover:text-white w-3 h-3 shrink-0 transition-colors" />
+                        <span class="text-[9px] uppercase">{{ __('ADMIN') }}</span>
                     </a>
                 @endif
             </div>
@@ -400,31 +400,26 @@
                 <!-- Right Side Actions -->
                 <div class="flex items-center gap-2 sm:gap-3">
                     <!-- Language Switcher -->
-                    <div :class="navDark ? 'bg-gray-100' : 'bg-white/10'"
-                        class="hidden sm:flex items-center gap-0.5 rounded p-0.5 h-8 border border-white/5">
+                    <div class="hidden sm:flex items-center gap-0.5 rounded p-0.5 h-8 bg-gray-100 border border-gray-200/60">
                         <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
-                            class="h-full flex items-center px-2.5 rounded text-[9px] font-black tracking-widest transition-all"
-                            :class="{{ app()->getLocale() === 'en' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
+                            class="h-full flex items-center px-2.5 rounded text-[9px] font-black tracking-widest transition-all {{ app()->getLocale() === 'en' ? 'bg-titan-red text-white shadow-xs' : 'text-titan-navy/50 hover:text-titan-navy hover:bg-gray-200/70' }}">
                             EN
                         </a>
                         <a href="{{ request()->fullUrlWithQuery(['lang' => 'km']) }}"
-                            class="h-full flex items-center px-2.5 rounded text-[9px] font-black tracking-widest transition-all"
-                            :class="{{ app()->getLocale() === 'km' ? "'bg-titan-red text-white shadow-md shadow-titan-red/20'" : "navDark ? 'text-titan-navy/40 hover:text-titan-navy hover:bg-gray-200' : 'text-white/40 hover:text-white hover:bg-white/10'" }}">
+                            class="h-full flex items-center px-2.5 rounded text-[9px] font-black tracking-widest transition-all {{ app()->getLocale() === 'km' ? 'bg-titan-red text-white shadow-xs' : 'text-titan-navy/50 hover:text-titan-navy hover:bg-gray-200/70' }}">
                             KH
                         </a>
                     </div>
 
                     <!-- Search Button -->
                     <button @click="isSearchOpen = true"
-                        :class="navDark ? 'bg-gray-100 text-titan-navy' : 'bg-white/10 text-white hover:bg-white/20'"
-                        class="hidden lg:flex w-8 h-8 rounded items-center justify-center hover:bg-titan-red hover:text-white transition-all">
+                        class="hidden lg:flex w-8 h-8 rounded items-center justify-center bg-gray-100 text-titan-navy hover:bg-titan-red hover:text-white transition-all cursor-pointer">
                         <x-lucide-search class="w-3.5 h-3.5" />
                     </button>
 
                     <!-- Mobile Menu Button -->
                     <button @click="isMobileMenuOpen = !isMobileMenuOpen"
-                        :class="navDark ? 'bg-titan-navy text-white' : 'bg-white/10 text-white'"
-                        class="lg:hidden w-8 h-8 rounded flex items-center justify-center transition-colors">
+                        class="lg:hidden w-8 h-8 rounded flex items-center justify-center bg-titan-navy text-white transition-colors cursor-pointer">
                         <span x-show="!isMobileMenuOpen"><x-lucide-menu class="w-4 h-4" /></span>
                         <span x-show="isMobileMenuOpen" style="display:none"><x-lucide-x class="w-4 h-4" /></span>
                     </button>
@@ -594,6 +589,15 @@
                         ខ្មែរ
                     </a>
                 </div>
+                @if(auth()->check() && auth()->user()->isAdmin())
+                    <div class="mt-3">
+                        <a href="/admin"
+                            class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded bg-titan-navy text-white text-xs font-bold uppercase tracking-wider hover:bg-titan-red transition-colors">
+                            <x-lucide-shield class="w-3.5 h-3.5 text-titan-red" />
+                            <span>{{ __('Admin Panel') }}</span>
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
