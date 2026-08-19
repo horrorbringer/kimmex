@@ -406,7 +406,7 @@
 
 
         <!-- === BEAUTIFUL & CLEAN PROJECT JOURNEY LINE CHART === -->
-        <section id="project-journey" class="py-20 md:py-28 px-4 sm:px-6 bg-white border-t border-titan-navy/10 overflow-hidden"
+        <section id="milestones" class="py-20 md:py-28 px-4 sm:px-6 bg-white border-t border-titan-navy/10 overflow-hidden"
             x-data="{
                 activeYear: 'all',
                 chartMode: 'cumulative', // 'cumulative' or 'annual'

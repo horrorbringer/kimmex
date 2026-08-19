@@ -26,12 +26,7 @@ class AboutMilestonesTest extends TestCase
         $this->get('/about?lang=en')
             ->assertOk()
             ->assertSee('Company Milestones')
-            ->assertSee('milestone-timeline', false)
-            ->assertSee('timelineVisible', false)
-            ->assertSee('milestone-animate', false)
-            ->assertSee('milestone-timeline-progress', false)
-            ->assertSee('Back to top')
-            ->assertSee('Key milestone')
-            ->assertSee('Project turning point');
+            ->assertSee('OUR JOURNEY')
+            ->assertSee('kimmexCanvasJsChart');
     }
 }

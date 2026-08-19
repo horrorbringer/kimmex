@@ -146,9 +146,12 @@
                         <article x-data="{ detailOpen: false, detailTrigger: null, openDetail(event) { this.detailTrigger = event.currentTarget; this.detailOpen = true; this.$nextTick(() => this.$refs.detailClose.focus()); }, closeDetail() { this.detailOpen = false; this.$nextTick(() => this.detailTrigger?.focus()); } }" class="home-milestone-mobile-item relative" style="--milestone-delay: {{ $index * 110 }}ms">
                             <span class="absolute -left-[2.05rem] top-5 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white" style="background-color: {{ $color }}"><span class="absolute inset-0 rounded-full border-2" style="border-color: {{ $color }}"></span></span>
                             <button type="button" aria-label="{{ $milestone['title'] }}" @if ($hasDetail) @click="openDetail($event)" @endif class="home-milestone-story-card block w-full overflow-hidden rounded-2xl border border-titan-navy/10 bg-white p-3 text-left shadow-[0_14px_30px_-25px_rgba(11,43,92,0.45)] {{ $hasDetail ? 'cursor-pointer' : 'cursor-default' }}">
-                                <div class="flex gap-4">
+                                <div class="flex items-center gap-3">
                                     @if ($milestone['image'])<img src="{{ $milestone['image'] }}" @if (filled($milestone['imageSrcset'])) srcset="{{ $milestone['imageSrcset'] }}" @endif sizes="(min-width: 1024px) 64px, 80px" width="80" height="64" alt="" class="h-16 w-20 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />@endif
-                                    <div><p class="font-heading text-lg font-black text-titan-navy">{{ $milestone['year'] }}</p><h3 class="mt-1 font-heading !text-sm font-black text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-base' : '' }}">{{ $milestone['title'] }}</h3></div>
+                                    <div class="min-w-0">
+                                        <p class="font-heading text-lg font-black leading-tight text-titan-navy">{{ $milestone['year'] }}</p>
+                                        <h3 class="font-heading !text-sm font-black leading-snug text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-base' : '' }}">{{ $milestone['title'] }}</h3>
+                                    </div>
                                 </div>
                             </button>
                             @if ($hasDetail)
@@ -183,7 +186,7 @@
                                 @endif
                                 <div class="flex items-center gap-3">
                                     @if ($milestone['image'])<img src="{{ $milestone['image'] }}" @if (filled($milestone['imageSrcset'])) srcset="{{ $milestone['imageSrcset'] }}" @endif sizes="(min-width: 1024px) 64px, 80px" width="64" height="64" alt="" class="h-16 w-16 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />@endif
-                                    <div class="min-w-0"><p class="font-heading text-base font-black leading-none text-titan-navy">{{ $milestone['year'] }}</p><span class="mt-2 block h-0.5 w-5 bg-titan-red"></span><p class="mt-2 line-clamp-2 font-heading text-xs font-black leading-snug text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-sm' : '' }}">{{ $milestone['title'] }}</p></div>
+                                    <div class="min-w-0"><p class="font-heading text-base font-black leading-tight text-titan-navy">{{ $milestone['year'] }}</p><p class="line-clamp-2 font-heading text-xs font-black leading-snug text-titan-navy {{ app()->getLocale() === 'km' ? 'font-khmer text-sm' : '' }}">{{ $milestone['title'] }}</p></div>
                                 </div>
                             </button>
                             @if ($hasDetail)
