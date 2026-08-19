@@ -82,7 +82,7 @@ class AdminPanelProvider extends PanelProvider
             ->font('Suwannaphum')
             ->sidebarCollapsibleOnDesktop()
             ->maxContentWidth(Width::Full)
-            ->simplePageMaxContentWidth(Width::Full)
+            ->simplePageMaxContentWidth(Width::Large)
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
                 'primary' => Color::hex(self::getThemeColor('primary_color', '#E31E24')),
@@ -354,31 +354,64 @@ class AdminPanelProvider extends PanelProvider
                             box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2) !important;
                         }
 
-                        /* Full width layout for Create, Edit, and Form pages */
-                        .fi-main,
-                        .fi-main > *,
-                        .fi-page,
-                        .fi-page-header,
-                        .fi-page-header-main-ctn,
-                        .fi-page-content,
-                        .fi-page-content > *,
-                        .fi-sc,
-                        .fi-sc-form,
-                        .fi-sc-component,
-                        .fi-form,
-                        .fi-section,
-                        .fi-section-content-ctn,
-                        .fi-grid-col,
-                        .fi-sc > .fi-grid-col,
-                        .fi-main.fi-width-7xl,
-                        .fi-main.fi-width-6xl,
-                        .fi-main.fi-width-5xl,
-                        .fi-main.fi-width-4xl,
-                        .fi-main.fi-width-3xl,
-                        .fi-main.fi-width-2xl,
-                        .fi-main.fi-width-xl {
+                        /* Full width layout strictly for internal Admin Pages (excluding auth/login pages) */
+                        .fi-layout:not(.fi-simple-layout) .fi-main,
+                        .fi-layout:not(.fi-simple-layout) .fi-main > *,
+                        .fi-layout:not(.fi-simple-layout) .fi-page,
+                        .fi-layout:not(.fi-simple-layout) .fi-page-header,
+                        .fi-layout:not(.fi-simple-layout) .fi-page-header-main-ctn,
+                        .fi-layout:not(.fi-simple-layout) .fi-page-content,
+                        .fi-layout:not(.fi-simple-layout) .fi-page-content > *,
+                        .fi-layout:not(.fi-simple-layout) .fi-sc,
+                        .fi-layout:not(.fi-simple-layout) .fi-sc-form,
+                        .fi-layout:not(.fi-simple-layout) .fi-sc-component,
+                        .fi-layout:not(.fi-simple-layout) .fi-form,
+                        .fi-layout:not(.fi-simple-layout) .fi-section,
+                        .fi-layout:not(.fi-simple-layout) .fi-section-content-ctn,
+                        .fi-layout:not(.fi-simple-layout) .fi-grid-col,
+                        .fi-layout:not(.fi-simple-layout) .fi-sc > .fi-grid-col,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-7xl,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-6xl,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-5xl,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-4xl,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-3xl,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-2xl,
+                        .fi-layout:not(.fi-simple-layout) .fi-main.fi-width-xl {
                             max-width: 100% !important;
                             width: 100% !important;
+                        }
+
+                        /* Auth & Login Page Card Enhancements */
+                        .fi-simple-layout {
+                            background-color: #f8fafc !important;
+                        }
+                        .dark .fi-simple-layout {
+                            background-color: #0b1120 !important;
+                        }
+                        .fi-simple-layout .fi-simple-main-ctn {
+                            display: flex !important;
+                            justify-content: center !important;
+                            align-items: center !important;
+                            min-height: 100vh !important;
+                            padding: 1.5rem !important;
+                        }
+                        .fi-simple-layout .fi-simple-main {
+                            max-width: 28rem !important;
+                            width: 100% !important;
+                            background: #ffffff !important;
+                            border: 1px solid #e2e8f0 !important;
+                            border-radius: 1.25rem !important;
+                            box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04) !important;
+                            padding: 2.25rem !important;
+                        }
+                        .dark .fi-simple-layout .fi-simple-main {
+                            background: #111827 !important;
+                            border-color: #1f2937 !important;
+                            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
+                        }
+                        .fi-fo-field-wrp-label,
+                        .fi-fo-field-wrp-label span {
+                            white-space: nowrap !important;
                         }
                     </style>";
                 }
