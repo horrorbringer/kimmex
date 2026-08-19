@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProjectStatus;
 use App\Models\Milestone;
 use App\Models\OrgUnit;
+use App\Models\Project;
 use App\Models\SystemSetting;
 use App\Support\PublicStorage;
 use Illuminate\Support\Facades\Cache;
@@ -175,6 +177,85 @@ class AboutController extends Controller
 
         $tagline = $orgProfile[$localeKey]['tagline'] ?? "Cambodia's Premier Construction Partner";
 
+        // Query all active projects for the Project Journey & Clean Line Chart
+        $allProjectsDb = Project::where('isActive', true)
+            ->with('projectCategory')
+            ->orderBy('completionDate', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $projectsByYear = [];
+        $runningTotal = 0;
+
+        foreach ($allProjectsDb as $proj) {
+            $year = $proj->completionDate ? $proj->completionDate->format('Y') : date('Y', strtotime($proj->created_at));
+            if (! isset($projectsByYear[$year])) {
+                $projectsByYear[$year] = [
+                    'year' => (string) $year,
+                    'count' => 0,
+                    'projects' => [],
+                ];
+            }
+            $projectsByYear[$year]['count']++;
+            $projectsByYear[$year]['projects'][] = [
+                'id' => $proj->id,
+                'slug' => $proj->slug,
+                'title' => $proj->getTranslation('title', $localeKey) ?: $proj->getTranslation('title', 'en'),
+                'location' => $proj->getTranslation('location', $localeKey) ?: $proj->getTranslation('location', 'en'),
+                'client' => $proj->client,
+                'status' => $proj->status?->value ?? 'COMPLETED',
+                'status_label' => $proj->status?->getLabel() ?? __('Completed'),
+                'category' => $proj->projectCategory?->getTranslation('name', $localeKey) ?: ($proj->projectCategory?->getTranslation('name', 'en') ?: __('General Construction')),
+                'image' => PublicStorage::urlIfExists($proj->heroImage, '/images/webp/projects/Thumbnail-1.webp'),
+                'year' => $year,
+            ];
+        }
+
+        // Ensure chronological ordering of years
+        ksort($projectsByYear);
+
+        $timelinePoints = [];
+        $runningCumulative = 0;
+        foreach ($projectsByYear as $yr => $data) {
+            $runningCumulative += $data['count'];
+            $timelinePoints[] = [
+                'year' => (string) $yr,
+                'count' => $data['count'],
+                'cumulative' => $runningCumulative,
+                'projects' => $data['projects'],
+            ];
+        }
+
+        $allProjectsFlat = $allProjectsDb->map(function ($proj) use ($localeKey) {
+            $year = $proj->completionDate ? $proj->completionDate->format('Y') : date('Y', strtotime($proj->created_at));
+
+            return [
+                'id' => $proj->id,
+                'slug' => $proj->slug,
+                'title' => $proj->getTranslation('title', $localeKey) ?: $proj->getTranslation('title', 'en'),
+                'location' => $proj->getTranslation('location', $localeKey) ?: $proj->getTranslation('location', 'en'),
+                'client' => $proj->client,
+                'status' => $proj->status?->value ?? 'COMPLETED',
+                'status_label' => $proj->status?->getLabel() ?? __('Completed'),
+                'category' => $proj->projectCategory?->getTranslation('name', $localeKey) ?: ($proj->projectCategory?->getTranslation('name', 'en') ?: __('General Construction')),
+                'image' => PublicStorage::urlIfExists($proj->heroImage, '/images/webp/projects/Thumbnail-1.webp'),
+                'year' => $year,
+            ];
+        })->toArray();
+
+        $projectJourneyStats = [
+            'total_projects' => $allProjectsDb->count(),
+            'completed_projects' => $allProjectsDb->where('status', ProjectStatus::COMPLETED)->count(),
+            'ongoing_projects' => $allProjectsDb->where('status', ProjectStatus::ONGOING)->count(),
+            'start_year' => ! empty($timelinePoints) ? $timelinePoints[0]['year'] : '2021',
+            'latest_year' => ! empty($timelinePoints) ? end($timelinePoints)['year'] : '2027',
+        ];
+
+        $canvasJsCumulativeData = array_map(fn ($pt) => [
+            'label' => (string) $pt['year'],
+            'y' => (int) $pt['cumulative'],
+        ], $timelinePoints);
+
         return view('pages.about', compact(
             'locale', 'localeKey',
             'brandProfile', 'brand',
@@ -183,6 +264,8 @@ class AboutController extends Controller
             'milestones', 'orgChart',
             'orgProfile', 'orgChartVisible', 'orgChartType', 'orgChartImage', 'orgChartPdf',
             'tagline',
+            'timelinePoints', 'allProjectsFlat', 'projectJourneyStats',
+            'canvasJsCumulativeData',
         ));
     }
 }

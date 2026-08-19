@@ -427,6 +427,7 @@
             <x-lucide-arrow-up class="w-5 h-5 group-hover:-translate-y-1 transition-transform duration-300" />
         </button>
     </div>
+    @stack('scripts')
     @livewireScripts
 </body>
 

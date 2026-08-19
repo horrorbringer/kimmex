@@ -402,101 +402,198 @@
             }
         </style>
 
-        <!-- === MILESTONES === -->
-        <section id="milestones" x-data="{ timelineVisible: false }" x-intersect.once="timelineVisible = true"
-            class="py-20 md:py-28 px-6 bg-gray-50 border-y border-gray-100 overflow-hidden">
+
+
+
+        <!-- === BEAUTIFUL & CLEAN PROJECT JOURNEY LINE CHART === -->
+        <section id="project-journey" class="py-20 md:py-28 px-4 sm:px-6 bg-white border-t border-titan-navy/10 overflow-hidden"
+            x-data="{
+                activeYear: 'all',
+                chartMode: 'cumulative', // 'cumulative' or 'annual'
+                hoveredIndex: null,
+                points: {{ Js::from($timelinePoints) }},
+                svgWidth: 960,
+                svgHeight: 320,
+                paddingX: 70,
+                paddingY: 45,
+                
+                get maxVal() {
+                    if (this.chartMode === 'cumulative') {
+                        return Math.max(...this.points.map(p => p.cumulative), 1);
+                    }
+                    return Math.max(...this.points.map(p => p.count), 1);
+                },
+                
+                getCoords() {
+                    const usableW = this.svgWidth - (this.paddingX * 2);
+                    const usableH = this.svgHeight - (this.paddingY * 2);
+                    const stepX = this.points.length > 1 ? usableW / (this.points.length - 1) : usableW;
+                    const maxV = this.maxVal;
+
+                    return this.points.map((p, idx) => {
+                        const val = this.chartMode === 'cumulative' ? p.cumulative : p.count;
+                        const x = this.paddingX + (idx * stepX);
+                        const y = this.svgHeight - this.paddingY - ((val / maxV) * usableH);
+                        return { x, y, val, year: p.year, count: p.count, cumulative: p.cumulative, projects: p.projects };
+                    });
+                },
+                
+                get linePath() {
+                    const coords = this.getCoords();
+                    if (coords.length === 0) return '';
+                    if (coords.length === 1) return `M ${coords[0].x} ${coords[0].y}`;
+                    
+                    let d = `M ${coords[0].x} ${coords[0].y}`;
+                    for (let i = 0; i < coords.length - 1; i++) {
+                        const p0 = coords[i];
+                        const p1 = coords[i + 1];
+                        const cpX1 = p0.x + (p1.x - p0.x) / 2;
+                        const cpY1 = p0.y;
+                        const cpX2 = p0.x + (p1.x - p0.x) / 2;
+                        const cpY2 = p1.y;
+                        d += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p1.x} ${p1.y}`;
+                    }
+                    return d;
+                },
+                
+                get areaPath() {
+                    const coords = this.getCoords();
+                    if (coords.length === 0) return '';
+                    const baseLine = this.linePath;
+                    const lastX = coords[coords.length - 1].x;
+                    const firstX = coords[0].x;
+                    const bottomY = this.svgHeight - this.paddingY;
+                    return `${baseLine} L ${lastX} ${bottomY} L ${firstX} ${bottomY} Z`;
+                }
+            }">
             <div class="max-w-[1200px] mx-auto">
-                <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                    class="text-center mb-16 md:mb-24 transition-all duration-700 ease-out">
-                    <div class="flex items-center justify-center gap-3 mb-5">
-                        <div class="w-8 h-px bg-titan-red"></div>
+                
+                <!-- Section Header -->
+                <div class="text-center mb-10 md:mb-14">
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        <div class="w-8 h-[2px] bg-titan-red"></div>
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('OUR JOURNEY') }}</span>
-                        <div class="w-8 h-px bg-titan-red"></div>
+                        <div class="w-8 h-[2px] bg-titan-red"></div>
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">{{ __('Company Milestones') }}</h2>
+                    <h2 class="text-3xl md:text-5xl font-heading font-black text-titan-navy tracking-tight">
+                        {{ __('Company Milestones') }}
+                    </h2>
+                    <p class="mt-3 text-sm md:text-base text-titan-navy/60 max-w-2xl mx-auto font-medium">
+                        {{ __('Historical project delivery trajectory and annual completion milestones across Cambodia.') }}
+                    </p>
                 </div>
 
-                <div class="milestone-timeline space-y-12 md:space-y-0 relative">
-                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-titan-red/20 to-transparent -translate-x-1/2"></div>
-                    <div class="milestone-timeline-progress hidden md:block absolute left-1/2 top-8 bottom-8 w-[2px] bg-gradient-to-b from-titan-red via-titan-red/70 to-titan-red/10 -translate-x-1/2 origin-top transition-transform duration-[1600ms] ease-out"
-                        :class="timelineVisible ? 'scale-y-100' : 'scale-y-0'"></div>
-
-                    @foreach($milestones as $idx => $milestone)
-                        @php
-                            $isEven = $idx % 2 === 0;
-                            $hasMilestoneDetail = (bool) ($milestone['has_detail'] ?? false);
-                            $isFeaturedMilestone = (bool) ($milestone['is_featured'] ?? false);
-                        @endphp
-                        <div x-data="{ shown: false, open: false, hasDetail: @js($hasMilestoneDetail) }" x-intersect.once="shown = true"
-                            :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
-                            class="milestone-animate relative md:grid md:grid-cols-2 md:gap-16 md:py-12 transition-all duration-700 ease-out group/milestone"
-                            style="transition-delay: {{ min($idx * 90, 360) }}ms">
-
-                            <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                                <div class="w-4 h-4 bg-white border-[3px] border-titan-red rounded-full shadow-sm transition-all duration-300"
-                                    :class="open ? 'scale-150 bg-titan-red' : 'group-hover/milestone:scale-125'"></div>
-                            </div>
-
-                            <!-- Content Side -->
-                            <div class="{{ $isEven ? 'md:text-right md:pr-8' : 'md:col-start-2 md:pl-8' }}">
-                                <div class="inline-flex items-center gap-2 bg-titan-red/10 text-titan-red text-sm font-bold px-4 py-1.5 rounded-full mb-4">
-                                    <x-lucide-calendar class="w-3.5 h-3.5" />
-                                    {{ $milestone['year'] }}
-                                </div>
-                                @if($isFeaturedMilestone)
-                                    <span class="ml-2 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-amber-800">
-                                        <x-lucide-star class="h-3 w-3 fill-current" />
-                                        {{ __('Key milestone') }}
-                                    </span>
-                                @endif
-                                <h3 class="text-xl md:text-2xl font-heading font-black text-titan-navy mb-3 tracking-tight">
-                                    {{ $milestone['title'] }}
-                                </h3>
-                                <div class="text-gray-500 leading-relaxed text-sm md:text-base
-                                    [&>p]:mb-3 [&>ul]:space-y-1.5 [&>ol]:space-y-1.5
-                                    [&_li]:text-sm milestone-list">
-                                    {!! $milestone['desc'] !!}
-                                </div>
-
-                                @if($hasMilestoneDetail)
-                                    <button @click="open = !open" class="mt-4 inline-flex items-center gap-2 text-titan-red text-xs font-bold uppercase tracking-wider hover:gap-3 transition-all">
-                                        <span x-text="open ? '{{ __('Close') }}' : '{{ __('Read More') }}'"></span>
-                                        <x-lucide-chevron-down class="w-3.5 h-3.5 transition-transform" x-bind:class="open ? 'rotate-180' : ''" />
-                                    </button>
-                                    <div x-show="open" x-collapse>
-                                        <div class="mt-4 p-5 bg-white rounded-lg border border-gray-100 text-gray-500 text-sm leading-relaxed">
-                                            {!! $milestone['detail'] !!}
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <!-- Image Side -->
-                            <div class="{{ $isEven ? 'md:col-start-2 md:pl-8' : 'md:row-start-1 md:col-start-1 md:pr-8' }} mt-6 md:mt-0">
-                                <div class="aspect-[16/10] rounded-xl overflow-hidden shadow-md border border-gray-100 group/img cursor-{{ $hasMilestoneDetail ? 'pointer' : 'default' }}"
-                                    @if($hasMilestoneDetail) @click="open = !open" @endif>
-                                    <img src="{{ $milestone['image'] }}" alt="{{ $milestone['title'] }}"
-                                        class="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105" loading="lazy" decoding="async" />
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                <!-- Ultra-Clean Milestone Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-8 overflow-hidden text-titan-navy">
+                    <!-- CanvasJS Interactive Chart Area -->
+                    <div id="kimmexCanvasJsChart" style="height: 380px; width: 100%;"></div>
                 </div>
 
-                <div class="mt-14 text-center md:mt-20">
-                    <a href="#page-top" class="inline-flex items-center gap-2 rounded-full border border-titan-navy/10 bg-white px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-titan-navy shadow-sm transition-all hover:-translate-y-0.5 hover:border-titan-red/30 hover:text-titan-red focus:outline-none focus-visible:ring-4 focus-visible:ring-titan-red/20">
-                        <x-lucide-arrow-up class="h-4 w-4" />
-                        {{ __('Back to top') }}
-                    </a>
-                </div>
             </div>
         </section>
 
+        @push('head')
+        <style>
+            .canvasjs-chart-credit {
+                display: none !important;
+            }
+        </style>
+        @endpush
+
+        @push('scripts')
+        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+        <script>
+            (function() {
+                const cumulativePoints = @json($canvasJsCumulativeData, JSON_NUMERIC_CHECK);
+                let chartInstance = null;
+
+                function renderKimmexChart() {
+                    const container = document.getElementById("kimmexCanvasJsChart");
+                    if (!container || typeof CanvasJS === 'undefined') return;
+
+                    chartInstance = new CanvasJS.Chart("kimmexCanvasJsChart", {
+                        animationEnabled: true,
+                        animationDuration: 800,
+                        theme: "light2",
+                        backgroundColor: "transparent",
+                        toolTip: {
+                            shared: false,
+                            backgroundColor: "#0F172A",
+                            fontColor: "#FFFFFF",
+                            borderColor: "#E31E24",
+                            borderThickness: 1,
+                            cornerRadius: 6,
+                            fontSize: 12,
+                            fontWeight: "bold",
+                            content: "{label}: <strong>{y} " + "{{ __('Projects') }}" + "</strong>"
+                        },
+                        axisX: {
+                            interval: 1,
+                            labelFontColor: "#475569",
+                            labelFontWeight: "600",
+                            labelFontSize: 13,
+                            lineColor: "#E2E8F0",
+                            lineThickness: 1,
+                            tickColor: "#E2E8F0",
+                            tickLength: 6,
+                            gridThickness: 0,
+                            crosshair: {
+                                enabled: true,
+                                color: "#E31E24",
+                                opacity: 0.3,
+                                lineDashType: "dash"
+                            }
+                        },
+                        axisY: {
+                            labelFontColor: "#94A3B8",
+                            labelFontWeight: "600",
+                            labelFontSize: 11,
+                            lineThickness: 0,
+                            tickLength: 0,
+                            gridColor: "#F1F5F9",
+                            gridThickness: 1,
+                            includeZero: true
+                        },
+                        data: [{
+                            type: "area",
+                            color: "#E31E24",
+                            fillOpacity: 0.08,
+                            lineColor: "#E31E24",
+                            lineThickness: 3,
+                            markerSize: 9,
+                            markerColor: "#FFFFFF",
+                            markerBorderColor: "#E31E24",
+                            markerBorderThickness: 2.5,
+                            indexLabel: "{y}",
+                            indexLabelPlacement: "outside",
+                            indexLabelFontColor: "#0F172A",
+                            indexLabelFontSize: 12,
+                            indexLabelFontWeight: "bold",
+                            dataPoints: cumulativePoints
+                        }]
+                    });
+
+                    chartInstance.render();
+                }
+
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    renderKimmexChart();
+                } else {
+                    document.addEventListener('DOMContentLoaded', renderKimmexChart);
+                }
+
+                window.addEventListener('load', renderKimmexChart);
+                window.addEventListener('resize', function() {
+                    if (chartInstance) chartInstance.render();
+                });
+            })();
+        </script>
+        @endpush
+
 
         @if(($orgChartVisible ?? true) && $orgChartType !== 'none')
-        <!-- === ORG CHART === -->
-        <section id="leadership" class="py-14 sm:py-20 md:py-28 px-4 sm:px-6 bg-white overflow-hidden">
+        <!-- === GOVERNANCE / ORG CHART === -->
+        <section id="leadership" class="py-14 sm:py-20 md:py-28 px-4 sm:px-6 bg-white overflow-hidden border-t border-titan-navy/10">
             <div class="max-w-[1700px] mx-auto">
                 @if($orgChartType === 'dynamic')
                 <div class="text-center mb-10 sm:mb-16 md:mb-24">
