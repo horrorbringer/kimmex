@@ -11,10 +11,10 @@
             <div class="mx-auto mb-12 max-w-2xl text-center lg:mb-16">
                 <div class="mb-4 flex items-center justify-center gap-3">
                     <span class="h-px w-10 bg-titan-red"></span>
-                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">{{ __('Our Journey') }}</span>
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">Our Journey</span>
                     <span class="h-px w-10 bg-titan-red"></span>
                 </div>
-                <h2 class="font-heading text-3xl font-black tracking-tight text-titan-navy md:text-5xl">{{ __('A legacy built milestone by milestone') }}</h2>
+                <h2 class="font-heading text-3xl font-black tracking-tight text-titan-navy md:text-5xl">A legacy built milestone by milestone</h2>
                 <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-titan-navy/60">{{ __('From our first foundation to the projects shaping Cambodia today.') }}</p>
             </div>
 
@@ -150,7 +150,7 @@
                                     @if ($milestone['image'])<img src="{{ $milestone['image'] }}" @if (filled($milestone['imageSrcset'])) srcset="{{ $milestone['imageSrcset'] }}" @endif sizes="(min-width: 1024px) 64px, 80px" width="80" height="64" alt="" class="h-16 w-20 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />@endif
                                     <div class="min-w-0">
                                         <p class="font-heading text-sm font-black tracking-tight leading-none text-titan-navy">{{ $milestone['year'] }}</p>
-                                        <h3 class="mt-1 font-heading text-xs font-bold leading-tight text-titan-navy/85 {{ app()->getLocale() === 'km' ? 'font-khmer text-xs leading-snug' : '' }}">{{ $milestone['title'] }}</h3>
+                                        <h3 class="mt-1 font-heading text-xs font-bold leading-tight text-titan-navy/85">{{ $milestone['title'] }}</h3>
                                     </div>
                                 </div>
                             </button>
@@ -188,7 +188,7 @@
                                     @if ($milestone['image'])<img src="{{ $milestone['image'] }}" @if (filled($milestone['imageSrcset'])) srcset="{{ $milestone['imageSrcset'] }}" @endif sizes="(min-width: 1024px) 64px, 80px" width="64" height="64" alt="" class="h-16 w-16 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />@endif
                                     <div class="min-w-0">
                                         <p class="font-heading text-xs font-black tracking-tight leading-none text-titan-navy">{{ $milestone['year'] }}</p>
-                                        <p class="mt-0 line-clamp-3 font-heading text-xs font-bold leading-tight text-titan-navy/85 {{ app()->getLocale() === 'km' ? 'font-khmer text-xs leading-snug' : '' }}">{{ $milestone['title'] }}</p>
+                                        <p class="mt-0 line-clamp-3 font-heading text-xs font-bold leading-tight text-titan-navy/85">{{ $milestone['title'] }}</p>
                                     </div>
                                 </div>
                             </button>

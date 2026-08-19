@@ -133,9 +133,9 @@ class HomePageService
 
                     return [
                         'year' => $milestone->year,
-                        'title' => $milestone->getTranslation('title', $contentLocale, false) ?: $milestone->getTranslation('title', 'en'),
-                        'description' => Str::limit(trim(strip_tags((string) ($milestone->getTranslation('description', $contentLocale, false) ?: $milestone->getTranslation('description', 'en')))), 96),
-                        'detail' => $milestone->getTranslation('detailed_description', $contentLocale, false) ?: $milestone->getTranslation('detailed_description', 'en'),
+                        'title' => $milestone->getTranslation('title', 'en') ?: $milestone->getTranslation('title', $contentLocale, false),
+                        'description' => Str::limit(trim(strip_tags((string) ($milestone->getTranslation('description', 'en') ?: $milestone->getTranslation('description', $contentLocale, false)))), 96),
+                        'detail' => $milestone->getTranslation('detailed_description', 'en') ?: $milestone->getTranslation('detailed_description', $contentLocale, false),
                         'image' => PublicStorage::urlIfExists($milestone->image, $fallbackImage),
                     ];
                 })
