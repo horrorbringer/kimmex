@@ -183,103 +183,91 @@
             </div>
         </section>
 
-        <!-- --- GALLERY SECTION WITH PHOTOSWIPE --- -->
+        <!-- --- GALLERY SECTION WITH TELEPORTED LIGHTBOX --- -->
         @if(count($project['images']) > 0)
-            @push('head')
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css">
-                <style>
-                    .pswp-custom-caption {
-                        background: rgba(15, 23, 42, 0.85);
-                        backdrop-filter: blur(12px);
-                        -webkit-backdrop-filter: blur(12px);
-                        color: #ffffff;
-                        font-size: 0.875rem;
-                        font-weight: 600;
-                        padding: 0.75rem 1.25rem;
-                        border-radius: 9999px;
-                        position: absolute;
-                        left: 50%;
-                        bottom: 1.5rem;
-                        transform: translateX(-50%);
-                        max-width: 90vw;
-                        text-align: center;
-                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-                        border: 1px solid rgba(255, 255, 255, 0.15);
-                        z-index: 1000;
-                        pointer-events: none;
-                    }
-                    .pswp__img {
-                        object-fit: contain !important;
-                        max-width: 100% !important;
-                        max-height: 100% !important;
-                    }
-                    .pswp__zoom-wrap {
-                        transform-origin: center center !important;
-                    }
-                </style>
-            @endpush
+            @php
+                $galleryList = array_map(function($img, $idx) use ($project) {
+                    $url = is_array($img) ? ($img['url'] ?? '') : (string) $img;
+                    $caption = is_array($img) ? ($img['caption'] ?? '') : '';
+                    return [
+                        'url' => $url,
+                        'caption' => $caption ?: ($project['title'] . ' — ' . __('Photo') . ' ' . ($idx + 1)),
+                    ];
+                }, $project['images'], array_keys($project['images']));
+            @endphp
 
-            <div x-data="{ displayMode: 'bento', activeSlide: 0, total: {{ count($project['images']) }} }">
-                <section id="project-gallery" class="bg-slate-900 py-12 md:py-16 px-4 md:px-6 text-white border-y border-white/10">
+            <div x-data="{
+                displayMode: 'bento',
+                activeSlide: 0,
+                lightboxOpen: false,
+                currentLightboxIndex: 0,
+                images: {{ Js::from($galleryList) }},
+                total: {{ count($project['images']) }},
+                openLightbox(index) {
+                    this.currentLightboxIndex = index;
+                    this.lightboxOpen = true;
+                    document.body.style.overflow = 'hidden';
+                },
+                closeLightbox() {
+                    this.lightboxOpen = false;
+                    document.body.style.overflow = '';
+                },
+                prev() {
+                    this.currentLightboxIndex = (this.currentLightboxIndex - 1 + this.images.length) % this.images.length;
+                },
+                next() {
+                    this.currentLightboxIndex = (this.currentLightboxIndex + 1) % this.images.length;
+                }
+            }"
+            x-init="window.openPhotoSwipeAt = (idx = 0) => openLightbox(idx)"
+            @keydown.escape.window="closeLightbox()"
+            @keydown.arrow-left.window="lightboxOpen && prev()"
+            @keydown.arrow-right.window="lightboxOpen && next()"
+            >
+                <section id="project-gallery" class="bg-slate-950 py-12 md:py-16 px-4 md:px-6 text-white border-y border-white/10" style="background-color: #090e1a;">
                     <div class="max-w-[1400px] mx-auto">
                         
                         <!-- Header & Display Switcher Controls -->
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 md:mb-10 pb-6 border-b border-white/10">
                             <div>
-                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-titan-red/20 text-titan-red text-xs font-bold uppercase tracking-widest mb-3">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-titan-red/20 text-titan-red text-xs font-bold uppercase tracking-widest mb-3 border border-titan-red/30">
                                     <x-lucide-camera class="w-3.5 h-3.5" />
                                     <span>{{ __('Visual Showcase') }}</span>
                                 </div>
-                                <h2 class="text-2xl md:text-3xl font-black !text-white tracking-tight leading-tight">
+                                <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight" style="color: #ffffff !important;">
                                     {{ __('Project Media & Gallery') }}
                                 </h2>
-                                <p class="text-xs md:text-sm text-slate-400 mt-1 font-medium max-w-xl">
-                                    {{ __('Explore high-resolution project photography with multi-angle visual displays and PhotoSwipe controls.') }}
+                                <p class="text-xs md:text-sm text-slate-400 mt-1 font-medium max-w-xl" style="color: #94a3b8 !important;">
+                                    {{ __('Explore high-resolution project photography with multi-angle visual displays and interactive fullscreen viewer.') }}
                                 </p>
                             </div>
 
                             <!-- Display Mode Tabs Switcher -->
-                            <div class="flex flex-wrap items-center gap-2 bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-lg">
+                            <div class="flex flex-wrap items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-white/15 shadow-xl">
                                 <button type="button" @click="displayMode = 'bento'"
-                                    :class="displayMode === 'bento' ? 'bg-titan-red text-white shadow-md' : 'text-slate-300 hover:text-white hover:bg-slate-700/60'"
+                                    :class="displayMode === 'bento' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
                                     class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer">
                                     <x-lucide-layout-grid class="w-4 h-4" />
                                     <span>{{ __('Bento Grid') }}</span>
                                 </button>
                                 <button type="button" @click="displayMode = 'carousel'"
-                                    :class="displayMode === 'carousel' ? 'bg-titan-red text-white shadow-md' : 'text-slate-300 hover:text-white hover:bg-slate-700/60'"
+                                    :class="displayMode === 'carousel' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
                                     class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer">
                                     <x-lucide-film class="w-4 h-4" />
                                     <span>{{ __('Showcase Carousel') }}</span>
                                 </button>
                                 <button type="button" @click="displayMode = 'masonry'"
-                                    :class="displayMode === 'masonry' ? 'bg-titan-red text-white shadow-md' : 'text-slate-300 hover:text-white hover:bg-slate-700/60'"
+                                    :class="displayMode === 'masonry' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
                                     class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer">
                                     <x-lucide-columns class="w-4 h-4" />
                                     <span>{{ __('Masonry') }}</span>
                                 </button>
-                                <button type="button" onclick="window.openPhotoSwipeAt(0)"
-                                    class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer border border-white/15">
+                                <button type="button" @click="openLightbox(0)"
+                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer border border-white/20">
                                     <x-lucide-maximize-2 class="w-4 h-4 text-titan-red" />
-                                    <span>{{ __('PhotoSwipe 5.0') }}</span>
+                                    <span>{{ __('Fullscreen') }}</span>
                                 </button>
                             </div>
-                        </div>
-
-                        <!-- Hidden PhotoSwipe Gallery Link Container -->
-                        <div id="project-gallery-pswp" class="hidden">
-                            @foreach($project['images'] as $i => $img)
-                                @php
-                                    $imgUrl = is_array($img) ? $img['url'] : $img;
-                                    $imgCaption = is_array($img) ? ($img['caption'] ?? '') : '';
-                                @endphp
-                                <a href="{{ $imgUrl }}"
-                                   class="pswp-item"
-                                   data-pswp-caption="{{ $imgCaption ?: $project['title'] . ' — ' . __('Photo') . ' ' . ($i + 1) }}"
-                                   target="_blank">
-                                    <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" />
-                                </a>
-                            @endforeach
                         </div>
 
                         <!-- DISPLAY MODE 1: Architectural Bento Grid -->
@@ -304,7 +292,7 @@
                                     @endphp
 
                                     @if($i < 3)
-                                        <button type="button" onclick="window.openPhotoSwipeAt({{ $i }})"
+                                        <button type="button" @click="openLightbox({{ $i }})"
                                             aria-label="{{ __('Open gallery image :number', ['number' => $i + 1]) }}"
                                             class="project-gallery-card rounded-2xl overflow-hidden group cursor-pointer relative block w-full bg-slate-800 text-left border border-white/10 shadow-2xl {{ $gridClass }}">
                                             <img src="{{ $imgUrl }}" alt="Gallery {{ $i + 1 }}"
@@ -357,7 +345,7 @@
                                                     {{ $imgCaption ?: $project['title'] }}
                                                 </p>
                                             </div>
-                                            <button type="button" onclick="window.openPhotoSwipeAt({{ $i }})" class="absolute top-6 right-6 z-20 w-11 h-11 rounded-full bg-white/20 backdrop-blur-md hover:bg-titan-red transition-all flex items-center justify-center text-white cursor-pointer shadow-lg">
+                                            <button type="button" @click="openLightbox({{ $i }})" class="absolute top-6 right-6 z-20 w-11 h-11 rounded-full bg-white/20 backdrop-blur-md hover:bg-titan-red transition-all flex items-center justify-center text-white cursor-pointer shadow-lg">
                                                 <x-lucide-maximize-2 class="w-5 h-5" />
                                             </button>
                                         </div>
@@ -396,14 +384,14 @@
                                         $imgUrl = is_array($img) ? $img['url'] : $img;
                                         $imgCaption = is_array($img) ? ($img['caption'] ?? '') : '';
                                     @endphp
-                                    <button type="button" onclick="window.openPhotoSwipeAt({{ $i }})"
+                                    <button type="button" @click="openLightbox({{ $i }})"
                                         class="break-inside-avoid group rounded-2xl overflow-hidden bg-slate-800 border border-white/10 text-left transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer relative block w-full">
                                         <div class="relative overflow-hidden">
                                             <img src="{{ $imgUrl }}" alt="Photo {{ $i + 1 }}" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                                                 <span class="text-xs font-semibold text-white flex items-center gap-2">
                                                     <x-lucide-zoom-in class="w-4 h-4 text-titan-red shrink-0" />
-                                                    <span>{{ __('Expand Image in PhotoSwipe') }}</span>
+                                                    <span>{{ __('Expand Image Fullscreen') }}</span>
                                                 </span>
                                             </div>
                                             <span class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-xs text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10">
@@ -422,97 +410,86 @@
 
                     </div>
                 </section>
+
+                <!-- Fullscreen Teleported Lightbox -->
+                <template x-teleport="body">
+                    <div
+                        x-show="lightboxOpen"
+                        x-transition:enter="transition ease-out duration-250"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="fixed inset-0 z-[99999] flex flex-col justify-between bg-slate-950/98 backdrop-blur-xl text-white p-4 md:p-6 select-none"
+                        @click.self="closeLightbox()"
+                        style="display: none;"
+                    >
+                        <!-- Top Toolbar -->
+                        <div class="flex items-center justify-between z-20 w-full max-w-7xl mx-auto">
+                            <div class="flex items-center gap-3">
+                                <span class="px-3.5 py-1 rounded-full bg-titan-red text-white text-xs font-black uppercase tracking-wider shadow-md">
+                                    <span x-text="currentLightboxIndex + 1"></span> / <span x-text="images.length"></span>
+                                </span>
+                                <span class="text-sm font-bold text-slate-300 truncate max-w-md hidden sm:inline drop-shadow">
+                                    {{ $project['title'] }}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center gap-2">
+                                <a :href="images[currentLightboxIndex]?.url" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer" title="{{ __('Open full resolution') }}">
+                                    <x-lucide-external-link class="w-4 h-4" />
+                                </a>
+                                <button type="button" @click="closeLightbox()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-titan-red text-white flex items-center justify-center transition cursor-pointer" title="{{ __('Close') }}">
+                                    <x-lucide-x class="w-5 h-5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Main Image Stage with Navigation -->
+                        <div class="relative flex-1 flex items-center justify-center my-2 overflow-hidden w-full" @click.self="closeLightbox()">
+                            <!-- Prev Button -->
+                            <button type="button" @click="prev()" x-show="images.length > 1" class="absolute left-2 md:left-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/80 hover:bg-titan-red text-white border border-white/10 flex items-center justify-center transition shadow-2xl cursor-pointer">
+                                <x-lucide-chevron-left class="w-6 h-6 md:w-7 md:h-7" />
+                            </button>
+
+                            <!-- Image with 100% aspect-ratio contain (NEVER STRETCHES) -->
+                            <div class="flex items-center justify-center max-h-[74vh] max-w-[90vw]">
+                                <img
+                                    :src="images[currentLightboxIndex]?.url"
+                                    :alt="images[currentLightboxIndex]?.caption"
+                                    class="max-h-[74vh] max-w-[90vw] w-auto h-auto object-contain rounded-2xl shadow-2xl transition-all duration-200"
+                                    draggable="false"
+                                />
+                            </div>
+
+                            <!-- Next Button -->
+                            <button type="button" @click="next()" x-show="images.length > 1" class="absolute right-2 md:right-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/80 hover:bg-titan-red text-white border border-white/10 flex items-center justify-center transition shadow-2xl cursor-pointer">
+                                <x-lucide-chevron-right class="w-6 h-6 md:w-7 md:h-7" />
+                            </button>
+                        </div>
+
+                        <!-- Bottom Bar: Caption & Thumbnails -->
+                        <div class="flex flex-col items-center gap-3 z-20 w-full max-w-4xl mx-auto">
+                            <!-- Caption -->
+                            <div x-show="images[currentLightboxIndex]?.caption" class="px-5 py-2 rounded-full bg-slate-900/90 border border-white/15 text-xs md:text-sm font-semibold text-slate-200 text-center max-w-2xl truncate shadow-xl">
+                                <span x-text="images[currentLightboxIndex]?.caption"></span>
+                            </div>
+
+                            <!-- Thumbnails Track -->
+                            <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 scrollbar-none" x-show="images.length > 1">
+                                <template x-for="(item, idx) in images" :key="idx">
+                                    <button type="button" @click="currentLightboxIndex = idx"
+                                        :class="currentLightboxIndex === idx ? 'ring-2 ring-titan-red scale-105 opacity-100 shadow-lg' : 'opacity-45 hover:opacity-90'"
+                                        class="shrink-0 w-14 h-10 md:w-16 md:h-12 rounded-lg overflow-hidden border border-white/10 transition-all duration-200 cursor-pointer bg-slate-800">
+                                        <img :src="item.url" :alt="'Thumb ' + (idx + 1)" class="w-full h-full object-cover" />
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
-
-            <!-- PhotoSwipe 5 ES Module Script with Custom Caption Plugin -->
-            <script type="module">
-                import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
-                import PhotoSwipe from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js';
-
-                // Pre-calculate natural image dimensions for all gallery items to preserve exact aspect ratio
-                document.querySelectorAll('#project-gallery-pswp a.pswp-item').forEach((link) => {
-                    const img = new Image();
-                    img.src = link.href;
-                    img.onload = function() {
-                        if (this.naturalWidth && this.naturalHeight) {
-                            link.setAttribute('data-pswp-width', this.naturalWidth);
-                            link.setAttribute('data-pswp-height', this.naturalHeight);
-                        }
-                    };
-                });
-
-                let lightbox = new PhotoSwipeLightbox({
-                    gallery: '#project-gallery-pswp',
-                    children: 'a.pswp-item',
-                    pswpModule: PhotoSwipe,
-                    bgOpacity: 0.95,
-                    showHideAnimationType: 'fade',
-                    wheelToZoom: true,
-                    paddingFn: () => ({ top: 30, bottom: 80, left: 20, right: 20 }),
-                });
-
-                // Dynamic natural dimension resolver to guarantee zero image stretching
-                lightbox.addFilter('itemData', (itemData) => {
-                    const el = itemData.element;
-                    if (el) {
-                        const w = parseInt(el.getAttribute('data-pswp-width'), 10);
-                        const h = parseInt(el.getAttribute('data-pswp-height'), 10);
-                        if (w && h) {
-                            itemData.w = w;
-                            itemData.h = h;
-                        } else {
-                            itemData.w = window.innerWidth || 1920;
-                            itemData.h = window.innerHeight || 1080;
-                        }
-                    }
-                    return itemData;
-                });
-
-                lightbox.on('contentLoad', (e) => {
-                    const { content } = e;
-                    if (content.type === 'image') {
-                        const img = new Image();
-                        img.src = content.data.src;
-                        img.onload = () => {
-                            if (img.naturalWidth && img.naturalHeight) {
-                                const changed = content.data.w !== img.naturalWidth || content.data.h !== img.naturalHeight;
-                                content.data.w = img.naturalWidth;
-                                content.data.h = img.naturalHeight;
-                                content.width = img.naturalWidth;
-                                content.height = img.naturalHeight;
-                                if (changed && content.instance) {
-                                    content.instance.updateSize(true);
-                                }
-                            }
-                        };
-                    }
-                });
-
-                lightbox.on('uiRegister', function() {
-                    lightbox.pswp.ui.registerElement({
-                        name: 'custom-caption',
-                        order: 9,
-                        isButton: false,
-                        appendTo: 'root',
-                        onInit: (el, pswp) => {
-                            el.className = 'pswp-custom-caption';
-                            pswp.on('change', () => {
-                                const currSlide = pswp.currSlide;
-                                if (currSlide && currSlide.data && currSlide.data.element) {
-                                    const caption = currSlide.data.element.getAttribute('data-pswp-caption') || '';
-                                    el.innerHTML = caption ? `<span>${caption}</span>` : '';
-                                }
-                            });
-                        }
-                    });
-                });
-
-                lightbox.init();
-
-                window.openPhotoSwipeAt = function(index = 0) {
-                    lightbox.loadAndOpen(index);
-                };
-            </script>
         @endif
 
         <!-- --- RELATED PROJECTS --- -->
