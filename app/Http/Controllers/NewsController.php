@@ -22,8 +22,13 @@ class NewsController extends Controller
         $fallbackImage = '/images/webp/hero/hero-3.webp';
 
         $newsArticles = Cache::remember("news_index_data_{$locale}", now()->addHours(12), function () use ($locale, $fallbackImage): array {
-            return NewsArticle::where('isActive', true)
+            return NewsArticle::query()
+                ->where('isActive', true)
                 ->where('publishedAt', '<=', now())
+                ->with([
+                    'newsCategory:id,name,slug',
+                    'author:id,name,avatar_url',
+                ])
                 ->orderByDesc('isFeatured')
                 ->orderByDesc('publishedAt')
                 ->get()
@@ -38,7 +43,7 @@ class NewsController extends Controller
                         : Str::slug((string) ($n->getTranslation('category', 'en') ?: 'updates'));
 
                     $authorName = $n->getTranslation('authorName', $locale)
-                        ?: 'Kimmex';
+                        ?: ($n->author?->name ?? 'Kimmex');
                     $readTime = $n->getTranslation('readTime', $locale) ?: '3 min read';
                     $dateObj = $n->publishedAt ?? $n->created_at;
 
@@ -59,31 +64,19 @@ class NewsController extends Controller
         });
 
         $allArticles = collect($newsArticles);
-        $featured = $allArticles->first();
-        $gridArticles = $allArticles->slice(1)->values();
         $totalArticles = count($newsArticles);
 
         $categoryCounts = collect($newsArticles)->groupBy('category')->map->count();
         $categories = array_values(array_filter(array_unique(array_column($newsArticles, 'category')), fn ($c) => ! empty(trim((string) $c)) && ! is_numeric($c)));
-
-        $sidebarHeadlines = $gridArticles->slice(0, 4)->values();
-
-        $sidebarDocs = $this->getSidebarDocs($locale);
-        $sidebarJobs = $this->getSidebarJobs($locale);
 
         $perPage = 9;
 
         return view('pages.news.index', compact(
             'newsArticles',
             'allArticles',
-            'featured',
-            'gridArticles',
             'totalArticles',
             'categoryCounts',
             'categories',
-            'sidebarHeadlines',
-            'sidebarDocs',
-            'sidebarJobs',
             'locale',
             'fallbackImage',
             'perPage'
@@ -104,9 +97,15 @@ class NewsController extends Controller
         };
 
         $article = Cache::remember("news_article_data_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage): ?array {
-            $articleDb = NewsArticle::where('isActive', true)
+            $articleDb = NewsArticle::query()
+                ->where('isActive', true)
                 ->where('publishedAt', '<=', now())
                 ->where('slug', $slug)
+                ->with([
+                    'newsCategory:id,name,slug',
+                    'author:id,name,avatar_url',
+                    'projects' => fn ($q) => $q->where('isActive', true)->select(['projects.id', 'projects.slug', 'projects.title', 'projects.heroImage', 'projects.location', 'projects.isActive']),
+                ])
                 ->first();
 
             if (! $articleDb) {
@@ -114,11 +113,9 @@ class NewsController extends Controller
             }
 
             $excerpt = $articleDb->getTranslation('excerpt', $locale)
-                ?: strip_tags($articleDb->getTranslation('content', $locale));
+                ?: strip_tags((string) $articleDb->getTranslation('content', $locale));
 
-            $relatedProjects = $articleDb->projects()
-                ->where('isActive', true)
-                ->get()
+            $relatedProjects = $articleDb->projects
                 ->map(fn ($project) => [
                     'slug' => $project->slug,
                     'title' => $project->getTranslation('title', $locale),
@@ -139,9 +136,9 @@ class NewsController extends Controller
                     : $articleDb->created_at->format('M d, Y'),
                 'publishedAt' => ($articleDb->publishedAt ?: $articleDb->created_at)->toIso8601String(),
                 'updatedAt' => $articleDb->updated_at->toIso8601String(),
-                'author' => $articleDb->getTranslation('authorName', $locale) ?: 'Kimmex Editorial',
+                'author' => $articleDb->getTranslation('authorName', $locale) ?: ($articleDb->author?->name ?? 'Kimmex Editorial'),
                 'readTime' => $articleDb->getTranslation('readTime', $locale)
-                    ?: (ceil(str_word_count(strip_tags($articleDb->getTranslation('content', $locale))) / 200).' min read'),
+                    ?: (ceil(str_word_count(strip_tags((string) $articleDb->getTranslation('content', $locale))) / 200).' min read'),
                 'excerpt' => $excerpt,
                 'content' => $articleDb->getTranslation('content', $locale),
                 'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0
@@ -163,9 +160,11 @@ class NewsController extends Controller
         }
 
         $relatedData = Cache::remember("news_related_array_{$slug}_{$locale}", now()->addHours(12), function () use ($slug, $locale, $fallbackImage, $resolveNewsImage, $article): array {
-            $relatedDb = NewsArticle::where('isActive', true)
+            $relatedDb = NewsArticle::query()
+                ->where('isActive', true)
                 ->where('publishedAt', '<=', now())
                 ->where('slug', '!=', $slug)
+                ->with('newsCategory:id,name,slug')
                 ->orderByDesc('publishedAt')
                 ->take(3)
                 ->get();
@@ -174,7 +173,7 @@ class NewsController extends Controller
                 'slug' => $r->slug,
                 'title' => $r->getTranslation('title', $locale),
                 'date' => $r->publishedAt ? $r->publishedAt->format('M d, Y') : $r->created_at->format('M d, Y'),
-                'category' => $r->getTranslation('category', $locale) ?: __('Updates'),
+                'category' => $r->newsCategory ? ($r->newsCategory->getTranslation('name', $locale) ?: $r->newsCategory->getTranslation('name', 'en')) : ($r->getTranslation('category', $locale) ?: __('Updates')),
                 'image' => $resolveNewsImage($r->coverImage, $fallbackImage),
             ])->toArray();
 
@@ -184,15 +183,19 @@ class NewsController extends Controller
             if (! empty($article['publishedAt'])) {
                 $currentPublishedAt = Carbon::parse($article['publishedAt']);
 
-                $nextDb = NewsArticle::where('isActive', true)
+                $nextDb = NewsArticle::query()
+                    ->where('isActive', true)
                     ->where('publishedAt', '<=', now())
                     ->where('publishedAt', '<', $currentPublishedAt)
+                    ->with('newsCategory:id,name,slug')
                     ->orderByDesc('publishedAt')
                     ->first();
 
-                $prevDb = NewsArticle::where('isActive', true)
+                $prevDb = NewsArticle::query()
+                    ->where('isActive', true)
                     ->where('publishedAt', '<=', now())
                     ->where('publishedAt', '>', $currentPublishedAt)
+                    ->with('newsCategory:id,name,slug')
                     ->orderBy('publishedAt')
                     ->first();
 
@@ -231,7 +234,12 @@ class NewsController extends Controller
     protected function getSidebarDocs(string $locale): array
     {
         return Cache::remember("news_sidebar_documents_{$locale}", now()->addHours(12), function () use ($locale): array {
-            return Document::with('documentCategory')->publiclyVisible()->latest()->take(3)->get()
+            return Document::query()
+                ->with('documentCategory:id,name')
+                ->publiclyVisible()
+                ->latest()
+                ->take(3)
+                ->get(['id', 'slug', 'title', 'document_category_id', 'category', 'fileType', 'fileSize', 'isActive', 'created_at'])
                 ->map(fn (Document $d): array => [
                     'slug' => $d->slug,
                     'title' => $d->getTranslation('title', $locale),
@@ -248,7 +256,12 @@ class NewsController extends Controller
     protected function getSidebarJobs(string $locale): array
     {
         return Cache::remember("news_sidebar_jobs_{$locale}", now()->addHours(12), function () use ($locale): array {
-            return JobPosting::where('status', JobPostingStatus::OPEN)->with('department')->orderByDesc('created_at')->take(3)->get()
+            return JobPosting::query()
+                ->where('status', JobPostingStatus::OPEN)
+                ->with('department:id,name')
+                ->orderByDesc('created_at')
+                ->take(3)
+                ->get(['id', 'slug', 'title', 'departmentId', 'location', 'type', 'salary', 'status', 'created_at'])
                 ->map(fn (JobPosting $j): array => [
                     'slug' => $j->slug,
                     'title' => $j->getTranslation('title', $locale),
