@@ -501,88 +501,131 @@
         @endpush
 
         @push('scripts')
-        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+        <script src="{{ asset('js/canvasjs.min.js') }}" onerror="this.onerror=null;this.src='https://cdn.canvasjs.com/canvasjs.min.js'"></script>
         <script>
             (function() {
                 const cumulativePoints = @json($canvasJsCumulativeData, JSON_NUMERIC_CHECK);
                 let chartInstance = null;
+                let isRendered = false;
 
                 function renderKimmexChart() {
                     const container = document.getElementById("kimmexCanvasJsChart");
-                    if (!container || typeof CanvasJS === 'undefined') return;
+                    if (!container || typeof CanvasJS === 'undefined') return false;
 
-                    chartInstance = new CanvasJS.Chart("kimmexCanvasJsChart", {
-                        animationEnabled: true,
-                        animationDuration: 800,
-                        theme: "light2",
-                        backgroundColor: "transparent",
-                        toolTip: {
-                            shared: false,
-                            backgroundColor: "#0F172A",
-                            fontColor: "#FFFFFF",
-                            borderColor: "#E31E24",
-                            borderThickness: 1,
-                            cornerRadius: 6,
-                            fontSize: 12,
-                            fontWeight: "bold",
-                            content: "{label}: <strong>{y} " + "{{ __('Projects') }}" + "</strong>"
-                        },
-                        axisX: {
-                            interval: 1,
-                            labelFontColor: "#475569",
-                            labelFontWeight: "600",
-                            labelFontSize: 13,
-                            lineColor: "#E2E8F0",
-                            lineThickness: 1,
-                            tickColor: "#E2E8F0",
-                            tickLength: 6,
-                            gridThickness: 0,
-                            crosshair: {
-                                enabled: true,
+                    try {
+                        chartInstance = new CanvasJS.Chart("kimmexCanvasJsChart", {
+                            animationEnabled: true,
+                            animationDuration: 800,
+                            theme: "light2",
+                            backgroundColor: "transparent",
+                            toolTip: {
+                                shared: false,
+                                backgroundColor: "#0F172A",
+                                fontColor: "#FFFFFF",
+                                borderColor: "#E31E24",
+                                borderThickness: 1,
+                                cornerRadius: 6,
+                                fontSize: 12,
+                                fontWeight: "bold",
+                                content: "{label}: <strong>{y} " + "{{ __('Projects') }}" + "</strong>"
+                            },
+                            axisX: {
+                                interval: 1,
+                                labelFontColor: "#475569",
+                                labelFontWeight: "600",
+                                labelFontSize: 13,
+                                lineColor: "#E2E8F0",
+                                lineThickness: 1,
+                                tickColor: "#E2E8F0",
+                                tickLength: 6,
+                                gridThickness: 0,
+                                crosshair: {
+                                    enabled: true,
+                                    color: "#E31E24",
+                                    opacity: 0.3,
+                                    lineDashType: "dash"
+                                }
+                            },
+                            axisY: {
+                                labelFontColor: "#94A3B8",
+                                labelFontWeight: "600",
+                                labelFontSize: 11,
+                                lineThickness: 0,
+                                tickLength: 0,
+                                gridColor: "#F1F5F9",
+                                gridThickness: 1,
+                                includeZero: true
+                            },
+                            data: [{
+                                type: "area",
                                 color: "#E31E24",
-                                opacity: 0.3,
-                                lineDashType: "dash"
-                            }
-                        },
-                        axisY: {
-                            labelFontColor: "#94A3B8",
-                            labelFontWeight: "600",
-                            labelFontSize: 11,
-                            lineThickness: 0,
-                            tickLength: 0,
-                            gridColor: "#F1F5F9",
-                            gridThickness: 1,
-                            includeZero: true
-                        },
-                        data: [{
-                            type: "area",
-                            color: "#E31E24",
-                            fillOpacity: 0.08,
-                            lineColor: "#E31E24",
-                            lineThickness: 3,
-                            markerSize: 9,
-                            markerColor: "#FFFFFF",
-                            markerBorderColor: "#E31E24",
-                            markerBorderThickness: 2.5,
-                            indexLabel: "{y}",
-                            indexLabelPlacement: "outside",
-                            indexLabelFontColor: "#0F172A",
-                            indexLabelFontSize: 12,
-                            indexLabelFontWeight: "bold",
-                            dataPoints: cumulativePoints
-                        }]
-                    });
+                                fillOpacity: 0.08,
+                                lineColor: "#E31E24",
+                                lineThickness: 3,
+                                markerSize: 9,
+                                markerColor: "#FFFFFF",
+                                markerBorderColor: "#E31E24",
+                                markerBorderThickness: 2.5,
+                                indexLabel: "{y}",
+                                indexLabelPlacement: "outside",
+                                indexLabelFontColor: "#0F172A",
+                                indexLabelFontSize: 12,
+                                indexLabelFontWeight: "bold",
+                                dataPoints: cumulativePoints
+                            }]
+                        });
 
-                    chartInstance.render();
+                        chartInstance.render();
+                        isRendered = true;
+                        return true;
+                    } catch (e) {
+                        console.warn('CanvasJS rendering attempt:', e);
+                        return false;
+                    }
                 }
 
+                function tryInitChart() {
+                    if (renderKimmexChart()) return;
+
+                    let retries = 0;
+                    const maxRetries = 60; // Up to 6 seconds polling
+                    const timer = setInterval(function() {
+                        retries++;
+                        if (renderKimmexChart() || retries >= maxRetries) {
+                            clearInterval(timer);
+                        }
+                    }, 100);
+                }
+
+                // Initialize immediately or on next animation frame
                 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                    renderKimmexChart();
+                    tryInitChart();
                 } else {
-                    document.addEventListener('DOMContentLoaded', renderKimmexChart);
+                    document.addEventListener('DOMContentLoaded', tryInitChart);
                 }
 
-                window.addEventListener('load', renderKimmexChart);
+                window.addEventListener('load', tryInitChart);
+                document.addEventListener('livewire:navigated', tryInitChart);
+                document.addEventListener('turbo:load', tryInitChart);
+
+                // Intersection Observer to render when scrolled into view if hidden initially
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                if (!isRendered) {
+                                    tryInitChart();
+                                } else if (chartInstance) {
+                                    chartInstance.render();
+                                }
+                            }
+                        });
+                    }, { threshold: 0.1 });
+
+                    const chartTarget = document.getElementById("kimmexCanvasJsChart");
+                    if (chartTarget) observer.observe(chartTarget);
+                }
+
                 window.addEventListener('resize', function() {
                     if (chartInstance) chartInstance.render();
                 });

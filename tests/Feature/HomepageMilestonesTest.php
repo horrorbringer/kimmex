@@ -58,7 +58,7 @@ class HomepageMilestonesTest extends TestCase
         $this->assertStringContainsString('home-milestone-mobile-track', $milestones);
         $this->assertStringContainsString('home-milestone-desktop-scroll', $milestones);
         $this->assertStringContainsString('w-[12.5rem]', $milestones);
-        $this->assertStringContainsString('line-clamp-2 font-heading text-xs', $milestones);
+        $this->assertStringContainsString('font-heading text-xs font-bold leading-tight', $milestones);
         $this->assertStringContainsString('$loop->last', $milestones);
         $this->assertStringContainsString("{{ __('Latest') }}", $milestones);
         $this->assertStringNotContainsString('Scroll sideways to explore', $milestones);

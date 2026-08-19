@@ -25,6 +25,16 @@ Recent commits use short, imperative summaries such as `update ux/ui news page` 
 ## Security & Configuration Tips
 Do not commit `.env`, secrets, generated build output, or local runtime artifacts. For schema changes, add a new migration instead of editing old ones. If you change admin resources or translations, verify the affected Filament pages and localized content paths before merging.
 
+## Production cPanel Hosting & Deployment Architecture
+- **cPanel Layout**:
+  - `/kimmex_app/`: Private Laravel core (deployed via GitHub Actions `.github/workflows/deploy.yml` step 1).
+  - `/public_html/`: Web root (deployed via GitHub Actions `deploy.yml` step 2 from `./public/`).
+- **Dynamic Public Path (`bootstrap/app.php`)**:
+  - When `$_SERVER['SERVER_NAME']` is `kimmex.com.kh` or `www.kimmex.com.kh`, `public_path()` is dynamically mapped to `dirname($app->basePath()).'/public_html'`.
+  - On local development (`kimmex.test` via Laravel Herd), `public_path()` remains the standard `./public`.
+- **Post-Deploy Hook (`deploy-hook.php`)**:
+  - Triggered via GitHub Actions at `https://kimmex.com.kh/deploy-hook.php?token=${{ secrets.PROD_DEPLOY_TOKEN }}` to clear/rebuild caches and run migrations.
+
 ===
 
 <laravel-boost-guidelines>

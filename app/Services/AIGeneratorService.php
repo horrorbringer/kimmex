@@ -120,13 +120,22 @@ class AIGeneratorService
             throw new Exception('AI API Key is not configured.');
         }
 
+        // Protect code blocks (<pre><code>, <code>) from being translated
+        $codeBlocks = [];
+        $protectedContent = $this->protectCodeBlocks($content, $codeBlocks);
+
         try {
             $result = match ($provider) {
-                'gemini' => $this->translateWithGemini($content, $targetLanguage, $apiKey, $model, $temperature),
-                'openrouter' => $this->translateWithOpenRouter($content, $targetLanguage, $apiKey, $model, $temperature),
-                'ollama' => $this->translateWithOllama($content, $targetLanguage, $baseUrl, $model, $temperature),
+                'gemini' => $this->translateWithGemini($protectedContent, $targetLanguage, $apiKey, $model, $temperature),
+                'openrouter' => $this->translateWithOpenRouter($protectedContent, $targetLanguage, $apiKey, $model, $temperature),
+                'ollama' => $this->translateWithOllama($protectedContent, $targetLanguage, $baseUrl, $model, $temperature),
                 default => throw new Exception('Unsupported AI Provider: '.$provider),
             };
+
+            if ($result && ! empty($codeBlocks)) {
+                $result = $this->restoreCodeBlocks($result, $codeBlocks);
+            }
+
             $this->trackUsage($provider, true);
 
             return $result;
@@ -442,5 +451,43 @@ class AIGeneratorService
             'models/gemini-3.1-flash-lite' => 'Gemini 3.1 Flash-Lite',
             'models/gemini-3.5-flash' => 'Gemini 3.5 Flash',
         ];
+    }
+
+    /**
+     * Replace code blocks with unique placeholders before translation.
+     */
+    protected function protectCodeBlocks(string $content, array &$codeBlocks): string
+    {
+        $codeBlocks = [];
+
+        // Protect multiline <pre>...</pre> (including nested <code>)
+        $content = preg_replace_callback('/<pre\b[^>]*>[\s\S]*?<\/pre>/i', function ($matches) use (&$codeBlocks) {
+            $placeholder = '___KMD_CODE_BLOCK_'.count($codeBlocks).'___';
+            $codeBlocks[$placeholder] = $matches[0];
+
+            return $placeholder;
+        }, $content) ?? $content;
+
+        // Protect remaining standalone <code>...</code>
+        $content = preg_replace_callback('/<code\b[^>]*>[\s\S]*?<\/code>/i', function ($matches) use (&$codeBlocks) {
+            $placeholder = '___KMD_INLINE_CODE_'.count($codeBlocks).'___';
+            $codeBlocks[$placeholder] = $matches[0];
+
+            return $placeholder;
+        }, $content) ?? $content;
+
+        return $content;
+    }
+
+    /**
+     * Restore original untranslated code blocks into the translated text.
+     */
+    protected function restoreCodeBlocks(string $content, array $codeBlocks): string
+    {
+        foreach ($codeBlocks as $placeholder => $originalCode) {
+            $content = str_replace($placeholder, $originalCode, $content);
+        }
+
+        return $content;
     }
 }

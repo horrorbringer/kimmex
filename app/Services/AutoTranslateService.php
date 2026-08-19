@@ -101,7 +101,7 @@ class AutoTranslateService
                 continue;
             }
 
-            if ($child instanceof \DOMElement && in_array(strtolower($child->tagName), ['script', 'style'], true)) {
+            if ($child instanceof \DOMElement && in_array(strtolower($child->tagName), ['script', 'style', 'pre', 'code'], true)) {
                 continue;
             }
 

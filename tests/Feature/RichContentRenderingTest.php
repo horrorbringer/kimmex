@@ -27,4 +27,13 @@ class RichContentRenderingTest extends TestCase
         $this->assertStringContainsString('Broken link text</a>', $rendered);
         $this->assertStringNotContainsString('<a href="https://example.com>', $rendered);
     }
+
+    public function test_news_content_preserves_code_blocks_and_pre_tags(): void
+    {
+        $content = '<pre><code>function helloWorld() { return true; }</code></pre>';
+
+        $rendered = RichContent::render($content);
+
+        $this->assertStringContainsString('<pre translate="no" class="notranslate"><code translate="no" class="notranslate">function helloWorld() { return true; }</code></pre>', $rendered);
+    }
 }

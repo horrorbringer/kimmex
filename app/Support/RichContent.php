@@ -110,10 +110,49 @@ class RichContent
         }
 
         if (preg_match('/<\s*[a-z][\s\S]*>/i', $content)) {
-            return static::resolveImages($content);
+            $html = static::resolveImages($content);
+
+            return static::preventCodeTranslation($html);
         }
 
         return '<p>'.e($content).'</p>';
+    }
+
+    /**
+     * Mark <pre> and <code> elements with translate="no" and class="notranslate"
+     * to prevent browser translation tools from altering source code.
+     */
+    public static function preventCodeTranslation(string $html): string
+    {
+        $html = preg_replace_callback('/<pre\b([^>]*)>/i', function ($matches) {
+            $attrs = $matches[1];
+            if (! str_contains($attrs, 'translate=')) {
+                $attrs .= ' translate="no"';
+            }
+            if (str_contains($attrs, 'class="') || str_contains($attrs, "class='")) {
+                $attrs = preg_replace('/class=(["\'])(.*?)\1/i', 'class=$1$2 notranslate$1', $attrs);
+            } else {
+                $attrs .= ' class="notranslate"';
+            }
+
+            return '<pre'.$attrs.'>';
+        }, $html) ?? $html;
+
+        $html = preg_replace_callback('/<code\b([^>]*)>/i', function ($matches) {
+            $attrs = $matches[1];
+            if (! str_contains($attrs, 'translate=')) {
+                $attrs .= ' translate="no"';
+            }
+            if (str_contains($attrs, 'class="') || str_contains($attrs, "class='")) {
+                $attrs = preg_replace('/class=(["\'])(.*?)\1/i', 'class=$1$2 notranslate$1', $attrs);
+            } else {
+                $attrs .= ' class="notranslate"';
+            }
+
+            return '<code'.$attrs.'>';
+        }, $html) ?? $html;
+
+        return $html;
     }
 
     /**

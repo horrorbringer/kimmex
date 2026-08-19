@@ -61,7 +61,7 @@ class DepartmentForm
                     ->icon('heroicon-o-information-circle')
                     ->description(__('Provide a detailed overview of the department\'s scope and responsibilities.'))
                     ->components([
-                        RichEditor::make('description')->resizableImages()->resizableImages()
+                        RichEditor::make('description')->resizableImages()
                             ->label(__('Detailed Description'))
                             ->hintAction(TranslationHelper::getAutoTranslateAction('description'))
                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))

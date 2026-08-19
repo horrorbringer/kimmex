@@ -747,6 +747,54 @@
         .news-content table p {
             margin: 0;
         }
+
+        /* Code Block Styling */
+        .news-content pre {
+            background-color: #F8FAFC !important;
+            color: #1E293B !important;
+            padding: 0.875rem 1.125rem !important;
+            border-radius: 0.5rem !important;
+            overflow-x: auto !important;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+            font-size: 0.85rem !important;
+            line-height: 1.6 !important;
+            margin: 1.25rem 0 !important;
+            border: 1px solid #E2E8F0 !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+        }
+
+        .news-content pre code {
+            background: transparent !important;
+            color: inherit !important;
+            padding: 0 !important;
+            font-size: inherit !important;
+            border-radius: 0 !important;
+            border: none !important;
+            font-weight: 500 !important;
+        }
+
+        /* Inline Code Styling */
+        .news-content :not(pre) > code {
+            background-color: #F1F5F9 !important;
+            color: #E31E24 !important;
+            padding: 0.2rem 0.45rem !important;
+            border-radius: 0.375rem !important;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+            font-size: 0.875em !important;
+            font-weight: 600 !important;
+            border: 1px solid #E2E8F0 !important;
+        }
+
+        /* Blockquote Styling */
+        .news-content blockquote {
+            border-left: 4px solid #E31E24 !important;
+            background-color: #F8FAFC !important;
+            padding: 1rem 1.25rem !important;
+            border-radius: 0 0.5rem 0.5rem 0 !important;
+            margin: 1.5rem 0 !important;
+            color: #334155 !important;
+            font-style: italic !important;
+        }
     </style>
 
 </x-layouts.app>

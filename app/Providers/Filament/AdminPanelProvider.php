@@ -409,9 +409,31 @@ class AdminPanelProvider extends PanelProvider
                             border-color: #1f2937 !important;
                             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4) !important;
                         }
+                        /* Prevent Field Labels from Wrapping onto Multiple Lines */
+                        .fi-fo-field-label-ctn {
+                            display: flex !important;
+                            align-items: center !important;
+                            justify-content: space-between !important;
+                            width: 100% !important;
+                            gap: 0.75rem !important;
+                        }
+
+                        .fi-fo-field-label,
+                        .fi-fo-field-label-content,
+                        .fi-fo-field-label-content > *,
+                        .fi-fo-field-label span,
                         .fi-fo-field-wrp-label,
                         .fi-fo-field-wrp-label span {
                             white-space: nowrap !important;
+                            display: inline-flex !important;
+                            align-items: center !important;
+                            flex-shrink: 0 !important;
+                        }
+
+                        .fi-fo-field-label-required-mark {
+                            white-space: nowrap !important;
+                            display: inline-block !important;
+                            margin-left: 0.125rem !important;
                         }
                     </style>";
                 }

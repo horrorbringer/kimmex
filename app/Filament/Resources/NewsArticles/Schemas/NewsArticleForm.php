@@ -48,7 +48,6 @@ class NewsArticleForm
                                         Tab::make('🇬🇧 '.__('English (Original)'))
                                             ->schema([
                                                 Section::make(__('Article Identity (English)'))
-                                                    ->columns(2)
                                                     ->components([
                                                         TextInput::make('title_en')
                                                             ->label(__('Title (English)'))
@@ -102,13 +101,14 @@ class NewsArticleForm
 
                                                         RichEditor::make('content_en')->resizableImages()
                                                             ->label(__('Content (English)'))
+                                                            ->extraInputAttributes(['style' => 'min-height: 5rem;'])
                                                             ->required()
                                                             ->toolbarButtons([
                                                                 ['bold', 'italic', 'underline', 'strike', 'link'],
                                                                 [ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
                                                                 [ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
                                                                 ['blockquote', 'bulletList', 'orderedList', 'table'],
-                                                                ['attachFiles', 'horizontalRule'],
+                                                                ['attachFiles', 'horizontalRule', 'codeBlock'],
                                                                 ['undo', 'redo'],
                                                             ])
                                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
@@ -116,6 +116,7 @@ class NewsArticleForm
                                                             ->fileAttachmentsDirectory('news/content')
                                                             ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                                                             ->hintActions([
+                                                                self::getInsertExternalMediaAction('content_en'),
                                                                 AIHelper::getGenerateAction('content_en', 'News Article'),
                                                                 AIHelper::getImproveAction('content_en', 'Rewrite this news article to be more professional and articulate.'),
                                                                 AIHelper::getTranslateAction('content_en', 'content_km', 'Khmer', 'km', 'en'),
@@ -183,12 +184,13 @@ class NewsArticleForm
 
                                                         RichEditor::make('content_km')->resizableImages()
                                                             ->label(__('ខ្លឹមសារព័ត៌មាន (Khmer Content)'))
+                                                            ->extraInputAttributes(['style' => 'min-height: 5rem;'])
                                                             ->toolbarButtons([
                                                                 ['bold', 'italic', 'underline', 'strike', 'link'],
                                                                 [ToolbarButtonGroup::make('Heading', ['h2', 'h3', 'h4'])->textualButtons()],
                                                                 [ToolbarButtonGroup::make('Alignment', ['alignStart', 'alignCenter', 'alignEnd', 'alignJustify'])],
                                                                 ['blockquote', 'bulletList', 'orderedList', 'table'],
-                                                                ['attachFiles', 'horizontalRule'],
+                                                                ['attachFiles', 'horizontalRule', 'codeBlock'],
                                                                 ['undo', 'redo'],
                                                             ])
                                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
@@ -196,6 +198,7 @@ class NewsArticleForm
                                                             ->fileAttachmentsDirectory('news/content')
                                                             ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                                                             ->hintActions([
+                                                                self::getInsertExternalMediaAction('content_km'),
                                                                 AIHelper::getTranslateAction('content_km', 'content_en', 'English', 'en', 'km'),
                                                                 AIHelper::getImproveAction('content_km', 'កែលម្អអត្ថបទនេះឱ្យកាន់តែមានលក្ខណៈវិជ្ជាជីវៈ និងត្រឹមត្រូវតាមវេយ្យាករណ៍'),
                                                             ])
@@ -600,5 +603,59 @@ class NewsArticleForm
                     ])
                     ->columnSpanFull(),
             ]);
+    }
+
+    protected static function getInsertExternalMediaAction(string $targetField): Action
+    {
+        return Action::make('insertExternalMedia_'.$targetField)
+            ->label(__('Insert External Link / Image'))
+            ->icon('heroicon-m-link')
+            ->color('info')
+            ->modalHeading(__('Insert External Media or Link'))
+            ->modalDescription(__('Embed an external image or create a file download link from any URL.'))
+            ->modalSubmitActionLabel(__('Insert into Article'))
+            ->form([
+                ToggleButtons::make('media_type')
+                    ->label(__('Media Type'))
+                    ->options([
+                        'image' => __('External Image (Embed <img>)'),
+                        'link' => __('File / Web Link (Download <a> link)'),
+                    ])
+                    ->icons([
+                        'image' => 'heroicon-m-photo',
+                        'link' => 'heroicon-m-arrow-down-tray',
+                    ])
+                    ->colors([
+                        'image' => 'primary',
+                        'link' => 'success',
+                    ])
+                    ->default('image')
+                    ->inline()
+                    ->live(),
+                TextInput::make('url')
+                    ->label(__('External URL'))
+                    ->placeholder('https://example.com/image.webp or https://.../document.pdf')
+                    ->url()
+                    ->required()
+                    ->columnSpanFull(),
+                TextInput::make('caption')
+                    ->label(fn (Get $get) => $get('media_type') === 'image' ? __('Image Caption / Alt Text') : __('Link / Button Text'))
+                    ->placeholder(fn (Get $get) => $get('media_type') === 'image' ? 'e.g. Groundbreaking Ceremony' : 'e.g. Download Press Release (PDF)')
+                    ->required()
+                    ->columnSpanFull(),
+            ])
+            ->action(function (array $data, Set $set, Get $get) use ($targetField) {
+                $currentHtml = (string) ($get($targetField) ?? '');
+                $url = htmlspecialchars($data['url'], ENT_QUOTES, 'UTF-8');
+                $caption = htmlspecialchars($data['caption'], ENT_QUOTES, 'UTF-8');
+
+                if ($data['media_type'] === 'image') {
+                    $snippet = "<p><img src=\"{$url}\" alt=\"{$caption}\" class=\"rounded-xl shadow-md my-4 max-w-full h-auto\" /></p>";
+                } else {
+                    $snippet = "<p><a href=\"{$url}\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"text-titan-red underline font-bold inline-flex items-center gap-1\">{$caption} &rarr;</a></p>";
+                }
+
+                $set($targetField, $currentHtml.$snippet);
+            });
     }
 }

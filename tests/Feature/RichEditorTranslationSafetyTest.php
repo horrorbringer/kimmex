@@ -62,4 +62,23 @@ class RichEditorTranslationSafetyTest extends TestCase
         $this->assertStringContainsString("self::activeLocale(\$livewire) === 'km' ? '🇬🇧 '.__('To EN') : '🇰🇭 '.__('To KH')", $helper);
         $this->assertStringContainsString('$sourceLocale = self::activeLocale($livewire, (string) $sourceText);', $helper);
     }
+
+    public function test_it_does_not_translate_code_blocks_and_pre_tags(): void
+    {
+        $googleTranslate = Mockery::mock(GoogleTranslate::class);
+        $googleTranslate->shouldReceive('setSource')->twice()->with('en');
+        $googleTranslate->shouldReceive('setTarget')->times(3)->with('km');
+        $googleTranslate->shouldReceive('translate')
+            ->once()
+            ->with('Here is our API endpoint:')
+            ->andReturn('នេះគឺជាចំណុចបញ្ចប់ API របស់យើង៖');
+
+        $service = new AutoTranslateService($googleTranslate);
+
+        $html = '<p>Here is our API endpoint:</p><pre><code>const url = "https://kimmex.com/api";</code></pre>';
+        $translated = $service->translateFrom($html, 'km', 'en');
+
+        $this->assertStringContainsString('នេះគឺជាចំណុចបញ្ចប់ API របស់យើង៖', $translated);
+        $this->assertStringContainsString('<pre><code>const url = "https://kimmex.com/api";</code></pre>', $translated);
+    }
 }
