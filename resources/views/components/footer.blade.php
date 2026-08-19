@@ -289,23 +289,22 @@
         /* ── Working hours ── */
         #site-footer .ft-hours {
             margin-top: 0.85rem;
-            padding: 0.65rem 0.8rem;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px;
+            padding: 0;
+            background: transparent;
+            border: none;
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.45);
+            gap: 0.2rem;
+            font-size: 0.8125rem;
+            color: rgba(255,255,255,0.55);
         }
         #site-footer .ft-hours-label {
             font-weight: 700;
-            font-size: 0.65rem;
+            font-size: 0.6875rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 0.15rem;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 0.1rem;
         }
     </style>
 
