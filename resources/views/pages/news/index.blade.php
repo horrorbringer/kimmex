@@ -1,263 +1,202 @@
 <x-layouts.app :title="__('News & Updates')" :description="__('Read the latest news, updates, and announcements from Kimmex.')">
 
-
-
-
-    <div class="min-h-screen bg-gray-50"
+    <div class="min-h-screen bg-slate-50 text-slate-800 pt-28 md:pt-32"
          x-data="{
             activeCategory: {{ Js::from(request('category', 'all')) }},
+            searchQuery: '',
             perPage: {{ $perPage }},
             visible: {{ $perPage }},
-            allArticles: {{ Js::from($gridArticles) }},
+            allArticles: {{ Js::from($allArticles) }},
             get filtered() {
-                if (!this.activeCategory || this.activeCategory === 'all') return this.allArticles;
-                const target = String(this.activeCategory).toLowerCase();
-                return this.allArticles.filter(a =>
-                    String(a.category).toLowerCase() === target ||
-                    String(a.categorySlug).toLowerCase() === target
-                );
+                let list = this.allArticles;
+                if (this.activeCategory && this.activeCategory !== 'all') {
+                    const target = String(this.activeCategory).toLowerCase();
+                    list = list.filter(a =>
+                        String(a.category).toLowerCase() === target ||
+                        String(a.categorySlug).toLowerCase() === target
+                    );
+                }
+                if (this.searchQuery && this.searchQuery.trim() !== '') {
+                    const query = this.searchQuery.toLowerCase().trim();
+                    list = list.filter(a =>
+                        String(a.title).toLowerCase().includes(query) ||
+                        String(a.category).toLowerCase().includes(query)
+                    );
+                }
+                return list;
             },
             get shown() { return this.filtered.slice(0, this.visible); },
             get hasMore() { return this.visible < this.filtered.length; },
             loadMore() { this.visible += this.perPage; },
-            setCategory(cat) { this.activeCategory = cat; this.visible = this.perPage; },
+            setCategory(cat) { 
+                this.activeCategory = cat; 
+                this.visible = this.perPage; 
+            },
             isCategoryActive(cat) {
                 if (cat === 'all') return !this.activeCategory || this.activeCategory === 'all';
                 const target = String(this.activeCategory).toLowerCase();
                 return String(cat).toLowerCase() === target;
+            },
+            resetFilters() {
+                this.activeCategory = 'all';
+                this.searchQuery = '';
+                this.visible = this.perPage;
             }
          }">
 
-        <!-- ═══ HERO ═══ -->
-        <section class="relative h-[380px] md:h-[440px] flex items-end overflow-hidden" style="background: #0B2B5C;">
-            <div class="absolute inset-0">
-                <img src="/images/webp/hero/hero-3.webp" alt="{{ __('News & Updates') }}" class="w-full h-full object-cover opacity-40" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/95 via-[#0B2B5C]/50 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-[#071A33]/50 via-transparent to-transparent"></div>
-            </div>
-            <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-12 md:pb-16">
-                <nav class="flex items-center gap-2 text-xs mb-5" style="color: rgba(255,255,255,0.5);">
-                    <a href="/" class="hover:text-white transition-colors">{{ __('Home') }}</a>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-                    <span style="color: rgba(255,255,255,0.9);">{{ __('News') }}</span>
-                </nav>
-                <h1 class="font-heading font-[900] uppercase leading-[1] tracking-tight mb-4"
-                    style="font-size: clamp(2rem, 5vw, 3.2rem); color: #FFFFFF;">
-                    {{ __('News') }} <span style="color: var(--primary-color, #E31E24);">{{ __('& Updates') }}</span>
+        <!-- ═══ MINIMAL PAGE TITLE & BREADCRUMB ═══ -->
+        <div class="max-w-[1360px] mx-auto px-6 mb-4">
+            <nav class="flex items-center gap-2 text-xs mb-2 text-slate-400 font-medium">
+                <a href="/" class="hover:text-titan-red transition-colors">{{ __('Home') }}</a>
+                <x-lucide-chevron-right class="w-3.5 h-3.5 text-slate-300" />
+                <span class="text-titan-navy font-semibold">{{ __('News') }}</span>
+            </nav>
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                <h1 class="font-heading font-black uppercase leading-tight tracking-tight text-titan-navy text-2xl sm:text-3xl md:text-4xl">
+                    {{ __('News') }} <span class="text-titan-red">{{ __('& Updates') }}</span>
                 </h1>
-                <p style="color: rgba(255,255,255,0.6); font-size: 1rem;" class="max-w-lg leading-relaxed">
-                    {{ __('Company announcements, project milestones, and industry insights.') }}
-                </p>
-                <div class="flex items-center gap-5 mt-6">
-                    <div class="text-center">
-                        <div class="text-xl font-black" style="color: #FFFFFF;">{{ $totalArticles }}</div>
-                        <div class="text-[9px] font-bold uppercase tracking-wider" style="color: rgba(255,255,255,0.35);">{{ __('Articles') }}</div>
-                    </div>
-                    <div class="w-px h-8" style="background: rgba(255,255,255,0.15);"></div>
-                    <div class="text-center">
-                        <div class="text-xl font-black" style="color: #FFFFFF;">{{ count($categories) }}</div>
-                        <div class="text-[9px] font-bold uppercase tracking-wider" style="color: rgba(255,255,255,0.35);">{{ __('Categories') }}</div>
-                    </div>
+                <div class="text-xs font-semibold text-slate-500">
+                    <span class="font-black text-titan-navy text-base" x-text="filtered.length"></span> {{ __('articles available') }}
                 </div>
             </div>
-        </section>
+        </div>
 
-
-        <!-- ═══ FEATURED ARTICLE (DUAL HORIZONTAL 50/50 SPLIT LAYOUT) ═══ -->
-        @if($featured)
-        <section x-show="isCategoryActive('all')" x-transition class="max-w-[1280px] mx-auto px-6 -mt-10 relative z-20 w-full">
-            <a href="/news/{{ $featured['slug'] }}"
-               class="group grid grid-cols-1 md:grid-cols-2 w-full rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)] border border-gray-200/80 bg-white hover:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.2)] transition-all duration-500 min-h-[360px]">
-                <!-- Left Side: Text Content -->
-                <div class="p-7 md:p-10 flex flex-col justify-between bg-white text-gray-900 min-w-0">
-                    <div>
-                        <div class="flex items-center gap-3 mb-4 flex-wrap">
-                            <span class="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-md bg-titan-red text-white shadow-sm inline-block">
-                                {{ $featured['category'] }}
-                            </span>
-                            <span class="text-xs font-medium text-gray-400">{{ $featured['date'] }}</span>
-                        </div>
-                        <h2 class="text-2xl md:text-3xl font-heading font-black leading-snug text-titan-navy group-hover:text-titan-red transition-colors mb-4">
-                            {{ $featured['title'] }}
-                        </h2>
-                        <p class="text-sm leading-relaxed text-gray-600 line-clamp-4 mb-6">
-                            {{ $featured['excerpt'] }}
-                        </p>
-                    </div>
-                    <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-titan-red group-hover:gap-3 transition-all pt-4 border-t border-gray-100">
-                        {{ __('Read Full Story') }}
-                        <x-lucide-arrow-right class="w-4 h-4" />
-                    </div>
-                </div>
-                <!-- Right Side: Featured Image -->
-                <div class="relative min-h-[260px] md:min-h-[360px] h-full overflow-hidden bg-gray-100 min-w-0">
-                    <img src="{{ $featured['image'] }}" alt="{{ $featured['title'] }}"
-                         class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
-                         loading="eager" decoding="async" />
-                </div>
-            </a>
-        </section>
-        @endif
-
-
-        <!-- ═══ MAIN CONTENT: GRID + SIDEBAR ═══ -->
-        <section class="max-w-[1280px] mx-auto px-6 py-12 md:py-16">
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 lg:gap-10 items-start">
-
-                <!-- LEFT: Articles -->
-                <div>
-                    <!-- Category Filters -->
-                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 mb-8">
+        <!-- ═══ ONE-LINE NON-STICKY FILTER & SEARCH TOOLBAR ═══ -->
+        <section class="max-w-[1360px] mx-auto px-6 my-6">
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-2.5 sm:p-3">
+                <div class="flex flex-row items-center justify-between gap-3">
+                    <!-- Category Filter Buttons (Horizontal Scrollable) -->
+                    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 min-w-0 pr-2">
                         <button @click="setCategory('all')"
-                            :class="isCategoryActive('all') ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'"
-                            class="h-9 px-4 rounded-lg border text-xs font-bold transition-all shrink-0 whitespace-nowrap">
-                            {{ __('All') }} <span class="opacity-50 ml-1">({{ count($gridArticles) }})</span>
+                            :class="isCategoryActive('all') ? 'bg-titan-navy text-white shadow-xs border-titan-navy' : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 hover:text-slate-900'"
+                            class="h-9 px-3.5 rounded-xl border text-xs font-bold transition-all shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                            <span>{{ __('All') }}</span>
+                            <span :class="isCategoryActive('all') ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'" class="text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                                {{ count($allArticles) }}
+                            </span>
                         </button>
+
                         @foreach($categories as $cat)
                             <button @click="setCategory(@js($cat))"
-                                :class="isCategoryActive(@js($cat)) ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'"
-                                class="h-9 px-4 rounded-lg border text-xs font-bold transition-all shrink-0 whitespace-nowrap">
-                                {{ $cat }} <span class="opacity-50 ml-1">({{ $categoryCounts[$cat] ?? 0 }})</span>
+                                :class="isCategoryActive(@js($cat)) ? 'bg-titan-navy text-white shadow-xs border-titan-navy' : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200 hover:text-slate-900'"
+                                class="h-9 px-3.5 rounded-xl border text-xs font-bold transition-all shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 cursor-pointer">
+                                <span>{{ $cat }}</span>
+                                <span :class="isCategoryActive(@js($cat)) ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'" class="text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                                    {{ $categoryCounts[$cat] ?? 0 }}
+                                </span>
                             </button>
                         @endforeach
                     </div>
 
-                    <!-- Article Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <template x-for="article in shown" :key="article.slug">
-                            <a :href="'/news/' + article.slug"
-                               class="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:border-gray-200 transition-all duration-300 flex flex-col">
-                                <div class="relative aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
-                                    <img :src="article.image" :alt="article.title"
-                                         class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
-                                         loading="lazy" decoding="async" />
-                                    <div class="absolute top-3 left-3">
-                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md backdrop-blur-sm"
-                                              style="background: rgba(0,0,0,0.6); color: #FFFFFF;"
-                                              x-text="article.category"></span>
-                                    </div>
-                                </div>
-                                <div class="p-5 flex flex-col flex-1">
-                                    <div class="text-[11px] font-medium text-gray-400 mb-2" x-text="article.date"></div>
-                                    <h3 class="text-base font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-titan-red transition-colors mb-3 flex-1"
-                                        x-text="article.title"></h3>
-                                    <p class="text-xs text-gray-400 leading-relaxed line-clamp-2 mb-4"
-                                       x-text="article.excerpt"></p>
-                                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider group-hover:gap-3 transition-all"
-                                         style="color: var(--primary-color, #E31E24);">
-                                        {{ __('Read More') }}
-                                        <x-lucide-arrow-right class="w-3.5 h-3.5" />
-                                    </div>
-                                </div>
-                            </a>
-                        </template>
-                    </div>
-
-                    <!-- Empty State -->
-                    <div x-show="filtered.length === 0" class="py-16 text-center bg-white border border-dashed border-gray-200 rounded-xl mt-4">
-                        <x-lucide-newspaper class="w-10 h-10 text-gray-200 mx-auto mb-3" />
-                        <p class="text-sm text-gray-400">{{ __('No articles in this category.') }}</p>
-                    </div>
-
-                    <!-- Load More -->
-                    <div x-show="hasMore" class="mt-10 text-center">
-                        <button @click="loadMore()"
-                            class="inline-flex items-center gap-2 h-11 px-8 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-bold hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300">
-                            <x-lucide-plus class="w-4 h-4" />
-                            {{ __('Load More') }}
+                    <!-- Compact Search Input -->
+                    <div class="relative w-48 sm:w-64 md:w-72 shrink-0">
+                        <x-lucide-search class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input type="text"
+                               x-model.debounce.250ms="searchQuery"
+                               placeholder="{{ __('Search news...') }}"
+                               class="w-full h-9 pl-9 pr-8 text-xs font-medium rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-titan-red focus:ring-1 focus:ring-titan-red outline-hidden transition-all text-slate-800 placeholder-slate-400" />
+                        <button x-show="searchQuery"
+                                @click="searchQuery = ''"
+                                class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5">
+                            <x-lucide-x class="w-3.5 h-3.5" />
                         </button>
-                        <p class="text-xs text-gray-400 mt-2">
-                            <span x-text="shown.length"></span> / <span x-text="filtered.length"></span> {{ __('articles') }}
-                        </p>
                     </div>
                 </div>
-
-
-                <!-- RIGHT: Sidebar -->
-                <aside class="space-y-6 lg:sticky lg:top-28">
-
-                    <!-- Latest Headlines -->
-                    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
-                        <div class="px-5 py-4 border-b border-gray-100">
-                            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900">{{ __('Latest Stories') }}</h3>
-                        </div>
-                        <div class="divide-y divide-gray-50">
-                            @forelse($sidebarHeadlines as $h)
-                                <a href="/news/{{ $h['slug'] }}" class="group flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors">
-                                    <div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                                        <img src="{{ $h['image'] }}" alt="{{ $h['title'] }}"
-                                             class="w-full h-full object-cover" loading="lazy" decoding="async" />
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-bold text-gray-900 line-clamp-2 group-hover:text-titan-red transition-colors leading-snug">{{ $h['title'] }}</p>
-                                        <p class="text-[10px] text-gray-400 mt-1">{{ $h['date'] }}</p>
-                                    </div>
-                                </a>
-                            @empty
-                                <div class="p-5 text-xs text-gray-400">{{ __('No stories yet.') }}</div>
-                            @endforelse
-                        </div>
-                    </div>
-
-                    <!-- Documents -->
-                    @if(!empty($sidebarDocs))
-                    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
-                        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900">{{ __('Documents') }}</h3>
-                            <a href="/documents" class="text-[10px] font-bold text-gray-400 hover:text-titan-red transition-colors">{{ __('View All') }}</a>
-                        </div>
-                        <div class="divide-y divide-gray-50">
-                            @foreach($sidebarDocs as $doc)
-                                <a href="/documents/{{ $doc['slug'] }}" class="group flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors">
-                                    <div class="w-10 h-10 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
-                                        <x-lucide-file-text class="w-4 h-4 text-gray-300 group-hover:text-titan-red transition-colors" />
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-bold text-gray-900 line-clamp-1 group-hover:text-titan-red transition-colors">{{ $doc['title'] }}</p>
-                                        <p class="text-[10px] text-gray-400 mt-0.5">{{ $doc['category'] }} @if($doc['fileSize'])· {{ $doc['fileSize'] }}@endif</p>
-                                    </div>
-                                    <x-lucide-download class="w-3.5 h-3.5 text-gray-300 group-hover:text-titan-red transition-colors shrink-0" />
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
-
-                    <!-- Careers -->
-                    @if(!empty($sidebarJobs))
-                    <div x-show="isCategoryActive('all')" x-transition class="rounded-xl overflow-hidden" style="background: #071A33;">
-                        <div class="px-5 py-4" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-                            <div class="flex items-center justify-between">
-                                <h3 class="text-xs font-bold uppercase tracking-wider" style="color: #FFFFFF;">{{ __('We\'re Hiring') }}</h3>
-                                <a href="/careers" class="text-[10px] font-bold transition-colors" style="color: rgba(255,255,255,0.4);">{{ __('All Jobs') }}</a>
-                            </div>
-                        </div>
-                        <div style="border-color: rgba(255,255,255,0.05);" class="divide-y">
-                            @foreach($sidebarJobs as $job)
-                                <a href="/careers/{{ $job['slug'] }}" class="group flex items-center gap-3 p-4 transition-colors" style="--tw-divide-opacity: 0.05;">
-                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style="background: rgba(255,255,255,0.05);">
-                                        <x-lucide-briefcase class="w-4 h-4" style="color: var(--primary-color, #E31E24);" />
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-bold line-clamp-1 transition-colors" style="color: rgba(255,255,255,0.85);">{{ $job['title'] }}</p>
-                                        <p class="text-[10px] mt-0.5" style="color: rgba(255,255,255,0.35);">{{ $job['dept'] }} · {{ $job['type'] }}</p>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-                        <div class="p-4">
-                            <a href="/careers"
-                               class="flex items-center justify-center gap-2 w-full h-10 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors"
-                               style="background: var(--primary-color, #E31E24); color: #FFFFFF;">
-                                <x-lucide-send class="w-3.5 h-3.5" />
-                                {{ __('View All Positions') }}
-                            </a>
-                        </div>
-                    </div>
-                    @endif
-                </aside>
             </div>
         </section>
+
+        <!-- ═══ FULL WIDTH ONLY-GRID NEWS SECTION ═══ -->
+        <main class="max-w-[1360px] mx-auto px-6 pb-16">
+            
+            <!-- Result Count & Active Filter Indicator -->
+            <div class="flex items-center justify-between gap-4 mb-5">
+                <div class="text-xs font-semibold text-slate-500">
+                    {{ __('Showing') }} <span class="font-bold text-slate-900" x-text="shown.length"></span> {{ __('of') }} <span class="font-bold text-slate-900" x-text="filtered.length"></span> {{ __('stories') }}
+                    <span x-show="searchQuery" class="ml-1 text-slate-400">
+                        ({{ __('matching') }} "<span class="text-titan-red font-medium" x-text="searchQuery"></span>")
+                    </span>
+                </div>
+
+                <div x-show="activeCategory !== 'all' || searchQuery" class="flex items-center gap-2">
+                    <button @click="resetFilters()" class="text-xs font-bold text-titan-red hover:underline inline-flex items-center gap-1 cursor-pointer">
+                        <x-lucide-rotate-ccw class="w-3 h-3" />
+                        <span>{{ __('Reset Filters') }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Responsive 3-Column News Grid (Clean Visual Tile with Smooth Hover Metadata) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <template x-for="article in shown" :key="article.slug">
+                    <a :href="'/news/' + article.slug"
+                       class="group relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-900 shadow-xs hover:shadow-2xl transition-all duration-500 ease-out block hover:-translate-y-1.5">
+                        <!-- Cover Image (Bright, Natural & Crisp) -->
+                        <img :src="article.image" :alt="article.title"
+                             class="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
+                             loading="lazy" decoding="async" />
+                        
+                        <!-- Soft Natural Bottom Gradient Overlay -->
+                        <div class="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
+                             style="background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.45) 75%, rgba(0,0,0,0.78) 100%);"></div>
+
+                        <!-- Card Content Overlaid at Bottom -->
+                        <div class="absolute inset-0 p-5 flex flex-col justify-end pointer-events-none">
+                            <!-- Category Pill & Date Row -->
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md shadow-xs text-white bg-titan-red"
+                                      x-text="article.category"></span>
+                                <span class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90"
+                                      style="text-shadow: 0 1px 2px rgba(0,0,0,0.75);"
+                                      x-text="article.dateUpper || article.date"></span>
+                            </div>
+
+                            <!-- Refined Headline Title (Smaller & Clean) -->
+                            <h2 class="!text-[11px] sm:!text-xs md:!text-[13px] font-heading font-bold !text-white leading-snug line-clamp-2 group-hover:!text-amber-300 transition-colors duration-300"
+                                style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.85);"
+                                x-text="article.title"></h2>
+
+                            <!-- Author & Meta Stats Row (Smoothly Reveals on Hover) -->
+                            <div class="flex items-center gap-2 pt-2 border-t border-white/20 text-xs text-white/90 opacity-0 max-h-0 overflow-hidden group-hover:opacity-100 group-hover:max-h-12 group-hover:mt-2 transition-all duration-500 ease-out">
+                                <div class="w-5 h-5 rounded-full bg-white/25 border border-white/40 flex items-center justify-center text-[9px] font-bold text-white uppercase shrink-0"
+                                     x-text="(article.authorName || 'K').charAt(0)"></div>
+                                <span class="text-xs font-medium text-white/90 truncate max-w-[130px]" x-text="article.authorName || 'Kimmex'"></span>
+                                <span class="text-white/40 text-[10px]">•</span>
+                                <span class="text-[11px] text-white/75 font-medium" x-text="article.readTime || '3 min read'"></span>
+                                
+                                <x-lucide-arrow-up-right class="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 ml-auto shrink-0" />
+                            </div>
+                        </div>
+                    </a>
+                </template>
+            </div>
+
+            <!-- Empty State -->
+            <div x-show="filtered.length === 0" class="py-20 text-center bg-white border border-dashed border-slate-200 rounded-2xl mt-4">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                    <x-lucide-newspaper class="w-7 h-7" />
+                </div>
+                <h3 class="text-base font-bold text-slate-800 mb-1">{{ __('No matching articles found') }}</h3>
+                <p class="text-xs text-slate-500 max-w-sm mx-auto mb-5">{{ __('Try selecting a different category or clearing your search term.') }}</p>
+                <button @click="resetFilters()"
+                        class="h-9 px-5 rounded-lg bg-titan-navy text-white text-xs font-bold hover:bg-titan-red transition-colors cursor-pointer inline-flex items-center gap-1.5">
+                    <x-lucide-rotate-ccw class="w-3 h-3" />
+                    <span>{{ __('Show All Articles') }}</span>
+                </button>
+            </div>
+
+            <!-- Load More Action -->
+            <div x-show="hasMore" class="mt-12 text-center">
+                <button @click="loadMore()"
+                    class="inline-flex items-center gap-2 h-11 px-8 rounded-xl border border-slate-300 bg-white text-slate-800 text-sm font-bold hover:bg-titan-navy hover:text-white hover:border-titan-navy transition-all duration-300 shadow-xs cursor-pointer">
+                    <x-lucide-plus class="w-4 h-4" />
+                    <span>{{ __('Load More Articles') }}</span>
+                </button>
+                <p class="text-xs font-medium text-slate-400 mt-2.5">
+                    {{ __('Showing') }} <span class="font-bold text-slate-700" x-text="shown.length"></span> {{ __('of') }} <span class="font-bold text-slate-700" x-text="filtered.length"></span> {{ __('articles') }}
+                </p>
+            </div>
+
+        </main>
     </div>
 
     <style>

@@ -37,14 +37,22 @@ class NewsController extends Controller
                         ? $n->newsCategory->slug
                         : Str::slug((string) ($n->getTranslation('category', 'en') ?: 'updates'));
 
+                    $authorName = $n->getTranslation('authorName', $locale)
+                        ?: 'Kimmex';
+                    $readTime = $n->getTranslation('readTime', $locale) ?: '3 min read';
+                    $dateObj = $n->publishedAt ?? $n->created_at;
+
                     return [
                         'slug' => $n->slug,
                         'category' => $catName,
                         'categorySlug' => $catSlug,
                         'image' => PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
                         'title' => $n->getTranslation('title', $locale),
-                        'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
+                        'date' => $dateObj ? $dateObj->format('M d, Y') : '',
+                        'dateUpper' => $dateObj ? strtoupper($dateObj->format('M d, Y')) : '',
                         'excerpt' => $excerpt,
+                        'authorName' => $authorName,
+                        'readTime' => $readTime,
                         'isFeatured' => (bool) $n->isFeatured,
                     ];
                 })->toArray();
@@ -56,7 +64,7 @@ class NewsController extends Controller
         $totalArticles = count($newsArticles);
 
         $categoryCounts = collect($newsArticles)->groupBy('category')->map->count();
-        $categories = array_values(array_unique(array_column($newsArticles, 'category')));
+        $categories = array_values(array_filter(array_unique(array_column($newsArticles, 'category')), fn ($c) => ! empty(trim((string) $c)) && ! is_numeric($c)));
 
         $sidebarHeadlines = $gridArticles->slice(0, 4)->values();
 
