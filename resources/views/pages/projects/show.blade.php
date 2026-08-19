@@ -208,6 +208,14 @@
                         z-index: 1000;
                         pointer-events: none;
                     }
+                    .pswp__img {
+                        object-fit: contain !important;
+                        max-width: 100% !important;
+                        max-height: 100% !important;
+                    }
+                    .pswp__zoom-wrap {
+                        transform-origin: center center !important;
+                    }
                 </style>
             @endpush
 
@@ -267,8 +275,6 @@
                                 @endphp
                                 <a href="{{ $imgUrl }}"
                                    class="pswp-item"
-                                   data-pswp-width="1920"
-                                   data-pswp-height="1080"
                                    data-pswp-caption="{{ $imgCaption ?: $project['title'] . ' — ' . __('Photo') . ' ' . ($i + 1) }}"
                                    target="_blank">
                                     <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" />
@@ -423,13 +429,63 @@
                 import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
                 import PhotoSwipe from 'https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js';
 
+                // Pre-calculate natural image dimensions for all gallery items to preserve exact aspect ratio
+                document.querySelectorAll('#project-gallery-pswp a.pswp-item').forEach((link) => {
+                    const img = new Image();
+                    img.src = link.href;
+                    img.onload = function() {
+                        if (this.naturalWidth && this.naturalHeight) {
+                            link.setAttribute('data-pswp-width', this.naturalWidth);
+                            link.setAttribute('data-pswp-height', this.naturalHeight);
+                        }
+                    };
+                });
+
                 let lightbox = new PhotoSwipeLightbox({
                     gallery: '#project-gallery-pswp',
                     children: 'a.pswp-item',
                     pswpModule: PhotoSwipe,
-                    bgOpacity: 0.94,
-                    showHideAnimationType: 'zoom',
-                    wheelToZoom: true
+                    bgOpacity: 0.95,
+                    showHideAnimationType: 'fade',
+                    wheelToZoom: true,
+                    paddingFn: () => ({ top: 30, bottom: 80, left: 20, right: 20 }),
+                });
+
+                // Dynamic natural dimension resolver to guarantee zero image stretching
+                lightbox.addFilter('itemData', (itemData) => {
+                    const el = itemData.element;
+                    if (el) {
+                        const w = parseInt(el.getAttribute('data-pswp-width'), 10);
+                        const h = parseInt(el.getAttribute('data-pswp-height'), 10);
+                        if (w && h) {
+                            itemData.w = w;
+                            itemData.h = h;
+                        } else {
+                            itemData.w = window.innerWidth || 1920;
+                            itemData.h = window.innerHeight || 1080;
+                        }
+                    }
+                    return itemData;
+                });
+
+                lightbox.on('contentLoad', (e) => {
+                    const { content } = e;
+                    if (content.type === 'image') {
+                        const img = new Image();
+                        img.src = content.data.src;
+                        img.onload = () => {
+                            if (img.naturalWidth && img.naturalHeight) {
+                                const changed = content.data.w !== img.naturalWidth || content.data.h !== img.naturalHeight;
+                                content.data.w = img.naturalWidth;
+                                content.data.h = img.naturalHeight;
+                                content.width = img.naturalWidth;
+                                content.height = img.naturalHeight;
+                                if (changed && content.instance) {
+                                    content.instance.updateSize(true);
+                                }
+                            }
+                        };
+                    }
                 });
 
                 lightbox.on('uiRegister', function() {
