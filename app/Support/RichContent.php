@@ -32,12 +32,9 @@ class RichContent
                     $existingSrc = $srcMatch[1];
                 }
 
-                // If existing src is already a full remote URL (Cloudinary, CDN, external), preserve it directly
+                // If existing src is already a full remote URL (Cloudinary, CDN, external), keep it as is
                 if ($existingSrc && Str::startsWith($existingSrc, ['http://', 'https://'])) {
-                    $cleanSrc = preg_replace('/(\.(avif|webp|png|jpg|jpeg|gif))\1+/i', '$1', $existingSrc) ?? $existingSrc;
-                    if ($cleanSrc !== $existingSrc) {
-                        $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($cleanSrc).'"', $attrs);
-                    }
+                    // Full remote URL is already valid and ready
                 } else {
                     // Extract data-id (canonical relative path stored by Filament for local storage)
                     $path = null;
@@ -48,11 +45,10 @@ class RichContent
                     if ($path) {
                         $url = static::resolveImageUrl($path, $existingSrc);
                         if ($url) {
-                            $cleanUrl = preg_replace('/(\.(avif|webp|png|jpg|jpeg|gif))\1+/i', '$1', $url) ?? $url;
                             if ($existingSrc !== null) {
-                                $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($cleanUrl).'"', $attrs);
+                                $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
                             } else {
-                                $attrs = 'src="'.e($cleanUrl).'" '.$attrs;
+                                $attrs = 'src="'.e($url).'" '.$attrs;
                             }
                         }
                     }
