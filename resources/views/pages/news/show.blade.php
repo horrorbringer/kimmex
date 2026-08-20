@@ -205,15 +205,16 @@
                     </div>
 
                     <div class="relative">
-                        <div class="relative rounded-2xl overflow-hidden border border-gray-200/80 bg-titan-navy shadow-[0_16px_48px_-8px_rgba(0,0,0,0.12)] aspect-[16/11]">
+                        <div class="relative rounded-2xl overflow-hidden border border-gray-200/80 bg-slate-900 shadow-[0_16px_48px_-8px_rgba(0,0,0,0.12)] aspect-[16/9] flex items-center justify-center group">
                             @if($article['image'])
-                                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="w-full h-full object-cover hover:scale-103 transition-transform duration-700" decoding="async" loading="lazy" />
+                                {{-- Subtle ambient glow --}}
+                                <img src="{{ $article['image'] }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-25 scale-110 pointer-events-none" aria-hidden="true" />
+                                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="relative z-10 w-full h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-[1.01]" decoding="async" loading="lazy" />
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.16)_0%,transparent_50%)]">
                                     <x-lucide-newspaper class="w-20 h-20 text-white/10" />
                                 </div>
                             @endif
-                            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/50 via-transparent to-transparent pointer-events-none"></div>
                         </div>
                     </div>
                 </div>
@@ -324,7 +325,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Thumbnail row --}}
+                                {{-- Thumbnails --}}
                                 @if($galleryCount > 3)
                                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-2">
                                         @for($i = 3; $i < min($galleryCount, 8); $i++)
