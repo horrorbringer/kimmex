@@ -125,59 +125,45 @@
                 </div>
             </div>
 
-            <!-- Responsive 3-Column News Grid (Clean Editorial Cards with Unobstructed Full Images) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+            <!-- Responsive 3-Column News Grid (Clean Visual Tile with Smooth Hover Metadata) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <template x-for="article in shown" :key="article.slug">
                     <a :href="'/news/' + article.slug"
-                       class="group bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-xl hover:border-slate-300 transition-all duration-300 ease-out flex flex-col overflow-hidden block hover:-translate-y-1">
+                       class="group relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-900 shadow-xs hover:shadow-2xl transition-all duration-500 ease-out block hover:-translate-y-1.5">
+                        <!-- Cover Image (Bright, Natural & Crisp) -->
+                        <img :src="article.image" :alt="article.title"
+                             class="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
+                             loading="lazy" decoding="async" />
                         
-                        <!-- Image Container: 100% Full Unobstructed View with Soft Hover Zoom -->
-                        <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-900 shrink-0">
-                            <img :src="article.image" :alt="article.title"
-                                 class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                                 loading="lazy" decoding="async" />
-                            
-                            <!-- Category Badge -->
-                            <div class="absolute top-3.5 left-3.5 z-10">
-                                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-xs text-white bg-titan-red"
+                        <!-- Soft Natural Bottom Gradient Overlay -->
+                        <div class="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-out"
+                             style="background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.45) 75%, rgba(0,0,0,0.78) 100%);"></div>
+
+                        <!-- Card Content Overlaid at Bottom -->
+                        <div class="absolute inset-0 p-5 flex flex-col justify-end pointer-events-none">
+                            <!-- Category Pill & Date Row -->
+                            <div class="flex items-center justify-between gap-2 mb-1.5">
+                                <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md shadow-xs text-white bg-titan-red"
                                       x-text="article.category"></span>
-                            </div>
-                        </div>
-
-                        <!-- Card Body Content -->
-                        <div class="p-5 sm:p-6 flex flex-col flex-1">
-                            <!-- Meta Row: Date & Reading Time -->
-                            <div class="flex items-center justify-between text-xs text-slate-500 font-medium mb-2.5">
-                                <span class="inline-flex items-center gap-1.5">
-                                    <x-lucide-calendar class="w-3.5 h-3.5 text-slate-400" />
-                                    <span x-text="article.date"></span>
-                                </span>
-                                <span class="inline-flex items-center gap-1.5 text-slate-400">
-                                    <x-lucide-clock class="w-3.5 h-3.5" />
-                                    <span x-text="article.readTime || '3 min read'"></span>
-                                </span>
+                                <span class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-white/90"
+                                      style="text-shadow: 0 1px 2px rgba(0,0,0,0.75);"
+                                      x-text="article.dateUpper || article.date"></span>
                             </div>
 
-                            <!-- Headline Title -->
-                            <h2 class="text-sm sm:text-base font-heading font-bold text-titan-navy leading-snug line-clamp-2 group-hover:text-titan-red transition-colors duration-300 mb-2.5"
+                            <!-- Refined Headline Title (Smaller & Clean) -->
+                            <h2 class="!text-[11px] sm:!text-xs md:!text-[13px] font-heading font-bold !text-white leading-snug line-clamp-2 group-hover:!text-amber-300 transition-colors duration-300"
+                                style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.85);"
                                 x-text="article.title"></h2>
 
-                            <!-- Excerpt -->
-                            <p x-show="article.excerpt" class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-4 font-normal"
-                               x-text="article.excerpt"></p>
-
-                            <!-- Footer: Author & Read More -->
-                            <div class="mt-auto pt-3.5 border-t border-slate-100 flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-6 h-6 rounded-full bg-titan-navy/10 text-titan-navy flex items-center justify-center text-[10px] font-bold uppercase"
-                                         x-text="(article.authorName || 'K').charAt(0)"></div>
-                                    <span class="text-xs font-semibold text-slate-700 truncate max-w-[130px]" x-text="article.authorName || 'Kimmex'"></span>
-                                </div>
-
-                                <span class="text-xs font-bold text-titan-red inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                                    <span>{{ __('Read More') }}</span>
-                                    <x-lucide-arrow-right class="w-3.5 h-3.5" />
-                                </span>
+                            <!-- Author & Meta Stats Row (Smoothly Reveals on Hover) -->
+                            <div class="flex items-center gap-2 pt-2 border-t border-white/20 text-xs text-white/90 opacity-0 max-h-0 overflow-hidden group-hover:opacity-100 group-hover:max-h-12 group-hover:mt-2 transition-all duration-500 ease-out">
+                                <div class="w-5 h-5 rounded-full bg-white/25 border border-white/40 flex items-center justify-center text-[9px] font-bold text-white uppercase shrink-0"
+                                     x-text="(article.authorName || 'K').charAt(0)"></div>
+                                <span class="text-xs font-medium text-white/90 truncate max-w-[130px]" x-text="article.authorName || 'Kimmex'"></span>
+                                <span class="text-white/40 text-[10px]">•</span>
+                                <span class="text-[11px] text-white/75 font-medium" x-text="article.readTime || '3 min read'"></span>
+                                
+                                <x-lucide-arrow-up-right class="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 ml-auto shrink-0" />
                             </div>
                         </div>
                     </a>
