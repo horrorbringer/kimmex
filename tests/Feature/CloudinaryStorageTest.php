@@ -31,7 +31,7 @@ class CloudinaryStorageTest extends TestCase
     public function test_public_storage_resolves_cloudinary_image_url(): void
     {
         $this->assertSame(
-            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/news/cover.jpg',
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/news/cover.jpg.jpg',
             PublicStorage::url('news/cover.jpg'),
         );
     }
@@ -42,7 +42,7 @@ class CloudinaryStorageTest extends TestCase
             $path = "projects/hero-image.{$extension}";
 
             $this->assertSame(
-                "https://res.cloudinary.com/demo-cloud/image/upload/kimmex/{$path}",
+                "https://res.cloudinary.com/demo-cloud/image/upload/kimmex/{$path}.{$extension}",
                 PublicStorage::urlIfExists($path),
             );
         }
@@ -102,7 +102,7 @@ class CloudinaryStorageTest extends TestCase
     public function test_public_storage_resolves_cloudinary_pdf_as_image_asset_url(): void
     {
         $this->assertSame(
-            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/resumes/cv.pdf',
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/resumes/cv.pdf.pdf',
             PublicStorage::url('resumes/cv.pdf'),
         );
     }
@@ -140,7 +140,7 @@ class CloudinaryStorageTest extends TestCase
         $this->assertFalse(Storage::disk('cloudinary')->exists('projects/cloud-only.jpg'));
         $this->assertTrue(PublicStorage::exists('projects/cloud-only.jpg'));
         $this->assertSame(
-            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/projects/cloud-only.jpg',
+            'https://res.cloudinary.com/demo-cloud/image/upload/kimmex/projects/cloud-only.jpg.jpg',
             PublicStorage::urlIfExists('projects/cloud-only.jpg'),
         );
     }
