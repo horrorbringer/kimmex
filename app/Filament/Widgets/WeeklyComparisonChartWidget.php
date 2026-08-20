@@ -34,15 +34,22 @@ class WeeklyComparisonChartWidget extends ChartWidget
         $startOfThisWeek = Carbon::now()->startOfWeek();
         $startOfLastWeek = Carbon::now()->startOfWeek()->subWeek();
 
+        $dailyCounts = PageView::query()
+            ->where('visited_at', '>=', $startOfLastWeek)
+            ->where('visited_at', '<=', $startOfThisWeek->copy()->endOfWeek())
+            ->selectRaw('DATE(visited_at) as view_date, COUNT(*) as aggregate')
+            ->groupBy('view_date')
+            ->pluck('aggregate', 'view_date');
+
         $thisWeekData = [];
         $lastWeekData = [];
 
         for ($i = 0; $i < 7; $i++) {
-            $thisWeekData[] = PageView::whereDate('visited_at', $startOfThisWeek->copy()->addDays($i))
-                ->count();
+            $thisDate = $startOfThisWeek->copy()->addDays($i)->toDateString();
+            $lastDate = $startOfLastWeek->copy()->addDays($i)->toDateString();
 
-            $lastWeekData[] = PageView::whereDate('visited_at', $startOfLastWeek->copy()->addDays($i))
-                ->count();
+            $thisWeekData[] = (int) ($dailyCounts[$thisDate] ?? 0);
+            $lastWeekData[] = (int) ($dailyCounts[$lastDate] ?? 0);
         }
 
         return [

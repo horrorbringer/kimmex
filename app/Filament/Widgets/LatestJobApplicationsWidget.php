@@ -26,7 +26,7 @@ class LatestJobApplicationsWidget extends BaseWidget
     {
         return $table
             ->query(
-                JobApplication::query()->latest()->limit(5)
+                JobApplication::query()->with('job')->latest()->limit(5)
             )
             ->columns([
                 TextColumn::make('applicantName')

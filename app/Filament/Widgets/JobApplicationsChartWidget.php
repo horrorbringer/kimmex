@@ -23,15 +23,21 @@ class JobApplicationsChartWidget extends ChartWidget
 
     protected function getData(): array
     {
+        $startOfMonth = Carbon::now()->subMonths(5)->startOfMonth();
+
+        $appCounts = JobApplication::query()
+            ->where('created_at', '>=', $startOfMonth)
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as aggregate")
+            ->groupBy('ym')
+            ->pluck('aggregate', 'ym');
+
         $labels = [];
         $data = [];
 
         for ($i = 5; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i);
             $labels[] = $month->format('M');
-            $data[] = JobApplication::whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->count();
+            $data[] = (int) ($appCounts[$month->format('Y-m')] ?? 0);
         }
 
         return [

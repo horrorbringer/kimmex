@@ -21,16 +21,36 @@ class PageAnalyticsStatsWidget extends StatsOverviewWidget
         $today = Carbon::today();
         $startOfWeek = Carbon::now()->startOfWeek();
         $startOfMonth = Carbon::now()->startOfMonth();
+        $sevenDaysAgo = Carbon::now()->subDays(6)->startOfDay();
 
-        $todayCount = PageView::where('visited_at', '>=', $today)->count();
-        $weekCount = PageView::where('visited_at', '>=', $startOfWeek)->count();
-        $monthCount = PageView::where('visited_at', '>=', $startOfMonth)->count();
+        $earliest = min($startOfMonth, $sevenDaysAgo);
+
+        $dailyCounts = PageView::query()
+            ->where('visited_at', '>=', $earliest)
+            ->selectRaw('DATE(visited_at) as view_date, COUNT(*) as aggregate')
+            ->groupBy('view_date')
+            ->pluck('aggregate', 'view_date');
+
         $totalCount = PageView::count();
+
+        $todayKey = $today->toDateString();
+        $todayCount = (int) ($dailyCounts[$todayKey] ?? 0);
+
+        $weekCount = 0;
+        for ($date = $startOfWeek->copy(); $date <= $today; $date->addDay()) {
+            $weekCount += (int) ($dailyCounts[$date->toDateString()] ?? 0);
+        }
+
+        $monthCount = 0;
+        for ($date = $startOfMonth->copy(); $date <= $today; $date->addDay()) {
+            $monthCount += (int) ($dailyCounts[$date->toDateString()] ?? 0);
+        }
 
         // Get daily trend for sparkline (last 7 days)
         $trend = [];
         for ($i = 6; $i >= 0; $i--) {
-            $trend[] = PageView::whereDate('visited_at', Carbon::now()->subDays($i)->toDateString())->count();
+            $d = Carbon::now()->subDays($i)->toDateString();
+            $trend[] = (int) ($dailyCounts[$d] ?? 0);
         }
 
         return [

@@ -31,13 +31,20 @@ class PageViewsChartWidget extends ChartWidget
 
     protected function getData(): array
     {
+        $startDate = Carbon::now()->subDays(29)->startOfDay();
+        $dailyCounts = PageView::query()
+            ->where('visited_at', '>=', $startDate)
+            ->selectRaw('DATE(visited_at) as view_date, COUNT(*) as aggregate')
+            ->groupBy('view_date')
+            ->pluck('aggregate', 'view_date');
+
         $labels = [];
         $data = [];
 
         for ($i = 29; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i);
             $labels[] = $date->format('d M');
-            $data[] = PageView::whereDate('visited_at', $date->toDateString())->count();
+            $data[] = (int) ($dailyCounts[$date->toDateString()] ?? 0);
         }
 
         return [

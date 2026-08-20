@@ -24,19 +24,30 @@ class CombinedTrendChartWidget extends ChartWidget
 
     protected function getData(): array
     {
+        $startOfMonth = Carbon::now()->subMonths(5)->startOfMonth();
+
+        $inquiryCounts = Inquiry::query()
+            ->where('created_at', '>=', $startOfMonth)
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as aggregate")
+            ->groupBy('ym')
+            ->pluck('aggregate', 'ym');
+
+        $appCounts = JobApplication::query()
+            ->where('created_at', '>=', $startOfMonth)
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as ym, COUNT(*) as aggregate")
+            ->groupBy('ym')
+            ->pluck('aggregate', 'ym');
+
         $labels = [];
         $inquiryData = [];
         $appData = [];
 
         for ($i = 5; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i);
+            $ym = $month->format('Y-m');
             $labels[] = $month->format('M');
-            $inquiryData[] = Inquiry::whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->count();
-            $appData[] = JobApplication::whereYear('created_at', $month->year)
-                ->whereMonth('created_at', $month->month)
-                ->count();
+            $inquiryData[] = (int) ($inquiryCounts[$ym] ?? 0);
+            $appData[] = (int) ($appCounts[$ym] ?? 0);
         }
 
         return [
