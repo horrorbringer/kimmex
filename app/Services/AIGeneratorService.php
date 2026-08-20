@@ -454,11 +454,35 @@ class AIGeneratorService
     }
 
     /**
-     * Replace code blocks with unique placeholders before translation.
+     * Replace code blocks, images, figures, and embeds with unique placeholders before translation.
      */
     protected function protectCodeBlocks(string $content, array &$codeBlocks): string
     {
         $codeBlocks = [];
+
+        // Protect <figure>...</figure> wrappers (including internal img and figcaption)
+        $content = preg_replace_callback('/<figure\b[^>]*>[\s\S]*?<\/figure>/i', function ($matches) use (&$codeBlocks) {
+            $placeholder = '___KMD_FIGURE_BLOCK_'.count($codeBlocks).'___';
+            $codeBlocks[$placeholder] = $matches[0];
+
+            return $placeholder;
+        }, $content) ?? $content;
+
+        // Protect standalone <img> tags
+        $content = preg_replace_callback('/<img\b[^>]*\/?>/i', function ($matches) use (&$codeBlocks) {
+            $placeholder = '___KMD_IMG_TAG_'.count($codeBlocks).'___';
+            $codeBlocks[$placeholder] = $matches[0];
+
+            return $placeholder;
+        }, $content) ?? $content;
+
+        // Protect <iframe>...</iframe> and <video>...</video>
+        $content = preg_replace_callback('/<(iframe|video)\b[^>]*>[\s\S]*?<\/\1>/i', function ($matches) use (&$codeBlocks) {
+            $placeholder = '___KMD_EMBED_BLOCK_'.count($codeBlocks).'___';
+            $codeBlocks[$placeholder] = $matches[0];
+
+            return $placeholder;
+        }, $content) ?? $content;
 
         // Protect multiline <pre>...</pre> (including nested <code>)
         $content = preg_replace_callback('/<pre\b[^>]*>[\s\S]*?<\/pre>/i', function ($matches) use (&$codeBlocks) {

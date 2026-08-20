@@ -20,6 +20,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -114,7 +115,7 @@ class NewsArticleForm
                                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                                             ->fileAttachmentsVisibility('public')
                                                             ->fileAttachmentsDirectory('news/content')
-                                                            ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                                                            ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'])
                                                             ->hintActions([
                                                                 self::getInsertExternalMediaAction('content_en'),
                                                                 AIHelper::getGenerateAction('content_en', 'News Article'),
@@ -196,8 +197,10 @@ class NewsArticleForm
                                                             ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
                                                             ->fileAttachmentsVisibility('public')
                                                             ->fileAttachmentsDirectory('news/content')
-                                                            ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                                                            ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'])
                                                             ->hintActions([
+                                                                self::getCopyFromEnglishAction('content_km'),
+                                                                self::getSyncMediaFromEnglishAction('content_km'),
                                                                 self::getInsertExternalMediaAction('content_km'),
                                                                 AIHelper::getTranslateAction('content_km', 'content_en', 'English', 'en', 'km'),
                                                                 AIHelper::getImproveAction('content_km', 'កែលម្អអត្ថបទនេះឱ្យកាន់តែមានលក្ខណៈវិជ្ជាជីវៈ និងត្រឹមត្រូវតាមវេយ្យាករណ៍'),
@@ -656,6 +659,96 @@ class NewsArticleForm
                 }
 
                 $set($targetField, $currentHtml.$snippet);
+            });
+    }
+
+    protected static function getCopyFromEnglishAction(string $targetField = 'content_km'): Action
+    {
+        return Action::make('copyFromEnglish_'.$targetField)
+            ->label(__('Copy from EN'))
+            ->icon('heroicon-m-document-duplicate')
+            ->tooltip(__('Copy content & embedded images from English to Khmer'))
+            ->color('warning')
+            ->requiresConfirmation()
+            ->modalHeading(__('Copy content & images from English?'))
+            ->modalDescription(__('This will copy the full article and all embedded images from the English tab into Khmer, so you can edit the Khmer text around the images without re-uploading.'))
+            ->modalSubmitActionLabel(__('Copy into Khmer Editor'))
+            ->action(function (Get $get, Set $set) use ($targetField) {
+                $enContent = (string) ($get('content_en') ?? '');
+
+                if (empty(trim(strip_tags($enContent)))) {
+                    Notification::make()
+                        ->warning()
+                        ->title(__('English content is empty'))
+                        ->body(__('Please write content or upload images in the English tab first.'))
+                        ->send();
+
+                    return;
+                }
+
+                $set($targetField, $enContent);
+
+                Notification::make()
+                    ->success()
+                    ->title(__('Copied from English'))
+                    ->body(__('Content and embedded images have been copied into the Khmer editor. You can now edit the Khmer text around the images.'))
+                    ->send();
+            });
+    }
+
+    protected static function getSyncMediaFromEnglishAction(string $targetField = 'content_km'): Action
+    {
+        return Action::make('syncMediaFromEnglish_'.$targetField)
+            ->label(__('Sync Images from EN'))
+            ->icon('heroicon-m-photo')
+            ->tooltip(__('Sync all images uploaded in English into this Khmer editor'))
+            ->color('success')
+            ->requiresConfirmation()
+            ->modalHeading(__('Sync images from English?'))
+            ->modalDescription(__('This extracts all images and figures from English that are missing in Khmer and inserts them.'))
+            ->modalSubmitActionLabel(__('Sync Images'))
+            ->action(function (Get $get, Set $set) use ($targetField) {
+                $enContent = (string) ($get('content_en') ?? '');
+                $kmContent = (string) ($get($targetField) ?? '');
+
+                preg_match_all('/<figure\b[^>]*>[\s\S]*?<\/figure>|<p>\s*<img\b[^>]*\/?>\s*<\/p>|<img\b[^>]*\/?>/i', $enContent, $matches);
+                $images = $matches[0] ?? [];
+
+                if (empty($images)) {
+                    Notification::make()
+                        ->warning()
+                        ->title(__('No images found in English'))
+                        ->body(__('The English article does not have any embedded images to sync.'))
+                        ->send();
+
+                    return;
+                }
+
+                $appended = 0;
+                foreach ($images as $imgTag) {
+                    if (preg_match('/src=([\'"])(.*?)\1/i', $imgTag, $srcMatch)) {
+                        $src = $srcMatch[2];
+                        if (! str_contains($kmContent, $src)) {
+                            $kmContent .= "\n<p>{$imgTag}</p>";
+                            $appended++;
+                        }
+                    }
+                }
+
+                if ($appended > 0) {
+                    $set($targetField, $kmContent);
+                    Notification::make()
+                        ->success()
+                        ->title(__('Images Synced'))
+                        ->body(__(':count image(s) from English have been inserted into the Khmer editor.', ['count' => $appended]))
+                        ->send();
+                } else {
+                    Notification::make()
+                        ->info()
+                        ->title(__('Already up to date'))
+                        ->body(__('All images from English are already present in the Khmer editor.'))
+                        ->send();
+                }
             });
     }
 }
