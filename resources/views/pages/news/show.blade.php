@@ -582,7 +582,7 @@
 
                                 @if(!empty($prevArticle['image']))
                                     <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100 shadow-sm">
-                                        <img src="{{ $prevArticle['image'] }}" alt="{{ $prevArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" loading="lazy" decoding="async" />
+                                        <img src="{{ $prevArticle['image'] }}" alt="{{ $prevArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                                     </div>
                                 @endif
 
@@ -595,7 +595,7 @@
                                         @endif
                                     </div>
                                     <h4 class="text-sm sm:text-base font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-2 leading-snug">
-                                        {{ $prevArticle['title'] }}
+                                         {{ $prevArticle['title'] }}
                                     </h4>
                                     @if(!empty($prevArticle['date']))
                                         <span class="text-[11px] text-gray-400 mt-1 block">{{ $prevArticle['date'] }}</span>
@@ -613,7 +613,7 @@
 
                                 @if(!empty($nextArticle['image']))
                                     <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100 shadow-sm">
-                                        <img src="{{ $nextArticle['image'] }}" alt="{{ $nextArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500" loading="lazy" decoding="async" />
+                                        <img src="{{ $nextArticle['image'] }}" alt="{{ $nextArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                                     </div>
                                 @endif
 

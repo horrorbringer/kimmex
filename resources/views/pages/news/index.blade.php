@@ -129,10 +129,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <template x-for="article in shown" :key="article.slug">
                     <a :href="'/news/' + article.slug"
-                       class="group relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-900 shadow-xs hover:shadow-2xl transition-all duration-500 ease-out block hover:-translate-y-1.5">
-                        <!-- Cover Image (Bright, Natural & Crisp) -->
+                       class="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-900 shadow-xs hover:shadow-xl transition-all duration-500 ease-out block hover:-translate-y-1">
+                        <!-- Cover Image (Natural 16:10 Framing with Soft Hover Scaling) -->
                         <img :src="article.image" :alt="article.title"
-                             class="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
+                             class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 ease-out"
                              loading="lazy" decoding="async" />
                         
                         <!-- Soft Natural Bottom Gradient Overlay -->
