@@ -2,8 +2,8 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class RichContent
 {
@@ -11,10 +11,9 @@ class RichContent
      * Resolve all <img> src attributes inside rich editor HTML.
      *
      * Strategy:
-     * 1. If the src already starts with http(s) and is reachable → keep it
-     * 2. Try the active disk URL → if reachable, use it
-     * 3. Fall back to local 'public' disk URL → if reachable, use it
-     * 4. File genuinely missing → remove the broken <img> tag
+     * 1. If data-id is present, resolve its public URL via PublicStorage / Storage disk
+     * 2. If already a valid absolute URL or root-relative src, keep and sanitize it
+     * 3. Ensure responsive and accessible image attributes
      */
     public static function resolveImages(string $html): string
     {
@@ -27,24 +26,35 @@ class RichContent
             function (array $matches) {
                 $attrs = $matches[1];
 
+                // Extract existing src
+                $existingSrc = null;
+                if (preg_match('/src=["\']([^"\']*)["\']/', $attrs, $srcMatch)) {
+                    $existingSrc = $srcMatch[1];
+                }
+
                 // Extract data-id (canonical relative path stored by Filament)
-                if (! preg_match('/data-id=["\']([^"\']+)["\']/', $attrs, $idMatch)) {
-                    return $matches[0]; // no data-id — leave untouched
+                $path = null;
+                if (preg_match('/data-id=["\']([^"\']+)["\']/', $attrs, $idMatch)) {
+                    $path = $idMatch[1];
                 }
 
-                $path = $idMatch[1];
-                $url = static::resolveImageUrl($path);
-
-                if (! $url) {
-                    // File not found anywhere — remove the broken img tag
-                    return '';
+                if ($path) {
+                    $url = static::resolveImageUrl($path, $existingSrc);
+                    if ($url) {
+                        if ($existingSrc !== null) {
+                            $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
+                        } else {
+                            $attrs = 'src="'.e($url).'" '.$attrs;
+                        }
+                    }
                 }
 
-                // Replace or insert src
-                if (preg_match('/src=["\'][^"\']*["\']/', $attrs)) {
-                    $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
-                } else {
-                    $attrs = 'src="'.e($url).'" '.$attrs;
+                // Ensure lazy loading and async decoding for frontend performance
+                if (! str_contains($attrs, 'loading=')) {
+                    $attrs .= ' loading="lazy"';
+                }
+                if (! str_contains($attrs, 'decoding=')) {
+                    $attrs .= ' decoding="async"';
                 }
 
                 return '<img'.$attrs.'>';
@@ -55,46 +65,36 @@ class RichContent
 
     /**
      * Resolve a file path to a publicly accessible URL.
-     * Tries active disk first, falls back to local storage.
+     * Tries active disk first, falls back to local storage and existing src.
      */
-    public static function resolveImageUrl(string $path): ?string
+    public static function resolveImageUrl(string $path, ?string $existingSrc = null): ?string
     {
-        // Try active disk (Cloudinary, R2, local, etc.)
-        $diskUrl = PublicStorage::url($path);
-        if ($diskUrl && static::urlIsReachable($diskUrl)) {
-            return $diskUrl;
+        if (Str::startsWith($path, ['http://', 'https://', '/'])) {
+            return $path;
         }
 
-        // Fallback: local public disk (files uploaded before disk switch)
-        if (PublicStorage::isRemoteDisk()) {
-            $localUrl = Storage::disk('public')->url($path);
-            if ($localUrl && Storage::disk('public')->exists($path)) {
-                return $localUrl;
-            }
+        // Try PublicStorage first (checks disk exist or returns proxy/disk url)
+        if (PublicStorage::exists($path)) {
+            return PublicStorage::url($path);
+        }
+
+        // Fallback: local public disk
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->url($path);
+        }
+
+        // If active disk generates a URL
+        $url = PublicStorage::url($path);
+        if ($url) {
+            return $url;
+        }
+
+        // Fall back to existing src if valid
+        if (filled($existingSrc)) {
+            return $existingSrc;
         }
 
         return null;
-    }
-
-    /**
-     * Quick HTTP HEAD check to verify URL is reachable.
-     * Cached per request to avoid repeated network calls for the same URL.
-     */
-    protected static array $urlCache = [];
-
-    protected static function urlIsReachable(string $url): bool
-    {
-        if (isset(static::$urlCache[$url])) {
-            return static::$urlCache[$url];
-        }
-
-        try {
-            $status = Http::timeout(5)->head($url)->status();
-
-            return static::$urlCache[$url] = ($status >= 200 && $status < 400);
-        } catch (\Throwable) {
-            return static::$urlCache[$url] = false;
-        }
     }
 
     /**

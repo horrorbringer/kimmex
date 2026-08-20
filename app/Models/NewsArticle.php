@@ -70,7 +70,7 @@ class NewsArticle extends Model
             $this->getOriginal('slug'),
         ]));
 
-        foreach (['en', 'km'] as $locale) {
+        foreach (['en', 'km', 'kh'] as $locale) {
             Cache::forget("home_news_array_{$locale}");
             Cache::forget("news_index_data_{$locale}");
 
