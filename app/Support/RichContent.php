@@ -38,14 +38,18 @@ class RichContent
                     $path = $idMatch[1];
                 }
 
+                $url = null;
                 if ($path) {
                     $url = static::resolveImageUrl($path, $existingSrc);
-                    if ($url) {
-                        if ($existingSrc !== null) {
-                            $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
-                        } else {
-                            $attrs = 'src="'.e($url).'" '.$attrs;
-                        }
+                } elseif ($existingSrc) {
+                    $url = static::normalizeCloudinaryImageUrl($existingSrc);
+                }
+
+                if ($url) {
+                    if ($existingSrc !== null) {
+                        $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
+                    } else {
+                        $attrs = 'src="'.e($url).'" '.$attrs;
                     }
                 }
 
@@ -70,12 +74,12 @@ class RichContent
     public static function resolveImageUrl(string $path, ?string $existingSrc = null): ?string
     {
         if (Str::startsWith($path, ['http://', 'https://', '/'])) {
-            return $path;
+            return static::normalizeCloudinaryImageUrl($path);
         }
 
         // Try PublicStorage first (checks disk exist or returns proxy/disk url)
         if (PublicStorage::exists($path)) {
-            return PublicStorage::url($path);
+            return static::normalizeCloudinaryImageUrl(PublicStorage::url($path));
         }
 
         // Fallback: local public disk
@@ -86,15 +90,40 @@ class RichContent
         // If active disk generates a URL
         $url = PublicStorage::url($path);
         if ($url) {
-            return $url;
+            return static::normalizeCloudinaryImageUrl($url);
         }
 
         // Fall back to existing src if valid
         if (filled($existingSrc)) {
-            return $existingSrc;
+            return static::normalizeCloudinaryImageUrl($existingSrc);
         }
 
         return null;
+    }
+
+    /**
+     * Normalize Cloudinary image URLs so that extensionless/raw UUID endpoints
+     * are correctly served via the /image/upload/ delivery route.
+     */
+    public static function normalizeCloudinaryImageUrl(?string $url): ?string
+    {
+        if (! filled($url)) {
+            return $url;
+        }
+
+        if (str_contains($url, 'res.cloudinary.com')) {
+            // Fix double extensions (e.g. .avif.avif -> .avif, .webp.webp -> .webp)
+            $url = preg_replace('/(\.(avif|webp|png|jpg|jpeg|gif))\1+/i', '$1', $url) ?? $url;
+
+            if (str_contains($url, '/raw/upload/')) {
+                $ext = Str::lower(pathinfo(parse_url($url, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+                if (! in_array($ext, ['pdf', 'zip', 'doc', 'docx', 'xls', 'xlsx', 'csv'], true)) {
+                    $url = str_replace('/raw/upload/', '/image/upload/', $url);
+                }
+            }
+        }
+
+        return $url;
     }
 
     /**

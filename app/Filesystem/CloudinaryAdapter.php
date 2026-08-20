@@ -282,9 +282,10 @@ class CloudinaryAdapter implements FilesystemAdapter
         $extension = Str::lower(pathinfo($path, PATHINFO_EXTENSION));
 
         return match (true) {
-            in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'svg', 'bmp', 'tif', 'tiff', 'pdf'], true) => 'image',
-            in_array($extension, ['mp4', 'mov', 'webm', 'm4v', 'avi'], true) => 'video',
-            default => 'raw',
+            in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'svg', 'bmp', 'tif', 'tiff', 'pdf', 'heic'], true) => 'image',
+            in_array($extension, ['mp4', 'mov', 'webm', 'm4v', 'avi', 'mkv', 'flv'], true) => 'video',
+            in_array($extension, ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'tar', 'gz', 'csv', 'txt', 'json'], true) => 'raw',
+            default => 'image',
         };
     }
 
@@ -308,7 +309,11 @@ class CloudinaryAdapter implements FilesystemAdapter
         $publicId = $this->publicId($path);
         $extension = Str::lower(pathinfo($path, PATHINFO_EXTENSION));
 
-        return $extension !== '' ? $publicId.'.'.$extension : $publicId;
+        if ($extension !== '' && ! Str::endsWith(Str::lower($publicId), '.'.$extension)) {
+            return $publicId.'.'.$extension;
+        }
+
+        return $publicId;
     }
 
     private function normalizePath(string $path): string
