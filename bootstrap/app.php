@@ -34,8 +34,9 @@ $app = Application::configure(basePath: dirname(__DIR__))
         });
     })->create();
 
-if (($_SERVER['SERVER_NAME'] ?? '') === 'www.kimmex.com.kh' || ($_SERVER['SERVER_NAME'] ?? '') === 'kimmex.com.kh') {
-    $app->usePublicPath(dirname($app->basePath()).'/public_html');
+$cpanelPublicHtml = dirname($app->basePath()).'/public_html';
+if (is_dir($cpanelPublicHtml) || in_array($_SERVER['SERVER_NAME'] ?? '', ['www.kimmex.com.kh', 'kimmex.com.kh'], true) || in_array($_SERVER['HTTP_HOST'] ?? '', ['www.kimmex.com.kh', 'kimmex.com.kh'], true)) {
+    $app->usePublicPath($cpanelPublicHtml);
 }
 
 return $app;

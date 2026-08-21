@@ -113,6 +113,7 @@ $run('config:cache');
 $run('route:cache');
 $run('filament:assets');
 $run('view:cache');
+$run('sitemap:generate');
 
 // 4b. Clear OPcache to ensure fresh PHP code
 if (function_exists('opcache_reset')) {
