@@ -291,4 +291,50 @@ class RichContent
             $content,
         ) ?? $content;
     }
+
+    /**
+     * Extract all public storage image paths from rich editor content / translatable arrays.
+     */
+    public static function extractImagePaths(mixed $content): array
+    {
+        if (empty($content)) {
+            return [];
+        }
+
+        $htmlStrings = [];
+        if (is_array($content)) {
+            $htmlStrings = array_values(array_filter($content, 'is_string'));
+        } elseif (is_string($content)) {
+            $decoded = json_decode($content, true);
+            if (is_array($decoded)) {
+                $htmlStrings = array_values(array_filter($decoded, 'is_string'));
+            } else {
+                $htmlStrings = [$content];
+            }
+        }
+
+        $paths = [];
+        foreach ($htmlStrings as $html) {
+            // 1. Extract canonical relative path from data-id
+            if (preg_match_all('/data-id=["\']([^"\']+)["\']/', $html, $idMatches)) {
+                foreach ($idMatches[1] as $id) {
+                    if (str_contains($id, '.') && ! Str::startsWith($id, ['http://', 'https://'])) {
+                        $paths[] = ltrim($id, '/');
+                    }
+                }
+            }
+
+            // 2. Extract relative path from src (Cloudinary or local storage URLs)
+            if (preg_match_all('/src=["\']([^"\']+)["\']/', $html, $srcMatches)) {
+                foreach ($srcMatches[1] as $src) {
+                    if (preg_match('#(?:kimmex_website/|/storage/)([\w\-]+(?:/[\w\-]+)*\.[a-z0-9]+)#i', $src, $m)) {
+                        $clean = preg_replace('/(\.(avif|webp|png|jpg|jpeg|gif))\1+/i', '$1', $m[1]) ?? $m[1];
+                        $paths[] = ltrim($clean, '/');
+                    }
+                }
+            }
+        }
+
+        return array_values(array_unique(array_filter($paths)));
+    }
 }
