@@ -32,23 +32,39 @@ class RichContent
                     $existingSrc = $srcMatch[1];
                 }
 
-                // If existing src is already a full remote URL (Cloudinary, CDN, external), keep it as is
-                if ($existingSrc && Str::startsWith($existingSrc, ['http://', 'https://'])) {
-                    // Full remote URL is already valid and ready
-                } else {
-                    // Extract data-id (canonical relative path stored by Filament for local storage)
-                    $path = null;
-                    if (preg_match('/data-id=["\']([^"\']+)["\']/', $attrs, $idMatch)) {
-                        $path = $idMatch[1];
+                // Check if existing src is a temporary Livewire preview URL
+                $isLivewireTempUrl = $existingSrc && (
+                    str_contains($existingSrc, '/preview-file/') ||
+                    str_contains($existingSrc, 'livewire-') ||
+                    str_contains($existingSrc, '/livewire/')
+                );
+
+                // Extract data-id (canonical relative path or UUID stored by Filament)
+                $path = null;
+                if (preg_match('/data-id=["\']([^"\']+)["\']/', $attrs, $idMatch)) {
+                    $path = $idMatch[1];
+                }
+
+                // If src is missing OR is a temporary Livewire URL, we must resolve the permanent URL
+                if (! $existingSrc || $isLivewireTempUrl) {
+                    $lookupPath = $path;
+
+                    // If path is a UUID or missing, extract filename from the temporary Livewire URL
+                    if ((! $lookupPath || ! str_contains($lookupPath, '.')) && $existingSrc) {
+                        $parsedPath = parse_url($existingSrc, PHP_URL_PATH) ?? '';
+                        $filename = basename($parsedPath);
+                        if (filled($filename) && str_contains($filename, '.')) {
+                            $lookupPath = $filename;
+                        }
                     }
 
-                    if ($path) {
-                        $url = static::resolveImageUrl($path, $existingSrc);
+                    if ($lookupPath) {
+                        $url = static::resolveImageUrl($lookupPath);
                         if ($url) {
                             if ($existingSrc !== null) {
                                 $attrs = preg_replace('/src=["\'][^"\']*["\']/', 'src="'.e($url).'"', $attrs);
                             } else {
-                                $attrs = 'src="'.e($url).'" '.$attrs;
+                                $attrs = ' src="'.e($url).'" '.$attrs;
                             }
                         }
                     }
@@ -62,7 +78,10 @@ class RichContent
                     $attrs .= ' decoding="async"';
                 }
 
-                return '<img'.$attrs.'>';
+                // Clean duplicate whitespace and ensure proper HTML tag format
+                $cleanAttrs = trim(preg_replace('/\s+/', ' ', $attrs));
+
+                return '<img '.$cleanAttrs.'>';
             },
             $html
         ) ?? $html;
@@ -78,9 +97,17 @@ class RichContent
             return $path;
         }
 
-        // Try PublicStorage first (checks disk exist or returns proxy/disk url)
+        // Try direct path on active storage disk
         if (PublicStorage::exists($path)) {
             return PublicStorage::url($path);
+        }
+
+        // If path is just a filename, check within standard rich content directory
+        if (! str_starts_with($path, 'news/content/')) {
+            $contentPath = 'news/content/'.$path;
+            if (PublicStorage::exists($contentPath)) {
+                return PublicStorage::url($contentPath);
+            }
         }
 
         // Fallback: local public disk
@@ -88,14 +115,18 @@ class RichContent
             return Storage::disk('public')->url($path);
         }
 
-        // If active disk generates a URL
-        $url = PublicStorage::url($path);
+        if (! str_starts_with($path, 'news/content/') && Storage::disk('public')->exists('news/content/'.$path)) {
+            return Storage::disk('public')->url('news/content/'.$path);
+        }
+
+        // If active disk generates a URL for the path
+        $url = PublicStorage::url(str_starts_with($path, 'news/content/') ? $path : 'news/content/'.$path);
         if ($url) {
             return $url;
         }
 
-        // Fall back to existing src if valid
-        if (filled($existingSrc)) {
+        // Fall back to existing src if valid and not a temp URL
+        if (filled($existingSrc) && ! str_contains($existingSrc, '/preview-file/')) {
             return $existingSrc;
         }
 
