@@ -724,6 +724,29 @@ class NewsArticleForm
                     return;
                 }
 
+                $changed = false;
+
+                // 1. Clean and replace any temporary Livewire preview images in Khmer with the clean English image tags
+                if (str_contains($kmContent, 'preview-file') || str_contains($kmContent, 'livewire-')) {
+                    $imgIndex = 0;
+                    $kmContent = preg_replace_callback(
+                        '/<p>\s*<img[^>]*(?:preview-file|livewire-)[^>]*\/?>\s*<\/p>|<img[^>]*(?:preview-file|livewire-)[^>]*\/?>/i',
+                        function () use ($images, &$imgIndex, &$changed) {
+                            $replacement = $images[$imgIndex] ?? null;
+                            if ($replacement) {
+                                $imgIndex++;
+                                $changed = true;
+
+                                return str_starts_with($replacement, '<p>') ? $replacement : "<p>{$replacement}</p>";
+                            }
+
+                            return '';
+                        },
+                        $kmContent
+                    ) ?? $kmContent;
+                }
+
+                // 2. Insert any remaining English images that are not yet present in Khmer
                 $appended = 0;
                 foreach ($images as $imgTag) {
                     $identifier = null;
@@ -734,17 +757,18 @@ class NewsArticleForm
                     }
 
                     if ($identifier && ! str_contains($kmContent, $identifier)) {
-                        $kmContent .= "\n<p>{$imgTag}</p>";
+                        $kmContent .= "\n".(str_starts_with($imgTag, '<p>') ? $imgTag : "<p>{$imgTag}</p>");
                         $appended++;
+                        $changed = true;
                     }
                 }
 
-                if ($appended > 0) {
+                if ($changed) {
                     $set($targetField, $kmContent);
                     Notification::make()
                         ->success()
                         ->title(__('Images Synced'))
-                        ->body(__(':count image(s) from English have been inserted into the Khmer editor.', ['count' => $appended]))
+                        ->body(__('English images have been synced and temporary files updated in the Khmer editor.'))
                         ->send();
                 } else {
                     Notification::make()
