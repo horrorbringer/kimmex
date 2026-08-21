@@ -23,7 +23,7 @@ Use PHPUnit through Laravel’s test runner. Feature tests belong in `tests/Feat
 Recent commits use short, imperative summaries such as `update ux/ui news page` or `feat: add AI stats dashboard component`. Keep commit messages concise and task-focused. Pull requests should include a short description, linked issue or task when available, and screenshots for UI changes. Mention any migration, seeder, or environment steps reviewers must run.
 
 ## Security & Configuration Tips
-Do not commit `.env`, secrets, generated build output, or local runtime artifacts. For schema changes, add a new migration instead of editing old ones. If you change admin resources or translations, verify the affected Filament pages and localized content paths before merging.
+Do not commit `.env`, secrets, generated build output, or local runtime artifacts. Do not stage or commit `public/sitemap.xml` (it is auto-generated on production and local test runs will overwrite it with `kimmex.test` URLs). For schema changes, add a new migration instead of editing old ones. If you change admin resources or translations, verify the affected Filament pages and localized content paths before merging.
 
 ## Production cPanel Hosting & Deployment Architecture
 - **cPanel Layout**:
