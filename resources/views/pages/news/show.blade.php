@@ -98,10 +98,10 @@
         {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
 
-    <div class="min-h-screen text-titan-navy font-sans antialiased pt-16 sm:pt-24 md:pt-28"
+    <div class="min-h-screen text-titan-navy font-sans antialiased pt-28 md:pt-32"
          style="background-color: {{ \App\Models\SystemSetting::get('theme_settings', [])['news_page_bg_color'] ?? '#F7F8FA' }}">
         <!-- ARTICLE NAVIGATION & BREADCRUMB -->
-        <div class="sticky top-16 sm:top-20 z-[80] bg-white/95 backdrop-blur-md border-b border-gray-200/80 transition-all">
+        <div class="sticky top-20 z-[80] bg-white/95 backdrop-blur-md border-b border-gray-200/80 transition-all">
             <div class="max-w-[1240px] mx-auto px-3 sm:px-6 h-10 sm:h-12 flex items-center justify-between gap-3 sm:gap-4">
                 {{-- Left: Back Button & Breadcrumbs --}}
                 <div class="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -172,7 +172,7 @@
                             </span>
                         </div>
 
-                        <h1 class="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-titan-navy leading-snug tracking-tight">
+                        <h1 class="!text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-titan-navy leading-snug tracking-tight">
                             {{ $article['title'] }}
                         </h1>
 
