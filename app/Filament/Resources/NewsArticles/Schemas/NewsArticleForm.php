@@ -726,12 +726,16 @@ class NewsArticleForm
 
                 $appended = 0;
                 foreach ($images as $imgTag) {
+                    $identifier = null;
                     if (preg_match('/src=([\'"])(.*?)\1/i', $imgTag, $srcMatch)) {
-                        $src = $srcMatch[2];
-                        if (! str_contains($kmContent, $src)) {
-                            $kmContent .= "\n<p>{$imgTag}</p>";
-                            $appended++;
-                        }
+                        $identifier = $srcMatch[2];
+                    } elseif (preg_match('/data-id=([\'"])(.*?)\1/i', $imgTag, $idMatch)) {
+                        $identifier = $idMatch[2];
+                    }
+
+                    if ($identifier && ! str_contains($kmContent, $identifier)) {
+                        $kmContent .= "\n<p>{$imgTag}</p>";
+                        $appended++;
                     }
                 }
 
