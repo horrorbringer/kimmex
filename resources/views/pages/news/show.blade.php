@@ -345,71 +345,68 @@
                             @endif
 
                             {{-- Lightbox --}}
-                            <template x-teleport="body">
-                                <div
-                                    x-cloak
-                                    x-show="open"
-                                    x-transition:enter="transition ease-out duration-200"
-                                    x-transition:enter-start="opacity-0"
-                                    x-transition:enter-end="opacity-100"
-                                    x-transition:leave="transition ease-in duration-150"
-                                    x-transition:leave-start="opacity-100"
-                                    x-transition:leave-end="opacity-0"
-                                    class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
-                                    @click.self="close()"
-                                    style="display: none !important;"
-                                    :style="open ? 'display: flex !important;' : 'display: none !important;'"
-                                >
-                                    {{-- Close --}}
-                                    <button @click="close()"
-                                        class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10">
-                                        <x-lucide-x class="w-5 h-5" />
-                                    </button>
+                            <div
+                                x-cloak
+                                x-show="open"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+                                @click.self="close()"
+                                style="display: none;"
+                            >
+                                {{-- Close --}}
+                                <button @click="close()"
+                                    class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10">
+                                    <x-lucide-x class="w-5 h-5" />
+                                </button>
 
-                                    {{-- Counter --}}
-                                    <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] font-black uppercase tracking-[0.2em] text-white/50">
-                                        <span x-text="current + 1"></span> / <span x-text="images.length"></span>
-                                    </div>
-
-                                    {{-- Prev --}}
-                                    <button @click="prev()"
-                                        class="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
-                                        x-show="images.length > 1">
-                                        <x-lucide-chevron-left class="w-5 h-5" />
-                                    </button>
-
-                                    {{-- Image --}}
-                                    <div class="max-w-5xl max-h-[85vh] w-full px-16 flex items-center justify-center">
-                                        <img
-                                            :src="images[current]"
-                                            :alt="'Image ' + (current + 1)"
-                                            class="max-h-[85vh] max-w-full w-auto object-contain rounded shadow-2xl select-none"
-                                            x-transition:enter="transition ease-out duration-200"
-                                            x-transition:enter-start="opacity-0 scale-95"
-                                            x-transition:enter-end="opacity-100 scale-100"
-                                            draggable="false"
-                                        />
-                                    </div>
-
-                                    {{-- Next --}}
-                                    <button @click="next()"
-                                        class="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
-                                        x-show="images.length > 1">
-                                        <x-lucide-chevron-right class="w-5 h-5" />
-                                    </button>
-
-                                    {{-- Dot indicators --}}
-                                    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5" x-show="images.length > 1">
-                                        <template x-for="(img, idx) in images" :key="idx">
-                                            <button
-                                                @click="current = idx"
-                                                class="w-1.5 h-1.5 rounded-full transition-all duration-200"
-                                                :class="current === idx ? 'bg-white w-4' : 'bg-white/35 hover:bg-white/60'"
-                                            ></button>
-                                        </template>
-                                    </div>
+                                {{-- Counter --}}
+                                <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] font-black uppercase tracking-[0.2em] text-white/50">
+                                    <span x-text="current + 1"></span> / <span x-text="images.length"></span>
                                 </div>
-                            </template>
+
+                                {{-- Prev --}}
+                                <button @click="prev()"
+                                    class="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+                                    x-show="images.length > 1">
+                                    <x-lucide-chevron-left class="w-5 h-5" />
+                                </button>
+
+                                {{-- Image --}}
+                                <div class="max-w-5xl max-h-[85vh] w-full px-16 flex items-center justify-center">
+                                    <img
+                                        :src="images[current]"
+                                        :alt="'Image ' + (current + 1)"
+                                        class="max-h-[85vh] max-w-full w-auto object-contain rounded shadow-2xl select-none"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-95"
+                                        x-transition:enter-end="opacity-100 scale-100"
+                                        draggable="false"
+                                    />
+                                </div>
+
+                                {{-- Next --}}
+                                <button @click="next()"
+                                    class="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10"
+                                    x-show="images.length > 1">
+                                    <x-lucide-chevron-right class="w-5 h-5" />
+                                </button>
+
+                                {{-- Dot indicators --}}
+                                <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5" x-show="images.length > 1">
+                                    <template x-for="(img, idx) in images" :key="idx">
+                                        <button
+                                            @click="current = idx"
+                                            class="w-1.5 h-1.5 rounded-full transition-all duration-200"
+                                            :class="current === idx ? 'bg-white w-4' : 'bg-white/35 hover:bg-white/60'"
+                                        ></button>
+                                    </template>
+                                </div>
+                            </div>
                         </section>
                     @endif
 

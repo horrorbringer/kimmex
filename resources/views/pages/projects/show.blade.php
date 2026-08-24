@@ -219,7 +219,6 @@
                     this.currentLightboxIndex = (this.currentLightboxIndex + 1) % this.images.length;
                 }
             }"
-            x-init="window.openPhotoSwipeAt = (idx = 0) => openLightbox(idx)"
             @keydown.escape.window="closeLightbox()"
             @keydown.arrow-left.window="lightboxOpen && prev()"
             @keydown.arrow-right.window="lightboxOpen && next()"
@@ -411,86 +410,83 @@
                     </div>
                 </section>
 
-                <!-- Fullscreen Teleported Lightbox -->
-                <template x-teleport="body">
-                    <div
-                        x-cloak
-                        x-show="lightboxOpen"
-                        x-transition:enter="transition ease-out duration-250"
-                        x-transition:enter-start="opacity-0"
-                        x-transition:enter-end="opacity-100"
-                        x-transition:leave="transition ease-in duration-200"
-                        x-transition:leave-start="opacity-100"
-                        x-transition:leave-end="opacity-0"
-                        class="fixed inset-0 z-[99999] flex flex-col justify-between bg-slate-950/98 backdrop-blur-xl text-white p-4 md:p-6 select-none"
-                        @click.self="closeLightbox()"
-                        style="display: none !important;"
-                        :style="lightboxOpen ? 'display: flex !important;' : 'display: none !important;'"
-                    >
-                        <!-- Top Toolbar -->
-                        <div class="flex items-center justify-between z-20 w-full max-w-7xl mx-auto">
-                            <div class="flex items-center gap-3">
-                                <span class="px-3.5 py-1 rounded-full bg-titan-red text-white text-xs font-black uppercase tracking-wider shadow-md">
-                                    <span x-text="currentLightboxIndex + 1"></span> / <span x-text="images.length"></span>
-                                </span>
-                                <span class="text-sm font-bold text-slate-300 truncate max-w-md hidden sm:inline drop-shadow">
-                                    {{ $project['title'] }}
-                                </span>
-                            </div>
-                            
-                            <div class="flex items-center gap-2">
-                                <a :href="images[currentLightboxIndex]?.url" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer" title="{{ __('Open full resolution') }}">
-                                    <x-lucide-external-link class="w-4 h-4" />
-                                </a>
-                                <button type="button" @click="closeLightbox()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-titan-red text-white flex items-center justify-center transition cursor-pointer" title="{{ __('Close') }}">
-                                    <x-lucide-x class="w-5 h-5" />
-                                </button>
-                            </div>
+                <!-- Fullscreen Lightbox Modal -->
+                <div
+                    x-cloak
+                    x-show="lightboxOpen"
+                    x-transition:enter="transition ease-out duration-250"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="fixed inset-0 z-[99999] flex flex-col justify-between bg-slate-950/98 backdrop-blur-xl text-white p-4 md:p-6 select-none"
+                    @click.self="closeLightbox()"
+                    style="display: none;"
+                >
+                    <!-- Top Toolbar -->
+                    <div class="flex items-center justify-between z-20 w-full max-w-7xl mx-auto">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3.5 py-1 rounded-full bg-titan-red text-white text-xs font-black uppercase tracking-wider shadow-md">
+                                <span x-text="currentLightboxIndex + 1"></span> / <span x-text="images.length"></span>
+                            </span>
+                            <span class="text-sm font-bold text-slate-300 truncate max-w-md hidden sm:inline drop-shadow">
+                                {{ $project['title'] }}
+                            </span>
                         </div>
-
-                        <!-- Main Image Stage with Navigation -->
-                        <div class="relative flex-1 flex items-center justify-center my-2 overflow-hidden w-full" @click.self="closeLightbox()">
-                            <!-- Prev Button -->
-                            <button type="button" @click="prev()" x-show="images.length > 1" class="absolute left-2 md:left-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/80 hover:bg-titan-red text-white border border-white/10 flex items-center justify-center transition shadow-2xl cursor-pointer">
-                                <x-lucide-chevron-left class="w-6 h-6 md:w-7 md:h-7" />
+                        
+                        <div class="flex items-center gap-2">
+                            <a :href="images[currentLightboxIndex]?.url" target="_blank" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer" title="{{ __('Open full resolution') }}">
+                                <x-lucide-external-link class="w-4 h-4" />
+                            </a>
+                            <button type="button" @click="closeLightbox()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-titan-red text-white flex items-center justify-center transition cursor-pointer" title="{{ __('Close') }}">
+                                <x-lucide-x class="w-5 h-5" />
                             </button>
-
-                            <!-- Image with 100% aspect-ratio contain (NEVER STRETCHES) -->
-                            <div class="flex items-center justify-center max-h-[74vh] max-w-[90vw]">
-                                <img
-                                    :src="images[currentLightboxIndex]?.url"
-                                    :alt="images[currentLightboxIndex]?.caption"
-                                    class="max-h-[74vh] max-w-[90vw] w-auto h-auto object-contain rounded-2xl shadow-2xl transition-all duration-200"
-                                    draggable="false"
-                                />
-                            </div>
-
-                            <!-- Next Button -->
-                            <button type="button" @click="next()" x-show="images.length > 1" class="absolute right-2 md:right-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/80 hover:bg-titan-red text-white border border-white/10 flex items-center justify-center transition shadow-2xl cursor-pointer">
-                                <x-lucide-chevron-right class="w-6 h-6 md:w-7 md:h-7" />
-                            </button>
-                        </div>
-
-                        <!-- Bottom Bar: Caption & Thumbnails -->
-                        <div class="flex flex-col items-center gap-3 z-20 w-full max-w-4xl mx-auto">
-                            <!-- Caption -->
-                            <div x-show="images[currentLightboxIndex]?.caption" class="px-5 py-2 rounded-full bg-slate-900/90 border border-white/15 text-xs md:text-sm font-semibold text-slate-200 text-center max-w-2xl truncate shadow-xl">
-                                <span x-text="images[currentLightboxIndex]?.caption"></span>
-                            </div>
-
-                            <!-- Thumbnails Track -->
-                            <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 scrollbar-none" x-show="images.length > 1">
-                                <template x-for="(item, idx) in images" :key="idx">
-                                    <button type="button" @click="currentLightboxIndex = idx"
-                                        :class="currentLightboxIndex === idx ? 'ring-2 ring-titan-red scale-105 opacity-100 shadow-lg' : 'opacity-45 hover:opacity-90'"
-                                        class="shrink-0 w-14 h-10 md:w-16 md:h-12 rounded-lg overflow-hidden border border-white/10 transition-all duration-200 cursor-pointer bg-slate-800">
-                                        <img :src="item.url" :alt="'Thumb ' + (idx + 1)" class="w-full h-full object-cover" />
-                                    </button>
-                                </template>
-                            </div>
                         </div>
                     </div>
-                </template>
+
+                    <!-- Main Image Stage with Navigation -->
+                    <div class="relative flex-1 flex items-center justify-center my-2 overflow-hidden w-full" @click.self="closeLightbox()">
+                        <!-- Prev Button -->
+                        <button type="button" @click="prev()" x-show="images.length > 1" class="absolute left-2 md:left-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/80 hover:bg-titan-red text-white border border-white/10 flex items-center justify-center transition shadow-2xl cursor-pointer">
+                            <x-lucide-chevron-left class="w-6 h-6 md:w-7 md:h-7" />
+                        </button>
+
+                        <!-- Image with 100% aspect-ratio contain (NEVER STRETCHES) -->
+                        <div class="flex items-center justify-center max-h-[74vh] max-w-[90vw]">
+                            <img
+                                :src="images[currentLightboxIndex]?.url"
+                                :alt="images[currentLightboxIndex]?.caption"
+                                class="max-h-[74vh] max-w-[90vw] w-auto h-auto object-contain rounded-2xl shadow-2xl transition-all duration-200"
+                                draggable="false"
+                            />
+                        </div>
+
+                        <!-- Next Button -->
+                        <button type="button" @click="next()" x-show="images.length > 1" class="absolute right-2 md:right-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/80 hover:bg-titan-red text-white border border-white/10 flex items-center justify-center transition shadow-2xl cursor-pointer">
+                            <x-lucide-chevron-right class="w-6 h-6 md:w-7 md:h-7" />
+                        </button>
+                    </div>
+
+                    <!-- Bottom Bar: Caption & Thumbnails -->
+                    <div class="flex flex-col items-center gap-3 z-20 w-full max-w-4xl mx-auto">
+                        <!-- Caption -->
+                        <div x-show="images[currentLightboxIndex]?.caption" class="px-5 py-2 rounded-full bg-slate-900/90 border border-white/15 text-xs md:text-sm font-semibold text-slate-200 text-center max-w-2xl truncate shadow-xl">
+                            <span x-text="images[currentLightboxIndex]?.caption"></span>
+                        </div>
+
+                        <!-- Thumbnails Track -->
+                        <div class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 scrollbar-none" x-show="images.length > 1">
+                            <template x-for="(item, idx) in images" :key="idx">
+                                <button type="button" @click="currentLightboxIndex = idx"
+                                    :class="currentLightboxIndex === idx ? 'ring-2 ring-titan-red scale-105 opacity-100 shadow-lg' : 'opacity-45 hover:opacity-90'"
+                                    class="shrink-0 w-14 h-10 md:w-16 md:h-12 rounded-lg overflow-hidden border border-white/10 transition-all duration-200 cursor-pointer bg-slate-800">
+                                    <img :src="item.url" :alt="'Thumb ' + (idx + 1)" class="w-full h-full object-cover" />
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
 
