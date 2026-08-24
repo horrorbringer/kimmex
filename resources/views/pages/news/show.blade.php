@@ -347,6 +347,7 @@
                             {{-- Lightbox --}}
                             <template x-teleport="body">
                                 <div
+                                    x-cloak
                                     x-show="open"
                                     x-transition:enter="transition ease-out duration-200"
                                     x-transition:enter-start="opacity-0"

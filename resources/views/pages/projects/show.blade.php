@@ -414,6 +414,7 @@
                 <!-- Fullscreen Teleported Lightbox -->
                 <template x-teleport="body">
                     <div
+                        x-cloak
                         x-show="lightboxOpen"
                         x-transition:enter="transition ease-out duration-250"
                         x-transition:enter-start="opacity-0"
