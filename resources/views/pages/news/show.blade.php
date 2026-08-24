@@ -357,7 +357,8 @@
                                     x-transition:leave-end="opacity-0"
                                     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm"
                                     @click.self="close()"
-                                    style="display:none"
+                                    style="display: none !important;"
+                                    :style="open ? 'display: flex !important;' : 'display: none !important;'"
                                 >
                                     {{-- Close --}}
                                     <button @click="close()"

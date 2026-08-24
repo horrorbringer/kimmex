@@ -424,7 +424,8 @@
                         x-transition:leave-end="opacity-0"
                         class="fixed inset-0 z-[99999] flex flex-col justify-between bg-slate-950/98 backdrop-blur-xl text-white p-4 md:p-6 select-none"
                         @click.self="closeLightbox()"
-                        style="display: none;"
+                        style="display: none !important;"
+                        :style="lightboxOpen ? 'display: flex !important;' : 'display: none !important;'"
                     >
                         <!-- Top Toolbar -->
                         <div class="flex items-center justify-between z-20 w-full max-w-7xl mx-auto">
