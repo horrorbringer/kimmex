@@ -334,7 +334,7 @@
                                             $imgCaption = is_array($img) ? ($img['caption'] ?? '') : '';
                                         @endphp
                                         <div x-show="activeSlide === {{ $i }}" x-transition:enter="transition ease-out duration-400" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0">
-                                            <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" class="w-full h-full object-cover" />
+                                            <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
                                             <div class="absolute bottom-6 left-6 right-20 flex flex-col items-start gap-2 z-10">
                                                 <span class="px-3 py-1 rounded-full bg-titan-red text-white text-[10px] font-black uppercase tracking-widest">
@@ -368,7 +368,7 @@
                                         <button type="button" @click="activeSlide = {{ $i }}"
                                             :class="activeSlide === {{ $i }} ? 'ring-2 ring-titan-red scale-105 opacity-100' : 'opacity-60 hover:opacity-100'"
                                             class="shrink-0 aspect-[4/3] w-24 md:w-32 rounded-lg overflow-hidden bg-slate-800 border border-white/10 transition-all duration-300 cursor-pointer relative">
-                                            <img src="{{ $imgUrl }}" alt="Thumb {{ $i + 1 }}" class="w-full h-full object-cover" />
+                                            <img src="{{ $imgUrl }}" alt="Thumb {{ $i + 1 }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                         </button>
                                     @endforeach
                                 </div>
@@ -481,7 +481,7 @@
                                 <button type="button" @click="currentLightboxIndex = idx"
                                     :class="currentLightboxIndex === idx ? 'ring-2 ring-titan-red scale-105 opacity-100 shadow-lg' : 'opacity-45 hover:opacity-90'"
                                     class="shrink-0 w-14 h-10 md:w-16 md:h-12 rounded-lg overflow-hidden border border-white/10 transition-all duration-200 cursor-pointer bg-slate-800">
-                                    <img :src="item.url" :alt="'Thumb ' + (idx + 1)" class="w-full h-full object-cover" />
+                                    <img :src="item.url" :alt="'Thumb ' + (idx + 1)" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                 </button>
                             </template>
                         </div>
