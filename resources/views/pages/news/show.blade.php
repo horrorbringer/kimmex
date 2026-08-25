@@ -98,7 +98,7 @@
         {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
 
-    <div class="min-h-screen text-titan-navy font-sans antialiased pt-28 md:pt-32"
+    <div class="min-h-screen text-titan-navy font-sans antialiased pt-28"
          style="background-color: {{ \App\Models\SystemSetting::get('theme_settings', [])['news_page_bg_color'] ?? '#F7F8FA' }}">
         <!-- ARTICLE NAVIGATION & BREADCRUMB -->
         <div class="sticky top-20 z-[80] bg-white/95 backdrop-blur-md border-b border-gray-200/80 transition-all">
