@@ -283,9 +283,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <template x-for="project in filteredProjects" :key="project.id">
                         <a :href="'/projects/' + project.id"
-                            class="group block bg-white rounded-lg overflow-hidden border border-gray-100 hover:border-titan-red/20 hover:shadow-[0_8px_24px_-8px_rgba(11,43,92,0.14)] transition-all duration-300">
+                            class="group flex flex-col h-full bg-white rounded-lg overflow-hidden border border-gray-100 hover:border-titan-red/20 hover:shadow-[0_8px_24px_-8px_rgba(11,43,92,0.14)] transition-all duration-300">
 
-                            <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
+                            <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
                                 <img :src="project.image" :alt="project.title"
                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                                 <div class="absolute top-3 left-3">
@@ -298,16 +298,17 @@
                                 </template>
                             </div>
 
-                            <div class="p-4 md:p-5">
-                                <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-red/60 mb-1.5" x-text="project.type"></div>
-                                <h3 class="projects-title text-base font-bold text-titan-navy leading-snug mb-2 group-hover:text-titan-red transition-colors tracking-tight" x-text="project.title"></h3>
-                                <p class="text-xs text-titan-navy/45 leading-relaxed line-clamp-2 mb-3" x-text="project.summary"></p>
-                                <div class="flex items-center justify-between pt-3 border-t border-gray-100">
-                                    <div class="flex items-center gap-1.5 text-[10px] font-semibold text-titan-navy/40">
-                                        <x-lucide-map-pin class="w-3 h-3 text-titan-red/50" />
-                                        <span x-text="project.location"></span>
+                            <div class="p-4 md:p-5 flex flex-col justify-between flex-1">
+                                <div>
+                                    <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-red/70 mb-1.5" x-text="project.type"></div>
+                                    <h3 class="projects-title text-base font-bold text-titan-navy leading-snug group-hover:text-titan-red transition-colors tracking-tight line-clamp-2" x-text="project.title"></h3>
+                                </div>
+                                <div class="flex items-center justify-between pt-3 mt-3.5 border-t border-gray-100">
+                                    <div class="flex items-center gap-1.5 text-xs font-semibold text-titan-navy/55 min-w-0 pr-2">
+                                        <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red shrink-0" />
+                                        <span class="truncate whitespace-nowrap" x-text="project.location"></span>
                                     </div>
-                                    <span class="text-[9px] font-black uppercase tracking-[0.15em] text-titan-navy/30 group-hover:text-titan-red transition-colors flex items-center gap-1">
+                                    <span class="text-[10px] font-black uppercase tracking-wider text-titan-navy/35 group-hover:text-titan-red transition-colors flex items-center gap-1 shrink-0">
                                         {{ __('View') }}
                                         <x-lucide-arrow-right class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                                     </span>
