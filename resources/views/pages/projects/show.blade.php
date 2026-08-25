@@ -110,20 +110,38 @@
             <div class="absolute inset-0 bg-black/10"></div>
 
             <div class="relative z-10 mx-auto w-full max-w-[1180px] px-5 pb-10 md:px-6 md:pb-14">
-                <a href="/projects" class="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-white/75 transition hover:text-white">
-                    <x-lucide-arrow-left class="h-4 w-4" /> {{ __('All Projects') }}
-                </a>
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <a href="/projects" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-white/80 transition hover:text-white hover:translate-x-[-2px]">
+                        <x-lucide-arrow-left class="h-4 w-4" /> {{ __('All Projects') }}
+                    </a>
+                    @if(!empty($project['type']))
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-titan-red text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
+                            {{ $project['type'] }}
+                        </span>
+                    @endif
+                </div>
+
                 <h1 class="max-w-4xl font-black text-white drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'tracking-tight leading-[1.08]' }}"
                     style="font-size: {{ $contentLocale === 'km' ? 'clamp(1.75rem, 3.6vw, 3.25rem)' : 'clamp(1.75rem, 5vw, 3.5rem)' }} !important; color: white !important;">
                     {{ $project['title'] }}
                 </h1>
-                <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/85 {{ $contentLocale === 'km' ? 'tracking-normal' : 'uppercase tracking-[0.14em]' }}">
-                    <div class="flex items-center gap-2">
-                        <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
-                        {{ $project['location'] }}
-                    </div>
-                    <span class="h-1 w-1 rounded-full bg-titan-red"></span>
-                    <span>{{ $project['status'] }}</span>
+
+                <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/90 {{ $contentLocale === 'km' ? 'tracking-normal' : 'uppercase tracking-[0.14em]' }}">
+                    @if(!empty($project['location']))
+                        <div class="flex items-center gap-2">
+                            <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
+                            <span>{{ $project['location'] }}</span>
+                        </div>
+                    @endif
+                    @if(!empty($project['location']) && !empty($project['status']))
+                        <span class="h-1 w-1 rounded-full bg-titan-red"></span>
+                    @endif
+                    @if(!empty($project['status']))
+                        <span class="inline-flex items-center gap-1.5">
+                            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                            <span>{{ $project['status'] }}</span>
+                        </span>
+                    @endif
                 </div>
             </div>
 

@@ -159,16 +159,16 @@
         <!-- HERO -->
         <section class="relative h-[320px] md:h-[380px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
-                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Projects" class="w-full h-full object-cover opacity-50" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent"></div>
+                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Projects" class="w-full h-full object-cover opacity-45" loading="eager" decoding="async" fetchpriority="high" />
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/95 via-titan-navy/50 to-titan-navy/20"></div>
             </div>
             <div class="relative z-10 w-full max-w-[1200px] mx-auto px-6 pb-10 md:pb-12">
                 <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Kimmex') }}</p>
-                <h1 class="font-black text-white uppercase leading-none"
-                    style="font-size: clamp(1.6rem, 4vw, 2.6rem) !important; color: white !important; font-weight: 900 !important;">
+                <h1 class="font-black text-white leading-tight tracking-tight drop-shadow-sm"
+                    style="font-size: clamp(1.75rem, 4vw, 2.75rem) !important; color: white !important; font-weight: 900 !important;">
                     {{ __('Our Projects') }}
                 </h1>
-                <p class="text-white/50 text-sm mt-2">{{ __('Architecting the future through engineering precision.') }}</p>
+                <p class="text-white/70 text-sm md:text-base mt-2 max-w-xl font-normal leading-relaxed">{{ __('Architecting the future through engineering precision.') }}</p>
             </div>
         </section>
 
