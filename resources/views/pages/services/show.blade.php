@@ -216,14 +216,17 @@
 
         <!-- === 2. SERVICE OVERVIEW === -->
         <section id="service-overview" class="mx-auto max-w-[1280px] px-5 py-16 sm:px-6 md:py-20 scroll-mt-24 md:scroll-mt-28">
-            <div class="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-[0_20px_60px_-45px_rgba(15,23,42,0.45)] md:p-10 lg:p-12">
+            <div class="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm md:p-10 lg:p-12">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="transition-all duration-700">
                     <div>
-                        <span
-                            class="mb-3 inline-block !text-xs font-black uppercase tracking-[0.2em] text-titan-red">{{ __('Overview') }}</span>
-                        <h2 class="mb-6 font-heading !text-xl sm:!text-2xl md:!text-3xl font-black leading-tight text-titan-navy">
+                        <div class="flex items-center justify-center gap-3 mb-3">
+                            <div class="w-8 h-[2px] bg-titan-red"></div>
+                            <span class="font-bold uppercase tracking-[0.2em] !text-xs text-titan-red">{{ __('Overview') }}</span>
+                            <div class="w-8 h-[2px] bg-titan-red"></div>
+                        </div>
+                        <h2 class="mb-6 font-heading !text-xl sm:!text-2xl md:!text-3xl font-black leading-tight text-titan-navy {{ $lang === 'kh' ? 'font-khmer leading-snug' : '' }}">
                             {{ $lang === 'kh' ? 'ការកំណត់ឡើងវិញនូវ' : 'Redefining' }} {{ $service['title'][$lang] }}
                         </h2>
                         @php($serviceDescription = $service['description'][$lang] ?? $service['description']['en'] ?? '')
@@ -238,14 +241,14 @@
                     </div>
 
                     @if (!empty($service['idealFor'][$lang] ?? ''))
-                        <div class="mx-auto mt-10 max-w-2xl rounded-xl border border-slate-200 bg-slate-50 p-5 shadow-sm md:p-6 text-left">
-                            <h3 class="mb-2.5 flex items-center gap-2.5 !text-sm md:!text-base font-bold text-titan-navy">
+                        <div class="mx-auto mt-10 max-w-2xl rounded-xl border border-slate-200 border-l-4 border-l-titan-red bg-slate-50 p-5 shadow-sm md:p-6 text-left">
+                            <h3 class="mb-2.5 flex items-center gap-2.5 !text-sm md:!text-base font-bold text-titan-navy {{ $lang === 'kh' ? 'font-khmer' : '' }}">
                                 <div class="w-8 h-8 rounded-lg bg-titan-red/10 flex items-center justify-center text-titan-red">
-                                    <x-lucide-users class="w-4 h-4" />
+                                    <x-lucide-target class="w-4 h-4" />
                                 </div>
                                 {{ $lang === 'kh' ? 'ស័ក្តិសមសម្រាប់' : 'Ideal For' }}
                             </h3>
-                            <div class="prose prose-sm prose-slate mx-auto max-w-none text-slate-600 !text-xs md:!text-sm leading-relaxed">
+                            <div class="prose prose-sm prose-slate mx-auto max-w-none text-slate-600 !text-xs md:!text-sm leading-relaxed {{ $lang === 'kh' ? 'font-khmer' : '' }}">
                                 {{ $service['idealFor'][$lang] }}
                             </div>
                         </div>
