@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\MethodologyStep;
 use App\Models\Milestone;
+use App\Models\NewsArticle;
+use App\Models\NewsCategory;
 use App\Models\Partner;
 use App\Models\Project;
 use App\Services\HomePageService;
@@ -108,5 +110,43 @@ class HomePageServiceTest extends TestCase
         $response->assertViewHas('testimonials');
         $response->assertViewHas('allNews');
         $response->assertViewHas('partners');
+    }
+
+    public function test_home_news_filters_by_category_with_fallback_prevention(): void
+    {
+        Cache::flush();
+
+        $category = NewsCategory::create([
+            'name' => ['en' => 'Building & Construction', 'km' => 'សំណង់អគារ'],
+            'slug' => 'news-building-construction',
+            'is_active' => true,
+        ]);
+
+        NewsArticle::create([
+            'isActive' => true,
+            'publishedAt' => now()->subDay(),
+            'slug' => 'construction-insight-1',
+            'title' => ['en' => 'Construction Insight 1', 'km' => 'សំណង់ ១'],
+            'news_category_id' => $category->id,
+            'category' => 'Building & Construction',
+        ]);
+
+        NewsArticle::create([
+            'isActive' => true,
+            'publishedAt' => now()->subDays(2),
+            'slug' => 'general-news-1',
+            'title' => ['en' => 'General News 1', 'km' => 'ព័ត៌មានទូទៅ ១'],
+            'category' => 'General',
+        ]);
+
+        // When requesting news-building-construction, returns the targeted article
+        $news = $this->service->getNews('en', 'news-building-construction');
+        $this->assertCount(1, $news);
+        $this->assertEquals('construction-insight-1', $news[0]['id']);
+
+        // Fallback test: when requesting a non-existent category, it falls back to active news instead of returning empty
+        Cache::flush();
+        $fallbackNews = $this->service->getNews('en', 'non-existent-category');
+        $this->assertCount(2, $fallbackNews);
     }
 }

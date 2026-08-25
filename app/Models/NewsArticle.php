@@ -72,6 +72,8 @@ class NewsArticle extends Model
 
         foreach (['en', 'km', 'kh'] as $locale) {
             Cache::forget("home_news_array_{$locale}");
+            Cache::forget("home_news_array_{$locale}_all");
+            Cache::forget("home_news_array_{$locale}_news-building-construction");
             Cache::forget("news_index_data_{$locale}");
 
             foreach ($slugs as $slug) {

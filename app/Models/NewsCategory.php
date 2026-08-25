@@ -40,6 +40,16 @@ class NewsCategory extends Model
             Cache::forget('news_categories_list_kh');
             Cache::forget('news_index_data_en');
             Cache::forget('news_index_data_km');
+            Cache::forget('news_index_data_kh');
+            Cache::forget('home_news_array_en');
+            Cache::forget('home_news_array_km');
+            Cache::forget('home_news_array_kh');
+            Cache::forget('home_news_array_en_news-building-construction');
+            Cache::forget('home_news_array_km_news-building-construction');
+            Cache::forget('home_news_array_kh_news-building-construction');
+            Cache::forget('home_news_array_en_all');
+            Cache::forget('home_news_array_km_all');
+            Cache::forget('home_news_array_kh_all');
         });
 
         static::deleted(function () {
@@ -48,6 +58,16 @@ class NewsCategory extends Model
             Cache::forget('news_categories_list_kh');
             Cache::forget('news_index_data_en');
             Cache::forget('news_index_data_km');
+            Cache::forget('news_index_data_kh');
+            Cache::forget('home_news_array_en');
+            Cache::forget('home_news_array_km');
+            Cache::forget('home_news_array_kh');
+            Cache::forget('home_news_array_en_news-building-construction');
+            Cache::forget('home_news_array_km_news-building-construction');
+            Cache::forget('home_news_array_kh_news-building-construction');
+            Cache::forget('home_news_array_en_all');
+            Cache::forget('home_news_array_km_all');
+            Cache::forget('home_news_array_kh_all');
         });
     }
 }

@@ -291,25 +291,46 @@ class HomePageService
     /**
      * Get latest news insights.
      */
-    public function getNews(?string $locale = null): array
+    public function getNews(?string $locale = null, ?string $categorySlug = 'news-building-construction'): array
     {
         $locale = $locale ?? app()->getLocale();
         $fallbackImage = '/images/webp/projects/Thumbnail-5.webp';
+        $cacheKey = 'home_news_array_'.$locale.($categorySlug ? '_'.$categorySlug : '_all');
 
-        $allNews = Cache::remember('home_news_array_'.$locale, now()->addHours(self::CACHE_TTL_HOURS), function () use ($fallbackImage, $locale): array {
-            $newsDb = NewsArticle::where('isActive', true)
+        $allNews = Cache::remember($cacheKey, now()->addHours(self::CACHE_TTL_HOURS), function () use ($fallbackImage, $locale, $categorySlug): array {
+            $baseQuery = NewsArticle::where('isActive', true)
                 ->where('publishedAt', '<=', now())
-                ->orderBy('publishedAt', 'desc')
-                ->take(3)
-                ->get();
+                ->with('newsCategory');
+
+            $newsDb = collect();
+
+            if ($categorySlug) {
+                $newsDb = (clone $baseQuery)
+                    ->where(function ($q) use ($categorySlug) {
+                        $q->whereHas('newsCategory', fn ($cat) => $cat->where('slug', $categorySlug))
+                            ->orWhere('category', $categorySlug);
+                    })
+                    ->orderBy('publishedAt', 'desc')
+                    ->take(3)
+                    ->get();
+            }
+
+            // Fallback prevention: If targeted category has no articles or doesn't exist, fall back to latest active news
+            if ($newsDb->isEmpty()) {
+                $newsDb = $baseQuery->orderBy('publishedAt', 'desc')->take(3)->get();
+            }
 
             return $newsDb->map(function (NewsArticle $n) use ($fallbackImage, $locale): array {
+                $catName = $n->newsCategory
+                    ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en'))
+                    : ($n->getTranslation('category', $locale) ?: __('Updates'));
+
                 return [
                     'id' => $n->slug,
                     'image' => PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
                     'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
                     'title' => $n->getTranslation('title', $locale),
-                    'category' => $n->getTranslation('category', $locale) ?: __('Updates'),
+                    'category' => $catName,
                 ];
             })->toArray();
         });
