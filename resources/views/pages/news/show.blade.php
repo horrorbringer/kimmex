@@ -144,82 +144,7 @@
         </div>
 
         <!-- ARTICLE HEADER -->
-        <header class="border-b border-gray-200/80 bg-white">
-            <div class="max-w-[1240px] mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-10">
-                <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-4 sm:gap-6 lg:gap-12 items-center">
-                    <div>
-                        <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 sm:gap-x-3 sm:gap-y-2 text-[11px] sm:text-xs text-titan-navy/55 mb-2.5 sm:mb-4 font-medium">
-                            <span class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md bg-titan-red text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wider shadow-2xs">
-                                {{ $article['category'] }}
-                            </span>
-
-                            <span class="inline-flex items-center gap-1 sm:gap-1.5 text-titan-navy/60">
-                                <x-lucide-calendar class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-titan-navy/40" />
-                                <span>{{ $article['date'] }}</span>
-                            </span>
-
-                            <span class="text-gray-300">·</span>
-
-                            <span class="inline-flex items-center gap-1 sm:gap-1.5 text-titan-navy/60">
-                                <x-lucide-clock class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-titan-navy/40" />
-                                <span>{{ $article['readTime'] }}</span>
-                            </span>
-
-                            <span class="text-gray-300">·</span>
-
-                            <span class="inline-flex items-center gap-1 sm:gap-1.5 text-titan-navy/60">
-                                <x-page-view-count class="text-titan-navy/60 font-medium normal-case tracking-normal text-[11px] sm:text-xs" />
-                            </span>
-                        </div>
-
-                        <h1 class="!text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-titan-navy leading-snug tracking-tight">
-                            {{ $article['title'] }}
-                        </h1>
-
-                        @if(!empty($article['excerpt']))
-                            <p class="mt-1.5 sm:mt-2.5 text-xs sm:text-sm leading-relaxed text-titan-navy/65 font-normal">
-                                {{ $article['excerpt'] }}
-                            </p>
-                        @endif
-
-                        <div class="mt-3 sm:mt-5 flex flex-wrap items-center justify-between gap-3 pt-3 sm:pt-4 border-t border-gray-100">
-                            {{-- Author Info --}}
-                            <div class="flex items-center gap-2.5 sm:gap-3">
-                                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-titan-navy to-titan-navy/80 text-white flex items-center justify-center font-bold text-xs sm:text-sm shadow-xs ring-2 ring-white">
-                                    {{ strtoupper(substr($article['author'] ?? 'K', 0, 1)) }}
-                                </div>
-                                <div>
-                                    <div class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-titan-red">{{ __('Written by') }}</div>
-                                    <div class="text-xs sm:text-sm font-bold text-titan-navy leading-tight">{{ $article['author'] }}</div>
-                                </div>
-                            </div>
-
-                            {{-- Read Action --}}
-                            <div class="flex items-center gap-2">
-                                <a href="#article-body" class="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-titan-navy/5 hover:bg-titan-red hover:!text-white text-titan-navy text-[11px] sm:text-xs font-semibold transition-all group">
-                                    <x-lucide-arrow-down-circle class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-titan-red group-hover:!text-white transition-colors" />
-                                    <span>{{ __('Start Reading') }}</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="relative">
-                        <div class="relative rounded-xl sm:rounded-2xl overflow-hidden border border-gray-200/80 bg-slate-900 shadow-md sm:shadow-[0_16px_48px_-8px_rgba(0,0,0,0.12)] aspect-[16/9] flex items-center justify-center group">
-                            @if($article['image'])
-                                {{-- Subtle ambient glow --}}
-                                <img src="{{ $article['image'] }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-25 scale-110 pointer-events-none" aria-hidden="true" />
-                                <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="relative z-10 w-full h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-[1.01]" decoding="async" loading="lazy" />
-                            @else
-                                <div class="w-full h-full flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.16)_0%,transparent_50%)]">
-                                    <x-lucide-newspaper class="w-20 h-20 text-white/10" />
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        {{-- <x-news.header :article="$article" /> --}}
 
         <!-- CONTENT -->
         <main id="article-body" class="max-w-[1240px] mx-auto px-3 sm:px-6 py-4 sm:py-8 md:py-12">
@@ -410,44 +335,80 @@
                         </section>
                     @endif
 
-                    <div class="mt-6 sm:mt-12 pt-5 sm:pt-8 border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
-                        <div class="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/30">
-                            <x-lucide-share-2 class="w-4 h-4 text-titan-red" />
-                            {{ __('Share this story') }}
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-facebook text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-social-icon network="facebook" class="w-4 h-4" />
-                            </a>
-                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-linkedin text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-social-icon network="linkedin" class="w-4 h-4" />
-                            </a>
-                            <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener" class="w-10 h-10 rounded bg-social-telegram text-white flex items-center justify-center hover:brightness-110 transition-all">
-                                <x-social-icon network="telegram" class="w-4 h-4" />
-                            </a>
-                            <button x-data="{ 
-                                    copied: false,
-                                    copyLink() {
-                                        const url = window.location.href;
-                                        if (navigator.clipboard && navigator.clipboard.writeText) {
-                                            navigator.clipboard.writeText(url).catch(() => {});
-                                        } else {
-                                            const el = document.createElement('textarea');
-                                            el.value = url;
-                                            document.body.appendChild(el);
-                                            el.select();
-                                            document.execCommand('copy');
-                                            document.body.removeChild(el);
-                                        }
-                                        this.copied = true;
-                                        setTimeout(() => this.copied = false, 1600);
-                                    }
-                                }"
-                                @click="copyLink()"
-                                class="h-10 px-4 rounded border border-gray-200 bg-white text-titan-navy hover:text-titan-red hover:border-titan-red/30 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.14em] transition-all">
-                                <x-lucide-link class="w-4 h-4" />
-                                <span x-text="copied ? '{{ __('Copied') }}' : '{{ __('Copy') }}'"></span>
-                            </button>
+                    {{-- Article Footer: Author Info & Social Sharing in One Row --}}
+                    <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+                        <div class="rounded-xl border border-gray-200/90 bg-slate-50/80 px-4 py-3.5 sm:px-6 sm:py-4 flex flex-wrap items-center justify-between gap-4">
+                            {{-- Author Details --}}
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-titan-navy to-titan-navy/80 text-white flex items-center justify-center font-bold text-sm shadow-xs ring-2 ring-white shrink-0">
+                                    {{ strtoupper(substr($article['author'] ?? 'K', 0, 1)) }}
+                                </div>
+                                <div>
+                                    <div class="text-[9px] font-black uppercase tracking-wider text-titan-red">
+                                        {{ __('Written by') }}
+                                    </div>
+                                    <div class="text-xs sm:text-sm font-bold text-titan-navy leading-tight">
+                                        {{ $article['author'] }}
+                                    </div>
+                                    @if(!empty($article['date']))
+                                        <div class="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-0.5">
+                                            {{ $article['date'] }}@if(!empty($article['readTime'])) · {{ str_contains($article['readTime'], 'min') ? $article['readTime'] : $article['readTime'] . ' ' . __('min read') }}@endif
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Social Sharing --}}
+                            <div class="flex items-center gap-2.5 sm:gap-3">
+                                <span class="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/45 mr-1">
+                                    <x-lucide-share-2 class="w-3.5 h-3.5 text-titan-red" />
+                                    {{ __('Share') }}
+                                </span>
+                                <div class="flex items-center gap-1.5 sm:gap-2">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" 
+                                       target="_blank" rel="noopener" 
+                                       class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-social-facebook text-white flex items-center justify-center hover:brightness-110 shadow-xs transition-all"
+                                       title="{{ __('Share on Facebook') }}">
+                                        <x-social-icon network="facebook" class="w-3.5 h-3.5" />
+                                    </a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" 
+                                       target="_blank" rel="noopener" 
+                                       class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-social-linkedin text-white flex items-center justify-center hover:brightness-110 shadow-xs transition-all"
+                                       title="{{ __('Share on LinkedIn') }}">
+                                        <x-social-icon network="linkedin" class="w-3.5 h-3.5" />
+                                    </a>
+                                    <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" 
+                                       target="_blank" rel="noopener" 
+                                       class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-social-telegram text-white flex items-center justify-center hover:brightness-110 shadow-xs transition-all"
+                                       title="{{ __('Share on Telegram') }}">
+                                        <x-social-icon network="telegram" class="w-3.5 h-3.5" />
+                                    </a>
+                                    <button x-data="{ 
+                                            copied: false,
+                                            copyLink() {
+                                                const url = window.location.href;
+                                                if (navigator.clipboard && navigator.clipboard.writeText) {
+                                                    navigator.clipboard.writeText(url).catch(() => {});
+                                                } else {
+                                                    const el = document.createElement('textarea');
+                                                    el.value = url;
+                                                    document.body.appendChild(el);
+                                                    el.select();
+                                                    document.execCommand('copy');
+                                                    document.body.removeChild(el);
+                                                }
+                                                this.copied = true;
+                                                setTimeout(() => this.copied = false, 1600);
+                                            }
+                                        }"
+                                        @click="copyLink()"
+                                        class="h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-lg border border-gray-200 bg-white text-titan-navy hover:text-titan-red hover:border-titan-red/30 inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all shadow-xs"
+                                        title="{{ __('Copy Article Link') }}">
+                                        <x-lucide-link class="w-3.5 h-3.5" />
+                                        <span x-text="copied ? '{{ __('Copied!') }}' : '{{ __('Copy') }}'"></span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </article>
@@ -568,71 +529,43 @@
 
         {{-- Next & Previous Story Navigation --}}
         @if($prevArticle || $nextArticle)
-            <section class="max-w-[1240px] mx-auto px-6 pb-16">
-                <div class="relative rounded-2xl border border-gray-200/90 bg-white p-4 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
-                    <div class="grid grid-cols-1 {{ ($prevArticle && $nextArticle) ? 'md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100' : '' }} gap-6 items-stretch">
+            <section class="max-w-[1240px] mx-auto px-4 sm:px-6 pb-12">
+                <div class="rounded-xl border border-gray-200/90 bg-white p-3 sm:p-4 shadow-2xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
                         
                         {{-- Previous Story --}}
-                        @if($prevArticle)
-                            <a href="/news/{{ $prevArticle['slug'] }}" class="group flex items-center gap-4 sm:gap-5 p-2 sm:p-3 rounded-xl hover:bg-gray-50/80 transition-all">
-                                <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-titan-red group-hover:text-white text-gray-500 flex items-center justify-center shrink-0 transition-colors shadow-sm">
-                                    <x-lucide-arrow-left class="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-                                </div>
-
-                                @if(!empty($prevArticle['image']))
-                                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100 shadow-sm">
-                                        <img src="{{ $prevArticle['image'] }}" alt="{{ $prevArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                        <div class="flex-1 min-w-0 {{ !$prevArticle ? 'hidden sm:block sm:invisible' : '' }}">
+                            @if($prevArticle)
+                                <a href="/news/{{ $prevArticle['slug'] }}" class="group flex items-center gap-3 py-1 hover:text-titan-red transition-colors">
+                                    <div class="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 group-hover:bg-titan-red group-hover:text-white text-gray-500 flex items-center justify-center shrink-0 transition-colors">
+                                        <x-lucide-arrow-left class="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
                                     </div>
-                                @endif
-
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-[10px] font-black uppercase tracking-wider text-titan-red">{{ __('Previous Story') }}</span>
-                                        @if(!empty($prevArticle['category']))
-                                            <span class="text-[10px] text-gray-300">·</span>
-                                            <span class="text-[10px] text-gray-500 font-semibold truncate">{{ $prevArticle['category'] }}</span>
-                                        @endif
+                                    <div class="min-w-0 flex-1">
+                                        <div class="text-[10px] font-black uppercase tracking-wider text-titan-red/80">{{ __('Previous') }}</div>
+                                        <div class="text-xs sm:text-sm font-bold text-titan-navy group-hover:text-titan-red truncate transition-colors">
+                                            {{ $prevArticle['title'] }}
+                                        </div>
                                     </div>
-                                    <h4 class="text-sm sm:text-base font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-2 leading-snug">
-                                         {{ $prevArticle['title'] }}
-                                    </h4>
-                                    @if(!empty($prevArticle['date']))
-                                        <span class="text-[11px] text-gray-400 mt-1 block">{{ $prevArticle['date'] }}</span>
-                                    @endif
-                                </div>
-                            </a>
-                        @endif
+                                </a>
+                            @endif
+                        </div>
 
                         {{-- Next Story --}}
-                        @if($nextArticle)
-                            <a href="/news/{{ $nextArticle['slug'] }}" class="group flex items-center {{ $prevArticle ? 'md:flex-row-reverse md:text-right' : '' }} gap-4 sm:gap-5 p-2 sm:p-3 rounded-xl hover:bg-gray-50/80 transition-all {{ $prevArticle ? 'pt-6 md:pt-3' : '' }}">
-                                <div class="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-titan-red group-hover:text-white text-gray-500 flex items-center justify-center shrink-0 transition-colors shadow-sm">
-                                    <x-lucide-arrow-right class="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                                </div>
-
-                                @if(!empty($nextArticle['image']))
-                                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100 shadow-sm">
-                                        <img src="{{ $nextArticle['image'] }}" alt="{{ $nextArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                        <div class="flex-1 min-w-0 {{ $prevArticle ? 'pt-3 sm:pt-0 sm:pl-6' : '' }} {{ !$nextArticle ? 'hidden sm:block sm:invisible' : '' }}">
+                            @if($nextArticle)
+                                <a href="/news/{{ $nextArticle['slug'] }}" class="group flex items-center justify-end text-right gap-3 py-1 hover:text-titan-red transition-colors">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="text-[10px] font-black uppercase tracking-wider text-titan-red/80">{{ __('Next') }}</div>
+                                        <div class="text-xs sm:text-sm font-bold text-titan-navy group-hover:text-titan-red truncate transition-colors">
+                                            {{ $nextArticle['title'] }}
+                                        </div>
                                     </div>
-                                @endif
-
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center {{ $prevArticle ? 'md:justify-end' : '' }} gap-2 mb-1">
-                                        <span class="text-[10px] font-black uppercase tracking-wider text-titan-red">{{ __('Next Story') }}</span>
-                                        @if(!empty($nextArticle['category']))
-                                            <span class="text-[10px] text-gray-300">·</span>
-                                            <span class="text-[10px] text-gray-500 font-semibold truncate">{{ $nextArticle['category'] }}</span>
-                                        @endif
+                                    <div class="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 group-hover:bg-titan-red group-hover:text-white text-gray-500 flex items-center justify-center shrink-0 transition-colors">
+                                        <x-lucide-arrow-right class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                                     </div>
-                                    <h4 class="text-sm sm:text-base font-bold text-titan-navy group-hover:text-titan-red transition-colors line-clamp-2 leading-snug">
-                                        {{ $nextArticle['title'] }}
-                                    </h4>
-                                    @if(!empty($nextArticle['date']))
-                                        <span class="text-[11px] text-gray-400 mt-1 block">{{ $nextArticle['date'] }}</span>
-                                    @endif
-                                </div>
-                            </a>
-                        @endif
+                                </a>
+                            @endif
+                        </div>
 
                     </div>
                 </div>
