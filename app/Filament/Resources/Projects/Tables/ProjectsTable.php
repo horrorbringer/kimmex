@@ -26,6 +26,7 @@ class ProjectsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('completionDate', 'desc')
             ->modifyQueryUsing(fn ($query) => $query->with('projectCategory'))
             ->columns([
                 ToggleColumn::make('isActive')
