@@ -68,18 +68,146 @@
                 </div>
             </div>
 
-            <div class="relative">
+            <div class="relative" x-data="{
+                previewOpen: false,
+                shareOpen: false,
+                copied: false,
+                copyUrl() {
+                    navigator.clipboard.writeText(window.location.href);
+                    this.copied = true;
+                    setTimeout(() => this.copied = false, 2000);
+                }
+            }">
                 <div class="relative rounded-xl sm:rounded-2xl overflow-hidden border border-gray-200/80 bg-slate-900 shadow-md sm:shadow-[0_16px_48px_-8px_rgba(0,0,0,0.12)] aspect-[16/9] flex items-center justify-center group">
                     @if($article['image'])
                         {{-- Subtle ambient glow --}}
                         <img src="{{ $article['image'] }}" alt="" class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-25 scale-110 pointer-events-none" aria-hidden="true" />
                         <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="relative z-10 w-full h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-[1.01]" decoding="async" loading="lazy" />
+
+                        {{-- Floating Action Bar (Top Right) --}}
+                        <div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 sm:gap-2">
+                            <button type="button" 
+                                @click="previewOpen = true" 
+                                class="h-8 sm:h-8.5 px-2.5 sm:px-3 rounded-full bg-slate-950/70 hover:bg-slate-950 text-white backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer" 
+                                title="{{ __('Preview Cover Image') }}">
+                                <x-lucide-maximize-2 class="w-3.5 h-3.5 text-titan-red" />
+                                <span>{{ __('Preview') }}</span>
+                            </button>
+
+                            <div class="relative" @click.outside="shareOpen = false">
+                                <button type="button" 
+                                    @click="shareOpen = !shareOpen" 
+                                    class="h-8 sm:h-8.5 px-2.5 sm:px-3 rounded-full bg-slate-950/70 hover:bg-slate-950 text-white backdrop-blur-md border border-white/20 text-[10px] sm:text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer"
+                                    title="{{ __('Share Story') }}">
+                                    <x-lucide-share-2 class="w-3.5 h-3.5 text-titan-red" />
+                                    <span>{{ __('Share') }}</span>
+                                </button>
+
+                                {{-- Share Dropdown --}}
+                                <div x-show="shareOpen" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                                    x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                    x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                                    class="absolute right-0 mt-2 w-48 rounded-xl bg-white/95 backdrop-blur-md p-2 shadow-xl border border-gray-100 text-titan-navy z-30 space-y-1"
+                                    style="display: none;">
+                                    
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" 
+                                        target="_blank" rel="noopener"
+                                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-social-facebook/10 hover:text-social-facebook transition-colors">
+                                        <x-social-icon network="facebook" class="w-4 h-4 text-social-facebook" />
+                                        <span>Facebook</span>
+                                    </a>
+                                    <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" 
+                                        target="_blank" rel="noopener"
+                                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-social-telegram/10 hover:text-social-telegram transition-colors">
+                                        <x-social-icon network="telegram" class="w-4 h-4 text-social-telegram" />
+                                        <span>Telegram</span>
+                                    </a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" 
+                                        target="_blank" rel="noopener"
+                                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-social-linkedin/10 hover:text-social-linkedin transition-colors">
+                                        <x-social-icon network="linkedin" class="w-4 h-4 text-social-linkedin" />
+                                        <span>LinkedIn</span>
+                                    </a>
+                                    <button type="button" 
+                                        @click="copyUrl()" 
+                                        class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-titan-red/10 hover:text-titan-red transition-colors text-left cursor-pointer">
+                                        <div class="flex items-center gap-2.5">
+                                            <x-lucide-link class="w-4 h-4 text-titan-red" />
+                                            <span x-text="copied ? '{{ __('Copied!') }}' : '{{ __('Copy Link') }}'"></span>
+                                        </div>
+                                        <x-lucide-check x-show="copied" class="w-3.5 h-3.5 text-emerald-600" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     @else
                         <div class="w-full h-full flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.16)_0%,transparent_50%)]">
                             <x-lucide-newspaper class="w-20 h-20 text-white/10" />
                         </div>
                     @endif
                 </div>
+
+                {{-- Fullscreen Lightbox Modal --}}
+                @if($article['image'])
+                    <template x-teleport="body">
+                        <div x-show="previewOpen" 
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                            @keydown.escape.window="previewOpen = false"
+                            class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6"
+                            style="display: none;">
+                            
+                            <div class="relative max-w-5xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                                @click.outside="previewOpen = false">
+                                
+                                {{-- Modal Header --}}
+                                <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-slate-950/80">
+                                    <div class="text-white font-bold text-sm sm:text-base truncate pr-4">
+                                        {{ $article['title'] }}
+                                    </div>
+                                    <button type="button" 
+                                        @click="previewOpen = false"
+                                        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0 cursor-pointer">
+                                        <x-lucide-x class="w-4 h-4" />
+                                    </button>
+                                </div>
+
+                                {{-- Image View --}}
+                                <div class="p-2 sm:p-4 bg-black flex items-center justify-center max-h-[75vh] overflow-hidden">
+                                    <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="max-h-[70vh] w-auto max-w-full object-contain rounded-lg shadow-md" />
+                                </div>
+
+                                {{-- Modal Footer with Share links --}}
+                                <div class="px-5 py-3.5 bg-slate-950/80 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+                                    <span class="text-white/60 font-medium">{{ __('Share this story:') }}</span>
+                                    <div class="flex items-center gap-2">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-social-facebook text-white flex items-center justify-center hover:opacity-90 transition-opacity" title="Facebook">
+                                            <x-social-icon network="facebook" class="w-4 h-4" />
+                                        </a>
+                                        <a href="https://t.me/share/url?url={{ urlencode(url('/news/' . $article['slug'])) }}&text={{ urlencode($article['title']) }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-social-telegram text-white flex items-center justify-center hover:opacity-90 transition-opacity" title="Telegram">
+                                            <x-social-icon network="telegram" class="w-4 h-4" />
+                                        </a>
+                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url('/news/' . $article['slug'])) }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-social-linkedin text-white flex items-center justify-center hover:opacity-90 transition-opacity" title="LinkedIn">
+                                            <x-social-icon network="linkedin" class="w-4 h-4" />
+                                        </a>
+                                        <button type="button" @click="copyUrl()" class="h-8 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium inline-flex items-center gap-1.5 transition-colors cursor-pointer">
+                                            <x-lucide-link class="w-3.5 h-3.5 text-titan-red" />
+                                            <span x-text="copied ? '{{ __('Copied!') }}' : '{{ __('Copy Link') }}'"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                @endif
             </div>
         </div>
     </div>

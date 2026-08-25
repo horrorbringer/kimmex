@@ -6,7 +6,9 @@ use App\Filament\Support\AIHelper;
 use App\Filament\Support\OptimizedFileUpload;
 use App\Filament\Support\TranslationHelper;
 use App\Models\Employee;
+use App\Models\NewsArticle;
 use App\Models\NewsCategory;
+use App\Support\PublicStorage;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -236,6 +238,7 @@ class NewsArticleForm
                             ->icon('heroicon-o-photo')
                             ->schema([
                                 Section::make(__('Cover Image'))
+                                    ->description(__('Recommended: 1200 × 675 px (16:9 ratio). Ideal for news cards, social media sharing (OG), and hero banners.'))
                                     ->components([
                                         ToggleButtons::make('coverImage_source')
                                             ->label(__('Cover Image Source'))
@@ -258,14 +261,17 @@ class NewsArticleForm
                                         OptimizedFileUpload::hero('coverImage')
                                             ->directory('news/covers')
                                             ->label(__('Cover Image File'))
-                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Upload high-resolution image. It will be automatically optimized.'))
+                                            ->helperText(__('Recommended: 1200 × 675 px (16:9) or 1600 × 900 px. Formats: WebP, JPG, PNG (Max 5MB).'))
+                                            ->hintAction(static::getPreviewSocialShareAction())
+                                            ->live()
                                             ->visible(fn (Get $get) => ($get('coverImage_source') ?? 'upload') === 'upload'),
 
                                         TextInput::make('coverImageUrl')
                                             ->label(__('External Cover Image URL'))
+                                            ->helperText(__('Direct URL to high-resolution landscape image (16:9 recommended, e.g. 1200 × 675 px).'))
                                             ->placeholder('https://images.unsplash.com/... or https://example.com/image.jpg')
                                             ->prefixIcon('heroicon-o-link')
-                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Enter direct image link (supports https:// or http://). Changes preview immediately.'))
+                                            ->hintAction(static::getPreviewSocialShareAction())
                                             ->url()
                                             ->live(onBlur: true)
                                             ->suffixActions([
@@ -361,7 +367,7 @@ class NewsArticleForm
                                     ]),
 
                                 Section::make(__('Gallery'))
-                                    ->description(__('Upload files or add external image links (max 12)'))
+                                    ->description(__('Upload files or add external image links (max 12). Recommended: 1200 × 800 px (3:2) or 1200 × 900 px (4:3).'))
                                     ->collapsible()
                                     ->components([
                                         ToggleButtons::make('gallery_source')
@@ -387,6 +393,7 @@ class NewsArticleForm
 
                                         FileUpload::make('gallery')
                                             ->label(__('Gallery Images (Upload)'))
+                                            ->helperText(__('Recommended standard: 1200 × 800 px (3:2) or 1200 × 900 px (4:3). Formats: WebP, JPG, PNG.'))
                                             ->image()
                                             ->multiple()
                                             ->maxFiles(12)
@@ -405,6 +412,7 @@ class NewsArticleForm
 
                                         TagsInput::make('galleryUrls')
                                             ->label(__('External Gallery URLs'))
+                                            ->helperText(__('Add direct URLs to photos (1200 × 800 px or 1200 × 900 px recommended).'))
                                             ->placeholder(__('Paste image URL and press Enter...'))
                                             ->prefixIcon('heroicon-o-link')
                                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Paste direct image links (https://...) and hit Enter to add multiple.'))
@@ -537,11 +545,13 @@ class NewsArticleForm
                                             ->numeric(),
                                     ]),
 
-                                Section::make(__('Author'))
+                                Section::make(__('Author Details'))
+                                    ->description(__('Author profile and avatar will be featured at the bottom of the article and on news preview cards.'))
                                     ->columns(3)
                                     ->components([
                                         Select::make('authorId')
                                             ->label(__('Author (Employee)'))
+                                            ->helperText(__('Select linked employee profile'))
                                             ->relationship('author', 'name')
                                             ->searchable()
                                             ->preload()
@@ -558,10 +568,12 @@ class NewsArticleForm
                                             ->default(auth()->user()?->employee?->id),
                                         TextInput::make('authorName_en')
                                             ->label(__('Author Name (English)'))
+                                            ->helperText(__('Custom display name (EN)'))
                                             ->suffixAction(AIHelper::getTranslateAction('authorName_en', 'authorName_km', 'Khmer', 'km', 'en'))
                                             ->default(auth()->user()?->name),
                                         TextInput::make('authorName_km')
                                             ->label(__('Author Name (Khmer)'))
+                                            ->helperText(__('Custom display name (KM)'))
                                             ->suffixAction(AIHelper::getTranslateAction('authorName_km', 'authorName_en', 'English', 'en', 'km'))
                                             ->default(auth()->user()?->name),
                                     ]),
@@ -777,6 +789,552 @@ class NewsArticleForm
                         ->body(__('All images from English are already present in the Khmer editor.'))
                         ->send();
                 }
+            });
+    }
+
+    public static function getPreviewSocialShareAction(): Action
+    {
+        return Action::make('previewSocialShare')
+            ->label(__('Preview Social Share'))
+            ->icon('heroicon-m-share')
+            ->color('primary')
+            ->visible(function (Get $get, ?NewsArticle $record): bool {
+                $coverSource = $get('coverImage_source') ?? 'upload';
+                if ($coverSource === 'url') {
+                    return filled($get('coverImageUrl'));
+                }
+
+                $cover = $get('coverImage');
+                if (! empty($cover)) {
+                    return true;
+                }
+
+                return $record && filled($record->coverImage);
+            })
+            ->modalHeading(__('Social Media Share Preview'))
+            ->modalDescription(__('Real-time simulation of how this article will appear across major social platforms.'))
+            ->modalSubmitAction(false)
+            ->modalCancelActionLabel(__('Close'))
+            ->modalWidth('4xl')
+            ->modalContent(function (Get $get, ?NewsArticle $record) {
+                // 1. Resolve Cover Image URL (robust against Livewire uploads, stored paths, and external links)
+                $coverSource = $get('coverImage_source') ?? 'upload';
+                $coverUrl = '';
+
+                if ($coverSource === 'url') {
+                    $rawUrl = trim((string) $get('coverImageUrl'));
+                    if (! empty($rawUrl) && filter_var($rawUrl, FILTER_VALIDATE_URL)) {
+                        $coverUrl = $rawUrl;
+                    }
+                } else {
+                    $coverVal = $get('coverImage');
+
+                    if (empty($coverVal) && $record) {
+                        $coverVal = $record->coverImage;
+                    }
+
+                    if (is_array($coverVal)) {
+                        $coverVal = reset($coverVal);
+                    }
+
+                    if (! empty($coverVal)) {
+                        if (is_object($coverVal) && method_exists($coverVal, 'temporaryUrl')) {
+                            try {
+                                $coverUrl = $coverVal->temporaryUrl();
+                            } catch (\Throwable $e) {
+                                $coverUrl = '';
+                            }
+                        } elseif (is_string($coverVal)) {
+                            if (filter_var($coverVal, FILTER_VALIDATE_URL)) {
+                                $coverUrl = $coverVal;
+                            } else {
+                                $coverUrl = PublicStorage::urlIfExists($coverVal, '')
+                                    ?: asset('storage/'.ltrim($coverVal, '/'));
+                            }
+                        }
+                    }
+                }
+
+                // 2. Resolve Text Meta
+                $title = trim((string) ($get('metaTitle_en') ?: $get('title_en') ?: $get('title_km') ?: __('Kimmex Announces New Milestone in Construction Excellence')));
+                $excerpt = trim((string) ($get('metaDescription_en') ?: $get('excerpt_en') ?: $get('excerpt_km') ?: __('Discover how Kim Mex Construction & Investment continues to lead Cambodia infrastructure developments with quality engineering and modern technology.')));
+                $slug = trim((string) ($get('slug') ?: 'kimmex-news-article'));
+                $appUrl = rtrim(config('app.url', 'https://kimmex.com.kh'), '/');
+                $articleUrl = $appUrl.'/news/'.$slug;
+
+                $imageHtml = ! empty($coverUrl)
+                    ? '<img src="'.e($coverUrl).'" alt="Social Cover" style="width: 100%; height: 100%; object-fit: cover; display: block;" />'
+                    : '<div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #111827; color: #9ca3af; padding: 2rem; text-align: center;"><svg style="width: 2.5rem; height: 2.5rem; margin-bottom: 0.5rem; color: #6b7280; opacity: 0.6;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span style="font-size: 0.75rem; font-weight: 500; color: #d1d5db;">'.e(__('No image uploaded yet. Upload a cover photo to preview.')).'</span></div>';
+
+                return new HtmlString('
+                    <div x-data="{ platform: \'facebook\', viewMode: \'desktop\' }" class="social-modal-root" style="display: flex; flex-direction: column; gap: 1rem; padding: 0.25rem 0;">
+                        <style>
+                            .social-modal-root {
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                                color: #1f2937;
+                            }
+                            .dark .social-modal-root { color: #f3f4f6; }
+                            .social-controls-bar {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                justify-content: space-between;
+                                gap: 0.625rem;
+                                padding: 0.375rem;
+                                background-color: #f3f4f6;
+                                border-radius: 0.75rem;
+                                border: 1px solid #e5e7eb;
+                                flex-wrap: wrap;
+                            }
+                            .dark .social-controls-bar {
+                                background-color: #1f2937;
+                                border-color: #374151;
+                            }
+                            .social-tab-btn {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 6px;
+                                padding: 6px 12px;
+                                border-radius: 8px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                border: 1px solid transparent;
+                                transition: all 0.15s ease;
+                                white-space: nowrap;
+                                background: transparent;
+                                color: #4b5563;
+                            }
+                            .dark .social-tab-btn { color: #9ca3af; }
+                            .social-tab-btn.is-active {
+                                background: #ffffff;
+                                color: #2563eb;
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                                border-color: #e5e7eb;
+                                font-weight: 700;
+                            }
+                            .dark .social-tab-btn.is-active {
+                                background: #111827;
+                                color: #60a5fa;
+                                border-color: #374151;
+                            }
+                            .social-view-btn {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 4px;
+                                padding: 4px 10px;
+                                border-radius: 6px;
+                                font-size: 11px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                border: none;
+                                background: transparent;
+                                color: #6b7280;
+                                transition: all 0.15s ease;
+                            }
+                            .dark .social-view-btn { color: #9ca3af; }
+                            .social-view-btn.is-active {
+                                background: #ffffff;
+                                color: #111827;
+                                font-weight: 700;
+                                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+                            }
+                            .dark .social-view-btn.is-active {
+                                background: #374151;
+                                color: #ffffff;
+                            }
+                            .social-card-img-box {
+                                width: 100%;
+                                aspect-ratio: 16 / 9;
+                                background-color: #000000;
+                                position: relative;
+                                overflow: hidden;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                            .social-card-img-box img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                display: block;
+                            }
+                            .social-card-fb {
+                                background: #ffffff;
+                                border: 1px solid #e5e7eb;
+                                border-radius: 16px;
+                                overflow: hidden;
+                                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+                                transition: all 0.2s ease;
+                                margin: 0 auto;
+                            }
+                            .dark .social-card-fb {
+                                background: #242526;
+                                border-color: #3e4042;
+                                color: #e4e6eb;
+                            }
+                            .social-card-li {
+                                background: #ffffff;
+                                border: 1px solid #e5e7eb;
+                                border-radius: 16px;
+                                overflow: hidden;
+                                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+                                transition: all 0.2s ease;
+                                margin: 0 auto;
+                            }
+                            .dark .social-card-li {
+                                background: #1b1f23;
+                                border-color: #38434f;
+                                color: #f3f2ef;
+                            }
+                            .social-card-tg {
+                                background: #eef2f5;
+                                border: 1px solid #e5e7eb;
+                                border-radius: 16px;
+                                padding: 16px;
+                                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+                                transition: all 0.2s ease;
+                                margin: 0 auto;
+                            }
+                            .dark .social-card-tg {
+                                background: #0e1621;
+                                border-color: #242f3d;
+                            }
+                            .social-card-x {
+                                background: #ffffff;
+                                border: 1px solid #e5e7eb;
+                                border-radius: 16px;
+                                padding: 16px;
+                                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+                                transition: all 0.2s ease;
+                                margin: 0 auto;
+                            }
+                            .dark .social-card-x {
+                                background: #000000;
+                                border-color: #2f3336;
+                                color: #e7e9ea;
+                            }
+                            .social-card-google {
+                                background: #ffffff;
+                                border: 1px solid #e5e7eb;
+                                border-radius: 16px;
+                                padding: 20px;
+                                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+                                transition: all 0.2s ease;
+                                margin: 0 auto;
+                            }
+                            .dark .social-card-google {
+                                background: #202124;
+                                border-color: #3c4043;
+                                color: #bdc1c6;
+                            }
+                            .social-clamp-2 {
+                                display: -webkit-box;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
+                                overflow: hidden;
+                            }
+                            .social-clamp-3 {
+                                display: -webkit-box;
+                                -webkit-line-clamp: 3;
+                                -webkit-box-orient: vertical;
+                                overflow: hidden;
+                            }
+                        </style>
+
+                        <!-- TOP CONTROLS: PLATFORMS + VIEWPORT SWITCHER -->
+                        <div class="social-controls-bar">
+                            <!-- Platform Tabs -->
+                            <div style="display: flex; align-items: center; gap: 4px; overflow-x: auto;">
+                                <button type="button" 
+                                        @click="platform = \'facebook\'"
+                                        :class="platform === \'facebook\' ? \'is-active\' : \'\'"
+                                        class="social-tab-btn">
+                                    <span style="width: 10px; height: 10px; border-radius: 9999px; background-color: #2563eb; display: inline-block;"></span>
+                                    Facebook
+                                </button>
+                                <button type="button" 
+                                        @click="platform = \'linkedin\'"
+                                        :class="platform === \'linkedin\' ? \'is-active\' : \'\'"
+                                        class="social-tab-btn">
+                                    <span style="width: 10px; height: 10px; border-radius: 9999px; background-color: #0a66c2; display: inline-block;"></span>
+                                    LinkedIn
+                                </button>
+                                <button type="button" 
+                                        @click="platform = \'telegram\'"
+                                        :class="platform === \'telegram\' ? \'is-active\' : \'\'"
+                                        class="social-tab-btn">
+                                    <span style="width: 10px; height: 10px; border-radius: 9999px; background-color: #229ed9; display: inline-block;"></span>
+                                    Telegram
+                                </button>
+                                <button type="button" 
+                                        @click="platform = \'twitter\'"
+                                        :class="platform === \'twitter\' ? \'is-active\' : \'\'"
+                                        class="social-tab-btn">
+                                    <span style="width: 10px; height: 10px; border-radius: 9999px; background-color: #000000; display: inline-block;"></span>
+                                    X (Twitter)
+                                </button>
+                                <button type="button" 
+                                        @click="platform = \'google\'"
+                                        :class="platform === \'google\' ? \'is-active\' : \'\'"
+                                        class="social-tab-btn">
+                                    <span style="width: 10px; height: 10px; border-radius: 9999px; background-color: #10b981; display: inline-block;"></span>
+                                    Google Search
+                                </button>
+                            </div>
+
+                            <!-- Actual Size Switcher (Desktop 550px vs Mobile 375px) -->
+                            <div style="display: flex; align-items: center; gap: 4px; padding: 2px; background-color: rgba(229, 231, 235, 0.8); border-radius: 8px;">
+                                <button type="button"
+                                        @click="viewMode = \'desktop\'"
+                                        :class="viewMode === \'desktop\' ? \'is-active\' : \'\'"
+                                        class="social-view-btn">
+                                    <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    <span>Desktop (550px)</span>
+                                </button>
+                                <button type="button"
+                                        @click="viewMode = \'mobile\'"
+                                        :class="viewMode === \'mobile\' ? \'is-active\' : \'\'"
+                                        class="social-view-btn">
+                                    <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                    <span>Mobile (375px)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- CANVAS AREA (Actual 1:1 Size Preview Container) -->
+                        <div style="padding: 1.25rem 0.75rem; background-color: rgba(249, 250, 251, 0.8); border-radius: 1rem; border: 1px dashed #d1d5db; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                            
+                            <!-- 1. FACEBOOK POST PREVIEW -->
+                            <div x-show="platform === \'facebook\'" x-cloak 
+                                 :style="viewMode === \'desktop\' ? \'max-width: 550px; width: 100%;\' : \'max-width: 375px; width: 100%; box-shadow: 0 0 0 8px rgba(0,0,0,0.06); border-radius: 24px;\'"
+                                 class="social-card-fb">
+                                <!-- Actual Dimension Header -->
+                                <div style="padding: 6px 14px; background-color: #eff6ff; border-bottom: 1px solid #dbeafe; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #1d4ed8; font-family: monospace;">
+                                    <span style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                        <span style="width: 8px; height: 8px; border-radius: 9999px; background-color: #2563eb; display: inline-block;"></span>
+                                        Facebook Feed Card
+                                    </span>
+                                    <span x-text="viewMode === \'desktop\' ? \'Width: 550px (Desktop Scale)\' : \'Width: 375px (Mobile Scale)\'"></span>
+                                </div>
+                                <!-- FB Header -->
+                                <div style="padding: 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f3f4f6;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 40px; height: 40px; border-radius: 9999px; background-color: #dc2626; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
+                                            KM
+                                        </div>
+                                        <div style="line-height: 1.25;">
+                                            <div style="display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 700;">
+                                                <span>Kim Mex Construction & Investment Co., Ltd.</span>
+                                                <svg style="width: 14px; height: 14px; color: #3b82f6; flex-shrink: 0;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                            </div>
+                                            <div style="font-size: 11px; color: #6b7280; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                                <span>Just now</span> &bull; <span title="Public">🌐</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="color: #9ca3af; font-weight: 700; font-size: 18px; line-height: 1; padding: 0 4px;">&bull;&bull;&bull;</div>
+                                </div>
+                                <!-- FB Caption -->
+                                <div style="padding: 14px; font-size: 14px; line-height: 1.5;">
+                                    '.e($excerpt).'
+                                </div>
+                                <!-- FB Link Card -->
+                                <div style="border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
+                                    <div class="social-card-img-box">
+                                        '.$imageHtml.'
+                                        <div style="position: absolute; bottom: 8px; right: 8px; padding: 2px 6px; border-radius: 4px; background-color: rgba(0,0,0,0.75); font-size: 10px; font-family: monospace; color: #ffffff; font-weight: 700;">
+                                            16:9 (1200 &times; 675)
+                                        </div>
+                                    </div>
+                                    <div style="padding: 14px; display: flex; flex-direction: column; gap: 4px;">
+                                        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280;">
+                                            KIMMEX.COM.KH
+                                        </div>
+                                        <div style="font-size: 15px; font-weight: 700; line-height: 1.35;">
+                                            '.e($title).'
+                                        </div>
+                                        <div class="social-clamp-2" style="font-size: 12px; color: #6b7280; line-height: 1.5;">
+                                            '.e($excerpt).'
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- FB Actions Footer -->
+                                <div style="padding: 8px 16px; border-top: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #6b7280;">
+                                    <div>👍 ❤️ 84</div>
+                                    <div>12 comments &bull; 6 shares</div>
+                                </div>
+                                <div style="padding: 4px 8px; border-top: 1px solid #f3f4f6; display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 12px; font-weight: 600; color: #4b5563;">
+                                    <div style="padding: 8px; border-radius: 8px;">👍 Like</div>
+                                    <div style="padding: 8px; border-radius: 8px;">💬 Comment</div>
+                                    <div style="padding: 8px; border-radius: 8px;">↗ Share</div>
+                                </div>
+                            </div>
+
+                            <!-- 2. LINKEDIN POST PREVIEW -->
+                            <div x-show="platform === \'linkedin\'" x-cloak 
+                                 :style="viewMode === \'desktop\' ? \'max-width: 552px; width: 100%;\' : \'max-width: 375px; width: 100%; box-shadow: 0 0 0 8px rgba(0,0,0,0.06); border-radius: 24px;\'"
+                                 class="social-card-li">
+                                <!-- Actual Dimension Header -->
+                                <div style="padding: 6px 14px; background-color: #f0f9ff; border-bottom: 1px solid #e0f2fe; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #0369a1; font-family: monospace;">
+                                    <span style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                        <span style="width: 8px; height: 8px; border-radius: 9999px; background-color: #0a66c2; display: inline-block;"></span>
+                                        LinkedIn Feed Post
+                                    </span>
+                                    <span x-text="viewMode === \'desktop\' ? \'Width: 552px (Desktop Scale)\' : \'Width: 375px (Mobile Scale)\'"></span>
+                                </div>
+                                <!-- LI Header -->
+                                <div style="padding: 14px; display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 44px; height: 44px; border-radius: 8px; background-color: #0b1f3a; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;">
+                                        KM
+                                    </div>
+                                    <div style="line-height: 1.25;">
+                                        <div style="font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                                            <span>Kim Mex Construction & Investment</span>
+                                        </div>
+                                        <div style="font-size: 11px; color: #6b7280;">
+                                            Civil Engineering & Building Construction &bull; 1,480 followers
+                                        </div>
+                                        <div style="font-size: 10px; color: #9ca3af; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                            <span>1h</span> &bull; <span>🌐</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- LI Caption -->
+                                <div style="padding: 0 14px 12px 14px; font-size: 14px; line-height: 1.5;">
+                                    '.e($excerpt).'
+                                </div>
+                                <!-- LI Card -->
+                                <div style="border: 1px solid #e5e7eb; border-radius: 12px; margin: 0 14px 14px 14px; overflow: hidden; background-color: #f9fafb;">
+                                    <div class="social-card-img-box">
+                                        '.$imageHtml.'
+                                        <div style="position: absolute; bottom: 8px; right: 8px; padding: 2px 6px; border-radius: 4px; background-color: rgba(0,0,0,0.75); font-size: 10px; font-family: monospace; color: #ffffff; font-weight: 700;">
+                                            16:9 Standard
+                                        </div>
+                                    </div>
+                                    <div style="padding: 12px; display: flex; flex-direction: column; gap: 2px;">
+                                        <div style="font-size: 14px; font-weight: 700; line-height: 1.35;">
+                                            '.e($title).'
+                                        </div>
+                                        <div style="font-size: 12px; color: #6b7280;">
+                                            kimmex.com.kh &bull; 3 min read
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- LI Actions -->
+                                <div style="padding: 6px 12px; border-top: 1px solid #f3f4f6; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; font-size: 12px; font-weight: 600; color: #4b5563;">
+                                    <div style="padding: 8px; border-radius: 8px;">👍 Like</div>
+                                    <div style="padding: 8px; border-radius: 8px;">💬 Comment</div>
+                                    <div style="padding: 8px; border-radius: 8px;">🔁 Repost</div>
+                                    <div style="padding: 8px; border-radius: 8px;">✈️ Send</div>
+                                </div>
+                            </div>
+
+                            <!-- 3. TELEGRAM CHAT PREVIEW -->
+                            <div x-show="platform === \'telegram\'" x-cloak 
+                                 :style="viewMode === \'desktop\' ? \'max-width: 420px; width: 100%;\' : \'max-width: 340px; width: 100%;\'"
+                                 class="social-card-tg">
+                                <div style="font-size: 11px; font-family: monospace; color: #6b7280; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span style="font-weight: 700; color: #229ed9;">Telegram Chat Bubble</span>
+                                    <span x-text="viewMode === \'desktop\' ? \'Bubble: 420px\' : \'Bubble: 340px\'"></span>
+                                </div>
+                                <div style="background-color: #ffffff; border-radius: 16px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="border-left: 3px solid #229ed9; padding-left: 10px; display: flex; flex-direction: column; gap: 4px;">
+                                        <div style="font-size: 12px; font-weight: 700; color: #229ed9;">
+                                            Kim Mex Construction
+                                        </div>
+                                        <div style="font-size: 14px; font-weight: 700; line-height: 1.25;">
+                                            '.e($title).'
+                                        </div>
+                                        <div class="social-clamp-3" style="font-size: 12px; color: #4b5563; line-height: 1.5;">
+                                            '.e($excerpt).'
+                                        </div>
+                                    </div>
+                                    <div class="social-card-img-box" style="border-radius: 12px;">
+                                        '.$imageHtml.'
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 10px; color: #9ca3af; font-family: monospace; padding-top: 4px;">
+                                        <span>'.date('H:i').'</span>
+                                        <span style="color: #229ed9; font-weight: 700;">✓✓</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. X (TWITTER) POST PREVIEW -->
+                            <div x-show="platform === \'twitter\'" x-cloak 
+                                 :style="viewMode === \'desktop\' ? \'max-width: 504px; width: 100%;\' : \'max-width: 375px; width: 100%; box-shadow: 0 0 0 8px rgba(0,0,0,0.06); border-radius: 24px;\'"
+                                 class="social-card-x">
+                                <div style="font-size: 11px; font-family: monospace; color: #6b7280; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding-bottom: 6px;">
+                                    <span style="font-weight: 700; color: #1f2937;">X (Twitter) Large Summary Card</span>
+                                    <span x-text="viewMode === \'desktop\' ? \'Width: 504px\' : \'Width: 375px\'"></span>
+                                </div>
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 9999px; background-color: #dc2626; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">
+                                        KM
+                                    </div>
+                                    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b7280;">
+                                            <span style="font-weight: 700; font-size: 14px; color: #111827;">Kim Mex Construction</span>
+                                            <span>@kimmex_kh</span>
+                                            <span>&bull;</span>
+                                            <span>Just now</span>
+                                        </div>
+                                        <div style="font-size: 14px; line-height: 1.5;">
+                                            '.e($title).'
+                                        </div>
+                                        <div style="border-radius: 16px; overflow: hidden; border: 1px solid #e5e7eb; background-color: #f9fafb;">
+                                            <div class="social-card-img-box">
+                                                '.$imageHtml.'
+                                            </div>
+                                            <div style="padding: 12px;">
+                                                <div style="font-size: 11px; color: #6b7280;">kimmex.com.kh</div>
+                                                <div style="font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'.e($title).'</div>
+                                                <div style="font-size: 12px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'.e($excerpt).'</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 5. GOOGLE SEARCH RESULT PREVIEW -->
+                            <div x-show="platform === \'google\'" x-cloak 
+                                 :style="viewMode === \'desktop\' ? \'max-width: 600px; width: 100%;\' : \'max-width: 375px; width: 100%; box-shadow: 0 0 0 8px rgba(0,0,0,0.06); border-radius: 24px;\'"
+                                 class="social-card-google">
+                                <div style="font-size: 11px; font-family: monospace; color: #9ca3af; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding-bottom: 6px;">
+                                    <span style="font-weight: 700; color: #059669;">Google SERP Snippet</span>
+                                    <span x-text="viewMode === \'desktop\' ? \'Width: 600px (Desktop Scale)\' : \'Width: 375px (Mobile Scale)\'"></span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #374151; margin-bottom: 6px;">
+                                    <div style="width: 24px; height: 24px; border-radius: 9999px; background-color: #dc2626; color: white; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        KM
+                                    </div>
+                                    <div style="line-height: 1.25; min-width: 0;">
+                                        <div style="font-weight: 600; color: #111827;">Kim Mex Construction</div>
+                                        <div style="font-size: 11px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">'.e($articleUrl).'</div>
+                                    </div>
+                                </div>
+                                <div style="color: #1a0dab; font-size: 18px; font-weight: 500; line-height: 1.35; cursor: pointer; margin-bottom: 6px;">
+                                    '.e($title).' - KIMMEX
+                                </div>
+                                <div style="font-size: 12px; color: #4b5563; line-height: 1.5;">
+                                    <span style="color: #9ca3af; font-weight: 500;">'.date('M d, Y').' &mdash; </span>
+                                    '.e($excerpt).'
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HELPER FOOTER WITH EXACT SPECS -->
+                        <div style="padding: 14px; background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; font-size: 12px; color: #78350f; display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <svg style="width: 16px; height: 16px; flex-shrink: 0; color: #d97706;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>'.e(__('Scale: Displays standard 1:1 pixel width. Edit SEO Meta in Content tab for custom text.')).'</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px; font-family: monospace; font-size: 11px; color: #b45309; flex-shrink: 0; font-weight: 700;">
+                                <span>Image: 1200 &times; 675 px (16:9)</span>
+                            </div>
+                        </div>
+                    </div>
+                ');
             });
     }
 }

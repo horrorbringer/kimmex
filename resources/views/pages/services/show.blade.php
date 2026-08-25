@@ -158,14 +158,89 @@
                         </div>
 
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="relative min-h-[260px] overflow-hidden rounded-2xl border border-white/80 bg-titan-navy shadow-lg sm:min-h-[320px] lg:min-h-[380px]">
+                            <div x-data="{ 
+                                previewOpen: false, 
+                                shareOpen: false, 
+                                copied: false,
+                                copyUrl() {
+                                    navigator.clipboard.writeText(window.location.href);
+                                    this.copied = true;
+                                    setTimeout(() => this.copied = false, 2000);
+                                }
+                            }" 
+                            class="relative min-h-[260px] overflow-hidden rounded-2xl border border-white/80 bg-titan-navy shadow-lg sm:min-h-[320px] lg:min-h-[380px] group">
                                 @if ($service['image'])
                                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
-                                        class="absolute inset-0 w-full h-full object-cover" loading="eager" decoding="async" />
+                                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" loading="eager" decoding="async" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/25 to-transparent"></div>
                                 @else
                                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
                                 @endif
+
+                                {{-- Top Floating Actions: Preview & Share --}}
+                                <div class="absolute top-4 right-4 z-20 flex items-center gap-2">
+                                    @if ($service['image'])
+                                        <button type="button" 
+                                            @click="previewOpen = true" 
+                                            class="h-8 sm:h-9 px-2.5 sm:px-3 rounded-full bg-titan-navy/70 hover:bg-titan-navy text-white backdrop-blur-md border border-white/20 text-[11px] sm:text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer" 
+                                            title="{{ __('Preview Cover Image') }}">
+                                            <x-lucide-maximize-2 class="w-3.5 h-3.5 text-titan-red" />
+                                            <span>{{ __('Preview') }}</span>
+                                        </button>
+                                    @endif
+
+                                    {{-- Share Dropdown --}}
+                                    <div class="relative" @click.outside="shareOpen = false">
+                                        <button type="button" 
+                                            @click="shareOpen = !shareOpen" 
+                                            class="h-8 sm:h-9 px-2.5 sm:px-3 rounded-full bg-titan-navy/70 hover:bg-titan-navy text-white backdrop-blur-md border border-white/20 text-[11px] sm:text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer"
+                                            title="{{ __('Share Service') }}">
+                                            <x-lucide-share-2 class="w-3.5 h-3.5 text-titan-red" />
+                                            <span>{{ __('Share') }}</span>
+                                        </button>
+
+                                        {{-- Share Dropdown Menu --}}
+                                        <div x-show="shareOpen" 
+                                            x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                                            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                                            x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
+                                            class="absolute right-0 mt-2 w-48 rounded-xl bg-white/95 backdrop-blur-md p-2 shadow-xl border border-gray-100 text-titan-navy z-30 space-y-1"
+                                            style="display: none;">
+                                            
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" 
+                                                target="_blank" rel="noopener"
+                                                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-social-facebook/10 hover:text-social-facebook transition-colors">
+                                                <x-social-icon network="facebook" class="w-4 h-4 text-social-facebook" />
+                                                <span>Facebook</span>
+                                            </a>
+                                            <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($service['title'][$lang] ?? '') }}" 
+                                                target="_blank" rel="noopener"
+                                                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-social-telegram/10 hover:text-social-telegram transition-colors">
+                                                <x-social-icon network="telegram" class="w-4 h-4 text-social-telegram" />
+                                                <span>Telegram</span>
+                                            </a>
+                                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" 
+                                                target="_blank" rel="noopener"
+                                                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-social-linkedin/10 hover:text-social-linkedin transition-colors">
+                                                <x-social-icon network="linkedin" class="w-4 h-4 text-social-linkedin" />
+                                                <span>LinkedIn</span>
+                                            </a>
+                                            <button type="button" 
+                                                @click="copyUrl()" 
+                                                class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 hover:bg-titan-red/10 hover:text-titan-red transition-colors text-left cursor-pointer">
+                                                <div class="flex items-center gap-2.5">
+                                                    <x-lucide-link class="w-4 h-4 text-titan-red" />
+                                                    <span x-text="copied ? '{{ __('Copied!') }}' : '{{ __('Copy Link') }}'"></span>
+                                                </div>
+                                                <x-lucide-check x-show="copied" class="w-3.5 h-3.5 text-emerald-600" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="absolute bottom-0 left-0 right-0 flex items-end justify-between gap-4 p-6 md:p-7">
                                     <div>
                                         <div class="!text-[10px] md:!text-xs font-black uppercase tracking-[0.18em] text-white/70 mb-1">
@@ -179,6 +254,64 @@
                                         <x-lucide-arrow-up-right class="w-4 h-4 text-white" />
                                     </div>
                                 </div>
+
+                                {{-- Lightbox / Full Image Preview Modal --}}
+                                @if ($service['image'])
+                                    <template x-teleport="body">
+                                        <div x-show="previewOpen" 
+                                            x-transition:enter="transition ease-out duration-300"
+                                            x-transition:enter-start="opacity-0"
+                                            x-transition:enter-end="opacity-100"
+                                            x-transition:leave="transition ease-in duration-200"
+                                            x-transition:leave-start="opacity-100"
+                                            x-transition:leave-end="opacity-0"
+                                            @keydown.escape.window="previewOpen = false"
+                                            class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6"
+                                            style="display: none;">
+                                            
+                                            <div class="relative max-w-5xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                                                @click.outside="previewOpen = false">
+                                                
+                                                {{-- Modal Header --}}
+                                                <div class="flex items-center justify-between px-5 py-4 border-b border-white/10 bg-slate-950/80">
+                                                    <div class="text-white font-bold text-sm sm:text-base truncate pr-4">
+                                                        {{ $service['title'][$lang] }}
+                                                    </div>
+                                                    <button type="button" 
+                                                        @click="previewOpen = false"
+                                                        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors shrink-0 cursor-pointer">
+                                                        <x-lucide-x class="w-4 h-4" />
+                                                    </button>
+                                                </div>
+
+                                                {{-- Image View --}}
+                                                <div class="p-2 sm:p-4 bg-black flex items-center justify-center max-h-[75vh] overflow-hidden">
+                                                    <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}" class="max-h-[70vh] w-auto max-w-full object-contain rounded-lg shadow-md" />
+                                                </div>
+
+                                                {{-- Modal Footer with Share links --}}
+                                                <div class="px-5 py-3.5 bg-slate-950/80 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+                                                    <span class="text-white/60 font-medium">{{ __('Share this service photo:') }}</span>
+                                                    <div class="flex items-center gap-2">
+                                                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-social-facebook text-white flex items-center justify-center hover:opacity-90 transition-opacity" title="Facebook">
+                                                            <x-social-icon network="facebook" class="w-4 h-4" />
+                                                        </a>
+                                                        <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($service['title'][$lang] ?? '') }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-social-telegram text-white flex items-center justify-center hover:opacity-90 transition-opacity" title="Telegram">
+                                                            <x-social-icon network="telegram" class="w-4 h-4" />
+                                                        </a>
+                                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener" class="w-8 h-8 rounded-lg bg-social-linkedin text-white flex items-center justify-center hover:opacity-90 transition-opacity" title="LinkedIn">
+                                                            <x-social-icon network="linkedin" class="w-4 h-4" />
+                                                        </a>
+                                                        <button type="button" @click="copyUrl()" class="h-8 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium inline-flex items-center gap-1.5 transition-colors cursor-pointer">
+                                                            <x-lucide-link class="w-3.5 h-3.5 text-titan-red" />
+                                                            <span x-text="copied ? '{{ __('Copied!') }}' : '{{ __('Copy Link') }}'"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                @endif
                             </div>
                         </div>
                     </div>
