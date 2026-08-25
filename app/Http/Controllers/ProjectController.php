@@ -55,7 +55,7 @@ class ProjectController extends Controller
             $query->where('project_category_id', $categoryId);
         }
 
-        $projectsDb = $query->orderBy('created_at', 'desc')->get();
+        $projectsDb = $query->orderByRaw('completionDate IS NULL, completionDate DESC')->orderByDesc('created_at')->get();
 
         $categoryLookup = $projectCategories->flatMap(function ($category) {
             return [
@@ -79,7 +79,7 @@ class ProjectController extends Controller
         };
 
         // Build filter option lists (always from full dataset for consistent UI)
-        $allProjects = Project::where('isActive', true)->with('projectCategory')->orderBy('created_at', 'desc')->get();
+        $allProjects = Project::where('isActive', true)->with('projectCategory')->orderByRaw('completionDate IS NULL, completionDate DESC')->orderByDesc('created_at')->get();
 
         $categories = $allProjects->map($localizedCategoryName)->unique()->sort()->values()->toArray();
         $locations = $allProjects->map(fn ($p) => $p->getTranslation('location', $contentLocale))->filter()->unique()->sort()->values()->toArray();
@@ -120,6 +120,7 @@ class ProjectController extends Controller
                 'category_id' => $p->project_category_id,
                 'status' => $p->status ? $p->status->getLabel() : __('Unknown'),
                 'status_value' => $p->status?->value,
+                'completion_date' => $p->completionDate?->toDateString(),
                 'year' => $p->completionDate?->year,
                 'image' => PublicStorage::urlIfExists($p->heroImage, $fallbackImage),
                 'summary' => strip_tags($p->getTranslation('description', $contentLocale)),

@@ -123,11 +123,19 @@
 
                 return matchLoc && matchSearch;
             }).sort((a, b) => {
+                const getTime = (item) => item.completion_date ? new Date(item.completion_date).getTime() : 0;
+
                 if (this.sortBy === 'featured') {
                     if ((a.featured ? 1 : 0) !== (b.featured ? 1 : 0)) {
                         return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
                     }
-                    return a.title.localeCompare(b.title);
+                    const diff = getTime(b) - getTime(a);
+                    return diff !== 0 ? diff : a.title.localeCompare(b.title);
+                }
+
+                if (this.sortBy === 'date' || this.sortBy === 'completionDate') {
+                    const diff = getTime(b) - getTime(a);
+                    return diff !== 0 ? diff : a.title.localeCompare(b.title);
                 }
 
                 if (this.sortBy === 'title') {
@@ -138,7 +146,8 @@
                     return a.status.localeCompare(b.status) || a.title.localeCompare(b.title);
                 }
 
-                return a.title.localeCompare(b.title);
+                const diff = getTime(b) - getTime(a);
+                return diff !== 0 ? diff : a.title.localeCompare(b.title);
             });
         },
 
