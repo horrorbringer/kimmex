@@ -245,24 +245,24 @@
                             <div class="flex flex-wrap items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-white/15 shadow-xl">
                                 <button type="button" @click="displayMode = 'bento'"
                                     :class="displayMode === 'bento' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                                     <x-lucide-layout-grid class="w-4 h-4" />
                                     <span>{{ __('Bento Grid') }}</span>
                                 </button>
                                 <button type="button" @click="displayMode = 'carousel'"
                                     :class="displayMode === 'carousel' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                                     <x-lucide-film class="w-4 h-4" />
                                     <span>{{ __('Showcase Carousel') }}</span>
                                 </button>
                                 <button type="button" @click="displayMode = 'masonry'"
                                     :class="displayMode === 'masonry' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                                     <x-lucide-columns class="w-4 h-4" />
                                     <span>{{ __('Masonry') }}</span>
                                 </button>
                                 <button type="button" @click="openLightbox(0)"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer border border-white/20">
+                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-all duration-300 ease-out active:scale-95 cursor-pointer border border-white/20 hover:border-white/40">
                                     <x-lucide-maximize-2 class="w-4 h-4 text-titan-red" />
                                     <span>{{ __('Fullscreen') }}</span>
                                 </button>
@@ -270,7 +270,7 @@
                         </div>
 
                         <!-- DISPLAY MODE 1: Architectural Bento Grid -->
-                        <div x-show="displayMode === 'bento'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-98" x-transition:enter-end="opacity-100 scale-100">
+                        <div x-show="displayMode === 'bento'" x-transition:enter="transition ease-out duration-350" x-transition:enter-start="opacity-0 translate-y-3 scale-[0.99]" x-transition:enter-end="opacity-100 translate-y-0 scale-100">
                             <div class="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
                                 @foreach($project['images'] as $i => $img)
                                     @php
@@ -293,26 +293,26 @@
                                     @if($i < 3)
                                         <button type="button" @click="openLightbox({{ $i }})"
                                             aria-label="{{ __('Open gallery image :number', ['number' => $i + 1]) }}"
-                                            class="project-gallery-card rounded-2xl overflow-hidden group cursor-pointer relative block w-full bg-slate-800 text-left border border-white/10 shadow-2xl {{ $gridClass }}">
+                                            class="project-gallery-card rounded-2xl overflow-hidden group cursor-pointer relative block w-full bg-slate-800 text-left border border-white/10 shadow-xl hover:border-titan-red/40 {{ $gridClass }}">
                                             <img src="{{ $imgUrl }}" alt="Gallery {{ $i + 1 }}"
-                                                class="project-gallery-image absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                class="project-gallery-image absolute inset-0 w-full h-full object-cover"
                                                 loading="lazy" decoding="async" />
 
                                             @if($i === 2 && $count > 3)
-                                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-sm z-10 transition-all duration-300 group-hover:bg-slate-950/85">
-                                                    <div class="w-16 h-16 rounded-full bg-titan-red/20 border border-titan-red/40 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                                                <div class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-xs z-10 transition-all duration-400 group-hover:bg-slate-950/90">
+                                                    <div class="w-16 h-16 rounded-full bg-titan-red/20 border border-titan-red/40 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-titan-red/30 transition-transform duration-400 ease-out">
                                                         <x-lucide-images class="w-8 h-8 text-titan-red" />
                                                     </div>
-                                                    <span class="text-4xl md:text-5xl font-black text-white tracking-tight">+{{ $count - 3 }}</span>
+                                                    <span class="text-4xl md:text-5xl font-black text-white tracking-tight group-hover:scale-105 transition-transform duration-400 ease-out">+{{ $count - 3 }}</span>
                                                     <span class="mt-1 text-xs font-bold text-slate-300 uppercase tracking-widest">{{ __('More Photos') }}</span>
                                                 </div>
                                             @else
-                                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-40 transition-opacity duration-300 group-hover:opacity-60"></div>
+                                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-40 group-hover:opacity-75 transition-opacity duration-400 ease-out"></div>
                                                 <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10">
-                                                    <span class="text-xs font-semibold text-white/90 truncate max-w-[75%] bg-black/40 backdrop-blur-xs px-3 py-1 rounded-full border border-white/10">
+                                                    <span class="text-xs font-semibold text-white/95 truncate max-w-[75%] bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 shadow-md transform group-hover:translate-y-[-2px] transition-transform duration-400 ease-out">
                                                         {{ $imgCaption ?: __('Photo') . ' ' . ($i + 1) }}
                                                     </span>
-                                                    <div class="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-110">
+                                                    <div class="w-9 h-9 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 scale-90 group-hover:scale-100 transition-all duration-400 ease-out shadow-lg hover:bg-titan-red text-white">
                                                         <x-lucide-zoom-in class="w-4 h-4 text-white" />
                                                     </div>
                                                 </div>
@@ -324,7 +324,7 @@
                         </div>
 
                         <!-- DISPLAY MODE 2: Showcase Carousel & Filmstrip Slider -->
-                        <div x-show="displayMode === 'carousel'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-98" x-transition:enter-end="opacity-100 scale-100">
+                        <div x-show="displayMode === 'carousel'" x-cloak x-transition:enter="transition ease-out duration-350" x-transition:enter-start="opacity-0 translate-y-3 scale-[0.99]" x-transition:enter-end="opacity-100 translate-y-0 scale-100">
                             <div class="space-y-6">
                                 <!-- Main Showcase Stage -->
                                 <div class="relative aspect-video max-h-[560px] w-full rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-2xl group">
@@ -337,24 +337,24 @@
                                             <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
                                             <div class="absolute bottom-6 left-6 right-20 flex flex-col items-start gap-2 z-10">
-                                                <span class="px-3 py-1 rounded-full bg-titan-red text-white text-[10px] font-black uppercase tracking-widest">
+                                                <span class="px-3 py-1 rounded-full bg-titan-red text-white text-[10px] font-black uppercase tracking-widest shadow-md">
                                                     {{ $i + 1 }} / {{ count($project['images']) }}
                                                 </span>
                                                 <p class="text-base md:text-lg font-bold text-white max-w-2xl drop-shadow-md">
                                                     {{ $imgCaption ?: $project['title'] }}
                                                 </p>
                                             </div>
-                                            <button type="button" @click="openLightbox({{ $i }})" class="absolute top-6 right-6 z-20 w-11 h-11 rounded-full bg-white/20 backdrop-blur-md hover:bg-titan-red transition-all flex items-center justify-center text-white cursor-pointer shadow-lg">
+                                            <button type="button" @click="openLightbox({{ $i }})" class="absolute top-6 right-6 z-20 w-11 h-11 rounded-full bg-white/20 backdrop-blur-md hover:bg-titan-red transition-all duration-300 ease-out hover:scale-110 active:scale-95 flex items-center justify-center text-white cursor-pointer shadow-lg border border-white/20">
                                                 <x-lucide-maximize-2 class="w-5 h-5" />
                                             </button>
                                         </div>
                                     @endforeach
 
                                     <!-- Carousel Nav Arrows -->
-                                    <button type="button" @click="activeSlide = (activeSlide - 1 + total) % total" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/70 backdrop-blur-md border border-white/10 hover:bg-titan-red text-white transition-all flex items-center justify-center cursor-pointer">
+                                    <button type="button" @click="activeSlide = (activeSlide - 1 + total) % total" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/70 backdrop-blur-md border border-white/10 hover:bg-titan-red hover:border-titan-red/40 text-white transition-all duration-300 ease-out hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer shadow-xl">
                                         <x-lucide-chevron-left class="w-6 h-6" />
                                     </button>
-                                    <button type="button" @click="activeSlide = (activeSlide + 1) % total" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/70 backdrop-blur-md border border-white/10 hover:bg-titan-red text-white transition-all flex items-center justify-center cursor-pointer">
+                                    <button type="button" @click="activeSlide = (activeSlide + 1) % total" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-900/70 backdrop-blur-md border border-white/10 hover:bg-titan-red hover:border-titan-red/40 text-white transition-all duration-300 ease-out hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer shadow-xl">
                                         <x-lucide-chevron-right class="w-6 h-6" />
                                     </button>
                                 </div>
@@ -366,8 +366,8 @@
                                             $imgUrl = is_array($img) ? $img['url'] : $img;
                                         @endphp
                                         <button type="button" @click="activeSlide = {{ $i }}"
-                                            :class="activeSlide === {{ $i }} ? 'ring-2 ring-titan-red scale-105 opacity-100' : 'opacity-60 hover:opacity-100'"
-                                            class="shrink-0 aspect-[4/3] w-24 md:w-32 rounded-lg overflow-hidden bg-slate-800 border border-white/10 transition-all duration-300 cursor-pointer relative">
+                                            :class="activeSlide === {{ $i }} ? 'ring-2 ring-titan-red scale-105 opacity-100 shadow-lg' : 'opacity-60 hover:opacity-100 hover:scale-102'"
+                                            class="shrink-0 aspect-[4/3] w-24 md:w-32 rounded-lg overflow-hidden bg-slate-800 border border-white/10 transition-all duration-300 ease-out cursor-pointer relative active:scale-95">
                                             <img src="{{ $imgUrl }}" alt="Thumb {{ $i + 1 }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                         </button>
                                     @endforeach
@@ -376,7 +376,7 @@
                         </div>
 
                         <!-- DISPLAY MODE 3: Masonry Mosaic Grid -->
-                        <div x-show="displayMode === 'masonry'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-98" x-transition:enter-end="opacity-100 scale-100">
+                        <div x-show="displayMode === 'masonry'" x-cloak x-transition:enter="transition ease-out duration-350" x-transition:enter-start="opacity-0 translate-y-3 scale-[0.99]" x-transition:enter-end="opacity-100 translate-y-0 scale-100">
                             <div class="columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5">
                                 @foreach($project['images'] as $i => $img)
                                     @php
@@ -384,21 +384,21 @@
                                         $imgCaption = is_array($img) ? ($img['caption'] ?? '') : '';
                                     @endphp
                                     <button type="button" @click="openLightbox({{ $i }})"
-                                        class="break-inside-avoid group rounded-2xl overflow-hidden bg-slate-800 border border-white/10 text-left transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer relative block w-full">
-                                        <div class="relative overflow-hidden">
-                                            <img src="{{ $imgUrl }}" alt="Photo {{ $i + 1 }}" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
-                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                                                <span class="text-xs font-semibold text-white flex items-center gap-2">
+                                        class="project-gallery-card break-inside-avoid group rounded-2xl overflow-hidden bg-slate-800 border border-white/10 text-left cursor-pointer relative block w-full shadow-xl hover:border-titan-red/40">
+                                        <div class="relative overflow-hidden aspect-[4/3]">
+                                            <img src="{{ $imgUrl }}" alt="Photo {{ $i + 1 }}" class="project-gallery-image absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
+                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 ease-out flex items-end p-4">
+                                                <span class="text-xs font-semibold text-white flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-400 ease-out">
                                                     <x-lucide-zoom-in class="w-4 h-4 text-titan-red shrink-0" />
                                                     <span>{{ __('Expand Image Fullscreen') }}</span>
                                                 </span>
                                             </div>
-                                            <span class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-xs text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10">
+                                            <span class="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/15 shadow-md">
                                                 {{ $i + 1 }} / {{ count($project['images']) }}
                                             </span>
                                         </div>
                                         @if($imgCaption)
-                                            <div class="p-3.5 bg-slate-900 border-t border-white/5">
+                                            <div class="p-3.5 bg-slate-900/90 border-t border-white/10">
                                                 <p class="text-xs font-medium text-slate-300 line-clamp-2">{{ $imgCaption }}</p>
                                             </div>
                                         @endif
@@ -690,13 +690,17 @@
         }
 
         .project-gallery-card {
-            transform: translateZ(0);
-            transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 420ms cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translate3d(0, 0, 0);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, box-shadow;
+            backface-visibility: hidden;
         }
 
         .project-gallery-card:hover {
-            transform: translateY(-4px) translateZ(0);
-            box-shadow: 0 24px 52px rgba(11, 43, 92, 0.18);
+            transform: translate3d(0, -6px, 0);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(227, 30, 36, 0.35);
         }
 
         .project-gallery-card:focus-visible {
@@ -705,25 +709,31 @@
         }
 
         .project-gallery-image {
-            transform: translateZ(0);
-            transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+            transform: scale(1) translate3d(0, 0, 0);
+            transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), 
+                        filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        .project-gallery-card:hover .project-gallery-image {
+            transform: scale(1.06) translate3d(0, 0, 0);
         }
 
         .project-gallery-overlay {
-            transition: background-color 420ms ease;
+            transition: background-color 0.4s ease, opacity 0.4s ease;
         }
 
         .project-gallery-card:hover .project-gallery-overlay {
-            background-color: rgb(0 0 0 / 0.04);
+            background-color: rgb(0 0 0 / 0.08);
         }
 
         .project-gallery-more {
-            transition: background-color 420ms ease;
+            transition: background-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .project-gallery-card:hover .project-gallery-more {
-            background-color: rgb(11 43 92 / 0.82);
+            background-color: rgb(11 43 92 / 0.88);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -731,11 +741,15 @@
             .project-gallery-image,
             .project-gallery-overlay,
             .project-gallery-more {
-                transition: none;
+                transition: none !important;
             }
 
             .project-gallery-card:hover {
-                transform: translateZ(0);
+                transform: none !important;
+            }
+
+            .project-gallery-card:hover .project-gallery-image {
+                transform: none !important;
             }
         }
 
