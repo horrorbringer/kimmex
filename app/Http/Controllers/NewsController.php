@@ -134,6 +134,7 @@ class NewsController extends Controller
                 'date' => $articleDb->publishedAt
                     ? $articleDb->publishedAt->format('M d, Y')
                     : $articleDb->created_at->format('M d, Y'),
+                'dateRelative' => ($articleDb->publishedAt ?: $articleDb->created_at)?->locale($locale)->diffForHumans() ?: '',
                 'publishedAt' => ($articleDb->publishedAt ?: $articleDb->created_at)->toIso8601String(),
                 'updatedAt' => $articleDb->updated_at->toIso8601String(),
                 'author' => $articleDb->getTranslation('authorName', $locale) ?: ($articleDb->author?->name ?? 'Kimmex Editorial'),

@@ -147,14 +147,10 @@
         {{-- <x-news.header :article="$article" /> --}}
 
         <!-- CONTENT -->
-        <main id="article-body" class="max-w-[1240px] mx-auto px-3 sm:px-6 py-4 sm:py-8 md:py-12">
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 sm:gap-8 lg:gap-12 items-start">
-                <article class="rounded-xl sm:rounded border border-gray-200 bg-white p-4 sm:p-6 md:p-10">
-                    <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red mb-3 sm:mb-5">
-                        {{ __('Story') }}
-                    </div>
-
-                    <div class="news-content prose prose-sm sm:prose-base md:prose-lg prose-slate max-w-none prose-p:text-titan-navy/75 prose-p:leading-relaxed prose-headings:font-bold prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
+        <main id="article-body" class="max-w-[1240px] mx-auto px-3 sm:px-6 pt-3 sm:pt-4 md:pt-6 pb-8 sm:pb-12 md:pb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 sm:gap-6 lg:gap-8 items-start">
+                <article class="rounded-xl sm:rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 md:p-8">
+                    <div class="news-content prose prose-sm sm:prose-base md:prose-lg prose-slate max-w-none first:[&>*]:mt-0 prose-p:text-titan-navy/75 prose-p:leading-relaxed prose-headings:font-bold prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
                         {!! $renderNewsContent($article['content'] ?? '') !!}
                     </div>
 
@@ -350,9 +346,15 @@
                                     <div class="text-xs sm:text-sm font-bold text-titan-navy leading-tight">
                                         {{ $article['author'] }}
                                     </div>
-                                    @if(!empty($article['date']))
+                                    @php
+                                        $displayDate = $article['dateRelative'] 
+                                            ?? (!empty($article['publishedAt']) 
+                                                ? \Illuminate\Support\Carbon::parse($article['publishedAt'])->locale(app()->getLocale())->diffForHumans() 
+                                                : ($article['date'] ?? ''));
+                                    @endphp
+                                    @if(!empty($displayDate))
                                         <div class="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-0.5">
-                                            {{ $article['date'] }}@if(!empty($article['readTime'])) · {{ str_contains($article['readTime'], 'min') ? $article['readTime'] : $article['readTime'] . ' ' . __('min read') }}@endif
+                                            {{ $displayDate }}@if(!empty($article['readTime'])) · {{ str_contains($article['readTime'], 'min') ? $article['readTime'] : $article['readTime'] . ' ' . __('min read') }}@endif
                                         </div>
                                     @endif
                                 </div>

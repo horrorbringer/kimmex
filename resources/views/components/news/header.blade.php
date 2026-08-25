@@ -9,12 +9,20 @@
                         {{ $article['category'] }}
                     </span>
 
-                    <span class="inline-flex items-center gap-1 sm:gap-1.5 text-titan-navy/60">
-                        <x-lucide-calendar class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-titan-navy/40" />
-                        <span>{{ $article['date'] }}</span>
-                    </span>
+                    @php
+                        $displayDate = $article['dateRelative'] 
+                            ?? (!empty($article['publishedAt']) 
+                                ? \Illuminate\Support\Carbon::parse($article['publishedAt'])->locale(app()->getLocale())->diffForHumans() 
+                                : ($article['date'] ?? ''));
+                    @endphp
+                    @if(!empty($displayDate))
+                        <span class="inline-flex items-center gap-1 sm:gap-1.5 text-titan-navy/60">
+                            <x-lucide-calendar class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-titan-navy/40" />
+                            <span>{{ $displayDate }}</span>
+                        </span>
 
-                    <span class="text-gray-300">·</span>
+                        <span class="text-gray-300">·</span>
+                    @endif
 
                     <span class="inline-flex items-center gap-1 sm:gap-1.5 text-titan-navy/60">
                         <x-lucide-clock class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-titan-navy/40" />
