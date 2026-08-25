@@ -300,7 +300,7 @@
 
                             <div class="p-4 md:p-5">
                                 <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-red/60 mb-1.5" x-text="project.type"></div>
-                                <h3 class="projects-title text-base font-black text-titan-navy leading-tight mb-2 group-hover:text-titan-red transition-colors uppercase tracking-tight" x-text="project.title"></h3>
+                                <h3 class="projects-title text-base font-bold text-titan-navy leading-snug mb-2 group-hover:text-titan-red transition-colors tracking-tight" x-text="project.title"></h3>
                                 <p class="text-xs text-titan-navy/45 leading-relaxed line-clamp-2 mb-3" x-text="project.summary"></p>
                                 <div class="flex items-center justify-between pt-3 border-t border-gray-100">
                                     <div class="flex items-center gap-1.5 text-[10px] font-semibold text-titan-navy/40">

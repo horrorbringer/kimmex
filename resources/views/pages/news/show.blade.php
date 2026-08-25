@@ -656,7 +656,7 @@
                                 @endif
                             </div>
                             <div class="p-4">
-                                <div class="text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors uppercase tracking-tight leading-tight">
+                                <div class="text-sm font-bold text-titan-navy group-hover:text-titan-red transition-colors tracking-tight leading-snug">
                                     {{ $relProject['title'] }}
                                 </div>
                                 @if($relProject['location'])

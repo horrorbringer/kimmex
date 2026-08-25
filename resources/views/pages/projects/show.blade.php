@@ -113,7 +113,7 @@
                 <a href="/projects" class="mb-7 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-white/75 transition hover:text-white">
                     <x-lucide-arrow-left class="h-4 w-4" /> {{ __('All Projects') }}
                 </a>
-                <h1 class="max-w-4xl font-black text-white drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'uppercase tracking-tighter leading-[0.95]' }}"
+                <h1 class="max-w-4xl font-black text-white drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'tracking-tight leading-[1.08]' }}"
                     style="font-size: {{ $contentLocale === 'km' ? 'clamp(1.75rem, 3.6vw, 3.25rem)' : 'clamp(1.75rem, 5vw, 3.5rem)' }} !important; color: white !important;">
                     {{ $project['title'] }}
                 </h1>
@@ -511,7 +511,7 @@
                                     {{ $p['type'] }}
                                 </div>
                             </div>
-                            <h3 class="projects-title text-sm font-black text-titan-navy group-hover:text-titan-red transition-colors uppercase tracking-tight leading-tight">
+                            <h3 class="projects-title text-sm font-bold text-titan-navy group-hover:text-titan-red transition-colors tracking-tight leading-snug">
                                 {{ $p['title'] }}
                             </h3>
                         </a>
