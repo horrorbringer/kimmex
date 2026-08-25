@@ -157,38 +157,26 @@
     }" class="bg-white min-h-screen text-titan-navy relative overflow-hidden">
 
         <!-- HERO -->
-        <section class="relative h-[320px] md:h-[380px] flex items-end overflow-hidden bg-titan-navy">
+        <section class="relative h-[320px] md:h-[400px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
                 <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Projects" class="w-full h-full object-cover opacity-45" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/95 via-titan-navy/50 to-titan-navy/20"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/95 via-titan-navy/55 to-titan-navy/25"></div>
             </div>
             <div class="relative z-10 w-full max-w-[1200px] mx-auto px-6 pb-10 md:pb-12">
-                <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Kimmex') }}</p>
+                <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Our Portfolio') }}</p>
                 <h1 class="font-black text-white leading-tight tracking-tight drop-shadow-sm"
                     style="font-size: clamp(1.75rem, 4vw, 2.75rem) !important; color: white !important; font-weight: 900 !important;">
                     {{ __('Our Projects') }}
                 </h1>
-                <p class="text-white/70 text-sm md:text-base mt-2 max-w-xl font-normal leading-relaxed">{{ __('Architecting the future through engineering precision.') }}</p>
+                <p class="text-white/75 text-sm md:text-base mt-2 max-w-2xl font-normal leading-relaxed">
+                    {{ __('From government infrastructure to commercial developments, each project reflects our commitment to quality, safety, and timely delivery.') }}
+                </p>
             </div>
         </section>
 
         <!-- FILTER & GRID -->
-        <section id="portfolio-grid" class="py-14 md:py-20 px-6 bg-white">
+        <section id="portfolio-grid" class="py-8 md:py-12 px-6 bg-white">
             <div class="max-w-[1200px] mx-auto">
-
-                <!-- Section Header -->
-                <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                    :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-1000 mb-10">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                        <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
-                    </div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight mb-4">{{ __('Projects Delivered') }}</h2>
-                    <p class="text-gray-500 text-sm md:text-base max-w-2xl leading-relaxed">
-                        {{ __('From government infrastructure to commercial developments, each project reflects our commitment to quality, safety, and timely delivery.') }}
-                    </p>
-                </div>
 
                 <!-- Filter Bar -->
                 <div class="sticky top-24 z-30 mb-10 pt-2 lg:top-28">
