@@ -86,18 +86,19 @@
     @push('head')
         <style>
             .service-scope-card {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease !important;
                 background-color: #ffffff !important;
                 border: 1px solid #e2e8f0 !important;
+                will-change: transform;
             }
             .service-scope-card:hover {
                 background-color: #0F172A !important;
                 border-color: #0F172A !important;
-                transform: translateY(-4px) !important;
-                box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.4) !important;
+                transform: translate3d(0, -4px, 0) !important;
+                box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.35) !important;
             }
             .service-scope-card .service-scope-icon {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
                 background-color: rgba(227, 30, 36, 0.1) !important;
                 border: 1px solid rgba(227, 30, 36, 0.2) !important;
                 color: #E31E24 !important;
@@ -106,7 +107,7 @@
                 background-color: #E31E24 !important;
                 border-color: #E31E24 !important;
                 color: #ffffff !important;
-                transform: scale(1.1) !important;
+                transform: scale(1.08) !important;
             }
             .service-scope-card .service-scope-title {
                 transition: color 0.3s ease !important;
@@ -158,38 +159,38 @@
             <div class="relative z-10">
                 <div class="mx-auto max-w-[1280px] px-5 pb-14 pt-28 sm:px-6 md:pb-20 md:pt-36 lg:pb-24">
                     <a href="/services"
-                        class="group mb-10 inline-flex min-h-11 items-center gap-3 rounded text-[10px] font-black uppercase tracking-[0.22em] text-slate-600 transition-colors duration-200 hover:text-titan-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-4">
+                        class="group mb-8 inline-flex min-h-10 items-center gap-2.5 rounded text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 transition-colors duration-200 hover:text-titan-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-4">
                         <x-lucide-arrow-left class="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-1 motion-reduce:transform-none" />
                         {{ __('Back to Services') }}
                     </a>
 
                     <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
                         <div class="max-w-2xl">
-                            <div class="mb-7 inline-flex items-center gap-3 rounded-full border border-titan-red/15 bg-white/90 px-4 py-2 shadow-sm">
+                            <div class="mb-5 inline-flex items-center gap-2.5 rounded-full border border-titan-red/15 bg-white/90 px-3.5 py-1.5 shadow-sm">
                                 <x-dynamic-component :component="$service['icon'] ?? 'lucide-building'" class="h-4 w-4 text-titan-red" />
-                                <span class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-navy/60">
+                                <span class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-navy/70">
                                     {{ __('Service Details') }}
                                 </span>
                             </div>
 
-                            <h1 class="mb-6 font-heading text-4xl font-black leading-[0.96] tracking-tight text-titan-navy sm:text-5xl lg:text-6xl">
+                            <h1 class="mb-5 font-heading text-3xl font-black leading-tight tracking-tight text-titan-navy sm:text-4xl lg:text-5xl {{ $lang === 'kh' ? 'font-khmer leading-snug' : '' }}">
                                 {{ $service['title'][$lang] }}
                             </h1>
 
-                            <x-page-view-count class="mb-6 text-titan-navy/55" />
+                            <x-page-view-count class="mb-5 text-titan-navy/55" />
 
-                            <p class="max-w-xl text-base font-medium leading-8 text-slate-600 md:text-lg md:leading-8">
+                            <p class="max-w-xl text-sm font-medium leading-relaxed text-slate-600 md:text-base md:leading-relaxed">
                                 {{ $service['summary'][$lang] ?? $service['summary']['en'] }}
                             </p>
 
                             <div class="mt-8 flex flex-wrap gap-3">
                                 <a href="#scope-of-work"
-                                    class="inline-flex min-h-11 items-center gap-2 rounded bg-titan-red px-5 text-[10px] font-black uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-titan-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-4">
+                                    class="inline-flex min-h-11 items-center gap-2 rounded-lg bg-titan-red px-5 text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 hover:bg-titan-navy shadow-sm hover:shadow">
                                     <x-lucide-list class="h-4 w-4" />
                                     {{ __('View Scope') }}
                                 </a>
                                 <a href="/contact"
-                                    class="inline-flex min-h-11 items-center gap-2 rounded border border-slate-300 bg-white px-5 text-[10px] font-black uppercase tracking-[0.16em] text-titan-navy transition-colors duration-200 hover:border-titan-navy hover:bg-titan-navy hover:!text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-titan-red focus-visible:ring-offset-4">
+                                    class="inline-flex min-h-11 items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 text-xs font-bold uppercase tracking-wider text-titan-navy transition-all duration-200 hover:border-titan-navy hover:bg-titan-navy hover:!text-white shadow-sm">
                                     <x-lucide-phone class="h-4 w-4" />
                                     {{ __('Contact Us') }}
                                 </a>
@@ -197,25 +198,25 @@
                         </div>
 
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="relative min-h-[240px] overflow-hidden rounded-2xl border border-white/70 bg-titan-navy shadow-[0_28px_70px_-35px_rgba(15,23,42,0.55)] sm:min-h-[300px] lg:min-h-[390px]">
+                            <div class="relative min-h-[240px] overflow-hidden rounded-2xl border border-white/70 bg-titan-navy shadow-[0_28px_70px_-35px_rgba(15,23,42,0.55)] sm:min-h-[300px] lg:min-h-[360px]">
                                 @if ($service['image'])
                                     <img src="{{ $service['image'] }}" alt="{{ $service['title'][$lang] }}"
                                         class="absolute inset-0 w-full h-full object-cover" loading="eager" decoding="async" />
-                                    <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/70 via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/85 via-titan-navy/20 to-transparent"></div>
                                 @else
                                     <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(227,30,36,0.15)_0%,transparent_50%)]"></div>
                                 @endif
                                 <div class="absolute bottom-0 left-0 right-0 flex items-end justify-between gap-4 p-5 md:p-7">
                                     <div>
-                                        <div class="text-[9px] font-black uppercase tracking-[0.18em] text-white/60 mb-2">
+                                        <div class="text-[9px] font-black uppercase tracking-[0.18em] text-white/60 mb-1.5">
                                             {{ __('Key Scope') }}
                                         </div>
-                                        <div class="text-white font-black text-lg uppercase tracking-normal">
+                                        <div class="text-white font-black text-lg md:text-xl tracking-tight {{ $lang === 'kh' ? 'font-khmer leading-snug' : '' }}">
                                             {{ $service['title'][$lang] }}
                                         </div>
                                     </div>
-                                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 backdrop-blur">
-                                        <x-lucide-arrow-up-right class="w-5 h-5 text-white" />
+                                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 backdrop-blur">
+                                        <x-lucide-arrow-up-right class="w-4 h-4 text-white" />
                                     </div>
                                 </div>
                             </div>
@@ -245,8 +246,36 @@
             </div>
         </section>
 
+        <!-- === STICKY SECTION QUICK NAVIGATION === -->
+        <nav class="sticky top-20 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+            <div class="mx-auto max-w-[1280px] px-5 sm:px-6 flex items-center gap-2 overflow-x-auto py-2.5 no-scrollbar text-xs font-bold uppercase tracking-wider text-slate-600">
+                <a href="#service-overview" class="px-3.5 py-1.5 rounded-full hover:bg-slate-100 hover:text-titan-red transition-colors whitespace-nowrap">
+                    {{ __('Overview') }}
+                </a>
+                @if (!empty($service['scopeItems'] ?? []))
+                    <a href="#scope-of-work" class="px-3.5 py-1.5 rounded-full hover:bg-slate-100 hover:text-titan-red transition-colors whitespace-nowrap">
+                        {{ $lang === 'kh' ? 'វិសាលភាព' : 'Scope' }}
+                    </a>
+                @endif
+                <a href="#process-roadmap" class="px-3.5 py-1.5 rounded-full hover:bg-slate-100 hover:text-titan-red transition-colors whitespace-nowrap">
+                    {{ $lang === 'kh' ? 'ដំណើរការ' : 'Process' }}
+                </a>
+                <a href="#why-choose-us" class="px-3.5 py-1.5 rounded-full hover:bg-slate-100 hover:text-titan-red transition-colors whitespace-nowrap">
+                    {{ $lang === 'kh' ? 'គុណតម្លៃ' : 'Why Choose Us' }}
+                </a>
+                @if ($featuredProjects !== [])
+                    <a href="#featured-projects" class="px-3.5 py-1.5 rounded-full hover:bg-slate-100 hover:text-titan-red transition-colors whitespace-nowrap">
+                        {{ __('Featured Projects') }}
+                    </a>
+                @endif
+                <a href="/contact" class="ml-auto px-4 py-1.5 rounded-full bg-titan-red text-white hover:bg-titan-navy transition-colors whitespace-nowrap">
+                    {{ __('Inquire Now') }}
+                </a>
+            </div>
+        </nav>
+
         <!-- === 2. SERVICE OVERVIEW === -->
-        <section class="mx-auto max-w-[1280px] px-5 py-16 sm:px-6 md:py-24">
+        <section id="service-overview" class="mx-auto max-w-[1280px] px-5 py-16 sm:px-6 md:py-24">
             <div class="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-[0_20px_60px_-45px_rgba(15,23,42,0.45)] md:p-10 lg:p-12">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
@@ -321,17 +350,17 @@
         @endif
 
         <!-- === 4. PROCESS / HOW WE DELIVER === -->
-        <section class="py-10 md:py-14 px-4 md:px-6 bg-white">
+        <section id="process-roadmap" class="py-12 md:py-16 px-4 md:px-6 bg-white border-b border-slate-200/70">
             <div class="max-w-[1400px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                     class="text-center max-w-2xl mx-auto mb-10 md:mb-16 transition-all duration-1000">
                     <span
                         class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'ដំណើរការរបស់យើង' : 'Our Process' }}</span>
-                    <h2 class="text-xl md:text-2xl font-bold text-titan-navy mb-4">
+                    <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy mb-3">
                         {{ $lang === 'kh' ? 'មាគ៌ាឆ្ពោះទៅរកភាពជោគជ័យ' : 'The Path to Success' }}
                     </h2>
-                    <p class="text-gray-500 text-sm">
+                    <p class="text-slate-500 text-sm md:text-base">
                         {{ $lang === 'kh' ? 'វិធីសាស្រ្តដែលមានរចនាសម្ព័ន្ធ និងតម្លាភាពដើម្បីធានាភាពជោគជ័យនៃគម្រោងរបស់អ្នក។' : 'A transparent, structured approach to ensure your project\'s success.' }}
                     </p>
                 </div>
@@ -352,7 +381,7 @@
                                 <div class="relative mb-8 md:mb-16 flex justify-center">
                                     <!-- Large Background Number -->
                                     <div
-                                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[64px] md:text-[80px] font-black text-gray-50 group-hover:text-titan-red/[0.05] transition-colors duration-500 pointer-events-none z-0 tracking-tighter leading-none select-none">
+                                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[64px] md:text-[80px] font-black text-slate-100 group-hover:text-titan-red/[0.05] transition-colors duration-500 pointer-events-none z-0 tracking-tighter leading-none select-none">
                                         {{ $step['step'] }}
                                     </div>
 
@@ -371,7 +400,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Step Number Badge (Orange box with white border) -->
+                                    <!-- Step Number Badge -->
                                     <div
                                         class="absolute -bottom-1 -right-3 md:-bottom-2 md:-right-4 w-10 h-10 md:w-11 md:h-11 bg-titan-red rounded flex items-center justify-center border-[4px] border-white z-20 transition-transform duration-500 group-hover:scale-110 shadow-sm">
                                         <span
@@ -381,10 +410,10 @@
 
                                 <div class="px-2">
                                     <h3
-                                        class="text-xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors duration-300">
+                                        class="text-lg md:text-xl font-bold text-titan-navy mb-2 group-hover:text-titan-red transition-colors duration-300 {{ $lang === 'kh' ? 'font-khmer leading-snug' : '' }}">
                                         {{ $step['title'][$lang] }}
                                     </h3>
-                                    <p class="text-sm text-gray-500 leading-relaxed max-w-[240px] mx-auto">
+                                    <p class="text-sm text-slate-500 leading-relaxed max-w-[240px] mx-auto">
                                         {{ $step['desc'][$lang] }}
                                     </p>
                                 </div>
@@ -396,7 +425,7 @@
         </section>
 
         <!-- === 5. KEY BENEFITS === -->
-        <section class="max-w-6xl mx-auto py-12 md:py-16 px-5 md:px-6">
+        <section id="why-choose-us" class="max-w-6xl mx-auto py-12 md:py-16 px-5 md:px-6">
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                 class="text-center mb-10 md:mb-16 transition-all duration-1000">
@@ -419,10 +448,10 @@
                                 class="w-6 h-6 text-titan-red" stroke-width="1.5" />
                         </div>
                         <h3
-                            class="text-xl md:text-2xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors">
+                            class="text-xl md:text-2xl font-bold text-titan-navy mb-3 group-hover:text-titan-red transition-colors {{ $lang === 'kh' ? 'font-khmer leading-snug' : '' }}">
                             {{ $benefit['title'][$lang] }}
                         </h3>
-                        <p class="text-titan-navy/90 leading-relaxed">
+                        <p class="text-titan-navy/90 leading-relaxed text-sm">
                             {{ $benefit['desc'][$lang] }}
                         </p>
                     </div>
@@ -432,56 +461,56 @@
 
         <!-- === 6. FEATURED PROJECTS === -->
         @if ($featuredProjects !== [])
-        <section class="py-10 md:py-14 bg-gray-50 text-titan-navy px-4 md:px-6">
+        <section id="featured-projects" class="py-14 md:py-20 bg-slate-100/70 text-titan-navy px-4 md:px-6 border-t border-slate-200/70">
             <div class="max-w-[1400px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-10 md:mb-16 border-b border-gray-200 pb-6 md:pb-8 transition-all duration-1000">
+                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-10 md:mb-14 border-b border-slate-200 pb-6 md:pb-8 transition-all duration-1000">
                     <div>
                         <span
-                            class="text-titan-red font-bold uppercase tracking-widest text-xs mb-3 block">{{ $lang === 'kh' ? 'ស្នាដៃ' : 'Portfolio' }}</span>
-                        <h2 class="text-xl md:text-2xl font-bold text-titan-navy">{{ __('Featured Projects') }}</h2>
+                            class="text-titan-red font-bold uppercase tracking-widest text-xs mb-2 block">{{ $lang === 'kh' ? 'ស្នាដៃ' : 'Portfolio' }}</span>
+                        <h2 class="text-2xl md:text-3xl font-heading font-black text-titan-navy">{{ __('Featured Projects') }}</h2>
                     </div>
                     <a href="/projects"
-                        class="px-5 md:px-8 py-3 bg-titan-navy hover:bg-titan-red text-white transition-all font-bold uppercase tracking-widest text-xs md:text-sm flex items-center gap-2 rounded-lg">
+                        class="px-5 md:px-7 py-3 bg-titan-navy hover:bg-titan-red text-white transition-all font-bold uppercase tracking-wider text-xs md:text-sm flex items-center gap-2 rounded-lg shadow-sm">
                         {{ $lang === 'kh' ? 'មើលគម្រោងទាំងអស់' : 'View All Projects' }} <x-lucide-arrow-right
                             class="w-4 h-4 text-white" />
                     </a>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-5 md:gap-10">
+                <div class="flex flex-wrap justify-center gap-5 md:gap-8">
                     @foreach ($featuredProjects as $i => $project)
                         <div x-data="{ shown: false }" x-intersect.once="shown = true"
                             style="transition-delay: {{ $i * 100 }}ms"
                             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                            class="w-full md:w-[calc(50%-1.25rem)] transition-all duration-1000">
+                            class="w-full md:w-[calc(50%-1rem)] transition-all duration-1000">
                             <a href="{{ route('projects.show', ['slug' => $project['slug']]) }}"
-                                class="group relative aspect-[4/3] sm:aspect-[16/9] overflow-hidden rounded cursor-pointer block shadow-lg md:shadow-2xl h-full">
+                                class="group relative aspect-[4/3] sm:aspect-[16/9] overflow-hidden rounded-2xl cursor-pointer block shadow-md hover:shadow-xl transition-shadow h-full border border-slate-200/80">
                                 <img src="{{ $project['image'] }}" alt="{{ $project['title'] }}"
                                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                     loading="lazy" decoding="async" />
                                 <div
-                                    class="absolute inset-0 bg-gradient-to-t from-titan-navy via-titan-navy/40 to-transparent opacity-95 group-hover:opacity-80 transition-opacity">
+                                    class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-transparent group-hover:from-titan-navy/95 transition-colors">
                                 </div>
 
                                 <div class="absolute bottom-0 left-0 p-5 md:p-6 w-full">
                                     <div
-                                        class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                        class="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                                         <span
-                                            class="inline-block bg-titan-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded mb-3">{{ $project['category'] }}</span>
-                                        <h3 class="text-xl md:text-lg font-bold !text-white mb-2 leading-tight">
+                                            class="inline-block bg-titan-red text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md mb-2.5 shadow-sm">{{ $project['category'] }}</span>
+                                        <h3 class="text-lg md:text-xl font-bold !text-white mb-2 leading-snug drop-shadow-sm">
                                             {{ $project['title'] }}
                                         </h3>
-                                        <div class="flex items-center gap-2 text-white/100 text-sm">
-                                            <x-lucide-map-pin class="w-4 h-4 text-titan-red" />
+                                        <div class="flex items-center gap-1.5 text-white/85 text-xs md:text-sm">
+                                            <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red" />
                                             {{ $project['location'] }}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div
-                                    class="absolute top-6 right-6 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all duration-300">
-                                    <x-lucide-arrow-right class="w-5 h-5 text-white" />
+                                    class="absolute top-5 right-5 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300 border border-white/20">
+                                    <x-lucide-arrow-right class="w-4 h-4 text-white" />
                                 </div>
                             </a>
                         </div>
@@ -512,7 +541,7 @@
                         {{ $lang === 'kh' ? 'ទាក់ទងក្រុមការងារជំនាញរបស់យើងថ្ងៃនេះ សម្រាប់ការពិគ្រោះយោបល់ និងការសិក្សាសមិទ្ធភាពដោយឥតគិតថ្លៃ។' : 'Contact our expert team today for a free consultation and feasibility study.' }}
                     </p>
                     <a href="/contact"
-                        class="group inline-flex min-h-12 items-center gap-2 rounded bg-titan-red px-6 py-3 text-xs font-black uppercase tracking-[0.16em] text-white transition-colors duration-200 hover:bg-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-titan-navy md:px-10 md:py-4">
+                        class="group inline-flex min-h-12 items-center gap-2 rounded-xl bg-titan-red px-6 py-3 text-xs font-black uppercase tracking-[0.16em] text-white transition-all duration-200 hover:bg-white hover:!text-titan-navy shadow-lg hover:shadow-xl md:px-10 md:py-4">
                         {{ $lang === 'kh' ? 'ស្នើសុំការប្រឹក្សា' : 'Request Quote' }} <x-lucide-arrow-right
                             class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </a>
