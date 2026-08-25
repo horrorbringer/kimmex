@@ -147,7 +147,7 @@
         {{-- <x-news.header :article="$article" /> --}}
 
         <!-- CONTENT -->
-        <main id="article-body" class="max-w-[1240px] mx-auto px-3 sm:px-6 pt-3 sm:pt-4 md:pt-6 pb-8 sm:pb-12 md:pb-16">
+        <main id="article-body" class="max-w-[1240px] mx-auto px-3 sm:px-6 pt-3 sm:pt-4 md:pt-3 pb-8 sm:pb-12 md:pb-16">
             <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 sm:gap-6 lg:gap-8 items-start">
                 <article class="rounded-xl sm:rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 md:p-8">
                     <div class="news-content prose prose-sm sm:prose-base md:prose-lg prose-slate max-w-none first:[&>*]:mt-0 prose-p:text-titan-navy/75 prose-p:leading-relaxed prose-headings:font-bold prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
