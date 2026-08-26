@@ -12,7 +12,7 @@
             <div class="min-w-0 flex items-baseline gap-2">
                 <span
                     class="text-titan-red font-bold uppercase tracking-widest text-[8px] sm:text-[10px] md:text-sm block whitespace-nowrap">{{ __('News & Updates') }}</span>
-                <h2 class="text-base sm:text-2xl md:text-4xl font-heading font-black text-titan-navy leading-tight whitespace-nowrap">{{ __('Latest Insights') }}</h2>
+                <h2 class="!text-lg sm:text-2xl md:text-3xl font-heading font-black text-titan-navy leading-tight whitespace-nowrap">{{ __('Latest Insights') }}</h2>
             </div>
             <a href="/news"
                 class="inline-flex items-center gap-1 md:gap-2 text-titan-red font-bold uppercase tracking-widest text-[8px] sm:text-[10px] md:text-sm hover:text-titan-navy transition-colors whitespace-nowrap shrink-0">
@@ -42,7 +42,7 @@
                                 <x-lucide-calendar class="w-3.5 h-3.5" /> {{ $news['date'] }}
                             </div>
                             <h3
-                                class="text-xl font-heading font-bold text-titan-navy group-hover:text-accent-orange transition-colors duration-300 ease-out leading-tight mb-4">
+                                class="!text-xl font-heading font-bold text-titan-navy group-hover:text-accent-orange transition-colors duration-300 ease-out leading-tight mb-4">
                                 {{ $news['title'] }}
                             </h3>
                             <span class="text-sm font-bold text-accent-orange flex items-center gap-2 mt-auto">

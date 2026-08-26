@@ -14,8 +14,8 @@
                     <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">Our Journey</span>
                     <span class="h-px w-10 bg-titan-red"></span>
                 </div>
-                <h2 class="font-heading text-3xl font-black tracking-tight text-titan-navy md:text-5xl">A legacy built milestone by milestone</h2>
-                <p class="mx-auto mt-4 max-w-xl text-base leading-relaxed text-titan-navy/60">{{ __('From our first foundation to the projects shaping Cambodia today.') }}</p>
+                <h2 class="font-heading !text-xl font-black tracking-tight text-titan-navy md:text-5xl">A legacy built milestone by milestone</h2>
+                <p class="mx-auto mt-4 max-w-xl !text-base leading-relaxed text-titan-navy/60">{{ __('From our first foundation to the projects shaping Cambodia today.') }}</p>
             </div>
 
             <div x-data="{

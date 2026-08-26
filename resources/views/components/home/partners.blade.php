@@ -15,7 +15,7 @@
                 </span>
                 <span class="h-px w-8" style="background: var(--primary-color, #E31E24);"></span>
             </div>
-            <h2 class="font-heading text-2xl font-black tracking-tight text-titan-navy md:text-4xl">
+            <h2 class="font-heading !text-xl font-black tracking-tight text-titan-navy md:text-4xl">
                 {{ __('Trusted By Leading Institutions') }}
             </h2>
             <p class="mt-3 max-w-xl text-sm leading-relaxed text-titan-navy/60 md:text-base">

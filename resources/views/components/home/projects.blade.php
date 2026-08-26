@@ -14,14 +14,14 @@
             <div class="flex flex-nowrap items-center gap-3 md:gap-5 min-w-0">
                 <div class="flex items-center gap-3">
                     <div class="hidden sm:block w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                    <span class="font-bold uppercase tracking-[0.12em] sm:tracking-[0.2em] text-[10px] sm:text-xs whitespace-nowrap" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
+                    <span class="font-bold uppercase tracking-[0.12em] sm:tracking-[0.2em] !text-[10px] sm:text-xl whitespace-nowrap" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
                 </div>
-                <h2 class="text-xl sm:text-3xl md:text-4xl font-heading font-black text-gray-900 tracking-tight whitespace-nowrap">
+                <h2 class="!text-lg md:text-3xl lg:text-4xl font-heading font-black text-gray-900 tracking-tight whitespace-nowrap">
                     {{ __('Featured Projects') }}
                 </h2>
             </div>
             <a href="/projects"
-                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider text-[10px] sm:text-xs whitespace-nowrap group transition-colors duration-300 ease-out"
+                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider !text-[10px] sm:text-xs whitespace-nowrap group transition-colors duration-300 ease-out"
                 style="color: var(--primary-color, #E31E24);">
                 {{ __('View All Projects') }}
                 <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out motion-reduce:transform-none" />

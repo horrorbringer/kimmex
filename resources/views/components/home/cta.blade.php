@@ -10,7 +10,7 @@
             {{-- Left: Text --}}
             <div class="text-center lg:text-left max-w-xl">
                 <span class="mb-3 block text-[10px] font-bold uppercase tracking-[0.2em] text-white/50">{{ __('Let’s build with confidence') }}</span>
-                <h2 class="text-3xl md:text-4xl font-heading font-black leading-tight tracking-tight mb-4" style="color: #FFFFFF;">
+                <h2 class="!text-xl md:text-2xl font-heading font-black leading-tight tracking-tight mb-4" style="color: #FFFFFF;">
                     {{ __('Ready to Start Your Project?') }}
                 </h2>
                 <p class="text-base md:text-lg leading-relaxed" style="color: rgba(255,255,255,0.6);">
