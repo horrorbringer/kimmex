@@ -121,21 +121,11 @@
                     @endif
                 </div>
 
-                <h1 class="max-w-4xl font-black text-white drop-shadow-2xl {{ $contentLocale === 'km' ? 'tracking-normal leading-[1.28]' : 'tracking-tight leading-[1.08]' }}"
-                    style="font-size: {{ $contentLocale === 'km' ? 'clamp(1.75rem, 3.6vw, 3.25rem)' : 'clamp(1.75rem, 5vw, 3.5rem)' }} !important; color: white !important;">
+                <h1 class="max-w-3xl font-heading font-black !text-white drop-shadow-md !text-xl sm:!text-2xl md:!text-3xl lg:!text-4xl {{ $contentLocale === 'km' ? 'font-khmer leading-snug tracking-normal' : 'leading-tight tracking-tight' }}">
                     {{ $project['title'] }}
                 </h1>
 
-                <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-semibold text-white/90 {{ $contentLocale === 'km' ? 'tracking-normal' : 'uppercase tracking-[0.14em]' }}">
-                    @if(!empty($project['location']))
-                        <div class="flex items-center gap-2">
-                            <x-lucide-map-pin class="h-4 w-4 shrink-0 text-titan-red" />
-                            <span>{{ $project['location'] }}</span>
-                        </div>
-                    @endif
-                    @if(!empty($project['location']) && !empty($project['status']))
-                        <span class="h-1 w-1 rounded-full bg-titan-red"></span>
-                    @endif
+                <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 !text-sm font-semibold text-white/90 {{ $contentLocale === 'km' ? 'tracking-normal' : ' tracking-[0.14em]' }}">
                     @if(!empty($project['status']))
                         <span class="inline-flex items-center gap-1.5">
                             <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
@@ -190,8 +180,8 @@
                     </div>
                 @endif
 
-                <div id="project-share" class="mx-auto mt-4 flex max-w-3xl items-center gap-5 border-t border-titan-navy/10 pt-7 md:mt-8">
-                    <p class="shrink-0 text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/40">{{ __('Share') }}</p>
+                <div id="project-share" class="mx-auto mt-4 flex max-w-3xl items-center gap-2.5 sm:gap-3.5 border-t border-titan-navy/10 pt-6 md:mt-8 flex-nowrap overflow-x-auto">
+                    <p class="shrink-0 !text-[10px] font-black uppercase tracking-[0.18em] text-titan-navy/40">{{ __('Share') }}</p>
                     <x-social-share
                         :url="route('projects.show', ['slug' => $project['slug']])"
                         :title="$project['title']"
@@ -241,47 +231,48 @@
             @keydown.arrow-left.window="lightboxOpen && prev()"
             @keydown.arrow-right.window="lightboxOpen && next()"
             >
-                <section id="project-gallery" class="bg-slate-950 py-12 md:py-16 px-4 md:px-6 text-white border-y border-white/10" style="background-color: #090e1a;">
-                    <div class="max-w-[1400px] mx-auto">
+                <section id="project-gallery" class="bg-slate-950 py-8 md:py-12 text-white border-y border-white/10" style="background-color: #090e1a;">
+                    <div class="max-w-7xl mx-auto px-5 sm:px-6">
                         
                         <!-- Header & Display Switcher Controls -->
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 md:mb-10 pb-6 border-b border-white/10">
-                            <div>
-                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-titan-red/20 text-titan-red text-xs font-bold uppercase tracking-widest mb-3 border border-titan-red/30">
-                                    <x-lucide-camera class="w-3.5 h-3.5" />
-                                    <span>{{ __('Visual Showcase') }}</span>
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8 pb-5 border-b border-white/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-1.5 h-6 rounded-full bg-titan-red shrink-0"></div>
+                                <div class="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                                    <span class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-titan-red">
+                                        {{ __('Visual Showcase') }}
+                                    </span>
+                                    <span class="text-white/30 hidden sm:inline">•</span>
+                                    <h2 class="font-heading font-black !text-white text-lg sm:text-xl md:text-2xl tracking-tight leading-tight inline-flex items-baseline gap-1.5" style="color: #ffffff !important;">
+                                        {{ __('Project Gallery') }}
+                                        <span class="text-xs sm:text-sm font-semibold !text-white/40 font-sans">({{ count($project['images']) }})</span>
+                                    </h2>
                                 </div>
-                                <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight" style="color: #ffffff !important;">
-                                    {{ __('Project Media & Gallery') }}
-                                </h2>
-                                <p class="text-xs md:text-sm text-slate-400 mt-1 font-medium max-w-xl" style="color: #94a3b8 !important;">
-                                    {{ __('Explore high-resolution project photography with multi-angle visual displays and interactive fullscreen viewer.') }}
-                                </p>
                             </div>
 
                             <!-- Display Mode Tabs Switcher -->
-                            <div class="flex flex-wrap items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-white/15 shadow-xl">
+                            <div class="inline-flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/10 shrink-0 self-start md:self-auto overflow-x-auto max-w-full">
                                 <button type="button" @click="displayMode = 'bento'"
-                                    :class="displayMode === 'bento' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all duration-300 ease-out active:scale-95 cursor-pointer">
-                                    <x-lucide-layout-grid class="w-4 h-4" />
-                                    <span>{{ __('Bento Grid') }}</span>
+                                    :class="displayMode === 'bento' ? 'bg-titan-red text-white shadow-xs' : 'text-white/70 hover:text-white hover:bg-white/5'"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shrink-0">
+                                    <x-lucide-layout-grid class="w-3.5 h-3.5" />
+                                    <span>{{ __('Grid') }}</span>
                                 </button>
                                 <button type="button" @click="displayMode = 'carousel'"
-                                    :class="displayMode === 'carousel' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all duration-300 ease-out active:scale-95 cursor-pointer">
-                                    <x-lucide-film class="w-4 h-4" />
-                                    <span>{{ __('Showcase Carousel') }}</span>
+                                    :class="displayMode === 'carousel' ? 'bg-titan-red text-white shadow-xs' : 'text-white/70 hover:text-white hover:bg-white/5'"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shrink-0">
+                                    <x-lucide-film class="w-3.5 h-3.5" />
+                                    <span>{{ __('Carousel') }}</span>
                                 </button>
                                 <button type="button" @click="displayMode = 'masonry'"
-                                    :class="displayMode === 'masonry' ? 'bg-titan-red text-white shadow-md' : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700'"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all duration-300 ease-out active:scale-95 cursor-pointer">
-                                    <x-lucide-columns class="w-4 h-4" />
+                                    :class="displayMode === 'masonry' ? 'bg-titan-red text-white shadow-xs' : 'text-white/70 hover:text-white hover:bg-white/5'"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shrink-0">
+                                    <x-lucide-columns class="w-3.5 h-3.5" />
                                     <span>{{ __('Masonry') }}</span>
                                 </button>
                                 <button type="button" @click="openLightbox(0)"
-                                    class="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-white/10 hover:bg-white/20 text-white transition-all duration-300 ease-out active:scale-95 cursor-pointer border border-white/20 hover:border-white/40">
-                                    <x-lucide-maximize-2 class="w-4 h-4 text-titan-red" />
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/20 transition-all duration-200 cursor-pointer border border-white/15 shrink-0">
+                                    <x-lucide-maximize-2 class="w-3.5 h-3.5 text-titan-red" />
                                     <span>{{ __('Fullscreen') }}</span>
                                 </button>
                             </div>
