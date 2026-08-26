@@ -64,7 +64,7 @@
 
             {{-- Right: Text Content --}}
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
-                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'"
                 class="transition-all duration-700 ease-out delay-150 motion-reduce:transition-none">
 
                 <div class="flex items-center gap-3 mb-5">
@@ -72,7 +72,7 @@
                     <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('About Us') }}</span>
                 </div>
 
-                <h2 class="text-3xl md:text-4xl font-heading font-black text-gray-900 leading-tight mb-6 tracking-tight">
+                <h2 class="!text-lg md:!text-xl font-heading font-black text-gray-900 leading-tight !mb-3 tracking-tight">
                     {{ $tagline }}
                 </h2>
 
