@@ -243,7 +243,7 @@
                                         {{ __('Visual Showcase') }}
                                     </span>
                                     <span class="text-white/30 hidden sm:inline">•</span>
-                                    <h2 class="font-heading font-black !text-white text-lg sm:text-xl md:text-2xl tracking-tight leading-tight inline-flex items-baseline gap-1.5" style="color: #ffffff !important;">
+                                    <h2 class="font-heading font-black !text-white text-lg sm:text-xl md:text-2xl tracking-tight leading-tight inline-flex items-baseline gap-1.5 {{ $contentLocale === 'km' ? 'font-khmer leading-snug' : '' }}" style="color: #ffffff !important;">
                                         {{ __('Project Gallery') }}
                                         <span class="text-xs sm:text-sm font-semibold !text-white/40 font-sans">({{ count($project['images']) }})</span>
                                     </h2>
@@ -251,30 +251,34 @@
                             </div>
 
                             <!-- Display Mode Tabs Switcher -->
-                            <div class="inline-flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/10 shrink-0 self-start md:self-auto overflow-x-auto max-w-full">
-                                <button type="button" @click="displayMode = 'bento'"
+                            <div class="inline-flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/10 shrink-0 self-start md:self-auto overflow-x-auto max-w-full" role="tablist">
+                                <button type="button" @click="displayMode = 'bento'" role="tab" :aria-selected="displayMode === 'bento'"
                                     :class="displayMode === 'bento' ? 'bg-titan-red text-white shadow-xs' : 'text-white/70 hover:text-white hover:bg-white/5'"
                                     class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shrink-0">
                                     <x-lucide-layout-grid class="w-3.5 h-3.5" />
                                     <span>{{ __('Grid') }}</span>
                                 </button>
-                                <button type="button" @click="displayMode = 'carousel'"
+                                <button type="button" @click="displayMode = 'carousel'" role="tab" :aria-selected="displayMode === 'carousel'"
                                     :class="displayMode === 'carousel' ? 'bg-titan-red text-white shadow-xs' : 'text-white/70 hover:text-white hover:bg-white/5'"
                                     class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shrink-0">
                                     <x-lucide-film class="w-3.5 h-3.5" />
                                     <span>{{ __('Carousel') }}</span>
                                 </button>
-                                <button type="button" @click="displayMode = 'masonry'"
+                                <button type="button" @click="displayMode = 'masonry'" role="tab" :aria-selected="displayMode === 'masonry'"
                                     :class="displayMode === 'masonry' ? 'bg-titan-red text-white shadow-xs' : 'text-white/70 hover:text-white hover:bg-white/5'"
                                     class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shrink-0">
                                     <x-lucide-columns class="w-3.5 h-3.5" />
                                     <span>{{ __('Masonry') }}</span>
                                 </button>
-                                <button type="button" @click="openLightbox(0)"
-                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/20 transition-all duration-200 cursor-pointer border border-white/15 shrink-0">
-                                    <x-lucide-maximize-2 class="w-3.5 h-3.5 text-titan-red" />
-                                    <span>{{ __('Fullscreen') }}</span>
-                                </button>
+                                
+                                {{-- Fullscreen Action with Divider --}}
+                                <div class="border-l border-white/15 pl-1 ml-0.5 shrink-0">
+                                    <button type="button" @click="openLightbox(0)"
+                                        class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white/90 hover:text-white bg-white/10 hover:bg-white/20 transition-all duration-200 cursor-pointer border border-white/15 shrink-0">
+                                        <x-lucide-maximize-2 class="w-3.5 h-3.5 text-titan-red" />
+                                        <span>{{ __('Fullscreen') }}</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 

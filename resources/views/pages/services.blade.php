@@ -22,25 +22,38 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
 
 <div class="bg-white text-gray-900">
 
-    <!-- ═══ HERO ═══ -->
-    <section class="relative h-[380px] md:h-[440px] flex items-end overflow-hidden bg-titan-navy">
+    <!-- ═══ 1. MODERN LIGHT HERO ═══ -->
+    <section class="relative overflow-hidden border-b border-slate-200 bg-slate-50">
         <div class="absolute inset-0">
             <img src="/images/webp/projects/Thumbnail-1.webp" alt="{{ __('Our Services') }}"
-                class="w-full h-full object-cover opacity-40" loading="eager" decoding="async" fetchpriority="high" />
-            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/95 via-titan-navy/60 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-transparent to-transparent"></div>
+                class="w-full h-full object-cover opacity-30 scale-105 object-center" style="opacity: 0.3 !important;" decoding="async" loading="eager" fetchpriority="high" />
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-50 via-slate-50/85 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-50/90 via-transparent to-slate-50/40"></div>
         </div>
-        <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-12 md:pb-16">
-            <nav class="flex items-center gap-2 text-xs mb-4 text-white/60 font-medium">
-                <a href="/" class="hover:text-white transition-colors">{{ __('Home') }}</a>
-                <x-lucide-chevron-right class="w-3.5 h-3.5 text-white/40" />
-                <span class="text-white font-semibold">{{ __('Services') }}</span>
+
+        <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-12 pt-28 sm:px-6 md:pb-16 md:pt-36">
+            {{-- Breadcrumb --}}
+            <nav class="flex items-center gap-2 text-xs mb-4 text-slate-400 font-medium">
+                <a href="/" class="hover:text-titan-red transition-colors">{{ __('Home') }}</a>
+                <x-lucide-chevron-right class="w-3.5 h-3.5 text-slate-300" />
+                <span class="text-titan-navy font-semibold">{{ __('Services') }}</span>
             </nav>
-            <h1 class="font-black text-white leading-tight tracking-tight drop-shadow-sm mb-3"
-                style="font-size: clamp(2rem, 5vw, 3.25rem) !important; color: white !important;">
+
+            {{-- Eyebrow --}}
+            <div class="flex items-center gap-2.5 mb-2.5">
+                <span class="h-[2px] w-8 bg-titan-red"></span>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-titan-red">
+                    {{ __('Capabilities & Expertise') }}
+                </span>
+            </div>
+
+            {{-- Title --}}
+            <h1 class="font-heading font-black text-titan-navy text-2xl sm:text-4xl md:text-5xl leading-tight tracking-tight mb-3 {{ app()->getLocale() === 'km' ? 'font-khmer leading-snug' : '' }}">
                 {{ __('Our Services') }}
             </h1>
-            <p class="max-w-xl text-white/75 text-sm md:text-base leading-relaxed font-normal">
+
+            {{-- Description --}}
+            <p class="max-w-2xl text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
                 {{ __('Comprehensive construction and engineering solutions delivering excellence across Cambodia.') }}
             </p>
         </div>

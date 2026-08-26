@@ -357,7 +357,7 @@
                     image.setAttribute('decoding', 'async');
                 }
 
-                const isHero = index === 0 || image.closest('header') || image.closest('[data-priority-image]');
+                const isHero = index === 0 || image.closest('header') || image.closest('section') || image.closest('[data-priority-image]');
 
                 if (!image.hasAttribute('loading')) {
                     image.setAttribute('loading', isHero ? 'eager' : 'lazy');
@@ -367,22 +367,22 @@
                 if (!isHero) {
                     image.style.opacity = '0';
                     image.style.transition = 'opacity 0.4s ease';
-                }
 
-                image.addEventListener('load', () => {
+                    const reveal = () => {
+                        image.dataset.imageLoaded = 'true';
+                        if (image.style.opacity === '0') {
+                            image.style.opacity = '';
+                        }
+                    };
+
+                    image.addEventListener('load', reveal, { once: true });
+                    image.addEventListener('error', reveal, { once: true });
+
+                    if (image.complete && image.naturalHeight > 0) {
+                        reveal();
+                    }
+                } else {
                     image.dataset.imageLoaded = 'true';
-                    image.style.opacity = '1';
-                }, { once: true });
-
-                image.addEventListener('error', () => {
-                    image.dataset.imageError = 'true';
-                    image.style.opacity = '1';
-                }, { once: true });
-
-                // If already loaded (cached), show immediately
-                if (image.complete && image.naturalHeight > 0) {
-                    image.dataset.imageLoaded = 'true';
-                    image.style.opacity = '1';
                 }
             });
         });
