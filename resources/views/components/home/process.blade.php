@@ -8,15 +8,20 @@
     <div class="max-w-[1280px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="grid gap-6 border-b border-titan-navy/10 pb-10 transition-all duration-700 ease-out motion-reduce:transition-none lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
-            <div class="flex items-center justify-between">
-                <div class="mb-5 flex items-center gap-3">
-                    <span class="h-px w-10 bg-titan-red"></span>
-                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">{{ __('Our Process') }}</span>
-                </div>
-                <h2 class="font-heading !text-xl sm:text-2xl font-black tracking-tight text-titan-navy md:text-5xl">{{ __('How We Deliver') }}</h2>
+            class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 md:gap-6 border-b border-titan-navy/10 pb-8 md:pb-10 transition-all duration-700 ease-out motion-reduce:transition-none">
+            <div class="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 shrink-0">
+                <span class="hidden sm:block h-[2px] w-6 sm:w-8 md:w-10 bg-titan-red shrink-0"></span>
+                <span class="text-[9px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest text-titan-red whitespace-nowrap shrink-0">
+                    {{ __('Our Process') }}
+                </span>
+                <span class="text-gray-300 hidden sm:inline">&bull;</span>
+                <h2 class="!text-lg sm:!text-2xl md:!text-3xl font-heading font-black text-titan-navy tracking-tight whitespace-nowrap">
+                    {{ __('How We Deliver') }}
+                </h2>
             </div>
-            <p class="max-w-lg text-base leading-relaxed text-titan-navy/60 lg:pb-1 md:text-lg">{{ __('A proven methodology that ensures quality, safety, and on-time delivery.') }}</p>
+            <p class="text-xs sm:text-sm md:text-base leading-relaxed text-titan-navy/60 lg:text-right max-w-xl">
+                {{ __('A proven methodology that ensures quality, safety, and on-time delivery.') }}
+            </p>
         </div>
 
         <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">

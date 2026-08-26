@@ -10,20 +10,20 @@
         {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex flex-nowrap items-center justify-between gap-3 md:gap-6 mb-12 transition-all duration-700 ease-out motion-reduce:transition-none">
-            <div class="flex flex-nowrap items-center gap-3 md:gap-5 min-w-0">
-                <div class="flex items-center gap-3">
-                    <div class="hidden sm:block w-10 h-[2px]" style="background: var(--primary-color, #E31E24);"></div>
-                    <span class="font-bold uppercase tracking-[0.12em] sm:tracking-[0.2em] !text-[10px] sm:text-xl whitespace-nowrap" style="color: var(--primary-color, #E31E24);">{{ __('Our Portfolio') }}</span>
-                </div>
-                <h2 class="!text-lg md:text-3xl lg:text-4xl font-heading font-black text-gray-900 tracking-tight whitespace-nowrap">
+            class="flex items-center md:justify-center gap-3 sm:gap-6 mb-8 md:mb-12 transition-all duration-700 ease-out motion-reduce:transition-none">
+            <div class="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0">
+                <span class="hidden sm:block h-[2px] w-6 sm:w-8 md:w-10 bg-titan-red shrink-0"></span>
+                <span class="text-[8px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest text-titan-red whitespace-nowrap shrink-0">
+                    {{ __('Our Portfolio') }}
+                </span>
+                <span class="text-gray-300 hidden sm:inline">&bull;</span>
+                <h2 class="!text-lg sm:!text-xl md:!text-2xl font-heading font-black text-titan-navy tracking-tight whitespace-nowrap">
                     {{ __('Featured Projects') }}
                 </h2>
             </div>
             <a href="/projects"
-                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-[0.08em] sm:tracking-wider !text-[10px] sm:text-xs whitespace-nowrap group transition-colors duration-300 ease-out"
-                style="color: var(--primary-color, #E31E24);">
-                {{ __('View All Projects') }}
+                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-wider text-[8px] sm:text-xs text-titan-red hover:text-titan-navy group transition-colors duration-300 whitespace-nowrap">
+                {{ __('All Projects') }}
                 <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out motion-reduce:transform-none" />
             </a>
         </div>
