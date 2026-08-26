@@ -24,27 +24,38 @@
             </p>
         </div>
 
-        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:mt-14 lg:grid-cols-4">
+        {{-- Process Steps Grid --}}
+        <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4 lg:gap-6">
             @foreach($processes as $index => $s)
                 <article x-data="{ shown: false }" x-intersect.once="shown = true"
                     style="transition-delay: {{ $index * 100 }}ms"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'"
-                    class="group relative border-t border-titan-navy/10 py-8 transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none sm:px-7 sm:odd:border-l sm:odd:border-t-0 lg:border-l lg:border-t-0 lg:first:border-l-0 lg:py-2">
-                    <span class="absolute -top-2 left-0 h-1 w-10 bg-titan-red sm:odd:left-7 lg:left-7 lg:first:left-0"></span>
+                    class="group relative flex flex-col justify-between rounded-2xl border border-titan-navy/10 bg-white p-6 sm:p-7 shadow-xs transition-all duration-300 ease-out hover:-translate-y-1 hover:border-titan-red/30 hover:bg-slate-50/60 hover:shadow-lg hover:shadow-titan-navy/5">
+                    
+                    {{-- Red Accent Line --}}
+                    <span class="absolute top-0 left-6 h-[3px] w-8 rounded-full bg-titan-red transition-all duration-300 ease-out group-hover:w-16"></span>
 
-                    <div class="mb-8 flex items-center justify-between">
-                        <span class="font-heading text-5xl font-black leading-none text-titan-navy/10">{{ $s['step'] }}</span>
-                        <div class="flex h-11 w-11 items-center justify-center rounded-full border border-titan-navy/10 text-titan-red transition-[background-color,color,border-color] duration-300 ease-out group-hover:border-titan-red group-hover:bg-titan-red group-hover:!text-white">
-                            <x-dynamic-component :component="$s['icon']" class="h-5 w-5" stroke-width="1.8" />
+                    <div>
+                        {{-- Step Watermark & Icon --}}
+                        <div class="mb-6 flex items-center justify-between">
+                            <span class="font-heading text-4xl sm:text-5xl font-black leading-none text-titan-navy/15 transition-colors duration-300 group-hover:text-titan-red/30">
+                                {{ $s['step'] }}
+                            </span>
+                            <div class="flex h-11 w-11 items-center justify-center rounded-xl border border-titan-navy/10 bg-titan-navy/[0.03] text-titan-red transition-all duration-300 ease-out group-hover:scale-105 group-hover:border-titan-red group-hover:bg-titan-red group-hover:!text-white group-hover:shadow-md group-hover:shadow-titan-red/20">
+                                <x-dynamic-component :component="$s['icon']" class="h-5 w-5" stroke-width="1.8" />
+                            </div>
                         </div>
-                    </div>
 
-                    <h3 class="mb-3 font-heading text-xl font-black tracking-tight text-titan-navy transition-colors duration-300 group-hover:text-titan-red {{ app()->getLocale() === 'km' ? 'font-khmer text-2xl' : '' }}">
-                        {{ $s['title'] }}
-                    </h3>
-                    <p class="max-w-[230px] text-sm leading-relaxed text-titan-navy/55">
-                        {{ $s['desc'] }}
-                    </p>
+                        {{-- Title --}}
+                        <h3 class="mb-2.5 font-heading text-lg font-black tracking-tight text-titan-navy transition-colors duration-300 group-hover:text-titan-red {{ app()->getLocale() === 'km' ? 'font-khmer text-xl' : '' }}">
+                            {{ $s['title'] }}
+                        </h3>
+
+                        {{-- Description --}}
+                        <p class="text-xs sm:text-sm leading-relaxed text-titan-navy/65">
+                            {{ $s['desc'] }}
+                        </p>
+                    </div>
                 </article>
             @endforeach
         </div>
