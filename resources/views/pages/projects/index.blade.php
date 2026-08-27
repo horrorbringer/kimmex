@@ -272,35 +272,53 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <template x-for="project in filteredProjects" :key="project.id">
                         <a :href="'/projects/' + project.id"
-                            class="group flex flex-col h-full bg-white rounded-lg overflow-hidden border border-gray-100 hover:border-titan-red/20 hover:shadow-[0_8px_24px_-8px_rgba(11,43,92,0.14)] transition-all duration-300">
+                            class="group flex flex-col h-full bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-titan-red/25 hover:shadow-[0_12px_32px_-12px_rgba(11,43,92,0.14)] transition-all duration-300">
 
+                            {{-- Clean Unobstructed Photo --}}
                             <div class="relative w-full aspect-[16/10] overflow-hidden bg-gray-100 shrink-0">
                                 <img :src="project.image" :alt="project.title"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
-                                <div class="absolute top-3 left-3">
-                                    <span class="inline-flex h-5 px-2 rounded bg-white/90 backdrop-blur-sm border border-gray-200/50 text-[8px] font-black uppercase tracking-[0.15em] text-titan-navy/70 items-center" x-text="project.status"></span>
-                                </div>
-                                <template x-if="project.year">
-                                    <div class="absolute top-3 right-3">
-                                        <span class="inline-flex h-5 px-2 rounded bg-white/90 backdrop-blur-sm border border-gray-200/50 text-[8px] font-black uppercase tracking-[0.15em] text-titan-navy/70 items-center" x-text="project.year"></span>
-                                    </div>
-                                </template>
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy" decoding="async" />
                             </div>
 
-                            <div class="p-4 md:p-5 flex flex-col justify-between flex-1">
+                            {{-- Card Content --}}
+                            <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
                                 <div>
-                                    <div class="text-[9px] font-black uppercase tracking-[0.2em] text-titan-red/70 mb-1.5" x-text="project.type"></div>
-                                    <h3 class="projects-title text-base font-bold text-titan-navy leading-snug group-hover:text-titan-red transition-colors tracking-tight line-clamp-2" x-text="project.title"></h3>
-                                </div>
-                                <div class="flex items-center justify-between pt-3 mt-3.5 border-t border-gray-100">
-                                    <div class="flex items-center gap-1.5 text-xs font-semibold text-titan-navy/55 min-w-0 pr-2">
-                                        <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red shrink-0" />
-                                        <span class="truncate whitespace-nowrap" x-text="project.location"></span>
+                                    {{-- Category & Year Header --}}
+                                    <div class="flex items-center justify-between gap-2 mb-2">
+                                        <span class="text-[10px] font-black uppercase tracking-[0.18em] text-titan-red truncate" :title="project.type" x-text="project.type"></span>
+                                        <template x-if="project.year">
+                                            <span class="text-[11px] font-bold text-titan-navy/45 shrink-0 tabular-nums" x-text="project.year"></span>
+                                        </template>
                                     </div>
-                                    <span class="text-[10px] font-black uppercase tracking-wider text-titan-navy/35 group-hover:text-titan-red transition-colors flex items-center gap-1 shrink-0">
-                                        {{ __('View') }}
-                                        <x-lucide-arrow-right class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                                    </span>
+
+                                    {{-- Title --}}
+                                    <h3 class="projects-title text-base font-bold text-titan-navy leading-snug group-hover:text-titan-red transition-colors tracking-tight line-clamp-2" :title="project.title" x-text="project.title"></h3>
+                                </div>
+
+                                {{-- Footer Meta Row --}}
+                                <div class="flex items-center justify-between pt-3 mt-4 border-t border-gray-100 text-xs">
+                                    <div class="flex items-center gap-1.5 font-medium text-titan-navy/65 min-w-0 pr-2" :title="project.location">
+                                        <x-lucide-map-pin class="w-3.5 h-3.5 text-titan-red shrink-0" />
+                                        <span class="truncate" x-text="project.location"></span>
+                                    </div>
+
+                                    {{-- Status with glowing semantic dot --}}
+                                    <div class="inline-flex items-center gap-1.5 shrink-0 font-bold text-[11px]"
+                                        :class="{
+                                            'text-emerald-700': project.status_value === 'COMPLETED',
+                                            'text-blue-700': project.status_value === 'ONGOING' || project.status_value === 'IN_PROGRESS',
+                                            'text-amber-700': project.status_value === 'PLANNING',
+                                            'text-titan-navy/60': !project.status_value || (project.status_value !== 'COMPLETED' && project.status_value !== 'ONGOING' && project.status_value !== 'IN_PROGRESS' && project.status_value !== 'PLANNING')
+                                        }">
+                                        <span class="w-1.5 h-1.5 rounded-full shrink-0"
+                                            :class="{
+                                                'bg-emerald-500 ring-2 ring-emerald-200/80': project.status_value === 'COMPLETED',
+                                                'bg-blue-500 animate-pulse ring-2 ring-blue-200/80': project.status_value === 'ONGOING' || project.status_value === 'IN_PROGRESS',
+                                                'bg-amber-500 ring-2 ring-amber-200/80': project.status_value === 'PLANNING',
+                                                'bg-titan-navy/40': !project.status_value || (project.status_value !== 'COMPLETED' && project.status_value !== 'ONGOING' && project.status_value !== 'IN_PROGRESS' && project.status_value !== 'PLANNING')
+                                            }"></span>
+                                        <span x-text="project.status"></span>
+                                    </div>
                                 </div>
                             </div>
                         </a>
