@@ -163,8 +163,8 @@
                         </p>
                         @php
                             $heroTitleSize = \Illuminate\Support\Str::length($slide['title']) > 48
-                                ? '!text-[1.25rem] sm:text-[1.5rem] md:text-[2rem] xl:text-[2.3rem]'
-                                : '!text-[1.5rem] sm:text-[1.75rem] md:text-[2.35rem] xl:text-[2.8rem]';
+                                ? '!text-[1.25rem] sm:!text-[1.5rem] md:!text-[2rem] xl:!text-[2.3rem]'
+                                : '!text-[1.5rem] sm:!text-[1.75rem] md:!text-[2.35rem] xl:!text-[2.8rem]';
                         @endphp
                         <h1 class="{{ $heroTitleSize }} hero-copy-shadow font-heading font-[900] mb-4 sm:mb-7 !text-white uppercase leading-[1.05] sm:leading-[1.02] tracking-normal"
                             style="overflow-wrap: anywhere;">{{ $slide['title'] }}</h1>

@@ -193,7 +193,7 @@
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('WHO WE ARE') }}</span>
                     </div>
 
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy leading-tight mb-5 tracking-tight">
+                    <h2 class="!text-base md:!text-xl font-heading font-black text-titan-navy leading-tight mb-5 tracking-tight">
                         {{ $tagline }}
                     </h2>
 

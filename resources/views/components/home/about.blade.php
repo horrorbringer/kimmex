@@ -72,7 +72,7 @@
                     <span class="font-bold uppercase tracking-[0.2em] text-xs" style="color: var(--primary-color, #E31E24);">{{ __('About Us') }}</span>
                 </div>
 
-                <h2 class="!text-lg md:!text-xl font-heading font-black text-gray-900 leading-tight !mb-3 tracking-tight">
+                <h2 class="!text-[13px] md:!text-xl font-heading font-black text-gray-900 leading-tight !mb-3 tracking-tight">
                     {{ $tagline }}
                 </h2>
 

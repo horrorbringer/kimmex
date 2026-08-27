@@ -150,7 +150,7 @@
                                     @if ($milestone['image'])<img src="{{ $milestone['image'] }}" @if (filled($milestone['imageSrcset'])) srcset="{{ $milestone['imageSrcset'] }}" @endif sizes="(min-width: 1024px) 64px, 80px" width="80" height="64" alt="" class="h-16 w-20 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />@endif
                                     <div class="min-w-0">
                                         <p class="font-heading text-sm font-black tracking-tight leading-none text-titan-navy">{{ $milestone['year'] }}</p>
-                                        <h3 class="mt-1 font-heading text-xs font-bold leading-tight text-titan-navy/85">{{ $milestone['title'] }}</h3>
+                                        <h3 class="mt-1 font-heading !text-xs font-bold leading-tight text-titan-navy/85">{{ $milestone['title'] }}</h3>
                                     </div>
                                 </div>
                             </button>
@@ -188,7 +188,7 @@
                                     @if ($milestone['image'])<img src="{{ $milestone['image'] }}" @if (filled($milestone['imageSrcset'])) srcset="{{ $milestone['imageSrcset'] }}" @endif sizes="(min-width: 1024px) 64px, 80px" width="64" height="64" alt="" class="h-16 w-16 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />@endif
                                     <div class="min-w-0">
                                         <p class="font-heading text-xs font-black tracking-tight leading-none text-titan-navy">{{ $milestone['year'] }}</p>
-                                        <p class="mt-0 line-clamp-3 font-heading text-xs font-bold leading-tight text-titan-navy/85">{{ $milestone['title'] }}</p>
+                                        <p class="mt-0 line-clamp-3 font-heading !text-[10px] font-bold leading-tight text-titan-navy/85">{{ $milestone['title'] }}</p>
                                     </div>
                                 </div>
                             </button>
