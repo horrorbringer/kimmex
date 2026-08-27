@@ -159,8 +159,9 @@
         <!-- HERO -->
         <section class="relative h-[320px] md:h-[400px] flex items-end overflow-hidden bg-titan-navy">
             <div class="absolute inset-0">
-                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Projects" class="w-full h-full object-cover opacity-45" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/95 via-titan-navy/55 to-titan-navy/25"></div>
+                <img src="/images/webp/projects/Thumbnail-5.webp" alt="Kimmex Projects" class="w-full h-full object-cover opacity-70" loading="eager" decoding="async" fetchpriority="high" />
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/75 via-titan-navy/35 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/45 via-transparent to-transparent"></div>
             </div>
             <div class="relative z-10 w-full max-w-[1200px] mx-auto px-6 pb-10 md:pb-12">
                 <p class="text-[9px] font-black uppercase tracking-[0.35em] text-titan-red mb-2">{{ __('Our Portfolio') }}</p>

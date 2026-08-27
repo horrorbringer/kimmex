@@ -84,8 +84,8 @@
             <div class="absolute inset-0">
                 <img src="{{ $aboutHeroImageUrl }}" @if (filled($aboutHeroImageSrcset)) srcset="{{ $aboutHeroImageSrcset }}" @endif
                     sizes="100vw" alt="{{ __('About Kimmex') }}" class="w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/90 via-titan-navy/40 to-titan-navy/20"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-transparent to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/75 via-titan-navy/35 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/45 via-transparent to-transparent"></div>
             </div>
 
             <div class="relative z-20 w-full max-w-[1200px] mx-auto px-5 sm:px-6 pb-10 sm:pb-14 md:pb-20">

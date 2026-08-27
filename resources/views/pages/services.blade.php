@@ -26,9 +26,9 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
     <section class="relative h-[380px] md:h-[440px] flex items-end overflow-hidden bg-titan-navy">
         <div class="absolute inset-0">
             <img src="/images/webp/projects/Thumbnail-1.webp" alt="{{ __('Our Services') }}"
-                class="w-full h-full object-cover opacity-40" loading="eager" decoding="async" fetchpriority="high" />
-            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/95 via-titan-navy/60 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/60 via-transparent to-transparent"></div>
+                class="w-full h-full object-cover opacity-70" loading="eager" decoding="async" fetchpriority="high" />
+            <div class="absolute inset-0 bg-gradient-to-t from-titan-navy/75 via-titan-navy/35 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/45 via-transparent to-transparent"></div>
         </div>
         <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-12 md:pb-16">
             <nav class="flex items-center gap-2 text-xs mb-4 text-white/60 font-medium">

@@ -37,9 +37,9 @@
         <!-- ═══ HERO ═══ -->
         <section class="relative h-[400px] md:h-[450px] flex items-end overflow-hidden" style="background: #0B2B5C;">
             <div class="absolute inset-0">
-                <img src="/images/webp/projects/Thumbnail-3.webp" alt="{{ __('Contact Us') }}" class="w-full h-full object-cover opacity-35" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/95 via-[#0B2B5C]/50 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-[#071A33]/60 via-transparent to-transparent"></div>
+                <img src="/images/webp/projects/Thumbnail-3.webp" alt="{{ __('Contact Us') }}" class="w-full h-full object-cover opacity-70" loading="eager" decoding="async" fetchpriority="high" />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/75 via-[#0B2B5C]/35 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#071A33]/45 via-transparent to-transparent"></div>
             </div>
             <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-14 md:pb-18">
                 <nav class="flex items-center gap-2 text-xs mb-6" style="color: rgba(255,255,255,0.5);">

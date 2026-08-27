@@ -44,9 +44,9 @@
         <!-- ═══ HERO ═══ -->
         <section class="order-1 relative h-[420px] md:h-[480px] flex items-end overflow-hidden" style="background: #0B2B5C;">
             <div class="absolute inset-0">
-                <img src="/images/webp/projects/Thumbnail-5.webp" alt="{{ __('Careers') }}" class="w-full h-full object-cover opacity-40" loading="eager" decoding="async" fetchpriority="high" />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/95 via-[#0B2B5C]/50 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-[#071A33]/60 via-transparent to-transparent"></div>
+                <img src="/images/webp/projects/Thumbnail-5.webp" alt="{{ __('Careers') }}" class="w-full h-full object-cover opacity-70" loading="eager" decoding="async" fetchpriority="high" />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#071A33]/75 via-[#0B2B5C]/35 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-[#071A33]/45 via-transparent to-transparent"></div>
             </div>
             <div class="relative z-10 w-full max-w-[1280px] mx-auto px-6 pb-12 md:pb-16">
                 <nav class="flex items-center gap-2 text-xs mb-5" style="color: rgba(255,255,255,0.5);">
