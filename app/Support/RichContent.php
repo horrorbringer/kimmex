@@ -70,6 +70,20 @@ class RichContent
                     }
                 }
 
+                // Normalize unitless dimensions in style attribute (e.g. style="width: 406; height: 573;" from TipTap/Filament)
+                if (preg_match('/style=["\']([^"\']*)["\']/', $attrs, $styleMatch)) {
+                    $style = $styleMatch[1];
+                    $style = preg_replace('/width:\s*(\d+)(?!px|%|rem|em|vw)/i', 'width: ${1}px;', $style);
+                    $style = preg_replace('/height:\s*(\d+)(?!px|%|rem|em|vw)/i', 'height: auto;', $style);
+                    if (! str_contains($style, 'max-width')) {
+                        $style .= ' max-width: 100%;';
+                    }
+                    $attrs = preg_replace('/style=["\'][^"\']*["\']/', 'style="'.trim($style).'"', $attrs);
+                } elseif (preg_match('/width=["\'](\d+)["\']/', $attrs, $wMatch)) {
+                    // If HTML width attribute is present without style, ensure responsive inline styling
+                    $attrs .= ' style="width: '.$wMatch[1].'px; max-width: 100%; height: auto;"';
+                }
+
                 // Ensure lazy loading and async decoding for frontend performance
                 if (! str_contains($attrs, 'loading=')) {
                     $attrs .= ' loading="lazy"';

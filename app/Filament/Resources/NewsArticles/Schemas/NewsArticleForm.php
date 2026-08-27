@@ -757,7 +757,7 @@ class NewsArticleForm
                 $enContent = (string) ($get('content_en') ?? '');
                 $kmContent = (string) ($get($targetField) ?? '');
 
-                preg_match_all('/<figure\b[^>]*>[\s\S]*?<\/figure>|<p>\s*<img\b[^>]*\/?>\s*<\/p>|<img\b[^>]*\/?>/i', $enContent, $matches);
+                preg_match_all('/<figure\b[^>]*>[\s\S]*?<\/figure>|<p\b[^>]*>(?:\s*<img\b[^>]*\/?>\s*)+<\/p>|<img\b[^>]*\/?>/i', $enContent, $matches);
                 $images = $matches[0] ?? [];
 
                 if (empty($images)) {

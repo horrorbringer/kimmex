@@ -517,40 +517,40 @@
                     </div>
                     @endif
 
-                    <div class="rounded border border-gray-200 bg-titan-navy overflow-hidden">
-                        <div class="px-4 pt-4 pb-3 border-b border-white/10 flex items-center justify-between">
+                    <div class="rounded-xl border border-gray-200/90 bg-white overflow-hidden shadow-2xs">
+                        <div class="px-4 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between">
                             <div class="text-[10px] font-black uppercase tracking-[0.24em] text-titan-red">
                                 {{ __('Careers') }}
                             </div>
-                            <a href="/careers" class="text-[9px] font-black uppercase tracking-[0.16em] text-white/30 hover:text-titan-red transition-colors">
+                            <a href="/careers" class="text-[9px] font-black uppercase tracking-[0.16em] text-titan-navy/40 hover:text-titan-red transition-colors">
                                 {{ __('All') }} →
                             </a>
                         </div>
-                        <div class="divide-y divide-white/[0.07]">
+                        <div class="divide-y divide-gray-100">
                             @forelse($sidebarJobs as $job)
-                                <a href="/careers/{{ $job['slug'] }}" class="group flex items-center hover:bg-white/5 transition-colors">
+                                <a href="/careers/{{ $job['slug'] }}" class="group flex items-center hover:bg-gray-50 transition-colors">
                                     {{-- Icon column --}}
-                                    <div class="w-16 h-14 shrink-0 flex items-center justify-center border-r border-white/[0.07]">
+                                    <div class="w-16 h-14 shrink-0 flex items-center justify-center border-r border-gray-100 bg-titan-navy/[0.02]">
                                         <x-lucide-briefcase class="w-4 h-4 text-titan-red/70 group-hover:text-titan-red transition-colors" />
                                     </div>
                                     {{-- Text --}}
                                     <div class="flex-1 min-w-0 px-3 py-2">
                                         <div class="text-[8px] font-black uppercase tracking-[0.18em] text-titan-red leading-none mb-1">{{ $job['dept'] }}</div>
-                                        <div class="text-[11px] font-bold text-white leading-snug line-clamp-1 group-hover:text-titan-red transition-colors">
+                                        <div class="text-[11px] font-bold text-titan-navy leading-snug line-clamp-1 group-hover:text-titan-red transition-colors">
                                             {{ $job['title'] }}
                                         </div>
-                                        <div class="mt-1 text-[9px] text-white/35 font-normal">{{ $job['location'] }} · {{ $job['type'] }}</div>
+                                        <div class="mt-1 text-[9px] text-titan-navy/35 font-normal">{{ $job['location'] }} · {{ $job['type'] }}</div>
                                     </div>
                                     <div class="pr-3 shrink-0">
-                                        <x-lucide-chevron-right class="w-3.5 h-3.5 text-white/20 group-hover:text-titan-red transition-colors" />
+                                        <x-lucide-chevron-right class="w-3.5 h-3.5 text-titan-navy/20 group-hover:text-titan-red transition-colors" />
                                     </div>
                                 </a>
                             @empty
-                                <div class="px-4 py-5 text-sm text-white/40 font-normal">{{ __('No open roles right now.') }}</div>
+                                <div class="px-4 py-5 text-sm text-titan-navy/40 font-normal">{{ __('No open roles right now.') }}</div>
                             @endforelse
-                            <div class="px-4 py-3">
-                                <a href="/careers/gen" class="flex items-center justify-center gap-2 w-full h-9 rounded bg-titan-red/90 hover:bg-titan-red text-white text-[9px] font-black uppercase tracking-[0.18em] transition-colors">
-                                    <x-social-icon network="telegram" class="w-3 h-3" />
+                            <div class="p-3 bg-slate-50/70 border-t border-gray-100">
+                                <a href="/careers/gen" class="flex items-center justify-center gap-2 w-full h-9 rounded-lg bg-titan-red hover:bg-titan-red/90 text-white text-[10px] font-bold uppercase tracking-wider shadow-xs transition-all">
+                                    <x-social-icon network="telegram" class="w-3.5 h-3.5" />
                                     {{ __('General Application') }}
                                 </a>
                             </div>
@@ -691,19 +691,38 @@
             margin-bottom: 0.85rem;
         }
 
+        .news-content p:has(> img + img),
+        .news-content p:has(> img:nth-child(2)) {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .news-content p:has(> img + img) img,
+        .news-content p:has(> img:nth-child(2)) img {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
         .news-content img {
             border: 1px solid #E5E7EB;
-            border-radius: 0.25rem;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
         }
 
         .news-content iframe,
         .news-content video {
             border: 1px solid #E5E7EB;
-            border-radius: 0.25rem;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
             overflow: hidden;
+            max-width: 100%;
         }
 
         .news-content p + table,
