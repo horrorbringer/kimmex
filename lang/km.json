@@ -1216,5 +1216,14 @@
     "Generate Default Sectors": "បង្កើតវិស័យលំនាំដើម",
     "Generate default sectors?": "បង្កើតវិស័យលំនាំដើម?",
     "This will create or update the default industry sectors displayed on the Services page.": "វានឹងបង្កើត ឬធ្វើបច្ចុប្បន្នភាពវិស័យឧស្សាហកម្មលំនាំដើមដែលបង្ហាញនៅលើទំព័រសេវាកម្ម។",
-    "Default sectors generated successfully": "បានបង្កើតវិស័យលំនាំដើមដោយជោគជ័យ"
+    "Default sectors generated successfully": "បានបង្កើតវិស័យលំនាំដើមដោយជោគជ័យ",
+    "Add Summary / Excerpt": "បន្ថែមសេចក្តីសង្ខេប",
+    "Hide Summary": "លាក់សេចក្តីសង្ខេប",
+    "Optional 1-2 sentence overview used for SEO search snippets, email newsletters, and social media share previews (Facebook, Telegram, LinkedIn).": "សេចក្តីសង្ខេបខ្លី ១-២ ប្រយោគសម្រាប់បង្ហាញលើការចែករំលែកបណ្តាញសង្គម (Facebook/Telegram), លទ្ធផលស្វែងរក SEO Google និងអ៊ីមែលព័ត៌មាន។",
+    "min read": "នាទីអាន",
+    "Title (English)": "ចំណងជើង (អង់គ្លេស)",
+    "Title (Khmer)": "ចំណងជើង (ខ្មែរ)",
+    "Slug (URL Path)": "អត្តសញ្ញាណ URL",
+    "Article Body (English)": "មាតិកាអត្ថបទ (អង់គ្លេស)",
+    "Article Body (Khmer)": "មាតិកាអត្ថបទ (ខ្មែរ)"
 }

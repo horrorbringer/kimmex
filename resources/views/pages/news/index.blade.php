@@ -161,7 +161,7 @@
                                      x-text="(article.authorName || 'K').charAt(0)"></div>
                                 <span class="text-xs font-medium text-white/90 truncate max-w-[130px]" x-text="article.authorName || 'Kimmex'"></span>
                                 <span class="text-white/40 text-[10px]">•</span>
-                                <span class="text-[11px] text-white/75 font-medium" x-text="article.readTime || '3 min read'"></span>
+                                <span class="text-[11px] text-white/75 font-medium" x-text="article.readTime || '{{ __('3 min read') }}'"></span>
                                 
                                 <x-lucide-arrow-up-right class="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 ml-auto shrink-0" />
                             </div>

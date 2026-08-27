@@ -86,15 +86,32 @@ class NewsArticleForm
                                                     ]),
 
                                                 Section::make(__('Article Body (English)'))
+                                                    ->headerActions([
+                                                        Action::make('toggleExcerptEn')
+                                                            ->label(fn ($get, $record) => ($get('_show_excerpt_en') ?? (filled($get('excerpt_en')) || filled($record?->getTranslation('excerpt', 'en', false)))) ? __('Hide Summary') : __('Add Summary / Excerpt'))
+                                                            ->tooltip(__('Optional 1-2 sentence overview used for SEO search snippets, email newsletters, and social media share previews (Facebook, Telegram, LinkedIn).'))
+                                                            ->icon(fn ($get, $record) => ($get('_show_excerpt_en') ?? (filled($get('excerpt_en')) || filled($record?->getTranslation('excerpt', 'en', false)))) ? 'heroicon-m-minus' : 'heroicon-m-plus')
+                                                            ->size('xs')
+                                                            ->outlined()
+                                                            ->color(fn ($get, $record) => ($get('_show_excerpt_en') ?? (filled($get('excerpt_en')) || filled($record?->getTranslation('excerpt', 'en', false)))) ? 'gray' : 'primary')
+                                                            ->action(function (Set $set, $get, $record) {
+                                                                $isOpen = $get('_show_excerpt_en') ?? (filled($get('excerpt_en')) || filled($record?->getTranslation('excerpt', 'en', false)));
+                                                                $set('_show_excerpt_en', ! $isOpen);
+                                                            }),
+                                                    ])
                                                     ->components([
+                                                        Hidden::make('_show_excerpt_en')->default(false)->dehydrated(false),
+
                                                         Textarea::make('excerpt_en')
                                                             ->label(__('Excerpt / Summary (English)'))
                                                             ->placeholder('Brief overview of this news article for cards and previews...')
+                                                            ->helperText(__('Short summary displayed in SEO search results, newsletter emails, and social media cards.'))
                                                             ->hintActions([
                                                                 AIHelper::getImproveAction('excerpt_en', 'Make this news summary more engaging and impactful.'),
                                                                 AIHelper::getTranslateAction('excerpt_en', 'excerpt_km', 'Khmer', 'km', 'en'),
                                                             ])
                                                             ->rows(2)
+                                                            ->visible(fn ($get, $record) => $get('_show_excerpt_en') ?? (filled($get('excerpt_en')) || filled($record?->getTranslation('excerpt', 'en', false))))
                                                             ->live(onBlur: true)
                                                             ->afterStateUpdated(function (Set $set, ?string $state, $get) {
                                                                 if (! $get('metaDescription_en')) {
@@ -169,15 +186,32 @@ class NewsArticleForm
                                                     ]),
 
                                                 Section::make(__('Article Body (Khmer / ភាសាខ្មែរ)'))
+                                                    ->headerActions([
+                                                        Action::make('toggleExcerptKm')
+                                                            ->label(fn ($get, $record) => ($get('_show_excerpt_km') ?? (filled($get('excerpt_km')) || filled($record?->getTranslation('excerpt', 'km', false)))) ? __('លាក់សេចក្តីសង្ខេប (Hide)') : __('+ បន្ថែមសេចក្តីសង្ខេប (+ Add Summary)'))
+                                                            ->tooltip(__('សេចក្តីសង្ខេបខ្លី ១-២ ប្រយោគសម្រាប់បង្ហាញលើការចែករំលែកបណ្តាញសង្គម (Facebook/Telegram), លទ្ធផលស្វែងរក SEO Google និងអ៊ីមែលព័ត៌មាន (Optional summary for social sharing, SEO snippets, and newsletters).'))
+                                                            ->icon(fn ($get, $record) => ($get('_show_excerpt_km') ?? (filled($get('excerpt_km')) || filled($record?->getTranslation('excerpt', 'km', false)))) ? 'heroicon-m-minus' : 'heroicon-m-plus')
+                                                            ->size('xs')
+                                                            ->outlined()
+                                                            ->color(fn ($get, $record) => ($get('_show_excerpt_km') ?? (filled($get('excerpt_km')) || filled($record?->getTranslation('excerpt', 'km', false)))) ? 'gray' : 'primary')
+                                                            ->action(function (Set $set, $get, $record) {
+                                                                $isOpen = $get('_show_excerpt_km') ?? (filled($get('excerpt_km')) || filled($record?->getTranslation('excerpt', 'km', false)));
+                                                                $set('_show_excerpt_km', ! $isOpen);
+                                                            }),
+                                                    ])
                                                     ->components([
+                                                        Hidden::make('_show_excerpt_km')->default(false)->dehydrated(false),
+
                                                         Textarea::make('excerpt_km')
                                                             ->label(__('សេចក្តីសង្ខេប (Khmer Excerpt)'))
                                                             ->placeholder('បញ្ចូលសេចក្តីសង្ខេបព័ត៌មានជាភាសាខ្មែរ...')
+                                                            ->helperText(__('សេចក្តីសង្ខេបខ្លីសម្រាប់បង្ហាញលើការចែករំលែកបណ្តាញសង្គម (Facebook/Telegram), SEO និងអ៊ីមែលព័ត៌មាន។'))
                                                             ->hintActions([
                                                                 AIHelper::getTranslateAction('excerpt_km', 'excerpt_en', 'English', 'en', 'km'),
                                                                 AIHelper::getImproveAction('excerpt_km', 'កែលម្អសេចក្តីសង្ខេបនេះឱ្យកាន់តែច្បាស់លាស់'),
                                                             ])
                                                             ->rows(2)
+                                                            ->visible(fn ($get, $record) => $get('_show_excerpt_km') ?? (filled($get('excerpt_km')) || filled($record?->getTranslation('excerpt', 'km', false))))
                                                             ->live(onBlur: true)
                                                             ->afterStateUpdated(function (Set $set, ?string $state, $get) {
                                                                 if (! $get('metaDescription_km')) {

@@ -44,7 +44,15 @@ class NewsController extends Controller
 
                     $authorName = $n->getTranslation('authorName', $locale)
                         ?: ($n->author?->name ?? 'Kimmex');
-                    $readTime = $n->getTranslation('readTime', $locale) ?: '3 min read';
+
+                    $rawReadTime = $n->getTranslation('readTime', $locale) ?: $n->readTime;
+                    $readMinutes = is_numeric($rawReadTime) ? (int) $rawReadTime : (int) filter_var((string) $rawReadTime, FILTER_SANITIZE_NUMBER_INT);
+                    if (! $readMinutes || $readMinutes < 1) {
+                        $contentStr = strip_tags((string) $n->getTranslation('content', $locale));
+                        $wordCount = str_word_count($contentStr) ?: (int) ceil(mb_strlen($contentStr) / 6);
+                        $readMinutes = max(1, (int) ceil($wordCount / 200));
+                    }
+                    $readTime = $readMinutes.' '.__('min read');
                     $dateObj = $n->publishedAt ?? $n->created_at;
 
                     return [
@@ -138,8 +146,17 @@ class NewsController extends Controller
                 'publishedAt' => ($articleDb->publishedAt ?: $articleDb->created_at)->toIso8601String(),
                 'updatedAt' => $articleDb->updated_at->toIso8601String(),
                 'author' => $articleDb->getTranslation('authorName', $locale) ?: ($articleDb->author?->name ?? 'Kimmex Editorial'),
-                'readTime' => $articleDb->getTranslation('readTime', $locale)
-                    ?: (ceil(str_word_count(strip_tags((string) $articleDb->getTranslation('content', $locale))) / 200).' min read'),
+                'readTime' => (function () use ($articleDb, $locale): string {
+                    $rawReadTime = $articleDb->getTranslation('readTime', $locale) ?: $articleDb->readTime;
+                    $readMinutes = is_numeric($rawReadTime) ? (int) $rawReadTime : (int) filter_var((string) $rawReadTime, FILTER_SANITIZE_NUMBER_INT);
+                    if (! $readMinutes || $readMinutes < 1) {
+                        $contentStr = strip_tags((string) $articleDb->getTranslation('content', $locale));
+                        $wordCount = str_word_count($contentStr) ?: (int) ceil(mb_strlen($contentStr) / 6);
+                        $readMinutes = max(1, (int) ceil($wordCount / 200));
+                    }
+
+                    return $readMinutes.' '.__('min read');
+                })(),
                 'excerpt' => $excerpt,
                 'content' => $articleDb->getTranslation('content', $locale),
                 'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0
