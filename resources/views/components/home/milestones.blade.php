@@ -6,9 +6,9 @@
 @endphp
 
 @if (! empty($milestones))
-    <section class="overflow-hidden border-y border-titan-navy/10 bg-[#f8fbff] py-16 md:py-24">
+    <section class="overflow-hidden border-y border-titan-navy/10 bg-[#f8fbff] py-12 md:py-16">
         <div class="mx-auto max-w-[1440px] px-6">
-            <div class="mx-auto mb-12 max-w-2xl text-center lg:mb-16">
+            <div class="mx-auto mb-8 max-w-2xl text-center md:mb-10 lg:mb-12">
                 <div class="mb-4 flex items-center justify-center gap-3">
                     <span class="h-px w-10 bg-titan-red"></span>
                     <span class="text-xs font-bold uppercase tracking-[0.2em] text-titan-red">Our Journey</span>

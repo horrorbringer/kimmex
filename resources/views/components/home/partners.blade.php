@@ -6,9 +6,9 @@
     $displayPartners = $shouldUseMarquee ? array_merge($partners, $partners) : $partners;
 @endphp
 
-<section class="border-y border-titan-navy/10 py-16 md:py-24">
+<section class="border-y border-titan-navy/10 py-10 md:py-14">
     <div class="mx-auto max-w-[1240px] px-5 md:px-6">
-        <div class="mb-9 max-w-2xl md:mb-12">
+        <div class="mb-6 max-w-2xl md:mb-8">
             <div class="mb-3 flex items-center gap-3">
                 <span class="text-[10px] font-black uppercase tracking-[0.22em]" style="color: var(--primary-color, #E31E24);">
                     {{ __('Our Partners') }}

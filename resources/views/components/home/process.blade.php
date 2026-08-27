@@ -4,7 +4,7 @@
     $processes = $processes ?? app(\App\Services\HomePageService::class)->getProcess();
 @endphp
 
-<section class="bg-white py-16 md:py-24">
+<section class="bg-white py-12 md:py-16">
     <div class="max-w-[1280px] mx-auto px-6">
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"

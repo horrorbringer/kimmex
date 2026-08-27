@@ -143,8 +143,8 @@
                 class="hero-slide-image object-cover object-[62%_center] sm:object-center w-full h-full"
                 decoding="async" />
             {{-- Gradient overlays --}}
-            <div class="absolute inset-0 bg-gradient-to-r from-titan-navy/95 via-titan-navy/75 to-titan-navy/45 sm:from-titan-navy/75 sm:via-titan-navy/35 sm:to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-titan-navy/30 via-transparent to-titan-navy/70 sm:from-titan-navy/10 sm:to-titan-navy/50"></div>
+            <div class="hero-gradient-overlay-h absolute inset-0"></div>
+            <div class="hero-gradient-overlay-v absolute inset-0"></div>
         </div>
     @endforeach
 
@@ -157,7 +157,7 @@
                         @if($index !== 0) style="display: none;" @endif
                         :class="!prefersReducedMotion && prev !== null && {{ $index }} === current ? 'hero-content-enter' : ''"
                         class="w-full">
-                        <p class="text-titan-red font-black text-[9px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.35em] mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+                        <p class="hero-carousel-subtitle text-titan-red font-black text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.35em] mb-3 sm:mb-4 items-center gap-2 sm:gap-3">
                             <span class="inline-block w-6 sm:w-8 h-px bg-titan-red"></span>
                             <span>{{ $slide['subtitle'] }}</span>
                         </p>
@@ -232,5 +232,30 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .hero-gradient-overlay-h {
+            background: linear-gradient(to right, rgba(11, 43, 92, 0.45), rgba(11, 43, 92, 0.25), transparent);
+        }
+        .hero-gradient-overlay-v {
+            background: linear-gradient(to bottom, rgba(11, 43, 92, 0.10), transparent, rgba(11, 43, 92, 0.35));
+        }
+        @media (max-width: 639px) {
+            .hero-carousel-subtitle {
+                display: none !important;
+            }
+        }
+        @media (min-width: 640px) {
+            .hero-gradient-overlay-h {
+                background: linear-gradient(to right, rgba(11, 43, 92, 0.75), rgba(11, 43, 92, 0.35), transparent);
+            }
+            .hero-gradient-overlay-v {
+                background: linear-gradient(to bottom, rgba(11, 43, 92, 0.10), transparent, rgba(11, 43, 92, 0.50));
+            }
+            .hero-carousel-subtitle {
+                display: flex !important;
+            }
+        }
+    </style>
 
 </section>

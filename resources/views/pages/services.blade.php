@@ -47,17 +47,17 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
     </section>
 
     <!-- ═══ SERVICES LIST ═══ -->
-    <section class="py-16 md:py-24">
+    <section class="py-12 sm:py-16 md:py-20">
         <div class="max-w-[1280px] mx-auto px-6">
 
             <div x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                class="transition-all duration-1000 mb-12">
+                class="transition-all duration-1000 mb-8 sm:mb-10 md:mb-12">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-[2px] bg-titan-red"></div>
                     <span class="font-bold uppercase tracking-[0.2em] text-xs text-titan-red">{{ __('What We Do') }}</span>
                 </div>
-                <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight mb-3">{{ __('Our Expertise') }}</h2>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight mb-3">{{ __('Our Expertise') }}</h2>
                 <p class="text-slate-500 text-sm md:text-base max-w-2xl leading-relaxed">
                     {{ __('From concept to completion, we bring design, construction, and project management under one accountable team.') }}
                 </p>
@@ -80,7 +80,7 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
                             </div>
 
                             {{-- Content --}}
-                            <div class="md:col-span-7 p-7 md:p-10 flex flex-col justify-center">
+                            <div class="md:col-span-7 p-5 sm:p-7 md:p-8 flex flex-col justify-center">
                                 <div class="flex items-center gap-4 mb-4">
                                     <div class="w-11 h-11 rounded-xl flex items-center justify-center bg-titan-red/10 group-hover:bg-titan-red group-hover:!text-white transition-all duration-300 group-hover:shadow-md">
                                         <x-dynamic-component :component="$service['icon'] ?? 'lucide-hammer'" class="w-5 h-5 text-titan-red group-hover:!text-white transition-colors" stroke-width="1.8" />
@@ -122,16 +122,16 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
     </section>
 
     <!-- ═══ METHODOLOGY ═══ -->
-    <section class="py-16 md:py-20 bg-slate-50 border-y border-slate-200">
+    <section class="py-12 sm:py-16 md:py-20 bg-slate-50 border-y border-slate-200">
         <div class="max-w-[1280px] mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-12" x-data="{ shown: false }" x-intersect.once="shown = true"
+            <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10 md:mb-12" x-data="{ shown: false }" x-intersect.once="shown = true"
                 :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'" class="transition-all duration-700">
                 <div class="flex items-center justify-center gap-3 mb-3">
                     <div class="w-8 h-[2px] bg-titan-red"></div>
                     <span class="font-bold uppercase tracking-[0.2em] text-xs text-titan-red">{{ __('How We Work') }}</span>
                     <div class="w-8 h-[2px] bg-titan-red"></div>
                 </div>
-                <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight mb-3">{{ __('Our Methodology') }}</h2>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight mb-3">{{ __('Our Methodology') }}</h2>
                 <p class="text-slate-500 text-sm md:text-base leading-relaxed">
                     {{ __('A disciplined 5-stage engineering workflow ensuring quality compliance, budget control, and seamless project execution.') }}
                 </p>
@@ -170,16 +170,16 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
 
     <!-- ═══ SECTORS ═══ -->
     @if(!empty($sectors))
-        <section class="py-16 md:py-20">
+        <section class="py-12 sm:py-16 md:py-20">
             <div class="max-w-[1280px] mx-auto px-6">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="transition-all duration-700 mb-10">
+                    class="transition-all duration-700 mb-8 sm:mb-10">
                     <div class="flex items-center gap-3 mb-3">
                         <div class="w-10 h-[2px] bg-titan-red"></div>
                         <span class="font-bold uppercase tracking-[0.2em] text-xs text-titan-red">{{ __('Industries') }}</span>
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">{{ __('Sectors We Serve') }}</h2>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">{{ __('Sectors We Serve') }}</h2>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
@@ -210,7 +210,7 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
     @endif
 
     <!-- ═══ CTA ═══ -->
-    <section class="py-16 md:py-20 bg-titan-navy text-white">
+    <section class="py-12 sm:py-16 md:py-20 bg-titan-navy text-white">
         <div class="max-w-[1280px] mx-auto px-6">
             <div class="flex flex-col md:flex-row items-center justify-between gap-8">
                 <div class="text-center lg:text-left max-w-xl">
