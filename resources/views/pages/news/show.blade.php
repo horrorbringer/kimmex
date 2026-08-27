@@ -149,7 +149,48 @@
         <!-- CONTENT -->
         <main id="article-body" class="max-w-[1240px] mx-auto px-3 sm:px-6 pt-3 sm:pt-4 md:pt-3 pb-8 sm:pb-12 md:pb-16">
             <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 sm:gap-6 lg:gap-8 items-start">
-                <article class="rounded-xl sm:rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 md:p-8">
+                <article class="rounded-xl sm:rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 md:p-8"
+                    x-data="{
+                        open: false,
+                        current: 0,
+                        images: {{ Js::from($article['gallery'] ?? []) }},
+                        init() {
+                            const contentImages = Array.from(this.$el.querySelectorAll('.news-content img'));
+                            contentImages.forEach((img) => {
+                                img.classList.add('cursor-zoom-in', 'hover:opacity-95', 'transition-all', 'duration-300', 'hover:shadow-md');
+                                img.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    const src = img.getAttribute('src');
+                                    if (!src) return;
+                                    let idx = this.images.indexOf(src);
+                                    if (idx === -1) {
+                                        this.images.push(src);
+                                        idx = this.images.length - 1;
+                                    }
+                                    this.openAt(idx);
+                                });
+                            });
+                        },
+                        openAt(index) {
+                            this.current = index;
+                            this.open = true;
+                            document.body.style.overflow = 'hidden';
+                        },
+                        close() {
+                            this.open = false;
+                            document.body.style.overflow = '';
+                        },
+                        prev() {
+                            this.current = (this.current - 1 + this.images.length) % this.images.length;
+                        },
+                        next() {
+                            this.current = (this.current + 1) % this.images.length;
+                        }
+                    }"
+                    @keydown.escape.window="close()"
+                    @keydown.arrow-left.window="open && prev()"
+                    @keydown.arrow-right.window="open && next()"
+                >
                     <div class="news-content prose prose-sm sm:prose-base md:prose-lg prose-slate max-w-none first:[&>*]:mt-0 prose-p:text-titan-navy/75 prose-p:leading-relaxed prose-headings:font-bold prose-headings:text-titan-navy prose-a:text-titan-red prose-strong:text-titan-navy">
                         {!! $renderNewsContent($article['content'] ?? '') !!}
                     </div>
@@ -178,31 +219,7 @@
                     @endif
 
                     @if(!empty($article['gallery']))
-                        <section class="mt-12 pt-10 border-t border-gray-200"
-                            x-data="{
-                                open: false,
-                                current: 0,
-                                images: {{ Js::from($article['gallery']) }},
-                                openAt(index) {
-                                    this.current = index;
-                                    this.open = true;
-                                    document.body.style.overflow = 'hidden';
-                                },
-                                close() {
-                                    this.open = false;
-                                    document.body.style.overflow = '';
-                                },
-                                prev() {
-                                    this.current = (this.current - 1 + this.images.length) % this.images.length;
-                                },
-                                next() {
-                                    this.current = (this.current + 1) % this.images.length;
-                                }
-                            }"
-                            @keydown.escape.window="close()"
-                            @keydown.arrow-left.window="open && prev()"
-                            @keydown.arrow-right.window="open && next()"
-                        >
+                        <section class="mt-12 pt-10 border-t border-gray-200">
                             <div class="flex items-center justify-between gap-3 mb-4">
                                 <div class="flex items-center gap-2.5">
                                     <span class="h-3.5 w-1 bg-titan-red rounded-full"></span>
@@ -268,82 +285,82 @@
                                     </div>
                                 @endif
                             @endif
-
-                            {{-- Lightbox --}}
-                            <div
-                                x-cloak
-                                x-show="open"
-                                x-transition:enter="transition ease-out duration-200"
-                                x-transition:enter-start="opacity-0"
-                                x-transition:enter-end="opacity-100"
-                                x-transition:leave="transition ease-in duration-150"
-                                x-transition:leave-start="opacity-100"
-                                x-transition:leave-end="opacity-0"
-                                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm cursor-zoom-out"
-                                @click="close()"
-                                style="display: none;"
-                            >
-                                {{-- Close --}}
-                                <button @click.stop="close()"
-                                    class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
-                                    title="{{ __('Close (Esc)') }}">
-                                    <x-lucide-x class="w-5 h-5" />
-                                </button>
-
-                                {{-- Counter --}}
-                                <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] font-black uppercase tracking-[0.2em] text-white/50 pointer-events-none">
-                                    <span x-text="current + 1"></span> / <span x-text="images.length"></span>
-                                </div>
-
-                                {{-- Prev --}}
-                                <button @click.stop="prev()"
-                                    class="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
-                                    x-show="images.length > 1"
-                                    title="{{ __('Previous') }}">
-                                    <x-lucide-chevron-left class="w-5 h-5" />
-                                </button>
-
-                                {{-- Image --}}
-                                <div class="relative group max-w-5xl max-h-[85vh] w-full px-16 flex items-center justify-center cursor-zoom-out" @click="close()">
-                                    <img
-                                        :src="images[current]"
-                                        :alt="'Image ' + (current + 1)"
-                                        class="max-h-[85vh] max-w-full w-auto object-contain rounded shadow-2xl select-none cursor-zoom-out transition-all duration-300 group-hover:brightness-95"
-                                        x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 scale-95"
-                                        x-transition:enter-end="opacity-100 scale-100"
-                                        draggable="false"
-                                        @click="close()"
-                                    />
-
-                                    {{-- Hover Zoom-Out Indicator --}}
-                                    <div class="absolute bottom-3 right-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/75 backdrop-blur-md text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5">
-                                        <x-lucide-zoom-out class="w-3.5 h-3.5 text-white" />
-                                        <span>{{ __('Click to minimize') }}</span>
-                                    </div>
-                                </div>
-
-                                {{-- Next --}}
-                                <button @click.stop="next()"
-                                    class="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
-                                    x-show="images.length > 1"
-                                    title="{{ __('Next') }}">
-                                    <x-lucide-chevron-right class="w-5 h-5" />
-                                </button>
-
-                                {{-- Dot indicators --}}
-                                <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5" x-show="images.length > 1">
-                                    <template x-for="(img, idx) in images" :key="idx">
-                                        <button
-                                            @click="current = idx"
-                                            class="w-1.5 h-1.5 rounded-full transition-all duration-200"
-                                            :class="current === idx ? 'bg-white w-4' : 'bg-white/35 hover:bg-white/60'"
-                                        ></button>
-                                    </template>
-                                </div>
-                            </div>
                         </section>
                     @endif
+
+                    {{-- Lightbox --}}
+                    <div
+                        x-cloak
+                        x-show="open"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm cursor-zoom-out"
+                        @click="close()"
+                        style="display: none;"
+                    >
+                        {{-- Close --}}
+                        <button @click.stop="close()"
+                            class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
+                            title="{{ __('Close (Esc)') }}">
+                            <x-lucide-x class="w-5 h-5" />
+                        </button>
+
+                        {{-- Counter --}}
+                        <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[11px] font-black uppercase tracking-[0.2em] text-white/50 pointer-events-none" x-show="images.length > 1">
+                            <span x-text="current + 1"></span> / <span x-text="images.length"></span>
+                        </div>
+
+                        {{-- Prev --}}
+                        <button @click.stop="prev()"
+                            class="absolute left-3 md:left-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
+                            x-show="images.length > 1"
+                            title="{{ __('Previous') }}">
+                            <x-lucide-chevron-left class="w-5 h-5" />
+                        </button>
+
+                        {{-- Image --}}
+                        <div class="relative group max-w-5xl max-h-[85vh] w-full px-16 flex items-center justify-center cursor-zoom-out" @click="close()">
+                            <img
+                                :src="images[current]"
+                                :alt="'Image ' + (current + 1)"
+                                class="max-h-[85vh] max-w-full w-auto object-contain rounded shadow-2xl select-none cursor-zoom-out transition-all duration-300 group-hover:brightness-95"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                draggable="false"
+                                @click="close()"
+                            />
+
+                            {{-- Hover Zoom-Out Indicator --}}
+                            <div class="absolute bottom-3 right-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/75 backdrop-blur-md text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/20 shadow-lg flex items-center gap-1.5">
+                                <x-lucide-zoom-out class="w-3.5 h-3.5 text-white" />
+                                <span>{{ __('Click to minimize') }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Next --}}
+                        <button @click.stop="next()"
+                            class="absolute right-3 md:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors z-10 cursor-pointer"
+                            x-show="images.length > 1"
+                            title="{{ __('Next') }}">
+                            <x-lucide-chevron-right class="w-5 h-5" />
+                        </button>
+
+                        {{-- Dot indicators --}}
+                        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-1.5" x-show="images.length > 1">
+                            <template x-for="(img, idx) in images" :key="idx">
+                                <button
+                                    @click="current = idx"
+                                    class="w-1.5 h-1.5 rounded-full transition-all duration-200"
+                                    :class="current === idx ? 'bg-white w-4' : 'bg-white/35 hover:bg-white/60'"
+                                ></button>
+                            </template>
+                        </div>
+                    </div>
 
                     {{-- Article Footer: Author Info & Social Sharing in One Row --}}
                     <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
