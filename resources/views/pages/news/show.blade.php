@@ -237,14 +237,14 @@
                             @if($galleryCount === 1)
                                 <div class="aspect-[16/9] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
                                      @click="openAt(0)">
-                                    <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
+                                    <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-fit hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                 </div>
                             @elseif($galleryCount === 2)
                                 <div class="grid grid-cols-2 gap-2">
                                     @foreach($article['gallery'] as $gi => $img)
                                         <div class="aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
                                              @click="openAt({{ $gi }})">
-                                            <img src="{{ $img }}" alt="Gallery {{ $gi + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
+                                            <img src="{{ $img }}" alt="Gallery {{ $gi + 1 }}" class="w-full h-full object-fit hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                         </div>
                                     @endforeach
                                 </div>
@@ -253,14 +253,14 @@
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                                     <div class="md:col-span-2 aspect-[4/3] md:aspect-auto md:h-[400px] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
                                          @click="openAt(0)">
-                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
+                                        <img src="{{ $article['gallery'][0] }}" alt="Gallery 1" class="w-full h-full object-fit hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                     </div>
                                     <div class="grid grid-rows-2 gap-2 h-auto md:h-[400px]">
                                         @for($i = 1; $i <= 2; $i++)
                                             @if(isset($article['gallery'][$i]))
                                                 <div class="aspect-[16/10] md:aspect-auto overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
                                                      @click="openAt({{ $i }})">
-                                                    <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
+                                                    <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-fit hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 </div>
                                             @endif
                                         @endfor
@@ -274,7 +274,7 @@
                                             @php $isLastVisible = ($i === 7 && $galleryCount > 8); @endphp
                                             <div class="relative aspect-[4/3] overflow-hidden rounded shadow-sm border border-gray-200 cursor-zoom-in"
                                                  @click="openAt({{ $i }})">
-                                                <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
+                                                <img src="{{ $article['gallery'][$i] }}" alt="Gallery {{ $i + 1 }}" class="w-full h-full object-fit hover:scale-105 transition-transform duration-500" decoding="async" loading="lazy" />
                                                 @if($isLastVisible)
                                                     <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white font-black text-lg tracking-wider pointer-events-none">
                                                         +{{ $galleryCount - 7 }} {{ __('photos') }}
@@ -459,7 +459,7 @@
                                     {{-- Image --}}
                                     <div class="w-20 h-16 shrink-0 overflow-hidden bg-titan-navy/5">
                                         <img src="{{ $rel['image'] }}" alt="{{ $rel['title'] }}"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            class="w-full h-full object-fit group-hover:scale-105 transition-transform duration-300"
                                             loading="lazy" decoding="async" />
                                     </div>
                                     {{-- Text --}}
@@ -614,7 +614,7 @@
                         <a href="/projects/{{ $relProject['slug'] }}" class="group rounded border border-gray-200 bg-white overflow-hidden hover:border-titan-red/25 hover:shadow-md transition-all">
                             <div class="aspect-[16/10] overflow-hidden bg-titan-navy/5">
                                 @if($relProject['heroImage'])
-                                    <img src="{{ $relProject['heroImage'] }}" alt="{{ $relProject['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                    <img src="{{ $relProject['heroImage'] }}" alt="{{ $relProject['title'] }}" class="w-full h-full object-fit group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                                 @else
                                     <div class="w-full h-full flex items-center justify-center">
                                         <x-lucide-building-2 class="w-10 h-10 text-titan-navy/10" />
