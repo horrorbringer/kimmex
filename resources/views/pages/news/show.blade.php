@@ -562,45 +562,89 @@
 
         {{-- Next & Previous Story Navigation --}}
         @if($prevArticle || $nextArticle)
-            <section class="max-w-[1240px] mx-auto px-4 sm:px-6 pb-12">
-                <div class="rounded-xl border border-gray-200/90 bg-white p-3 sm:p-4 shadow-2xs">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
-                        
-                        {{-- Previous Story --}}
-                        <div class="flex-1 min-w-0 {{ !$prevArticle ? 'hidden sm:block sm:invisible' : '' }}">
-                            @if($prevArticle)
-                                <a href="/news/{{ $prevArticle['slug'] }}" class="group flex items-center gap-3 py-1 hover:text-titan-red transition-colors">
-                                    <div class="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 group-hover:bg-titan-red group-hover:text-white text-gray-500 flex items-center justify-center shrink-0 transition-colors">
-                                        <x-lucide-arrow-left class="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <div class="text-[10px] font-black uppercase tracking-wider text-titan-red/80">{{ __('Previous') }}</div>
-                                        <div class="text-xs sm:text-sm font-bold text-titan-navy group-hover:text-titan-red truncate transition-colors">
-                                            {{ $prevArticle['title'] }}
-                                        </div>
-                                    </div>
-                                </a>
-                            @endif
-                        </div>
+            <section class="max-w-[1240px] mx-auto px-3 sm:px-6 pb-10 sm:pb-14">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    
+                    {{-- Previous Article Card --}}
+                    @if($prevArticle)
+                        <a href="/news/{{ $prevArticle['slug'] }}" 
+                           class="group relative flex flex-col justify-between rounded-xl sm:rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 hover:border-titan-red/40 hover:shadow-md transition-all duration-300">
+                            {{-- Header Meta --}}
+                            <div class="flex items-center justify-between gap-2 mb-3">
+                                <span class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-titan-red">
+                                    <x-lucide-arrow-left class="w-3.5 h-3.5 transition-transform duration-300 group-hover:-translate-x-1" />
+                                    {{ __('Previous Article') }}
+                                </span>
+                                @if(!empty($prevArticle['category']))
+                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-500 group-hover:bg-titan-navy/5 transition-colors">
+                                        {{ $prevArticle['category'] }}
+                                    </span>
+                                @endif
+                            </div>
 
-                        {{-- Next Story --}}
-                        <div class="flex-1 min-w-0 {{ $prevArticle ? 'pt-3 sm:pt-0 sm:pl-6' : '' }} {{ !$nextArticle ? 'hidden sm:block sm:invisible' : '' }}">
-                            @if($nextArticle)
-                                <a href="/news/{{ $nextArticle['slug'] }}" class="group flex items-center justify-end text-right gap-3 py-1 hover:text-titan-red transition-colors">
-                                    <div class="min-w-0 flex-1">
-                                        <div class="text-[10px] font-black uppercase tracking-wider text-titan-red/80">{{ __('Next') }}</div>
-                                        <div class="text-xs sm:text-sm font-bold text-titan-navy group-hover:text-titan-red truncate transition-colors">
-                                            {{ $nextArticle['title'] }}
-                                        </div>
+                            {{-- Content with Thumbnail --}}
+                            <div class="flex items-center gap-3.5 sm:gap-4">
+                                @if(!empty($prevArticle['image']))
+                                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0 bg-slate-100 border border-slate-200/60">
+                                        <img src="{{ $prevArticle['image'] }}" alt="{{ $prevArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                                     </div>
-                                    <div class="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 group-hover:bg-titan-red group-hover:text-white text-gray-500 flex items-center justify-center shrink-0 transition-colors">
-                                        <x-lucide-arrow-right class="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                                    </div>
-                                </a>
-                            @endif
-                        </div>
+                                @endif
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs sm:text-sm font-bold text-titan-navy group-hover:text-titan-red line-clamp-2 leading-snug transition-colors">
+                                        {{ $prevArticle['title'] }}
+                                    </h4>
+                                    @if(!empty($prevArticle['date']))
+                                        <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-1.5 block">
+                                            {{ $prevArticle['date'] }}
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @else
+                        <div class="hidden md:block"></div>
+                    @endif
 
-                    </div>
+                    {{-- Next Article Card --}}
+                    @if($nextArticle)
+                        <a href="/news/{{ $nextArticle['slug'] }}" 
+                           class="group relative flex flex-col justify-between rounded-xl sm:rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-5 hover:border-titan-red/40 hover:shadow-md transition-all duration-300 {{ !$prevArticle ? 'md:col-start-2' : '' }}">
+                            {{-- Header Meta --}}
+                            <div class="flex items-center justify-between gap-2 mb-3">
+                                @if(!empty($nextArticle['category']))
+                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-500 group-hover:bg-titan-navy/5 transition-colors">
+                                        {{ $nextArticle['category'] }}
+                                    </span>
+                                @else
+                                    <span></span>
+                                @endif
+                                <span class="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-titan-red">
+                                    {{ __('Next Article') }}
+                                    <x-lucide-arrow-right class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                                </span>
+                            </div>
+
+                            {{-- Content with Thumbnail --}}
+                            <div class="flex items-center justify-between gap-3.5 sm:gap-4">
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-xs sm:text-sm font-bold text-titan-navy group-hover:text-titan-red line-clamp-2 leading-snug transition-colors">
+                                        {{ $nextArticle['title'] }}
+                                    </h4>
+                                    @if(!empty($nextArticle['date']))
+                                        <span class="text-[10px] sm:text-[11px] text-slate-400 font-medium mt-1.5 block">
+                                            {{ $nextArticle['date'] }}
+                                        </span>
+                                    @endif
+                                </div>
+                                @if(!empty($nextArticle['image']))
+                                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0 bg-slate-100 border border-slate-200/60">
+                                        <img src="{{ $nextArticle['image'] }}" alt="{{ $nextArticle['title'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                                    </div>
+                                @endif
+                            </div>
+                        </a>
+                    @endif
+
                 </div>
             </section>
         @endif
