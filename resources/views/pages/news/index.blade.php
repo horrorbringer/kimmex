@@ -132,7 +132,7 @@
                        class="group relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-2xl border border-slate-200/80 bg-slate-900 shadow-xs hover:shadow-2xl transition-all duration-500 ease-out block hover:-translate-y-1.5">
                         <!-- Cover Image (Bright, Natural & Crisp) -->
                         <img :src="article.image" :alt="article.title"
-                             class="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
+                             class="w-full h-full object-fit group-hover:scale-106 transition-transform duration-700 ease-out"
                              loading="lazy" decoding="async" />
                         
                         <!-- Soft Natural Bottom Gradient Overlay -->
