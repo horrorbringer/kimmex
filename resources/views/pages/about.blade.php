@@ -151,8 +151,8 @@
 
 
         <!-- === WHO WE ARE === -->
-        <section id="profile" class="py-14 sm:py-20 md:py-28 px-5 sm:px-6 bg-white overflow-hidden">
-            <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <section id="profile" class="py-12 sm:py-16 md:py-20 px-5 sm:px-6 bg-white overflow-hidden">
+            <div class="max-w-[1200px] mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
                 <!-- Left: Image Grid -->
                 <div class="relative" x-data="{ shown: false }" x-intersect.once="shown = true">
@@ -188,12 +188,12 @@
 
                 <!-- Right: Text Content -->
                 <div>
-                    <div class="flex items-center gap-3 mb-6">
+                    <div class="flex items-center gap-3 mb-5">
                         <div class="w-10 h-[2px] bg-titan-red"></div>
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('WHO WE ARE') }}</span>
                     </div>
 
-                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy leading-tight mb-6 tracking-tight">
+                    <h2 class="text-3xl md:text-4xl font-heading font-black text-titan-navy leading-tight mb-5 tracking-tight">
                         {{ $tagline }}
                     </h2>
 
@@ -205,7 +205,7 @@
 
 
         <!-- === CEO MESSAGE === -->
-        <section class="relative py-14 sm:py-20 md:py-28 overflow-hidden" style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
+        <section class="relative py-12 sm:py-16 md:py-20 overflow-hidden" style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
             <div class="max-w-[1200px] mx-auto px-5 sm:px-6 relative z-10">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
@@ -294,12 +294,12 @@
 
 
         <!-- === CORE VALUES === -->
-        <section class="py-20 md:py-28 px-6 bg-white">
+        <section class="py-12 sm:py-16 md:py-20 px-5 sm:px-6 bg-white">
             <div class="max-w-[1200px] mx-auto">
                 <div x-data="{ shown: false }" x-intersect.once="shown = true"
                     :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-                    class="text-center mb-14 md:mb-20 transition-all duration-1000">
-                    <div class="flex items-center justify-center gap-3 mb-5">
+                    class="text-center mb-10 sm:mb-12 md:mb-14 transition-all duration-1000">
+                    <div class="flex items-center justify-center gap-3 mb-4">
                         <div class="w-8 h-[2px] bg-titan-red"></div>
                         <span class="text-titan-red font-bold uppercase tracking-[0.2em] text-xs">{{ __('WHAT DRIVES US') }}</span>
                         <div class="w-8 h-[2px] bg-titan-red"></div>
@@ -406,7 +406,7 @@
 
 
         <!-- === BEAUTIFUL & CLEAN PROJECT JOURNEY LINE CHART === -->
-        <section id="milestones" class="py-20 md:py-28 px-4 sm:px-6 bg-white border-t border-titan-navy/10 overflow-hidden"
+        <section id="milestones" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white border-t border-titan-navy/10 overflow-hidden"
             x-data="{
                 activeYear: 'all',
                 chartMode: 'cumulative', // 'cumulative' or 'annual'
@@ -636,10 +636,10 @@
 
         @if(($orgChartVisible ?? true) && $orgChartType !== 'none')
         <!-- === GOVERNANCE / ORG CHART === -->
-        <section id="leadership" class="py-14 sm:py-20 md:py-28 px-4 sm:px-6 bg-white overflow-hidden border-t border-titan-navy/10">
+        <section id="leadership" class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white overflow-hidden border-t border-titan-navy/10">
             <div class="max-w-[1700px] mx-auto">
                 @if($orgChartType === 'dynamic')
-                <div class="text-center mb-10 sm:mb-16 md:mb-24">
+                <div class="text-center mb-8 sm:mb-10 md:mb-12">
                     <div class="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-5">
                         <div class="w-6 sm:w-8 h-[2px] bg-titan-red"></div>
                         <span class="text-titan-red font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] sm:text-xs">{{ __('GOVERNANCE') }}</span>
@@ -731,7 +731,7 @@
 
 
         <!-- === QUALITY & SAFETY === -->
-        <section id="safety" class="py-20 md:py-28 px-6 bg-gray-50 border-y border-gray-100">
+        <section id="safety" class="py-12 sm:py-16 md:py-20 px-5 sm:px-6 bg-gray-50 border-y border-gray-100">
             <div class="max-w-[1200px] mx-auto">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
                     <!-- Left: Content -->
@@ -798,7 +798,7 @@
 
 
         <!-- === CTA SECTION === -->
-        <section class="relative py-20 md:py-28 overflow-hidden" style="background-color: #071A33;">
+        <section class="relative py-12 sm:py-16 md:py-20 overflow-hidden" style="background-color: #071A33;">
             {{-- Background image with overlay --}}
             <div class="absolute inset-0">
                 <img src="{{ $aboutHeroImageUrl }}" alt="" class="w-full h-full object-cover opacity-30" loading="lazy" decoding="async" />
