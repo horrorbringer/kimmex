@@ -340,7 +340,7 @@
                         <div x-show="displayMode === 'carousel'" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
                             <div class="space-y-4">
                                 <!-- Main Showcase Stage -->
-                                <div class="relative aspect-video max-h-[560px] w-full rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-lg group">
+                                <div class="relative aspect-video max-h-[560px] w-full rounded-2xl overflow-hidden bg-slate-950 border border-white/10 group">
                                     @foreach($project['images'] as $i => $img)
                                         @php
                                             $imgUrl = is_array($img) ? $img['url'] : $img;
@@ -348,38 +348,38 @@
                                         @endphp
                                         <div x-show="activeSlide === {{ $i }}" x-transition:enter="transition-opacity ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="absolute inset-0">
                                             <img src="{{ $imgUrl }}" alt="{{ $project['title'] }} {{ $i + 1 }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
-                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
-                                            <div class="absolute bottom-6 left-6 right-20 flex flex-col items-start gap-2 z-10">
-                                                <span class="px-3 py-1 rounded-full bg-titan-red text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent"></div>
+                                            <div class="absolute bottom-5 left-5 right-20 flex flex-col items-start gap-1.5 z-10">
+                                                <span class="px-2.5 py-0.5 rounded-full bg-titan-red text-white text-[10px] font-black uppercase tracking-widest">
                                                     {{ $i + 1 }} / {{ count($project['images']) }}
                                                 </span>
-                                                <p class="text-base md:text-lg font-bold text-white max-w-2xl">
+                                                <p class="text-sm md:text-base font-bold text-white max-w-2xl">
                                                     {{ $imgCaption ?: $project['title'] }}
                                                 </p>
                                             </div>
-                                            <button type="button" @click="openLightbox({{ $i }})" class="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-titan-red transition-colors duration-200 flex items-center justify-center text-white cursor-pointer shadow-md border border-white/15">
+                                            <button type="button" @click="openLightbox({{ $i }})" class="absolute top-5 right-5 z-20 w-9 h-9 rounded-full bg-slate-900/70 hover:bg-titan-red transition-colors duration-200 flex items-center justify-center text-white cursor-pointer border border-white/15">
                                                 <x-lucide-maximize-2 class="w-4 h-4" />
                                             </button>
                                         </div>
                                     @endforeach
 
                                     <!-- Carousel Nav Arrows -->
-                                    <button type="button" @click="activeSlide = (activeSlide - 1 + total) % total" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/80 border border-white/10 hover:bg-titan-red text-white transition-colors duration-200 flex items-center justify-center cursor-pointer shadow-lg">
+                                    <button type="button" @click="activeSlide = (activeSlide - 1 + total) % total" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-900/70 border border-white/10 hover:bg-titan-red text-white transition-colors duration-200 flex items-center justify-center cursor-pointer">
                                         <x-lucide-chevron-left class="w-5 h-5" />
                                     </button>
-                                    <button type="button" @click="activeSlide = (activeSlide + 1) % total" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-slate-900/80 border border-white/10 hover:bg-titan-red text-white transition-colors duration-200 flex items-center justify-center cursor-pointer shadow-lg">
+                                    <button type="button" @click="activeSlide = (activeSlide + 1) % total" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-900/70 border border-white/10 hover:bg-titan-red text-white transition-colors duration-200 flex items-center justify-center cursor-pointer">
                                         <x-lucide-chevron-right class="w-5 h-5" />
                                     </button>
                                 </div>
 
                                 <!-- Filmstrip Thumbnail Track -->
-                                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
+                                <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
                                     @foreach($project['images'] as $i => $img)
                                         @php
                                             $imgUrl = is_array($img) ? $img['url'] : $img;
                                         @endphp
                                         <button type="button" @click="activeSlide = {{ $i }}"
-                                            :class="activeSlide === {{ $i }} ? 'ring-2 ring-titan-red opacity-100 shadow-md' : 'opacity-60 hover:opacity-100'"
+                                            :class="activeSlide === {{ $i }} ? 'ring-2 ring-titan-red opacity-100' : 'opacity-60 hover:opacity-100'"
                                             class="shrink-0 aspect-[4/3] w-20 md:w-28 rounded-lg overflow-hidden bg-slate-800 border border-white/10 transition-opacity duration-200 cursor-pointer relative">
                                             <img src="{{ $imgUrl }}" alt="Thumb {{ $i + 1 }}" class="w-full h-full object-cover" loading="lazy" decoding="async" />
                                         </button>
