@@ -45,6 +45,9 @@ class AboutController extends Controller
             array_keys($defaultSectionImages)
         );
 
+        $aboutSafetyImage = $brandProfile['about_safety_image'] ?? null;
+        $aboutSafetyImageUrl = $resolveImage($aboutSafetyImage, '/images/webp/projects/Thumbnail-6.webp');
+
         $aboutData = [
             'story' => $brand['company_story'] ?? __('Since our humble beginnings, KIM MEX Construction has grown into a premier partner...'),
             'values' => array_map(function ($v) {
@@ -260,7 +263,7 @@ class AboutController extends Controller
             'locale', 'localeKey',
             'brandProfile', 'brand',
             'ceoName', 'aboutHeroImageUrl',
-            'aboutSectionImages', 'aboutData',
+            'aboutSectionImages', 'aboutSafetyImageUrl', 'aboutData',
             'milestones', 'orgChart',
             'orgProfile', 'orgChartVisible', 'orgChartType', 'orgChartImage', 'orgChartPdf',
             'tagline',

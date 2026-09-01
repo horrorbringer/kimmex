@@ -121,6 +121,7 @@ class ManageSettings extends Page implements HasForms
             // Branding English & Khmer
             'ceo_name' => $brand['ceo_name'] ?? '',
             'about_hero_image' => $brand['about_hero_image'] ?? '',
+            'about_safety_image' => $brand['about_safety_image'] ?? '',
             'about_section_image_1' => $brand['about_section_images'][0] ?? '',
             'about_section_image_2' => $brand['about_section_images'][1] ?? '',
             'about_section_image_3' => $brand['about_section_images'][2] ?? '',
@@ -297,7 +298,7 @@ class ManageSettings extends Page implements HasForms
                                     ])->collapsible(),
 
                                 Section::make(__('About Page Images'))
-                                    ->description(__('Manage the About page hero image and the four images beside the Who We Are section.'))
+                                    ->description(__('Manage the About page hero image, Who We Are section images, and Quality & Safety standards image.'))
                                     ->columns(2)
                                     ->schema([
                                         $this->makeImageUpload('about_hero_image', __('About Hero Image'), 'brand/about')
@@ -307,6 +308,9 @@ class ManageSettings extends Page implements HasForms
                                         $this->makeImageUpload('about_section_image_2', __('Who We Are Image 2'), 'brand/about'),
                                         $this->makeImageUpload('about_section_image_3', __('Who We Are Image 3'), 'brand/about'),
                                         $this->makeImageUpload('about_section_image_4', __('Who We Are Image 4'), 'brand/about'),
+                                        $this->makeImageUpload('about_safety_image', __('Quality & Safety Standards Image'), 'brand/about')
+                                            ->helperText(__('Used in the "OUR STANDARDS / Quality & Safety First" section.'))
+                                            ->columnSpanFull(),
                                     ])
                                     ->collapsible(),
 
@@ -847,6 +851,7 @@ class ManageSettings extends Page implements HasForms
         SystemSetting::set('brand_identity', [
             'ceo_name' => $state['ceo_name'],
             'about_hero_image' => $state['about_hero_image'] ?? '',
+            'about_safety_image' => $state['about_safety_image'] ?? '',
             'about_section_images' => [
                 $state['about_section_image_1'] ?? '',
                 $state['about_section_image_2'] ?? '',

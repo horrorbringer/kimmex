@@ -788,7 +788,7 @@
                         :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
                         class="transition-all duration-1000 delay-200 relative">
                         <div class="rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.12)]">
-                            <img src="/images/webp/projects/Thumbnail-6.webp" alt="{{ __('Safety Inspection') }}"
+                            <img src="{{ $aboutSafetyImageUrl }}" alt="{{ __('Quality & Safety Standards') }}"
                                 class="w-full aspect-[4/3] object-cover transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" loading="lazy" decoding="async" />
                         </div>
                     </div>
