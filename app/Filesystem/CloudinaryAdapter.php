@@ -323,6 +323,7 @@ class CloudinaryAdapter implements FilesystemAdapter
             'png' => 'image/png',
             'gif' => 'image/gif',
             'webp' => 'image/webp',
+            'avif' => 'image/avif',
             'svg' => 'image/svg+xml',
             'pdf' => 'application/pdf',
             default => 'application/octet-stream',

@@ -216,8 +216,9 @@ class ManageSettings extends Page implements HasForms
                                                 $this->makeImageUpload('logo', __('Default Logo'), 'organization')
                                                     ->helperText(__('Main logo. Used if header/footer logo is not set.')),
                                                 $this->makeImageUpload('favicon', __('Favicon'), 'organization')
-                                                    ->helperText(__('PNG, ICO, JPG, WebP, or SVG. Maximum size: 2 MB.'))
-                                                    ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/svg+xml'])
+                                                    ->helperText(__('PNG, ICO, JPG, WebP, AVIF, or SVG. Maximum size: 2 MB.'))
+                                                    ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
+                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
                                                     ->maxSize(2048),
                                                 $this->makeImageUpload('logo_header', __('Header Logo'), 'organization')
                                                     ->helperText(__('Optional. Navbar header logo. Falls back to Default Logo.')),
@@ -345,6 +346,8 @@ class ManageSettings extends Page implements HasForms
                                                 FileUpload::make('image')
                                                     ->label(__('Image'))
                                                     ->image()
+                                                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
+                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
                                                     ->disk(config('filesystems.public_uploads_disk'))
                                                     ->directory('brand/core-values')
                                                     ->visibility('public')
@@ -573,7 +576,8 @@ class ManageSettings extends Page implements HasForms
                                                 FileUpload::make('qr')
                                                     ->label(__('Telegram QR Image'))
                                                     ->image()
-                                                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                                                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/avif'])
+                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
                                                     ->maxSize(2048)
                                                     ->disk(config('filesystems.public_uploads_disk'))
                                                     ->directory('organization/career-telegram')
@@ -758,7 +762,7 @@ class ManageSettings extends Page implements HasForms
         } catch (ValidationException $exception) {
             Notification::make()
                 ->title(__('Upload failed'))
-                ->body(__('Please check the selected file type and size, then try again. Images must be valid PNG, JPG, WebP, SVG, or ICO files within the allowed size.'))
+                ->body(__('Please check the selected file type and size, then try again. Images must be valid PNG, JPG, WebP, AVIF, SVG, or ICO files within the allowed size.'))
                 ->danger()
                 ->send();
 
@@ -940,15 +944,16 @@ class ManageSettings extends Page implements HasForms
             ->label($label)
             ->validationAttribute($label)
             ->image()
-            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'])
+            ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
+            ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
             ->maxSize(5120)
             ->disk(config('filesystems.public_uploads_disk'))
             ->directory($directory)
             ->validationMessages([
                 'uploaded' => __('The :attribute could not be uploaded. Please check your connection and storage settings, then try again.'),
                 'image' => __('The :attribute must be a valid image file.'),
-                'mimetypes' => __('The :attribute must be PNG, JPG, WebP, or SVG.'),
-                'mimes' => __('The :attribute must be PNG, JPG, WebP, or SVG.'),
+                'mimetypes' => __('The :attribute must be PNG, JPG, WebP, AVIF, or SVG.'),
+                'mimes' => __('The :attribute must be PNG, JPG, WebP, AVIF, or SVG.'),
                 'max' => __('The :attribute is too large. Please upload a smaller file.'),
             ]);
     }
