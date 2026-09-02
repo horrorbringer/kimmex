@@ -126,6 +126,9 @@ class ManageSettings extends Page implements HasForms
             'about_section_image_2' => $brand['about_section_images'][1] ?? '',
             'about_section_image_3' => $brand['about_section_images'][2] ?? '',
             'about_section_image_4' => $brand['about_section_images'][3] ?? '',
+            'home_about_large_image' => $brand['home_about_large_image'] ?? '',
+            'home_about_top_image' => $brand['home_about_top_image'] ?? '',
+            'home_about_bottom_image' => $brand['home_about_bottom_image'] ?? '',
             'company_story_en' => $brand['en']['company_story'] ?? ($brand['company_story'] ?? ''),
             'company_story_km' => $brand['km']['company_story'] ?? '',
             'ceo_message_en' => $brand['en']['ceo_message'] ?? ($brand['ceo_message'] ?? ''),
@@ -203,160 +206,193 @@ class ManageSettings extends Page implements HasForms
             ->schema([
                 Tabs::make('SettingsHub')
                     ->tabs([
-                        // --- 1. ORGANIZATION TAB ---
-                        Tab::make(__('Organization'))
+                        // --- 1. COMPANY & BRAND TAB ---
+                        Tab::make(__('Company & Brand'))
                             ->icon('heroicon-o-building-office-2')
                             ->schema([
-                                Grid::make(2)->schema([
-                                    Section::make(__('Identity & Brand Assets'))
-                                        ->description(__('Manage logos, favicon, registration, and date.'))
-                                        ->columnSpan(1)
-                                        ->schema([
-                                            Grid::make(2)->schema([
-                                                $this->makeImageUpload('logo', __('Default Logo'), 'organization')
-                                                    ->helperText(__('Main logo. Used if header/footer logo is not set.')),
-                                                $this->makeImageUpload('favicon', __('Favicon'), 'organization')
-                                                    ->helperText(__('PNG, ICO, JPG, WebP, AVIF, or SVG. Maximum size: 2 MB.'))
-                                                    ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
-                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
-                                                    ->maxSize(2048),
-                                                $this->makeImageUpload('logo_header', __('Header Logo'), 'organization')
-                                                    ->helperText(__('Optional. Navbar header logo. Falls back to Default Logo.')),
-                                                $this->makeImageUpload('logo_footer', __('Footer Logo'), 'organization')
-                                                    ->helperText(__('Optional. Site footer logo. Falls back to Default Logo.')),
-                                            ]),
-                                            TextInput::make('registration_number')->label(__('Registration #')),
-                                            DatePicker::make('founded_date')->label(__('Founded Date')),
-                                        ]),
-
-                                    Section::make(__('Contact & Location'))
-                                        ->description(__('Global contact details and map.'))
-                                        ->columnSpan(1)
-                                        ->schema([
-                                            TextInput::make('email')->email()->label(__('Official Email')),
-                                            TextInput::make('phone')->tel()->label(__('Contact Phone')),
-                                            TextInput::make('google_maps_url')->url()->label(__('Google Maps Link')),
-                                        ]),
-                                ]),
-
-                                Section::make(__('Localized Organization Profile'))
-                                    ->description(__('Manage company name, tagline, address, and office hours for English and Khmer languages.'))
-                                    ->schema([
-                                        Tabs::make('OrgLocalizedTabs')
-                                            ->tabs([
-                                                Tab::make('🇬🇧 English')
-                                                    ->schema([
-                                                        TextInput::make('company_name_en')->label(__('Company Name (English)'))->required(),
-                                                        TextInput::make('website_title_en')
-                                                            ->label(__('Website Title (English)'))
-                                                            ->helperText(__('Custom title used for browser tabs and SEO.')),
-                                                        TextInput::make('tagline_en')
-                                                            ->label(__('Tagline (English)')),
-                                                        TextInput::make('working_hours_en')->label(__('Office Hours (English)')),
-                                                        Textarea::make('address_en')->rows(3)->label(__('Physical Address (English)')),
-                                                    ]),
-                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
-                                                    ->schema([
-                                                        TextInput::make('company_name_km')->label(__('ឈ្មោះក្រុមហ៊ុន (ភាសាខ្មែរ)')),
-                                                        TextInput::make('website_title_km')->label(__('ចំណងជើងគេហទំព័រ (ភាសាខ្មែរ)')),
-                                                        TextInput::make('tagline_km')->label(__('ពាក្យស្លោក (ភាសាខ្មែរ)')),
-                                                        TextInput::make('working_hours_km')->label(__('ម៉ោងធ្វើការ (ភាសាខ្មែរ)')),
-                                                        Textarea::make('address_km')->rows(3)->label(__('អាសយដ្ឋាន (ភាសាខ្មែរ)')),
-                                                    ]),
-                                            ]),
-                                    ]),
-
-                                Section::make(__('Executive Message & Bio'))
-                                    ->schema([
-                                        TextInput::make('ceo_name')->label(__('CEO Name')),
-                                        Tabs::make('CeoStoryTabs')
-                                            ->tabs([
-                                                Tab::make('🇬🇧 English')
-                                                    ->schema([
-                                                        RichEditor::make('ceo_message_en')
-                                                            ->resizableImages()
-                                                            ->label(__('CEO Official Message (English)'))
-                                                            ->columnSpanFull()
-                                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                                            ->fileAttachmentsVisibility('public'),
-                                                        Textarea::make('company_story_en')
-                                                            ->label(__('Our Story (English)'))
-                                                            ->rows(4),
-                                                    ]),
-                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
-                                                    ->schema([
-                                                        RichEditor::make('ceo_message_km')
-                                                            ->resizableImages()
-                                                            ->label(__('សារផ្លូវការរបស់នាយកប្រតិបត្តិ (ភាសាខ្មែរ)'))
-                                                            ->columnSpanFull()
-                                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
-                                                            ->fileAttachmentsVisibility('public'),
-                                                        Textarea::make('company_story_km')
-                                                            ->label(__('រឿងរ៉ាវក្រុមហ៊ុន (ភាសាខ្មែរ)'))
-                                                            ->rows(4),
-                                                    ]),
-                                            ]),
-                                    ])->collapsible(),
-
-                                Section::make(__('About Page Images'))
-                                    ->description(__('Manage the About page hero image, Who We Are section images, and Quality & Safety standards image.'))
-                                    ->columns(2)
-                                    ->schema([
-                                        $this->makeImageUpload('about_hero_image', __('About Hero Image'), 'brand/about')
-                                            ->helperText(__('Used as the large background image at the top of the About page.'))
-                                            ->columnSpanFull(),
-                                        $this->makeImageUpload('about_section_image_1', __('Who We Are Image 1'), 'brand/about'),
-                                        $this->makeImageUpload('about_section_image_2', __('Who We Are Image 2'), 'brand/about'),
-                                        $this->makeImageUpload('about_section_image_3', __('Who We Are Image 3'), 'brand/about'),
-                                        $this->makeImageUpload('about_section_image_4', __('Who We Are Image 4'), 'brand/about'),
-                                        $this->makeImageUpload('about_safety_image', __('Quality & Safety Standards Image'), 'brand/about')
-                                            ->helperText(__('Used in the "OUR STANDARDS / Quality & Safety First" section.'))
-                                            ->columnSpanFull(),
-                                    ])
-                                    ->collapsible(),
-
-                                Section::make(__('Mission, Vision & Goals'))
-                                    ->schema([
-                                        Tabs::make('MissionTabs')
-                                            ->tabs([
-                                                Tab::make('🇬🇧 English')
-                                                    ->schema([
-                                                        Grid::make(3)->schema([
-                                                            Textarea::make('mission_en')->label(__('Mission (English)'))->rows(3),
-                                                            Textarea::make('vision_en')->label(__('Vision (English)'))->rows(3),
-                                                            Textarea::make('goal_en')->label(__('Goal (English)'))->rows(3),
-                                                        ]),
-                                                    ]),
-                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
-                                                    ->schema([
-                                                        Grid::make(3)->schema([
-                                                            Textarea::make('mission_km')->label(__('បេសកកម្ម (ភាសាខ្មែរ)'))->rows(3),
-                                                            Textarea::make('vision_km')->label(__('ចក្ខុវិស័យ (ភាសាខ្មែរ)'))->rows(3),
-                                                            Textarea::make('goal_km')->label(__('គោលដៅ (ភាសាខ្មែរ)'))->rows(3),
-                                                        ]),
-                                                    ]),
-                                            ]),
-                                    ])->collapsible()->collapsed(),
-
-                                Section::make(__('Core Values'))
-                                    ->schema([
-                                        Repeater::make('values')
-                                            ->label(__('Core Values'))
+                                Tabs::make('CompanyBrandSubTabs')
+                                    ->tabs([
+                                        // --- Sub-Tab 1: Profile, Contact & Logos ---
+                                        Tab::make(__('General Profile & Contact'))
+                                            ->icon('heroicon-o-information-circle')
                                             ->schema([
-                                                FileUpload::make('image')
-                                                    ->label(__('Image'))
-                                                    ->image()
-                                                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
-                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
-                                                    ->disk(config('filesystems.public_uploads_disk'))
-                                                    ->directory('brand/core-values')
-                                                    ->visibility('public')
-                                                    ->columnSpanFull(),
-                                            ])
-                                            ->reorderable()
-                                            ->collapsible()
-                                            ->itemLabel(fn (array $state): string => filled($state['image'] ?? null) ? __('Image') : __('New image')),
-                                    ])->collapsible()->collapsed(),
+                                                Grid::make(2)->schema([
+                                                    Section::make(__('Identity & Brand Assets'))
+                                                        ->description(__('Manage logos, favicon, registration, and date.'))
+                                                        ->columnSpan(1)
+                                                        ->schema([
+                                                            Grid::make(2)->schema([
+                                                                $this->makeImageUpload('logo', __('Default Logo'), 'organization')
+                                                                    ->helperText(__('Main logo. Used if header/footer logo is not set.')),
+                                                                $this->makeImageUpload('favicon', __('Favicon'), 'organization')
+                                                                    ->helperText(__('PNG, ICO, JPG, WebP, AVIF, or SVG. Maximum size: 2 MB.'))
+                                                                    ->acceptedFileTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
+                                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
+                                                                    ->maxSize(2048),
+                                                                $this->makeImageUpload('logo_header', __('Header Logo'), 'organization')
+                                                                    ->helperText(__('Optional. Navbar header logo. Falls back to Default Logo.')),
+                                                                $this->makeImageUpload('logo_footer', __('Footer Logo'), 'organization')
+                                                                    ->helperText(__('Optional. Site footer logo. Falls back to Default Logo.')),
+                                                            ]),
+                                                            TextInput::make('registration_number')->label(__('Registration #')),
+                                                            DatePicker::make('founded_date')->label(__('Founded Date')),
+                                                        ]),
+
+                                                    Section::make(__('Contact & Location'))
+                                                        ->description(__('Global contact details and map.'))
+                                                        ->columnSpan(1)
+                                                        ->schema([
+                                                            TextInput::make('email')->email()->label(__('Official Email')),
+                                                            TextInput::make('phone')->tel()->label(__('Contact Phone')),
+                                                            TextInput::make('google_maps_url')->url()->label(__('Google Maps Link')),
+                                                        ]),
+                                                ]),
+
+                                                Section::make(__('Localized Organization Profile'))
+                                                    ->description(__('Manage company name, tagline, address, and office hours for English and Khmer languages.'))
+                                                    ->schema([
+                                                        Tabs::make('OrgLocalizedTabs')
+                                                            ->tabs([
+                                                                Tab::make('🇬🇧 English')
+                                                                    ->schema([
+                                                                        TextInput::make('company_name_en')->label(__('Company Name (English)'))->required(),
+                                                                        TextInput::make('website_title_en')
+                                                                            ->label(__('Website Title (English)'))
+                                                                            ->helperText(__('Custom title used for browser tabs and SEO.')),
+                                                                        TextInput::make('tagline_en')
+                                                                            ->label(__('Tagline (English)')),
+                                                                        TextInput::make('working_hours_en')->label(__('Office Hours (English)')),
+                                                                        Textarea::make('address_en')->rows(3)->label(__('Physical Address (English)')),
+                                                                    ]),
+                                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
+                                                                    ->schema([
+                                                                        TextInput::make('company_name_km')->label(__('ឈ្មោះក្រុមហ៊ុន (ភាសាខ្មែរ)')),
+                                                                        TextInput::make('website_title_km')->label(__('ចំណងជើងគេហទំព័រ (ភាសាខ្មែរ)')),
+                                                                        TextInput::make('tagline_km')->label(__('ពាក្យស្លោក (ភាសាខ្មែរ)')),
+                                                                        TextInput::make('working_hours_km')->label(__('ម៉ោងធ្វើការ (ភាសាខ្មែរ)')),
+                                                                        Textarea::make('address_km')->rows(3)->label(__('អាសយដ្ឋាន (ភាសាខ្មែរ)')),
+                                                                    ]),
+                                                            ]),
+                                                    ]),
+                                            ]),
+
+                                        // --- Sub-Tab 2: Story & Leadership ---
+                                        Tab::make(__('Story & Leadership'))
+                                            ->icon('heroicon-o-sparkles')
+                                            ->schema([
+                                                Section::make(__('Executive Message & Bio'))
+                                                    ->schema([
+                                                        TextInput::make('ceo_name')->label(__('CEO Name')),
+                                                        Tabs::make('CeoStoryTabs')
+                                                            ->tabs([
+                                                                Tab::make('🇬🇧 English')
+                                                                    ->schema([
+                                                                        RichEditor::make('ceo_message_en')
+                                                                            ->resizableImages()
+                                                                            ->label(__('CEO Official Message (English)'))
+                                                                            ->columnSpanFull()
+                                                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
+                                                                            ->fileAttachmentsVisibility('public'),
+                                                                        Textarea::make('company_story_en')
+                                                                            ->label(__('Our Story (English)'))
+                                                                            ->rows(4),
+                                                                    ]),
+                                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
+                                                                    ->schema([
+                                                                        RichEditor::make('ceo_message_km')
+                                                                            ->resizableImages()
+                                                                            ->label(__('សារផ្លូវការរបស់នាយកប្រតិបត្តិ (ភាសាខ្មែរ)'))
+                                                                            ->columnSpanFull()
+                                                                            ->fileAttachmentsDisk(config('filesystems.public_uploads_disk'))
+                                                                            ->fileAttachmentsVisibility('public'),
+                                                                        Textarea::make('company_story_km')
+                                                                            ->label(__('រឿងរ៉ាវក្រុមហ៊ុន (ភាសាខ្មែរ)'))
+                                                                            ->rows(4),
+                                                                    ]),
+                                                            ]),
+                                                    ]),
+
+                                                Section::make(__('Mission, Vision & Goals'))
+                                                    ->schema([
+                                                        Tabs::make('MissionTabs')
+                                                            ->tabs([
+                                                                Tab::make('🇬🇧 English')
+                                                                    ->schema([
+                                                                        Grid::make(3)->schema([
+                                                                            Textarea::make('mission_en')->label(__('Mission (English)'))->rows(3),
+                                                                            Textarea::make('vision_en')->label(__('Vision (English)'))->rows(3),
+                                                                            Textarea::make('goal_en')->label(__('Goal (English)'))->rows(3),
+                                                                        ]),
+                                                                    ]),
+                                                                Tab::make('🇰🇭 ភាសាខ្មែរ (Khmer)')
+                                                                    ->schema([
+                                                                        Grid::make(3)->schema([
+                                                                            Textarea::make('mission_km')->label(__('បេសកកម្ម (ភាសាខ្មែរ)'))->rows(3),
+                                                                            Textarea::make('vision_km')->label(__('ចក្ខុវិស័យ (ភាសាខ្មែរ)'))->rows(3),
+                                                                            Textarea::make('goal_km')->label(__('គោលដៅ (ភាសាខ្មែរ)'))->rows(3),
+                                                                        ]),
+                                                                    ]),
+                                                            ]),
+                                                    ]),
+
+                                                Section::make(__('Core Values'))
+                                                    ->schema([
+                                                        Repeater::make('values')
+                                                            ->label(__('Core Values'))
+                                                            ->schema([
+                                                                FileUpload::make('image')
+                                                                    ->label(__('Image'))
+                                                                    ->image()
+                                                                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp', 'image/avif', 'image/svg+xml'])
+                                                                    ->mimeTypeMap(['webp' => 'image/webp', 'avif' => 'image/avif'])
+                                                                    ->disk(config('filesystems.public_uploads_disk'))
+                                                                    ->directory('brand/core-values')
+                                                                    ->visibility('public')
+                                                                    ->columnSpanFull(),
+                                                            ])
+                                                            ->reorderable()
+                                                            ->collapsible()
+                                                            ->itemLabel(fn (array $state): string => filled($state['image'] ?? null) ? __('Image') : __('New image')),
+                                                    ]),
+                                            ]),
+
+                                        // --- Sub-Tab 3: Website Images ---
+                                        Tab::make(__('Website Images'))
+                                            ->icon('heroicon-o-photo')
+                                            ->schema([
+                                                Section::make(__('Home Page "About Us" Images'))
+                                                    ->description(__('Manage the 3 showcase images displayed in the "About Us" section on the Home page.'))
+                                                    ->columns(3)
+                                                    ->schema([
+                                                        $this->makeImageUpload('home_about_large_image', __('1. Large Left Image (Vertical 3:4)'), 'home/about')
+                                                            ->helperText(__('Main vertical showcase image on the left side.'))
+                                                            ->columnSpan(1),
+                                                        $this->makeImageUpload('home_about_top_image', __('2. Top Right Image (Horizontal 4:3)'), 'home/about')
+                                                            ->helperText(__('Top horizontal image on the right.'))
+                                                            ->columnSpan(1),
+                                                        $this->makeImageUpload('home_about_bottom_image', __('3. Bottom Right Image (Horizontal 4:3)'), 'home/about')
+                                                            ->helperText(__('Bottom horizontal image on the right.'))
+                                                            ->columnSpan(1),
+                                                    ]),
+
+                                                Section::make(__('About Page Images'))
+                                                    ->description(__('Manage the About page hero image, Who We Are section images, and Quality & Safety standards image.'))
+                                                    ->columns(2)
+                                                    ->schema([
+                                                        $this->makeImageUpload('about_hero_image', __('About Hero Image'), 'brand/about')
+                                                            ->helperText(__('Used as the large background image at the top of the About page.'))
+                                                            ->columnSpanFull(),
+                                                        $this->makeImageUpload('about_section_image_1', __('Who We Are Image 1'), 'brand/about'),
+                                                        $this->makeImageUpload('about_section_image_2', __('Who We Are Image 2'), 'brand/about'),
+                                                        $this->makeImageUpload('about_section_image_3', __('Who We Are Image 3'), 'brand/about'),
+                                                        $this->makeImageUpload('about_section_image_4', __('Who We Are Image 4'), 'brand/about'),
+                                                        $this->makeImageUpload('about_safety_image', __('Quality & Safety Standards Image'), 'brand/about')
+                                                            ->helperText(__('Used in the "OUR STANDARDS / Quality & Safety First" section.'))
+                                                            ->columnSpanFull(),
+                                                    ]),
+                                            ]),
+                                    ])
+                                    ->columnSpanFull(),
                             ]),
 
                         // --- 2. AI ENGINE TAB ---
@@ -862,6 +898,9 @@ class ManageSettings extends Page implements HasForms
                 $state['about_section_image_3'] ?? '',
                 $state['about_section_image_4'] ?? '',
             ],
+            'home_about_large_image' => $state['home_about_large_image'] ?? '',
+            'home_about_top_image' => $state['home_about_top_image'] ?? '',
+            'home_about_bottom_image' => $state['home_about_bottom_image'] ?? '',
             'en' => $brandEn,
             'km' => $brandKm,
         ]);
@@ -930,6 +969,9 @@ class ManageSettings extends Page implements HasForms
         Cache::forget('system_setting_organization_profile');
         Cache::forget('system_setting_brand_identity');
         Cache::forget('system_setting_integration_settings');
+        foreach (['en', 'km', 'kh'] as $locale) {
+            Cache::forget("home_about_data_{$locale}");
+        }
 
         Notification::make()
             ->title(__('Global Configuration Saved'))

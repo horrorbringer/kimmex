@@ -32,9 +32,18 @@ class HomePageService
             $brand = $brandProfile[$localeKey] ?? ($brandProfile['en'] ?? []);
             $org = $orgProfile[$localeKey] ?? ($orgProfile['en'] ?? []);
 
-            $aboutLargeImage = '/images/webp/projects/Thumbnail-2.webp';
-            $aboutTopImage = '/images/webp/projects/Thumbnail-3.webp';
-            $aboutBottomImage = '/images/webp/projects/Thumbnail-4.webp';
+            $aboutLargeImage = PublicStorage::urlIfExists(
+                $brandProfile['home_about_large_image'] ?? null,
+                '/images/webp/projects/Thumbnail-2.webp'
+            );
+            $aboutTopImage = PublicStorage::urlIfExists(
+                $brandProfile['home_about_top_image'] ?? null,
+                '/images/webp/projects/Thumbnail-3.webp'
+            );
+            $aboutBottomImage = PublicStorage::urlIfExists(
+                $brandProfile['home_about_bottom_image'] ?? null,
+                '/images/webp/projects/Thumbnail-4.webp'
+            );
 
             return [
                 'story' => $brand['company_story'] ?? __("With over 25 years of experience, we have established ourselves as Cambodia's most trusted construction partner, delivering projects that stand the test of time."),
@@ -42,9 +51,9 @@ class HomePageService
                 'aboutLargeImage' => $aboutLargeImage,
                 'aboutTopImage' => $aboutTopImage,
                 'aboutBottomImage' => $aboutBottomImage,
-                'aboutLargeImageSrcset' => PublicStorage::localResponsiveSrcset($aboutLargeImage, [320, 640, 960]),
-                'aboutTopImageSrcset' => PublicStorage::localResponsiveSrcset($aboutTopImage, [320, 640, 960]),
-                'aboutBottomImageSrcset' => PublicStorage::localResponsiveSrcset($aboutBottomImage, [320, 640, 960]),
+                'aboutLargeImageSrcset' => PublicStorage::cloudinaryResponsiveSrcset($aboutLargeImage, [320, 640, 960]) ?? PublicStorage::localResponsiveSrcset($aboutLargeImage, [320, 640, 960]),
+                'aboutTopImageSrcset' => PublicStorage::cloudinaryResponsiveSrcset($aboutTopImage, [320, 640, 960]) ?? PublicStorage::localResponsiveSrcset($aboutTopImage, [320, 640, 960]),
+                'aboutBottomImageSrcset' => PublicStorage::cloudinaryResponsiveSrcset($aboutBottomImage, [320, 640, 960]) ?? PublicStorage::localResponsiveSrcset($aboutBottomImage, [320, 640, 960]),
             ];
         });
     }
