@@ -32,6 +32,7 @@ class ActivityLogsTable
                 TextColumn::make('description')
                     ->label(__('What Changed'))
                     ->limit(60)
+                    ->tooltip(fn (TextColumn $column): ?string => $column->getState())
                     ->wrap()
                     ->searchable(),
                 TextColumn::make('subject_type')

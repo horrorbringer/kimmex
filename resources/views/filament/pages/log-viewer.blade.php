@@ -138,16 +138,17 @@
                             @endphp
 
                             <div
-                                x-data="{ expanded: false }"
+                                x-data="{ expanded: false, copied: false }"
                                 style="border: 1px solid {{ $colors['border'] }}; background: {{ $colors['bg'] }}; border-radius: 6px; padding: 12px 16px; margin-bottom: 8px;"
                             >
                                 {{-- Entry Header --}}
-                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; min-width: 0;">
                                     {{-- Expand toggle (only if has stack trace) --}}
                                     @if(!empty($entry['stackTrace']))
                                         <button
+                                            type="button"
                                             x-on:click="expanded = !expanded"
-                                            style="background: none; border: none; cursor: pointer; padding: 2px; display: flex; align-items: center;"
+                                            style="background: none; border: none; cursor: pointer; padding: 2px; display: flex; align-items: center; flex-shrink: 0;"
                                             title="{{ __('Toggle stack trace') }}"
                                         >
                                             <svg x-show="!expanded" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px; color: {{ $colors['text'] }};" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -158,23 +159,64 @@
                                             </svg>
                                         </button>
                                     @else
-                                        <span style="width: 16px; display: inline-block;"></span>
+                                        <span style="width: 16px; display: inline-block; flex-shrink: 0;"></span>
                                     @endif
 
                                     {{-- Level Badge --}}
-                                    <x-filament::badge :color="$colors['badge']" size="sm">
-                                        {{ $entry['level'] }}
-                                    </x-filament::badge>
+                                    <div style="flex-shrink: 0;">
+                                        <x-filament::badge :color="$colors['badge']" size="sm">
+                                            {{ $entry['level'] }}
+                                        </x-filament::badge>
+                                    </div>
 
                                     {{-- Timestamp --}}
-                                    <span style="font-size: 0.75rem; color: var(--gray-500); white-space: nowrap; font-family: monospace;">
+                                    <span style="font-size: 0.75rem; color: var(--gray-500); white-space: nowrap; font-family: monospace; flex-shrink: 0;">
                                         {{ $entry['timestamp'] }}
                                     </span>
 
-                                    {{-- Message --}}
-                                    <span style="font-size: 0.8125rem; color: {{ $colors['text'] }}; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                        {{ \Illuminate\Support\Str::limit($entry['message'], 150) }}
-                                    </span>
+                                    {{-- Message (Full text in DOM for complete copying and selection, CSS ellipsis for display) --}}
+                                    <span
+                                        title="{{ $entry['message'] }}"
+                                        x-tooltip="{
+                                            content: @js($entry['message']),
+                                            theme: $store.theme
+                                        }"
+                                        style="font-size: 0.8125rem; color: {{ $colors['text'] }}; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: default; user-select: text;"
+                                    >{{ $entry['message'] }}</span>
+
+                                    {{-- Quick Copy Action Button --}}
+                                    <button
+                                        type="button"
+                                        x-on:click="
+                                            const textToCopy = @js($entry['message'] . (!empty($entry['stackTrace']) ? "\n\n" . $entry['stackTrace'] : ''));
+                                            if (navigator.clipboard && window.isSecureContext) {
+                                                navigator.clipboard.writeText(textToCopy);
+                                            } else {
+                                                const textarea = document.createElement('textarea');
+                                                textarea.value = textToCopy;
+                                                textarea.style.position = 'fixed';
+                                                textarea.style.opacity = '0';
+                                                document.body.appendChild(textarea);
+                                                textarea.focus();
+                                                textarea.select();
+                                                document.execCommand('copy');
+                                                document.body.removeChild(textarea);
+                                            }
+                                            copied = true;
+                                            setTimeout(() => copied = false, 2000);
+                                        "
+                                        style="background: none; border: none; cursor: pointer; padding: 3px 6px; display: inline-flex; align-items: center; gap: 4px; color: var(--gray-500); border-radius: 4px; flex-shrink: 0; font-size: 0.7rem;"
+                                        class="hover:bg-black/5 dark:hover:bg-white/5 transition"
+                                        title="{{ __('Copy full log message') }}"
+                                    >
+                                        <svg x-show="!copied" xmlns="http://www.w3.org/2000/svg" style="width: 13px; height: 13px;" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.849A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.599m7.332 0c.055.194.084.4.084.615v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.215.03-.42.084-.615m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+                                        </svg>
+                                        <svg x-show="copied" style="display: none; width: 13px; height: 13px; color: #16a34a;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                        </svg>
+                                        <span x-show="copied" style="display: none; color: #16a34a; font-weight: bold; font-size: 0.7rem;">{{ __('Copied!') }}</span>
+                                    </button>
                                 </div>
 
                                 {{-- Stack Trace (Collapsible) --}}
