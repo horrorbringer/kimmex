@@ -39,24 +39,22 @@
                         </div>
                     </div>
                     {{-- Bottom right --}}
-                    <div class="col-span-5">
+                    <div class="col-span-5 relative">
                         <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-lg relative">
                             <img src="{{ $aboutBottomImage }}" @if (filled($aboutBottomImageSrcset)) srcset="{{ $aboutBottomImageSrcset }}" @endif
                                 sizes="(min-width: 1024px) 19vw, 42vw" width="1434" height="1080" alt="{{ __('Construction project') }}"
                                 class="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                         </div>
-                    </div>
-                </div>
 
-                {{-- Floating experience badge --}}
-                <div class="absolute -bottom-4 -right-2 md:bottom-6 md:right-0 z-20 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] p-4 md:p-5 border border-gray-100">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background: var(--primary-color, #E31E24); color: #fff;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-black text-gray-900 leading-none">25+</div>
-                            <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-0.5">{{ __('Years Experience') }}</div>
+                        {{-- Floating experience badge (Compact, anchored directly to bottom-right image) --}}
+                        <div class="absolute -bottom-3 -right-2 md:-bottom-3 md:right-0 z-20 bg-white rounded-xl shadow-md px-3 py-2 flex items-center gap-2.5">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background: linear-gradient(135deg, var(--primary-color, #E31E24) 0%, #B31419 100%); color: #fff;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                            </div>
+                            <div>
+                                <div class="text-base font-black text-gray-900 leading-none tracking-tight">25+</div>
+                                <div class="text-[9px] font-bold uppercase tracking-wider text-gray-400 mt-0.5 whitespace-nowrap">{{ __('Years Experience') }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
