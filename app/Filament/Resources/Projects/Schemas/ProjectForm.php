@@ -6,6 +6,8 @@ use App\Enums\ProjectStatus;
 use App\Filament\Support\AIHelper;
 use App\Filament\Support\OptimizedFileUpload;
 use App\Filament\Support\TranslationHelper;
+use App\Models\NewsArticle;
+use App\Models\ProjectCategory;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -16,6 +18,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
@@ -74,6 +77,7 @@ class ProjectForm
                                     Select::make('project_category_id')
                                         ->label(__('Category'))
                                         ->relationship('projectCategory', 'name', fn ($query) => $query->orderBy('name->en'))
+                                        ->getOptionLabelFromRecordUsing(fn (ProjectCategory $record): string => $record->localizedName())
                                         ->searchable()
                                         ->preload()
                                         ->required(),
@@ -100,7 +104,7 @@ class ProjectForm
                         ->icon('heroicon-o-document-text')
                         ->schema([
                             Section::make(__('Short Introduction'))
-                                ->description(__('Write 2–4 short paragraphs explaining the project.'))
+                                ->description(__('Write 2–4 short paragraphs explaining the project overview.'))
                                 ->schema([
                                     RichEditor::make('description')
                                         ->label(__('Project Description'))
@@ -114,35 +118,65 @@ class ProjectForm
                                         ->hintActions([
                                             AIHelper::getGenerateAction('description', 'Project Description'),
                                             AIHelper::getImproveAction('description'),
-                                            TranslationHelper::getAutoTranslateAction('description'),
                                         ]),
                                 ]),
 
-                            Section::make(__('Optional Detail Sections'))
-                                ->description(__('Add only the sections that help visitors understand this project.'))
+                            Section::make(__('Architectural Concept & Background').' (ផ្ទៃរឿង និងទស្សនទានគម្រោង)')
+                                ->description(__('Optional: Click to expand and add background context or design philosophy.'))
+                                ->icon('heroicon-o-sparkles')
+                                ->collapsible()
+                                ->collapsed(fn ($record): bool => empty($record?->background) && empty($record?->designConcept))
                                 ->schema([
-                                    RichEditor::make('background')
-                                        ->label(__('Background'))
-                                        ->toolbarButtons([['bold', 'italic', 'link'], ['bulletList', 'orderedList'], ['undo', 'redo']])
-                                        ->hintActions([
-                                            AIHelper::getImproveAction('background'),
-                                            TranslationHelper::getAutoTranslateAction('background'),
-                                        ]),
-                                    Textarea::make('objectives')
-                                        ->label(__('Objectives'))
-                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Write one objective per line. Each line becomes a bullet on the website.'))
-                                        ->rows(5),
-                                    Textarea::make('scopeContributions')
-                                        ->label(__('Scope of Work'))
-                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Write one contribution per line. Do not use lists or HTML.'))
-                                        ->rows(6),
-                                    Textarea::make('designConcept')
-                                        ->label(__('Design Concept'))
-                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Use short paragraphs in plain text.'))
-                                        ->rows(5),
+                                    Grid::make(2)->schema([
+                                        RichEditor::make('background')
+                                            ->label(__('Project Background'))
+                                            ->placeholder(__('Historical or contextual background of the project...'))
+                                            ->toolbarButtons([['bold', 'italic', 'link'], ['bulletList', 'orderedList'], ['undo', 'redo']])
+                                            ->hintActions([
+                                                AIHelper::getImproveAction('background'),
+                                            ])
+                                            ->columnSpan(1),
+                                        Textarea::make('designConcept')
+                                            ->label(__('Design Concept'))
+                                            ->placeholder(__('Key design philosophy, architectural aesthetic, and spatial planning principles...'))
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Use short paragraphs in plain text.'))
+                                            ->rows(8)
+                                            ->columnSpan(1),
+                                    ]),
+                                ]),
+
+                            Section::make(__('Scope of Work & Objectives').' (វិសាលភាពការងារ និងគោលបំណង)')
+                                ->description(__('Optional: Click to expand and add deliverables or key goals.'))
+                                ->icon('heroicon-o-clipboard-document-check')
+                                ->collapsible()
+                                ->collapsed(fn ($record): bool => empty($record?->scopeContributions) && empty($record?->objectives))
+                                ->schema([
+                                    Grid::make(2)->schema([
+                                        Textarea::make('scopeContributions')
+                                            ->label(__('Scope of Work'))
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Write one contribution per line. Each line becomes a bullet item on the website.'))
+                                            ->placeholder("Structural reinforced concrete framing\nMechanical, Electrical & Plumbing (MEP)\nArchitectural interior fit-out & finishing\nExternal facade & curtain wall glazing")
+                                            ->rows(7)
+                                            ->columnSpan(1),
+                                        Textarea::make('objectives')
+                                            ->label(__('Key Objectives'))
+                                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Write one objective per line. Each line becomes a bullet item on the website.'))
+                                            ->placeholder("Deliver project within specified timeline\nAchieve high engineering quality & energy efficiency\nZero lost-time safety incidents during construction")
+                                            ->rows(7)
+                                            ->columnSpan(1),
+                                    ]),
+                                ]),
+
+                            Section::make(__('Engineering & Technical Notes').' (កំណត់ចំណាំបច្ចេកទេស និងវិស្វកម្ម)')
+                                ->description(__('Optional: Click to expand and add engineering solutions or structural notes.'))
+                                ->icon('heroicon-o-wrench-screwdriver')
+                                ->collapsible()
+                                ->collapsed(fn ($record): bool => empty($record?->engineeringNarrative))
+                                ->schema([
                                     Textarea::make('engineeringNarrative')
                                         ->label(__('Engineering Notes'))
-                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional technical challenges and solutions.'))
+                                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional technical notes detailing engineering challenges and solutions.'))
+                                        ->placeholder(__('Details about deep foundation excavation, post-tensioned slabs, BIM coordination, or specialized materials used...'))
                                         ->rows(5),
                                 ]),
                         ]),
@@ -207,9 +241,9 @@ class ProjectForm
                                     Select::make('newsArticles')
                                         ->label(__('Related News Articles'))
                                         ->relationship('newsArticles', 'title')
+                                        ->getOptionLabelFromRecordUsing(fn (NewsArticle $record): string => $record->getTranslation('title', app()->getLocale(), false) ?: ($record->getTranslation('title', 'en', false) ?: ''))
                                         ->multiple()
-                                        ->searchable()
-                                        ->preload(),
+                                        ->searchable(),
                                 ])
                                 ->collapsible(),
                         ]),
