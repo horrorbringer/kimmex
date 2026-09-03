@@ -6,7 +6,7 @@
     @push('head')
     <script type="application/ld+json">
     {!! json_encode([
-        '@context' => 'https://schema.org',
+        '@@context' => 'https://schema.org',
         '@type' => 'WebPage',
         'name' => 'Kimmex Construction - Cambodia\'s Premier Construction Company',
         'description' => 'Kimmex Construction & Investment Co., Ltd is a leading construction and engineering company in Cambodia with over 25 years of experience, 150+ completed projects, and 500+ team members.',

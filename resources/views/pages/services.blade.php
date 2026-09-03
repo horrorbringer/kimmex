@@ -2,13 +2,13 @@
 
 @push('head')
 <script type="application/ld+json">
-{!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+{!! json_encode(['@@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
     ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
     ['@type' => 'ListItem', 'position' => 2, 'name' => __('Services'), 'item' => url('/services')],
 ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
 <script type="application/ld+json">
-{!! json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => [
+{!! json_encode(['@@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => [
     ['@type' => 'Question', 'name' => 'What construction services does Kimmex provide?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex provides comprehensive construction services including Design & Build, Civil Construction, MEP Systems (Mechanical, Electrical, Plumbing), Project Management, Infrastructure Development, and Engineering Consultancy across Cambodia.']],
     ['@type' => 'Question', 'name' => 'What is Kimmex\'s construction methodology?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex follows a 5-step methodology: Consultation & Analysis, Planning & Design, Construction Execution, Quality Control, and Handover & Support. Each phase ensures quality, safety, and on-time delivery.']],
     ['@type' => 'Question', 'name' => 'What sectors does Kimmex serve?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex serves Government, Education, Commercial, and Infrastructure sectors. We have completed over 150 projects including government buildings, schools, commercial complexes, and road/bridge infrastructure.']],

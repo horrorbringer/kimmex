@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\GzipResponse;
 use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\TrackPageView;
 use Illuminate\Foundation\Application;
@@ -16,6 +17,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
+            GzipResponse::class,
             SetLocale::class,
             TrackPageView::class,
         ]);

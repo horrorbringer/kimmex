@@ -13,13 +13,13 @@
 
     @push('head')
     <script type="application/ld+json">
-    {!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+    {!! json_encode(['@@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
         ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
         ['@type' => 'ListItem', 'position' => 2, 'name' => __('About Us'), 'item' => url('/about')],
     ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     <script type="application/ld+json">
-    {!! json_encode(['@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => [
+    {!! json_encode(['@@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => [
         ['@type' => 'Question', 'name' => 'What is Kimmex Construction?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex Construction & Investment Co., Ltd is Cambodia\'s premier construction company with over 25 years of experience. Founded in 1999, Kimmex has completed 150+ projects including government buildings, commercial complexes, and infrastructure across Cambodia.']],
         ['@type' => 'Question', 'name' => 'Where is Kimmex located?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex is headquartered in Phnom Penh, Cambodia. The company operates nationwide across all provinces of Cambodia.']],
         ['@type' => 'Question', 'name' => 'How many employees does Kimmex have?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Kimmex has over 500 team members including engineers, architects, project managers, and skilled construction workers.']],

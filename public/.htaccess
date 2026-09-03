@@ -24,14 +24,22 @@
 </IfModule>
 
 # ─── GZIP / DEFLATE COMPRESSION ───
-# Compresses text-based assets before sending to the browser.
-# Reduces CSS from ~151KB to ~25-30KB, dramatically faster first paint.
+# Compresses text-based assets and dynamic HTML before sending to the browser.
+# Reduces HTML from ~324KB to ~35KB and CSS from ~151KB to ~29KB.
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml
     AddOutputFilterByType DEFLATE text/css text/javascript application/javascript application/json
     AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml
     AddOutputFilterByType DEFLATE image/svg+xml font/woff2 font/woff font/ttf
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject application/x-font-ttf font/opentype
+
+    # Force compression for mangled Accept-Encoding headers
+    <IfModule mod_setenvif.c>
+        SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+$ HAVE_Accept-Encoding
+        RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+    </IfModule>
 </IfModule>
+
 
 # ─── BROWSER CACHING ───
 # Vite-built assets have content hashes in filenames (app-C36fIC05.css),
