@@ -260,6 +260,7 @@
 
     <style>
         :root {
+            --livewire-progress-bar-color: var(--primary-color, #ed1c24);
             --primary-color: {{ $primaryColor }};
             --primary-color-hover: {{ $primaryHover }};
             --secondary-color: {{ $secondaryColor }};
@@ -344,8 +345,6 @@
 
 <body
     class="antialiased bg-white text-titan-navy flex flex-col min-h-screen relative {{ app()->getLocale() === 'km' ? 'font-khmer khmer-optimized' : 'font-sans' }}">
-
-    <div id="page-loading-bar" aria-hidden="true"></div>
 
     <x-header />
 
