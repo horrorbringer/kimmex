@@ -66,13 +66,19 @@
         ])->filter(fn ($value) => filled($value) && $value !== '#')->values()->all();
         $organizationSchema = [
             '@context' => 'https://schema.org',
-            '@type' => 'Organization',
+            '@type' => ['Organization', 'GeneralContractor'],
             'name' => $profile[$siteLocale]['company_name'] ?? $profile['en']['company_name'] ?? $siteName,
             'url' => url('/'),
             'logo' => $organizationLogo,
             'email' => $profile['email'] ?? null,
             'telephone' => $profile['phone'] ?? null,
             'address' => $profile[$siteLocale]['address'] ?? $profile['en']['address'] ?? null,
+            'foundingDate' => '1999',
+            'areaServed' => [
+                '@type' => 'Country',
+                'name' => 'Cambodia',
+            ],
+            'priceRange' => '$$$',
             'sameAs' => $organizationSameAs,
         ];
     @endphp

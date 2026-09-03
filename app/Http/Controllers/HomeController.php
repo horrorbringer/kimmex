@@ -38,7 +38,6 @@ class HomeController extends Controller
         $testimonials = $this->homePageService->getTestimonials($locale);
         $allNews = $this->homePageService->getNews($locale);
         $partners = $this->homePageService->getPartners($locale);
-        $services = $this->homePageService->getServices($locale);
 
         return view('welcome', compact(
             'priorityHeroImage',
@@ -50,8 +49,7 @@ class HomeController extends Controller
             'projects',
             'testimonials',
             'allNews',
-            'partners',
-            'services'
+            'partners'
         ));
     }
 }

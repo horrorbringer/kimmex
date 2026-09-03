@@ -27,7 +27,6 @@
     <x-home.trust-strip />
     <x-home.about :about-data="$aboutData" />
     <x-home.milestones :milestones-data="$milestonesData" />
-    <!-- <x-home.services :services="$services" /> -->
     <x-home.process :processes="$processes" />
     <x-home.projects :projects="$projects" />
     <x-home.testimonials :testimonials="$testimonials" />

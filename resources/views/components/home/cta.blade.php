@@ -19,6 +19,10 @@
             </div>
 
             {{-- Right: Buttons --}}
+            @php
+                $phone = $globalSettings['profile']['phone'] ?? '+855 23 884 605';
+                $phoneTel = preg_replace('/[^\d+]/', '', $phone);
+            @endphp
             <div class="flex flex-row gap-2 sm:gap-4 shrink-0">
                 <a href="/contact"
                     class="group flex items-center justify-center gap-2 sm:gap-2.5 whitespace-nowrap px-3 sm:px-8 py-3 sm:py-4 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-sm transition-[box-shadow,filter] duration-300 ease-out shadow-lg hover:shadow-xl hover:brightness-110"
@@ -26,7 +30,7 @@
                     {{ __('Get Free Quote') }}
                     <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a href="tel:+85523999888"
+                <a href="tel:{{ $phoneTel }}"
                     class="group flex items-center justify-center gap-2 sm:gap-2.5 whitespace-nowrap px-3 sm:px-8 py-3 sm:py-4 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-sm transition-[background-color,border-color] duration-300 ease-out hover:bg-white/10"
                     style="border: 2px solid rgba(255,255,255,0.2); color: #FFFFFF;">
                     <x-lucide-phone class="w-4 h-4" />
