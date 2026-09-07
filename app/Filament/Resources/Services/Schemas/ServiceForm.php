@@ -220,6 +220,25 @@ class ServiceForm
                                 ->default(0),
                         ]),
                     ]),
+
+                Section::make(__('SEO & Search Engine Optimization'))
+                    ->icon('heroicon-o-globe-alt')
+                    ->description(__('Optional: Customize title and description for search engines and social sharing.'))
+                    ->collapsible()
+                    ->collapsed()
+                    ->components([
+                        TextInput::make('metaTitle')
+                            ->label(__('Meta Title'))
+                            ->placeholder(__('e.g. Expert Civil & Commercial Construction | Kimmex'))
+                            ->suffixAction(TranslationHelper::getAutoTranslateAction('metaTitle')),
+                        Textarea::make('metaDescription')
+                            ->label(__('Meta Description'))
+                            ->placeholder(__('e.g. Comprehensive construction solutions across Cambodia delivering engineering excellence...'))
+                            ->hintActions([
+                                TranslationHelper::getAutoTranslateAction('metaDescription'),
+                            ])
+                            ->rows(3),
+                    ]),
             ]);
     }
 }

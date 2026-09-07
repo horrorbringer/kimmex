@@ -97,13 +97,24 @@ $lang = $lang ?? (app()->getLocale() === 'km' ? 'kh' : app()->getLocale());
                                     {{ \Illuminate\Support\Str::limit($service['desc'][$lang] ?? '', 180) }}
                                 </p>
 
-                                @php $features = is_array($service['features']) ? $service['features'] : []; @endphp
-                                @if(count($features) > 0)
+                                @php
+                                    $rawFeatures = $service['features'] ?? [];
+                                    $features = isset($rawFeatures[$lang]) ? $rawFeatures[$lang] : (isset($rawFeatures['en']) ? $rawFeatures['en'] : (is_array($rawFeatures) ? $rawFeatures : []));
+                                @endphp
+                                @if(is_array($features) && count($features) > 0)
                                     <div class="flex flex-wrap gap-2 mb-6">
                                         @foreach(array_slice($features, 0, 5) as $feature)
-                                            @php $featureName = is_array($feature) ? ($feature['name'] ?? ($feature[$lang] ?? '')) : $feature; @endphp
+                                            @php
+                                                $featureName = '';
+                                                if (is_array($feature)) {
+                                                    $featureName = ($lang === 'kh' ? ($feature['name_kh'] ?? $feature['name_km'] ?? null) : null)
+                                                        ?? ($feature['name'] ?? $feature[$lang] ?? '');
+                                                } elseif (is_string($feature)) {
+                                                    $featureName = $feature;
+                                                }
+                                            @endphp
                                             @if(!empty($featureName))
-                                                <span class="text-[11px] font-semibold px-3 py-1 rounded-full bg-slate-50 text-slate-600 border border-slate-200/80 group-hover:border-titan-red/20 transition-colors">{{ __($featureName) }}</span>
+                                                <span class="text-[11px] font-semibold px-3 py-1 rounded-full bg-slate-50 text-slate-600 border border-slate-200/80 group-hover:border-titan-red/20 transition-colors {{ $lang === 'kh' ? 'font-khmer' : '' }}">{{ $featureName }}</span>
                                             @endif
                                         @endforeach
                                     </div>

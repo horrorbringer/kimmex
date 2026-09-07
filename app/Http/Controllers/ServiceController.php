@@ -61,6 +61,14 @@ class ServiceController extends Controller
                     'en' => $serviceDb->getTranslation('description', 'en'),
                     'kh' => $serviceDb->getTranslation('description', 'km'),
                 ],
+                'metaTitle' => [
+                    'en' => $serviceDb->getTranslation('metaTitle', 'en'),
+                    'kh' => $serviceDb->getTranslation('metaTitle', 'km'),
+                ],
+                'metaDescription' => [
+                    'en' => $serviceDb->getTranslation('metaDescription', 'en'),
+                    'kh' => $serviceDb->getTranslation('metaDescription', 'km'),
+                ],
                 'icon' => $serviceDb->icon,
                 'image' => PublicStorage::urlIfExists($serviceDb->image, $fallbackImages[$slug] ?? null),
                 'scopeItems' => (function () use ($serviceDb): array {

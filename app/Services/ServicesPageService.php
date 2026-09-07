@@ -38,7 +38,10 @@ class ServicesPageService
                         'kh' => strip_tags((string) $service->getTranslation('description', 'km')),
                     ],
                     'image' => PublicStorage::urlIfExists($service->image, '/images/webp/projects/Thumbnail-1.webp'),
-                    'features' => is_array($service->features) ? $service->features : [],
+                    'features' => [
+                        'en' => $service->getTranslation('features', 'en') ?: (is_array($service->features) ? $service->features : []),
+                        'kh' => $service->getTranslation('features', 'km') ?: ($service->getTranslation('features', 'en') ?: (is_array($service->features) ? $service->features : [])),
+                    ],
                 ];
             })->toArray();
         });

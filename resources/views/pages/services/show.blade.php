@@ -1,9 +1,8 @@
 @php
         /** @var string $slug */
         $lang = app()->getLocale() === 'km' ? 'kh' : app()->getLocale();
-        $pageTitle = $service['title'][$lang] ?? $service['title']['en'] ?? __('Service Details');
-        $pageDesc = \Illuminate\Support\Str::limit(strip_tags($service['summary'][$lang] ?? $service['summary']['en'] ?? ''), 160)
-            ?: __('Detailed information about Kimmex construction services.');
+        $pageTitle = (!empty($service['metaTitle'][$lang]) ? $service['metaTitle'][$lang] : (!empty($service['metaTitle']['en']) ? $service['metaTitle']['en'] : ($service['title'][$lang] ?? $service['title']['en'] ?? __('Service Details'))));
+        $pageDesc = (!empty($service['metaDescription'][$lang]) ? $service['metaDescription'][$lang] : (!empty($service['metaDescription']['en']) ? $service['metaDescription']['en'] : (\Illuminate\Support\Str::limit(strip_tags($service['summary'][$lang] ?? $service['summary']['en'] ?? ''), 160) ?: __('Detailed information about Kimmex construction services.'))));
         $canonicalUrl = route('services.show', ['slug' => $service['id']]);
 
         $roadmap = [
