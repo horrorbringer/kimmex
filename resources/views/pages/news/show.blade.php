@@ -709,7 +709,7 @@
 
         .news-content img {
             border: 1px solid #E5E7EB;
-            border-radius: 0.5rem;
+            border-radius: 0.1rem;
             box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
             max-width: 100%;
             height: auto;
@@ -719,7 +719,7 @@
         .news-content iframe,
         .news-content video {
             border: 1px solid #E5E7EB;
-            border-radius: 0.5rem;
+            border-radius: 0.1rem;
             box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
             overflow: hidden;
             max-width: 100%;
@@ -737,7 +737,7 @@
             table-layout: auto;
             border-collapse: collapse;
             border: 1px solid #E5E7EB;
-            border-radius: 0.5rem;
+            border-radius: 0.1rem;
             background: #FFFFFF;
             margin: 1.25rem 0 1.5rem;
         }

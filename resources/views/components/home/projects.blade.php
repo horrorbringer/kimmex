@@ -10,21 +10,21 @@
         {{-- Header --}}
         <div x-data="{ shown: false }" x-intersect.once="shown = true"
             :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
-            class="flex items-center md:justify-center gap-3 sm:gap-6 mb-8 md:mb-12 transition-all duration-700 ease-out motion-reduce:transition-none">
-            <div class="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0">
-                <span class="hidden sm:block h-[2px] w-6 sm:w-8 md:w-10 bg-titan-red shrink-0"></span>
-                <span class="text-[8px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest text-titan-red whitespace-nowrap shrink-0">
+            class="flex flex-wrap items-center md:justify-center gap-4 sm:gap-6 mb-8 md:mb-12 transition-all duration-700 ease-out motion-reduce:transition-none">
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                {{-- Category pill badge --}}
+                <span class="inline-flex items-center gap-1.5 bg-titan-red text-white text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] px-3 py-1 rounded-full shrink-0 shadow-sm shadow-titan-red/30">
+                    <span class="hidden sm:inline-block w-1 h-1 rounded-full bg-white/70"></span>
                     {{ __('Our Portfolio') }}
                 </span>
-                <span class="text-gray-300 hidden sm:inline">&bull;</span>
                 <h2 class="!text-lg sm:!text-xl md:!text-2xl font-heading font-black text-titan-navy tracking-tight whitespace-nowrap">
                     {{ __('Featured Projects') }}
                 </h2>
             </div>
             <a href="/projects"
-                class="inline-flex shrink-0 items-center gap-1 sm:gap-2 font-bold uppercase tracking-wider text-[8px] sm:text-xs text-titan-red hover:text-titan-navy group transition-colors duration-300 whitespace-nowrap">
+                class="group inline-flex shrink-0 items-center gap-2 font-bold uppercase tracking-wider text-[9px] sm:text-[10px] text-titan-red border border-titan-red/40 hover:border-titan-red hover:bg-titan-red hover:!text-white px-3 sm:px-4 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap">
                 {{ __('All Projects') }}
-                <x-lucide-arrow-right class="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform duration-300 ease-out motion-reduce:transform-none" />
+                <x-lucide-arrow-right class="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover:translate-x-0.5 transition-transform duration-300 ease-out motion-reduce:transform-none" />
             </a>
         </div>
 
@@ -43,7 +43,8 @@
                                 class="object-cover w-full h-full absolute inset-0 group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
                             <div class="absolute top-5 left-5 z-20">
-                                <span class="text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md" style="background: var(--primary-color, #E31E24);">
+                                <span class="inline-flex items-center gap-1.5 text-white text-[9px] font-black uppercase tracking-[0.15em] px-3 py-1 rounded-full backdrop-blur-sm border border-white/20" style="background: color-mix(in srgb, var(--primary-color, #E31E24) 85%, transparent);">
+                                    <span class="w-1 h-1 rounded-full bg-white/70 shrink-0"></span>
                                     {{ $projects[0]['type'] }}
                                 </span>
                             </div>
@@ -84,7 +85,8 @@
                                 class="object-cover w-full h-full absolute inset-0 group-hover:scale-[1.03] transition-transform duration-700 ease-out motion-reduce:transform-none" loading="lazy" decoding="async" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent z-10"></div>
                             <div class="absolute top-4 left-4 z-20">
-                                <span class="text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md" style="background: var(--primary-color, #E31E24);">
+                                <span class="inline-flex items-center gap-1.5 text-white text-[9px] font-black uppercase tracking-[0.15em] px-2.5 py-1 rounded-full backdrop-blur-sm border border-white/20" style="background: color-mix(in srgb, var(--primary-color, #E31E24) 85%, transparent);">
+                                    <span class="w-1 h-1 rounded-full bg-white/70 shrink-0"></span>
                                     {{ $p['type'] }}
                                 </span>
                             </div>

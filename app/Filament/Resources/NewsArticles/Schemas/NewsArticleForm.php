@@ -171,10 +171,12 @@ class NewsArticleForm
                                         Tab::make('🇰🇭 '.__('Khmer (ភាសាខ្មែរ)'))
                                             ->schema([
                                                 Section::make(__('Article Identity (Khmer / ភាសាខ្មែរ)'))
+                                                    ->description(__('Optional: If you leave the Khmer title and content empty, the English version will automatically be displayed on the frontend.'))
                                                     ->components([
                                                         TextInput::make('title_km')
                                                             ->label(__('ចំណងជើងព័ត៌មាន (Khmer Title)'))
                                                             ->placeholder('បញ្ចូលចំណងជើងព័ត៌មានជាភាសាខ្មែរ...')
+                                                            ->helperText(__('Optional: Leave empty to automatically display English title on the website.'))
                                                             ->live(onBlur: true)
                                                             ->suffixAction(AIHelper::getTranslateAction('title_km', 'title_en', 'English', 'en', 'km'))
                                                             ->hintAction(AIHelper::getImproveAction('title_km', 'កែលម្អចំណងជើងព័ត៌មាននេះឱ្យកាន់តែទាក់ទាញ និងច្បាស់លាស់'))
@@ -221,6 +223,7 @@ class NewsArticleForm
 
                                                         RichEditor::make('content_km')->resizableImages()
                                                             ->label(__('ខ្លឹមសារព័ត៌មាន (Khmer Content)'))
+                                                            ->helperText(__('Optional: Leave empty to automatically display English content and images on the website.'))
                                                             ->extraInputAttributes(['style' => 'min-height: 5rem;'])
                                                             ->toolbarButtons([
                                                                 ['bold', 'italic', 'underline', 'strike', 'link'],

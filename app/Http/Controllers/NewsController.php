@@ -27,14 +27,21 @@ class NewsController extends Controller
                 ->where('publishedAt', '<=', now())
                 ->with([
                     'newsCategory:id,name,slug',
-                    'author:id,name,avatar_url',
+                    'author:id,name,image',
                 ])
                 ->orderByDesc('isFeatured')
                 ->orderByDesc('publishedAt')
                 ->get()
                 ->map(function (NewsArticle $n) use ($locale, $fallbackImage): array {
-                    $excerpt = $n->getTranslation('excerpt', $locale)
-                        ?: Str::limit(strip_tags((string) $n->getTranslation('content', $locale)), 160);
+                    $title = $n->getTranslation('title', $locale) ?: $n->getTranslation('title', 'en');
+                    $contentRaw = (string) $n->getTranslation('content', $locale);
+                    if (empty(trim(strip_tags($contentRaw))) && ! str_contains($contentRaw, '<img')) {
+                        $contentRaw = (string) $n->getTranslation('content', 'en');
+                    }
+                    $excerpt = $n->getTranslation('excerpt', $locale);
+                    if (empty(trim((string) $excerpt))) {
+                        $excerpt = Str::limit(strip_tags($contentRaw), 160) ?: ($n->getTranslation('excerpt', 'en') ?: Str::limit(strip_tags((string) $n->getTranslation('content', 'en')), 160));
+                    }
                     $catName = $n->newsCategory
                         ? ($n->newsCategory->getTranslation('name', $locale) ?: $n->newsCategory->getTranslation('name', 'en'))
                         : ($n->getTranslation('category', $locale) ?: __('Updates'));
@@ -48,7 +55,7 @@ class NewsController extends Controller
                     $rawReadTime = $n->getTranslation('readTime', $locale) ?: $n->readTime;
                     $readMinutes = is_numeric($rawReadTime) ? (int) $rawReadTime : (int) filter_var((string) $rawReadTime, FILTER_SANITIZE_NUMBER_INT);
                     if (! $readMinutes || $readMinutes < 1) {
-                        $contentStr = strip_tags((string) $n->getTranslation('content', $locale));
+                        $contentStr = strip_tags($contentRaw);
                         $wordCount = str_word_count($contentStr) ?: (int) ceil(mb_strlen($contentStr) / 6);
                         $readMinutes = max(1, (int) ceil($wordCount / 200));
                     }
@@ -60,7 +67,7 @@ class NewsController extends Controller
                         'category' => $catName,
                         'categorySlug' => $catSlug,
                         'image' => PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
-                        'title' => $n->getTranslation('title', $locale),
+                        'title' => $title,
                         'date' => $dateObj ? $dateObj->format('M d, Y') : '',
                         'dateUpper' => $dateObj ? strtoupper($dateObj->format('M d, Y')) : '',
                         'excerpt' => $excerpt,
@@ -111,7 +118,7 @@ class NewsController extends Controller
                 ->where('slug', $slug)
                 ->with([
                     'newsCategory:id,name,slug',
-                    'author:id,name,avatar_url',
+                    'author:id,name,image',
                     'projects' => fn ($q) => $q->where('isActive', true)->select(['projects.id', 'projects.slug', 'projects.title', 'projects.heroImage', 'projects.location', 'projects.isActive']),
                 ])
                 ->first();
@@ -120,8 +127,17 @@ class NewsController extends Controller
                 return null;
             }
 
-            $excerpt = $articleDb->getTranslation('excerpt', $locale)
-                ?: strip_tags((string) $articleDb->getTranslation('content', $locale));
+            $title = $articleDb->getTranslation('title', $locale) ?: $articleDb->getTranslation('title', 'en');
+
+            $contentRaw = (string) $articleDb->getTranslation('content', $locale);
+            if (empty(trim(strip_tags($contentRaw))) && ! str_contains($contentRaw, '<img')) {
+                $contentRaw = (string) $articleDb->getTranslation('content', 'en');
+            }
+
+            $excerpt = $articleDb->getTranslation('excerpt', $locale);
+            if (empty(trim((string) $excerpt))) {
+                $excerpt = strip_tags($contentRaw) ?: ($articleDb->getTranslation('excerpt', 'en') ?: strip_tags((string) $articleDb->getTranslation('content', 'en')));
+            }
 
             $relatedProjects = $articleDb->projects
                 ->map(fn ($project) => [
@@ -136,9 +152,9 @@ class NewsController extends Controller
                 'slug' => $articleDb->slug,
                 'category' => $articleDb->newsCategory ? ($articleDb->newsCategory->getTranslation('name', $locale) ?: $articleDb->newsCategory->getTranslation('name', 'en')) : ($articleDb->getTranslation('category', $locale) ?: __('Updates')),
                 'image' => $resolveNewsImage($articleDb->coverImage, $fallbackImage),
-                'title' => $articleDb->getTranslation('title', $locale),
-                'metaTitle' => $articleDb->getTranslation('metaTitle', $locale),
-                'metaDescription' => $articleDb->getTranslation('metaDescription', $locale),
+                'title' => $title,
+                'metaTitle' => $articleDb->getTranslation('metaTitle', $locale) ?: ($articleDb->getTranslation('metaTitle', 'en') ?: $title),
+                'metaDescription' => $articleDb->getTranslation('metaDescription', $locale) ?: ($articleDb->getTranslation('metaDescription', 'en') ?: Str::limit($excerpt, 160)),
                 'date' => $articleDb->publishedAt
                     ? $articleDb->publishedAt->format('M d, Y')
                     : $articleDb->created_at->format('M d, Y'),
@@ -146,11 +162,11 @@ class NewsController extends Controller
                 'publishedAt' => ($articleDb->publishedAt ?: $articleDb->created_at)->toIso8601String(),
                 'updatedAt' => $articleDb->updated_at->toIso8601String(),
                 'author' => $articleDb->getTranslation('authorName', $locale) ?: ($articleDb->author?->name ?? 'Kimmex Editorial'),
-                'readTime' => (function () use ($articleDb, $locale): string {
+                'readTime' => (function () use ($articleDb, $locale, $contentRaw): string {
                     $rawReadTime = $articleDb->getTranslation('readTime', $locale) ?: $articleDb->readTime;
                     $readMinutes = is_numeric($rawReadTime) ? (int) $rawReadTime : (int) filter_var((string) $rawReadTime, FILTER_SANITIZE_NUMBER_INT);
                     if (! $readMinutes || $readMinutes < 1) {
-                        $contentStr = strip_tags((string) $articleDb->getTranslation('content', $locale));
+                        $contentStr = strip_tags($contentRaw);
                         $wordCount = str_word_count($contentStr) ?: (int) ceil(mb_strlen($contentStr) / 6);
                         $readMinutes = max(1, (int) ceil($wordCount / 200));
                     }
@@ -158,7 +174,7 @@ class NewsController extends Controller
                     return $readMinutes.' '.__('min read');
                 })(),
                 'excerpt' => $excerpt,
-                'content' => $articleDb->getTranslation('content', $locale),
+                'content' => $contentRaw,
                 'tags' => is_array($articleDb->tags) && count($articleDb->tags) > 0
                     ? $articleDb->tags
                     : [$articleDb->category ?: 'News'],

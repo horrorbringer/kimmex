@@ -338,7 +338,7 @@ class HomePageService
                     'id' => $n->slug,
                     'image' => PublicStorage::urlIfExists($n->coverImage, $fallbackImage),
                     'date' => $n->publishedAt ? $n->publishedAt->format('M d, Y') : $n->created_at->format('M d, Y'),
-                    'title' => $n->getTranslation('title', $locale),
+                    'title' => $n->getTranslation('title', $locale) ?: $n->getTranslation('title', 'en'),
                     'category' => $catName,
                 ];
             })->toArray();
