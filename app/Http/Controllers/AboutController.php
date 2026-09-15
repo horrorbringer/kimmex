@@ -135,6 +135,8 @@ class AboutController extends Controller
                     'name' => $name,
                     'role' => $role,
                     'type' => $type,
+                    'unitType' => $unit->type,
+                    'image' => $employeeImage,
                     'children' => $unitsByParent->get((string) $unit->id, collect())
                         ->map(fn ($child) => $buildNode($child))
                         ->toArray(),
