@@ -8,7 +8,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
@@ -21,95 +20,75 @@ class OrgUnitForm
             ->components(static::getSchema());
     }
 
-    public static function getSchema(): array
+    public static function getSchema(?string $context = null): array
     {
         return [
-            Section::make(__('Basic Information'))
-                ->icon('heroicon-o-identification')
-                ->description(__('Choose the position type and employee. The employee job title fills automatically.'))
-                ->components([
-                    Grid::make(3)->components([
-                        Select::make('type')
-                            ->label(__('Unit Type'))
-                            ->options([
-                                'EXECUTIVE' => __('C-Suite / Executive Board'),
-                                'MANAGEMENT' => __('Senior Management'),
-                                'DIRECTOR' => __('Department Director'),
-                                'MANAGER' => __('Manager / Lead'),
-                                'STAFF' => __('Individual (Staff)'),
-                                'DEPARTMENT' => __('Departmental Group'),
-                                'OFFICE' => __('Facility / Office'),
-                            ])
-                            ->native(false)
-                            ->selectablePlaceholder(false)
-                            ->live()
-                            ->required()
-                            ->default('STAFF'),
-                        Select::make('employeeId')
-                            ->label(__('Assigned Employee'))
-                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Select an employee to fill the position title automatically.'))
-                            ->relationship('employee', 'name')
-                            ->visible(fn ($get) => in_array($get('type'), ['EXECUTIVE', 'MANAGEMENT', 'DIRECTOR', 'MANAGER', 'STAFF']))
-                            ->searchable()
-                            ->preload()
-                            ->live()
-                            ->afterStateUpdated(function (Set $set, ?string $state): void {
-                                $employee = Employee::find($state);
+            Grid::make(['default' => 1, 'sm' => 2])->components([
+                Select::make('employeeId')
+                    ->label(__('Assigned Employee'))
+                    ->placeholder(__('Choose employee (optional)...'))
+                    ->relationship('employee', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->live()
+                    ->afterStateUpdated(function (Set $set, ?string $state): void {
+                        $employee = Employee::find($state);
 
-                                if ($employee) {
-                                    $set('title', filled($employee->role) ? $employee->role : $employee->name);
-                                }
-                            }),
-                        TextInput::make('title')
-                            ->label(__('Position Title'))
-                            ->placeholder(__('E.g., Engineering Lead, HR Group'))
-                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Filled from the employee job title. Change it only when this organization position needs a different name.'))
-                            ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
-                            ->required(),
-                    ]),
-                ]),
+                        if ($employee) {
+                            $set('title', filled($employee->role) ? $employee->role : $employee->name);
+                        }
+                    }),
 
-            Section::make(__('Hierarchy & Connections'))
-                ->icon('heroicon-o-swatch')
-                ->description(__('Connect this unit to the larger organizational tree and link it to employees or departments.'))
-                ->components([
-                    Grid::make(2)->components([
-                        Select::make('parentId')
-                            ->label(__('Reports To (Parent Unit)'))
-                            ->relationship('parent', 'title', fn ($query, ?Model $record) => $query->orderBy('title->en')->when($record, fn ($q) => $q->where('id', '!=', $record->id))
-                            )
-                            ->searchable()
-                            ->preload()
-                            ->placeholder(__('Select parent node...'))
-                            ->columnSpanFull(),
+                TextInput::make('title')
+                    ->label(__('Position Title'))
+                    ->placeholder(__('e.g. Chief Executive Officer, Project Director'))
+                    ->suffixAction(TranslationHelper::getAutoTranslateAction('title'))
+                    ->required(),
 
-                        Select::make('departmentId')
-                            ->label(__('Related Department'))
-                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Link a formal department structure to this unit.'))
-                            ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en'))
-                            ->visible(fn ($get) => in_array($get('type'), ['DEPARTMENT', 'DIRECTOR', 'MANAGER']))
-                            ->searchable()
-                            ->preload(),
-                    ]),
-                ]),
+                Select::make('type')
+                    ->label(__('Unit Type'))
+                    ->options([
+                        'EXECUTIVE' => __('Executive / C-Suite'),
+                        'MANAGEMENT' => __('Senior Management'),
+                        'DIRECTOR' => __('Director'),
+                        'MANAGER' => __('Manager / Lead'),
+                        'STAFF' => __('Staff / Officer'),
+                        'DEPARTMENT' => __('Department / Division'),
+                        'OFFICE' => __('Office / Branch'),
+                    ])
+                    ->native(false)
+                    ->selectablePlaceholder(false)
+                    ->default('STAFF')
+                    ->required(),
 
-            Section::make(__('Display & Visibility Settings'))
-                ->icon('heroicon-o-adjustments-horizontal')
-                ->components([
-                    Grid::make(2)->components([
-                        TextInput::make('orderIndex')
-                            ->label(__('Sort Priority'))
-                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Lower numbers appear first in lists.'))
-                            ->required()
-                            ->numeric()
-                            ->default(0),
-                        Toggle::make('isActive')
-                            ->label(__('Visible on Public Website'))
-                            ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('When turned off, this position will be hidden from the public website org chart.'))
-                            ->default(true)
-                            ->required(),
-                    ]),
-                ]),
+                Select::make('parentId')
+                    ->label(__('Reports To (Parent Position)'))
+                    ->relationship('parent', 'title', fn ($query, ?Model $record) => $query->orderBy('title->en')->when($record, fn ($q) => $q->where('id', '!=', $record->id)))
+                    ->searchable()
+                    ->preload()
+                    ->placeholder(__('None (Top Root Position)'))
+                    ->disabled(fn () => $context === 'child')
+                    ->dehydrated()
+                    ->visible(fn () => $context !== 'root'),
+
+                Select::make('departmentId')
+                    ->label(__('Related Department'))
+                    ->relationship('department', 'name', fn ($query) => $query->orderBy('name->en'))
+                    ->searchable()
+                    ->preload()
+                    ->placeholder(__('Optional department link...')),
+
+                TextInput::make('orderIndex')
+                    ->label(__('Sort Order'))
+                    ->numeric()
+                    ->default(0)
+                    ->required(),
+
+                Toggle::make('isActive')
+                    ->label(__('Visible on Public Website'))
+                    ->default(true)
+                    ->columnSpanFull(),
+            ]),
         ];
     }
 }

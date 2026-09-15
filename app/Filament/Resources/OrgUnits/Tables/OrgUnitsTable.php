@@ -2,13 +2,23 @@
 
 namespace App\Filament\Resources\OrgUnits\Tables;
 
+use App\Filament\Exports\OrgUnitExporter;
+use App\Filament\Imports\OrgUnitImporter;
 use App\Filament\Support\FlatRecordDetails;
 use App\Models\OrgUnit;
+use App\Services\OrgStructureTemplateService;
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
+use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
@@ -116,9 +126,68 @@ class OrgUnitsTable
                     ->iconButton()
                     ->tooltip(__('Actions')),
             ])
+            ->headerActions([
+                Action::make('loadTemplate')
+                    ->label(__('Load Template'))
+                    ->icon('heroicon-o-sparkles')
+                    ->color('success')
+                    ->modalHeading(__('Load Organization Chart Template'))
+                    ->modalDescription(__('Choose a corporate template to quickly populate your organization chart without creating each position manually.'))
+                    ->modalSubmitActionLabel(__('Apply Template'))
+                    ->form([
+                        Select::make('template')
+                            ->label(__('Select Corporate Template'))
+                            ->options([
+                                'kimmex_corporate' => __('KIMMEX Corporate Structure (Full 3-Tier Enterprise: CEO, DCEO, DGM, 7 Divisions, 16+ Positions)'),
+                                'standard_company' => __('Standard Business Structure (CEO, COO, CFO, CTO, 5 Key Departments - 8 Positions)'),
+                                'starter_root' => __('Starter Hierarchy (CEO + 3 Core Division Heads - 4 Positions)'),
+                            ])
+                            ->default('kimmex_corporate')
+                            ->required()
+                            ->native(false),
+                        Toggle::make('clear_existing')
+                            ->label(__('Replace existing positions (Fresh start)'))
+                            ->helperText(__('Clear existing organization units before loading the template.'))
+                            ->default(true),
+                    ])
+                    ->action(function (array $data): void {
+                        $count = OrgStructureTemplateService::applyTemplate(
+                            (string) ($data['template'] ?? 'kimmex_corporate'),
+                            (bool) ($data['clear_existing'] ?? true),
+                        );
+
+                        Notification::make()
+                            ->title(__('Corporate template applied successfully! :count positions loaded.', ['count' => $count]))
+                            ->success()
+                            ->send();
+                    })
+                    ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
+
+                ImportAction::make('importOrgUnits')
+                    ->label(__('Import Positions'))
+                    ->importer(OrgUnitImporter::class)
+                    ->fileRules(['max:5120'])
+                    ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
+
+                ExportAction::make('exportOrgUnits')
+                    ->label(__('Export Positions'))
+                    ->exporter(OrgUnitExporter::class)
+                    ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
+
+                Action::make('downloadCsvTemplate')
+                    ->label(__('CSV Template'))
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('gray')
+                    ->url(asset('org-chart-importer-example.csv'))
+                    ->openUrlInNewTab()
+                    ->tooltip(__('Download sample CSV template')),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                        ->exporter(OrgUnitExporter::class)
+                        ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
+                    DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);
     }

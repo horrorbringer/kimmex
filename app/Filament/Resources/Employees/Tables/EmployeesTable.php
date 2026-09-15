@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Employees\Tables;
 
+use App\Filament\Exports\EmployeeExporter;
 use App\Filament\Imports\EmployeeImporter;
 use App\Filament\Support\FlatRecordDetails;
 use App\Models\Employee;
@@ -10,6 +11,8 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Support\Icons\Heroicon;
@@ -76,6 +79,10 @@ class EmployeesTable
                     ->importer(EmployeeImporter::class)
                     ->fileRules(['max:5120'])
                     ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
+                ExportAction::make('exportEmployees')
+                    ->label(__('Export Employees'))
+                    ->exporter(EmployeeExporter::class)
+                    ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
             ])
             ->emptyStateHeading(__('No employees yet'))
             ->emptyStateDescription(__('Create an employee profile first. You can assign their organization position after saving.'))
@@ -90,6 +97,9 @@ class EmployeesTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->exporter(EmployeeExporter::class)
+                        ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
                     DeleteBulkAction::make()->visible(fn () => auth()->user()?->isAdmin()),
                 ]),
             ]);

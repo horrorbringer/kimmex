@@ -42,7 +42,7 @@
 
                         {{-- Time --}}
                         <span style="font-size: 0.6875rem; color: var(--gray-400); white-space: nowrap; flex-shrink: 0;">
-                            {{ $activity['time']->diffForHumans(short: true) }}
+                            {{ is_object($activity['time']) && !($activity['time'] instanceof \__PHP_Incomplete_Class) && method_exists($activity['time'], 'diffForHumans') ? $activity['time']->diffForHumans(short: true) : (is_string($activity['time']) ? $activity['time'] : '') }}
                         </span>
                     </a>
                 @endforeach

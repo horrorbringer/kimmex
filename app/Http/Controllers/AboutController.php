@@ -131,12 +131,10 @@ class AboutController extends Controller
                 $employeeImage = PublicStorage::urlIfExists($employeeImage);
 
                 return [
+                    'id' => (string) $unit->id,
                     'name' => $name,
                     'role' => $role,
                     'type' => $type,
-                    'image' => $employeeImage,
-                    'phone' => $unit->employee?->phone,
-                    'bio' => $unit->employee?->bio,
                     'children' => $unitsByParent->get((string) $unit->id, collect())
                         ->map(fn ($child) => $buildNode($child))
                         ->toArray(),

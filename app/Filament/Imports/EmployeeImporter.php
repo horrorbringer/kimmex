@@ -53,6 +53,14 @@ class EmployeeImporter extends Importer
                 ->rules(['nullable', 'string', 'max:255'])
                 ->example('5 Years')
                 ->ignoreBlankState(),
+            ImportColumn::make('image')
+                ->label('Profile photo URL')
+                ->rules(['nullable', 'string', 'max:2048'])
+                ->example('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400')
+                ->ignoreBlankState()
+                ->fillRecordUsing(function (Employee $record, string $state): void {
+                    $record->image = trim($state);
+                }),
             ImportColumn::make('is_active')
                 ->label('Show on organization chart')
                 ->boolean()
@@ -68,10 +76,17 @@ class EmployeeImporter extends Importer
     public function resolveRecord(): Employee
     {
         $email = $this->data['email'] ?? null;
+        $name = trim((string) ($this->data['name'] ?? ''));
 
         if (filled($email)) {
             return Employee::query()->firstOrNew([
                 'email' => $email,
+            ]);
+        }
+
+        if (filled($name)) {
+            return Employee::query()->firstOrNew([
+                'name' => $name,
             ]);
         }
 

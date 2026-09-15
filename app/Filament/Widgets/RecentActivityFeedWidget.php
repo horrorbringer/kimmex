@@ -34,7 +34,8 @@ class RecentActivityFeedWidget extends Widget
                         'color' => '#6366f1',
                         'title' => $inquiry->name ?? __('Anonymous'),
                         'subtitle' => $inquiry->subject ?? $inquiry->email,
-                        'time' => $inquiry->created_at,
+                        'time' => $inquiry->created_at?->diffForHumans(short: true) ?? '',
+                        'timestamp' => $inquiry->created_at?->timestamp ?? 0,
                         'url' => '/admin/inquiries/'.$inquiry->id.'/edit',
                         'badge' => $inquiry->is_read ? null : __('New'),
                         'badge_color' => '#ef4444',
@@ -54,7 +55,8 @@ class RecentActivityFeedWidget extends Widget
                         'color' => '#10b981',
                         'title' => $application->applicantName ?? __('Applicant'),
                         'subtitle' => $application->job?->getTranslation('title', 'en') ?? __('General Application'),
-                        'time' => $application->created_at,
+                        'time' => $application->created_at?->diffForHumans(short: true) ?? '',
+                        'timestamp' => $application->created_at?->timestamp ?? 0,
                         'url' => '/admin/job-applications/'.$application->id.'/edit',
                         'badge' => $application->status?->value === 'PENDING' ? __('Pending') : null,
                         'badge_color' => '#f59e0b',
@@ -73,14 +75,15 @@ class RecentActivityFeedWidget extends Widget
                         'color' => '#8b5cf6',
                         'title' => $subscriber->name ?? $subscriber->email,
                         'subtitle' => __('Subscribed to newsletter'),
-                        'time' => $subscriber->created_at,
+                        'time' => $subscriber->created_at?->diffForHumans(short: true) ?? '',
+                        'timestamp' => $subscriber->created_at?->timestamp ?? 0,
                         'url' => '/admin/subscribers',
                         'badge' => null,
                         'badge_color' => null,
                     ]);
                 });
 
-            return $items->sortByDesc('time')->take(10)->values()->all();
+            return $items->sortByDesc('timestamp')->take(10)->values()->all();
         }));
     }
 }

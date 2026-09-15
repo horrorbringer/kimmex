@@ -72,7 +72,9 @@ const nodeMarkup = (node) => {
                     ${statusBadge}
                 </div>
                 <p class="kimmex-org-chart__title">${escapeHtml(node.title || node.role || node.type)}</p>
-                <span class="kimmex-org-chart__type">${escapeHtml(node.type || '')}</span>
+                <div class="kimmex-org-chart__footer">
+                    <span class="kimmex-org-chart__type">${escapeHtml(node.type || '')}</span>
+                </div>
             </div>
         </article>
     `;

@@ -19,6 +19,7 @@ class EmployeeImportConfigurationTest extends TestCase
             'location',
             'specialization',
             'experience',
+            'image',
             'is_active',
         ], array_map(fn ($column): string => $column->getName(), $columns));
     }
@@ -39,7 +40,7 @@ class EmployeeImportConfigurationTest extends TestCase
         $example = file_get_contents(public_path('employee-importer-example.csv'));
 
         $this->assertStringStartsWith(
-            'name,role,email,phone,location,specialization,experience,is_active',
+            'name,role,email,phone,location,specialization,experience,image,is_active',
             $example,
         );
     }

@@ -1,0 +1,15 @@
+title,title_km,type,parent_title,employee_name,department_name,order_index,is_active
+Chief Executive Officer (CEO),នាយកប្រតិបត្តិ (CEO),EXECUTIVE,,TOUCH KIM,Executive Office,1,1
+Deputy CEO (DCEO),អគ្គនាយករង (DCEO),EXECUTIVE,Chief Executive Officer (CEO),RANY SOPHUAK,Executive Office,1,1
+Deputy General Manager (DGM),អគ្គនាយករង (DGM),MANAGEMENT,Deputy CEO (DCEO),TOUCH RUMREAKSAY,General Management,1,1
+Finance Director,នាយកហិរញ្ញវត្ថុ,DIRECTOR,Deputy General Manager (DGM),JENG VANNAK PH,Finance & Accounting,1,1
+Supply Chain Director,នាយកខ្សែសង្វាក់ផ្គត់ផ្គង់,DIRECTOR,Deputy General Manager (DGM),CHHOURN PUTSNA,Procurement,2,1
+Technical Director,នាយកបច្ចេកទេស,DIRECTOR,Deputy General Manager (DGM),SENG SOPHORN,Technical & Design,3,1
+Project Director,នាយកគ្រប់គ្រងគម្រោង,DIRECTOR,Deputy General Manager (DGM),HOR SAMNANG,Project Management,4,1
+HR & Liaison Manager,អ្នកគ្រប់គ្រងធនធានមនុស្ស,MANAGER,Deputy General Manager (DGM),KEO PHALLY,HR & Admin,5,1
+Legal Head,ប្រធានផ្នែកច្បាប់,MANAGER,Deputy General Manager (DGM),TY NOREN KEO,HR & Admin,6,1
+Internal Auditor,សវនករផ្ទៃក្នុង,MANAGER,Deputy General Manager (DGM),CHORN VUTHANAK,General Management,7,1
+MEP Operation Manager,អ្នកគ្រប់គ្រងប្រតិបត្តិការ MEP,MANAGER,Deputy CEO (DCEO),KIM KEAK,Technical & Design,8,1
+Finance Manager,អ្នកគ្រប់គ្រងហិរញ្ញវត្ថុ,MANAGER,Finance Director,SEEY SREANA,Finance & Accounting,1,1
+Business Unit Manager,អ្នកគ្រប់គ្រងអង្គភាពអាជីវកម្ម,MANAGER,Finance Director,HUON KHOA,Finance & Accounting,2,1
+Procurement Manager,អ្នកគ្រប់គ្រងលទ្ធកម្ម,MANAGER,Supply Chain Director,PHO VANDY,Procurement,1,1
