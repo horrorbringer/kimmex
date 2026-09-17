@@ -478,10 +478,51 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             ->modalWidth('lg')
             ->modalSubmitActionLabel(__('Save Changes'))
             ->model(OrgUnit::class)
+            ->record(fn (array $arguments): ?OrgUnit => OrgUnit::find($arguments['id'] ?? null))
             ->form(OrgUnitForm::getSchema(context: 'edit'))
-            ->fillForm(fn (array $arguments): array => OrgUnit::find($arguments['id'])->toArray())
+            ->fillForm(function (array $arguments): array {
+                $unit = OrgUnit::find($arguments['id'] ?? null);
+                if (! $unit) {
+                    return [];
+                }
+
+                $locale = app()->getLocale();
+                $title = $unit->getTranslation('title', $locale, false);
+                if (! filled($title)) {
+                    $title = $unit->getTranslation('title', 'en', false) ?: $unit->getTranslation('title', 'km', false);
+                }
+                if (is_array($title)) {
+                    $title = $title[$locale] ?? ($title['en'] ?? reset($title));
+                }
+
+                return [
+                    'employeeId' => $unit->employeeId,
+                    'title' => (string) ($title ?: $unit->title),
+                    'type' => $unit->type,
+                    'parentId' => $unit->parentId,
+                    'departmentId' => $unit->departmentId,
+                    'chart_group' => $unit->chart_group ?? $this->activeChartGroup,
+                    'orderIndex' => $unit->orderIndex,
+                    'isActive' => (bool) $unit->isActive,
+                ];
+            })
             ->action(function (array $data, array $arguments): void {
-                OrgUnit::find($arguments['id'])->update($data);
+                $unit = OrgUnit::find($arguments['id'] ?? null);
+                if (! $unit) {
+                    return;
+                }
+
+                $title = $data['title'] ?? null;
+                unset($data['title']);
+
+                $unit->fill($data);
+
+                if (filled($title)) {
+                    $locale = app()->getLocale();
+                    $unit->setTranslation('title', $locale, $title);
+                }
+
+                $unit->save();
                 $this->loadChartData();
                 Notification::make()
                     ->title(__('Position updated successfully'))
@@ -526,7 +567,16 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             ])
             ->action(function (array $data, array $arguments): void {
                 $data['parentId'] = $arguments['id'] ?? $data['parentId'] ?? null;
-                OrgUnit::create($data);
+                $unit = new OrgUnit;
+                $title = $data['title'] ?? null;
+                unset($data['title']);
+
+                $unit->fill($data);
+                if (filled($title)) {
+                    $unit->setTranslation('title', app()->getLocale(), $title);
+                }
+                $unit->save();
+
                 $this->loadChartData();
                 Notification::make()
                     ->title(__('Subordinate added successfully'))
