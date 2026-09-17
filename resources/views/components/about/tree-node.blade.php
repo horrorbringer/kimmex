@@ -125,16 +125,12 @@
                 @endif
             </div>
 
-            {{-- Clean Decorated Typography Below --}}
-            <div class="mt-2 text-center max-w-[145px] sm:max-w-[160px] flex flex-col items-center">
-                <h4 class="font-heading !font-black !text-[10.5px] sm:!text-[11.5px] !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-snug !m-0 transition-colors"
+            {{-- Clean Typography Below --}}
+            <div class="mt-2 text-center max-w-[140px] sm:max-w-[155px]">
+                <h4 class="font-heading !font-bold !text-[11px] sm:!text-xs !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-snug !m-0 transition-colors"
                     style="color: #0B2B5C !important;">{{ $node['name'] }}</h4>
-
-                <span class="inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full text-[7.5px] sm:text-[8px] font-semibold tracking-wider uppercase bg-slate-50 group-hover:bg-white text-slate-500 border border-slate-200/90 max-w-[140px] sm:max-w-[155px] truncate shadow-2xs transition-colors"
-                      style="color: #64748B !important;">
-                    <span class="w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
-                    <span class="truncate">{{ $node['role'] }}</span>
-                </span>
+                <p class="mt-0.5 !text-[9.5px] sm:!text-[10px] !font-medium !text-slate-500 leading-tight !m-0"
+                   style="color: #64748B !important;">{{ $node['role'] }}</p>
             </div>
         </div>
     @endif
@@ -142,7 +138,7 @@
     @if($hasChildren)
         @foreach($node['children'] as $child)
             {{-- Crisp vertical connector line between stacked cards --}}
-            <div class="w-[2px] {{ $cardStyle === 'avatar_top' ? 'h-5.5' : 'h-4' }} !bg-[#0B2B5C] mx-auto my-0"></div>
+            <div class="w-[2px] h-4 !bg-[#0B2B5C] mx-auto my-0"></div>
             @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => true, 'cardStyle' => $cardStyle])
         @endforeach
     @endif
@@ -350,34 +346,29 @@
                     @endif
                 </div>
 
-                {{-- Clean Decorated Typography Below --}}
-                <div class="mt-2 text-center max-w-[165px] sm:max-w-[195px] flex flex-col items-center">
-                    <h4 class="font-heading !font-black tracking-tight leading-snug !m-0
-                        {{ $isRoot ? '!text-xs sm:!text-[13px] !text-[#0B2B5C]' : ($isExecutive ? '!text-[11px] sm:!text-xs !text-[#0B2B5C]' : '!text-[10.5px] sm:!text-[11.5px] !text-[#0B2B5C]') }}"
+                {{-- Clean Typography Below --}}
+                <div class="mt-2.5 text-center max-w-[160px] sm:max-w-[185px]">
+                    <h4 class="font-heading !font-bold tracking-tight leading-snug !m-0
+                        {{ $isRoot ? '!text-xs sm:!text-[13.5px] !text-[#0B2B5C]' : ($isExecutive ? '!text-[11.5px] sm:!text-xs !text-[#0B2B5C]' : '!text-[11px] sm:!text-xs !text-[#0B2B5C]') }}"
                         style="color: #0B2B5C !important;">
                         {{ $node['name'] }}
                     </h4>
 
                     @if($isRoot)
-                        <div class="w-6 h-[1.5px] rounded-full mx-auto my-1 bg-gradient-to-r from-transparent via-[#E31E24]/70 to-transparent"></div>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[8px] sm:text-[8.5px] font-extrabold tracking-widest uppercase bg-gradient-to-r from-red-50 via-red-100/60 to-red-50 text-[#E31E24] border border-red-300/80 shadow-[0_1px_3px_rgba(227,30,36,0.12)]"
-                              style="color: #E31E24 !important;">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#E31E24] shrink-0 shadow-2xs"></span>
+                        <p class="mt-0.5 !text-[10.5px] sm:!text-[11.5px] !font-semibold !text-[#E31E24] leading-tight !m-0"
+                           style="color: #E31E24 !important;">
                             {{ $node['role'] }}
-                        </span>
+                        </p>
                     @elseif($isExecutive)
-                        <div class="w-5 h-[1.5px] rounded-full mx-auto my-1 bg-gradient-to-r from-transparent via-[#185FA5]/60 to-transparent"></div>
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[7.5px] sm:text-[8px] font-extrabold tracking-wider uppercase bg-gradient-to-r from-blue-50 via-blue-100/50 to-blue-50 text-[#185FA5] border border-blue-200/80 shadow-2xs"
-                              style="color: #185FA5 !important;">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#185FA5] shrink-0 shadow-2xs"></span>
+                        <p class="mt-0.5 !text-[10px] sm:!text-[11px] !font-medium !text-[#185FA5] leading-tight !m-0"
+                           style="color: #185FA5 !important;">
                             {{ $node['role'] }}
-                        </span>
+                        </p>
                     @else
-                        <span class="inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full text-[7.5px] sm:text-[8px] font-semibold tracking-wider uppercase bg-slate-50 group-hover:bg-white text-slate-500 border border-slate-200/90 max-w-[155px] truncate shadow-2xs transition-colors"
-                              style="color: #64748B !important;">
-                            <span class="w-1 h-1 rounded-full bg-slate-400 shrink-0"></span>
-                            <span class="truncate">{{ $node['role'] }}</span>
-                        </span>
+                        <p class="mt-0.5 !text-[9.5px] sm:!text-[10px] !font-medium !text-slate-500 leading-tight !m-0"
+                           style="color: #64748B !important;">
+                            {{ $node['role'] }}
+                        </p>
                     @endif
                 </div>
             </div>

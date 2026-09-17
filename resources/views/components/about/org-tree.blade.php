@@ -87,7 +87,7 @@
 }
 
 .org-tree-children {
-    padding-top: 24px !important;
+    padding-top: 16px !important;
 }
 
 /* Compact spacing between items to fit screen smoothly */
@@ -97,7 +97,7 @@
     align-items: center !important;
     flex-shrink: 0 !important;
     position: relative !important;
-    padding: 24px 6px 0 6px !important;
+    padding: 16px 6px 0 6px !important;
     list-style: none !important;
 }
 
@@ -116,7 +116,7 @@
     right: 50% !important;
     border-top: 2px solid #0B2B5C !important;
     width: 50% !important;
-    height: 24px !important;
+    height: 16px !important;
     z-index: 1 !important;
 }
 
@@ -126,13 +126,27 @@
     border-left: 2px solid #0B2B5C !important;
 }
 
-/* Single child items (straight line down, no horizontal bar) */
-.org-tree-item:only-child::before,
-.org-tree-item:only-child::after {
+/* Clean corner lines for first and last child in a multi-child row */
+.org-tree-item:first-child:not(:only-child)::before {
+    border: 0 none !important;
+}
+.org-tree-item:first-child:not(:only-child)::after {
+    border-top-left-radius: 6px !important;
+}
+.org-tree-item:last-child:not(:only-child)::after {
+    border: 0 none !important;
+}
+.org-tree-item:last-child:not(:only-child)::before {
+    border-right: 2px solid #0B2B5C !important;
+    border-top-right-radius: 6px !important;
+}
+
+/* Single child items (straight continuous line down, no horizontal bar) */
+.org-tree-item:only-child::before {
     display: none !important;
 }
 .org-tree-item:only-child {
-    padding-top: 24px !important;
+    padding-top: 16px !important;
 }
 .org-tree-item:only-child::after {
     display: block !important;
@@ -143,24 +157,9 @@
     border: none !important;
     border-left: 2px solid #0B2B5C !important;
     width: 0 !important;
-    height: 24px !important;
+    height: 16px !important;
     transform: translateX(-50%) !important;
     z-index: 1 !important;
-}
-
-/* Clean corner lines for first and last child in a row */
-.org-tree-item:first-child::before {
-    border: 0 none !important;
-}
-.org-tree-item:first-child::after {
-    border-top-left-radius: 6px !important;
-}
-.org-tree-item:last-child::after {
-    border: 0 none !important;
-}
-.org-tree-item:last-child::before {
-    border-right: 2px solid #0B2B5C !important;
-    border-top-right-radius: 6px !important;
 }
 
 /* Root item should have NO top connectors */
@@ -176,11 +175,11 @@
 .org-card-wrapper.has-children::after {
     content: '' !important;
     position: absolute !important;
-    bottom: -24px !important;
+    bottom: -16px !important;
     left: 50% !important;
     border-left: 2px solid #0B2B5C !important;
     width: 0 !important;
-    height: 24px !important;
+    height: 16px !important;
     transform: translateX(-50%) !important;
     z-index: 1 !important;
 }
