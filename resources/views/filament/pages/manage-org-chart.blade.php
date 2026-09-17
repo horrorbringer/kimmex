@@ -33,6 +33,54 @@
                 --org-canvas: #f8fafc;
             }
 
+            /* Tiny Page Header & Actions */
+            .fi-header-heading {
+                font-size: 1.125rem !important;
+                font-weight: 700 !important;
+                letter-spacing: -0.01em !important;
+            }
+            .fi-header {
+                padding-top: 0.25rem !important;
+                padding-bottom: 0.375rem !important;
+            }
+            .fi-header-actions {
+                gap: 0.35rem !important;
+            }
+            .fi-header-actions .fi-btn {
+                padding: 0.25rem 0.55rem !important;
+                font-size: 0.75rem !important;
+                border-radius: 0.375rem !important;
+                gap: 0.25rem !important;
+                line-height: 1.2 !important;
+            }
+            .fi-header-actions .fi-btn-icon {
+                width: 13px !important;
+                height: 13px !important;
+            }
+
+            /* Compact Table Repeater inside Manage Groups */
+            .fi-fo-table-repeater th {
+                font-size: 0.6875rem !important;
+                font-weight: 700 !important;
+                color: #475569 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+                padding: 0.45rem 0.6rem !important;
+                background: #f8fafc !important;
+            }
+            .fi-fo-table-repeater td {
+                padding: 0.35rem 0.5rem !important;
+                vertical-align: middle !important;
+            }
+            .fi-fo-table-repeater td input {
+                font-size: 0.8125rem !important;
+                padding: 0.35rem 0.5rem !important;
+                border-radius: 0.375rem !important;
+            }
+            .fi-fo-table-repeater .fi-fo-toggle {
+                justify-content: center !important;
+            }
+
             .org-card-container {
                 background: #ffffff;
                 border: 1px solid var(--org-border);
@@ -381,6 +429,39 @@
             }
         </style>
 
+        {{-- Chart Group Switcher --}}
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid var(--org-border); border-radius: 0.5rem;">
+            <span style="font-size: 0.6875rem; font-weight: 700; color: var(--org-navy); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.25rem;">
+                <x-heroicon-o-rectangle-group style="width: 14px; height: 14px; display: inline; vertical-align: -2px;" />
+                {{ __('Chart Group') }}:
+            </span>
+            @php
+                $chartGroups = \App\Models\OrgUnit::getChartGroups();
+                $groupCounts = \App\Models\OrgUnit::selectRaw('chart_group, count(*) as cnt')->groupBy('chart_group')->pluck('cnt', 'chart_group');
+                $isKhmer = in_array(app()->getLocale(), ['km', 'kh']);
+            @endphp
+            @foreach($chartGroups as $group)
+                @php
+                    $groupKey = $group['key'] ?? 'main';
+                    $groupLabel = $isKhmer ? (!empty($group['name_km']) ? $group['name_km'] : ($group['name_en'] ?? $groupKey)) : (!empty($group['name_en']) ? $group['name_en'] : ($group['name_km'] ?? $groupKey));
+                    $isActiveGroup = $activeChartGroup === $groupKey;
+                    $isGroupEnabled = (bool) ($group['is_active'] ?? true);
+                @endphp
+                <button type="button"
+                        wire:click="switchChartGroup('{{ $groupKey }}')"
+                        style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.6rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 700; border: 1px solid {{ $isActiveGroup ? 'var(--org-navy)' : '#cbd5e1' }}; background: {{ $isActiveGroup ? 'var(--org-navy)' : '#ffffff' }}; color: {{ $isActiveGroup ? '#ffffff' : ($isGroupEnabled ? '#475569' : '#94a3b8') }}; cursor: pointer; transition: all 0.15s; {{ !$isGroupEnabled ? 'opacity: 0.75;' : '' }}"
+                        title="{{ !$isGroupEnabled ? __('Inactive on public website') : '' }}">
+                    {{ $groupLabel }}
+                    @if(!$isGroupEnabled)
+                        <span style="font-size: 0.5625rem; font-weight: 600; text-transform: uppercase; padding: 0.05rem 0.25rem; border-radius: 4px; background: #fee2e2; color: #dc2626;">{{ __('Hidden') }}</span>
+                    @endif
+                    <span style="font-size: 0.625rem; font-weight: 800; padding: 0 0.3rem; border-radius: 9999px; background: {{ $isActiveGroup ? 'rgba(255,255,255,0.2)' : '#e2e8f0' }}; color: {{ $isActiveGroup ? '#ffffff' : '#64748b' }};">
+                        {{ $groupCounts[$groupKey] ?? 0 }}
+                    </span>
+                </button>
+            @endforeach
+        </div>
+
         {{-- Clean View Switcher Tab Navigation --}}
         <div class="org-view-tabs">
             <div style="display: flex; align-items: center; gap: 0.375rem;">
@@ -434,9 +515,11 @@
                             {{ __('Get started instantly in 1 click by applying a corporate template, or add a root unit.') }}
                         </p>
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
-                            <x-filament::button wire:click="mountAction('loadTemplate')" icon="heroicon-o-sparkles" color="success" size="sm">
-                                {{ __('Load Template (1-Click)') }}
-                            </x-filament::button>
+                            @if((app()->isLocal() || app()->runningUnitTests()) && $activeChartGroup === 'main')
+                                <x-filament::button wire:click="mountAction('loadTemplate')" icon="heroicon-o-sparkles" color="success" size="sm">
+                                    {{ __('Load Template (1-Click)') }}
+                                </x-filament::button>
+                            @endif
                             <x-filament::button wire:click="mountAction('addRoot')" icon="heroicon-o-plus" color="primary" size="sm">
                                 {{ __('Add Root Position') }}
                             </x-filament::button>

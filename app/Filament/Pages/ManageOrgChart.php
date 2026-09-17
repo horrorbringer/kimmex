@@ -18,7 +18,11 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -27,6 +31,7 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\HtmlString;
 
 class ManageOrgChart extends Page implements HasActions, HasForms
 {
@@ -58,12 +63,15 @@ class ManageOrgChart extends Page implements HasActions, HasForms
 
     public ?array $data = [];
 
+    public string $activeChartGroup = 'main';
+
     public function mount(): void
     {
         $org = SystemSetting::get('organization_profile', []);
         $this->form->fill([
             'org_chart_visible' => (bool) ($org['org_chart_visible'] ?? true),
             'org_chart_type' => $org['org_chart_type'] ?? 'dynamic',
+            'org_chart_card_style' => $org['org_chart_card_style'] ?? 'avatar_top',
             'org_chart_image' => $org['org_chart_image'] ?? null,
             'org_chart_pdf' => $org['org_chart_pdf'] ?? null,
         ]);
@@ -94,6 +102,18 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                             ->default('dynamic')
                             ->required()
                             ->live(),
+                        Select::make('org_chart_card_style')
+                            ->label(__('Card Design Template'))
+                            ->options([
+                                'avatar_top' => __('Circle Photo Above Box (Clean Canva)'),
+                                'floating' => __('Floating Circle Avatar (Classic Overlap)'),
+                                'badge' => __('Executive Portrait Badge (Integrated Photo)'),
+                                'capsule' => __('Horizontal Capsule (Avatar on Left)'),
+                                'corporate' => __('Corporate Tagged Minimalist (Role Badges)'),
+                            ])
+                            ->default('avatar_top')
+                            ->native(false)
+                            ->visible(fn ($get) => (bool) $get('org_chart_visible') && $get('org_chart_type') === 'dynamic'),
                         FileUpload::make('org_chart_image')
                             ->label(__('Organization Chart Image'))
                             ->image()
@@ -121,13 +141,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
         $org = array_merge($org, $this->form->getState());
         SystemSetting::set('organization_profile', $org);
 
-        // Clear cache
-        Cache::forget('about_orgchart_en');
-        Cache::forget('about_orgchart_kh');
-        Cache::forget('about_orgchart_km');
-        Cache::forget('about_page_en');
-        Cache::forget('about_page_kh');
-        Cache::forget('about_page_km');
+        OrgUnit::clearOrgCache();
 
         Notification::make()
             ->title(__('Display Settings Saved'))
@@ -141,16 +155,24 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             CreateAction::make('addRoot')
                 ->label(__('Add Root Unit'))
                 ->icon('heroicon-o-plus')
+                ->size('xs')
                 ->modalHeading(__('Add Root Position'))
                 ->modalWidth('lg')
                 ->modalSubmitActionLabel(__('Create Position'))
                 ->model(OrgUnit::class)
-                ->form(OrgUnitForm::getSchema(context: 'root')),
+                ->form(OrgUnitForm::getSchema(context: 'root'))
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['chart_group'] = $this->activeChartGroup;
+
+                    return $data;
+                }),
 
             Action::make('loadTemplate')
                 ->label(__('Load Template'))
                 ->icon('heroicon-o-sparkles')
                 ->color('success')
+                ->size('xs')
+                ->visible(fn (): bool => (app()->isLocal() || app()->runningUnitTests()) && $this->activeChartGroup === 'main')
                 ->modalHeading(__('Load Organization Chart Template'))
                 ->modalDescription(__('Choose a corporate template to quickly populate your organization chart without creating each position manually.'))
                 ->modalWidth('md')
@@ -172,6 +194,24 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                         ->default(true),
                 ])
                 ->action(function (array $data): void {
+                    if (! (app()->isLocal() || app()->runningUnitTests())) {
+                        Notification::make()
+                            ->title(__('Template loading is only available in local development.'))
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
+                    if ($this->activeChartGroup !== 'main') {
+                        Notification::make()
+                            ->title(__('Templates are only available for the Main Organization Structure.'))
+                            ->warning()
+                            ->send();
+
+                        return;
+                    }
+
                     $count = OrgStructureTemplateService::applyTemplate(
                         (string) ($data['template'] ?? 'kimmex_corporate'),
                         (bool) ($data['clear_existing'] ?? true),
@@ -185,14 +225,157 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                         ->send();
                 }),
 
+            Action::make('manageGroups')
+                ->label(__('Manage Groups'))
+                ->icon('heroicon-o-rectangle-group')
+                ->color('gray')
+                ->size('xs')
+                ->modalHeading(__('Manage Organization Chart Groups'))
+                ->modalDescription(__('Configure separate organization chart sections for your public About page (e.g. Corporate Governance, Project Teams, Board of Directors).'))
+                ->modalWidth('4xl')
+                ->modalSubmitActionLabel(__('Save Groups'))
+                ->fillForm(fn () => [
+                    'groups' => OrgUnit::getChartGroups(),
+                ])
+                ->form([
+                    Placeholder::make('explanation')
+                        ->hiddenLabel()
+                        ->content(new HtmlString('
+                            <div style="font-size: 0.8125rem; line-height: 1.5; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 0.25rem;">
+                                <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.375rem;">
+                                    <span>💡</span> '.e(__('How Multi-Chart Groups Work:')).'
+                                </div>
+                                <ul style="list-style-type: disc; padding-left: 1.25rem; margin: 0; space-y: 0.25rem;">
+                                    <li>'.e(__('Each group appears as an independent flowchart section on your website About page.')).'</li>
+                                    <li>'.e(__('Drag the handle on the left to reorder how sections appear from top to bottom.')).'</li>
+                                    <li>'.e(__('Toggle "Public" off to hide a group from the public website while keeping your data.')).'</li>
+                                </ul>
+                            </div>
+                        ')),
+
+                    Repeater::make('groups')
+                        ->label(__('Configured Sections'))
+                        ->compact()
+                        ->table([
+                            TableColumn::make(__('Section ID (Code)'))
+                                ->width('160px'),
+                            TableColumn::make(__('English Title'))
+                                ->markAsRequired(),
+                            TableColumn::make(__('Khmer Title')),
+                            TableColumn::make(__('Card Style'))
+                                ->width('160px'),
+                            TableColumn::make(__('Public'))
+                                ->alignment('center')
+                                ->width('80px'),
+                        ])
+                        ->schema([
+                            TextInput::make('key')
+                                ->required()
+                                ->regex('/^[a-z0-9_]+$/')
+                                ->placeholder('e.g. board_of_directors')
+                                ->readOnly(fn (?string $state) => $state === 'main')
+                                ->helperText(fn (?string $state) => $state === 'main' ? __('Default main chart') : null)
+                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem; font-family: monospace;']),
+
+                            TextInput::make('name_en')
+                                ->required()
+                                ->placeholder(__('e.g. Executive Board'))
+                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem;']),
+
+                            TextInput::make('name_km')
+                                ->placeholder(__('e.g. គណៈកម្មាធិការនាយក'))
+                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem;']),
+
+                            Select::make('card_style')
+                                ->options([
+                                    'default' => __('Global Default'),
+                                    'avatar_top' => __('Circle Photo Above Box'),
+                                    'floating' => __('Floating Avatar'),
+                                    'badge' => __('Executive Badge'),
+                                    'capsule' => __('Horizontal Capsule'),
+                                    'corporate' => __('Corporate Tagged'),
+                                ])
+                                ->default('default')
+                                ->native(false)
+                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem;']),
+
+                            Toggle::make('is_active')
+                                ->hiddenLabel()
+                                ->default(true),
+                        ])
+                        ->reorderable()
+                        ->addActionLabel(__('Add New Section / Group'))
+                        ->minItems(1),
+                ])
+                ->action(function (array $data): void {
+                    $groups = $data['groups'] ?? [];
+                    $cleanGroups = [];
+                    $seenKeys = [];
+                    foreach ($groups as $group) {
+                        $rawKey = $group['key'] ?? '';
+                        $key = strtolower(trim((string) preg_replace('/[^a-zA-Z0-9_]+/', '_', $rawKey)));
+                        if (empty($key) || isset($seenKeys[$key])) {
+                            continue;
+                        }
+                        $seenKeys[$key] = true;
+                        $cleanGroups[] = [
+                            'key' => $key,
+                            'name_en' => trim($group['name_en'] ?? ucfirst(str_replace('_', ' ', $key))),
+                            'name_km' => trim($group['name_km'] ?? ''),
+                            'card_style' => $group['card_style'] ?? 'default',
+                            'is_active' => (bool) ($group['is_active'] ?? true),
+                        ];
+                    }
+
+                    // Guarantee 'main' is never lost
+                    $hasMain = false;
+                    foreach ($cleanGroups as $g) {
+                        if ($g['key'] === 'main') {
+                            $hasMain = true;
+                            break;
+                        }
+                    }
+                    if (! $hasMain) {
+                        array_unshift($cleanGroups, [
+                            'key' => 'main',
+                            'name_en' => 'Organization Structure',
+                            'name_km' => 'រចនាសម្ព័ន្ធអង្គភាព',
+                            'card_style' => 'default',
+                            'is_active' => true,
+                        ]);
+                    }
+
+                    SystemSetting::set('org_chart_groups', $cleanGroups);
+                    OrgUnit::clearOrgCache();
+
+                    if (! in_array($this->activeChartGroup, array_column($cleanGroups, 'key'))) {
+                        $this->activeChartGroup = $cleanGroups[0]['key'] ?? 'main';
+                    }
+
+                    $this->loadChartData();
+
+                    Notification::make()
+                        ->title(__('Chart groups updated successfully!'))
+                        ->success()
+                        ->send();
+                }),
+
             Action::make('displaySettings')
                 ->label(__('Website Display'))
                 ->icon('heroicon-o-globe-alt')
                 ->color('gray')
+                ->size('xs')
                 ->modalHeading(__('Website Display Settings'))
                 ->modalDescription(__('Configure how the organization chart is presented on the public About page.'))
                 ->modalWidth('md')
                 ->modalSubmitActionLabel(__('Save Settings'))
+                ->fillForm(fn (): array => [
+                    'org_chart_visible' => (bool) (SystemSetting::get('organization_profile', [])['org_chart_visible'] ?? true),
+                    'org_chart_type' => SystemSetting::get('organization_profile', [])['org_chart_type'] ?? 'dynamic',
+                    'org_chart_card_style' => SystemSetting::get('organization_profile', [])['org_chart_card_style'] ?? 'avatar_top',
+                    'org_chart_image' => SystemSetting::get('organization_profile', [])['org_chart_image'] ?? null,
+                    'org_chart_pdf' => SystemSetting::get('organization_profile', [])['org_chart_pdf'] ?? null,
+                ])
                 ->form([
                     Toggle::make('org_chart_visible')
                         ->label(__('Show Org Chart on Website'))
@@ -209,6 +392,18 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                         ->default(fn () => SystemSetting::get('organization_profile', [])['org_chart_type'] ?? 'dynamic')
                         ->required()
                         ->live(),
+                    Select::make('org_chart_card_style')
+                        ->label(__('Card Design Template'))
+                        ->options([
+                            'avatar_top' => __('Circle Photo Above Box (Clean Canva)'),
+                            'floating' => __('Floating Circle Avatar (Classic Overlap)'),
+                            'badge' => __('Executive Portrait Badge (Integrated Photo)'),
+                            'capsule' => __('Horizontal Capsule (Avatar on Left)'),
+                            'corporate' => __('Corporate Tagged Minimalist (Role Badges)'),
+                        ])
+                        ->default(fn () => SystemSetting::get('organization_profile', [])['org_chart_card_style'] ?? 'avatar_top')
+                        ->native(false)
+                        ->visible(fn ($get) => (bool) $get('org_chart_visible') && $get('org_chart_type') === 'dynamic'),
                     FileUpload::make('org_chart_image')
                         ->label(__('Organization Chart Image'))
                         ->image()
@@ -233,12 +428,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     $org = array_merge($org, $data);
                     SystemSetting::set('organization_profile', $org);
 
-                    Cache::forget('about_orgchart_en');
-                    Cache::forget('about_orgchart_kh');
-                    Cache::forget('about_orgchart_km');
-                    Cache::forget('about_page_en');
-                    Cache::forget('about_page_kh');
-                    Cache::forget('about_page_km');
+                    OrgUnit::clearOrgCache();
 
                     Notification::make()
                         ->title(__('Display settings updated successfully'))
@@ -276,7 +466,8 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                 ->label(__('More Tools'))
                 ->icon('heroicon-o-ellipsis-vertical')
                 ->color('gray')
-                ->button(),
+                ->button()
+                ->size('xs'),
         ];
     }
 
@@ -329,6 +520,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
             ->fillForm(fn (array $arguments): array => [
                 'parentId' => $arguments['id'] ?? null,
                 'type' => 'STAFF',
+                'chart_group' => $this->activeChartGroup,
                 'isActive' => true,
                 'orderIndex' => 0,
             ])
@@ -367,12 +559,19 @@ class ManageOrgChart extends Page implements HasActions, HasForms
     public function loadChartData(): void
     {
         $unitsByParent = OrgUnit::with(['employee', 'department'])
+            ->forChart($this->activeChartGroup)
             ->orderBy('orderIndex')
             ->get()
             ->groupBy(fn (OrgUnit $unit): string => (string) ($unit->parentId ?? '__root__'));
 
         $this->chartData = $this->buildTree($unitsByParent);
         $this->dispatch('chartUpdated', chartData: $this->chartData);
+    }
+
+    public function switchChartGroup(string $group): void
+    {
+        $this->activeChartGroup = $group;
+        $this->loadChartData();
     }
 
     /**

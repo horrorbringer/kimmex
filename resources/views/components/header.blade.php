@@ -355,7 +355,7 @@
                                         <div class="h-[1px] bg-gray-100/40 my-0.5 mx-1"></div>
                                     @endif
                                 @endforeach
-                                @if($hasPublicDocuments)
+                                @if($hasPublicDocuments ?? false)
                                     <div class="h-[1px] bg-gray-100/70 my-1 mx-1"></div>
                                     <a href="/documents"
                                         class="flex items-center px-4 py-3 rounded hover:bg-gray-50 transition-all duration-200 group/item">
@@ -547,7 +547,7 @@
                                 <div class="h-[1px] bg-gray-100/40 my-0.5 mx-2"></div>
                             @endif
                         @endforeach
-                        @if($hasPublicDocuments)
+                        @if($hasPublicDocuments ?? false)
                             <div class="h-[1px] bg-gray-100/60 my-1 mx-2"></div>
                             <a href="/documents"
                                 class="flex items-center gap-3 px-4 py-2.5 rounded hover:bg-titan-red/10 text-titan-navy/70 hover:text-titan-red transition-all">

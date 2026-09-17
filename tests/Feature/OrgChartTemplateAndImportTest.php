@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Filament\Exports\OrgUnitExporter;
 use App\Filament\Imports\OrgUnitImporter;
 use App\Models\OrgUnit;
+use App\Models\SystemSetting;
 use App\Services\OrgStructureTemplateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -132,5 +133,91 @@ class OrgChartTemplateAndImportTest extends TestCase
         $this->assertStringContainsString("ImportAction::make('importOrgUnits')", $tableCode);
         $this->assertStringContainsString("ExportAction::make('exportOrgUnits')", $tableCode);
         $this->assertStringContainsString('ExportBulkAction::make()', $tableCode);
+    }
+
+    public function test_dynamic_chart_groups_default_and_custom_configuration(): void
+    {
+        // 1. Defaults
+        $defaults = OrgUnit::defaultChartGroups();
+        $this->assertCount(3, $defaults);
+        $this->assertSame('main', $defaults[0]['key']);
+
+        $groups = OrgUnit::getChartGroups();
+        $this->assertCount(3, $groups);
+
+        $options = OrgUnit::getChartGroupOptions('en');
+        $this->assertArrayHasKey('main', $options);
+        $this->assertSame('Organization Structure', $options['main']);
+
+        // 2. Custom groups saved via SystemSetting
+        SystemSetting::set('org_chart_groups', [
+            [
+                'key' => 'main',
+                'name_en' => 'Executive Board',
+                'name_km' => 'គណៈកម្មាធិការប្រតិបត្តិ',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'safety_team',
+                'name_en' => 'Safety & QA Team',
+                'name_km' => 'ក្រុមសុវត្ថិភាព',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'inactive_group',
+                'name_en' => 'Hidden Group',
+                'name_km' => '',
+                'is_active' => false,
+            ],
+        ]);
+
+        $customGroups = OrgUnit::getChartGroups();
+        $this->assertCount(3, $customGroups);
+
+        $activeGroups = OrgUnit::getChartGroups(activeOnly: true);
+        $this->assertCount(2, $activeGroups);
+
+        $customOptionsEn = OrgUnit::getChartGroupOptions('en');
+        $this->assertSame('Executive Board', $customOptionsEn['main']);
+        $this->assertSame('Safety & QA Team', $customOptionsEn['safety_team']);
+
+        $customOptionsKm = OrgUnit::getChartGroupOptions('km');
+        $this->assertSame('គណៈកម្មាធិការប្រតិបត្តិ', $customOptionsKm['main']);
+        $this->assertSame('ក្រុមសុវត្ថិភាព', $customOptionsKm['safety_team']);
+
+        // 3. Verify ManageOrgChart page has manageGroups action
+        $pageCode = file_get_contents(app_path('Filament/Pages/ManageOrgChart.php'));
+        $this->assertStringContainsString("Action::make('manageGroups')", $pageCode);
+    }
+
+    public function test_card_style_templates_configuration_and_rendering(): void
+    {
+        $pageCode = file_get_contents(app_path('Filament/Pages/ManageOrgChart.php'));
+        $this->assertStringContainsString("'org_chart_card_style'", $pageCode);
+        $this->assertStringContainsString("'avatar_top'", $pageCode);
+        $this->assertStringContainsString("'floating'", $pageCode);
+        $this->assertStringContainsString("'badge'", $pageCode);
+        $this->assertStringContainsString("'capsule'", $pageCode);
+        $this->assertStringContainsString("'corporate'", $pageCode);
+
+        // Test blade component rendering with different styles
+        $mockNode = [
+            'name' => 'Touch Kim',
+            'role' => 'Chief Executive Officer',
+            'unitType' => 'EXECUTIVE',
+            'image' => null,
+            'children' => [],
+        ];
+
+        foreach (['avatar_top', 'floating', 'badge', 'capsule', 'corporate'] as $style) {
+            $html = view('components.about.tree-node', [
+                'node' => $mockNode,
+                'level' => 0,
+                'cardStyle' => $style,
+            ])->render();
+
+            $this->assertStringContainsString('Touch Kim', $html);
+            $this->assertStringContainsString('Chief Executive Officer', $html);
+        }
     }
 }

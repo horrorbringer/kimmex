@@ -103,8 +103,9 @@ class AboutController extends Controller
             })->toArray();
         }
 
-        $orgChart = Cache::remember('about_orgchart_'.$localeKey, 43200, function () use ($localeKey) {
+        $buildOrgTree = function (string $group) use ($localeKey) {
             $unitsByParent = OrgUnit::where('isActive', true)
+                ->forChart($group)
                 ->with(['employee', 'department'])
                 ->orderBy('orderIndex')
                 ->get()
@@ -145,10 +146,7 @@ class AboutController extends Controller
 
             $roots = $unitsByParent->get('__root__', collect());
             if ($roots->isEmpty()) {
-                return [
-                    'name' => 'Sok Visal', 'role' => __('CEO (Not Configured)'), 'type' => 'ceo',
-                    'image' => null, 'bio' => __('To show your team here, please add Employee and Org Unit records in the admin panel.'), 'children' => [],
-                ];
+                return null;
             }
             if ($roots->count() === 1) {
                 return $buildNode($roots->first());
@@ -160,9 +158,58 @@ class AboutController extends Controller
                 'name' => $companyName, 'role' => __('Organization Structure'), 'type' => 'office',
                 'children' => $roots->map(fn ($root) => $buildNode($root))->toArray(),
             ];
+        };
+
+        $isKhmer = in_array($localeKey, ['km', 'kh']);
+        $configuredGroups = OrgUnit::getChartGroups(activeOnly: true);
+        $orgProfile = SystemSetting::get('organization_profile', []);
+        $orgChartCardStyle = $orgProfile['org_chart_card_style'] ?? 'avatar_top';
+
+        // Build all chart groups
+        $orgCharts = Cache::remember('about_orgcharts_'.$localeKey, 43200, function () use ($buildOrgTree, $configuredGroups, $isKhmer, $orgChartCardStyle) {
+            $charts = [];
+            foreach ($configuredGroups as $groupConfig) {
+                $groupKey = $groupConfig['key'] ?? 'main';
+                $label = $isKhmer
+                    ? (! empty($groupConfig['name_km']) ? $groupConfig['name_km'] : ($groupConfig['name_en'] ?? $groupKey))
+                    : (! empty($groupConfig['name_en']) ? $groupConfig['name_en'] : ($groupConfig['name_km'] ?? $groupKey));
+
+                $groupCardStyle = $groupConfig['card_style'] ?? 'default';
+                if ($groupCardStyle === 'default' || empty($groupCardStyle)) {
+                    $groupCardStyle = $orgChartCardStyle;
+                }
+
+                $tree = $buildOrgTree($groupKey);
+                if ($tree !== null) {
+                    $charts[$groupKey] = [
+                        'label' => $label,
+                        'tree' => $tree,
+                        'card_style' => $groupCardStyle,
+                    ];
+                }
+            }
+
+            return $charts;
         });
 
-        $orgProfile = SystemSetting::get('organization_profile', []);
+        $fallbackTree = [
+            'name' => 'Sok Visal', 'role' => __('CEO (Not Configured)'), 'type' => 'ceo',
+            'image' => null, 'bio' => __('To show your team here, please add Employee and Org Unit records in the admin panel.'), 'children' => [],
+        ];
+
+        if (empty($orgCharts)) {
+            $orgCharts = [
+                'main' => [
+                    'label' => __('Organization Structure'),
+                    'tree' => $fallbackTree,
+                    'card_style' => $orgChartCardStyle,
+                ],
+            ];
+        }
+
+        // Backward compatibility: $orgChart is the 'main' group tree (or fallback)
+        $orgChart = $orgCharts['main']['tree'] ?? $fallbackTree;
+
         $orgChartVisible = (bool) ($orgProfile['org_chart_visible'] ?? true);
         $orgChartType = $orgProfile['org_chart_type'] ?? 'dynamic';
         if (! $orgChartVisible) {
@@ -264,8 +311,9 @@ class AboutController extends Controller
             'brandProfile', 'brand',
             'ceoName', 'aboutHeroImageUrl',
             'aboutSectionImages', 'aboutSafetyImageUrl', 'aboutData',
-            'milestones', 'orgChart',
+            'milestones', 'orgChart', 'orgCharts',
             'orgProfile', 'orgChartVisible', 'orgChartType', 'orgChartImage', 'orgChartPdf',
+            'orgChartCardStyle',
             'tagline',
             'timelinePoints', 'allProjectsFlat', 'projectJourneyStats',
             'canvasJsCumulativeData',

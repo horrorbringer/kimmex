@@ -1,4 +1,4 @@
-@props(['orgChart'])
+@props(['orgChart', 'cardStyle' => 'floating'])
 
 @if(!empty($orgChart))
 <div x-data="{
@@ -56,7 +56,7 @@
                  class="w-max shrink-0 flex flex-col items-center justify-start text-center">
                 <ul x-ref="treeRoot"
                     class="org-tree-root !p-0 !m-0 !list-none inline-flex justify-center items-start mx-auto w-max">
-                    @include('components.about.tree-node', ['node' => $orgChart, 'level' => 0])
+                    @include('components.about.tree-node', ['node' => $orgChart, 'level' => 0, 'cardStyle' => $cardStyle])
                 </ul>
             </div>
         </div>

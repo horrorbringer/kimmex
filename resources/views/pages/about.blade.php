@@ -676,7 +676,29 @@
                         </div>
                     </div>
                 @else
-                    <x-about.org-tree :orgChart="$orgChart" />
+                    {{-- Dynamic chart: render each chart group as its own section --}}
+                    @foreach($orgCharts as $groupKey => $groupData)
+                        <div class="{{ !$loop->first ? 'mt-12 sm:mt-16 pt-10 sm:pt-14 border-t border-titan-navy/10' : '' }}"
+                             x-data="{ shown: false }" x-intersect.once="shown = true">
+                            <div :class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+                                 class="transition-all duration-700">
+                                @if(!$loop->first)
+                                <div class="text-center mb-8 sm:mb-10 md:mb-12">
+                                    <div class="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-5">
+                                        <div class="w-6 sm:w-8 h-[2px] bg-titan-red"></div>
+                                        <span class="text-titan-red font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[10px] sm:text-xs">{{ __('TEAM STRUCTURE') }}</span>
+                                        <div class="w-6 sm:w-8 h-[2px] bg-titan-red"></div>
+                                    </div>
+                                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-titan-navy tracking-tight">
+                                        {{ $groupData['label'] }}
+                                    </h2>
+                                </div>
+                                @endif
+
+                                <x-about.org-tree :orgChart="$groupData['tree']" :cardStyle="$groupData['card_style'] ?? ($orgChartCardStyle ?? 'avatar_top')" />
+                            </div>
+                        </div>
+                    @endforeach
                 @endif
             </div>
         </section>

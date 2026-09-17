@@ -1,6 +1,6 @@
 @php
     $profile = $globalSettings['profile'] ?? [];
-    $lang = $siteLocale;
+    $lang = $siteLocale ?? app()->getLocale();
     $brand = $globalSettings['brand'] ?? [];
 
     $getVal = function ($field, $default) use ($profile, $lang) {

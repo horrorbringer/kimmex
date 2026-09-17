@@ -4,6 +4,7 @@ namespace App\Filament\Resources\OrgUnits\Schemas;
 
 use App\Filament\Support\TranslationHelper;
 use App\Models\Employee;
+use App\Models\OrgUnit;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -77,6 +78,15 @@ class OrgUnitForm
                     ->searchable()
                     ->preload()
                     ->placeholder(__('Optional department link...')),
+
+                Select::make('chart_group')
+                    ->label(__('Chart Group'))
+                    ->options(fn () => OrgUnit::getChartGroupOptions())
+                    ->allowHtml(false)
+                    ->native(false)
+                    ->default('main')
+                    ->required()
+                    ->searchable(),
 
                 TextInput::make('orderIndex')
                     ->label(__('Sort Order'))

@@ -151,6 +151,15 @@ class OrgUnitsTable
                             ->default(true),
                     ])
                     ->action(function (array $data): void {
+                        if (! (app()->isLocal() || app()->runningUnitTests())) {
+                            Notification::make()
+                                ->title(__('Template loading is only available in local development.'))
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
                         $count = OrgStructureTemplateService::applyTemplate(
                             (string) ($data['template'] ?? 'kimmex_corporate'),
                             (bool) ($data['clear_existing'] ?? true),
@@ -161,7 +170,7 @@ class OrgUnitsTable
                             ->success()
                             ->send();
                     })
-                    ->visible(fn (): bool => auth()->user()?->isAdmin() ?? false),
+                    ->visible(fn (): bool => (app()->isLocal() || app()->runningUnitTests()) && (auth()->user()?->isAdmin() ?? false)),
 
                 ImportAction::make('importOrgUnits')
                     ->label(__('Import Positions'))
