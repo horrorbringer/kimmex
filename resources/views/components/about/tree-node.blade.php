@@ -116,10 +116,10 @@
     @else
         {{-- STYLE 5 (Default): Circle Photo Centered Above (Clean Round Avatar) --}}
         <div class="org-card-wrapper pt-0 flex flex-col items-center select-none text-center group">
-            {{-- Big Prominent Circle Avatar with Multi-layer Ring & Ambient Shadow --}}
-            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-[0_4px_14px_rgba(0,0,0,0.08)] overflow-hidden flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 text-[#0B2B5C] font-black text-base shrink-0 ring-3 ring-slate-200/90 group-hover:ring-[#0B2B5C]/20 ring-offset-2 ring-offset-white transition-all duration-300 group-hover:scale-105">
+            {{-- Big Prominent Circle Avatar - Clean Single Border, No Outer Rings, No Scale on Hover --}}
+            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-xs overflow-hidden flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 text-[#0B2B5C] font-black text-base shrink-0 transition-colors duration-200">
                 @if($image)
-                    <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+                    <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
                 @else
                     <span class="tracking-wider">{{ $initials }}</span>
                 @endif
@@ -341,10 +341,10 @@
         @else
             {{-- STYLE 5 (Default): Circle Photo Centered Above (Clean Round Avatar) --}}
             <div class="org-card-wrapper {{ $hasChildren ? 'has-children' : '' }} pt-0 flex flex-col items-center select-none text-center group">
-                {{-- Big Prominent Circle Avatar with Multi-layer Executive Ring & Shadow --}}
-                <div class="{{ $isRoot ? 'w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 border-[3.5px] border-[#E31E24] shadow-[0_12px_28px_-6px_rgba(227,30,36,0.32)] ring-4 ring-[#E31E24]/25 ring-offset-4' : ($isExecutive ? 'w-22 h-22 sm:w-26 sm:h-26 border-[2.5px] border-[#185FA5] shadow-[0_8px_22px_-4px_rgba(24,95,165,0.25)] ring-4 ring-[#185FA5]/20 ring-offset-3' : 'w-18 h-18 sm:w-20 sm:h-20 border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-[0_4px_14px_rgba(0,0,0,0.08)] ring-3 ring-slate-200/90 group-hover:ring-[#0B2B5C]/20 ring-offset-2') }} ring-offset-white rounded-full overflow-hidden flex items-center justify-center {{ $isRoot ? 'bg-[#0B2B5C] text-white' : ($isExecutive ? 'bg-[#185FA5] text-white' : 'bg-slate-100 text-[#0B2B5C]') }} font-black {{ $isRoot ? 'text-3xl sm:text-4xl' : ($isExecutive ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg') }} shrink-0 transition-all duration-300 group-hover:scale-105">
+                {{-- Big Prominent Circle Avatar - Clean Single Border, No Outer Rings, No Scale on Hover --}}
+                <div class="{{ $isRoot ? 'w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 border-[3px] border-[#E31E24] shadow-md' : ($isExecutive ? 'w-22 h-22 sm:w-26 sm:h-26 border-2 border-[#185FA5] shadow-sm' : 'w-18 h-18 sm:w-20 sm:h-20 border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-xs') }} rounded-full overflow-hidden flex items-center justify-center {{ $isRoot ? 'bg-[#0B2B5C] text-white' : ($isExecutive ? 'bg-[#185FA5] text-white' : 'bg-slate-100 text-[#0B2B5C]') }} font-black {{ $isRoot ? 'text-3xl sm:text-4xl' : ($isExecutive ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg') }} shrink-0 transition-colors duration-200">
                     @if($image)
-                        <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+                        <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
                     @else
                         <span class="tracking-wider">{{ $initials }}</span>
                     @endif
