@@ -21,53 +21,45 @@
 @if($inColumn)
     {{-- Node inside a vertical department column (stacks vertically straight down) --}}
     @if($cardStyle === 'floating')
-        {{-- STYLE 1: Floating Circular Avatar Clipped to Center Top Edge --}}
-        <div class="org-card-wrapper pt-3">
-            <div class="org-tree-card group relative text-center rounded-xl bg-white !border-2 !border-slate-200 hover:!border-[#0B2B5C] shadow-xs px-3 pt-5.5 pb-2.5 w-[160px] sm:w-[175px] transition-all hover:shadow-sm select-none"
+        {{-- STYLE 1 / Template 2: Compact Card Without Floating Circle --}}
+        <div class="org-card-wrapper pt-0">
+            <div class="org-tree-card group relative text-center rounded-lg bg-white !border !border-slate-200 hover:!border-[#0B2B5C] shadow-2xs px-2 py-1.5 sm:py-2 w-[115px] sm:w-[130px] transition-all hover:shadow-xs select-none"
                  style="background: #ffffff !important; color: #0f172a !important;">
-                <div class="absolute -top-4.5 left-1/2 -translate-x-1/2 z-10">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-xs overflow-hidden flex items-center justify-center bg-slate-100 text-[#0B2B5C] font-bold text-xs shrink-0 ring-1 ring-slate-200/90">
-                        @if($image)
-                            <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
-                        @else
-                            <span class="tracking-wider">{{ $initials }}</span>
-                        @endif
-                    </div>
-                </div>
-
-                <h4 class="font-heading !font-black !text-xs sm:!text-[13px] !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-snug !m-0 !mb-0"
-                    style="color: #0B2B5C !important;">
+                <h4 class="!font-sans !font-bold !text-[8.5px] sm:!text-[9px] !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-tight !m-0 transition-colors"
+                    style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important; font-size: 9px !important; line-height: 1.25 !important;">
                     {{ $node['name'] }}
                 </h4>
-                <div class="my-1.5 w-6 mx-auto h-px !bg-slate-200 group-hover:!bg-[#E31E24]/40 transition-colors"
+                <div class="my-1 w-5 mx-auto h-px !bg-slate-200 group-hover:!bg-[#E31E24]/30 transition-colors"
                      style="background-color: #E2E8F0 !important;"></div>
-                <p class="italic !text-[10px] sm:!text-[11px] !font-medium !text-slate-500 leading-tight !m-0 !mb-0"
-                   style="color: #64748B !important;">
+                <p class="!font-sans !text-[7px] sm:!text-[7.5px] !font-medium !text-slate-500 leading-tight !m-0"
+                   style="font-family: var(--font-sans), sans-serif !important; color: #64748B !important; font-size: 7.5px !important; line-height: 1.2 !important;">
                     {{ $node['role'] }}
                 </p>
             </div>
         </div>
     @elseif($cardStyle === 'badge')
-        {{-- STYLE 2: Integrated Executive Badge (Photo on top, text below) --}}
+        {{-- STYLE 2 / Template 3: Integrated Executive Badge (3/4 Photo, 1/4 Name & Role) --}}
         <div class="org-card-wrapper pt-0">
-            <div class="org-tree-card group relative text-center rounded-xl bg-white !border-2 !border-slate-200 hover:!border-[#0B2B5C] shadow-xs overflow-hidden w-[160px] sm:w-[175px] transition-all hover:shadow-sm select-none"
+            <div class="org-tree-card group relative flex flex-col text-center rounded-lg bg-white !border !border-slate-200 hover:!border-[#0B2B5C] shadow-2xs overflow-hidden w-[105px] sm:w-[118px] h-[130px] sm:h-[145px] transition-all hover:shadow-xs select-none"
                  style="background: #ffffff !important; color: #0f172a !important;">
-                <div class="w-full h-22 sm:h-26 bg-slate-100 relative overflow-hidden flex items-center justify-center">
+                {{-- 3/4 Image Section --}}
+                <div class="w-full h-3/4 shrink-0 bg-slate-100 relative overflow-hidden flex items-center justify-center">
                     @if($image)
                         <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
                     @else
-                        <div class="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-400 font-black text-xl tracking-wider">
+                        <div class="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-400 font-bold text-base tracking-wider">
                             {{ $initials }}
                         </div>
                     @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"></div>
                 </div>
-                <div class="px-2.5 py-2">
-                    <h4 class="font-heading !font-black !text-xs sm:!text-[13px] !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-snug !m-0"
-                        style="color: #0B2B5C !important;">{{ $node['name'] }}</h4>
-                    <div class="my-1 w-5 mx-auto h-px !bg-slate-200" style="background-color: #E2E8F0 !important;"></div>
-                    <p class="italic !text-[10px] sm:!text-[11px] !font-medium !text-slate-500 leading-tight !m-0"
-                       style="color: #64748B !important;">{{ $node['role'] }}</p>
+                {{-- 1/4 Name & Role Section --}}
+                <div class="w-full h-1/4 shrink-0 flex flex-col justify-center items-center px-1.5 py-0.5 text-center">
+                    <h4 class="!font-sans !font-bold !text-[8px] sm:!text-[8.5px] !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-tight !m-0 transition-colors"
+                        style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important; font-size: 8.5px !important; line-height: 1.2 !important;">{{ $node['name'] }}</h4>
+                    <div class="my-0.5 w-4 mx-auto h-px !bg-slate-200" style="background-color: #E2E8F0 !important;"></div>
+                    <p class="!font-sans !text-[6.5px] sm:!text-[7px] !font-medium !text-slate-500 leading-tight !m-0"
+                       style="font-family: var(--font-sans), sans-serif !important; color: #64748B !important; font-size: 7px !important; line-height: 1.15 !important;">{{ $node['role'] }}</p>
                 </div>
             </div>
         </div>
@@ -116,8 +108,8 @@
     @else
         {{-- STYLE 5 (Default): Circle Photo Centered Above (Clean Round Avatar) --}}
         <div class="org-card-wrapper pt-0 flex flex-col items-center select-none text-center group">
-            {{-- Big Prominent Circle Avatar - Clean Single Border, No Outer Rings, No Scale on Hover --}}
-            <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-xs overflow-hidden flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 text-[#0B2B5C] font-black text-base shrink-0 transition-colors duration-200">
+            {{-- Compact Circle Avatar - Clean Single Border --}}
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-xs overflow-hidden flex items-center justify-center bg-gradient-to-b from-slate-50 to-slate-100 text-[#0B2B5C] font-bold text-xs shrink-0 transition-colors duration-200">
                 @if($image)
                     <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
                 @else
@@ -126,11 +118,11 @@
             </div>
 
             {{-- Clean Typography Below --}}
-            <div class="mt-2 text-center max-w-[140px] sm:max-w-[155px]">
-                <h4 class="font-heading !font-bold !text-[11px] sm:!text-xs !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-snug !m-0 transition-colors"
-                    style="color: #0B2B5C !important;">{{ $node['name'] }}</h4>
-                <p class="mt-0.5 !text-[9.5px] sm:!text-[10px] !font-medium !text-slate-500 leading-tight !m-0"
-                   style="color: #64748B !important;">{{ $node['role'] }}</p>
+            <div class="mt-0.5 text-center max-w-[110px] sm:max-w-[130px]">
+                <h4 class="!font-sans !font-bold !text-[8.5px] sm:!text-[9px] !text-[#0B2B5C] group-hover:!text-[#E31E24] leading-tight !m-0 transition-colors"
+                    style="font-family: var(--font-sans), sans-serif !important; font-size: 9px !important; line-height: 1.25 !important; color: #0B2B5C !important;">{{ $node['name'] }}</h4>
+                <p class="mt-0 !font-sans !text-[7px] sm:!text-[7.5px] !font-medium !text-slate-500 leading-tight !m-0"
+                   style="font-family: var(--font-sans), sans-serif !important; font-size: 7.5px !important; line-height: 1.2 !important; color: #64748B !important;">{{ $node['role'] }}</p>
             </div>
         </div>
     @endif
@@ -138,7 +130,7 @@
     @if($hasChildren)
         @foreach($node['children'] as $child)
             {{-- Crisp vertical connector line between stacked cards --}}
-            <div class="w-[2px] h-4 !bg-[#0B2B5C] mx-auto my-0"></div>
+            <div class="w-[2px] h-2 !bg-[#0B2B5C] mx-auto my-0"></div>
             @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => true, 'cardStyle' => $cardStyle])
         @endforeach
     @endif
@@ -146,120 +138,105 @@
     {{-- Node in the horizontal tree (CEO, DCEO, DGM) --}}
     <li class="org-tree-item">
         @if($cardStyle === 'floating')
-            {{-- STYLE 1: Floating Circular Avatar Clipped to Center Top Edge --}}
-            <div class="org-card-wrapper {{ $hasChildren ? 'has-children' : '' }} pt-4">
-                <div class="org-tree-card group relative text-center rounded-xl transition-all duration-200 select-none
+            {{-- STYLE 1 / Template 2: Compact Corporate Card (No Floating Circle Avatar) --}}
+            <div class="org-card-wrapper {{ $hasChildren ? 'has-children' : '' }} pt-0">
+                <div class="org-tree-card group relative text-center rounded-lg transition-all duration-200 select-none
                     @if($isRoot)
-                        !bg-gradient-to-b !from-[#0E3A7A] !to-[#0B2B5C] !text-white shadow-md !border-t-[3px] !border-t-[#E31E24] !border-x !border-b !border-[#0B2B5C] w-[190px] sm:w-[210px] px-3.5 pt-7 pb-3 sm:pb-3.5
+                        !bg-gradient-to-b !from-[#0E3A7A] !to-[#0B2B5C] !text-white shadow-sm !border-t-[2.5px] !border-t-[#E31E24] !border-x !border-b !border-[#0B2B5C] w-[130px] sm:w-[145px] px-2.5 py-2
                     @elseif($isExecutive)
-                        !bg-gradient-to-b !from-[#1C69B5] !to-[#185FA5] !text-white shadow-xs !border !border-[#124A82] w-[170px] sm:w-[190px] px-3 pt-6 pb-2.5 sm:pb-3
+                        !bg-gradient-to-b !from-[#1C69B5] !to-[#185FA5] !text-white shadow-2xs !border !border-[#124A82] w-[120px] sm:w-[135px] px-2 py-1.5 sm:py-2
                     @else
-                        !bg-white !text-slate-900 !border-2 !border-slate-200 hover:!border-[#0B2B5C] w-[160px] sm:w-[175px] px-3 pt-5.5 pb-2.5 hover:shadow-sm
+                        !bg-white !text-slate-900 !border !border-slate-200 hover:!border-[#0B2B5C] w-[110px] sm:w-[125px] px-2 py-1.5 sm:py-2 hover:shadow-2xs
                     @endif"
                     style="{{ $isRoot ? 'background: linear-gradient(to bottom, #0E3A7A, #0B2B5C) !important; color: #ffffff !important;' : ($isExecutive ? 'background: linear-gradient(to bottom, #1C69B5, #185FA5) !important; color: #ffffff !important;' : 'background: #ffffff !important; color: #0f172a !important;') }}">
 
-                    {{-- Floating Circular Avatar Clipped to Center Top Edge --}}
-                    <div class="absolute {{ $isRoot ? '-top-6' : '-top-5' }} left-1/2 -translate-x-1/2 z-10">
-                        @if($isRoot)
-                            <div class="w-12 h-12 rounded-full border-2 border-[#E31E24] shadow-md overflow-hidden flex items-center justify-center bg-[#0B2B5C] text-white font-black text-sm shrink-0 ring-2 ring-white/20">
-                                @if($image)
-                                    <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
-                                @else
-                                    <span class="tracking-wider">{{ $initials }}</span>
-                                @endif
-                            </div>
-                        @elseif($isExecutive)
-                            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full border-2 border-white shadow-sm overflow-hidden flex items-center justify-center bg-[#155394] text-white font-bold text-xs shrink-0 ring-1 ring-blue-300/40">
-                                @if($image)
-                                    <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
-                                @else
-                                    <span class="tracking-wider">{{ $initials }}</span>
-                                @endif
-                            </div>
-                        @else
-                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-xs overflow-hidden flex items-center justify-center bg-slate-100 text-[#0B2B5C] font-bold text-xs shrink-0 ring-1 ring-slate-200/90">
-                                @if($image)
-                                    <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
-                                @else
-                                    <span class="tracking-wider">{{ $initials }}</span>
-                                @endif
-                            </div>
-                        @endif
-                    </div>
-
                     {{-- Person Name --}}
-                    <h4 class="font-heading !font-black tracking-tight leading-snug !m-0 !mb-0
+                    <h4 class="!font-sans !font-bold tracking-tight leading-tight !m-0
                         @if($isRoot)
-                            !text-xs sm:!text-sm !text-white
+                            !text-[10px] sm:!text-[10.5px] !text-white
                         @elseif($isExecutive)
-                            !text-xs sm:!text-[13px] !text-white
+                            !text-[9px] sm:!text-[9.5px] !text-white
                         @else
-                            !text-xs sm:!text-[13px] !text-[#0B2B5C] group-hover:!text-[#E31E24]
+                            !text-[8.5px] sm:!text-[9px] !text-[#0B2B5C] group-hover:!text-[#E31E24] transition-colors
                         @endif"
-                        style="color: {{ $isRoot || $isExecutive ? '#ffffff' : '#0B2B5C' }} !important;">
+                        style="font-family: var(--font-sans), sans-serif !important; color: {{ $isRoot || $isExecutive ? '#ffffff' : '#0B2B5C' }} !important; font-size: {{ $isRoot ? '10.5px' : ($isExecutive ? '9.5px' : '9px') }} !important; line-height: 1.25 !important;">
                         {{ $node['name'] }}
                     </h4>
 
                     {{-- Dividing Line --}}
-                    <div class="my-1.5
+                    <div class="my-1
                         @if($isRoot)
-                            w-8 mx-auto h-[2px] !bg-[#E31E24] rounded-full
+                            w-6 mx-auto h-[1.5px] !bg-[#E31E24] rounded-full
                         @elseif($isExecutive)
-                            w-7 mx-auto h-px !bg-white/40
+                            w-5 mx-auto h-px !bg-white/40
                         @else
-                            w-6 mx-auto h-px !bg-slate-200 group-hover:!bg-[#E31E24]/40 transition-colors
+                            w-5 mx-auto h-px !bg-slate-200 group-hover:!bg-[#E31E24]/30 transition-colors
                         @endif"
                         style="{{ $isRoot ? 'background-color: #E31E24 !important;' : ($isExecutive ? 'background-color: rgba(255, 255, 255, 0.4) !important;' : 'background-color: #E2E8F0 !important;') }}"></div>
 
                     {{-- Position / Title --}}
-                    <p class="italic leading-tight !font-medium !m-0 !mb-0
+                    <p class="!font-sans leading-tight !m-0
                         @if($isRoot)
-                            !text-[11px] !text-slate-200
+                            !text-[7.5px] sm:!text-[8px] !font-semibold !text-slate-200 tracking-wider uppercase
                         @elseif($isExecutive)
-                            !text-[10px] sm:!text-[11px] !text-blue-100
+                            !text-[7px] sm:!text-[7.5px] !font-medium !text-blue-100 tracking-wider uppercase
                         @else
-                            !text-[10px] sm:!text-[11px] !text-slate-500
+                            !text-[7px] sm:!text-[7.5px] !font-medium !text-slate-500
                         @endif"
-                        style="color: {{ $isRoot ? '#E2E8F0' : ($isExecutive ? '#DBEAFE' : '#64748B') }} !important;">
+                        style="font-family: var(--font-sans), sans-serif !important; color: {{ $isRoot ? '#E2E8F0' : ($isExecutive ? '#DBEAFE' : '#64748B') }} !important; font-size: {{ $isRoot ? '8px' : '7.5px' }} !important; line-height: 1.2 !important;">
                         {{ $node['role'] }}
                     </p>
                 </div>
             </div>
         @elseif($cardStyle === 'badge')
-            {{-- STYLE 2: Integrated Executive Badge --}}
+            {{-- STYLE 2 / Template 3: Integrated Executive Badge (3/4 Photo, 1/4 Name & Role) --}}
             <div class="org-card-wrapper {{ $hasChildren ? 'has-children' : '' }} pt-0">
-                <div class="org-tree-card group relative text-center rounded-xl overflow-hidden transition-all duration-200 select-none shadow-md
+                <div class="org-tree-card group relative flex flex-col text-center rounded-lg overflow-hidden transition-all duration-200 select-none shadow-xs
                     @if($isRoot)
-                        !bg-[#0B2B5C] !border-t-4 !border-t-[#E31E24] !border-x !border-b !border-[#0B2B5C] w-[190px] sm:w-[210px]
+                        !bg-[#0B2B5C] !border-t-[3px] !border-t-[#E31E24] !border-x !border-b !border-[#0B2B5C] w-[125px] sm:w-[138px] h-[155px] sm:h-[170px]
                     @elseif($isExecutive)
-                        !bg-[#185FA5] !border !border-[#124A82] w-[170px] sm:w-[190px]
+                        !bg-[#185FA5] !border !border-[#124A82] w-[115px] sm:w-[128px] h-[140px] sm:h-[155px]
                     @else
-                        !bg-white !border-2 !border-slate-200 w-[160px] sm:w-[175px]
+                        !bg-white !border !border-slate-200 hover:!border-[#0B2B5C] w-[105px] sm:w-[118px] h-[130px] sm:h-[145px]
                     @endif"
                     style="{{ $isRoot ? 'background: #0B2B5C !important; color: #ffffff !important;' : ($isExecutive ? 'background: #185FA5 !important; color: #ffffff !important;' : 'background: #ffffff !important; color: #0f172a !important;') }}">
 
-                    <div class="w-full {{ $isRoot ? 'h-28 sm:h-32' : 'h-24 sm:h-28' }} bg-slate-800 relative overflow-hidden flex items-center justify-center">
+                    {{-- 3/4 Image Section --}}
+                    <div class="w-full h-3/4 shrink-0 bg-slate-800 relative overflow-hidden flex items-center justify-center">
                         @if($image)
                             <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center text-white/50 font-black text-2xl tracking-wider">
+                            <div class="w-full h-full bg-gradient-to-br {{ $isRoot || $isExecutive ? 'from-slate-700 to-slate-900 text-white/50' : 'from-slate-100 to-slate-200 text-slate-400' }} flex items-center justify-center font-bold text-base sm:text-lg tracking-wider">
                                 {{ $initials }}
                             </div>
                         @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
                     </div>
 
-                    <div class="px-3 py-2.5">
-                        <h4 class="font-heading !font-black tracking-tight leading-snug !m-0
-                            {{ $isRoot || $isExecutive ? '!text-white' : '!text-[#0B2B5C]' }}
-                            {{ $isRoot ? '!text-xs sm:!text-sm' : '!text-xs sm:!text-[13px]' }}"
-                            style="color: {{ $isRoot || $isExecutive ? '#ffffff' : '#0B2B5C' }} !important;">
+                    {{-- 1/4 Name and Role Section --}}
+                    <div class="w-full h-1/4 shrink-0 flex flex-col justify-center items-center px-1.5 py-0.5 text-center">
+                        <h4 class="!font-sans !font-bold tracking-tight leading-tight !m-0
+                            @if($isRoot)
+                                !text-[9.5px] sm:!text-[10px] !text-white
+                            @elseif($isExecutive)
+                                !text-[8.5px] sm:!text-[9px] !text-white
+                            @else
+                                !text-[8px] sm:!text-[8.5px] !text-[#0B2B5C] group-hover:!text-[#E31E24] transition-colors
+                            @endif"
+                            style="font-family: var(--font-sans), sans-serif !important; color: {{ $isRoot || $isExecutive ? '#ffffff' : '#0B2B5C' }} !important; font-size: {{ $isRoot ? '10px' : ($isExecutive ? '9px' : '8.5px') }} !important; line-height: 1.2 !important;">
                             {{ $node['name'] }}
                         </h4>
-                        <div class="my-1.5 w-6 mx-auto h-px {{ $isRoot ? '!bg-[#E31E24]' : ($isExecutive ? '!bg-white/40' : '!bg-slate-200') }}"></div>
-                        <p class="italic leading-tight !font-medium !m-0
-                            {{ $isRoot ? '!text-[11px] !text-slate-200' : ($isExecutive ? '!text-[10px] sm:!text-[11px] !text-blue-100' : '!text-[10px] sm:!text-[11px] !text-slate-500') }}"
-                            style="color: {{ $isRoot ? '#E2E8F0' : ($isExecutive ? '#DBEAFE' : '#64748B') }} !important;">
+                        <div class="my-0.5 w-4 mx-auto h-px {{ $isRoot ? '!bg-[#E31E24]' : ($isExecutive ? '!bg-white/40' : '!bg-slate-200') }}"
+                             style="{{ $isRoot ? 'background-color: #E31E24 !important;' : ($isExecutive ? 'background-color: rgba(255, 255, 255, 0.4) !important;' : 'background-color: #E2E8F0 !important;') }}"></div>
+                        <p class="!font-sans leading-tight !m-0
+                            @if($isRoot)
+                                !text-[7px] sm:!text-[7.5px] !font-semibold !text-slate-200 tracking-wider uppercase
+                            @elseif($isExecutive)
+                                !text-[6.5px] sm:!text-[7px] !font-medium !text-blue-100 tracking-wider uppercase
+                            @else
+                                !text-[6.5px] sm:!text-[7px] !font-medium !text-slate-500
+                            @endif"
+                            style="font-family: var(--font-sans), sans-serif !important; color: {{ $isRoot ? '#E2E8F0' : ($isExecutive ? '#DBEAFE' : '#64748B') }} !important; font-size: {{ $isRoot ? '7.5px' : '7px' }} !important; line-height: 1.15 !important;">
                             {{ $node['role'] }}
                         </p>
                     </div>
@@ -337,8 +314,8 @@
         @else
             {{-- STYLE 5 (Default): Circle Photo Centered Above (Clean Round Avatar) --}}
             <div class="org-card-wrapper {{ $hasChildren ? 'has-children' : '' }} pt-0 flex flex-col items-center select-none text-center group">
-                {{-- Big Prominent Circle Avatar - Clean Single Border, No Outer Rings, No Scale on Hover --}}
-                <div class="{{ $isRoot ? 'w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 border-[3px] border-[#E31E24] shadow-md' : ($isExecutive ? 'w-22 h-22 sm:w-26 sm:h-26 border-2 border-[#185FA5] shadow-sm' : 'w-18 h-18 sm:w-20 sm:h-20 border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-xs') }} rounded-full overflow-hidden flex items-center justify-center {{ $isRoot ? 'bg-[#0B2B5C] text-white' : ($isExecutive ? 'bg-[#185FA5] text-white' : 'bg-slate-100 text-[#0B2B5C]') }} font-black {{ $isRoot ? 'text-3xl sm:text-4xl' : ($isExecutive ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg') }} shrink-0 transition-colors duration-200">
+                {{-- Compact Circle Avatar - Clean Single Border --}}
+                <div class="{{ $isRoot ? 'w-18 h-18 sm:w-20 sm:h-20 md:w-22 md:h-22 border-2 border-[#E31E24] shadow-sm' : ($isExecutive ? 'w-14 h-14 sm:w-16 sm:h-16 border-2 border-[#185FA5] shadow-xs' : 'w-11 h-11 sm:w-12 sm:h-12 border-2 border-slate-300 group-hover:border-[#0B2B5C] shadow-xs') }} rounded-full overflow-hidden flex items-center justify-center {{ $isRoot ? 'bg-[#0B2B5C] text-white' : ($isExecutive ? 'bg-[#185FA5] text-white' : 'bg-slate-100 text-[#0B2B5C]') }} font-bold {{ $isRoot ? 'text-xl sm:text-2xl' : ($isExecutive ? 'text-base sm:text-lg' : 'text-xs sm:text-sm') }} shrink-0 transition-colors duration-200">
                     @if($image)
                         <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
                     @else
@@ -347,26 +324,26 @@
                 </div>
 
                 {{-- Clean Typography Below --}}
-                <div class="mt-2.5 text-center max-w-[160px] sm:max-w-[185px]">
-                    <h4 class="font-heading !font-bold tracking-tight leading-snug !m-0
-                        {{ $isRoot ? '!text-xs sm:!text-[13.5px] !text-[#0B2B5C]' : ($isExecutive ? '!text-[11.5px] sm:!text-xs !text-[#0B2B5C]' : '!text-[11px] sm:!text-xs !text-[#0B2B5C]') }}"
-                        style="color: #0B2B5C !important;">
+                <div class="mt-0.5 text-center max-w-[125px] sm:max-w-[145px]">
+                    <h4 class="!font-sans !font-bold tracking-tight leading-tight !m-0
+                        {{ $isRoot ? '!text-[10px] sm:!text-[10.5px]' : ($isExecutive ? '!text-[9px] sm:!text-[9.5px]' : '!text-[8.5px] sm:!text-[9px]') }}"
+                        style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important; font-size: {{ $isRoot ? '10.5px' : ($isExecutive ? '9.5px' : '9px') }} !important; line-height: 1.25 !important;">
                         {{ $node['name'] }}
                     </h4>
 
                     @if($isRoot)
-                        <p class="mt-0.5 !text-[10.5px] sm:!text-[11.5px] !font-semibold !text-[#E31E24] leading-tight !m-0"
-                           style="color: #E31E24 !important;">
+                        <p class="mt-0 !font-sans !text-[7.5px] sm:!text-[8px] !font-semibold !text-[#E31E24] leading-tight !m-0 tracking-wider uppercase"
+                           style="font-family: var(--font-sans), sans-serif !important; color: #E31E24 !important; font-size: 8px !important; line-height: 1.2 !important;">
                             {{ $node['role'] }}
                         </p>
                     @elseif($isExecutive)
-                        <p class="mt-0.5 !text-[10px] sm:!text-[11px] !font-medium !text-[#185FA5] leading-tight !m-0"
-                           style="color: #185FA5 !important;">
+                        <p class="mt-0 !font-sans !text-[7px] sm:!text-[7.5px] !font-medium !text-[#185FA5] leading-tight !m-0 tracking-wider uppercase"
+                           style="font-family: var(--font-sans), sans-serif !important; color: #185FA5 !important; font-size: 7.5px !important; line-height: 1.2 !important;">
                             {{ $node['role'] }}
                         </p>
                     @else
-                        <p class="mt-0.5 !text-[9.5px] sm:!text-[10px] !font-medium !text-slate-500 leading-tight !m-0"
-                           style="color: #64748B !important;">
+                        <p class="mt-0 !font-sans !text-[7px] sm:!text-[7.5px] !font-medium !text-slate-500 leading-tight !m-0"
+                           style="font-family: var(--font-sans), sans-serif !important; color: #64748B !important; font-size: 7.5px !important; line-height: 1.2 !important;">
                             {{ $node['role'] }}
                         </p>
                     @endif
@@ -374,29 +351,11 @@
             </div>
         @endif
 
-        {{-- Subordinate Branches / Children --}}
+        {{-- Subordinate Branches / Children (True Tree Hierarchy) --}}
         @if($hasChildren)
             <ul class="org-tree-children">
                 @foreach($node['children'] as $child)
-                    @php
-                        $childIsExecutive = in_array(strtoupper($child['unitType'] ?? ''), ['EXECUTIVE', 'MANAGEMENT'])
-                            || preg_match('/\b(ceo|dceo|gm|dgm|general manager|president|chief|board)\b/i', $child['role'] ?? '')
-                            || ($level < 2 && !empty($child['children']));
-
-                        // Executive leadership positions remain in the central horizontal spine.
-                        // Non-executive positions (departments, managers, staff) form vertical columns!
-                        $childInColumn = !$childIsExecutive;
-                    @endphp
-
-                    @if($childInColumn)
-                        <li class="org-tree-item !px-2 sm:!px-3">
-                            <div class="flex flex-col items-center">
-                                @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => true, 'cardStyle' => $cardStyle])
-                            </div>
-                        </li>
-                    @else
-                        @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => false, 'cardStyle' => $cardStyle])
-                    @endif
+                    @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => false, 'cardStyle' => $cardStyle])
                 @endforeach
             </ul>
         @endif

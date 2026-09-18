@@ -49,7 +49,7 @@
 
     {{-- Seamless Auto-Fit Flowchart Container with Zero Horizontal Scrollbar --}}
     <div x-ref="viewport"
-         class="org-tree-viewport w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/50 via-white to-slate-50/30 py-8 px-2 sm:px-4 shadow-xs flex justify-center items-start">
+         class="org-tree-viewport w-full overflow-hidden rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/50 via-white to-slate-50/30 py-5 sm:py-6 px-2 sm:px-4 shadow-xs flex justify-center items-start">
         <div class="org-tree-canvas flex justify-center items-start overflow-visible transition-all duration-200"
              :style="naturalHeight > 0 && scale < 1 ? 'height: ' + Math.ceil(naturalHeight * scale) + 'px;' : ''">
             <div :style="'transform: scale(' + scale + '); transform-origin: top center; transition: transform 0.2s ease-out;'"
@@ -69,7 +69,6 @@
 /* Disable horizontal scrolling completely for a clean, non-scrolling fit */
 .org-tree-viewport {
     overflow-x: hidden !important;
-    overflow-y: hidden !important;
 }
 
 /* Tree Structure Lists */
@@ -87,7 +86,7 @@
 }
 
 .org-tree-children {
-    padding-top: 16px !important;
+    padding-top: 8px !important;
 }
 
 /* Compact spacing between items to fit screen smoothly */
@@ -97,7 +96,7 @@
     align-items: center !important;
     flex-shrink: 0 !important;
     position: relative !important;
-    padding: 16px 6px 0 6px !important;
+    padding: 8px 6px 0 6px !important;
     list-style: none !important;
 }
 
@@ -116,7 +115,7 @@
     right: 50% !important;
     border-top: 2px solid #0B2B5C !important;
     width: 50% !important;
-    height: 16px !important;
+    height: 8px !important;
     z-index: 1 !important;
 }
 
@@ -146,7 +145,7 @@
     display: none !important;
 }
 .org-tree-item:only-child {
-    padding-top: 16px !important;
+    padding-top: 8px !important;
 }
 .org-tree-item:only-child::after {
     display: block !important;
@@ -157,7 +156,7 @@
     border: none !important;
     border-left: 2px solid #0B2B5C !important;
     width: 0 !important;
-    height: 16px !important;
+    height: 8px !important;
     transform: translateX(-50%) !important;
     z-index: 1 !important;
 }
@@ -175,11 +174,11 @@
 .org-card-wrapper.has-children::after {
     content: '' !important;
     position: absolute !important;
-    bottom: -16px !important;
+    bottom: -8px !important;
     left: 50% !important;
     border-left: 2px solid #0B2B5C !important;
     width: 0 !important;
-    height: 16px !important;
+    height: 8px !important;
     transform: translateX(-50%) !important;
     z-index: 1 !important;
 }
