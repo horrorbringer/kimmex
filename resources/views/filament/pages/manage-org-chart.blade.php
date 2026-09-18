@@ -58,27 +58,25 @@
                 height: 13px !important;
             }
 
-            /* Compact Table Repeater inside Manage Groups */
-            .fi-fo-table-repeater th {
-                font-size: 0.6875rem !important;
-                font-weight: 700 !important;
-                color: #475569 !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0.05em !important;
-                padding: 0.45rem 0.6rem !important;
+            /* Polished Section Repeater Styling */
+            .fi-modal .fi-fo-repeater-item {
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 0.625rem !important;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+                background: #ffffff !important;
+                transition: all 0.15s ease !important;
+                margin-bottom: 0.625rem !important;
+            }
+            .fi-modal .fi-fo-repeater-item:hover {
+                border-color: #cbd5e1 !important;
+                box-shadow: 0 2px 6px rgba(11, 43, 92, 0.06) !important;
+            }
+            .fi-modal .fi-fo-repeater-item-header {
                 background: #f8fafc !important;
-            }
-            .fi-fo-table-repeater td {
-                padding: 0.35rem 0.5rem !important;
-                vertical-align: middle !important;
-            }
-            .fi-fo-table-repeater td input {
-                font-size: 0.8125rem !important;
-                padding: 0.35rem 0.5rem !important;
-                border-radius: 0.375rem !important;
-            }
-            .fi-fo-table-repeater .fi-fo-toggle {
-                justify-content: center !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+                padding: 0.5rem 0.75rem !important;
+                border-top-left-radius: 0.625rem !important;
+                border-top-right-radius: 0.625rem !important;
             }
 
             .org-card-container {
@@ -430,36 +428,55 @@
         </style>
 
         {{-- Chart Group Switcher --}}
-        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid var(--org-border); border-radius: 0.5rem;">
-            <span style="font-size: 0.6875rem; font-weight: 700; color: var(--org-navy); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.25rem;">
-                <x-heroicon-o-rectangle-group style="width: 14px; height: 14px; display: inline; vertical-align: -2px;" />
-                {{ __('Chart Group') }}:
-            </span>
-            @php
-                $chartGroups = \App\Models\OrgUnit::getChartGroups();
-                $groupCounts = \App\Models\OrgUnit::selectRaw('chart_group, count(*) as cnt')->groupBy('chart_group')->pluck('cnt', 'chart_group');
-                $isKhmer = in_array(app()->getLocale(), ['km', 'kh']);
-            @endphp
-            @foreach($chartGroups as $group)
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; padding: 0.5rem 0.75rem; background: #f1f5f9; border: 1px solid var(--org-border); border-radius: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+                <span title="{{ __('Chart Sections') }}" style="color: var(--org-navy); display: inline-flex; align-items: center; margin-right: 0.15rem;">
+                    <x-heroicon-o-rectangle-group style="width: 16px; height: 16px;" />
+                </span>
                 @php
-                    $groupKey = $group['key'] ?? 'main';
-                    $groupLabel = $isKhmer ? (!empty($group['name_km']) ? $group['name_km'] : ($group['name_en'] ?? $groupKey)) : (!empty($group['name_en']) ? $group['name_en'] : ($group['name_km'] ?? $groupKey));
-                    $isActiveGroup = $activeChartGroup === $groupKey;
-                    $isGroupEnabled = (bool) ($group['is_active'] ?? true);
+                    $chartGroups = \App\Models\OrgUnit::getChartGroups();
+                    $groupCounts = \App\Models\OrgUnit::selectRaw('chart_group, count(*) as cnt')->groupBy('chart_group')->pluck('cnt', 'chart_group');
+                    $isKhmer = in_array(app()->getLocale(), ['km', 'kh']);
+                    $activeGroupStyle = $this->getActiveGroupCardStyle();
                 @endphp
-                <button type="button"
-                        wire:click="switchChartGroup('{{ $groupKey }}')"
-                        style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.6rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 700; border: 1px solid {{ $isActiveGroup ? 'var(--org-navy)' : '#cbd5e1' }}; background: {{ $isActiveGroup ? 'var(--org-navy)' : '#ffffff' }}; color: {{ $isActiveGroup ? '#ffffff' : ($isGroupEnabled ? '#475569' : '#94a3b8') }}; cursor: pointer; transition: all 0.15s; {{ !$isGroupEnabled ? 'opacity: 0.75;' : '' }}"
-                        title="{{ !$isGroupEnabled ? __('Inactive on public website') : '' }}">
-                    {{ $groupLabel }}
-                    @if(!$isGroupEnabled)
-                        <span style="font-size: 0.5625rem; font-weight: 600; text-transform: uppercase; padding: 0.05rem 0.25rem; border-radius: 4px; background: #fee2e2; color: #dc2626;">{{ __('Hidden') }}</span>
-                    @endif
-                    <span style="font-size: 0.625rem; font-weight: 800; padding: 0 0.3rem; border-radius: 9999px; background: {{ $isActiveGroup ? 'rgba(255,255,255,0.2)' : '#e2e8f0' }}; color: {{ $isActiveGroup ? '#ffffff' : '#64748b' }};">
-                        {{ $groupCounts[$groupKey] ?? 0 }}
-                    </span>
-                </button>
-            @endforeach
+                @foreach($chartGroups as $group)
+                    @php
+                        $groupKey = $group['key'] ?? 'main';
+                        $groupLabel = $isKhmer ? (!empty($group['name_km']) ? $group['name_km'] : ($group['name_en'] ?? $groupKey)) : (!empty($group['name_en']) ? $group['name_en'] : ($group['name_km'] ?? $groupKey));
+                        $isActiveGroup = $activeChartGroup === $groupKey;
+                        $isGroupEnabled = (bool) ($group['is_active'] ?? true);
+                    @endphp
+                    <button type="button"
+                            wire:click="switchChartGroup('{{ $groupKey }}')"
+                            style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.6rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 700; border: 1px solid {{ $isActiveGroup ? 'var(--org-navy)' : '#cbd5e1' }}; background: {{ $isActiveGroup ? 'var(--org-navy)' : '#ffffff' }}; color: {{ $isActiveGroup ? '#ffffff' : ($isGroupEnabled ? '#475569' : '#94a3b8') }}; cursor: pointer; transition: all 0.15s; {{ !$isGroupEnabled ? 'opacity: 0.75;' : '' }}"
+                            title="{{ !$isGroupEnabled ? __('Inactive on public website') : '' }}">
+                        {{ $groupLabel }}
+                        @if(!$isGroupEnabled)
+                            <span style="font-size: 0.5625rem; font-weight: 600; text-transform: uppercase; padding: 0.05rem 0.25rem; border-radius: 4px; background: #fee2e2; color: #dc2626;">{{ __('Hidden') }}</span>
+                        @endif
+                        <span style="font-size: 0.625rem; font-weight: 800; padding: 0 0.3rem; border-radius: 9999px; background: {{ $isActiveGroup ? 'rgba(255,255,255,0.2)' : '#e2e8f0' }}; color: {{ $isActiveGroup ? '#ffffff' : '#64748b' }};">
+                            {{ $groupCounts[$groupKey] ?? 0 }}
+                        </span>
+                    </button>
+                @endforeach
+            </div>
+
+            {{-- Independent Section Card Template Selector --}}
+            <div style="display: flex; align-items: center; gap: 0.35rem; margin-left: auto;">
+                <label for="group-card-style-select" title="{{ __('Section Template') }}" style="display: inline-flex; align-items: center; cursor: pointer;">
+                    <x-heroicon-o-swatch style="width: 16px; height: 16px; color: var(--org-blue);" />
+                </label>
+                <select id="group-card-style-select"
+                        wire:change="updateActiveGroupCardStyle($event.target.value)"
+                        style="font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.375rem; border: 1px solid #cbd5e1; background: #ffffff; color: var(--org-navy); cursor: pointer; outline: none;">
+                    <option value="default" {{ $activeGroupStyle === 'default' ? 'selected' : '' }}>{{ __('Global Default') }}</option>
+                    <option value="avatar_top" {{ $activeGroupStyle === 'avatar_top' ? 'selected' : '' }}>{{ __('Circle Photo (T1)') }}</option>
+                    <option value="floating" {{ $activeGroupStyle === 'floating' ? 'selected' : '' }}>{{ __('Floating Avatar (T2)') }}</option>
+                    <option value="badge" {{ $activeGroupStyle === 'badge' ? 'selected' : '' }}>{{ __('Executive Badge (T3)') }}</option>
+                    <option value="capsule" {{ $activeGroupStyle === 'capsule' ? 'selected' : '' }}>{{ __('Capsule (T4)') }}</option>
+                    <option value="corporate" {{ $activeGroupStyle === 'corporate' ? 'selected' : '' }}>{{ __('Corporate (T5)') }}</option>
+                </select>
+            </div>
         </div>
 
         {{-- Clean View Switcher Tab Navigation --}}
@@ -477,10 +494,10 @@
                 <button type="button"
                         @click="activeTab = 'chart'; $nextTick(() => window.dispatchEvent(new Event('resize')))"
                         class="org-tab-btn"
-                        :class="activeTab === 'chart' ? 'is-active' : ''">
+                        :class="activeTab === 'chart' ? 'is-active' : ''"
+                        title="{{ __('Interactive builder') }}">
                     <x-heroicon-o-presentation-chart-line style="width: 14px; height: 14px;" />
                     <span>{{ __('Diagram Canvas') }}</span>
-                    <span class="org-tab-badge">{{ __('Interactive builder') }}</span>
                 </button>
             </div>
 
@@ -500,10 +517,6 @@
                                type="search"
                                class="org-tree-search-input"
                                placeholder="{{ __('Search by name, role, tier...') }}" />
-                    </div>
-
-                    <div style="font-size: 0.6875rem; color: #64748b;">
-                        <span>{{ __('Click') }} <strong>+</strong> {{ __('to add subordinate') }}</span>
                     </div>
                 </div>
 

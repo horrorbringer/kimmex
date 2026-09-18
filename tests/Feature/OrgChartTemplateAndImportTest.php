@@ -220,4 +220,59 @@ class OrgChartTemplateAndImportTest extends TestCase
             $this->assertStringContainsString('Chief Executive Officer', $html);
         }
     }
+
+    public function test_node_independent_card_style_overrides_group_style(): void
+    {
+        // 1. A node with card_style 'badge' rendered inside an 'avatar_top' group
+        $badgeNode = [
+            'name' => 'Touch Kim',
+            'role' => 'Chief Executive Officer',
+            'unitType' => 'EXECUTIVE',
+            'card_style' => 'badge',
+            'image' => null,
+            'children' => [],
+        ];
+
+        $html = view('components.about.tree-node', [
+            'node' => $badgeNode,
+            'level' => 0,
+            'cardStyle' => 'avatar_top',
+        ])->render();
+
+        // Template 3 (badge) specific markup: h-3/4 (75% image) and h-1/4 (25% text)
+        $this->assertStringContainsString('h-3/4', $html);
+        $this->assertStringContainsString('h-1/4', $html);
+
+        // 2. A node with card_style 'floating' rendered inside a 'badge' group
+        $floatingNode = [
+            'name' => 'Heang Meng',
+            'role' => 'Deputy CEO',
+            'unitType' => 'EXECUTIVE',
+            'card_style' => 'floating',
+            'image' => null,
+            'children' => [],
+        ];
+
+        $htmlFloating = view('components.about.tree-node', [
+            'node' => $floatingNode,
+            'level' => 0,
+            'cardStyle' => 'badge',
+        ])->render();
+
+        // Floating does not have h-3/4
+        $this->assertStringNotContainsString('h-3/4', $htmlFloating);
+        $this->assertStringContainsString('Heang Meng', $htmlFloating);
+
+        // 3. OrgUnit model can persist card_style
+        $unit = OrgUnit::create([
+            'title' => 'Finance Director',
+            'type' => 'DIRECTOR',
+            'chart_group' => 'main',
+            'card_style' => 'capsule',
+            'isActive' => true,
+            'orderIndex' => 1,
+        ]);
+
+        $this->assertSame('capsule', $unit->fresh()->card_style);
+    }
 }

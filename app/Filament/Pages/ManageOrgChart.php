@@ -8,6 +8,7 @@ use App\Filament\Resources\OrgUnits\OrgUnitResource;
 use App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm;
 use App\Models\OrgUnit;
 use App\Models\SystemSetting;
+use App\Services\AutoTranslateService;
 use App\Services\OrgStructureTemplateService;
 use App\Support\PublicStorage;
 use Filament\Actions\Action;
@@ -18,9 +19,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -28,10 +27,13 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class ManageOrgChart extends Page implements HasActions, HasForms
 {
@@ -157,7 +159,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                 ->icon('heroicon-o-plus')
                 ->size('xs')
                 ->modalHeading(__('Add Root Position'))
-                ->modalWidth('lg')
+                ->modalWidth('2xl')
                 ->modalSubmitActionLabel(__('Create Position'))
                 ->model(OrgUnit::class)
                 ->form(OrgUnitForm::getSchema(context: 'root'))
@@ -173,24 +175,23 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                 ->color('success')
                 ->size('xs')
                 ->visible(fn (): bool => (app()->isLocal() || app()->runningUnitTests()) && $this->activeChartGroup === 'main')
-                ->modalHeading(__('Load Organization Chart Template'))
-                ->modalDescription(__('Choose a corporate template to quickly populate your organization chart without creating each position manually.'))
+                ->modalHeading(__('Load Template'))
+                ->modalDescription(__('Choose a corporate template to populate the chart.'))
                 ->modalWidth('md')
                 ->modalSubmitActionLabel(__('Apply Template'))
                 ->form([
                     Select::make('template')
-                        ->label(__('Select Corporate Template'))
+                        ->label(__('Template'))
                         ->options([
-                            'kimmex_corporate' => __('KIMMEX Corporate Structure (Full 3-Tier Enterprise: CEO, DCEO, DGM, 7 Divisions, 16+ Positions)'),
-                            'standard_company' => __('Standard Business Structure (CEO, COO, CFO, CTO, 5 Key Departments - 8 Positions)'),
-                            'starter_root' => __('Starter Hierarchy (CEO + 3 Core Division Heads - 4 Positions)'),
+                            'kimmex_corporate' => __('KIMMEX Corporate Structure (Full)'),
+                            'standard_company' => __('Standard Business Structure'),
+                            'starter_root' => __('Starter Hierarchy'),
                         ])
                         ->default('kimmex_corporate')
                         ->required()
                         ->native(false),
                     Toggle::make('clear_existing')
-                        ->label(__('Replace existing positions (Fresh start)'))
-                        ->helperText(__('Clear existing organization units before loading the template. Recommended for a clean hierarchy.'))
+                        ->label(__('Replace existing positions'))
                         ->default(true),
                 ])
                 ->action(function (array $data): void {
@@ -226,83 +227,110 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                 }),
 
             Action::make('manageGroups')
-                ->label(__('Manage Groups'))
+                ->label(__('Manage Sections'))
                 ->icon('heroicon-o-rectangle-group')
                 ->color('gray')
                 ->size('xs')
-                ->modalHeading(__('Manage Organization Chart Groups'))
-                ->modalDescription(__('Configure separate organization chart sections for your public About page (e.g. Corporate Governance, Project Teams, Board of Directors).'))
-                ->modalWidth('4xl')
-                ->modalSubmitActionLabel(__('Save Groups'))
+                ->modalHeading(__('Manage Sections'))
+                ->modalWidth('3xl')
+                ->modalSubmitActionLabel(__('Save Sections'))
                 ->fillForm(fn () => [
                     'groups' => OrgUnit::getChartGroups(),
                 ])
                 ->form([
-                    Placeholder::make('explanation')
-                        ->hiddenLabel()
-                        ->content(new HtmlString('
-                            <div style="font-size: 0.8125rem; line-height: 1.5; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 0.25rem;">
-                                <div style="font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.375rem;">
-                                    <span>💡</span> '.e(__('How Multi-Chart Groups Work:')).'
-                                </div>
-                                <ul style="list-style-type: disc; padding-left: 1.25rem; margin: 0; space-y: 0.25rem;">
-                                    <li>'.e(__('Each group appears as an independent flowchart section on your website About page.')).'</li>
-                                    <li>'.e(__('Drag the handle on the left to reorder how sections appear from top to bottom.')).'</li>
-                                    <li>'.e(__('Toggle "Public" off to hide a group from the public website while keeping your data.')).'</li>
-                                </ul>
-                            </div>
-                        ')),
 
                     Repeater::make('groups')
-                        ->label(__('Configured Sections'))
-                        ->compact()
-                        ->table([
-                            TableColumn::make(__('Section ID (Code)'))
-                                ->width('160px'),
-                            TableColumn::make(__('English Title'))
-                                ->markAsRequired(),
-                            TableColumn::make(__('Khmer Title')),
-                            TableColumn::make(__('Card Style'))
-                                ->width('160px'),
-                            TableColumn::make(__('Public'))
-                                ->alignment('center')
-                                ->width('80px'),
-                        ])
+                        ->label(__('Sections'))
+                        ->itemLabel(function (array $state): ?string {
+                            $name = $state['name_en'] ?? null;
+                            $key = $state['key'] ?? '';
+                            if (empty($name) && empty($key)) {
+                                return __('New Section');
+                            }
+                            $isMain = $key === 'main';
+                            $isActive = (bool) ($state['is_active'] ?? true);
+
+                            return ($name ?: ucfirst(str_replace('_', ' ', $key))).($isMain ? ' • 🔒' : '').($isActive ? '' : ' • ⚪ '.__('Hidden'));
+                        })
+                        ->collapsible()
+                        ->collapsed()
+                        ->collapseAllAction(fn (Action $action) => $action->label(__('Collapse All')))
+                        ->expandAllAction(fn (Action $action) => $action->label(__('Expand All')))
                         ->schema([
-                            TextInput::make('key')
-                                ->required()
-                                ->regex('/^[a-z0-9_]+$/')
-                                ->placeholder('e.g. board_of_directors')
-                                ->readOnly(fn (?string $state) => $state === 'main')
-                                ->helperText(fn (?string $state) => $state === 'main' ? __('Default main chart') : null)
-                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem; font-family: monospace;']),
+                            Grid::make(['default' => 1, 'md' => 3])->schema([
+                                TextInput::make('name_en')
+                                    ->label(__('Title (EN)'))
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function (?string $state, Set $set, Get $get) {
+                                        if ($get('key') !== 'main' && empty($get('key')) && filled($state)) {
+                                            $set('key', Str::slug($state, '_'));
+                                        }
+                                    }),
 
-                            TextInput::make('name_en')
-                                ->required()
-                                ->placeholder(__('e.g. Executive Board'))
-                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem;']),
+                                TextInput::make('name_km')
+                                    ->label(__('Title (KM)'))
+                                    ->suffixAction(
+                                        Action::make('translateKhmer')
+                                            ->icon('heroicon-m-language')
+                                            ->tooltip(__('Auto-translate'))
+                                            ->action(function (Get $get, Set $set) {
+                                                $english = trim((string) $get('name_en'));
+                                                if (empty($english)) {
+                                                    Notification::make()
+                                                        ->warning()
+                                                        ->title(__('Please enter an English title first'))
+                                                        ->send();
 
-                            TextInput::make('name_km')
-                                ->placeholder(__('e.g. គណៈកម្មាធិការនាយក'))
-                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem;']),
+                                                    return;
+                                                }
+                                                $translator = app(AutoTranslateService::class);
+                                                $translated = $translator->translateFrom($english, 'km', 'en') ?: __($english, [], 'km');
+                                                if ($translated && $translated !== $english) {
+                                                    $set('name_km', $translated);
+                                                    Notification::make()
+                                                        ->success()
+                                                        ->title(__('Translated'))
+                                                        ->send();
+                                                }
+                                            })
+                                    ),
 
-                            Select::make('card_style')
-                                ->options([
-                                    'default' => __('Global Default'),
-                                    'avatar_top' => __('Circle Photo Above Box'),
-                                    'floating' => __('Floating Avatar'),
-                                    'badge' => __('Executive Badge'),
-                                    'capsule' => __('Horizontal Capsule'),
-                                    'corporate' => __('Corporate Tagged'),
-                                ])
-                                ->default('default')
-                                ->native(false)
-                                ->extraInputAttributes(['style' => 'font-size: 0.8125rem;']),
+                                TextInput::make('key')
+                                    ->label(__('Code'))
+                                    ->required()
+                                    ->regex('/^[a-z0-9_]+$/')
+                                    ->disabled(fn (?string $state) => $state === 'main')
+                                    ->dehydrated()
+                                    ->extraInputAttributes(['style' => 'font-family: monospace; font-size: 0.8125rem;']),
+                            ]),
 
-                            Toggle::make('is_active')
-                                ->hiddenLabel()
-                                ->default(true),
+                            Grid::make(['default' => 1, 'md' => 3])->schema([
+                                Select::make('card_style')
+                                    ->label(__('Template'))
+                                    ->options([
+                                        'default' => __('Global Default'),
+                                        'avatar_top' => __('Circle Photo (Template 1)'),
+                                        'floating' => __('Floating Avatar (Template 2)'),
+                                        'badge' => __('Executive Badge (Template 3)'),
+                                        'capsule' => __('Horizontal Capsule (Template 4)'),
+                                        'corporate' => __('Corporate Tagged (Template 5)'),
+                                    ])
+                                    ->default('default')
+                                    ->native(false)
+                                    ->columnSpan(['default' => 1, 'md' => 2]),
+
+                                Toggle::make('is_active')
+                                    ->label(__('Public'))
+                                    ->default(true)
+                                    ->inline(false)
+                                    ->columnSpan(['default' => 1, 'md' => 1]),
+                            ]),
                         ])
+                        ->deleteAction(
+                            fn (Action $action) => $action->hidden(fn (array $arguments, Repeater $component): bool => ($component->getRawItemState($arguments['item'])['key'] ?? null) === 'main'
+                            )
+                        )
                         ->reorderable()
                         ->addActionLabel(__('Add New Section / Group'))
                         ->minItems(1),
@@ -475,11 +503,11 @@ class ManageOrgChart extends Page implements HasActions, HasForms
     {
         return Action::make('edit')
             ->modalHeading(__('Edit Position'))
-            ->modalWidth('lg')
+            ->modalWidth('2xl')
             ->modalSubmitActionLabel(__('Save Changes'))
             ->model(OrgUnit::class)
             ->record(fn (array $arguments): ?OrgUnit => OrgUnit::find($arguments['id'] ?? null))
-            ->form(OrgUnitForm::getSchema(context: 'edit'))
+            ->form(fn (array $arguments) => OrgUnitForm::getSchema(context: 'edit', parentId: OrgUnit::find($arguments['id'] ?? null)?->parentId))
             ->fillForm(function (array $arguments): array {
                 $unit = OrgUnit::find($arguments['id'] ?? null);
                 if (! $unit) {
@@ -502,6 +530,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     'parentId' => $unit->parentId,
                     'departmentId' => $unit->departmentId,
                     'chart_group' => $unit->chart_group ?? $this->activeChartGroup,
+                    'card_style' => $unit->card_style,
                     'orderIndex' => $unit->orderIndex,
                     'isActive' => (bool) $unit->isActive,
                 ];
@@ -551,17 +580,16 @@ class ManageOrgChart extends Page implements HasActions, HasForms
     public function addChildAction(): Action
     {
         return Action::make('addChild')
-            ->modalHeading(fn (array $arguments): string => __('Add Subordinate under :name', [
-                'name' => OrgUnit::find($arguments['id'] ?? null)?->title ?? __('Position'),
-            ]))
-            ->modalWidth('lg')
+            ->modalHeading(__('Add Subordinate'))
+            ->modalWidth('2xl')
             ->modalSubmitActionLabel(__('Add Subordinate'))
             ->model(OrgUnit::class)
-            ->form(OrgUnitForm::getSchema(context: 'child'))
+            ->form(fn (array $arguments) => OrgUnitForm::getSchema(context: 'child', parentId: $arguments['id'] ?? null))
             ->fillForm(fn (array $arguments): array => [
                 'parentId' => $arguments['id'] ?? null,
                 'type' => 'STAFF',
                 'chart_group' => $this->activeChartGroup,
+                'card_style' => null,
                 'isActive' => true,
                 'orderIndex' => 0,
             ])
@@ -579,7 +607,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
 
                 $this->loadChartData();
                 Notification::make()
-                    ->title(__('Subordinate added successfully'))
+                    ->title(__('Subordinate position created successfully'))
                     ->success()
                     ->send();
             });
@@ -624,6 +652,39 @@ class ManageOrgChart extends Page implements HasActions, HasForms
         $this->loadChartData();
     }
 
+    public function updateActiveGroupCardStyle(string $style): void
+    {
+        $groups = OrgUnit::getChartGroups();
+        $found = false;
+        foreach ($groups as &$group) {
+            if (($group['key'] ?? 'main') === $this->activeChartGroup) {
+                $group['card_style'] = $style;
+                $found = true;
+                break;
+            }
+        }
+        if ($found) {
+            SystemSetting::set('org_chart_groups', $groups);
+            OrgUnit::clearOrgCache();
+            Notification::make()
+                ->title(__('Section card template updated'))
+                ->success()
+                ->send();
+        }
+    }
+
+    public function getActiveGroupCardStyle(): string
+    {
+        $groups = OrgUnit::getChartGroups();
+        foreach ($groups as $group) {
+            if (($group['key'] ?? 'main') === $this->activeChartGroup) {
+                return $group['card_style'] ?? 'default';
+            }
+        }
+
+        return 'default';
+    }
+
     /**
      * @param  Collection<string, Collection<int, OrgUnit>>  $unitsByParent
      * @return array<int, array<string, mixed>>
@@ -636,6 +697,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     'id' => $unit->id,
                     'title' => $unit->getTranslation('title', app()->getLocale()),
                     'type' => $unit->type,
+                    'card_style' => $unit->card_style,
                     'name' => $unit->employee?->name ?? ($unit->department ? $unit->department->getTranslation('name', app()->getLocale()) : 'N/A'),
                     'role' => $unit->employee?->role ?? $unit->type,
                     'image' => PublicStorage::urlIfExists($unit->employee?->image),

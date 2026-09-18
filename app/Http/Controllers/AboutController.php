@@ -137,6 +137,7 @@ class AboutController extends Controller
                     'role' => $role,
                     'type' => $type,
                     'unitType' => $unit->type,
+                    'card_style' => $unit->card_style,
                     'image' => $employeeImage,
                     'children' => $unitsByParent->get((string) $unit->id, collect())
                         ->map(fn ($child) => $buildNode($child))

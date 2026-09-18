@@ -20,6 +20,7 @@ class OrgUnit extends Model
         'title',
         'type',
         'chart_group',
+        'card_style',
         'parentId',
         'employeeId',
         'departmentId',

@@ -4,7 +4,8 @@
     $hasChildren = !empty($node['children']);
     $isRoot = $level === 0;
     $isExecutive = $level === 1 || $level === 2;
-    $cardStyle = $cardStyle ?? 'avatar_top';
+    $groupCardStyle = $cardStyle ?? 'avatar_top';
+    $cardStyle = (!empty($node['card_style']) && $node['card_style'] !== 'inherit') ? $node['card_style'] : $groupCardStyle;
     $image = $node['image'] ?? null;
 
     $name = trim($node['name'] ?? '');
@@ -131,7 +132,7 @@
         @foreach($node['children'] as $child)
             {{-- Crisp vertical connector line between stacked cards --}}
             <div class="w-[2px] h-2 !bg-[#0B2B5C] mx-auto my-0"></div>
-            @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => true, 'cardStyle' => $cardStyle])
+            @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => true, 'cardStyle' => $groupCardStyle])
         @endforeach
     @endif
 @else
@@ -355,7 +356,7 @@
         @if($hasChildren)
             <ul class="org-tree-children">
                 @foreach($node['children'] as $child)
-                    @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => false, 'cardStyle' => $cardStyle])
+                    @include('components.about.tree-node', ['node' => $child, 'level' => $level + 1, 'inColumn' => false, 'cardStyle' => $groupCardStyle])
                 @endforeach
             </ul>
         @endif

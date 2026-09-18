@@ -50,6 +50,18 @@
                 @if(!$isActive)
                     <span class="org-badge-hidden">{{ __('Hidden') }}</span>
                 @endif
+                @if(!empty($node['card_style']))
+                    <span style="font-size: 0.5625rem; font-weight: 700; padding: 0.05rem 0.35rem; border-radius: 4px; background: #e0e7ff; color: #3730a3;" title="{{ __('Custom Card Template') }}">
+                        {{ match($node['card_style']) {
+                            'avatar_top' => __('Circle Photo'),
+                            'floating' => __('Floating Avatar'),
+                            'badge' => __('Executive Badge'),
+                            'capsule' => __('Capsule'),
+                            'corporate' => __('Corporate'),
+                            default => $node['card_style']
+                        } }}
+                    </span>
+                @endif
                 @if($hasChildren)
                     <span class="org-badge-children">{{ count($node['children']) }}</span>
                 @endif
