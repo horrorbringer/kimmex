@@ -38,4 +38,9 @@ milestones*.txt
 tmp_org.json
 db_dump.json
 
+# Database dumps & exports
+*.sql
+*.sql.gz
+/exports/
+
 .nvmrc
