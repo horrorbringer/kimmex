@@ -6,6 +6,7 @@ use App\Filament\Resources\Documents\DocumentResource;
 use App\Filament\Support\AIHelper;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Storage;
 
 class EditDocument extends EditRecord
 {
@@ -84,6 +85,22 @@ class EditDocument extends EditRecord
         // Handle External Thumbnail URL vs Upload
         if (($data['thumbnailUrl_source'] ?? 'upload') === 'url') {
             $data['thumbnailUrl'] = $data['thumbnailUrl_external'] ?? null;
+        }
+
+        // Auto-detect file extension and size for local uploads
+        if (! empty($data['fileUrl']) && is_string($data['fileUrl']) && ! str_starts_with($data['fileUrl'], 'http')) {
+            $disk = Storage::disk(config('filesystems.public_uploads_disk'));
+            if ($disk->exists($data['fileUrl'])) {
+                if (empty($data['fileSize'])) {
+                    $bytes = $disk->size($data['fileUrl']);
+                    $data['fileSize'] = $bytes > 1048576
+                        ? round($bytes / 1048576, 2).' MB'
+                        : round($bytes / 1024, 2).' KB';
+                }
+                if (empty($data['fileType'])) {
+                    $data['fileType'] = strtoupper(pathinfo($data['fileUrl'], PATHINFO_EXTENSION));
+                }
+            }
         }
 
         unset(

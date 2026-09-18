@@ -172,12 +172,18 @@ class DocumentForm
                                                         'application/vnd.ms-powerpoint',
                                                         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                                                         'application/zip',
+                                                        'application/x-zip-compressed',
                                                         'application/x-rar-compressed',
+                                                        'application/vnd.rar',
                                                         'text/plain',
+                                                        'text/csv',
+                                                        'image/jpeg',
+                                                        'image/png',
+                                                        'image/webp',
                                                     ])
                                                     ->preserveFilenames()
                                                     ->maxSize(51200)
-                                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('PDF, Word, Excel, PowerPoint, ZIP, TXT up to 50MB.'))
+                                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('PDF, Word, Excel, PowerPoint, ZIP, Images, TXT up to 50MB.'))
                                                     ->visible(fn (Get $get) => ($get('fileUrl_source') ?? 'upload') === 'upload'),
 
                                                 TextInput::make('fileUrl_external')
