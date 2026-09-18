@@ -4,21 +4,8 @@
         setView(mode) {
             this.viewMode = mode;
             localStorage.setItem('kimmex_doc_view', mode);
-        },
-        previewModal: false,
-        activeDoc: null,
-        openPreview(doc) {
-            this.activeDoc = doc;
-            this.previewModal = true;
-            document.body.classList.add('overflow-hidden');
-        },
-        closePreview() {
-            this.previewModal = false;
-            this.activeDoc = null;
-            document.body.classList.remove('overflow-hidden');
         }
-    }"
-    @keydown.escape.window="closePreview()">
+    }">
 
     <!-- ═══ HERO ═══ -->
     <section class="relative h-[280px] sm:h-[320px] md:h-[360px] flex items-end overflow-hidden" style="background: #0B2B5C;">
@@ -182,9 +169,9 @@
                         @php
                             $categoryName = $doc->documentCategory
                                 ? $doc->documentCategory->getTranslation('name', app()->getLocale())
-                                : ($doc->category ?: __('Resource'));
+                                : ($doc->category ?: null);
                             $fileType = strtoupper($doc->fileType ?: 'PDF');
-                            $description = str(strip_tags($doc->description))->limit(120);
+                            $description = str(strip_tags($doc->description ?? ''))->limit(120);
                             $thumbnailUrl = \App\Support\PublicStorage::urlIfExists($doc->thumbnailUrl);
                             $fileUrl = \App\Support\PublicStorage::urlIfExists($doc->fileUrl);
 
@@ -200,36 +187,19 @@
                                     $cloudProvider = 'OneDrive';
                                 }
                             }
-
-                            $docPayload = [
-                                'id' => $doc->id,
-                                'title' => $doc->title,
-                                'slug' => $doc->slug,
-                                'category' => $categoryName,
-                                'fileType' => $fileType,
-                                'fileSize' => $doc->fileSize ?: ($isExternal ? __('Cloud Hosted') : '-'),
-                                'fileUrl' => $fileUrl,
-                                'thumbnailUrl' => $thumbnailUrl,
-                                'description' => $doc->description,
-                                'date' => $doc->created_at->format('M d, Y'),
-                                'isExternal' => $isExternal,
-                                'cloudProvider' => $cloudProvider,
-                            ];
                         @endphp
 
                         <article class="group bg-white rounded-2xl border border-gray-200/80 overflow-hidden transition-all duration-300 hover:border-titan-navy/40 hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between">
                             <div>
                                 <!-- Image or Blueprint Area -->
-                                <div class="relative h-44 overflow-hidden flex items-center justify-center bg-slate-900">
+                                <a href="/documents/{{ $doc->slug }}" class="block relative h-44 overflow-hidden bg-slate-900 group/cover">
                                     @if($thumbnailUrl)
                                         <img src="{{ $thumbnailUrl }}" alt="{{ $doc->title }}"
-                                            class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 cursor-pointer"
-                                            @click="openPreview({{ Js::from($docPayload) }})"
+                                            class="absolute inset-0 w-full h-full object-cover group-hover/cover:scale-105 transition-transform duration-700"
                                             loading="lazy" decoding="async" />
                                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
                                     @else
-                                        <div class="w-full h-full flex flex-col items-center justify-center relative cursor-pointer"
-                                            @click="openPreview({{ Js::from($docPayload) }})"
+                                        <div class="w-full h-full flex flex-col items-center justify-center relative group-hover/cover:scale-105 transition-transform duration-700"
                                             style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
                                             <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 16px 16px;"></div>
                                             <div class="w-12 h-12 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center mb-2 z-10">
@@ -258,14 +228,7 @@
                                             </span>
                                         </div>
                                     @endif
-
-                                    <!-- Quick Preview Action Button on Hover -->
-                                    <button type="button" @click="openPreview({{ Js::from($docPayload) }})"
-                                        class="absolute bottom-3 right-3 z-10 px-2.5 py-1 rounded-lg bg-black/75 hover:bg-black text-white text-[11px] font-semibold backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1.5 cursor-pointer shadow-md">
-                                        <x-lucide-eye class="w-3.5 h-3.5" />
-                                        <span>{{ __('Quick Preview') }}</span>
-                                    </button>
-                                </div>
+                                </a>
 
                                 <!-- Card Content -->
                                 <div class="p-5">
@@ -300,27 +263,21 @@
                                 <div class="flex items-center justify-between pt-3.5 border-t border-gray-100">
                                     <span class="text-[11px] text-gray-400">{{ $doc->created_at->format('M d, Y') }}</span>
                                     <div class="flex items-center gap-2">
-                                        <!-- Preview Button -->
-                                        <button type="button" @click="openPreview({{ Js::from($docPayload) }})"
-                                            class="w-8 h-8 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors cursor-pointer"
-                                            title="{{ __('Quick Preview') }}">
-                                            <x-lucide-eye class="w-3.5 h-3.5" />
-                                        </button>
-
                                         @if($fileUrl)
                                             <a href="{{ $fileUrl }}" {{ $isExternal ? 'target="_blank" rel="noopener"' : 'download' }}
-                                                class="w-8 h-8 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors shadow-2xs"
-                                                title="{{ $isExternal ? ($cloudProvider ?: __('Open Link')) : __('Download') }}"
-                                                onclick="event.stopPropagation()">
+                                                class="h-8.5 px-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-white hover:border-gray-300 flex items-center gap-1.5 text-gray-700 text-xs font-semibold transition-all shadow-2xs"
+                                                title="{{ $isExternal ? ($cloudProvider ?: __('Open Link')) : __('Download') }}">
                                                 @if($isExternal)
                                                     <x-lucide-external-link class="w-3.5 h-3.5" />
+                                                    <span>{{ $cloudProvider ?: __('Open') }}</span>
                                                 @else
                                                     <x-lucide-download class="w-3.5 h-3.5" />
+                                                    <span>{{ __('Download') }}</span>
                                                 @endif
                                             </a>
                                         @endif
 
-                                        <a href="/documents/{{ $doc->slug }}" class="inline-flex items-center gap-1 text-xs font-bold transition-all group-hover:gap-1.5 ml-1" style="color: var(--primary-color, #E31E24);">
+                                        <a href="/documents/{{ $doc->slug }}" class="inline-flex items-center gap-1 text-xs font-bold transition-all hover:gap-1.5 ml-1" style="color: var(--primary-color, #E31E24);">
                                             <span>{{ __('View') }}</span>
                                             <x-lucide-arrow-right class="w-3.5 h-3.5" />
                                         </a>
@@ -366,33 +323,18 @@
                                                 $cloudProvider = 'OneDrive';
                                             }
                                         }
-
-                                        $docPayload = [
-                                            'id' => $doc->id,
-                                            'title' => $doc->title,
-                                            'slug' => $doc->slug,
-                                            'category' => $categoryName,
-                                            'fileType' => $fileType,
-                                            'fileSize' => $doc->fileSize ?: ($isExternal ? __('Cloud Hosted') : null),
-                                            'fileUrl' => $fileUrl,
-                                            'thumbnailUrl' => $thumbnailUrl,
-                                            'description' => $doc->description,
-                                            'date' => $doc->created_at->format('M d, Y'),
-                                            'isExternal' => $isExternal,
-                                            'cloudProvider' => $cloudProvider,
-                                        ];
                                     @endphp
                                     <tr class="group hover:bg-slate-50/80 transition-colors">
                                         <!-- Document Info -->
                                         <td class="py-3 px-4 sm:px-6">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-slate-900 flex items-center justify-center border border-gray-200">
+                                                <a href="/documents/{{ $doc->slug }}" class="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-slate-900 flex items-center justify-center border border-gray-200 hover:opacity-85 transition-opacity">
                                                     @if($thumbnailUrl)
                                                         <img src="{{ $thumbnailUrl }}" alt="" class="w-full h-full object-cover" loading="lazy" />
                                                     @else
                                                         <span class="font-mono font-bold text-[10px] text-white/80">{{ $fileType }}</span>
                                                     @endif
-                                                </div>
+                                                </a>
                                                 <div class="min-w-0">
                                                     <a href="/documents/{{ $doc->slug }}" class="font-semibold text-gray-900 group-hover:text-titan-red transition-colors block truncate max-w-xs sm:max-w-md">
                                                         {{ $doc->title }}
@@ -445,17 +387,10 @@
 
                                         <!-- Actions -->
                                         <td class="py-3 px-4 sm:px-6 text-right whitespace-nowrap">
-                                            <div class="inline-flex items-center gap-1.5">
-                                                <button type="button" @click="openPreview({{ Js::from($docPayload) }})"
-                                                    class="h-8 px-2.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
-                                                    title="{{ __('Quick Preview') }}">
-                                                    <x-lucide-eye class="w-3.5 h-3.5 text-gray-500" />
-                                                    <span class="hidden sm:inline">{{ __('Preview') }}</span>
-                                                </button>
-
+                                            <div class="inline-flex items-center gap-2">
                                                 @if($fileUrl)
                                                     <a href="{{ $fileUrl }}" {{ $isExternal ? 'target="_blank" rel="noopener"' : 'download' }}
-                                                        class="h-8 px-2.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold inline-flex items-center gap-1 transition-colors shadow-2xs"
+                                                        class="h-8.5 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
                                                         title="{{ $isExternal ? ($cloudProvider ?: __('Open Link')) : __('Download') }}">
                                                         @if($isExternal)
                                                             <x-lucide-external-link class="w-3.5 h-3.5 text-gray-500" />
@@ -468,8 +403,9 @@
                                                 @endif
 
                                                 <a href="/documents/{{ $doc->slug }}"
-                                                    class="h-8 w-8 rounded-lg bg-gray-100 hover:bg-titan-red hover:text-white flex items-center justify-center text-gray-600 transition-colors"
+                                                    class="h-8.5 px-3 rounded-lg bg-titan-navy hover:bg-titan-red text-white text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
                                                     title="{{ __('Document Details') }}">
+                                                    <span>{{ __('View') }}</span>
                                                     <x-lucide-arrow-right class="w-3.5 h-3.5" />
                                                 </a>
                                             </div>
@@ -506,127 +442,6 @@
             </div>
         @endif
     </section>
-
-    <!-- ═══ INSTANT DOCUMENT PREVIEW MODAL ═══ -->
-    <div x-show="previewModal" x-cloak
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0">
-
-        <!-- Modal Backdrop -->
-        <div class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm" @click="closePreview()"></div>
-
-        <!-- Modal Card Container -->
-        <div class="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col max-h-[90vh] z-10"
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
-            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-            x-transition:leave-end="opacity-0 scale-95 translate-y-4">
-
-            <!-- Modal Header -->
-            <div class="px-5 sm:px-6 py-4 bg-slate-900 text-white flex items-center justify-between gap-4 border-b border-slate-800 shrink-0">
-                <div class="min-w-0 flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center !text-white/80 shrink-0">
-                        <x-lucide-file-text class="w-5 h-5" />
-                    </div>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2 flex-wrap mb-0.5">
-                            <template x-if="activeDoc?.category">
-                                <span class="!text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded !text-white bg-titan-red" x-text="activeDoc?.category"></span>
-                            </template>
-                            <template x-if="activeDoc?.fileType">
-                                <span class="!text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 !text-white/80" x-text="activeDoc?.fileType"></span>
-                            </template>
-                            <template x-if="activeDoc?.fileSize">
-                                <span class="!text-[11px] !text-white/50" x-text="activeDoc?.fileSize"></span>
-                            </template>
-                        </div>
-                        <h3 class="!text-sm sm:!text-base font-bold !text-white truncate max-w-lg" x-text="activeDoc?.title"></h3>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2 shrink-0">
-                    <template x-if="activeDoc?.fileUrl">
-                        <a :href="activeDoc?.fileUrl" :target="activeDoc?.isExternal ? '_blank' : '_self'" :download="!activeDoc?.isExternal"
-                            class="h-9 px-3 rounded-lg bg-titan-red hover:bg-red-700 text-white text-xs font-bold inline-flex items-center gap-1.5 transition-colors shadow-xs">
-                            <template x-if="activeDoc?.isExternal"><x-lucide-external-link class="w-3.5 h-3.5" /></template>
-                            <template x-if="!activeDoc?.isExternal"><x-lucide-download class="w-3.5 h-3.5" /></template>
-                            <span x-text="activeDoc?.isExternal ? (activeDoc?.cloudProvider || '{{ __('Open Link') }}') : '{{ __('Download') }}'"></span>
-                        </a>
-                    </template>
-                    <button type="button" @click="closePreview()"
-                        class="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                        title="{{ __('Close') }}">
-                        <x-lucide-x class="w-4 h-4" />
-                    </button>
-                </div>
-            </div>
-
-            <!-- Modal Body (Scrollable) -->
-            <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-5 bg-slate-50/50">
-                <!-- Thumbnail Preview (if available) -->
-                <template x-if="activeDoc?.thumbnailUrl">
-                    <div class="rounded-xl overflow-hidden border border-gray-200 bg-slate-950 aspect-[16/9] max-h-72 w-full flex items-center justify-center shadow-inner">
-                        <img :src="activeDoc?.thumbnailUrl" :alt="activeDoc?.title" class="w-full h-full object-cover" />
-                    </div>
-                </template>
-
-                <!-- Document Description -->
-                <template x-if="activeDoc?.description && activeDoc?.description.trim().length > 0">
-                    <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-2xs">
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2 flex items-center gap-1.5">
-                            <x-lucide-info class="w-3.5 h-3.5 text-titan-red" />
-                            <span>{{ __('Document Overview') }}</span>
-                        </h4>
-                        <div class="prose prose-sm max-w-none text-gray-700 leading-relaxed" x-html="activeDoc?.description"></div>
-                    </div>
-                </template>
-
-                <!-- Access / Download Box -->
-                <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-red-50 text-titan-red flex items-center justify-center shrink-0 border border-red-100">
-                            <template x-if="activeDoc?.isExternal"><x-lucide-cloud class="w-5 h-5" /></template>
-                            <template x-if="!activeDoc?.isExternal"><x-lucide-file-down class="w-5 h-5" /></template>
-                        </div>
-                        <div>
-                            <h5 class="text-xs sm:text-sm font-bold text-gray-900" x-text="activeDoc?.isExternal ? '{{ __('External Cloud Document') }}' : '{{ __('Original Document File') }}'"></h5>
-                            <p class="text-[11px] text-gray-500 font-mono" x-text="(activeDoc?.date || '') + (activeDoc?.fileSize ? ' · ' + activeDoc?.fileSize : '')"></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <template x-if="activeDoc?.fileUrl">
-                            <a :href="activeDoc?.fileUrl" :target="activeDoc?.isExternal ? '_blank' : '_self'" :download="!activeDoc?.isExternal"
-                                class="flex-1 sm:flex-none h-9.5 px-4 rounded-xl bg-titan-navy hover:bg-slate-800 text-white text-xs font-bold inline-flex items-center justify-center gap-2 transition-colors">
-                                <template x-if="activeDoc?.isExternal"><x-lucide-external-link class="w-3.5 h-3.5" /></template>
-                                <template x-if="!activeDoc?.isExternal"><x-lucide-download class="w-3.5 h-3.5" /></template>
-                                <span>{{ __('Open / Download') }}</span>
-                            </a>
-                        </template>
-                        <a :href="'/documents/' + activeDoc?.slug"
-                            class="flex-1 sm:flex-none h-9.5 px-4 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-colors">
-                            <span>{{ __('View Full Page') }}</span>
-                            <x-lucide-arrow-right class="w-3.5 h-3.5" />
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="px-5 py-3 bg-white border-t border-gray-200 flex items-center justify-between text-xs text-gray-500 shrink-0">
-                <span class="text-[11px]">{{ __('Press ESC to close') }}</span>
-                <button type="button" @click="closePreview()" class="font-bold text-gray-700 hover:text-titan-red cursor-pointer">
-                    {{ __('Close') }}
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- ═══ CTA SECTION ═══ -->
     <section class="py-14 md:py-16 relative overflow-hidden" style="background: linear-gradient(135deg, #071A33 0%, #0B2B5C 100%);">
