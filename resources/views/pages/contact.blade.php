@@ -121,21 +121,125 @@
                                     </div>
                                 @endif
 
-                                <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-5" x-data="{ submitting: false }" x-on:submit="submitting = true">
+                                <form action="{{ route('contact.submit') }}" method="POST" enctype="multipart/form-data" class="space-y-5"
+                                    x-data="{
+                                        submitting: false,
+                                        errorMessage: '',
+                                        loadedAt: Date.now(),
+                                        validateForm(event) {
+                                            this.errorMessage = '';
+
+                                            // 1. Time-trap: ensure human has spent at least 3 seconds on the page
+                                            if (Date.now() - this.loadedAt < 3000) {
+                                                event.preventDefault();
+                                                this.errorMessage = '{{ __('Please take a moment to review your inquiry before sending.') }}';
+                                                return false;
+                                            }
+
+                                            const form = event.target;
+                                            const firstName = (form.first_name?.value || '').trim();
+                                            const lastName = (form.last_name?.value || '').trim();
+                                            const phone = (form.phone?.value || '').trim();
+                                            const subject = (form.subject?.value || '').trim();
+                                            const message = (form.message?.value || '').trim();
+
+                                            // 2. Prevent links / URLs in First and Last Name
+                                            const urlRegex = /(?:https?:\/\/|www\.|\.[a-z]{2,6}(?:\/|\s|$))/i;
+                                            if (urlRegex.test(firstName) || urlRegex.test(lastName)) {
+                                                event.preventDefault();
+                                                this.errorMessage = '{{ __('Name fields cannot contain website links or URLs.') }}';
+                                                return false;
+                                            }
+
+                                            // 3. Prevent identical bot names (e.g. HarryNetQE HarryNetQE)
+                                            if (firstName.length >= 6 && firstName.toLowerCase() === lastName.toLowerCase()) {
+                                                event.preventDefault();
+                                                this.errorMessage = '{{ __('Please provide a valid first and last name.') }}';
+                                                return false;
+                                            }
+
+                                            // 4. Validate phone format if provided
+                                            if (phone && !/^[+\d\s().-]{7,30}$/.test(phone)) {
+                                                event.preventDefault();
+                                                this.errorMessage = '{{ __('Please enter a valid phone number (e.g. +855 12 345 678).') }}';
+                                                return false;
+                                            }
+
+                                            // 5. Prohibited shortener or redirection links in subject or message
+                                            const combined = (subject + ' ' + message).toLowerCase();
+                                            const prohibitedLinks = [
+                                                'telegra.ph', 't.me/', 'wa.me/', 'whatsapp.com/channel',
+                                                'bit.ly', 'tinyurl.com', 'cutt.ly', 'is.gd', 'rb.gy', 'shorturl.at'
+                                            ];
+                                            for (const link of prohibitedLinks) {
+                                                if (combined.includes(link)) {
+                                                    event.preventDefault();
+                                                    this.errorMessage = '{{ __('External messaging or link shorteners are not allowed in this form.') }}';
+                                                    return false;
+                                                }
+                                            }
+
+                                            // 6. Prohibited scam phrases
+                                            const spamKeywords = [
+                                                'aventador', 'lamborghini', 'win the prize', 'you could win',
+                                                'claim your prize', 'prize you deserve', 'crypto investment',
+                                                'forex trading', 'binance gift', 'free spins', 'online casino', 'slot machine'
+                                            ];
+                                            for (const kw of spamKeywords) {
+                                                if (combined.includes(kw)) {
+                                                    event.preventDefault();
+                                                    this.errorMessage = '{{ __('Your message appears to contain prohibited spam or promotional content.') }}';
+                                                    return false;
+                                                }
+                                            }
+
+                                            // 7. Limit external links in message
+                                            const urlCount = (message.match(/https?:\/\/|www\./gi) || []).length;
+                                            if (urlCount > 1) {
+                                                event.preventDefault();
+                                                this.errorMessage = '{{ __('Please limit your inquiry to at most one reference link.') }}';
+                                                return false;
+                                            }
+
+                                            // 8. Message minimum length
+                                            if (message.length < 10) {
+                                                event.preventDefault();
+                                                this.errorMessage = '{{ __('Message must be at least 10 characters long.') }}';
+                                                return false;
+                                            }
+
+                                            this.submitting = true;
+                                            return true;
+                                        }
+                                    }"
+                                    x-on:submit="validateForm($event)">
                                     @csrf
+
+                                    {{-- Anti-Spam Honeypot & Time-Trap (Hidden from real users) --}}
+                                    <div class="hidden" aria-hidden="true" style="display:none !important; opacity:0; position:absolute; left:-9999px;">
+                                        <input type="text" name="website_url" tabindex="-1" autocomplete="off" />
+                                        <input type="hidden" name="_form_time" value="{{ encrypt(time()) }}" />
+                                    </div>
+
+                                    <!-- Frontend Validation Error Banner -->
+                                    <div x-show="errorMessage" x-cloak
+                                        class="flex items-start gap-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl p-3.5 text-xs sm:text-sm font-medium transition-all duration-300">
+                                        <x-lucide-alert-circle class="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                                        <span x-text="errorMessage"></span>
+                                    </div>
 
                                     <!-- Name -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('First Name') }} <span class="text-red-500">*</span></label>
-                                            <input type="text" name="first_name" value="{{ old('first_name') }}" required
+                                            <input type="text" name="first_name" value="{{ old('first_name') }}" required maxlength="50" autocomplete="given-name"
                                                 class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition @error('first_name') border-red-300 bg-red-50 @enderror"
                                                 placeholder="{{ __('First name') }}" />
                                             @error('first_name')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                                         </div>
                                         <div>
                                             <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Last Name') }} <span class="text-red-500">*</span></label>
-                                            <input type="text" name="last_name" value="{{ old('last_name') }}" required
+                                            <input type="text" name="last_name" value="{{ old('last_name') }}" required maxlength="50" autocomplete="family-name"
                                                 class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition @error('last_name') border-red-300 bg-red-50 @enderror"
                                                 placeholder="{{ __('Last name') }}" />
                                             @error('last_name')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
@@ -145,7 +249,7 @@
                                     <!-- Email -->
                                     <div>
                                         <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Email Address') }} <span class="text-red-500">*</span></label>
-                                        <input type="email" name="email" value="{{ old('email') }}" required
+                                        <input type="email" name="email" value="{{ old('email') }}" required maxlength="100" autocomplete="email"
                                             class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition @error('email') border-red-300 bg-red-50 @enderror"
                                             placeholder="you@company.com" />
                                         @error('email')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
@@ -155,13 +259,14 @@
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Phone') }} <span class="text-gray-300 font-normal">({{ __('optional') }})</span></label>
-                                            <input type="tel" name="phone" value="{{ old('phone') }}" inputmode="tel"
+                                            <input type="tel" name="phone" value="{{ old('phone') }}" inputmode="tel" maxlength="30" autocomplete="tel"
+                                                pattern="^[+\d\s().-]{7,30}$" title="{{ __('Please enter a valid phone number (e.g. +855 12 345 678)') }}"
                                                 class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition"
                                                 placeholder="+855 12 345 678" />
                                         </div>
                                         <div>
                                             <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Subject') }} <span class="text-gray-300 font-normal">({{ __('optional') }})</span></label>
-                                            <input type="text" name="subject" value="{{ old('subject') }}"
+                                            <input type="text" name="subject" value="{{ old('subject') }}" maxlength="150"
                                                 class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition"
                                                 placeholder="{{ __('Project inquiry') }}" />
                                         </div>
@@ -170,7 +275,7 @@
                                     <!-- Message -->
                                     <div>
                                         <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Message') }} <span class="text-red-500">*</span></label>
-                                        <textarea name="message" required rows="5"
+                                        <textarea name="message" required rows="5" minlength="10" maxlength="5000"
                                             class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition resize-none @error('message') border-red-300 bg-red-50 @enderror"
                                             placeholder="{{ __('Tell us about your project or how we can help...') }}">{{ old('message') }}</textarea>
                                         @error('message')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror

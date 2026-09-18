@@ -346,15 +346,70 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data" class="space-y-4" x-data="{ submitting: false }" x-on:submit="submitting = true">
+                    <form action="{{ route('careers.apply') }}" method="POST" enctype="multipart/form-data" class="space-y-4"
+                        x-data="{
+                            submitting: false,
+                            errorMessage: '',
+                            loadedAt: Date.now(),
+                            validateCareerForm(event) {
+                                this.errorMessage = '';
+
+                                if (Date.now() - this.loadedAt < 3000) {
+                                    event.preventDefault();
+                                    this.errorMessage = '{{ __('Please take a moment to review your application before submitting.') }}';
+                                    return false;
+                                }
+
+                                const form = event.target;
+                                const fullName = (form.full_name?.value || '').trim();
+                                const phone = (form.phone?.value || '').trim();
+                                const message = (form.message?.value || '').trim();
+
+                                const urlRegex = /(?:https?:\/\/|www\.|\.[a-z]{2,6}(?:\/|\s|$))/i;
+                                if (urlRegex.test(fullName)) {
+                                    event.preventDefault();
+                                    this.errorMessage = '{{ __('Name cannot contain website links or URLs.') }}';
+                                    return false;
+                                }
+
+                                if (phone && !/^[+\d\s().-]{7,30}$/.test(phone)) {
+                                    event.preventDefault();
+                                    this.errorMessage = '{{ __('Please enter a valid phone number (e.g. +855 12 345 678).') }}';
+                                    return false;
+                                }
+
+                                const prohibitedLinks = ['telegra.ph', 't.me/', 'wa.me/', 'bit.ly', 'tinyurl.com'];
+                                for (const link of prohibitedLinks) {
+                                    if (message.toLowerCase().includes(link)) {
+                                        event.preventDefault();
+                                        this.errorMessage = '{{ __('External shortlinks are not permitted in the application.') }}';
+                                        return false;
+                                    }
+                                }
+
+                                this.submitting = true;
+                                return true;
+                            }
+                        }"
+                        x-on:submit="validateCareerForm($event)">
                         @csrf
-                        <div class="hidden" aria-hidden="true"><input type="text" name="website_url" tabindex="-1" autocomplete="off" /></div>
+                        <div class="hidden" aria-hidden="true" style="display:none !important; opacity:0; position:absolute; left:-9999px;">
+                            <input type="text" name="website_url" tabindex="-1" autocomplete="off" />
+                            <input type="hidden" name="_form_time" value="{{ encrypt(time()) }}" />
+                        </div>
                         <input type="hidden" name="job_id" value="general-application">
+
+                        <!-- Frontend Validation Error Banner -->
+                        <div x-show="errorMessage" x-cloak
+                            class="flex items-start gap-2 bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-xs sm:text-sm font-medium transition">
+                            <x-lucide-alert-circle class="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                            <span x-text="errorMessage"></span>
+                        </div>
 
                         <!-- Full Name -->
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Full Name') }} <span class="text-red-500">*</span></label>
-                            <input type="text" name="full_name" value="{{ old('full_name') }}" required
+                            <input type="text" name="full_name" value="{{ old('full_name') }}" required maxlength="100" autocomplete="name"
                                 class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition @error('full_name') border-red-300 bg-red-50 @enderror"
                                 placeholder="{{ __('e.g. CHAN Sopheap') }}" />
                             @error('full_name')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
@@ -364,14 +419,15 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Email') }} <span class="text-red-500">*</span></label>
-                                <input type="email" name="email" value="{{ old('email') }}" required
+                                <input type="email" name="email" value="{{ old('email') }}" required maxlength="100" autocomplete="email"
                                     class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition @error('email') border-red-300 bg-red-50 @enderror"
                                     placeholder="you@example.com" />
                                 @error('email')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 mb-1.5">{{ __('Phone') }} <span class="text-red-500">*</span></label>
-                                <input type="tel" name="phone" value="{{ old('phone') }}" required inputmode="tel"
+                                <input type="tel" name="phone" value="{{ old('phone') }}" required inputmode="tel" maxlength="30" autocomplete="tel"
+                                    pattern="^[+\d\s().-]{7,30}$" title="{{ __('Please enter a valid phone number (e.g. +855 12 345 678)') }}"
                                     class="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition @error('phone') border-red-300 bg-red-50 @enderror"
                                     placeholder="+855 12 345 678" />
                                 @error('phone')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror

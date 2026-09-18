@@ -64,9 +64,10 @@ class FormController extends Controller
 
     public function submitContact(Request $request)
     {
-        // 1. Honeypot check
-        if ($request->filled('website_url')) {
-            return redirect()->back(); // Fail silently for bots
+        // 1. Anti-spam verification (Honeypot, Time-Trap, Content Analysis)
+        if ($this->isSpamContactSubmission($request)) {
+            // Fail silently with a generic success response so bots don't adapt
+            return redirect()->back()->with('success', __('Thank you for your inquiry! We will get back to you shortly.'));
         }
 
         $validated = $request->validate([
@@ -115,7 +116,29 @@ class FormController extends Controller
     {
         // 1. Honeypot check
         if ($request->filled('website_url')) {
-            return redirect()->back(); // Fail silently for bots
+            Log::info('Job application dropped: honeypot filled.', ['ip' => $request->ip()]);
+
+            return redirect()->back()->with('success', __('Your application has been submitted successfully!'));
+        }
+
+        // 2. Time-trap check
+        if ($request->has('_form_time')) {
+            try {
+                $formTime = (int) decrypt($request->input('_form_time'));
+                $elapsed = time() - $formTime;
+                if ($elapsed < 3 || $elapsed > 86400) {
+                    Log::info('Job application dropped: time-trap triggered.', [
+                        'ip' => $request->ip(),
+                        'elapsed_seconds' => $elapsed,
+                    ]);
+
+                    return redirect()->back()->with('success', __('Your application has been submitted successfully!'));
+                }
+            } catch (\Throwable $e) {
+                Log::info('Job application dropped: invalid form_time token.', ['ip' => $request->ip()]);
+
+                return redirect()->back()->with('success', __('Your application has been submitted successfully!'));
+            }
         }
 
         if (in_array($request->input('job_id'), ['gen', 'general-application'], true)) {
@@ -173,5 +196,131 @@ class FormController extends Controller
         ]);
 
         return view('pages.unsubscribed', ['email' => $subscriber->email]);
+    }
+
+    /**
+     * Determine if a contact inquiry submission is automated bot spam.
+     */
+    protected function isSpamContactSubmission(Request $request): bool
+    {
+        // 1. Honeypot check (hidden input that only bots fill)
+        if ($request->filled('website_url')) {
+            Log::info('Contact inquiry dropped: honeypot field filled.', [
+                'ip' => $request->ip(),
+            ]);
+
+            return true;
+        }
+
+        // 2. Time-trap check (real humans take at least 3 seconds to fill out the form)
+        if ($request->has('_form_time')) {
+            try {
+                $formTime = (int) decrypt($request->input('_form_time'));
+                $elapsed = time() - $formTime;
+                if ($elapsed < 3 || $elapsed > 86400) {
+                    Log::info('Contact inquiry dropped: time-trap triggered.', [
+                        'ip' => $request->ip(),
+                        'elapsed_seconds' => $elapsed,
+                    ]);
+
+                    return true;
+                }
+            } catch (\Throwable $e) {
+                Log::info('Contact inquiry dropped: invalid form_time token.', [
+                    'ip' => $request->ip(),
+                ]);
+
+                return true;
+            }
+        }
+
+        $firstName = trim((string) $request->input('first_name', ''));
+        $lastName = trim((string) $request->input('last_name', ''));
+        $subject = (string) $request->input('subject', '');
+        $message = (string) $request->input('message', '');
+        $combinedText = $subject.' '.$message;
+
+        // 3. Known spam link shorteners or messaging redirection domains
+        $spamLinkPatterns = [
+            'telegra\.ph',
+            't\.me',
+            'wa\.me',
+            'whatsapp\.com\/channel',
+            'bit\.ly',
+            'tinyurl\.com',
+            'cutt\.ly',
+            'is\.gd',
+            'rb\.gy',
+            'shorturl\.at',
+        ];
+        if (preg_match('/(?:https?:\/\/|www\.)[^\s]*(?:'.implode('|', $spamLinkPatterns).')/i', $combinedText)) {
+            Log::info('Contact inquiry dropped: spam link detected.', [
+                'ip' => $request->ip(),
+                'subject' => $subject,
+            ]);
+
+            return true;
+        }
+
+        // 4. Multiple URLs in contact message (legitimate inquiries rarely have multiple external links)
+        if (preg_match_all('/https?:\/\/|www\./i', $message) > 1) {
+            Log::info('Contact inquiry dropped: multiple URLs in message.', [
+                'ip' => $request->ip(),
+            ]);
+
+            return true;
+        }
+
+        // 5. Cyrillic text check (high-confidence indicator of spam bots on this site)
+        if (preg_match('/[\p{Cyrillic}]/u', $combinedText)) {
+            Log::info('Contact inquiry dropped: cyrillic script detected.', [
+                'ip' => $request->ip(),
+            ]);
+
+            return true;
+        }
+
+        // 6. Common lottery / casino / crypto prize scam phrases
+        $scamKeywords = [
+            'aventador',
+            'lamborghini',
+            'win the prize',
+            'you could win',
+            'claim your prize',
+            'prize you deserve',
+            'crypto investment',
+            'forex trading',
+            'binance gift',
+            'free spins',
+            'online casino',
+            'slot machine',
+            'cialis',
+            'viagra',
+            'message-id',
+        ];
+        foreach ($scamKeywords as $keyword) {
+            if (stripos($combinedText, $keyword) !== false) {
+                Log::info('Contact inquiry dropped: scam keyword detected.', [
+                    'ip' => $request->ip(),
+                    'keyword' => $keyword,
+                ]);
+
+                return true;
+            }
+        }
+
+        // 7. Bot name pattern (identical first and last name with mixed casing/numbers like HarryNetQE HarryNetQE)
+        if (! empty($firstName) && strcasecmp($firstName, $lastName) === 0 && strlen($firstName) >= 8) {
+            if (preg_match('/[A-Z].*[0-9]|[0-9].*[A-Z]/', $firstName)) {
+                Log::info('Contact inquiry dropped: suspicious bot name pattern.', [
+                    'ip' => $request->ip(),
+                    'name' => $firstName,
+                ]);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

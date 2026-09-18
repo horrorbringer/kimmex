@@ -9,6 +9,10 @@ class InquiryObserver
 {
     public function created(Inquiry $inquiry): void
     {
+        if ($inquiry->status === 'SPAM') {
+            return;
+        }
+
         SendInquiryTelegramNotification::dispatch($inquiry)->afterCommit();
     }
 }
