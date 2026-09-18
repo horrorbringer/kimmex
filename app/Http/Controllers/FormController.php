@@ -8,6 +8,7 @@ use App\Models\Inquiry;
 use App\Models\JobApplication;
 use App\Models\Subscriber;
 use App\Models\SystemSetting;
+use App\Rules\Turnstile;
 use App\Support\PublicStorage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -71,6 +72,7 @@ class FormController extends Controller
         }
 
         $validated = $request->validate([
+            'cf-turnstile-response' => [config('services.turnstile.secret') ? 'required' : 'nullable', new Turnstile],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -81,7 +83,7 @@ class FormController extends Controller
         ]);
 
         // 2. Sanitize Inputs
-        $sanitized = collect($validated)->except('attachment')->map(function ($value) {
+        $sanitized = collect($validated)->except(['attachment', 'cf-turnstile-response'])->map(function ($value) {
             return is_string($value) ? strip_tags($value) : $value;
         })->all();
 
@@ -146,6 +148,7 @@ class FormController extends Controller
         }
 
         $validated = $request->validate([
+            'cf-turnstile-response' => [config('services.turnstile.secret') ? 'required' : 'nullable', new Turnstile],
             'job_id' => 'present|nullable|uuid|exists:job_postings,id',
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -158,7 +161,7 @@ class FormController extends Controller
         ]);
 
         // 2. Sanitize Inputs
-        $sanitized = collect($validated)->except('resume')->map(function ($value) {
+        $sanitized = collect($validated)->except(['resume', 'cf-turnstile-response'])->map(function ($value) {
             return is_string($value) ? strip_tags($value) : $value;
         })->all();
 

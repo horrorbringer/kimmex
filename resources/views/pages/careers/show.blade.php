@@ -11,6 +11,9 @@
                 ],
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
         </script>
+        @if(config('services.turnstile.key'))
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        @endif
         <script type="application/ld+json">
             {!! json_encode([
                 '@@context' => 'https://schema.org',
@@ -280,6 +283,14 @@
                                             class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:border-gray-400 transition resize-none"
                                             placeholder="{{ __('Tell us why you\'re interested in this role...') }}">{{ old('message') }}</textarea>
                                     </div>
+
+                                    <!-- Cloudflare Turnstile -->
+                                    @if(config('services.turnstile.key'))
+                                        <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.key') }}" data-theme="light"></div>
+                                        @error('cf-turnstile-response')
+                                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                        @enderror
+                                    @endif
 
                                     <!-- Submit -->
                                     <div class="flex items-center justify-between pt-2">

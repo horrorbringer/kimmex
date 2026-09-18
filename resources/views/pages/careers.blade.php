@@ -7,6 +7,9 @@
         ['@type' => 'ListItem', 'position' => 2, 'name' => __('Careers'), 'item' => url('/careers')],
     ]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
+    @if(config('services.turnstile.key'))
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
     @endpush
 
 
@@ -474,6 +477,14 @@
                             </div>
                             @error('resume')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                         </div>
+
+                        <!-- Cloudflare Turnstile -->
+                        @if(config('services.turnstile.key'))
+                            <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.key') }}" data-theme="light"></div>
+                            @error('cf-turnstile-response')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        @endif
 
                         <!-- Submit -->
                         <div class="flex items-center justify-between pt-2">
