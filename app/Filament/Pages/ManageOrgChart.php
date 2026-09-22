@@ -168,6 +168,9 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                     $data['chart_group'] = $this->activeChartGroup;
 
                     return $data;
+                })
+                ->after(function (): void {
+                    $this->loadChartData();
                 }),
 
             Action::make('loadTemplate')

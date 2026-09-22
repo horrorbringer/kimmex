@@ -6,6 +6,8 @@ use App\Filament\Support\TranslationHelper;
 use App\Models\Employee;
 use App\Models\OrgUnit;
 use App\Support\PublicStorage;
+use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -23,6 +25,49 @@ class OrgUnitForm
     {
         return $schema
             ->components(static::getSchema());
+    }
+
+    public static function getEmployeeOptionFormSchema(): array
+    {
+        return [
+            Grid::make(['default' => 1, 'sm' => 2])->schema([
+                TextInput::make('name')
+                    ->label(__('Full Name'))
+                    ->placeholder(__('E.g., Sok Dara'))
+                    ->required()
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                TextInput::make('role')
+                    ->label(__('Job Title'))
+                    ->placeholder(__('E.g., Project Manager'))
+                    ->required()
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                TextInput::make('email')
+                    ->label(__('Email'))
+                    ->email()
+                    ->placeholder('name@company.com')
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                TextInput::make('phone')
+                    ->label(__('Phone'))
+                    ->tel()
+                    ->placeholder('+855 ...')
+                    ->columnSpan(['default' => 1, 'sm' => 1]),
+
+                FileUpload::make('image')
+                    ->image()
+                    ->disk(config('filesystems.public_uploads_disk'))
+                    ->directory('employees')
+                    ->visibility('public')
+                    ->label(__('Profile Photo'))
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('Optional. A clear head-and-shoulders photo works best.'))
+                    ->columnSpan(['default' => 1, 'sm' => 2]),
+
+                Hidden::make('isActive')
+                    ->default(true),
+            ]),
+        ];
     }
 
     public static function getSchema(?string $context = null, ?string $parentId = null): array
@@ -70,6 +115,16 @@ class OrgUnitForm
                             ->getOptionLabelFromRecordUsing(fn (Employee $record) => "{$record->name}".($record->role ? " — {$record->role}" : ''))
                             ->searchable()
                             ->preload()
+                            ->createOptionForm(static::getEmployeeOptionFormSchema())
+                            ->createOptionAction(fn (Action $action) => $action
+                                ->modalHeading(__('Create New Employee'))
+                                ->modalWidth('lg')
+                            )
+                            ->editOptionForm(static::getEmployeeOptionFormSchema())
+                            ->editOptionAction(fn (Action $action) => $action
+                                ->modalHeading(__('Edit Employee'))
+                                ->modalWidth('lg')
+                            )
                             ->live()
                             ->afterStateUpdated(function (Set $set, ?string $state): void {
                                 $employee = Employee::find($state);

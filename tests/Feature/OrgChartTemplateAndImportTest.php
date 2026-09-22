@@ -4,9 +4,13 @@ namespace Tests\Feature;
 
 use App\Filament\Exports\OrgUnitExporter;
 use App\Filament\Imports\OrgUnitImporter;
+use App\Filament\Resources\OrgUnits\Schemas\OrgUnitForm;
 use App\Models\OrgUnit;
 use App\Models\SystemSetting;
 use App\Services\OrgStructureTemplateService;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
@@ -275,5 +279,31 @@ class OrgChartTemplateAndImportTest extends TestCase
         ]);
 
         $this->assertSame('capsule', $unit->fresh()->card_style);
+    }
+
+    public function test_org_unit_form_allows_direct_employee_creation_and_editing(): void
+    {
+        $schema = OrgUnitForm::getSchema(context: 'root');
+        $this->assertNotEmpty($schema);
+
+        // Find Section with employeeId select
+        $foundEmployeeSelect = false;
+        foreach ($schema as $component) {
+            if ($component instanceof Section) {
+                foreach ($component->getDefaultChildComponents() as $grid) {
+                    if ($grid instanceof Grid) {
+                        foreach ($grid->getDefaultChildComponents() as $field) {
+                            if ($field instanceof Select && $field->getName() === 'employeeId') {
+                                $foundEmployeeSelect = true;
+                                $this->assertTrue($field->hasCreateOptionActionFormSchema());
+                                $this->assertTrue($field->hasEditOptionActionFormSchema());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->assertTrue($foundEmployeeSelect, 'employeeId select component with create and edit option forms was found in OrgUnitForm schema');
     }
 }
