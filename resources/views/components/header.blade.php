@@ -127,9 +127,12 @@
                 @if(auth()->check() && auth()->user()->isAdmin())
                     <div class="w-[1px] h-3 bg-gray-200 hidden sm:block"></div>
                     <a href="/admin"
-                        class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-gray-100 border border-gray-200/80 text-titan-navy hover:bg-titan-red hover:text-white hover:border-titan-red transition-all duration-200 group font-black tracking-wider">
-                        <x-lucide-shield class="text-titan-red group-hover:text-white w-3 h-3 shrink-0 transition-colors" />
-                        <span class="text-[9px] uppercase">{{ __('ADMIN') }}</span>
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hidden sm:inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded bg-titan-red text-white hover:bg-[#b81419] shadow-2xs hover:shadow-xs transition-all duration-200 group font-black tracking-wider text-[9px] uppercase cursor-pointer"
+                        title="{{ __('Open Admin Panel in new tab') }}">
+                        <span class="!text-white/90 group-hover:!text-white transition-colors">{{ __('ADMIN') }}</span>
+                        <x-lucide-external-link class="w-2.5 h-2.5 shrink-0 text-white/80 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
                     </a>
                 @endif
             </div>
@@ -592,9 +595,12 @@
                 @if(auth()->check() && auth()->user()->isAdmin())
                     <div class="mt-3">
                         <a href="/admin"
-                            class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded bg-titan-navy text-white text-xs font-bold uppercase tracking-wider hover:bg-titan-red transition-colors">
-                            <x-lucide-shield class="w-3.5 h-3.5 text-titan-red" />
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-titan-navy text-white text-xs font-bold uppercase tracking-wider hover:bg-titan-red transition-colors group">
+                            <x-lucide-shield class="w-3.5 h-3.5 text-titan-red group-hover:text-white transition-colors" />
                             <span>{{ __('Admin Panel') }}</span>
+                            <x-lucide-external-link class="w-3 h-3 text-white/70 group-hover:text-white transition-colors" />
                         </a>
                     </div>
                 @endif
