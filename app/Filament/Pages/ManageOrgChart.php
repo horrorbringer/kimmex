@@ -112,6 +112,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                                 'badge' => __('Executive Portrait Badge (Integrated Photo)'),
                                 'capsule' => __('Horizontal Capsule (Avatar on Left)'),
                                 'corporate' => __('Corporate Tagged Minimalist (Role Badges)'),
+                                'nameplate' => __('Framed Portrait with Nameplate (Template 6)'),
                             ])
                             ->default('avatar_top')
                             ->native(false)
@@ -315,6 +316,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                                         'badge' => __('Executive Badge (Template 3)'),
                                         'capsule' => __('Horizontal Capsule (Template 4)'),
                                         'corporate' => __('Corporate Tagged (Template 5)'),
+                                        'nameplate' => __('Framed Nameplate (Template 6)'),
                                     ])
                                     ->default('default')
                                     ->native(false)
@@ -428,6 +430,7 @@ class ManageOrgChart extends Page implements HasActions, HasForms
                             'badge' => __('Executive Portrait Badge (Integrated Photo)'),
                             'capsule' => __('Horizontal Capsule (Avatar on Left)'),
                             'corporate' => __('Corporate Tagged Minimalist (Role Badges)'),
+                            'nameplate' => __('Framed Portrait with Nameplate (Template 6)'),
                         ])
                         ->default(fn () => SystemSetting::get('organization_profile', [])['org_chart_card_style'] ?? 'avatar_top')
                         ->native(false)

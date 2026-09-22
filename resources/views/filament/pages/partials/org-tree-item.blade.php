@@ -58,6 +58,7 @@
                             'badge' => __('Executive Badge'),
                             'capsule' => __('Capsule'),
                             'corporate' => __('Corporate'),
+                            'nameplate' => __('Framed Nameplate'),
                             default => $node['card_style']
                         } }}
                     </span>

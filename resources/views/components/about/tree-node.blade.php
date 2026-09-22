@@ -106,6 +106,36 @@
                    style="color: #64748B !important;">{{ $node['role'] }}</p>
             </div>
         </div>
+    @elseif($cardStyle === 'nameplate')
+        {{-- STYLE 6: Framed Portrait with Bottom Nameplate Badge (Vertical Column) --}}
+        <div class="org-card-wrapper pt-0">
+            <div class="org-tree-card group relative flex flex-col items-center select-none w-[112px] sm:w-[124px] transition-all duration-200">
+                {{-- Main Photo Frame with Navy Border --}}
+                <div class="w-full h-[112px] sm:h-[124px] relative rounded-2xl border-2 sm:border-[2.5px] border-[#0B2B5C] overflow-hidden bg-slate-100 shadow-xs group-hover:shadow-md transition-shadow"
+                    style="border-color: #0B2B5C !important;">
+                    @if($image)
+                        <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
+                    @else
+                        <div class="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-[#0B2B5C]/50 font-bold text-sm sm:text-base tracking-wider">
+                            {{ $initials }}
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Overlapping Nameplate Badge at Bottom --}}
+                <div class="relative -mt-4 z-10 w-[94%] bg-white border-2 border-[#0B2B5C] rounded-xl px-1.5 py-1 text-center shadow-xs transition-transform duration-200 group-hover:scale-[1.02]"
+                    style="background-color: #ffffff !important; border-color: #0B2B5C !important;">
+                    <h4 class="!font-sans !font-black !text-[8px] sm:!text-[8.5px] uppercase tracking-tight leading-tight !m-0 truncate"
+                        style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important;">
+                        {{ $node['name'] }}
+                    </h4>
+                    <p class="!font-sans !text-[6.5px] sm:!text-[7px] !font-medium leading-tight !m-0 mt-0.5 truncate"
+                        style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important;">
+                        {{ $node['role'] }}
+                    </p>
+                </div>
+            </div>
+        </div>
     @else
         {{-- STYLE 5 (Default): Circle Photo Centered Above (Clean Round Avatar) --}}
         <div class="org-card-wrapper pt-0 flex flex-col items-center select-none text-center group">
@@ -310,6 +340,66 @@
                     <div class="my-1.5 w-6 mx-auto h-px !bg-slate-200" style="background-color: #E2E8F0 !important;"></div>
                     <p class="italic !text-[10px] sm:!text-[11px] !font-medium !text-slate-500 leading-tight !m-0"
                        style="color: #64748B !important;">{{ $node['role'] }}</p>
+                </div>
+            </div>
+        @elseif($cardStyle === 'nameplate')
+            {{-- STYLE 6: Framed Portrait with Bottom Nameplate Badge --}}
+            <div class="org-card-wrapper {{ $hasChildren ? 'has-children' : '' }} pt-0">
+                <div class="org-tree-card group relative flex flex-col items-center select-none transition-all duration-200
+                    @if($isRoot)
+                        w-[135px] sm:w-[150px]
+                    @elseif($isExecutive)
+                        w-[125px] sm:w-[138px]
+                    @else
+                        w-[115px] sm:w-[128px]
+                    @endif">
+
+                    {{-- Main Photo Frame with Navy Border --}}
+                    <div class="w-full relative rounded-2xl border-2 sm:border-[2.5px] border-[#0B2B5C] overflow-hidden bg-slate-100 shadow-xs group-hover:shadow-md transition-shadow
+                        @if($isRoot)
+                            h-[135px] sm:h-[150px]
+                        @elseif($isExecutive)
+                            h-[125px] sm:h-[140px]
+                        @else
+                            h-[115px] sm:h-[130px]
+                        @endif"
+                        style="border-color: #0B2B5C !important;">
+                        @if($image)
+                            <img src="{{ $image }}" alt="{{ $name }}" class="w-full h-full object-cover object-top" loading="lazy" />
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-[#0B2B5C]/50 font-bold tracking-wider
+                                {{ $isRoot ? 'text-lg sm:text-xl' : ($isExecutive ? 'text-base sm:text-lg' : 'text-sm sm:text-base') }}">
+                                {{ $initials }}
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Overlapping Nameplate Badge at Bottom --}}
+                    <div class="relative -mt-4 z-10 w-[94%] bg-white border-2 border-[#0B2B5C] rounded-xl px-2 py-1 text-center shadow-xs transition-transform duration-200 group-hover:scale-[1.02]"
+                        style="background-color: #ffffff !important; border-color: #0B2B5C !important;">
+                        <h4 class="!font-sans !font-black uppercase tracking-tight leading-tight !m-0 truncate
+                            @if($isRoot)
+                                !text-[9.5px] sm:!text-[10.5px]
+                            @elseif($isExecutive)
+                                !text-[8.5px] sm:!text-[9.5px]
+                            @else
+                                !text-[8px] sm:!text-[8.5px]
+                            @endif"
+                            style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important;">
+                            {{ $node['name'] }}
+                        </h4>
+                        <p class="!font-sans !font-medium leading-tight !m-0 mt-0.5 truncate
+                            @if($isRoot)
+                                !text-[7.5px] sm:!text-[8px]
+                            @elseif($isExecutive)
+                                !text-[7px] sm:!text-[7.5px]
+                            @else
+                                !text-[6.5px] sm:!text-[7px]
+                            @endif"
+                            style="font-family: var(--font-sans), sans-serif !important; color: #0B2B5C !important;">
+                            {{ $node['role'] }}
+                        </p>
+                    </div>
                 </div>
             </div>
         @else

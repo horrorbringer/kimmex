@@ -199,6 +199,7 @@ class OrgChartTemplateAndImportTest extends TestCase
         $this->assertStringContainsString("'badge'", $pageCode);
         $this->assertStringContainsString("'capsule'", $pageCode);
         $this->assertStringContainsString("'corporate'", $pageCode);
+        $this->assertStringContainsString("'nameplate'", $pageCode);
 
         // Test blade component rendering with different styles
         $mockNode = [
@@ -209,7 +210,7 @@ class OrgChartTemplateAndImportTest extends TestCase
             'children' => [],
         ];
 
-        foreach (['avatar_top', 'floating', 'badge', 'capsule', 'corporate'] as $style) {
+        foreach (['avatar_top', 'floating', 'badge', 'capsule', 'corporate', 'nameplate'] as $style) {
             $html = view('components.about.tree-node', [
                 'node' => $mockNode,
                 'level' => 0,

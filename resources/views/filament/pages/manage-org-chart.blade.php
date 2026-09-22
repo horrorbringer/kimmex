@@ -475,6 +475,7 @@
                     <option value="badge" {{ $activeGroupStyle === 'badge' ? 'selected' : '' }}>{{ __('Executive Badge (T3)') }}</option>
                     <option value="capsule" {{ $activeGroupStyle === 'capsule' ? 'selected' : '' }}>{{ __('Capsule (T4)') }}</option>
                     <option value="corporate" {{ $activeGroupStyle === 'corporate' ? 'selected' : '' }}>{{ __('Corporate (T5)') }}</option>
+                    <option value="nameplate" {{ $activeGroupStyle === 'nameplate' ? 'selected' : '' }}>{{ __('Framed Nameplate (T6)') }}</option>
                 </select>
             </div>
         </div>

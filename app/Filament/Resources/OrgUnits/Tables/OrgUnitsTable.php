@@ -121,6 +121,7 @@ class OrgUnitsTable
                         'badge' => __('Executive Badge (T3)'),
                         'capsule' => __('Capsule (T4)'),
                         'corporate' => __('Corporate (T5)'),
+                        'nameplate' => __('Framed Nameplate (T6)'),
                         default => __('Inherit'),
                     })
                     ->toggleable(isToggledHiddenByDefault: true),
