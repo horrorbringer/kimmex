@@ -381,7 +381,7 @@
                         <!-- Social -->
                         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                             <h3 class="text-sm font-bold text-gray-900 mb-4">{{ __('Follow Us') }}</h3>
-                            <div class="flex gap-2.5">
+                            <div class="flex gap-1.5">
                                 @if($facebook && $facebook !== '#')
                                     <a href="{{ $facebook }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl bg-social-facebook flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-social-facebook/30 transition-all" aria-label="Facebook">
                                         <x-social-icon network="facebook" class="w-4 h-4" />
