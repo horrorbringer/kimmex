@@ -84,7 +84,7 @@
                     <span>{{ __('Phnom Penh, Cambodia') }}</span>
                 </div>
                 <div class="w-[1px] h-3 bg-gray-200 hidden sm:block"></div>
-                <div class="hidden sm:flex gap-2">
+                <div class="hidden sm:flex gap-1">
                     @if($facebook && $facebook !== '#')
                         <a href="{{ $facebook }}" target="_blank"
                             class="w-6 h-6 rounded bg-social-facebook flex items-center justify-center hover:brightness-110 transition-all duration-300">
