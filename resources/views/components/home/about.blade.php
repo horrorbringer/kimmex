@@ -101,7 +101,7 @@
                 <a href="/about"
                     class="inline-flex items-center gap-3 font-bold uppercase tracking-wider text-sm group transition-[gap] duration-300 ease-out"
                     style="color: var(--primary-color, #E31E24);">
-                    {{ __('Learn More About Us') }}
+                    {{ __('Learn More About Us...') }}
                     <x-lucide-arrow-right class="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300 ease-out motion-reduce:transform-none" />
                 </a>
             </div>
